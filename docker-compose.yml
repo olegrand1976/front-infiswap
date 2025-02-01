@@ -1,0 +1,10 @@
+services:
+  frontend:
+    container_name: infiswap_frontend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ".:/infiswap_frontend"

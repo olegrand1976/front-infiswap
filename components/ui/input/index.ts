@@ -1,0 +1,24 @@
+import { cva, type VariantProps } from 'class-variance-authority';
+
+export { default as Input } from './Input.vue';
+
+export const inputVariants = cva(
+    'flex h-9 w-full rounded-md border border-none font-sans bg-background px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50',
+    {
+        variants: {
+            variant: {
+                default: 'outline outline-none border border-none bg-transparent',
+                transparent: 'outline outline-none border border-none text-white bg-transparent placeholder:text-white',
+                light: 'outline outline-none border border-none bg-gray-100',
+            },
+            size: {
+                xl: 'w-80',
+            },
+        },
+        defaultVariants: {
+            variant: 'default',
+        },
+    },
+);
+
+export type InputVariants = VariantProps<typeof inputVariants>;
