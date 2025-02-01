@@ -1,0 +1,5 @@
+
+./server
+.nuxt
+.vscode
+node_modules
