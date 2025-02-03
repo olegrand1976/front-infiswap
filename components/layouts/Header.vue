@@ -31,7 +31,7 @@
                 </Button> -->
                 <Button
                     class="font-semibold text-base"
-                    to="/dashboard"
+                    href="/dashboard"
                 >
                     Tableau de bord
                 </Button>
@@ -88,7 +88,6 @@ const navigationItems = [
     { label: 'ACCUEIL', route: '/' },
     { label: 'A PROPOS', route: '/about' },
     { label: 'NOS SERVICES', route: '/services' },
-    { label: 'ACTUALITES', route: '/news' },
     { label: 'CONTACTS', route: '/contact' },
 ];
 

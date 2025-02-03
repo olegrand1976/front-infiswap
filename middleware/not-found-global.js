@@ -1,4 +1,4 @@
-import { defineNuxtRouteMiddleware, useRouter, navigateTo } from "#app";
+import { defineNuxtRouteMiddleware, useRouter, navigateTo } from '#app';
 
 export default defineNuxtRouteMiddleware((to, from) => {
     if (import.meta.server) return;
@@ -9,5 +9,4 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!routeExists) {
         return navigateTo('/404', { redirectCode: 302 });
     }
-  });
-
+});

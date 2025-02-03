@@ -162,7 +162,7 @@ const navigationItems = [
     },
     {
         label: 'Remplacement',
-        route: '/dashboard/list-replacement',
+        route: '/dashboard/replacement',
         icon: UserPlusIcon,
     },
     {
