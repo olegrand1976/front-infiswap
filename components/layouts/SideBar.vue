@@ -49,37 +49,29 @@
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             </SidebarMenu>
-
-                            <div class="mt-4">
-                                <Button
-                                    variant="success"
-                                    class="w-full font-semibold"
-                                >
-                                    <PowerIcon class="w-6 h-6" />
-                                    Déconnexion
-                                </Button>
-                            </div>
                         </SidebarGroupContent>
                     </SidebarGroup>
 
                     <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
                         <SidebarGroupContent
-                            class="mt-2 w-52 space-y-2 flex flex-col justify-center items-center mx-auto"
+                            class="mt-2 w-52 flex space-x-1 justify-center items-center mx-auto"
                         >
-                            <div class="flex justify-center items-center">
+                            <div class="flex justify-center items-center w-40">
                                 <NuxtImg
                                     src="/home/infirmier_homme.png"
-                                    class="rounded-full h-20 w-20"
+                                    class="rounded-full h-12 w-12"
                                 />
                             </div>
-                            <p class="text-primary text-center">
+                            <p class="text-primary font-bold text-sm text-center">
                                 Richard Dupont
                             </p>
                             <Button
-                                class="text-xs"
+                                variant="secondary"
+                                class="text-xs text-black/70"
                                 href="/"
                             >
-                                Editer la photo de profil
+                                <PencilSquareIcon class="w-6 h-6" />
+                                Editer
                             </Button>
                         </SidebarGroupContent>
                     </SidebarGroup>
@@ -115,7 +107,7 @@ import {
     AcademicCapIcon,
     FolderIcon,
     Cog8ToothIcon,
-    PowerIcon,
+    PencilSquareIcon,
 } from '@heroicons/vue/24/solid';
 
 import { Badge } from '@/components/ui/badge';

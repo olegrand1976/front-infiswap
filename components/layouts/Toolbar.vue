@@ -42,13 +42,22 @@
                     </div>
                     <BellIcon class="h-7 w-7 text-gray-500" />
                 </div>
+                <div>
+                    <Button
+                        variant="success"
+                        class="w-full font-semibold"
+                    >
+                        <PowerIcon class="w-6 h-6" />
+                        Déconnexion
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, EnvelopeIcon, BellIcon } from '@heroicons/vue/24/solid';
+import { MagnifyingGlassIcon, EnvelopeIcon, BellIcon, PowerIcon } from '@heroicons/vue/24/solid';
 import { Badge } from '@/components/ui/badge';
 
 const search = ref('');
