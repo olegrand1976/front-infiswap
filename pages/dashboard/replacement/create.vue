@@ -181,14 +181,14 @@
                                         </template>
 
                                         <Dialog v-model:open="isOpen[period]">
-                                            <DialogContent class="sm:max-w-xl h-[70vh]">
+                                            <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto scrollable-dialog">
                                                 <DialogHeader>
                                                     <DialogTitle>Détail du patient</DialogTitle>
                                                     <DialogDescription>Veuillez confirmer ici les détails concernant le patient</DialogDescription>
                                                 </DialogHeader>
                                                 <div class="mt-0">
-                                                    <Form>
-                                                        <FormField name="g">
+                                                    <Form class="flex flex-col space-y-5">
+                                                        <FormField name="patient">
                                                             <FormItem>
                                                                 <Select v-model="selectedPatient[period]">
                                                                     <FormLabel class="font-bold">
@@ -236,6 +236,23 @@
                                                                         </SelectGroup>
                                                                     </SelectContent>
                                                                 </Select>
+                                                            </FormItem>
+                                                        </FormField>
+
+                                                        <FormField name="careType">
+                                                            <FormItem>
+                                                                <FormLabel class="font-bold">
+                                                                    Sélectionner le type de soin
+                                                                </FormLabel>
+                                                                <ul class="grid grid-cols-2 container gap-4">
+                                                                    <li
+                                                                        v-for="care in careTypes"
+                                                                        :key="care.id"
+                                                                        class="text-xs h-8 cursor-pointer flex rounded-full justify-center items-center border border-primary"
+                                                                    >
+                                                                        <span>{{ care.name }}</span>
+                                                                    </li>
+                                                                </ul>
                                                             </FormItem>
                                                         </FormField>
                                                     </Form>
@@ -293,6 +310,8 @@ import type { DateRange } from 'radix-vue';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+
+import { useCareTypes } from '~/composables/useCareTypes';
 
 useHead({
     title: 'Créer un remplacement',
@@ -495,4 +514,29 @@ const patients = [
         avatar: '/home/infirmier_femme.png',
     },
 ];
+
+const { careTypes, fetchCareTypes } = useCareTypes();
+
+onMounted(() => {
+    fetchCareTypes();
+});
 </script>
+
+<style scoped>
+.scrollable-dialog {
+    overflow-y: auto;
+}
+
+.scrollable-dialog::-webkit-scrollbar {
+    width: 2px;
+}
+
+.scrollable-dialog::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.scrollable-dialog::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+</style>
