@@ -127,13 +127,30 @@
                                     <div class="bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <PlusCircleIcon class="w-6 h-6" />
-                                            <span class="font-light text-nowrap">Type de soin à effectuer</span>
+                                            <span class="font-light text-xs">Type de soin à effectuer</span>
                                         </FormLabel>
                                     </div>
                                 </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
+
+                    <div>
+                        <ul class="grid grid-cols-2 container gap-4">
+                            <li
+                                v-for="care in careTypes"
+                                :key="care.id"
+                                class="text-xs h-8 cursor-pointer flex rounded-full justify-center items-center"
+                                :class="{
+                                    'bg-primary text-white': isSelected(care),
+                                    'border border-primary': !isSelected(care),
+                                }"
+                                @click="toggleSelectionCare(care)"
+                            >
+                                <span>{{ care.name }}</span>
+                            </li>
+                        </ul>
+                    </div>
 
                     <FormField name="frequency">
                         <FormItem>
@@ -243,4 +260,20 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 onMounted(() => {
     fetchCareTypes();
 });
+
+const selectedCareTypes = ref([]);
+
+const isSelected = (care) => {
+    return selectedCareTypes.value.some(item => item.id === care.id);
+};
+
+const toggleSelectionCare = (care) => {
+    const index = selectedCareTypes.value.findIndex(item => item.id === care.id);
+    if (index > -1) {
+        selectedCareTypes.value.splice(index, 1);
+    }
+    else {
+        selectedCareTypes.value.push(care);
+    }
+};
 </script>
