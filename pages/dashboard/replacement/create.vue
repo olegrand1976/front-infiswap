@@ -65,14 +65,14 @@
             <div class="mt-10 h-12 flex items-center justify-between rounded-xl px-2 bg-gray-100">
                 <div class="flex space-x-6 items-center">
                     <Form>
-                        <FormField name="currentDate">
+                        <FormField name="startDate">
                             <FormItem>
                                 <FormControl>
                                     <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
                                         <ChevronLeftIcon
                                             class="w-5 h-5 cursor-pointer"
                                             title="Date précédente"
-                                            :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) <= new Date(formData.startDate) }"
+                                            :class="{ 'opacity-90': new Date(currentDate) <= new Date(formData.startDate) }"
                                             :disabled="new Date(currentDate) <= new Date(formData.startDate)"
                                             @click="decrementDate"
                                         />
@@ -137,7 +137,7 @@
                                         class="p-2"
                                     >
                                         <Table class="w-full border">
-                                            <TableBody class>
+                                            <TableBody>
                                                 <TableRow
                                                     v-for="(time, index) in times"
                                                     :key="index"
@@ -146,121 +146,152 @@
                                                     <TableCell class="text-center border p-2 text-xs">
                                                         {{ time }}
                                                     </TableCell>
-                                                    <TableCell class="border ml-auto w-6 border-none p-2">
-                                                        <Checkbox
-                                                            :checked="selectedTimes[period].includes(time)"
-                                                            :value="time"
-                                                            class="w-full rounded-full p-1 text-xs"
-                                                            @update:checked="toggleSelection(time, period)"
-                                                        />
+                                                    <TableCell class="border border-none p-2">
+                                                        <span>.</span>
                                                     </TableCell>
                                                 </TableRow>
                                             </TableBody>
                                         </Table>
 
-                                        <!-- <div class="mt-4">
-                                            <h3>Plages horaires sélectionnées :</h3>
-                                            <div>
-                                                <p><strong>Matin :</strong> {{ selectedTimes.morning }}</p>
-                                                <p><strong>Après-midi :</strong> {{ selectedTimes.afternoon }}</p>
-                                                <p><strong>Soir :</strong> {{ selectedTimes.evening }}</p>
-                                            </div>
-                                        </div> -->
-
-                                        <template v-if="selectedPatients[period]">
-                                            <span class="text-center mt-6 text-sm flex justify-center items-center mx-auto font-semibold">
-                                                Patient : {{ selectedPatients[period].firstName }}
-                                            </span>
-                                        </template>
-                                        <template v-else>
-                                            <PlusCircleIcon
-                                                class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary cursor-pointer"
-                                                title="Choisir le patient"
-                                                @click="openModal(period)"
-                                            />
-                                        </template>
+                                        <PlusCircleIcon
+                                            class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary cursor-pointer"
+                                            title="Choisir le patient"
+                                            @click="openModal(period)"
+                                        />
 
                                         <Dialog v-model:open="isOpen[period]">
-                                            <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto scrollable-dialog">
+                                            <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
                                                 <DialogHeader>
                                                     <DialogTitle>Détail du patient</DialogTitle>
                                                     <DialogDescription>Veuillez confirmer ici les détails concernant le patient</DialogDescription>
                                                 </DialogHeader>
-                                                <div class="mt-0">
-                                                    <Form class="flex flex-col space-y-5">
-                                                        <FormField name="patient">
-                                                            <FormItem>
-                                                                <Select v-model="selectedPatient[period]">
-                                                                    <FormLabel class="font-bold">
-                                                                        Choisir le patient
-                                                                    </FormLabel>
-                                                                    <FormControl>
-                                                                        <SelectTrigger
-                                                                            class="flex h-10 items-center rounded-full border border-gray-300"
-                                                                            position="right"
-                                                                        >
-                                                                            <UserPlusIcon class="text-primary w-10 h-10" />
-                                                                            <span class="ml-3 w-full">{{ selectedPatient[period] ? selectedPatient[period] : 'Patient' }}</span>
-                                                                        </SelectTrigger>
-                                                                    </FormControl>
-                                                                    <SelectContent class="border border-none">
-                                                                        <SelectGroup>
-                                                                            <div
-                                                                                v-for="patient in patients"
-                                                                                :key="patient.id"
-                                                                                class="flex justify-center items-center"
-                                                                            >
-                                                                                <SelectItem
-                                                                                    v-model="patient.id"
-                                                                                    :value="`${patient.firstName} ${patient.lastName}`"
-                                                                                    @click="handlePatientSelection(period, patient)"
-                                                                                >
-                                                                                    <div class="flex space-x-5 items-center">
-                                                                                        <div>
-                                                                                            <NuxtImg
-                                                                                                :src="patient.avatar"
-                                                                                                class="rounded-full w-10 h-10"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <h6 class="font-bold text-xs">
-                                                                                                {{ patient.firstName }} {{ patient.lastName }} <br>
-                                                                                                <span class="font-light">
-                                                                                                    {{ patient.zipCode }}, {{ patient.city }}
-                                                                                                </span>
-                                                                                            </h6>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </SelectItem>
-                                                                            </div>
-                                                                        </SelectGroup>
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            </FormItem>
-                                                        </FormField>
 
-                                                        <FormField name="careType">
-                                                            <FormItem>
-                                                                <FormLabel class="font-bold">
-                                                                    Sélectionner le type de soin
-                                                                </FormLabel>
-                                                                <ul class="grid grid-cols-2 container gap-4">
-                                                                    <li
-                                                                        v-for="care in careTypes"
-                                                                        :key="care.id"
-                                                                        class="text-xs h-8 cursor-pointer flex rounded-full justify-center items-center border border-primary"
-                                                                    >
-                                                                        <span>{{ care.name }}</span>
-                                                                    </li>
-                                                                </ul>
-                                                            </FormItem>
-                                                        </FormField>
-                                                    </Form>
+                                                <div class="mt-6 grid grid-cols-1 gap-4 mx-8">
+                                                    <FormField name="fullname">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
+                                                                <div>
+                                                                    <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
+                                                                        <UserCircleIcon class="w-6 h-6" />
+                                                                        <span>Nom</span>
+                                                                    </FormLabel>
+                                                                    <Input
+                                                                        v-model="formData.replacement[0].patientName"
+                                                                        variant="transparent"
+                                                                        class="text-black"
+                                                                    />
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
+
+                                                    <FormField name="firstname">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
+                                                                <div>
+                                                                    <FormLabel class="flex relative h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
+                                                                        <UserCircleIcon class="w-6 h-6" />
+                                                                        <PlusIcon class="w-3 h-3 absolute top-0 left-4" />
+                                                                        <span>Prénoms</span>
+                                                                    </FormLabel>
+                                                                    <Input
+                                                                        v-model="formData.replacement[0].patientFirstName"
+                                                                        variant="transparent"
+                                                                        class="text-black"
+                                                                    />
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
+
+                                                    <FormField name="patientDateOfBirth">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
+                                                                <div>
+                                                                    <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
+                                                                        <CalendarIcon class="w-6 h-6" />
+                                                                        <span>Naissance</span>
+                                                                    </FormLabel>
+                                                                    <Input
+                                                                        v-model="formData.replacement[0].patientDateOfBirth"
+                                                                        type="date"
+                                                                        variant="transparent"
+                                                                        class="text-black"
+                                                                    />
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
+
+                                                    <FormField name="city">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
+                                                                <div>
+                                                                    <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
+                                                                        <NuxtImg
+                                                                            src="/icons/city_white.png"
+                                                                            class="w-6 h-6"
+                                                                        />
+                                                                        <span>Ville</span>
+                                                                    </FormLabel>
+                                                                    <Input
+                                                                        v-model="formData.replacement[0].city"
+                                                                        variant="transparent"
+                                                                        class="text-black"
+                                                                    />
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
+
+                                                    <FormField name="zipCode">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
+                                                                <div>
+                                                                    <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
+                                                                        <NuxtImg
+                                                                            src="/icons/city_white.png"
+                                                                            class="w-6 h-6"
+                                                                        />
+                                                                        <span>Code postal</span>
+                                                                    </FormLabel>
+                                                                    <Input
+                                                                        v-model="formData.replacement[0].city"
+                                                                        variant="transparent"
+                                                                        class="text-black"
+                                                                    />
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
                                                 </div>
+
+                                                <FormField name="careTypes">
+                                                    <FormItem class="my-4">
+                                                        <FormControl>
+                                                            <FormLabel class="font-bold text-lg">
+                                                                Séléctionnez le type de soin
+                                                            </FormLabel>
+                                                            <ul class="grid grid-cols-2 container gap-4">
+                                                                <li
+                                                                    v-for="care in careTypes"
+                                                                    :key="care.id"
+                                                                    class="text-xs h-8 cursor-pointer flex rounded-full justify-center items-center"
+                                                                    :class="{
+                                                                        'bg-primary text-white': isSelected(care),
+                                                                        'border border-primary': !isSelected(care),
+                                                                    }"
+                                                                    @click="toggleSelectionCare(care)"
+                                                                >
+                                                                    <span>{{ care.name }}</span>
+                                                                </li>
+                                                            </ul>
+                                                        </FormControl>
+                                                    </FormItem>
+                                                </FormField>
+
                                                 <DialogFooter>
-                                                    <Button
-                                                        @click="closeModal(period)"
-                                                    >
+                                                    <Button>
                                                         Valider
                                                     </Button>
                                                 </DialogFooter>
@@ -272,21 +303,19 @@
                         </Table>
                     </div>
 
-                    <div class="mt-8 mb-12 flex justify-between items-center my-auto">
-                        <div class="grid grid-cols-2 text-sm bg-primary outline outline-primary rounded-full h-9 w-48">
-                            <div class="flex items-center">
-                                <span class="text-white mx-auto text-center">Revenue</span>
+                    <div class="mt-8 mb-16 flex justify-between items-center">
+                        <div class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
+                            <div class="bg-primary flex rounded-s-full justify-center items-center px-auto">
+                                <span class="text-center text-white">Revenu</span>
                             </div>
-                            <div class="bg-white flex items-center">
-                                <span class="mx-auto text-center">8 000 £</span>
+                            <div class="flex justify-center items-center mx-auto">
+                                <span class="text-center">8 000 £</span>
                             </div>
                         </div>
 
                         <div>
-                            <Button
-                                type="submit"
-                            >
-                                Créer un remplacement
+                            <Button>
+                                Enregistrer
                             </Button>
                         </div>
                     </div>
@@ -299,27 +328,16 @@
 <script lang="ts" setup>
 import {
     CalendarIcon,
-    Square2StackIcon,
-    PlusCircleIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
-    UserPlusIcon,
+    PlusCircleIcon,
+    UserCircleIcon,
+    PlusIcon,
 } from '@heroicons/vue/24/solid';
 
 import type { DateRange } from 'radix-vue';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-
-import { useCareTypes } from '~/composables/useCareTypes';
-
-useHead({
-    title: 'Créer un remplacement',
-});
-
-definePageMeta({
-    layout: 'dashboard',
-});
 
 const formData = reactive({
     startDate: '',
@@ -339,109 +357,53 @@ const formData = reactive({
     ],
 });
 
-const addReplacement = () => {
-    formData.replacement.push({
-        patientId: null,
-        patientName: '',
-        patientFirstName: '',
-        patientDateOfBirth: '',
-        city: '',
-        zipCode: '',
-        date: '',
-        time: [],
-        careTypes: [],
-    });
-};
-
-const selectedTimes = reactive({
-    morning: [],
-    afternoon: [],
-    evening: [],
-});
-
-const selectedPatients = reactive({
-    morning: null,
-    afternoon: null,
-    evening: null,
-});
-
-const selectedPatient = reactive({
-    morning: null,
-    afternoon: null,
-    evening: null,
-});
-
-const handlePatientSelection = (period, patient) => {
-    selectedPatients[period] = patient;
-    selectedPatient[period] = `${patient.firstName} ${patient.lastName}`;
-};
-
-const hoursToMinutes = (time) => {
-    const [h, m] = time.split(':').map(Number);
-    return h * 60 + m;
-};
-
-const updateTimeSelection = (period) => {
-    if (selectedTimes[period].length === 0) {
-        return;
-    }
-
-    const sortedTimes = [...selectedTimes[period]].sort((a, b) => hoursToMinutes(a) - hoursToMinutes(b));
-
-    const startTime = sortedTimes[0];
-    const endTime = sortedTimes[sortedTimes.length - 1];
-
-    selectedTimes[period] = [startTime, endTime];
-};
-
-const toggleSelection = (time, period) => {
-    const index = selectedTimes[period].indexOf(time);
-    if (index === -1) {
-        selectedTimes[period].push(time);
-    }
-    else {
-        selectedTimes[period].splice(index, 1);
-    }
-
-    updateTimeSelection(period);
-};
-
-const currentDate = ref('');
-
-/* const scheduleSlots = {
-    dateJour: {
-        slotTime: {
-            patient: {
-                id: '',
-                nom: '',
-                prenom: '',
-                typeSoin: [
-
-                ],
-                time: [
-                    8, 10,
-                ],
-            },
-        },
-    },
-},
-
-const date = ref(formData.startDate);
-const stockSlot = reactive(null);
-const formDatas = {
-    startDate: formData.startDate,
-    endDate: formData.endDate,
-    // {...scheduleSlots, 20250130:slotTime},
-}; */
-
 const start = today(getLocalTimeZone());
-const end = start.add({ days: 7 });
+const end = null;
 
+/** Function for dynamic date selection in range calendar */
 const value = ref({
     start,
     end,
 }) as Ref<DateRange>;
 
+watch(value, (newValue) => {
+    if (newValue?.start) {
+        const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
+        formData.startDate = localStartDate.toLocaleDateString('fr-CA');
+        currentDate.value = formData.startDate;
+    }
+    if (newValue?.end) {
+        const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
+        formData.endDate = localEndDate.toLocaleDateString('fr-CA');
+    }
+});
+
+const currentDate = ref('');
+
+const incrementDate = () => {
+    if (!currentDate.value) return;
+
+    const nextDate = new Date(currentDate.value);
+    nextDate.setDate(nextDate.getDate() + 1);
+
+    if (nextDate.toISOString().split('T')[0] <= formData.endDate) {
+        currentDate.value = nextDate.toLocaleDateString('fr-CA');
+    }
+};
+
+const decrementDate = () => {
+    if (!currentDate.value) return;
+
+    const prevDate = new Date(currentDate.value);
+    prevDate.setDate(prevDate.getDate() - 1);
+
+    if (prevDate.toISOString().split('T')[0] >= formData.startDate) {
+        currentDate.value = prevDate.toLocaleDateString('fr-CA');
+    }
+};
+/** */
+
+/** Multiple times selection configuration */
 const hours = ref({
     morning: ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00'],
     afternoon: ['12:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
@@ -453,7 +415,9 @@ const periodLabels = {
     afternoon: 'Après-midi',
     evening: 'Soir',
 };
+/** */
 
+/** Dialog configuration */
 const isOpen = ref<{ [key: string]: boolean }>({
     morning: false,
     afternoon: false,
@@ -463,80 +427,40 @@ const isOpen = ref<{ [key: string]: boolean }>({
 const openModal = (period: string) => {
     isOpen.value[period] = true;
 };
+/** */
 
-const closeModal = (period) => {
-    isOpen.value[period] = false;
-};
+/** Patient configuration */
+/** */
 
-watch(value, (newValue) => {
-    if (newValue?.start && newValue?.end) {
-        formData.startDate = newValue.start.toString();
-        formData.endDate = newValue.end.toString();
-        currentDate.value = newValue.start.toString();
-    }
-});
-
-const incrementDate = () => {
-    const nextDate = new Date(currentDate.value);
-    nextDate.setDate(nextDate.getDate() + 1);
-
-    if (nextDate <= new Date(formData.endDate)) {
-        currentDate.value = nextDate.toISOString().split('T')[0];
-    }
-};
-
-const decrementDate = () => {
-    const prevDate = new Date(currentDate.value);
-    prevDate.setDate(prevDate.getDate() - 1);
-
-    if (prevDate >= new Date(formData.startDate)) {
-        currentDate.value = prevDate.toISOString().split('T')[0];
-    }
-};
-
-const patients = [
-    {
-        id: 1,
-        firstName: 'Jean Paul',
-        lastName: 'Dubois',
-        dateOfBirth: '2024-01-02',
-        city: 'Bruxelles',
-        zipCode: '7768',
-        avatar: '/home/infirmier_homme.png',
-    },
-    {
-        id: 2,
-        firstName: 'Marie',
-        lastName: 'Claire',
-        dateOfBirth: '2024-02-03',
-        city: 'Genève',
-        zipCode: '7760',
-        avatar: '/home/infirmier_femme.png',
-    },
-];
-
+/** Caretype configuration */
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 onMounted(() => {
     fetchCareTypes();
 });
+
+const selectedCareTypes = ref([]);
+
+const isSelected = (care) => {
+    return selectedCareTypes.value.some(item => item.id === care.id);
+};
+
+const toggleSelectionCare = (care) => {
+    const index = selectedCareTypes.value.findIndex(item => item.id === care.id);
+    if (index > -1) {
+        selectedCareTypes.value.splice(index, 1);
+    }
+    else {
+        selectedCareTypes.value.push(care);
+    }
+};
+/** */
+
+useHead({
+    title: 'Créer un remplacement',
+});
+
+definePageMeta({
+    layout: 'dashboard',
+});
 </script>
-
-<style scoped>
-.scrollable-dialog {
-    overflow-y: auto;
-}
-
-.scrollable-dialog::-webkit-scrollbar {
-    width: 2px;
-}
-
-.scrollable-dialog::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-}
-
-.scrollable-dialog::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-</style>
