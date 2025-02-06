@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:-mt-12 lg:-mt-4 mg:pb-24 md:pb-20 pb-16 md:-mt-5 sm:-mt-4 -mt-2 z-40">
+    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:-mt-40 lg:-mt-10 mb:pb-24 md:pb-20 pb-16 md:-mt-5 sm:-mt-4 -mt-2 z-40">
         <div class="hidden sm:block lg:container">
             <div class="flex flex-row xl:space-x-6 md:space-x-4 sm:space-x-2 lg:ps-auto md:ps-6 sm:ps-5">
                 <Card
