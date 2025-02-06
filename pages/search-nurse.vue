@@ -10,7 +10,7 @@
         </div>
 
         <div class="container mt-36 mb-24 w-[65%]">
-            <Form>
+            <Form @submit="handleSubmit">
                 <div class="grid grid-cols-1 gap-4">
                     <FormField name="fullname">
                         <FormItem>
@@ -24,6 +24,7 @@
                                     </div>
                                     <Input
                                         v-model="formData.lastname"
+                                          placeholder="Nom"
                                         variant="transparent"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
@@ -46,34 +47,13 @@
                                     <Input
                                         v-model="formData.firstname"
                                         variant="transparent"
+                                           placeholder="Prenom"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
-
-                    <FormField name="dateOfBirth">
-                        <FormItem>
-                            <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-primary rounded-s-full flex items-center">
-                                        <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <CalendarDaysIcon class="w-6 h-6 text-white" />
-                                            <span class="font-light">Date de naissance</span>
-                                        </FormLabel>
-                                    </div>
-                                    <Input
-                                        v-model="formData.dateOfBirth"
-                                        variant="transparent"
-                                        type="date"
-                                        class="w-full text-black placeholder:text-black/80"
-                                    />
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
                     <FormField name="zipCode">
                         <FormItem>
                             <FormControl>
@@ -87,11 +67,19 @@
                                             <span class="font-light">Code postal</span>
                                         </FormLabel>
                                     </div>
+                                 
+                                   
                                     <Input
-                                        v-model="formData.zipCode"
-                                        variant="transparent"
-                                        class="w-full text-black placeholder:text-black/80"
+                                    v-model="formData.zipCode"
+                                    variant="transparent"
+                                    placeholder="Code Postal"
+                                    class="w-full text-black placeholder:text-black/80"
+                                    v-bind:maxlength="4"
+                                    @keypress="onlyNumbers"
+                                    @paste.prevent
                                     />
+
+
                                 </div>
                             </FormControl>
                         </FormItem>
@@ -110,9 +98,11 @@
                                             <span class="font-light">Ville</span>
                                         </FormLabel>
                                     </div>
+                                
                                     <Input
                                         v-model="formData.city"
                                         variant="transparent"
+                                           placeholder="Ville"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
@@ -120,59 +110,8 @@
                         </FormItem>
                     </FormField>
 
-                    <FormField name="careType">
-                        <FormItem>
-                            <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-primary rounded-s-full flex items-center">
-                                        <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <PlusCircleIcon class="w-6 h-6" />
-                                            <span class="font-light text-xs">Type de soin à effectuer</span>
-                                        </FormLabel>
-                                    </div>
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
 
-                    <div>
-                        <ul class="grid grid-cols-2 container gap-4">
-                            <li
-                                v-for="care in careTypes"
-                                :key="care.id"
-                                class="text-xs h-8 cursor-pointer flex rounded-full justify-center items-center"
-                                :class="{
-                                    'bg-primary text-white': isSelected(care),
-                                    'border border-primary': !isSelected(care),
-                                }"
-                                @click="toggleSelectionCare(care)"
-                            >
-                                <span>{{ care.name }}</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <FormField name="frequency">
-                        <FormItem>
-                            <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-primary rounded-s-full flex items-center">
-                                        <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <ChartBarSquareIcon class="w-6 h-6 text-white" />
-                                            <span class="font-light">Fréquence</span>
-                                        </FormLabel>
-                                    </div>
-                                    <Input
-                                        v-model="formData.frequency"
-                                        type="number"
-                                        variant="transparent"
-                                        class="w-full text-black placeholder:text-black/80"
-                                    />
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
+                   
                     <FormField name="phoneNumber">
                         <FormItem>
                             <FormControl>
@@ -186,6 +125,7 @@
                                     <Input
                                         v-model="formData.phoneNumber"
                                         variant="transparent"
+                                           placeholder="97 12 25 - 123 - 45"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
@@ -193,6 +133,10 @@
                         </FormItem>
                     </FormField>
                 </div>
+
+
+             
+
 
                 <FormField name="accept">
                     <FormItem class="mt-6">
@@ -214,9 +158,10 @@
                 </FormField>
 
                 <div class="mt-12">
-                    <Button class="w-96 flex justify-center items-center mx-auto">
-                        Envoyer
-                    </Button>
+                    <Button :disabled="patientStore.isSubmitting" type="submit" class="w-96 flex justify-center items-center mx-auto">
+            <span v-if="patientStore.isSubmitting">Envoi en cours...</span>
+            <span v-else>Envoyer</span>
+          </Button>
                 </div>
 
                 <div class="mt-12 flex justify-center itemss-center">
@@ -228,9 +173,16 @@
             </Form>
         </div>
     </div>
+
+     
 </template>
 
 <script lang="ts" setup>
+import { usePatientStore } from '@/stores/usePatientStore';
+
+const patientStore = usePatientStore();
+
+
 import {
     UserCircleIcon,
     PlusIcon,
@@ -239,6 +191,7 @@ import {
     ChartBarSquareIcon,
     PlusCircleIcon,
 } from '@heroicons/vue/24/solid';
+const errorMessage = ref("");
 
 const formData = reactive({
     lastname: '',
@@ -251,9 +204,32 @@ const formData = reactive({
     phoneNumber: '',
 });
 
+
+
+
+const onlyNumbers = (event) => {
+  // Empêche la saisie si ce n'est pas un chiffre (0-9)
+  if (!/[0-9]/.test(event.key)) {
+    event.preventDefault();
+  }
+};
+
+
 useHead({
     title: 'Chercher un infirmier',
 });
+
+const formatPostalCode = (event) => {
+  // Supprime tout caractère qui n'est pas un chiffre
+  formData.zipCode = event.target.value.replace(/\D/g, "");
+
+  // Validation si exactement 4 chiffres
+  if (!/^\d{4}$/.test(formData.zipCode)) {
+    errorMessage.value = "Le code postal doit contenir exactement 4 chiffres.";
+  } else {
+    errorMessage.value = "";
+  }
+};
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 
@@ -276,4 +252,9 @@ const toggleSelectionCare = (care) => {
         selectedCareTypes.value.push(care);
     }
 };
+
+const handleSubmit = async () => {
+    await patientStore.submitForm(formData);
+};
+
 </script>
