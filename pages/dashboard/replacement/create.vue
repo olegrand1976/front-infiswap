@@ -214,17 +214,17 @@
                                                         </FormItem>
                                                     </FormField>
 
-                                                    <FormField name="patientDateOfBirth">
+                                                    <FormField name="patientSecurityNumber">
                                                         <FormItem>
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <CalendarIcon class="w-6 h-6" />
-                                                                        <span>Naissance</span>
+                                                                        <span>Numéro de sécurité</span>
                                                                     </FormLabel>
                                                                     <Input
-                                                                        v-model="selectedPatient[period].dateOfBirth"
-                                                                        type="date"
+                                                                        v-model="selectedPatient[period].securityNumber"
+                                                                        type="text"
                                                                         variant="transparent"
                                                                         class="text-black"
                                                                     />
@@ -408,6 +408,9 @@ import { getLocalTimeZone, today } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 
 import { useReplacements } from '~/composables/useReplacements';
+import { useReplacementDataStore } from '~/stores/useReplacementDataStore';
+
+const store = useReplacementDataStore();
 
 const formData = reactive({
     startDate: '',
@@ -425,18 +428,26 @@ const value = ref({
 }) as Ref<DateRange>;
 
 watch(value, (newValue) => {
-    if (newValue?.start) {
-        const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
-        formData.startDate = localStartDate.toLocaleDateString('fr-CA');
-        currentDate.value = formData.startDate;
-    }
-    if (newValue?.end) {
-        const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
-        formData.endDate = localEndDate.toLocaleDateString('fr-CA');
-    }
+        if (newValue?.start) {
+            const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
+            currentDate.value = localStartDate.toLocaleDateString('fr-CA');
+            store.getFormDataForDate(currentDate.value);
+        }
+        if (newValue?.end) {
+            const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
+            store.getFormDataForDate(localEndDate.toLocaleDateString('fr-CA'));
+        }
 });
 
 const currentDate = ref('');
+
+const formatDateValue = (dateValue) => {
+    if (!dateValue) return '';
+    const year = dateValue.year;
+    const month = String(dateValue.month).padStart(2, '0');
+    const day = String(dateValue.day).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 const incrementDate = () => {
     if (!currentDate.value) return;
@@ -444,8 +455,10 @@ const incrementDate = () => {
     const nextDate = new Date(currentDate.value);
     nextDate.setDate(nextDate.getDate() + 1);
 
-    if (nextDate.toISOString().split('T')[0] <= formData.endDate) {
-        currentDate.value = nextDate.toLocaleDateString('fr-CA');
+    const formattedEndDate = formatDateValue(value.value.end); // Formater la valeur de fin en chaîne
+    if (nextDate.toISOString().split('T')[0] <= formattedEndDate) { // Comparaison correcte
+        currentDate.value = nextDate.toLocaleDateString('fr-CA'); // Mettre à jour la date
+        store.getFormDataForDate(currentDate.value); // Charger ou initialiser formData pour cette date
     }
 };
 
@@ -455,8 +468,10 @@ const decrementDate = () => {
     const prevDate = new Date(currentDate.value);
     prevDate.setDate(prevDate.getDate() - 1);
 
-    if (prevDate.toISOString().split('T')[0] >= formData.startDate) {
-        currentDate.value = prevDate.toLocaleDateString('fr-CA');
+    const formattedStartDate = formatDateValue(value.value.start); // Formater la valeur de début en chaîne
+    if (prevDate.toISOString().split('T')[0] >= formattedStartDate) { // Comparaison correcte
+        currentDate.value = prevDate.toLocaleDateString('fr-CA'); // Mettre à jour la date
+        store.getFormDataForDate(currentDate.value); // Charger ou initialiser formData pour cette date
     }
 };
 /** */
@@ -501,7 +516,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        dateOfBirth: '',
+        securityNumber: '',
         city: '',
         zipCode: null,
     },
@@ -509,7 +524,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        dateOfBirth: '',
+        securityNumber: '',
         city: '',
         zipCode: null,
     },
@@ -517,7 +532,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        dateOfBirth: '',
+        securityNumber: '',
         city: '',
         zipCode: null,
     },
@@ -568,8 +583,8 @@ const updateReplacementData = () => {
             formData.replacement.push({
                 patientId: patient.id ?? null,
                 patientName: patient.lastname,
-                patientFirstname: patient.firstname,
-                patientDateOfBirth: patient.dateOfBirth,
+                patientFirstname: patient.firstname,    
+                patientSecurityNumber: patient.securityNumber,
                 city: patient.city,
                 zipCode: Number(patient.zipCode),
                 date: currentDate.value,

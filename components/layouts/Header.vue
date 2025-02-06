@@ -23,18 +23,18 @@
             </nav>
 
             <div class="flex gap-4 items-center">
-                <!-- <Button
+                <Button
                     class="font-semibold text-base"
                     href="/login"
                 >
-                    Connexion
-                </Button> -->
-                <Button
+                    Se connecter
+                </Button>
+                <!-- <Button
                     class="font-semibold text-base"
                     href="/dashboard"
                 >
                     Tableau de bord
-                </Button>
+                </Button> -->
                 <LayoutsDropdownLang />
             </div>
         </div>
