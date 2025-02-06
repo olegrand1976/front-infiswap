@@ -607,7 +607,7 @@ const {
         return register(formData);
     },
     {
-        onSuccess: () => router.push('/dashboard'),
+        onSuccess: () => router.push('/login'),
     },
 );
 </script>

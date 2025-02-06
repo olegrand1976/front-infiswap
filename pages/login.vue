@@ -45,15 +45,15 @@
                 <div class="w-full container">
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
-                            <FormField name="email">
+                            <FormField name="inami">
                                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
-                                            <EnvelopeIcon class="text-primary w-6 h-6" />
+                                            <span class="text-primary font-extrabold">N°</span>
                                             <Input
-                                                v-model="credentials.email"
-                                                type="email"
-                                                placeholder="Email"
+                                                v-model="credentials.inami"
+                                                type="text"
+                                                placeholder="INAMI"
                                                 class="text-sm"
                                             />
                                         </div>
@@ -65,7 +65,7 @@
                                 <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
-                                            <LockClosedIcon class="text-primary w-6 h-6" />
+                                            <KeyIcon class="text-primary w-6 h-6" />
                                             <Input
                                                 v-model="credentials.password"
                                                 type="password"
@@ -125,7 +125,7 @@
                     <p class="text-xs">
                         Vous n'avez pas encore de compte ?
                         <NuxtLink
-                            to="/"
+                            to="/register"
                             class="font-bold text-primary underline"
                         >
                             Inscrivez-vous
@@ -162,15 +162,15 @@
                     @submit.prevent="submit"
                 >
                     <div class="flex flex-col space-y-6">
-                        <FormField name="email">
+                        <FormField name="inami">
                             <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                 <FormControl>
                                     <div class="flex w-full items-center space-x-1">
-                                        <EnvelopeIcon class="text-primary w-5 h-5" />
+                                        <span class="text-primary font-extrabold">N°</span>
                                         <Input
-                                            v-model="credentials.email"
-                                            type="email"
-                                            placeholder="Email"
+                                            v-model="credentials.inami"
+                                            type="text"
+                                            placeholder="INAMI"
                                             class="text-sm"
                                         />
                                     </div>
@@ -182,7 +182,7 @@
                             <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                 <FormControl>
                                     <div class="flex w-full items-center space-x-1">
-                                        <LockClosedIcon class="text-primary w-5 h-5" />
+                                        <KeyIcon class="text-primary w-5 h-5" />
                                         <Input
                                             v-model="credentials.password"
                                             type="password"
@@ -236,7 +236,7 @@
                 <p>
                     Vous n'avez pas encore de compte ?
                     <NuxtLink
-                        to="/"
+                        to="/register"
                         class="font-bold text-primary underline"
                     >Inscrivez-vous</NuxtLink>
                 </p>
@@ -248,7 +248,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/solid';
+import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
 
 definePageMeta({
@@ -269,7 +269,7 @@ const status = ref(
 );
 
 const credentials = reactive({
-    email: '',
+    inami: null,
     password: '',
 });
 
@@ -283,7 +283,8 @@ const {
         return login(credentials);
     },
     {
-        onSuccess: () => router.push('/dashboard'),
+        // onSuccess: () => router.push('/dashboard'),
+        onSuccess: () => router.push('/'),
     },
 );
 </script>
