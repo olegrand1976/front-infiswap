@@ -12,7 +12,6 @@ export const useCareTypes = () => {
 
         try {
             const response = await $apifetch('/api/care-types', { method: 'GET' });
-            console.log('Réponse API :', response);
             careTypes.value = response.care_types;
         }
         catch (err) {
