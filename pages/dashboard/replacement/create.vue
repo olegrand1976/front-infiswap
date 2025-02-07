@@ -202,13 +202,13 @@
                                                                     />
                                                                     <div 
                                                                         v-if="showSuggestions[period] && filteredPatients[period].length > 0"
-                                                                        class="absolute z-50 w-96 mt-1 bg-white border border-gray-200 rounded-md shadow-lg"
+                                                                        class="absolute z-50 w-96 top-36 left-28 bg-white border border-gray-200 rounded-md shadow-lg"
                                                                     >
                                                                         <ul class="py-1">
                                                                             <li 
                                                                                 v-for="patient in filteredPatients[period]"
                                                                                 :key="patient.id"
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs"
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
                                                                                 @click="selectPatient(patient, period)"
                                                                             >
                                                                                 {{ patient.lastname }} {{ patient.firstname }}
@@ -759,9 +759,9 @@ const selectPatient = (patient: any, period: string) => {
         id: patient.id,
         lastname: patient.lastname,
         firstname: patient.firstname,
-        securityNumber: patient.social_security_number,
-        city: patient.city,
-        zipCode: patient.zipCode,
+        securityNumber: patient.social_security_number || '',
+        city: patient.city || '',
+        zipCode: patient.zipCode || null,
     };
     showSuggestions.value[period] = false;
 };

@@ -7,6 +7,9 @@ export const useReplacements = () => {
     const loading = useState('replacementLoading', () => false);
     const success = useState('replacementSuccess', () => false);
 
+    const user = useState('user');
+    console.log(user);
+
     const submitReplacement = async (formData) => {
         loading.value = true;
         error.value = null;
@@ -15,17 +18,17 @@ export const useReplacements = () => {
         try {
             const cleanFormData = JSON.parse(JSON.stringify(formData));
             console.log("Données envoyées :", JSON.stringify(cleanFormData, null, 2));
-            // const response = await $apifetch('/api/replacements', {
-            //     method: 'POST',
-            //     body: JSON.stringify(cleanFormData, null, 2),
-            //     headers: {
-            //          'Content-Type': 'application/json',
-            //      },
-            //   });
+            const response = await $apifetch('/api/replacements', {
+                 method: 'POST',
+                 body: JSON.stringify(cleanFormData, null, 2),
+                 headers: {
+                      'Content-Type': 'application/json',
+                  },
+               });
 
-            //  if (response.success) {
-            //      success.value = true;
-            //  }
+              if (response.success) {
+                  success.value = true;
+              }
         }
         catch (err) {
             error.value = err;
