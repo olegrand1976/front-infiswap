@@ -20,6 +20,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
+definePageMeta({
+  middleware: ['auth', 'verified'],
+});
+
+
 const isCollapsed = ref(false);
 
 const toggleSidebar = () => {
