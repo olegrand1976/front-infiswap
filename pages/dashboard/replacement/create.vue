@@ -151,17 +151,26 @@
                                                         {{ formatHour(time) }}
                                                     </TableCell>
                                                     <TableCell class="border border-none p-2">
-                                                        <span>.</span>
-                                                    </TableCell>
+                                                        <div 
+                                                            v-if="isTimeInSelectedRange(time, period)" 
+                                                            class="text-xs cursor-pointer"
+                                                            :title="selectedCareTypes[period]
+                                                                .map(id => careTypes.find(care => care.id === id)?.name)
+                                                                .filter(Boolean)
+                                                                .join(', ')"
+                                                        >
+                                                            <p class="font-semibold">
+                                                                {{ getCurrentDateReplacements(period)?.patientName || selectedPatient[period].lastname }} {{ getCurrentDateReplacements(period)?.patientFirstname || selectedPatient[period].firstname }}
+                                                            </p>
+                                                        </div>
+                                                    <span 
+                                                        v-else
+                                                        class="text-transparent"
+                                                    >.</span>
+                                                     </TableCell>
                                                 </TableRow>
                                             </TableBody>
                                         </Table>
-
-                                        <div>
-                                            <p>Patient: {{ selectedPatient[period].zipCode }}</p>
-                                            <p>Créneau horaire: {{ selectedTimes[period] }}</p>
-                                            <p>Type de soin: {{ selectedCareTypes[period] }}</p>
-                                        </div>
 
                                         <PlusCircleIcon
                                             class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary cursor-pointer"
@@ -189,7 +198,23 @@
                                                                         v-model="selectedPatient[period].lastname"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        @input="handleSearch(period)"
                                                                     />
+                                                                    <div 
+                                                                        v-if="showSuggestions[period] && filteredPatients[period].length > 0"
+                                                                        class="absolute z-50 w-96 mt-1 bg-white border border-gray-200 rounded-md shadow-lg"
+                                                                    >
+                                                                        <ul class="py-1">
+                                                                            <li 
+                                                                                v-for="patient in filteredPatients[period]"
+                                                                                :key="patient.id"
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs"
+                                                                                @click="selectPatient(patient, period)"
+                                                                            >
+                                                                                {{ patient.lastname }} {{ patient.firstname }}
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
                                                                 </div>
                                                             </FormControl>
                                                         </FormItem>
@@ -289,10 +314,13 @@
                                                                     <div class="bg-primary h-9 flex justify-center items-center px-auto rounded-s-full">
                                                                         <span class="text-center text-xs text-white">{{ periodLabels[period] }}</span>
                                                                     </div>
-                                                                    <div class="flex px-2 space-x-4 items-center">
+                                                                    <div class="flex px-2 space-x-10 items-center">
                                                                         <Select v-model="selectedTimes[period][0]">
                                                                             <SelectTrigger class="w-28 text-xs border border-none">
-                                                                                <SelectValue placeholder="Heure de début" />
+                                                                                <SelectValue 
+                                                                                    placeholder="Heure de début" 
+                                                                                    class="text-nowrap"
+                                                                                />
                                                                             </SelectTrigger>
                                                                             <SelectContent>
                                                                                 <SelectGroup>
@@ -309,7 +337,10 @@
 
                                                                         <Select v-model="selectedTimes[period][1]">
                                                                             <SelectTrigger class="w-28 text-xs border border-none">
-                                                                                <SelectValue placeholder="Heure de fin"  />
+                                                                                <SelectValue 
+                                                                                    placeholder="Heure de fin"  
+                                                                                    class="text-nowrap"
+                                                                                />
                                                                             </SelectTrigger>
                                                                             <SelectContent>
                                                                                 <SelectGroup>
@@ -356,7 +387,7 @@
                                                 </FormField>
 
                                                 <DialogFooter>
-                                                    <Button>
+                                                    <Button @click="closeModal(period)">
                                                         Valider
                                                     </Button>
                                                 </DialogFooter>
@@ -408,15 +439,14 @@ import { getLocalTimeZone, today } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 
 import { useReplacements } from '~/composables/useReplacements';
-import { useReplacementDataStore } from '~/stores/useReplacementDataStore';
-
-const store = useReplacementDataStore();
 
 const formData = reactive({
     startDate: '',
     endDate: '',
     replacement: [],
 });
+
+const savedReplacements = ref<{ [key: string]: any[] }>({});
 
 const start = today(getLocalTimeZone());
 const end = null;
@@ -428,51 +458,69 @@ const value = ref({
 }) as Ref<DateRange>;
 
 watch(value, (newValue) => {
-        if (newValue?.start) {
-            const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
-            currentDate.value = localStartDate.toLocaleDateString('fr-CA');
-            store.getFormDataForDate(currentDate.value);
-        }
-        if (newValue?.end) {
-            const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
-            store.getFormDataForDate(localEndDate.toLocaleDateString('fr-CA'));
-        }
+    if (newValue?.start) {
+        const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
+        formData.startDate = localStartDate.toLocaleDateString('fr-CA');
+        currentDate.value = formData.startDate;
+    }
+    if (newValue?.end) {
+        const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
+        formData.endDate = localEndDate.toLocaleDateString('fr-CA');
+    }
 });
+
+const isTimeInSelectedRange = (time: number, period: string) => {
+    const startTime = selectedTimes.value[period][0];
+    const endTime = selectedTimes.value[period][1];
+    
+    // Vérifier si on a des données sauvegardées
+    const savedData = getCurrentDateReplacements(period);
+    if (savedData) {
+        const savedStartTime = savedData.time[0];
+        const savedEndTime = savedData.time[1];
+        return time >= savedStartTime && time <= savedEndTime;
+    }
+
+    // Sinon vérifier les données en cours de sélection
+    if (startTime && endTime) {
+        return time >= startTime && time <= endTime;
+    }
+
+    return false;
+};
 
 const currentDate = ref('');
 
-const formatDateValue = (dateValue) => {
-    if (!dateValue) return '';
-    const year = dateValue.year;
-    const month = String(dateValue.month).padStart(2, '0');
-    const day = String(dateValue.day).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
-
 const incrementDate = () => {
-    if (!currentDate.value) return;
+  if (!currentDate.value) return;
 
-    const nextDate = new Date(currentDate.value);
-    nextDate.setDate(nextDate.getDate() + 1);
+  // Sauvegarder les données de la date courante avant de changer
+  updateReplacementData();
 
-    const formattedEndDate = formatDateValue(value.value.end); // Formater la valeur de fin en chaîne
-    if (nextDate.toISOString().split('T')[0] <= formattedEndDate) { // Comparaison correcte
-        currentDate.value = nextDate.toLocaleDateString('fr-CA'); // Mettre à jour la date
-        store.getFormDataForDate(currentDate.value); // Charger ou initialiser formData pour cette date
-    }
+  const nextDate = new Date(currentDate.value);
+  nextDate.setDate(nextDate.getDate() + 1);
+
+  if (nextDate.toISOString().split('T')[0] <= formData.endDate) {
+    currentDate.value = nextDate.toLocaleDateString('fr-CA');
+    // Charger les données sauvegardées pour la nouvelle date ou réinitialiser
+    loadSavedData();
+  }
 };
 
 const decrementDate = () => {
-    if (!currentDate.value) return;
+  if (!currentDate.value) return;
 
-    const prevDate = new Date(currentDate.value);
-    prevDate.setDate(prevDate.getDate() - 1);
+  // Sauvegarder les données de la date courante avant de changer
+  updateReplacementData();
 
-    const formattedStartDate = formatDateValue(value.value.start); // Formater la valeur de début en chaîne
-    if (prevDate.toISOString().split('T')[0] >= formattedStartDate) { // Comparaison correcte
-        currentDate.value = prevDate.toLocaleDateString('fr-CA'); // Mettre à jour la date
-        store.getFormDataForDate(currentDate.value); // Charger ou initialiser formData pour cette date
-    }
+  const prevDate = new Date(currentDate.value);
+  prevDate.setDate(prevDate.getDate() - 1);
+
+  if (prevDate.toISOString().split('T')[0] >= formData.startDate) {
+    currentDate.value = prevDate.toLocaleDateString('fr-CA');
+    // Charger les données sauvegardées pour la nouvelle date ou réinitialiser
+    loadSavedData();
+  }
 };
 /** */
 
@@ -507,6 +555,10 @@ const isOpen = ref<{ [key: string]: boolean }>({
 
 const openModal = (period: string) => {
     isOpen.value[period] = true;
+};
+
+const closeModal = (period: string) => {
+    isOpen.value[period] = false;
 };
 /** */
 
@@ -546,6 +598,12 @@ onMounted(() => {
     fetchCareTypes();
 });
 
+const { nursePatients, fetchNursePatients } = useNursePatients();
+
+onMounted(() => {
+    fetchNursePatients();
+});
+
 const selectedCareTypes = ref({
     morning: [],
     afternoon: [],
@@ -570,38 +628,154 @@ const toggleSelectionCare = (care, period) => {
 
 /** Submission purpose */
 const updateReplacementData = () => {
-    formData.replacement = [];
+  const newReplacements = [];
 
-    ['morning', 'afternoon', 'evening'].forEach((period) => {
-        const patient = selectedPatient.value[period];
-        const time = selectedTimes.value[period]
-            .filter(t => t !== '')
-            .map(Number);
-        const careTypes = selectedCareTypes.value[period].map(Number);
+  ['morning', 'afternoon', 'evening'].forEach((period) => {
+    const patient = selectedPatient.value[period];
+    const time = selectedTimes.value[period]
+      .filter(t => t !== '')
+      .map(Number);
+    const careTypes = selectedCareTypes.value[period].map(Number);
 
-        if (time.length > 0 && careTypes.length > 0) {
-            formData.replacement.push({
-                patientId: patient.id ?? null,
-                patientName: patient.lastname,
-                patientFirstname: patient.firstname,    
-                patientSecurityNumber: patient.securityNumber,
-                city: patient.city,
-                zipCode: Number(patient.zipCode),
-                date: currentDate.value,
-                time: time,
-                careTypes: careTypes,
-            });
-        }
-    });
+    if (time.length > 0 && careTypes.length > 0) {
+      newReplacements.push({
+        patientId: patient.id ?? null,
+        patientName: patient.lastname,
+        patientFirstname: patient.firstname,
+        patientSecurityNumber: patient.securityNumber,
+        city: patient.city,
+        zipCode: Number(patient.zipCode),
+        date: currentDate.value,
+        time: time,
+        careTypes: careTypes,
+        period: period
+      });
+    }
+  });
+
+  // Sauvegarde les remplacements pour la date courante
+  if (newReplacements.length > 0) {
+    savedReplacements.value[currentDate.value] = newReplacements;
+  }
+
+  // Met à jour formData avec tous les remplacements sauvegardés
+  formData.replacement = Object.values(savedReplacements.value).flat();
 };
 
+const getCurrentDateReplacements = (period: string) => {
+  const dateReplacements = savedReplacements.value[currentDate.value] || [];
+  return dateReplacements.find(r => r.period === period);
+};
 
 const { submitReplacement } = useReplacements();
 
+// Modification de la fonction onSavePatient
 const onSavePatient = () => {
-    updateReplacementData();
-    submitReplacement(formData);
+  updateReplacementData();
+  
+  // Réinitialisation des champs après sauvegarde
+  ['morning', 'afternoon', 'evening'].forEach((period) => {
+    selectedPatient.value[period] = {
+      id: null,
+      lastname: '',
+      firstname: '',
+      securityNumber: '',
+      city: '',
+      zipCode: null,
+    };
+    selectedTimes.value[period] = [null, null];
+    selectedCareTypes.value[period] = [];
+  });
+
+  // Appel de la fonction de soumission avec tous les remplacements
+  submitReplacement(formData);
 };
+
+// Modification des fonctions de navigation pour charger les données sauvegardées
+const loadSavedData = () => {
+  // Réinitialiser d'abord tous les champs
+  ['morning', 'afternoon', 'evening'].forEach((period) => {
+    selectedPatient.value[period] = {
+      id: null,
+      lastname: '',
+      firstname: '',
+      securityNumber: '',
+      city: '',
+      zipCode: null,
+    };
+    selectedTimes.value[period] = [null, null];
+    selectedCareTypes.value[period] = [];
+  });
+
+  // Charger les données sauvegardées si elles existent
+  const dateReplacements = savedReplacements.value[currentDate.value] || [];
+  
+  dateReplacements.forEach(replacement => {
+    const period = replacement.period;
+    if (period) {
+      selectedPatient.value[period] = {
+        id: replacement.patientId,
+        lastname: replacement.patientName,
+        firstname: replacement.patientFirstname,
+        securityNumber: replacement.patientSecurityNumber,
+        city: replacement.city,
+        zipCode: replacement.zipCode,
+      };
+      selectedTimes.value[period] = replacement.time;
+      selectedCareTypes.value[period] = replacement.careTypes;
+    }
+  });
+};
+
+const showSuggestions = ref({
+    morning: false,
+    afternoon: false,
+    evening: false,
+});
+
+const filteredPatients = ref({
+    morning: [],
+    afternoon: [],
+    evening: [],
+});
+
+const handleSearch = (period: string) => {
+    const searchTerm = selectedPatient.value[period].lastname.toLowerCase();
+    if (searchTerm.length < 1) {
+        showSuggestions.value[period] = false;
+        filteredPatients.value[period] = [];
+        return;
+    }
+
+    filteredPatients.value[period] = nursePatients.value.filter(patient =>
+        patient.lastname.toLowerCase().includes(searchTerm) ||
+        patient.firstname.toLowerCase().includes(searchTerm)
+    );
+    showSuggestions.value[period] = true;
+};
+
+const selectPatient = (patient: any, period: string) => {
+    selectedPatient.value[period] = {
+        id: patient.id,
+        lastname: patient.lastname,
+        firstname: patient.firstname,
+        securityNumber: patient.social_security_number,
+        city: patient.city,
+        zipCode: patient.zipCode,
+    };
+    showSuggestions.value[period] = false;
+};
+
+onMounted(() => {
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (!target.closest('input')) {
+            Object.keys(showSuggestions.value).forEach(period => {
+                showSuggestions.value[period] = false;
+            });
+        }
+    });
+});
 
 useHead({
     title: 'Créer un remplacement',

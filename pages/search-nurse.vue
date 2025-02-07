@@ -199,9 +199,9 @@ const formData = reactive({
     dateOfBirth: '',
     zipCode: '',
     city: '',
-    careType: '',
-    frequency: '',
-    phoneNumber: '',
+    // careType: '',
+    // frequency: '',
+    // phoneNumber: '',
 });
 
 

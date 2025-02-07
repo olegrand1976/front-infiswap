@@ -37,16 +37,23 @@ export const usePatientStore = defineStore('usePatientStore', () => {
   const submitForm = async (data) => {
     try {
       isSubmitting.value = true;
-
+      
 
       console.log('data',data);
       // Effectuer l'appel à l'API avec Axios
-      //const response = await axios.post("https://localhost:8000/api/api/care-types", data);
+      const { $apifetch } = useNuxtApp();
 
-      //console.log('Form submission response:', response);
+      const response = await $apifetch('/api/patients', {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+     });
 
+      // const response = await axios.post("http://localhost:8000/api/patients", data);
 
-
+      console.log('Form submission response:', response);
 
 
       // Example: Add your API call logic here
