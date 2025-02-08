@@ -43,7 +43,7 @@
                 Inscription
             </h1>
 
-            <div class="w-full">
+            <div class="w-full max-w-lg">
                 <form
                     class="grid grid-cols-2 lg:grid-cols-4 gap-4"
                     @submit.prevent="submit"

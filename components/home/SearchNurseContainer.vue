@@ -5,7 +5,7 @@
                 src="/Group_2968.png"
                 class="w-[90%] z-10"
             />
-        </div> 
+        </div>
         <div class="absolute top-40 left-96">
             <div class="relative z-20 flex space-x-32 justify-center items-center">
                 <div>

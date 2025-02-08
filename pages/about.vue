@@ -1,9 +1,6 @@
 <template>
-    <div>
-        <p>page d'à-propos</p>
-    </div>
+    <ErrorUnderConstruction />
 </template>
 
 <script lang="ts" setup>
-
 </script>

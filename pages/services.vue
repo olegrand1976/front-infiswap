@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <p>Page de service</p>
-    </div>
+    <ErrorUnderConstruction />
 </template>
 
 <script lang="ts" setup>

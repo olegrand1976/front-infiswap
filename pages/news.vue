@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <p>Page d'actualité</p>
-    </div>
+    <ErrorUnderConstruction />
 </template>
 
 <script lang="ts" setup>
