@@ -24,7 +24,7 @@
                                     </div>
                                     <Input
                                         v-model="formData.lastname"
-                                          placeholder="Nom"
+                                        placeholder="Nom"
                                         variant="transparent"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
@@ -47,7 +47,7 @@
                                     <Input
                                         v-model="formData.firstname"
                                         variant="transparent"
-                                           placeholder="Prenom"
+                                        placeholder="Prenom"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
@@ -67,19 +67,16 @@
                                             <span class="font-light">Code postal</span>
                                         </FormLabel>
                                     </div>
-                                 
-                                   
+
                                     <Input
-                                    v-model="formData.zipCode"
-                                    variant="transparent"
-                                    placeholder="Code Postal"
-                                    class="w-full text-black placeholder:text-black/80"
-                                    v-bind:maxlength="4"
-                                    @keypress="onlyNumbers"
-                                    @paste.prevent
+                                        v-model="formData.zipCode"
+                                        variant="transparent"
+                                        placeholder="Code Postal"
+                                        class="w-full text-black placeholder:text-black/80"
+                                        :maxlength="4"
+                                        @keypress="onlyNumbers"
+                                        @paste.prevent
                                     />
-
-
                                 </div>
                             </FormControl>
                         </FormItem>
@@ -98,11 +95,11 @@
                                             <span class="font-light">Ville</span>
                                         </FormLabel>
                                     </div>
-                                
+
                                     <Input
                                         v-model="formData.city"
                                         variant="transparent"
-                                           placeholder="Ville"
+                                        placeholder="Ville"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
@@ -110,8 +107,6 @@
                         </FormItem>
                     </FormField>
 
-
-                   
                     <FormField name="phoneNumber">
                         <FormItem>
                             <FormControl>
@@ -125,7 +120,7 @@
                                     <Input
                                         v-model="formData.phoneNumber"
                                         variant="transparent"
-                                           placeholder="97 12 25 - 123 - 45"
+                                        placeholder="97 12 25 - 123 - 45"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
                                 </div>
@@ -133,10 +128,6 @@
                         </FormItem>
                     </FormField>
                 </div>
-
-
-             
-
 
                 <FormField name="accept">
                     <FormItem class="mt-6">
@@ -158,10 +149,14 @@
                 </FormField>
 
                 <div class="mt-12">
-                    <Button :disabled="patientStore.isSubmitting" type="submit" class="w-96 flex justify-center items-center mx-auto">
-            <span v-if="patientStore.isSubmitting">Envoi en cours...</span>
-            <span v-else>Envoyer</span>
-          </Button>
+                    <Button
+                        :disabled="patientStore.isSubmitting"
+                        type="submit"
+                        class="w-96 flex justify-center items-center mx-auto"
+                    >
+                        <span v-if="patientStore.isSubmitting">Envoi en cours...</span>
+                        <span v-else>Envoyer</span>
+                    </Button>
                 </div>
 
                 <div class="mt-12 flex justify-center itemss-center">
@@ -173,16 +168,9 @@
             </Form>
         </div>
     </div>
-
-     
 </template>
 
 <script lang="ts" setup>
-import { usePatientStore } from '@/stores/usePatientStore';
-
-const patientStore = usePatientStore();
-
-
 import {
     UserCircleIcon,
     PlusIcon,
@@ -191,7 +179,10 @@ import {
     ChartBarSquareIcon,
     PlusCircleIcon,
 } from '@heroicons/vue/24/solid';
-const errorMessage = ref("");
+import { usePatientStore } from '@/stores/usePatientStore';
+
+const patientStore = usePatientStore();
+const errorMessage = ref('');
 
 const formData = reactive({
     lastname: '',
@@ -204,31 +195,28 @@ const formData = reactive({
     // phoneNumber: '',
 });
 
-
-
-
 const onlyNumbers = (event) => {
-  // Empêche la saisie si ce n'est pas un chiffre (0-9)
-  if (!/[0-9]/.test(event.key)) {
-    event.preventDefault();
-  }
+    // Empêche la saisie si ce n'est pas un chiffre (0-9)
+    if (!/[0-9]/.test(event.key)) {
+        event.preventDefault();
+    }
 };
-
 
 useHead({
     title: 'Chercher un infirmier',
 });
 
 const formatPostalCode = (event) => {
-  // Supprime tout caractère qui n'est pas un chiffre
-  formData.zipCode = event.target.value.replace(/\D/g, "");
+    // Supprime tout caractère qui n'est pas un chiffre
+    formData.zipCode = event.target.value.replace(/\D/g, '');
 
-  // Validation si exactement 4 chiffres
-  if (!/^\d{4}$/.test(formData.zipCode)) {
-    errorMessage.value = "Le code postal doit contenir exactement 4 chiffres.";
-  } else {
-    errorMessage.value = "";
-  }
+    // Validation si exactement 4 chiffres
+    if (!/^\d{4}$/.test(formData.zipCode)) {
+        errorMessage.value = 'Le code postal doit contenir exactement 4 chiffres.';
+    }
+    else {
+        errorMessage.value = '';
+    }
 };
 
 const { careTypes, fetchCareTypes } = useCareTypes();
@@ -256,5 +244,4 @@ const toggleSelectionCare = (care) => {
 const handleSubmit = async () => {
     await patientStore.submitForm(formData);
 };
-
 </script>

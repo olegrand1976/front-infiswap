@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-
 useHead({
     title: 'Accueil',
     meta: [{ name: 'description', content: 'Page d\'accueil....' }],

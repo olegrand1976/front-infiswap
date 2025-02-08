@@ -1,5 +1,5 @@
 <template>
-    <div class="xl:pt-0 lg:pt-40 pt-0">
+    <div class="">
         <div class="hidden sm:flex flex-row justify-center md:h-auto lg:pt-0 sm:pt-48">
             <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
                 <div class="xl:absolute z-20 bottom-0 left-44">
@@ -42,7 +42,7 @@
                     <LayoutsLogo class="lg:w-[22rem] lg:h-28 md:w-[20rem] md:h-[6.5rem] sm:w-[17rem] sm:h-[5rem]" />
                 </div>
 
-                <div class="w-full container">
+                <div class="w-full max-w-md container">
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
                             <FormField name="inami">

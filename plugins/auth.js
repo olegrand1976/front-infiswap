@@ -12,8 +12,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             return await $apifetch('/api/user');
         }
         catch (error) {
-          console.error('Failed to fetch user:', error);
-          return null;
+            console.error('Failed to fetch user:', error);
+            return null;
         }
     };
     user.value = await fetchCurrentUser();
