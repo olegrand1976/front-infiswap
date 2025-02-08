@@ -1,8 +1,5 @@
 export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', 'shadcn-nuxt', '@nuxt/image', 'nuxt-swiper', '@pinia/nuxt'],
-    plugins: [
-        '~/plugins/axios.js',
-    ],
     imports: {
         dirs: [
             './utils',

@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 
 export const usePatientStore = defineStore('usePatientStore', () => {
     // Form data structure
@@ -39,10 +38,10 @@ export const usePatientStore = defineStore('usePatientStore', () => {
             isSubmitting.value = true;
 
             console.log('data', data);
-            // Effectuer l'appel à l'API avec Axios
+
             const { $apifetch } = useNuxtApp();
 
-            const response = await $apifetch('/api/patients', {
+            await $apifetch('/api/patients', {
                 method: 'POST',
                 body: data,
                 headers: {
@@ -50,14 +49,6 @@ export const usePatientStore = defineStore('usePatientStore', () => {
                 },
             });
 
-            // const response = await axios.post("http://localhost:8000/api/patients", data);
-
-            console.log('Form submission response:', response);
-
-            // Example: Add your API call logic here
-            // const response = await api.submitForm(data);
-
-            // On success, reset the form
             resetForm();
         }
         catch (error) {
