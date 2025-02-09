@@ -86,6 +86,7 @@
                         <Button
                             class="w-[50%]"
                             type="submit"
+                            :in-progress="inProgress"
                         >
                             S'inscrire
                         </Button>
@@ -106,6 +107,7 @@ import {
 } from '@heroicons/vue/24/solid';
 import { reactive } from 'vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import { useToast } from '~/components/ui/toast';
 
 useHead({
     title: 'Inscription Beta',
@@ -142,16 +144,18 @@ const status = ref(
 
 const {
     submit,
-    // inProgress,
+    inProgress,
     validationErrors,
 } = useSubmit(
     () => {
         status.value = '';
-        return registerBeta(credentials);
-    },
-    {
-        // onSuccess: () => router.push('/dashboard'),
-        onSuccess: () => router.push('/'),
+        return registerBeta(credentials).then(() => {
+            useNuxtApp().$toast.success('Inscription réussie');
+
+            setTimeout(() => {
+                router.push('/');
+            }, 10000);
+        });
     },
 );
 </script>
