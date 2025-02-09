@@ -150,7 +150,7 @@ import {
 } from '@heroicons/vue/24/solid';
 
 useHead({
-    title: 'Entrez en contact',
+    title: 'Contact',
     meta: [{ name: 'description', content: 'Page d\'entrée en contact....' }],
 });
 
