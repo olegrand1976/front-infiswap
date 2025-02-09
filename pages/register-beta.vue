@@ -28,6 +28,7 @@
                 </h1>
                 <form
                     class="w-full flex flex-col gap-4 lg:gap-6"
+                    @submit.prevent="submit"
                 >
                     <div class="w-full">
                         <FormField name="lastname">
@@ -36,9 +37,10 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary w-7 h-7 ml-2" />
                                         <Input
-                                            v-model="formData.lastname"
+                                            v-model="credentials.lastname"
                                             type="text"
                                             placeholder="Nom"
+                                            :errors="validationErrors.lastname"
                                         />
                                     </div>
                                 </FormControl>
@@ -53,9 +55,10 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary ml-2 w-7 h-7" />
                                         <Input
-                                            v-model="formData.firstname"
+                                            v-model="credentials.firstname"
                                             type="text"
                                             placeholder="Prénom"
+                                            :errors="validationErrors.firstname"
                                         />
                                     </div>
                                 </FormControl>
@@ -70,9 +73,29 @@
                                     <div class="flex items-center">
                                         <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
-                                            v-model="formData.email"
+                                            v-model="credentials.email"
                                             type="email"
                                             placeholder="Email"
+                                            :errors="validationErrors.email"
+                                        />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+
+                    </div>
+
+                    <div class="col-span-2">
+                        <FormField name="email">
+                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                                <FormControl>
+                                    <div class="flex items-center">
+                                        <PhoneIcon class="text-primary ml-3 w-6 h-6" />
+                                        <Input
+                                            v-model="credentials.phoneNumber"
+                                            type="tel"
+                                            placeholder="N° de téléphone"
+                                            :errors="validationErrors.phoneNumber"
                                         />
                                     </div>
                                 </FormControl>
@@ -90,10 +113,11 @@
                                             class="h-4"
                                         />
                                         <Input
-                                            v-model="formData.zipCode"
+                                            v-model="credentials.zipCode"
                                             type="text"
                                             placeholder="Code postal"
                                             class="text-sm"
+                                            :errors="validationErrors.zipCode"
                                         />
                                     </div>
                                 </FormControl>
@@ -116,10 +140,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useHead, useRouter } from 'nuxt/app';
 import {
     UserCircleIcon,
     EnvelopeIcon,
+    PhoneIcon,
 } from '@heroicons/vue/24/solid';
 import { reactive } from 'vue';
 
@@ -132,6 +156,9 @@ definePageMeta({
     middleware: ['guest'],
 });
 const router = useRouter();
+const route = useRoute();
+const { registerBeta } = useAuth();
+
 const goBack = () => {
     if (window.history.length > 1) {
         router.back();
@@ -141,10 +168,30 @@ const goBack = () => {
     }
 };
 
-const formData = reactive({
+const credentials = reactive({
     lastname: '',
     firstname: '',
     email: '',
+    phoneNumber: '',
     zipCode: '',
 });
+
+const status = ref(
+    (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
+);
+
+const {
+    submit,
+    // inProgress,
+    validationErrors,
+} = useSubmit(
+    () => {
+        status.value = '';
+        return registerBeta(credentials);
+    },
+    {
+        // onSuccess: () => router.push('/dashboard'),
+        onSuccess: () => router.push('/'),
+    },
+);
 </script>
