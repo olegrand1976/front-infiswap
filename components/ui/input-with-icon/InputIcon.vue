@@ -12,6 +12,7 @@ const props = defineProps<{
     icon?: Component;
     iconClass?: string;
     size?: 'sm' | 'md' | 'lg';
+    errors?: string[];
 }>();
 
 const emits = defineEmits<{
@@ -39,7 +40,9 @@ const sizeClasses = {
             :class="cn(
                 'flex h-10 w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:text-sm focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                 sizeClasses[size || 'md'],
-                props.class)"
+                props.class,
+                { 'border-red-500': props.errors && props.errors.length > 0 }, // Classe conditionnelle en cas d'erreur
+            )"
         >
         <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
             <component
@@ -47,6 +50,14 @@ const sizeClasses = {
                 v-if="icon"
                 :class="cn('size-6', 'text-primary', props.iconClass)"
             />
+        </span>
+        <span
+            v-if="props.errors && props.errors.length > 0"
+            class="absolute start-6 -bottom-4"
+        >
+            <span class="text-xs text-red-500">
+                {{ props.errors[0] }}
+            </span>
         </span>
     </div>
 </template>

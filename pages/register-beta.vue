@@ -13,17 +13,17 @@
                 class="object-fill w-full h-screen"
             />
         </div>
-        <div class="col-span-2 lg:col-span-1 items-center md:flex flex-col justify-center text-primary text-center">
+        <div class="col-span-2 lg:col-span-1 lg:mb-10 items-center md:flex flex-col justify-center text-primary text-center">
             <div class="h-48 col-span-1 w-full">
                 <NuxtImg
                     src="/auth/bg-top-auth.jpg"
                     alt="Image d'authentification"
                     class="h-full md:hidden w-full"
                 />
-                <LayoutsLogo class="max-w-[90vw] -mt-40 md:mt-0 md:w-1/2 mx-auto" />
+                <LayoutsLogo class="max-w-[90vw] -mt-40 md:mt-4 md:w-1/2 mx-auto" />
             </div>
             <div class="container w-full max-w-lg mx-auto mt-10 md:mt-0">
-                <h1 class="text-xl lg:text-2xl mb-10">
+                <h1 class="text-xl lg:text-2xl mb-10 lg:mb-5">
                     <span class="font-bold">Inscription</span> <span class="font-extralight">BETA</span>
                 </h1>
                 <form
@@ -36,6 +36,7 @@
                             :icon="UserIcon"
                             size="md"
                             placeholder="Nom"
+                            :errors="validationErrors.lastname"
                         />
                     </div>
                     <div class="relative w-full items-center">
@@ -44,6 +45,7 @@
                             :icon="UserPlusIcon"
                             size="md"
                             placeholder="Prénom"
+                            :errors="validationErrors.firstname"
                         />
                     </div>
 
@@ -55,6 +57,7 @@
                             size="md"
                             placeholder="Email"
                             icon-class="h-5"
+                            :errors="validationErrors.email"
                         />
                     </div>
 
@@ -65,6 +68,7 @@
                             placeholder="Téléphone"
                             size="md"
                             icon-class="h-5"
+                            :errors="validationErrors.phoneNumber"
                         />
                     </div>
 
@@ -75,6 +79,7 @@
                             placeholder="Code postale"
                             size="md"
                             icon-class="h-5"
+                            :errors="validationErrors.zipCode"
                         />
                     </div>
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
@@ -138,7 +143,7 @@ const status = ref(
 const {
     submit,
     // inProgress,
-    // validationErrors,
+    validationErrors,
 } = useSubmit(
     () => {
         status.value = '';
