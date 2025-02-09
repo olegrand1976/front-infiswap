@@ -30,101 +30,53 @@
                     class="w-full flex flex-col gap-4 lg:gap-6"
                     @submit.prevent="submit"
                 >
-                    <div class="w-full">
-                        <FormField name="lastname">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <UserCircleIcon class="text-primary w-7 h-7 ml-2" />
-                                        <Input
-                                            v-model="credentials.lastname"
-                                            type="text"
-                                            placeholder="Nom"
-                                            :errors="validationErrors.lastname"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                    <div class="relative w-full items-center">
+                        <InputIcon
+                            v-model="credentials.lastname"
+                            :icon="UserIcon"
+                            size="md"
+                            placeholder="Nom"
+                        />
+                    </div>
+                    <div class="relative w-full items-center">
+                        <InputIcon
+                            v-model="credentials.firstname"
+                            :icon="UserPlusIcon"
+                            size="md"
+                            placeholder="Prénom"
+                        />
                     </div>
 
-                    <div class="">
-                        <FormField name="firstname">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <UserCircleIcon class="text-primary ml-2 w-7 h-7" />
-                                        <Input
-                                            v-model="credentials.firstname"
-                                            type="text"
-                                            placeholder="Prénom"
-                                            :errors="validationErrors.firstname"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                    <div class="relative w-full items-center">
+                        <InputIcon
+                            v-model="credentials.email"
+                            :icon="EnvelopeIcon"
+                            type="email"
+                            size="md"
+                            placeholder="Email"
+                            icon-class="h-5"
+                        />
                     </div>
 
-                    <div class="col-span-2">
-                        <FormField name="email">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
-                                        <Input
-                                            v-model="credentials.email"
-                                            type="email"
-                                            placeholder="Email"
-                                            :errors="validationErrors.email"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
-
+                    <div class="relative w-full items-center">
+                        <InputIcon
+                            v-model="credentials.phoneNumber"
+                            :icon="PhoneIcon"
+                            placeholder="Téléphone"
+                            size="md"
+                            icon-class="h-5"
+                        />
                     </div>
 
-                    <div class="col-span-2">
-                        <FormField name="email">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <PhoneIcon class="text-primary ml-3 w-6 h-6" />
-                                        <Input
-                                            v-model="credentials.phoneNumber"
-                                            type="tel"
-                                            placeholder="N° de téléphone"
-                                            :errors="validationErrors.phoneNumber"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                    <div class="relative w-full items-center">
+                        <InputIcon
+                            v-model="credentials.zipCode"
+                            :icon="MapIcon"
+                            placeholder="Code postale"
+                            size="md"
+                            icon-class="h-5"
+                        />
                     </div>
-
-                    <div class="col-span-1 lg:col-span-2">
-                        <FormField name="zipCode">
-                            <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <NuxtImg
-                                            src="/icons/boite.png"
-                                            class="h-4"
-                                        />
-                                        <Input
-                                            v-model="credentials.zipCode"
-                                            type="text"
-                                            placeholder="Code postal"
-                                            class="text-sm"
-                                            :errors="validationErrors.zipCode"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
-                    </div>
-
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
                         <Button
                             class="w-[50%]"
@@ -141,11 +93,14 @@
 
 <script lang="ts" setup>
 import {
-    UserCircleIcon,
+    UserIcon,
+    UserPlusIcon,
     EnvelopeIcon,
     PhoneIcon,
+    MapIcon,
 } from '@heroicons/vue/24/solid';
 import { reactive } from 'vue';
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 
 useHead({
     title: 'Inscription Beta',
@@ -183,7 +138,7 @@ const status = ref(
 const {
     submit,
     // inProgress,
-    validationErrors,
+    // validationErrors,
 } = useSubmit(
     () => {
         status.value = '';
