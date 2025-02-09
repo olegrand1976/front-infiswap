@@ -7,9 +7,12 @@ export const inputVariants = cva(
     {
         variants: {
             variant: {
-                default: 'outline outline-none border border-none',
+                default: 'outline outline-none border border-none bg-transparent',
                 transparent: 'outline outline-none border border-none text-white bg-transparent placeholder:text-white',
                 light: 'outline outline-none border border-none bg-gray-100',
+            },
+            size: {
+                xl: 'w-80',
             },
         },
         defaultVariants: {

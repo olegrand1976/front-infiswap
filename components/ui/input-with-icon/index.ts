@@ -1,1 +1,1 @@
-export { default as Input } from './InputIcon.vue';
+export { default as InputIcon } from './InputIcon.vue';
