@@ -35,6 +35,12 @@ export const useAuth = () => {
         await refresh();
     }
 
+    async function registerBeta(credentials) {
+        await $apifetch('/api/user-betas',
+            { method: 'post', body: credentials },
+        );
+    }
+
     async function resendEmailVerification() {
         return await $apifetch('/api/email/verification-notification', {
             method: 'post',
@@ -69,6 +75,7 @@ export const useAuth = () => {
         isLoggedIn,
         login,
         register,
+        registerBeta,
         resendEmailVerification,
         logout,
         forgotPassword,

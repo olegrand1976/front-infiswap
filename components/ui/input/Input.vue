@@ -11,6 +11,7 @@ const props = defineProps<{
     size?: InputVariants['size'];
     placeholder?: string;
     class?: HTMLAttributes['class'];
+    errors?: Record<string, string[]>;
 }>();
 
 const emits = defineEmits<{
@@ -21,12 +22,22 @@ const modelValue = useVModel(props, 'modelValue', emits, {
     passive: true,
     defaultValue: props.defaultValue,
 });
+
+const errorMessage = computed(() => props.errors?.[0] ?? '');
 </script>
 
 <template>
-    <input
-        v-model="modelValue"
-        :class="cn(inputVariants({ variant: props.variant, size: props.size }), props.class)"
-        :placeholder="placeholder"
-    >
+    <div class="relative">
+        <input
+            v-model="modelValue"
+            :class="cn(inputVariants({ variant: props.variant, size: props.size }), props.class)"
+            :placeholder="placeholder"
+        >
+        <p
+            v-if="errorMessage"
+            class="absolute text-red-500 text-[10px]"
+        >
+            {{ errorMessage }}
+        </p>
+    </div>
 </template>
