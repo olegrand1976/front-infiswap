@@ -107,7 +107,6 @@ import {
 } from '@heroicons/vue/24/solid';
 import { reactive } from 'vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
-import { useToast } from '~/components/ui/toast';
 
 useHead({
     title: 'Inscription Beta',
