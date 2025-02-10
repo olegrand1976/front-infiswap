@@ -2,7 +2,9 @@
     <footer class="bg-muted">
         <div class="flex lg:container flex-col md:flex-row justify-center md:justify-between md:space-x-4 items-center md:items-start pt-12 md:py-12 md:px-8">
             <div class="flex justify-center">
-                <LayoutsLogo class="h-10 lg:h-14" />
+                <!-- <LayoutsLogo class="h-10 lg:h-14" /> -->
+                <LayoutsLogo class="w-[20rem] h-32 sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
+
             </div>
 
             <div class="flex flex-col w-full md:w-auto mt-40 lg:w-auto justify-center items-center shadow-upper md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
