@@ -118,23 +118,22 @@
                                 </TableCell>
 
                                 <TableCell class="w-52 ml-5 grid grid-cols-3 justify-center items-center pl-6 bg-gray-100 text-xs">
-                                    <Switch 
-                                        id="morning" 
+                                    <Switch
+                                        id="morning"
                                         :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'morning'"
                                         disabled
-                                    ></Switch>
-                                    <Switch 
-                                        id="afternoon" 
+                                    />
+                                    <Switch
+                                        id="afternoon"
                                         :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'afternoon'"
                                         disabled
-                                    ></Switch>
-                                    <Switch 
-                                        id="evening" 
+                                    />
+                                    <Switch
+                                        id="evening"
                                         :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'evening'"
                                         disabled
-                                    ></Switch>
+                                    />
                                 </TableCell>
-
 
                                 <TableCell class="w-36 ml-[3.5rem] bg-gray-100 text-xs">
                                     <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
@@ -149,7 +148,7 @@
                                 </TableCell>
 
                                 <TableCell class="w-64 ml-0 bg-gray-100 text-xs">
-                                    <div 
+                                    <div
                                         class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                         :title="replacement.details[0].care_types.map(careType => careType.name).join(', ')"
                                     >
@@ -158,7 +157,10 @@
                                 </TableCell>
 
                                 <TableCell class="w-24 ml-20 text-xs overflow-x-hidden">
-                                    <Button class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center">
+                                    <Button
+                                        class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
+                                        :href="`/dashboard/replacement/detail/${replacement.id}`"
+                                    >
                                         <span class="text-xs">Voir plus</span>
                                     </Button>
                                 </TableCell>
@@ -187,32 +189,32 @@ onMounted(() => {
     fetchReplacements();
 });
 
-const formatDate= (isoString) => {
+const formatDate = (isoString) => {
     const date = new Date(isoString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
-}
+};
 
 const getShift = (startAt, endAt) => {
     if (!startAt || !endAt) return null;
 
-    const startHour = parseInt(startAt.split(":")[0], 10);
+    const startHour = parseInt(startAt.split(':')[0], 10);
 
     if (startHour >= 1 && startHour < 12) {
-        return "morning";
-    } else if (startHour >= 12 && startHour < 18) {
-        return "afternoon";
-    } else {
-        return "evening";
+        return 'morning';
+    }
+    else if (startHour >= 12 && startHour < 18) {
+        return 'afternoon';
+    }
+    else {
+        return 'evening';
     }
 };
 
-
 const search = ref('');
 const postalCode = ref('');
-
 
 definePageMeta({
     layout: 'dashboard',

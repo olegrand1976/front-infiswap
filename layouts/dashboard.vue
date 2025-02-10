@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white flex h-screen">
+    <div class="bg-white flex">
         <div
             :class="isCollapsed ? 'w-[4vw]' : 'w-[20vw]'"
             class="transition-all duration-300 bg-white h-screen"
