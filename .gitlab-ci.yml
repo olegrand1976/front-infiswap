@@ -12,45 +12,44 @@ build:
     - name: docker:dind
       command: ["--tls=false"]
   variables:
+    DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
-    # Installation de la CLI Docker dans l'image node (basée sur Debian)
+    # Installation de la CLI Docker dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
   script:
-    # Installation des dépendances et build du front
     - npm install
     - npm run build
-    # Construction de l'image Docker (assurez-vous que votre Dockerfile est présent à la racine)
     - docker build -t mydockerhubusername/front-app:latest .
   only:
     - main
 
 #####################################
-# Job de Déploiement sur FRONT1
+# Déploiement sur FRONT1
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16           # Image Alpine avec Docker CLI
+  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
   services:
     - name: docker:dind
       command: ["--tls=false"]
   variables:
+    DOCKER_HOST: tcp://docker:2375  # Nécessaire pour que le client Docker se connecte au service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
-    # Installation des outils SSH dans l'image Alpine
     - apk add --no-cache openssh-client sshpass
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajout de la clé SSH de FRONT1 dans known_hosts (SSH_HOST_FRONT1 doit être défini en variable)
+    # Ajoute la clé de l'hôte FRONT1 (la variable SSH_HOST_FRONT1 doit être définie dans vos variables GitLab)
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
-    # Connexion à Docker Hub et push de l'image construite
+    # Authentification sur Docker Hub et push de l'image construite
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     - docker push mydockerhubusername/front-app:latest
-    # Sur FRONT1 : login, pull de l'image et déploiement via docker-compose
+    # Sur FRONT1 : login Docker, pull de l'image et déploiement via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
@@ -62,7 +61,7 @@ deploy_front1:
     - main
 
 #####################################
-# Job de Déploiement sur FRONT2
+# Déploiement sur FRONT2
 #####################################
 deploy_front2:
   stage: deploy
@@ -71,6 +70,7 @@ deploy_front2:
     - name: docker:dind
       command: ["--tls=false"]
   variables:
+    DOCKER_HOST: tcp://docker:2375  # Pour la connexion au service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
@@ -78,7 +78,7 @@ deploy_front2:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajout de la clé SSH de FRONT2 dans known_hosts (SSH_HOST_FRONT2 doit être défini en variable)
+    # Ajoute la clé de l'hôte FRONT2 (la variable SSH_HOST_FRONT2 doit être définie dans vos variables GitLab)
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
