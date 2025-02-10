@@ -1,9 +1,8 @@
-image: node:20  # Image Node.js (à adapter selon ton projet React, Vue, Angular...)
+image: node:20  # Image Node.js (ajuste selon ton projet)
 
 services:
   - name: docker:dind
     command: ["--tls=false"]
-    privileged: true
 
 stages:
   - build
@@ -46,6 +45,9 @@ build:
 # 🚀 **Déploiement sur FRONT1**
 deploy_front1:
   stage: deploy_front1
+  variables:
+    GIT_STRATEGY: none
+  before_script: []
   script:
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
@@ -57,10 +59,22 @@ deploy_front1:
       "
   only:
     - main
+  tags:
+    - docker
+  before_script: []
+  services:
+    - name: docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "Déploiement sur FRONT1 en cours..."
 
 # 🚀 **Déploiement sur FRONT2 (après FRONT1)**
 deploy_front2:
   stage: deploy_front2
+  variables:
+    GIT_STRATEGY: none
+  before_script: []
   script:
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_2 "
@@ -74,4 +88,11 @@ deploy_front2:
     - main
   needs:
     - deploy_front1  # On déploie FRONT2 seulement après FRONT1
-
+  tags:
+    - docker
+  services:
+    - name: docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "Déploiement sur FRONT2 en cours..."
