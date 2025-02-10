@@ -19,7 +19,7 @@
                                     <Input
                                         :v-model="search"
                                         placeholder="Rechercher"
-                                        class="w-full text-xs"
+                                        class="w-full text-xs bg-transparent"
                                     />
                                     <Button
                                         type="submit"
@@ -32,23 +32,38 @@
                         </FormItem>
                     </FormField>
 
-                    <FormField name="postalCode">
-                        <FormItem>
-                            <FormControl>
-                                <div class="flex space-x-6 bg-primary rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white text-xs">
-                                        Codes postaux
-                                    </h5>
+                    <div class="flex space-x-4">
+                        <FormField name="postalCode">
+                            <FormItem>
+                                <FormControl>
+                                    <div class="flex space-x-6 bg-primary rounded-full items-center justify-between ps-3 pe-1">
+                                        <h5 class="text-white text-xs">
+                                            Codes postaux
+                                        </h5>
+                                        <Input
+                                            variant="light"
+                                            :v-model="postalCode"
+                                            placeholder="1000 - Bruxelles"
+                                            class="w-32 text-xs my-0.5 rounded-full"
+                                        />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+
+                        <FormField name="city">
+                            <FormItem>
+                                <FormControl>
                                     <Input
                                         variant="light"
                                         :v-model="postalCode"
-                                        placeholder="1000 - Bruxelles"
-                                        class="w-32 text-xs my-0.5 rounded-full"
+                                        placeholder="Ville"
+                                        class="w-32 text-xs my-0.5 rounded-full bg-white shadow"
                                     />
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+                    </div>
                 </Form>
 
                 <div>
@@ -62,20 +77,25 @@
                 </div>
             </div>
 
-            <div class="grid overflow-x-auto mt-8">
+            <div class="grid my-8">
                 <Table>
                     <TableHeader class="w-full">
-                        <TableRow class="grid grid-cols-4 gap-2 border border-none">
-                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
-                                Nom
-                            </TableHead>
-                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
+                            <TableHead class="w-48 bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                 Jour
                             </TableHead>
-                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
-                                Code postal
+                            <TableHead class="w-52 ml-5 bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
+                                <span>Matin</span>
+                                <span>Midi</span>
+                                <span>Soir</span>
                             </TableHead>
-                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="w-36 ml-[3.5rem] bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                                Codes postaux
+                            </TableHead>
+                            <TableHead class="w-36 ml-7 bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                                Ville
+                            </TableHead>
+                            <TableHead class="w-64 bg-primary ml-0 flex justify-center items-center rounded-lg text-white text-xs">
                                 Type de soin à pratiquer
                             </TableHead>
                         </TableRow>
@@ -83,39 +103,64 @@
 
                     <TableBody>
                         <template
-                            v-for="replacement in replacements"
+                            v-for="replacement in replacements.data"
                             :key="replacement.id"
                         >
-                            <TableRow class="grid grid-cols-4 gap-2 border border-none">
-                                <TableCell class="w-full bg-gray-100 text-xs">
-                                    <div class="flex bg-gray-200 rounded mx-auto space-x-3 justify-center items-center">
-                                        <div>
-                                            <NuxtImg
-                                                :src="replacement.user.img"
-                                                :alt="replacement.user.fullname"
-                                                class="object-cover object-center w-10 h-10 rounded-full"
-                                            />
-                                        </div>
-                                        <span>{{ replacement.user.fullname }}</span>
+                            <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
+                                <TableCell class="w-48 flex justify-center items-center bg-gray-100 text-xs">
+                                    <div class="flex h-8 py-1 px-2 rounded bg-gray-200 mx-auto justify-center items-center">
+                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                    </div>
+                                    <span class="flex items-center">au</span>
+                                    <div class="flex h-8 py-1 p x-2 rounded bg-gray-200 mx-auto justify-center items-center">
+                                        <span>{{ formatDate(replacement.end_date) }}</span>
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="w-full bg-gray-100 text-xs">
-                                    <div class="flex h-10 rounded bg-gray-200 mx-auto justify-center items-center">
-                                        <span>{{ replacement.day }}</span>
+                                <TableCell class="w-52 ml-5 grid grid-cols-3 justify-center items-center pl-6 bg-gray-100 text-xs">
+                                    <Switch 
+                                        id="morning" 
+                                        :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'morning'"
+                                        disabled
+                                    ></Switch>
+                                    <Switch 
+                                        id="afternoon" 
+                                        :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'afternoon'"
+                                        disabled
+                                    ></Switch>
+                                    <Switch 
+                                        id="evening" 
+                                        :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'evening'"
+                                        disabled
+                                    ></Switch>
+                                </TableCell>
+
+
+                                <TableCell class="w-36 ml-[3.5rem] bg-gray-100 text-xs">
+                                    <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
+                                        <span>{{ replacement.details[0]?.patient?.profile?.zip_code || '' }}</span>
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="w-full bg-gray-100 text-xs">
-                                    <div class="flex h-10 rounded bg-gray-200 mx-auto justify-center items-center">
-                                        <span>{{ replacement.postalCode }}</span>
+                                <TableCell class="w-36 ml-7 bg-gray-100 text-xs">
+                                    <div class="flex h-10 rounded bg-gray-200 justify-center mx-auto items-center">
+                                        <span class="">{{ replacement.details[0]?.patient?.profile?.city || '' }}</span>
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="w-full bg-gray-100 text-xs">
-                                    <div class="flex h-10 rounded bg-gray-200 mx-auto justify-center items-center">
-                                        <span>{{ replacement.careType }}</span>
+                                <TableCell class="w-64 ml-0 bg-gray-100 text-xs">
+                                    <div 
+                                        class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                        :title="replacement.details[0].care_types.map(careType => careType.name).join(', ')"
+                                    >
+                                        {{ replacement.details[0].care_types.map(careType => careType.name).join(', ') }}
                                     </div>
+                                </TableCell>
+
+                                <TableCell class="w-24 ml-20 text-xs overflow-x-hidden">
+                                    <Button class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center">
+                                        <span class="text-xs">Voir plus</span>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         </template>
@@ -127,67 +172,47 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import { PlusIcon, MagnifyingGlassIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
+import { Switch } from '@/components/ui/switch';
+
+import { useGetReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Liste des remplacements',
 });
 
+const { replacements, fetchReplacements } = useGetReplacements();
+
+onMounted(() => {
+    fetchReplacements();
+});
+
+const formatDate= (isoString) => {
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+const getShift = (startAt, endAt) => {
+    if (!startAt || !endAt) return null;
+
+    const startHour = parseInt(startAt.split(":")[0], 10);
+
+    if (startHour >= 1 && startHour < 12) {
+        return "morning";
+    } else if (startHour >= 12 && startHour < 18) {
+        return "afternoon";
+    } else {
+        return "evening";
+    }
+};
+
+
 const search = ref('');
 const postalCode = ref('');
 
-const replacements = [
-    {
-        id: 1,
-        user: {
-            fullname: 'Richard Dupond',
-            img: '/home/infirmier_homme.png',
-        },
-        day: '24/01/2025',
-        postalCode: '7000 - Mons',
-        careType: 'Bandage',
-    },
-    {
-        id: 2,
-        user: {
-            fullname: 'Richard Dupond',
-            img: '/home/infirmier_homme.png',
-        },
-        day: '24/01/2025',
-        postalCode: '7000 - Mons',
-        careType: 'Bandage',
-    },
-    {
-        id: 3,
-        user: {
-            fullname: 'Richard Dupond',
-            img: '/home/infirmier_homme.png',
-        },
-        day: '24/01/2025',
-        postalCode: '7000 - Mons',
-        careType: 'Bandage',
-    },
-    {
-        id: 4,
-        user: {
-            fullname: 'Richard Dupond',
-            img: '/home/infirmier_homme.png',
-        },
-        day: '24/01/2025',
-        postalCode: '7000 - Mons',
-        careType: 'Bandage',
-    },
-    {
-        id: 5,
-        user: {
-            fullname: 'Richard Dupond',
-            img: '/home/infirmier_homme.png',
-        },
-        day: '24/01/2025',
-        postalCode: '7000 - Mons',
-        careType: 'Bandage',
-    },
-];
 
 definePageMeta({
     layout: 'dashboard',

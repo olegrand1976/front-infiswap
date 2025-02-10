@@ -78,7 +78,8 @@
                                             v-model="currentDate"
                                             title="Date suivante"
                                             type="date"
-                                            class="w-24 text-sm"
+                                            placeholder="jj/mm/aaaa"
+                                            class="w-24 text-xs bg-transparent placeholder:text-white"
                                             disabled
                                         />
                                         <ChevronRightIcon

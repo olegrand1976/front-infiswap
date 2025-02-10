@@ -1,11 +1,13 @@
 <template>
     <div>
-        <section>
-            <HomeSearchNurseContainer />
-        </section>
-        <section>
-            <HomeBanner />
-        </section>
+        <div class="flex flex-col-reverse sm:flex-col">
+            <section>
+                <HomeSearchNurseContainer />
+            </section>
+            <section>
+                <HomeBanner />
+            </section>
+        </div>
         <section>
             <HomeGridCard />
         </section>
