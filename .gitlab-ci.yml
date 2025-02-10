@@ -53,15 +53,15 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Vérifie que SSH_HOST_FRONT1 est défini et ajoute sa clé dans known_hosts
-    - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
+    # Ajout de la clé SSH de localhost dans known_hosts (puisque le runner est sur FRONT1)
+    - ssh-keyscan -t ed25519 localhost >> known_hosts
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
-    # Connexion SSH sur FRONT1 pour déployer via docker-compose
+    # Connexion SSH sur localhost pour déployer via docker-compose
     - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@localhost "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
         docker-compose -f /srv/front/docker-compose.prod.yml down &&
