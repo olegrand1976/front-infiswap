@@ -73,34 +73,21 @@
                     <FormField name="zipCode">
                         <FormItem>
                             <FormControl>
-                                <!-- <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-primary rounded-s-full flex items-center">
-                                        <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <NuxtImg
-                                                src="/icons/zip_code.png"
-                                                class="w-5 h-5"
-                                            />
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
-                                        </FormLabel>
-                                    </div>
-
-                                    <Input
-                                        v-model="formData.zipCode"
-                                        variant="transparent"
-                                        placeholder="Code Postal"
-                                        class="w-full text-black placeholder:text-black/80"
-                                        :maxlength="4"
-                                        @keypress="onlyNumbers"
-                                        @paste.prevent
-                                    />
-                                </div> -->
+                              
 
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary  rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                            <NuxtImg
+                            <!-- <NuxtImg
                                 src="/icons/zip_code.png"
-                                class="w-5 h-5 filter invert saturate-200 hue-rotate-180 text-primary" />
+                                class="w-5 h-5 filter invert saturate-200 hue-rotate-180 text-primary" /> -->
+
+                                <div class="w-5 h-5 bg-primary flex items-center justify-center">
+                                        <NuxtImg
+                                            src="/icons/zip_code.png"
+                                            class="w-4 h-4" />
+                                    </div>
+
 
 
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
@@ -131,33 +118,24 @@
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
-                                <!-- <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-primary rounded-s-full flex items-center">
-                                        <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <NuxtImg
-                                                src="/icons/city_white.png"
-                                                class="w-5 h-5"
-                                            />
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Ville</span>
-                                        </FormLabel>
-                                    </div>
-
-                                    <Input
-                                        v-model="formData.city"
-                                        variant="transparent"
-                                        placeholder="Ville"
-                                        class="w-full text-black placeholder:text-black/80"
-                                    />
-                                </div> -->
+                            
 
 
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary  rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <NuxtImg
+                                            <!-- <NuxtImg
                                                 src="/icons/city_white.png"
                                                 class="w-5 h-5 filter invert saturate-200 hue-rotate-180 text-primary"
-                                            />
+                                            /> -->
+
+
+                                            <div class="w-5 h-5 bg-primary flex items-center justify-center">
+                                        <NuxtImg
+                                            src="/icons/city_white.png"
+                                            class="w-4 h-4" />
+                                    </div>
+
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Ville</span>
                                         </FormLabel>
                                     </div>
