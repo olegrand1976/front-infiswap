@@ -17,7 +17,7 @@ build:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
-    # Installation de la CLI Docker dans l'image node (node:20 ne contient pas Docker par défaut)
+    # Installation de Docker CLI dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
     # Attente de la résolution DNS pour "docker"
     - echo "Attente de la résolution DNS pour 'docker'..."
@@ -25,7 +25,12 @@ build:
   script:
     - npm install
     - npm run build
-    - docker build -t $DOCKERHUB_USERNAME/front-app:latest .
+    # Construction de l'image avec le tag complet
+    - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
+    # Connexion à Docker Hub et push de l'image
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    - docker images
   only:
     - main
 
@@ -48,17 +53,17 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Vérifie que SSH_HOST_FRONT1 est défini avant d'exécuter ssh-keyscan
+    # Vérifie que SSH_HOST_FRONT1 est défini et ajoute sa clé dans known_hosts
     - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
   script:
-    # Authentification sur Docker Hub et push de l'image construite
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push $DOCKERHUB_USERNAME/front-app:latest
-    # Sur FRONT1 : connexion via SSH, login Docker, pull de l'image et déploiement via docker-compose
+    # Récupération de l'image depuis Docker Hub
+    - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
+        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
         docker-compose -f /srv/front/docker-compose.prod.yml down &&
         docker-compose -f /srv/front/docker-compose.prod.yml up -d
       "
@@ -84,22 +89,22 @@ deploy_front2:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Vérifie que SSH_HOST_FRONT2 est défini avant d'exécuter ssh-keyscan
+    # Vérifie et ajoute la clé SSH de FRONT2
     - if [ -n "$SSH_HOST_FRONT2" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts; else echo "SSH_HOST_FRONT2 is not set"; fi
-    # Vérifie également SSH_HOST_FRONT1 pour récupérer le fichier .env.production
+    # Vérifie et ajoute également la clé SSH de FRONT1 (pour récupérer .env.production)
     - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push $DOCKERHUB_USERNAME/front-app:latest
-    # Sur FRONT2 : connexion via SSH, login Docker et pull de l'image
+    # Récupération de l'image depuis Docker Hub
+    - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Connexion SSH sur FRONT2 pour récupérer l'image
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT2 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull $DOCKERHUB_USERNAME/front-app:latest
+        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
       "
-    # Récupérer le fichier .env.production depuis FRONT1
+    # Récupération du fichier .env.production depuis FRONT1 et copie sur FRONT2
     - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1:/srv/front/.env.production .env.production
-    # Copier le fichier .env.production sur FRONT2 (au même emplacement)
     - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes .env.production $SSH_USER@$SSH_HOST_FRONT2:/srv/front/.env.production
     # Déploiement via docker-compose sur FRONT2
     - >
