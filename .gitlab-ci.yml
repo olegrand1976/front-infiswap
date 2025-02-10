@@ -39,10 +39,10 @@ build:
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16
+  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
   services:
     - name: docker:dind
-      alias: docker
+      alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -53,12 +53,15 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    - ssh-keyscan -t ed25519 localhost >> known_hosts || true
+    # Ajoute la clé SSH de FRONT1 (SSH_HOST_FRONT1 doit être défini avec l'adresse IP accessible)
+    - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@localhost "
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
         docker-compose -f /srv/front/docker-compose.prod.yml down &&
