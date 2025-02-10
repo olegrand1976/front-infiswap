@@ -753,7 +753,7 @@ const handleSearch = (period: string) => {
     showSuggestions.value[period] = true;
 };
 
-const selectPatient = (patient: any, period: string) => {
+const selectPatient = (patient: Record<T>, period: string) => {
     selectedPatient.value[period] = {
         id: patient.id,
         lastname: patient.lastname,
@@ -782,5 +782,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
+    middleware: ['auth', 'verified'],
 });
 </script>

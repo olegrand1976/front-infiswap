@@ -24,14 +24,14 @@
 
             <div class="flex gap-4 items-center">
                 <Button
-                    v-if="!$user"
+                    v-if="!isLoggedIn"
                     class="font-semibold text-base"
                     href="/login"
                 >
                     Se connecter
                 </Button>
                 <Button
-                    v-if="$user"
+                    v-if="isLoggedIn"
                     class="font-semibold text-base"
                     href="/dashboard"
                 >
@@ -85,8 +85,9 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
+const { isLoggedIn } = useAuth();
+const user = useUser();
 
-const { $user } = useNuxtApp();
 const navigationItems = [
     { label: 'ACCUEIL', route: '/' },
     { label: 'A PROPOS', route: '/about' },
