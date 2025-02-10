@@ -39,10 +39,10 @@ build:
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
+  image: docker:20.10.16
   services:
     - name: docker:dind
-      alias: docker                # Pour que le nom "docker" soit résolu
+      alias: docker
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -53,13 +53,10 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajout de la clé SSH de localhost dans known_hosts (puisque le runner est sur FRONT1)
-    - ssh-keyscan -t ed25519 localhost >> known_hosts
+    - ssh-keyscan -t ed25519 localhost >> known_hosts || true
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
-    # Connexion SSH sur localhost pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@localhost "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
