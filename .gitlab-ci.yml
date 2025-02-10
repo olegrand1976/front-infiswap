@@ -1,0 +1,77 @@
+image: node:20  # Image Node.js (à adapter selon ton projet React, Vue, Angular...)
+
+services:
+  - name: docker:dind
+    command: ["--tls=false"]
+    privileged: true
+
+stages:
+  - build
+  - deploy_front1
+  - deploy_front2
+
+# 🛠️ Configuration globale
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - apt-get update && apt-get install -y openssh-client sshpass
+  - echo "$SSH_PRIVATE_KEY" > id_rsa
+  - chmod 600 id_rsa
+  - echo "$SSH_KNOWN_HOSTS" > known_hosts
+  - ssh-keyscan -H $IP_FRONT_1 >> known_hosts
+  - ssh-keyscan -H $IP_FRONT_2 >> known_hosts
+
+# 📦 **Build du Front sur FRONT1**
+build:
+  stage: build
+  script:
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
+        cd /srv/front &&
+        git pull origin main &&
+        npm install &&
+        npm run build &&
+        docker build -t $DOCKERHUB_USERNAME/front-app:latest .
+      "
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        docker push $DOCKERHUB_USERNAME/front-app:latest
+      "
+  only:
+    - main
+
+# 🚀 **Déploiement sur FRONT1**
+deploy_front1:
+  stage: deploy_front1
+  script:
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
+        docker stop front-app || true &&
+        docker rm front-app || true &&
+        docker run -d --restart=always -p 80:3000 --name front-app $DOCKERHUB_USERNAME/front-app:latest
+      "
+  only:
+    - main
+
+# 🚀 **Déploiement sur FRONT2 (après FRONT1)**
+deploy_front2:
+  stage: deploy_front2
+  script:
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_2 "
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
+        docker stop front-app || true &&
+        docker rm front-app || true &&
+        docker run -d --restart=always -p 80:3000 --name front-app $DOCKERHUB_USERNAME/front-app:latest
+      "
+  only:
+    - main
+  needs:
+    - deploy_front1  # On déploie FRONT2 seulement après FRONT1
+
