@@ -85,6 +85,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
+
 const { isLoggedIn } = useAuth();
 const user = useUser();
 

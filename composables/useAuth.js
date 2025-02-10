@@ -26,7 +26,7 @@ export const useAuth = () => {
         await $apifetch('api/login', { method: 'post', body: credentials })
             .then(response => useCookie(AUTH_TOKEN, { maxAge: 704800 }).value = response.token);
 
-        await refresh();  
+        await refresh();
     }
 
     async function register(credentials) {

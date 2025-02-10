@@ -283,7 +283,7 @@ const {
     () => {
         status.value = '';
         return login(credentials).then(() => router.push('/dashboard'));
-    }
+    },
 );
 </script>
 
