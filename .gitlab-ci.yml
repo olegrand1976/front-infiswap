@@ -19,8 +19,9 @@ build:
   before_script:
     # Installation de la CLI Docker dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
-    # Vérifie que "docker" est résolvable (pour le débogage)
-    - getent hosts docker
+    # Attente que l'alias "docker" soit résolu
+    - echo "Attente de la résolution DNS pour 'docker'..."
+    - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
     - npm install
     - npm run build
