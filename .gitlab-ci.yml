@@ -19,10 +19,12 @@ build:
   before_script:
     # Installation de la CLI Docker dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
+    # Vérifie que "docker" est résolvable (pour le débogage)
+    - getent hosts docker
   script:
     - npm install
     - npm run build
-    - docker build -t mydockerhubusername/front-app:latest .
+    - docker build -t $DOCKERHUB_USERNAME/front-app:latest .
   only:
     - main
 
@@ -50,12 +52,12 @@ deploy_front1:
   script:
     # Authentification sur Docker Hub et push de l'image construite
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push mydockerhubusername/front-app:latest
+    - docker push $DOCKERHUB_USERNAME/front-app:latest
     # Sur FRONT1 : login Docker, pull de l'image et déploiement via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull mydockerhubusername/front-app:latest &&
+        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
         docker-compose -f /srv/front/docker-compose.prod.yml down &&
         docker-compose -f /srv/front/docker-compose.prod.yml up -d
       "
@@ -86,14 +88,13 @@ deploy_front2:
     # Ajout de la clé SSH de FRONT1 pour pouvoir récupérer le fichier .env.production
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
-    # Authentification sur Docker Hub et push de l'image construite (si nécessaire)
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    - docker push mydockerhubusername/front-app:latest
+    - docker push $DOCKERHUB_USERNAME/front-app:latest
     # Sur FRONT2 : login Docker et pull de l'image
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT2 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull mydockerhubusername/front-app:latest
+        docker pull $DOCKERHUB_USERNAME/front-app:latest
       "
     # Récupérer le fichier .env.production depuis FRONT1
     - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1:/srv/front/.env.production .env.production
