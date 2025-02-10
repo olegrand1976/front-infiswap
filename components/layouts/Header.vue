@@ -24,17 +24,19 @@
 
             <div class="flex gap-4 items-center">
                 <Button
+                    v-if="!$user"
                     class="font-semibold text-base"
                     href="/login"
                 >
                     Se connecter
                 </Button>
-                <!-- <Button
+                <Button
+                    v-if="$user"
                     class="font-semibold text-base"
                     href="/dashboard"
                 >
                     Tableau de bord
-                </Button> -->
+                </Button>
                 <LayoutsDropdownLang />
             </div>
         </div>
@@ -84,6 +86,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 
+const { $user } = useNuxtApp();
 const navigationItems = [
     { label: 'ACCUEIL', route: '/' },
     { label: 'A PROPOS', route: '/about' },
