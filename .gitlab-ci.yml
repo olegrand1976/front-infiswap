@@ -8,7 +8,6 @@ stages:
 build:
   stage: build
   image: node:20                   # Utilise Node.js pour disposer de npm
-  privileged: true                 # Nécessaire pour docker-in-docker
   services:
     - name: docker:dind
       alias: docker                # Pour que le nom "docker" soit résolu
@@ -20,7 +19,7 @@ build:
   before_script:
     # Installation de la CLI Docker dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
-    # Attente que l'alias "docker" soit résolu (boucle de débogage)
+    # Attente de la résolution DNS pour "docker"
     - echo "Attente de la résolution DNS pour 'docker'..."
     - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
@@ -36,7 +35,6 @@ build:
 deploy_front1:
   stage: deploy
   image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
-  privileged: true                 # Pour permettre l'exécution de commandes Docker
   services:
     - name: docker:dind
       alias: docker                # Pour que le nom "docker" soit résolu
@@ -73,7 +71,6 @@ deploy_front1:
 deploy_front2:
   stage: deploy
   image: docker:20.10.16
-  privileged: true                 # Pour l'utilisation de Docker dans ce job
   services:
     - name: docker:dind
       alias: docker                # Pour que le nom "docker" soit résolu
@@ -89,7 +86,7 @@ deploy_front2:
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
     # Ajout de la clé SSH de FRONT2 dans known_hosts
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts
-    # Ajout de la clé SSH de FRONT1 pour pouvoir récupérer le fichier .env.production
+    # Ajout de la clé SSH de FRONT1 pour récupérer le fichier .env.production
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
