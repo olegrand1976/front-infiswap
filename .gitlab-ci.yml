@@ -48,8 +48,8 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajout de la clé SSH de FRONT1 dans known_hosts
-    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
+    # Vérifie que SSH_HOST_FRONT1 est défini avant d'exécuter ssh-keyscan
+    - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
   script:
     # Authentification sur Docker Hub et push de l'image construite
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
@@ -84,10 +84,10 @@ deploy_front2:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajout de la clé SSH de FRONT2 dans known_hosts
-    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts
-    # Ajout de la clé SSH de FRONT1 pour récupérer le fichier .env.production
-    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
+    # Vérifie que SSH_HOST_FRONT2 est défini avant d'exécuter ssh-keyscan
+    - if [ -n "$SSH_HOST_FRONT2" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts; else echo "SSH_HOST_FRONT2 is not set"; fi
+    # Vérifie également SSH_HOST_FRONT1 pour récupérer le fichier .env.production
+    - if [ -n "$SSH_HOST_FRONT1" ]; then ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts; else echo "SSH_HOST_FRONT1 is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     - docker push $DOCKERHUB_USERNAME/front-app:latest
