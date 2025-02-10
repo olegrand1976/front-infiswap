@@ -120,21 +120,22 @@
                 <div class="flex flex-col md:space-y-4 sm:space-y-2 space-y-8 xl:mt-8 lg:mt-4 md:mt-4 mt-8 sm:mt-1">
                     <p class="xl:text-base lg:text-sm lg:w-96 md:text-xs sm:text-[0.75rem] sm:text-start text-center text-sm md:w-80 sm:w-72">
                         <strong>Besoin d'un remplacement ?</strong> Avec InfiSwap, publiez votre annonce en
-                        quelques secondes et trouvez rapidement un infirmier disponible près de chez vous. <br>
+                        quelques secondes et trouvez rapidement un(e) infirmier(e) disponible près de chez vous. <br>
                         Simplifiez la gestion de vos absences et assurez la continuité des soins en toute sérénité !
                     </p>
                     <p class="xl:text-base lg:text-sm lg:w-96 md:text-xs sm:text-[0.75rem] sm:text-start text-center text-sm md:w-80 sm:w-72">
-                        Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients en patients pendant
+                        Nos infirmier(e)s sont aussi souvent sur les routes et se déplacent de patients en patients pendant
                         leurs tournées qui sont planifiées de semaine en semaine.
                     </p>
                 </div>
+                <div>
                 <Button
-                    variant="outline"
-                    class="flex justify-center items-center w-36 mx-auto sm:inline-block mt-6 sm:mx-0 md:mt-8 sm:mt-4 rounded-full lg:text-sm sm:text-xs"
-                    href="/"
-                >
+                variant="outline"
+                class="rounded-full lg:text-sm text-xs mx-auto"
+                href="/">
                     En savoir plus
                 </Button>
+                </div>
             </div>
             <div>
                 <NuxtImg
@@ -184,7 +185,7 @@ import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 
 const cards = [
-    {
+/*     {
         image: '/home/Des_infirmiers.jpg',
         alt: 'Groupe d\'infirmiers',
         title: 'Me faire remplacer',
@@ -193,10 +194,10 @@ const cards = [
     {
         image: '/home/bon_infirmier.jpg',
         alt: 'Infirmier',
-        title: 'Cherche un remplacement',
+        title: 'Je cherche un remplacement',
         link: '/',
-    },
-    {
+    }, */
+/*     {
         image: '/home/Rectangle_24.png',
         alt: 'Infirmier',
         title: 'Mon planning',
@@ -207,7 +208,7 @@ const cards = [
         alt: 'Formation pic',
         title: 'Mes formations',
         link: '/',
-    },
+    }, */
 ];
 
 const currentIndex = ref(0);

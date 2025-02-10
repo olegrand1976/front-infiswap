@@ -52,10 +52,10 @@ const languages = [
         icon: '/icons/fr.png',
     },
     {
-        value: 'ru',
-        label: 'RU',
-        name: 'Russie',
-        icon: '/icons/russia.png',
+        value: 'nl',
+        label: 'NL',
+        name: 'Nederlands',
+        icon: '/icons/pays-bas.png',
     },
 ];
 
