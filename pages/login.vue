@@ -114,6 +114,7 @@
                             <Button
                                 class="md:w-80 sm:w-64 hover:shadow-lg md:text-base sm:text-xs"
                                 type="submit"
+                                :in-progress="inProgress"
                             >
                                 Se connecter
                             </Button>
@@ -225,6 +226,7 @@
                         <Button
                             class="w-80"
                             type="submit"
+                            :in-progress="inProgress"
                         >
                             Se connecter
                         </Button>
@@ -275,16 +277,12 @@ const credentials = reactive({
 
 const {
     submit,
-    // inProgress,
+    inProgress,
     // validationErrors: errors,
 } = useSubmit(
     () => {
         status.value = '';
-        return login(credentials);
-    },
-    {
-        // onSuccess: () => router.push('/dashboard'),
-        onSuccess: () => router.push('/'),
+        return login(credentials).then(() => router.push('/dashboard'));
     },
 );
 </script>

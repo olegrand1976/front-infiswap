@@ -24,17 +24,19 @@
 
             <div class="flex gap-4 items-center">
                 <Button
+                    v-if="!isLoggedIn"
                     class="font-semibold text-base"
                     href="/login"
                 >
                     Se connecter
                 </Button>
-                <!-- <Button
+                <Button
+                    v-if="isLoggedIn"
                     class="font-semibold text-base"
                     href="/dashboard"
                 >
                     Tableau de bord
-                </Button> -->
+                </Button>
                 <LayoutsDropdownLang />
             </div>
         </div>
@@ -83,6 +85,9 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
+
+const { isLoggedIn } = useAuth();
+const user = useUser();
 
 const navigationItems = [
     { label: 'ACCUEIL', route: '/' },

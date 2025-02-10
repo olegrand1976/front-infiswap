@@ -5,8 +5,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const user = useUser();
     const { $apifetch } = useNuxtApp();
 
-    if (user.value !== undefined) return;
-
     const fetchCurrentUser = async () => {
         try {
             return await $apifetch('/api/user');
@@ -16,7 +14,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             return null;
         }
     };
-    user.value = await fetchCurrentUser();
+
+    if (!user.value) {
+        user.value = await fetchCurrentUser();
+    }
 
     nuxtApp.provide('fetchCurrentUser', fetchCurrentUser);
+    nuxtApp.provide('user', user.value);
 });

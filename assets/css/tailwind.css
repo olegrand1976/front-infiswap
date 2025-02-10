@@ -28,7 +28,7 @@
     --accent-foreground: 240 5.9% 10%;
 
     --success: 143 65% 64%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --success-foreground: 355.7 100% 97.3%;
 
     --destructive: 355 100% 69%;
     --destructive-foreground: 0 0% 98%;
@@ -37,6 +37,11 @@
     --input:355 100% 69%;
     --ring:346.8 77.2% 49.8%;
     --radius: 0.5rem;
+
+    --toastify-color-success: hsl(var(--success)) !important;
+    --toastify-color-error: hsl(var(--destructive)) !important;
+    --toastify-text-color-success: hsl(var(--success-foreground)) !important;
+    --toastify-text-color-error: hsl(var(--destructive-foreground)) !important;
   }
 
   .dark {

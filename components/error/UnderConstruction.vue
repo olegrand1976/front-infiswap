@@ -6,7 +6,7 @@
                 class="hidden h-12 lg:absolute top-10 z-20 left-1/2 transform -translate-x-1/2 lg:left-10 lg:translate-x-0"
             />
             <div class="flex justify-center items-end text-center h-full">
-                <div class="-mb-8 lg:-mb-28 md:-mb-14">
+                <div class="-mb-8 lg:-mb-10 md:-mb-14">
                     <NuxtImg
                         src="/svg/not_found.svg"
                         class="h-72"
