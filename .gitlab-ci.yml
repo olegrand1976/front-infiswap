@@ -10,6 +10,7 @@ build:
   image: node:20                   # Utilise Node.js pour disposer de npm
   services:
     - name: docker:dind
+      alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
@@ -33,9 +34,10 @@ deploy_front1:
   image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
   services:
     - name: docker:dind
+      alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2375  # Nécessaire pour que le client Docker se connecte au service dind
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
@@ -43,7 +45,7 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajoute la clé de l'hôte FRONT1 (la variable SSH_HOST_FRONT1 doit être définie dans vos variables GitLab)
+    # Ajout de la clé SSH de FRONT1 dans known_hosts
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
     # Authentification sur Docker Hub et push de l'image construite
@@ -68,9 +70,10 @@ deploy_front2:
   image: docker:20.10.16
   services:
     - name: docker:dind
+      alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2375  # Pour la connexion au service dind
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
@@ -78,15 +81,27 @@ deploy_front2:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Ajoute la clé de l'hôte FRONT2 (la variable SSH_HOST_FRONT2 doit être définie dans vos variables GitLab)
+    # Ajout de la clé SSH de FRONT2 dans known_hosts
     - ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts
+    # Ajout de la clé SSH de FRONT1 pour pouvoir récupérer le fichier .env.production
+    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
+    # Authentification sur Docker Hub et push de l'image construite (si nécessaire)
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     - docker push mydockerhubusername/front-app:latest
+    # Sur FRONT2 : login Docker et pull de l'image
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT2 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull mydockerhubusername/front-app:latest &&
+        docker pull mydockerhubusername/front-app:latest
+      "
+    # Récupérer le fichier .env.production depuis FRONT1
+    - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1:/srv/front/.env.production .env.production
+    # Copier le fichier .env.production sur FRONT2 (au même emplacement)
+    - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes .env.production $SSH_USER@$SSH_HOST_FRONT2:/srv/front/.env.production
+    # Déploiement via docker-compose sur FRONT2
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT2 "
         docker-compose -f /srv/front/docker-compose.prod.yml down &&
         docker-compose -f /srv/front/docker-compose.prod.yml up -d
       "
