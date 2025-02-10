@@ -1,99 +1,96 @@
-image: node:20  # Image Node.js (ajuste selon ton projet)
-
-services:
-  - name: docker:dind
-    command: ["--tls=false"]
-
 stages:
   - build
-  - deploy_front1
-  - deploy_front2
+  - deploy
 
-# 🛠️ Configuration globale
-variables:
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_DRIVER: overlay2
-
-before_script:
-  - apt-get update && apt-get install -y openssh-client sshpass
-  - echo "$SSH_PRIVATE_KEY"
-  - echo "$SSH_PRIVATE_KEY" > id_rsa
-  - chmod 600 id_rsa
-  - echo "$SSH_KNOWN_HOSTS" > known_hosts
-  - ssh-keyscan -H $IP_FRONT_1 >> known_hosts
-  - ssh-keyscan -H $IP_FRONT_2 >> known_hosts
-
-# 📦 **Build du Front sur FRONT1**
+#####################################
+# Job de Build
+#####################################
 build:
   stage: build
-  script:
-    - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
-        cd /srv/front &&
-        git pull origin main &&
-        npm install &&
-        npm run build &&
-        docker build -t $DOCKERHUB_USERNAME/front-app:latest .
-      "
-    - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
-        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker push $DOCKERHUB_USERNAME/front-app:latest
-      "
-  only:
-    - main
-
-# 🚀 **Déploiement sur FRONT1**
-deploy_front1:
-  stage: deploy_front1
-  variables:
-    GIT_STRATEGY: none
-  before_script: []
-  script:
-    - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_1 "
-        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
-        docker stop front-app || true &&
-        docker rm front-app || true &&
-        docker run -d --restart=always -p 80:3000 --name front-app $DOCKERHUB_USERNAME/front-app:latest
-      "
-  only:
-    - main
-  tags:
-    - docker
-  before_script: []
+  image: node:20                   # Utilise Node.js pour disposer de npm
   services:
     - name: docker:dind
+      command: ["--tls=false"]
   variables:
     DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  before_script:
+    # Installation de la CLI Docker dans l'image node (basée sur Debian)
+    - apt-get update && apt-get install -y docker.io
   script:
-    - echo "Déploiement sur FRONT1 en cours..."
+    # Installation des dépendances et build du front
+    - npm install
+    - npm run build
+    # Construction de l'image Docker (assurez-vous que votre Dockerfile est présent à la racine)
+    - docker build -t mydockerhubusername/front-app:latest .
+  only:
+    - main
 
-# 🚀 **Déploiement sur FRONT2 (après FRONT1)**
-deploy_front2:
-  stage: deploy_front2
+#####################################
+# Job de Déploiement sur FRONT1
+#####################################
+deploy_front1:
+  stage: deploy
+  image: docker:20.10.16           # Image Alpine avec Docker CLI
+  services:
+    - name: docker:dind
+      command: ["--tls=false"]
   variables:
-    GIT_STRATEGY: none
-  before_script: []
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  before_script:
+    # Installation des outils SSH dans l'image Alpine
+    - apk add --no-cache openssh-client sshpass
+    - echo "$SSH_PRIVATE_KEY" > id_rsa
+    - chmod 600 id_rsa
+    - echo "$SSH_KNOWN_HOSTS" > known_hosts
+    # Ajout de la clé SSH de FRONT1 dans known_hosts (SSH_HOST_FRONT1 doit être défini en variable)
+    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT1 >> known_hosts
   script:
+    # Connexion à Docker Hub et push de l'image construite
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    - docker push mydockerhubusername/front-app:latest
+    # Sur FRONT1 : login, pull de l'image et déploiement via docker-compose
     - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=no $SSH_USER@$IP_FRONT_2 "
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull $DOCKERHUB_USERNAME/front-app:latest &&
-        docker stop front-app || true &&
-        docker rm front-app || true &&
-        docker run -d --restart=always -p 80:3000 --name front-app $DOCKERHUB_USERNAME/front-app:latest
+        docker pull mydockerhubusername/front-app:latest &&
+        docker-compose -f /srv/front/docker-compose.prod.yml down &&
+        docker-compose -f /srv/front/docker-compose.prod.yml up -d
+      "
+  only:
+    - main
+
+#####################################
+# Job de Déploiement sur FRONT2
+#####################################
+deploy_front2:
+  stage: deploy
+  image: docker:20.10.16
+  services:
+    - name: docker:dind
+      command: ["--tls=false"]
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - apk add --no-cache openssh-client sshpass
+    - echo "$SSH_PRIVATE_KEY" > id_rsa
+    - chmod 600 id_rsa
+    - echo "$SSH_KNOWN_HOSTS" > known_hosts
+    # Ajout de la clé SSH de FRONT2 dans known_hosts (SSH_HOST_FRONT2 doit être défini en variable)
+    - ssh-keyscan -t ed25519 $SSH_HOST_FRONT2 >> known_hosts
+  script:
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    - docker push mydockerhubusername/front-app:latest
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST_FRONT2 "
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        docker pull mydockerhubusername/front-app:latest &&
+        docker-compose -f /srv/front/docker-compose.prod.yml down &&
+        docker-compose -f /srv/front/docker-compose.prod.yml up -d
       "
   only:
     - main
   needs:
-    - deploy_front1  # On déploie FRONT2 seulement après FRONT1
-  tags:
-    - docker
-  services:
-    - name: docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    - echo "Déploiement sur FRONT2 en cours..."
+    - deploy_front1
