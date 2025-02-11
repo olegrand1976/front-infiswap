@@ -102,6 +102,8 @@
                                         :maxlength="4"
                                         @keypress="onlyNumbers"
                                         @paste.prevent
+                                        @input="formatPostalCode"
+
                                     />
                                 </div>
 
