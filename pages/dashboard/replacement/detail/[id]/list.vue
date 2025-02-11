@@ -53,8 +53,8 @@
                             </TableCell>
 
                             <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
-                                <Form @submit.prevent="acceptReplacement(list.id)">
-                                    <Button
+                                <Form @submit="changeStatus(list.id)">
+                                    <Button type="submit"
                                         variant="transparent"
                                         class="bg-gray-200 group-hover:bg-white rounded-full w-24"
                                     >
@@ -85,6 +85,8 @@
 import { useRoute } from 'vue-router';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { useSubmit } from '~/composables/useSubmit';
+import { useReplacementStore } from '@/stores/useReplacementStore';
+const replacementStore = useReplacementStore();
 
 const route = useRoute();
 const replacementId = route.params.id;
@@ -107,6 +109,7 @@ const endDate = computed(() =>
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : ''
 );
 
+/*
 const submitStatus = useSubmit(async (responseId) => {
     const { changeStatus } = changeStatusReplacement(responseId, 'confirmed');
     await changeStatus();
@@ -118,7 +121,7 @@ const submitStatus = useSubmit(async (responseId) => {
         console.error('Erreur lors du changement de statut:', error);
     }
 });
-
+*/
 onMounted(() => {
     fetchListResponse();
 });
@@ -131,4 +134,11 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
 });
+
+const changeStatus = async (id) => {
+    await replacementStore.changeStatus(id);
+
+
+};
+
 </script>
