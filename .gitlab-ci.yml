@@ -89,28 +89,28 @@ deploy_front2:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
-    # Vérifie et ajoute la clé SSH de FRONT2
+    # Vérifie et ajoute la clé SSH de FRONT2 (IP_FRONT_2 doit être défini)
     - if [ -n "$IP_FRONT_2" ]; then ssh-keyscan -t ed25519 $IP_FRONT_2 >> known_hosts; else echo "IP_FRONT_2 is not set"; fi
     # Vérifie et ajoute également la clé SSH de FRONT1 (pour récupérer .env.production)
     - if [ -n "$IP_FRONT_1" ]; then ssh-keyscan -t ed25519 $IP_FRONT_1 >> known_hosts; else echo "IP_FRONT_1 is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    # Récupération de l'image depuis Docker Hub
+    # Récupération de l'image depuis Docker Hub sur le runner
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
-    # Connexion SSH sur FRONT2 pour récupérer l'image
+    # Connexion SSH sur FRONT2 pour exécuter les commandes Docker avec sudo
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_2 "
-        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+        sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        sudo docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
       "
-    # Récupération du fichier .env.production depuis FRONT1 et copie sur FRONT2
+    # Récupérer le fichier .env.production depuis FRONT1 et le copier sur FRONT2
     - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1:/srv/front/.env.production .env.production
     - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes .env.production $SSH_USER@$IP_FRONT_2:/srv/front/.env.production
-    # Déploiement via docker-compose sur FRONT2
+    # Déploiement via docker-compose sur FRONT2 (avec sudo)
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_2 "
-        docker compose -f /srv/front/docker-compose.prod.yml down &&
-        docker compose -f /srv/front/docker-compose.prod.yml up -d
+        sudo docker-compose -f /srv/front/docker-compose.prod.yml down &&
+        sudo docker-compose -f /srv/front/docker-compose.prod.yml up -d
       "
   only:
     - main
