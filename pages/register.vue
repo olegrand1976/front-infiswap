@@ -523,10 +523,10 @@ const genders = [
 
 const countries = [
     {
-        value: 'ru',
-        label: 'Russie',
-        name: 'russie',
-        icon: '/icons/russia.png',
+        value: 'be',
+        label: 'Belgique',
+        name: 'belgique',
+        icon: '/icons/belgium.png',
     },
     {
         value: 'fr',
@@ -538,9 +538,9 @@ const countries = [
 
 const languages = [
     {
-        value: 'ru',
-        label: 'Russe',
-        name: 'russe',
+        value: 'nl',
+        label: 'Nederlands',
+        name: 'nederlands',
     },
     {
         value: 'fr',
