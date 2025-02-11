@@ -137,3 +137,38 @@ export const useListResponse = (replacementId) => {
 
     return { listResponse, error, loading, fetchListResponse };
 };
+
+export const changeStatusReplacement = (responseId, status) => {
+    const { $apifetch } = useNuxtApp();
+
+    const error = useState('statusError', () => null);
+    const loading = useState('statusLoading', () => false);
+    const success = useState('statusSuccess', () => false);
+
+    const changeStatus = async () => {
+        loading.value = true;
+        error.value = null;
+        success.value = false;
+
+        try {
+            const response = await $apifetch(`/api/replacement-responses/${responseId}/${status}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.success) {
+                success.value = true;
+            }
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
+    return { error, loading, success, changeStatus };
+}

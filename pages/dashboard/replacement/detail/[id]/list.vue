@@ -47,18 +47,22 @@
                     <template
                         v-for="list in listResponse"
                     >
-                        <TableRow class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8  border border-none group">
+                        <TableRow class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border border-none group">
                             <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-100 group-hover:bg-primary">
                                 <span class="group-hover:text-white">{{ list.repondedBy.firstname }} {{ list.repondedBy.lastname }}</span>
                             </TableCell>
 
                             <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
-                                <Button
-                                    variant="transparent"
-                                    class="bg-gray-200 group-hover:bg-white rounded-full w-24"
-                                >
-                                    <span class="text-xs">Accepter</span>
-                                </Button>
+                                <Form @submit.prevent="acceptReplacement(list.id)">
+                                    <Button
+                                        variant="transparent"
+                                        class="bg-gray-200 group-hover:bg-white rounded-full w-24"
+                                    >
+                                        <span class="text-xs">
+                                            Accepter
+                                        </span>
+                                    </Button>
+                                </Form>
                             </TableCell>
 
                             <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
@@ -79,8 +83,8 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-
-import { useListResponse } from '~/composables/useReplacements';
+import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import { useSubmit } from '~/composables/useSubmit';
 
 const route = useRoute();
 const replacementId = route.params.id;
@@ -102,6 +106,18 @@ const startDate = computed(() =>
 const endDate = computed(() => 
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : ''
 );
+
+const submitStatus = useSubmit(async (responseId) => {
+    const { changeStatus } = changeStatusReplacement(responseId, 'confirmed');
+    await changeStatus();
+    await fetchListResponse(); 
+}, {
+    onSuccess: () => {
+    },
+    onError: (error) => {
+        console.error('Erreur lors du changement de statut:', error);
+    }
+});
 
 onMounted(() => {
     fetchListResponse();
