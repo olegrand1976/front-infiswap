@@ -1,12 +1,12 @@
 <template>
     <div class="pt-3">
-        <div class="bg-gray-100 h-12 rounded py-2">
+        <div class="bg-gray-100 h-12 rounded p-2">
             <h1 class="text-primary">
                 Liste des personnes <strong>interessées par mon remplacement</strong>
             </h1>
         </div>
 
-        <div class="flex items-center space-x-6 mt-6 mx-16">
+        <div class="flex items-center space-x-6 mt-6 p-2">
             <h4 class="font-bold text-sm text-primary">
                 Période 
             </h4>
@@ -38,12 +38,15 @@
             </div>
         </div>
 
-        <div class="mx-16 mt-8 mb-12">
+        <div class="mt-8 mb-12 p-2">
             <Table>
                 <TableHeader>
-                    <TableRow class="grid grid-cols-3 overflow-x-hidden gap-3 border border-none">
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                    <TableRow class="grid grid-cols-4 overflow-x-hidden gap-4 md:gap-8 border border-none">
+                        <TableHead class="bg-primary col-span-2 flex w-full items-center rounded-lg text-white">
                             Nom
+                        </TableHead>
+                        <TableHead class="bg-primary col-span-2 justify-center flex w-full items-center rounded-lg text-white">
+                            Actions
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -53,26 +56,26 @@
                             v-for="people in peopleInterests"
                             :key="people.id"
                     >
-                        <TableRow class="grid grid-cols-3 overflow-x-hidden gap-3 border border-none group">
-                            <TableCell class="flex justify-center my-1 items-center bg-gray-100 group-hover:bg-primary text-xs">
+                        <TableRow class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8  border border-none group">
+                            <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-100 group-hover:bg-primary">
                                 <span class="group-hover:text-white">{{ people.lastname }}</span>
                             </TableCell>
 
-                            <TableCell class="flex group-hover:bg-primary w-52 ml-12 justify-center my-1 items-center bg-gray-100 text-xs">
+                            <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
                                 <Button
                                     variant="transparent"
-                                    class="bg-gray-200 group-hover:bg-white rounded-full"
+                                    class="bg-gray-200 group-hover:bg-white rounded-full w-24"
                                 >
                                     <span class="text-xs">Accepter</span>
                                 </Button>
                             </TableCell>
 
-                            <TableCell class="flex group-hover:bg-primary w-52 -ml-10 justify-center my-1 items-center bg-gray-100 text-xs">
+                            <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
                                 <Button
                                     variant="transparent"
                                     class="bg-gray-200 group-hover:bg-white rounded-full"
                                 >
-                                    <span class="text-xs">Refuser</span>
+                                    <span class="text-xs">Voir le profil</span>
                                 </Button>
                             </TableCell>
                         </TableRow>
