@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-    modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', 'shadcn-nuxt', '@nuxt/image', 'nuxt-swiper', '@pinia/nuxt'],
+    modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', 'shadcn-nuxt', '@nuxt/image', 'nuxt-swiper'],
     imports: {
         dirs: [
             './utils',
