@@ -14,7 +14,7 @@ export default defineNuxtConfig({
                 {
                     name: 'description',
                     content:
-          'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
+                        'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
                 },
                 {
                     name: 'keywords',
@@ -68,4 +68,29 @@ export default defineNuxtConfig({
        */
         componentDir: './components/ui',
     },
+    build: {
+        // Active la minification pour JS et CSS
+        optimization: {
+            minimize: true,
+            terserOptions: {
+                compress: {
+                    drop_console: true,
+                    drop_debugger: true
+                }
+            }
+        }
+        // Vous pouvez activer ou désactiver les sourcemaps selon vos besoins :
+        // sourcemap: process.env.NODE_ENV !== 'production'
+    },
+    vite: {
+        // Vous pouvez configurer ici d'autres options relatives au CSS si nécessaire
+        css: {
+            // Exemple : désactiver les sourcemaps CSS en production
+            devSourcemap: false
+        },
+        build: {
+            // Optionnel : utiliser esbuild pour minifier le CSS
+            minify: 'esbuild'
+        }
+    }
 });
