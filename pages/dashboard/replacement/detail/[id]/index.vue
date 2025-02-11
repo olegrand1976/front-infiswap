@@ -136,12 +136,10 @@
             </div>
         </div>
 
-        <div class="my-12">
-            <Form>
+        <div class="my-12"  v-if="user?.nurse && replacement.nurse_id !== user.nurse.id">
+            <Form  @submit="handleSubmit">
                 <div
-                    v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
-                    class="border-2 border-primary rounded p-3 w-96"
-                >
+                class="border-2 border-primary rounded p-3 w-96">
                     <label class="text-xs text-primary font-bold">
                         Parlez-nous un peu de vous
                     </label>
@@ -149,6 +147,8 @@
                         <FormItem class="mt-3">
                             <FormControl>
                                 <Textarea
+                                  v-model="formData.reason"
+
                                     placeholder="Entrez votre description ici"
                                     class="bg-gray-200 text-xs h-36"
                                 />
@@ -179,6 +179,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useReplacementStore } from '@/stores/useReplacementStore';
+
+const replacementStore = useReplacementStore();
+
 import {
     CalendarDaysIcon,
     ClockIcon,
@@ -187,16 +191,36 @@ import {
     ChevronRightIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
-import { CalendarDate } from '@internationalized/date';
+import { CalendarDate } from "@internationalized/date";
+import { ref } from 'vue';
 
-import { useDetailReplacement, currentUser } from '~/composables/useReplacements';
-
-const { user } = currentUser();
-console.log('Nurse id', user.value.nurse.id);
+import { useDetailReplacement, currentUser} from '~/composables/useReplacements';
+const {user } = currentUser();
 const route = useRoute();
 const replacementId = route.params.id;
+const respondedBy = computed(() => user.value?.id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
+const formData = ref({
+  replacementId: replacementId, // Remplacez par la vraie valeur
+  respondedBy: respondedBy, // Remplacez par l'ID de l'utilisateur actuel
+  reason: '',
+  comment: ''
+});
+
+const handleSubmit = async () => {
+    console.log('formData',formData.value);
+    await replacementStore.submitForm(formData.value);
+
+  // Réinitialiser le formulaire après soumission
+  formData.value = {
+        replacementId: "", // Conserver l'ID du remplacement
+        respondedBy: "", // Conserver l'utilisateur
+        reason: '',
+        comment: ''
+    };
+
+};
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
