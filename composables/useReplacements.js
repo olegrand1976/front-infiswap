@@ -1,5 +1,14 @@
 import { useState, useNuxtApp } from '#app';
 
+export const currentUser=()=>{
+  const { $apifetch } = useNuxtApp();
+  const user = useState('user');
+ console.log('user',user);
+  return {
+    user,
+};
+}
+
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -43,6 +52,7 @@ export const useReplacements = () => {
         error,
         loading,
         success,
+        user,
         submitReplacement,
     };
 };
