@@ -24,6 +24,7 @@ build:
     - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
     - npm install
+    - export NODE_OPTIONS=--max_old_space_size=4096
     - npm run build
     # Construction de l'image avec le tag complet
     - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
