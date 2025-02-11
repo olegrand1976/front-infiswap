@@ -157,7 +157,10 @@
                                 </TableCell>
 
                                 <TableCell class="w-24 ml-20 text-xs overflow-x-hidden">
-                                    <Button class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center">
+                                    <Button
+                                        class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
+                                        :href="`/dashboard/replacement/detail/${replacement.id}`"
+                                    >
                                         <span class="text-xs">Voir plus</span>
                                     </Button>
                                 </TableCell>
