@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-    modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', 'shadcn-nuxt', '@nuxt/image', 'nuxt-swiper', '@pinia/nuxt'],
+    modules: [ '@vee-validate/nuxt','@nuxtjs/tailwindcss', '@nuxt/eslint', 'shadcn-nuxt', '@nuxt/image', 'nuxt-swiper', '@pinia/nuxt'],
     imports: {
         dirs: [
             './utils',
@@ -68,4 +68,7 @@ export default defineNuxtConfig({
        */
         componentDir: './components/ui',
     },
+    plugins: [
+        '~/plugins/vee-validate.js', // Ajouter le plugin ici
+      ],
 });

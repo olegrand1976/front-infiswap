@@ -1,29 +1,118 @@
+<!-- <script setup>
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+
+// 📌 Configurer la validation en français
+configure({
+  generateMessage: localize({ fr }),
+  validateOnBlur: true,
+  validateOnInput: true,
+  validateOnChange: true,
+  validateOnModelUpdate: true,
+});
+
+// 📌 Définir le schéma de validation
+const schema = yup.object({
+  name: yup.string()
+    .required('Le nom est obligatoire')
+    .min(3, 'Le nom doit contenir au moins 3 caractères')
+    .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
+});
+
+// 📌 Initialiser le formulaire
+const { handleSubmit, defineField } = useForm({
+  validationSchema: schema,
+});
+
+const [name, nameAttrs] = defineField('name');
+
+// 📌 Fonction de soumission du formulaire
+const onSubmit = handleSubmit(values => {
+  console.log('Données du formulaire:', values);
+  alert('Formulaire soumis avec succès !');
+});
+</script>
+
+<template>
+  <div class="p-6 max-w-md mx-auto bg-white shadow-md rounded-lg">
+    <h2 class="text-xl font-bold mb-4">Formulaire de Nom</h2>
+
+    <form @submit="onSubmit">
+      
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-700">Nom :</label>
+        <Field v-model="name" v-bind="nameAttrs" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Entrez votre nom" />
+        <ErrorMessage name="name" class="text-red-500 text-xs mt-1" />
+      </div>
+
+   
+      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
+        Envoyer
+      </button>
+    </form>
+  </div>
+</template> -->
 <template>
     <div class="mt-20">
         <div class="relative bg-tertiary/30 h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 flex flex-col items-center justify-center m-auto space-y-4 px-4 sm:px-8 md:px-16">
-            <!-- Logo centré avec une taille réactive -->
-            <LayoutsLogo class="w-[20rem] h-32 sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
-
-            <!-- Titre centré avec un espace entre l'image et le texte -->
-            <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
-                <strong>Chercher</strong> un(e) infirmier(e) ?
-            </h1>
+        <!-- Logo centré avec une taille réactive -->
+        <LayoutsLogo class="w-[20rem] h-32 sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
+        <!-- Titre centré avec un espace entre l'image et le texte -->
+        <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
+            <strong>Chercher</strong> un(e) infirmier(e) ?
+        </h1>
         </div>
-
         <div class="container mt-36 mb-24 w-[65%]">
-            <Form @submit="handleSubmit">
+            <form @submit="handleSubmit">
                 <div class="grid grid-cols-1 gap-4">
-                    <FormField name="fullname">
+
+
+
+                    
+                    <FormField name="lastname">
+    <FormItem>
+        <FormControl>
+            <div class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%] 
+                        sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]">
+                <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full 
+                            flex items-center justify-center gap-2 px-2">
+                    <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
+                    <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
+                </div>
+                
+                <!-- Ajout de focus:border-primary et focus:text-primary -->
+                <Field v-model="formData.lastname" 
+       v-bind="lastnameAttrs" 
+       id="lastname" 
+       name="lastname"
+       class="w-full text-black placeholder:text-black/80 focus:border-primary" 
+       placeholder="Entrez votre nom" />
+
+            </div>
+            
+            <ErrorMessage name="lastname" class="text-red-500 text-xs mt-5" />
+        </FormControl>
+    </FormItem>
+</FormField>
+
+
+
+
+
+
+                 
+
+
+                
+                     <FormField name="fullname">
                         <FormItem>
                             <FormControl>
-                                <div
-                                    class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%]
-                                sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]"
-                                >
-                                    <div
-                                        class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full
-                                    flex items-center justify-center gap-2 px-2"
-                                    >
+                                <div class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%] 
+                                            sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]">
+                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full 
+                                                flex items-center justify-center gap-2 px-2">
                                         <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
                                     </div>
@@ -33,18 +122,24 @@
                                         variant="transparent"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
+                                    <ErrorMessage name="formData.lastname" class="text-red-500 text-xs mt-1" />
+
                                 </div>
                             </FormControl>
-                        </FormItem>
-                    </FormField>
+                        </FormItem> 
+                    </FormField>  
 
+                   
+
+      
                     <FormField name="firstname">
                         <FormItem>
                             <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
+
+                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary  rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white " />
+                                            <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white "  />
                                             <PlusIcon class="w-3 h-3 text-primary sm:text-white md:text-white lg:text-white absolute top-0 left-1" />
 
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Prénoms</span>
@@ -56,26 +151,34 @@
                                         placeholder="Prenom"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
-                                </div>
+                                </div> 
+
+
+
+
+
                             </FormControl>
                         </FormItem>
                     </FormField>
                     <FormField name="zipCode">
                         <FormItem>
                             <FormControl>
+                              
+
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary  rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <!-- <NuxtImg
+                            <!-- <NuxtImg
                                 src="/icons/zip_code.png"
                                 class="w-5 h-5 filter invert saturate-200 hue-rotate-180 text-primary" /> -->
 
-                                            <div class="w-5 h-5 bg-primary flex items-center justify-center">
-                                                <NuxtImg
-                                                    src="/icons/zip_code.png"
-                                                    class="w-4 h-4"
-                                                />
-                                            </div>
+                                <div class="w-5 h-5 bg-primary flex items-center justify-center">
+                                        <NuxtImg
+                                            src="/icons/zip_code.png"
+                                            class="w-4 h-4" />
+                                    </div>
+
+
 
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
                                         </FormLabel>
@@ -87,11 +190,17 @@
                                         placeholder="Code Postal"
                                         class="w-full text-black placeholder:text-black/80"
                                         :maxlength="4"
-                                        @keypress="onlyNumbers"
                                         @paste.prevent
-                                        @input="formatPostalCode"
+
                                     />
                                 </div>
+
+
+
+
+                             
+
+                                
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -99,6 +208,9 @@
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
+                            
+
+
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary  rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
@@ -107,12 +219,12 @@
                                                 class="w-5 h-5 filter invert saturate-200 hue-rotate-180 text-primary"
                                             /> -->
 
+
                                             <div class="w-5 h-5 bg-primary flex items-center justify-center">
-                                                <NuxtImg
-                                                    src="/icons/city_white.png"
-                                                    class="w-4 h-4"
-                                                />
-                                            </div>
+                                        <NuxtImg
+                                            src="/icons/city_white.png"
+                                            class="w-4 h-4" />
+                                    </div>
 
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Ville</span>
                                         </FormLabel>
@@ -132,7 +244,7 @@
                     <FormField name="phoneNumber">
                         <FormItem>
                             <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
+                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <PhoneIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white " />
@@ -145,7 +257,13 @@
                                         placeholder="97 12 25 - 123 - 45"
                                         class="w-full text-black placeholder:text-black/80"
                                     />
-                                </div>
+
+
+
+                                </div> 
+
+                             
+
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -170,7 +288,7 @@
                     </FormItem>
                 </FormField>
 
-                <div class="mt-12 flex justify-center itemss-center">
+                <div class="mt-12 flex justify-center itemss-center" >
                     <Button
                         :disabled="patientStore.isSubmitting"
                         type="submit"
@@ -187,8 +305,36 @@
                         de chez vous
                     </span>
                 </div>
-            </Form>
+            </form>
         </div>
+
+
+        <div class="p-6 max-w-md mx-auto bg-white shadow-md rounded-lg">
+    <h2 class="text-xl font-bold mb-4">Formulaire de Nom</h2>
+
+    <form @submit="onSubmit">
+      <!-- Champ "name" -->
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-700">Nom :</label>
+        <Field v-model="name" v-bind="nameAttrs" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Entrez votre nom" />
+        <ErrorMessage name="name" class="text-red-500 text-xs mt-1" />
+      </div>
+
+
+      <div class="mb-4">
+        <label for="lastname" class="block text-sm font-medium text-gray-700">lastaname :</label>
+        <Field v-model="lastname" v-bind="lastnameAttrs" id="lastname" name="lastname" class="w-full px-3 py-2 border rounded-lg" placeholder="Entrez votre lastname" />
+        <ErrorMessage name="lastname" class="text-red-500 text-xs mt-1" />
+      </div> 
+
+
+      <!-- Bouton de soumission -->
+      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
+        Envoyer
+      </button>
+    </form>
+  </div>
+
     </div>
 </template>
 
@@ -202,6 +348,16 @@ import {
     PlusCircleIcon,
 } from '@heroicons/vue/24/solid';
 import { usePatientStore } from '@/stores/usePatientStore';
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+
+
+useHead({
+    title: 'Chercher un infirmier',
+});
+
 
 const patientStore = usePatientStore();
 const errorMessage = ref('');
@@ -212,58 +368,65 @@ const formData = reactive({
     dateOfBirth: '',
     zipCode: '',
     city: '',
-    // careType: '',
-    // frequency: '',
     phoneNumber: '',
 });
 
-const onlyNumbers = (event) => {
-    // Empêche la saisie si ce n'est pas un chiffre (0-9)
-    if (!/[0-9]/.test(event.key)) {
-        event.preventDefault();
-    }
-};
-
-useHead({
-    title: 'Chercher un infirmier',
-});
-
-const formatPostalCode = (event) => {
-    // Supprime tout caractère qui n'est pas un chiffre
-    formData.zipCode = event.target.value.replace(/\D/g, '');
-
-    // Validation si exactement 4 chiffres
-    if (!/^\d{4}$/.test(formData.zipCode)) {
-        errorMessage.value = 'Le code postal doit contenir exactement 4 chiffres.';
-    }
-    else {
-        errorMessage.value = '';
-    }
-};
-
-const { careTypes, fetchCareTypes } = useCareTypes();
-
-onMounted(() => {
-    fetchCareTypes();
-});
-
-const selectedCareTypes = ref([]);
-
-const isSelected = (care) => {
-    return selectedCareTypes.value.some(item => item.id === care.id);
-};
-
-const toggleSelectionCare = (care) => {
-    const index = selectedCareTypes.value.findIndex(item => item.id === care.id);
-    if (index > -1) {
-        selectedCareTypes.value.splice(index, 1);
-    }
-    else {
-        selectedCareTypes.value.push(care);
-    }
-};
-
+/*
 const handleSubmit = async () => {
     await patientStore.submitForm(formData);
 };
+*/
+
+
+
+
+// 📌 Configurer la validation en français
+configure({
+  generateMessage: localize({ fr }),
+  validateOnBlur: true,
+  validateOnInput: true,
+  validateOnChange: true,
+  validateOnModelUpdate: true,
+});
+
+// 📌 Définir le schéma de validation
+const schema = yup.object({
+  name: yup.string()
+    .required('Le nom est obligatoire')
+    .min(3, 'Le nom doit contenir au moins 3 caractères')
+    .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
+
+    lastname: yup.string()
+    .required('Le nom est obligatoire')
+    .min(3, 'Le nom doit contenir au moins 3 caractères')
+    .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
+  
+  firstname: yup.string()
+    .required('Le prénom est obligatoire')
+    .min(3, 'Le prénom doit contenir au moins 3 caractères')
+    .max(50, 'Le prénom ne peut pas dépasser 50 caractères'),
+
+  fullname: yup.string()
+    .required('Le nom complet est obligatoire')
+    .min(3, 'Le nom complet doit contenir au moins 3 caractères')
+    .max(50, 'Le nom complet ne peut pas dépasser 50 caractères'),
+});
+
+// 📌 Initialiser le formulaire
+const { handleSubmit, defineField } = useForm({
+  validationSchema: schema,
+  initialValues: formData, // lier formData avec les valeurs initiales
+
+});
+
+const [name, nameAttrs] = defineField('name');
+const [lastname, lastnameAttrs] = defineField('lastname');
+const [fullname, fullnameAttrs] = defineField('fullname');
+
+
+const onSubmit = handleSubmit(values => {
+  console.log('Données du formulaire:', values);
+  alert('Formulaire soumis avec succès !');
+});
+
 </script>
