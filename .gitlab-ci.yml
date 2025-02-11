@@ -116,3 +116,4 @@ deploy_front2:
     - main
   needs:
     - deploy_front1
+
