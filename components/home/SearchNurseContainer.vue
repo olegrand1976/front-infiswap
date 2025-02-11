@@ -54,7 +54,7 @@
             <NuxtImg
                 src="/home/Group_2050.png"
                 class="w-48 mx-auto flex justify-center items-center"
-            /> 
+            />
             <NuxtImg
                 src="/icons/cog.png"
                 class="w-20 absolute top-36 left-24"
@@ -62,11 +62,11 @@
             <NuxtImg
                 src="/icons/Union_3.png"
                 class="w-12 absolute -top-6 left-20"
-            />  
+            />
             <NuxtImg
                 src="/icons/Union.png"
                 class="w-8 absolute top-24 right-20"
-            />  
+            />
         </div>
 
         <div class="flex flex-col mt-16 space-y-8 justify-center px-auto items-center">

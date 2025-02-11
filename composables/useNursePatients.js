@@ -23,5 +23,9 @@ export const useNursePatients = () => {
         }
     }
 
-    return { nursePatients, error, loading, fetchNursePatients };
+    async function searchNurse(form) {
+        await $apifetch('/api/patients', { method: 'post', body: form });
+    }
+
+    return { nursePatients, error, loading, fetchNursePatients, searchNurse };
 };
