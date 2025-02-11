@@ -16,17 +16,25 @@ build:
     DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
+    # Vous pouvez aussi définir NODE_ENV=production ici si nécessaire
+    NODE_ENV: production
+  cache:
+    key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
+    paths:
+      - node_modules/
+      - .npm/
   before_script:
-    # Installation de Docker CLI dans l'image node (node:20 ne contient pas Docker par défaut)
     - apt-get update && apt-get install -y docker.io
-    # Attente de la résolution DNS pour "docker"
     - echo "Attente de la résolution DNS pour 'docker'..."
     - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
-    - npm install
-    - export NODE_OPTIONS=--max_old_space_size=4096
+    # Installation déterministe des dépendances
+    - npm ci
+    # Augmenter la mémoire allouée à Node pour le build (8 Go ici – adaptez selon vos ressources)
+    - export NODE_OPTIONS=--max_old_space_size=8192
+    # Lancer le build de l'application (assurez-vous que votre configuration Nuxt/Vite est optimisée pour la production)
     - npm run build
-    # Construction de l'image avec le tag complet
+    # Construction de l'image Docker avec le tag complet (précisez "docker.io" pour être explicite)
     - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
     # Connexion à Docker Hub et push de l'image
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
@@ -34,6 +42,7 @@ build:
     - docker images
   only:
     - main
+
 
 #####################################
 # Déploiement sur FRONT1
