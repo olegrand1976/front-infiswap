@@ -40,7 +40,7 @@
                                                     :is="item.icon"
                                                     class="w-6 h-6 opacity-80"
                                                 />
-                                                <span class="text-xs">{{ item.label }}</span>
+                                                <span>{{ item.label }}</span>
                                             </div>
                                             <div v-if="item.count">
                                                 <Badge>{{ item.count }}</Badge>
@@ -67,7 +67,7 @@
                             </p>
                             <Button
                                 variant="secondary"
-                                class="text-xs text-black/70"
+                                class="text-black/70"
                                 href="/"
                             >
                                 <PencilSquareIcon class="w-6 h-6" />

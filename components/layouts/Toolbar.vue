@@ -1,5 +1,5 @@
 <template>
-    <div class="container h-[3.5rem] flex items-center rounded-lg -mt-2 bg-gray-100">
+    <div class="container h-20 py-3 flex items-center rounded-lg -mt-2 bg-gray-100">
         <div class="flex justify-between w-full">
             <div>
                 <Form>
@@ -10,7 +10,7 @@
                                     <Input
                                         :v-model="search"
                                         placeholder="Rechercher"
-                                        class="w-full text-xs"
+                                        class="w-80 text-xs bg-transparent"
                                     />
                                     <Button
                                         type="submit"
