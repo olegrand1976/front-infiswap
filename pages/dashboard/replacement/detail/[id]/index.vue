@@ -49,7 +49,9 @@
                         <span class="text-xs text-primary">27 intéressés</span>
                     </div>
                 </div>
-                <Button>
+                <Button
+                    :href="`/dashboard/replacement/detail/${replacement.id}/list`"
+                >
                     <span class="text-xs">Liste</span>
                 </Button>
             </div>
