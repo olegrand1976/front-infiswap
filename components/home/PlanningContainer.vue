@@ -1,5 +1,5 @@
 <template>
-    <!-- <div class="sm:mt-12 relative bg-white sm:bg-tertiary/25 md:pt-36 md:pb-28 sm:pt-28 sm:pb-24 pt-12 pb-10">
+     <div class="sm:mt-12 relative bg-white sm:bg-tertiary/25 md:pt-36 md:pb-28 sm:pt-28 sm:pb-24 pt-12 pb-10">
         <div class="flex flex-col-reverse sm:flex-row justify-center items-center xl:space-x-28 lg:space-x-20 sm:space-x-12 container">
             <div class="z-20 mt-6 sm:mt-0">
                 <NuxtImg
@@ -59,7 +59,7 @@
                 class="relative xl:w-52 lg:w-40 md:w-32 sm:w-24"
             />
         </div>
-    </div> -->
+    </div>
 </template>
 
 <script lang="ts" setup>

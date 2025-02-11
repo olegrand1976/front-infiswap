@@ -21,9 +21,6 @@
             <HomeSubscribeBanner />
         </section>
         <section>
-            <HomeFormationContainer />
-        </section>
-        <section>
             <HomeAppDownloadSection />
         </section>
     </div>
