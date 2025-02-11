@@ -200,7 +200,6 @@ useHead({
 const {
     submit,
     inProgress,
-    validationErrors,
 } = useSubmit(
     () => {
         return searchNurse(formData).then(() => {
