@@ -1,15 +1,15 @@
 <template>
     <div class="md:mt-16">
         <div class="relative bg-tertiary/30 h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 flex flex-col items-center justify-center m-auto space-y-4 px-4 sm:px-8 md:px-16">
-            <LayoutsLogo class="w-60 md:w-[50vw] xl:w-[35vw]" />
+            <LayoutsLogo class="w-60 md:w-[40vw] xl:w-[25vw]" />
 
-            <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
+            <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center">
                 <strong>Chercher</strong> un(e) infirmier(e) ?
             </h1>
         </div>
 
         <div class="container my-10 md:my-16 lg:w-6/12">
-            <Form @submit="submit">
+            <form @submit.prevent="submit">
                 <div class="grid grid-cols-1 gap-4">
                     <FormField name="lastname">
                         <FormItem>
@@ -159,7 +159,7 @@
                         de chez vous
                     </span>
                 </div>
-            </Form>
+            </form>
         </div>
     </div>
 </template>
@@ -200,6 +200,7 @@ useHead({
 const {
     submit,
     inProgress,
+    validationErrors,
 } = useSubmit(
     () => {
         return searchNurse(formData).then(() => {
