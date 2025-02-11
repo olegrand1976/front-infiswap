@@ -64,8 +64,8 @@ deploy_front1:
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
-        docker-compose -f /srv/front/docker-compose.prod.yml down &&
-        docker-compose -f /srv/front/docker-compose.prod.yml up -d
+        docker compose -f /srv/front/docker-compose.prod.yml down &&
+        docker compose -f /srv/front/docker-compose.prod.yml up -d
       "
   only:
     - main
@@ -109,8 +109,8 @@ deploy_front2:
     # Déploiement via docker-compose sur FRONT2
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_2 "
-        docker-compose -f /srv/front/docker-compose.prod.yml down &&
-        docker-compose -f /srv/front/docker-compose.prod.yml up -d
+        docker compose -f /srv/front/docker-compose.prod.yml down &&
+        docker compose -f /srv/front/docker-compose.prod.yml up -d
       "
   only:
     - main
