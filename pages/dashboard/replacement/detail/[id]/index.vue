@@ -42,7 +42,8 @@
                 </div>
             </div>
 
-            <div class="w-[45%] h-12 px-3 rounded bg-gray-100 flex justify-between items-center">
+            <div    v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
+            class="w-[45%] h-12 px-3 rounded bg-gray-100 flex justify-between items-center">
                 <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
                     <div class="bg-white flex items-center justify-center shadow w-72 rounded-full">
@@ -112,7 +113,7 @@
                     <div class="w-72">
                         <div class="h-10 flex bg-primary rounded justify-center items-center">
                             <h4 class="text-white text-sm text-center">
-                                Type de soin à effectuer
+                                Type de soin à effectuer 
                             </h4>
                         </div>
                         <div class="mt-2">
@@ -136,7 +137,8 @@
 
         <div class="my-12">
             <Form>
-                <div class="border-2 border-primary rounded p-3 w-96">
+                <div v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
+                class="border-2 border-primary rounded p-3 w-96">
                     <label class="text-xs text-primary font-bold">
                         Parlez-nous un peu de vous
                     </label>
@@ -184,12 +186,14 @@ import {
 import { useRoute } from 'vue-router';
 import { CalendarDate } from "@internationalized/date";
 
-import { useDetailReplacement } from '~/composables/useReplacements';
-
+import { useDetailReplacement, currentUser} from '~/composables/useReplacements';
+const {user } = currentUser();
+console.log('Nurse id',user.value.nurse.id);
 const route = useRoute();
 const replacementId = route.params.id;
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
+
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
