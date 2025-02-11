@@ -42,8 +42,10 @@
                 </div>
             </div>
 
-            <div    v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
-            class="w-[45%] h-12 px-3 rounded bg-gray-100 flex justify-between items-center">
+            <div
+                v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
+                class="w-[45%] h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
+            >
                 <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
                     <div class="bg-white flex items-center justify-center shadow w-72 rounded-full">
@@ -57,11 +59,10 @@
                 </Button>
             </div>
         </div>
-        
 
-        <div 
+        <div
             v-for="detail in replacement.details"
-            class="mt-6 mb-8 h-auto overflow-hidden" 
+            class="mt-6 mb-8 h-auto overflow-hidden"
         >
             <div
                 class="flex items-center"
@@ -113,7 +114,7 @@
                     <div class="w-72">
                         <div class="h-10 flex bg-primary rounded justify-center items-center">
                             <h4 class="text-white text-sm text-center">
-                                Type de soin à effectuer 
+                                Type de soin à effectuer
                             </h4>
                         </div>
                         <div class="mt-2">
@@ -242,11 +243,13 @@ const formatTime = (timeString: string) => {
 const getPeriodLabel = (timeString) => {
     const hours = parseInt(timeString.split(':')[0], 10);
     if (hours >= 1 && hours < 12) {
-        return "Matin";
-    } else if (hours >= 12 && hours < 18) {
-        return "Après-midi";
-    } else {
-        return "Soir";
+        return 'Matin';
+    }
+    else if (hours >= 12 && hours < 18) {
+        return 'Après-midi';
+    }
+    else {
+        return 'Soir';
     }
 };
 
