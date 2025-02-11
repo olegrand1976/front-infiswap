@@ -87,7 +87,7 @@ export const useDetailReplacement = (replacementId) => {
 
         try {
             const response = await $apifetch(`/api/replacements/${replacementId}`, { method: 'GET' });
-            console.log('Données récupérées :', response.replacement);
+            console.log("Données récupérées:", response);
             replacement.value = response.replacement;
         }
         catch (err) {
@@ -99,4 +99,31 @@ export const useDetailReplacement = (replacementId) => {
     }
 
     return { replacement, error, loading, fetchReplacement };
+};
+
+export const useListResponse = (replacementId) => {
+    const { $apifetch } = useNuxtApp();
+
+    const listResponse = useState('listResponse', () => []);
+    const error = useState('listError', () => null);
+    const loading = useState('listLoading', () => false);
+
+    async function fetchListResponse() {
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
+            console.log('Données récupérées de la liste des réponses :', response.responses);
+            listResponse.value = response.responses;
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    return { listResponse, error, loading, fetchListResponse };
 };
