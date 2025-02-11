@@ -25,9 +25,8 @@
                                 <EnvelopeIcon class="text-white w-5 h-5 ms-4" />
                                 <Input
                                     v-model="email"
-                                    type="email"
                                     placeholder="Email"
-                                    class="text-sm text-white placeholder:text-white lg:w-80 sm:w-64"
+                                    class="text-sm text-white bg-transparent placeholder:text-white lg:w-80 sm:w-64"
                                 />
                             </div>
                         </FormControl>

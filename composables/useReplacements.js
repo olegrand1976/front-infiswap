@@ -1,5 +1,14 @@
 import { useState, useNuxtApp } from '#app';
 
+export const currentUser=()=>{
+  const { $apifetch } = useNuxtApp();
+  const user = useState('user');
+ console.log('user',user);
+  return {
+    user,
+};
+}
+
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -43,6 +52,7 @@ export const useReplacements = () => {
         error,
         loading,
         success,
+        user,
         submitReplacement,
     };
 };
@@ -87,7 +97,7 @@ export const useDetailReplacement = (replacementId) => {
 
         try {
             const response = await $apifetch(`/api/replacements/${replacementId}`, { method: 'GET' });
-            console.log('Données récupérées :', response.replacement);
+            console.log("Données récupérées:", response);
             replacement.value = response.replacement;
         }
         catch (err) {
@@ -100,3 +110,65 @@ export const useDetailReplacement = (replacementId) => {
 
     return { replacement, error, loading, fetchReplacement };
 };
+
+export const useListResponse = (replacementId) => {
+    const { $apifetch } = useNuxtApp();
+
+    const listResponse = useState('listResponse', () => []);
+    const error = useState('listError', () => null);
+    const loading = useState('listLoading', () => false);
+
+    async function fetchListResponse() {
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
+            console.log('Données récupérées de la liste des réponses :', response.responses);
+            listResponse.value = response.responses;
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    return { listResponse, error, loading, fetchListResponse };
+};
+
+export const changeStatusReplacement = (responseId, status) => {
+    const { $apifetch } = useNuxtApp();
+
+    const error = useState('statusError', () => null);
+    const loading = useState('statusLoading', () => false);
+    const success = useState('statusSuccess', () => false);
+
+    const changeStatus = async () => {
+        loading.value = true;
+        error.value = null;
+        success.value = false;
+
+        try {
+            const response = await $apifetch(`/api/replacement-responses/${responseId}/${status}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.success) {
+                success.value = true;
+            }
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
+    return { error, loading, success, changeStatus };
+}
