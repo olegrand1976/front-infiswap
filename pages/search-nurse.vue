@@ -17,16 +17,15 @@
                         <FormItem>
                             <FormControl>
                                 <div
-                                    class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%]
-                                sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]"
+                                    class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]"
                                 >
-                                    <div
+                                    <FormLabel
                                         class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full
-                                    flex items-center justify-center gap-2 px-2"
+                                    flex items-center gap-2 px-2 ps-4"
                                     >
                                         <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
-                                        <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
-                                    </div>
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white ms-2">Nom</span>
+                                    </FormLabel>
                                     <Input
                                         v-model="formData.lastname"
                                         placeholder="Nom"
