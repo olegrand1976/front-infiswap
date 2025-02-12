@@ -73,10 +73,9 @@ const onSubmit = handleSubmit(values => {
                     <FormField name="lastname">
                         <FormItem>
                             <FormControl>
-                                <div class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%] 
-                                            sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]">
+                                <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full 
-                                                flex items-center justify-center gap-2 px-2">
+                                                flex items-center gap-2 pl-4 pr-2">
                                         <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
                                     </div>
@@ -261,11 +260,6 @@ const onSubmit = handleSubmit(values => {
                 </div>
             </form>
         </div>
-
-
-
-    
-
     </div>
 </template>
 
