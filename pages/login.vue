@@ -252,7 +252,7 @@
 <script lang="ts" setup>
 import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from "@/components/ui/input";
+import { Input } from '@/components/ui/input';
 
 definePageMeta({
     layout: 'auth',

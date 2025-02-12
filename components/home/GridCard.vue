@@ -129,12 +129,13 @@
                     </p>
                 </div>
                 <div>
-                <Button
-                variant="outline"
-                class="rounded-full lg:text-sm text-xs mx-auto"
-                href="/">
-                    En savoir plus
-                </Button>
+                    <Button
+                        variant="outline"
+                        class="rounded-full lg:text-sm text-xs mx-auto"
+                        href="/"
+                    >
+                        En savoir plus
+                    </Button>
                 </div>
             </div>
             <div>

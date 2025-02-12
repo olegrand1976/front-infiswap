@@ -135,38 +135,37 @@
                                     />
                                 </TableCell>
 
-                                <TableCell className="w-36 ml-[3.5rem] bg-gray-100 text-xs">
+                                <TableCell class-name="w-36 ml-[3.5rem] bg-gray-100 text-xs">
                                     <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center overflow-hidden">
                                         <span className="truncate w-full px-2">
-                                            {{replacement.details
+                                            {{ replacement.details
                                                 ?.map((detail) => detail?.patient?.profile?.zip_code)
-                                                .filter(Boolean) 
-                                                .join(', ') || ''}}
+                                                .filter(Boolean)
+                                                .join(', ') || '' }}
                                         </span>
                                     </div>
                                 </TableCell>
 
-                                <TableCell className="w-36 ml-7 bg-gray-100 text-xs">
+                                <TableCell class-name="w-36 ml-7 bg-gray-100 text-xs">
                                     <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center overflow-hidden">
                                         <span className="truncate w-full px-2">
-                                            {{replacement.details
+                                            {{ replacement.details
                                                 ?.map((detail) => detail?.patient?.profile?.city)
-                                                .filter(Boolean) 
-                                                .join(', ') || ''}}
+                                                .filter(Boolean)
+                                                .join(', ') || '' }}
                                         </span>
                                     </div>
                                 </TableCell>
 
-                                <TableCell className="w-64 ml-0 bg-gray-100 text-xs">
+                                <TableCell class-name="w-64 ml-0 bg-gray-100 text-xs">
                                     <div
                                         className="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                     >
-                                        {{replacement.details
-                                        ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                        .join(', ')}}
+                                        {{ replacement.details
+                                            ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
+                                            .join(', ') }}
                                     </div>
                                 </TableCell>
-
 
                                 <TableCell class="w-24 ml-20 text-xs overflow-x-hidden">
                                     <Button

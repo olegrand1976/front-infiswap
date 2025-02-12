@@ -1,13 +1,13 @@
 import { useState, useNuxtApp } from '#app';
 
-export const currentUser=()=>{
-  const { $apifetch } = useNuxtApp();
-  const user = useState('user');
- console.log('user',user);
-  return {
-    user,
+export const currentUser = () => {
+    const { $apifetch } = useNuxtApp();
+    const user = useState('user');
+    console.log('user', user);
+    return {
+        user,
+    };
 };
-}
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
@@ -97,7 +97,7 @@ export const useDetailReplacement = (replacementId) => {
 
         try {
             const response = await $apifetch(`/api/replacements/${replacementId}`, { method: 'GET' });
-            console.log("Données récupérées:", response);
+            console.log('Données récupérées:', response);
             replacement.value = response.replacement;
         }
         catch (err) {
@@ -171,4 +171,4 @@ export const changeStatusReplacement = (responseId, status) => {
     };
 
     return { error, loading, success, changeStatus };
-}
+};

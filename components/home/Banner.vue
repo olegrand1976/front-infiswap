@@ -18,9 +18,10 @@
             <div>
                 <LayoutsLogo class="xl:w-[42rem] lg:w-[28rem] md:w-80 sm:w-64 w-[14.5rem] mx-auto md:mx-auto" />
             </div>
-            <p class="xl:w-[28rem] lg:w-[28rem] md:w-[24rem] xl:text-base lg:text-sm sm:w-[19rem] text-xs text-center mx-8 sm:mx-auto">
-                    <p>Infiswap, la solution dédiée aux infirmiers libéraux pour gérer efficacement les remplacements.</p>
-                    <p class="m-4">Trouvez rapidement un remplaçant fiable, simplifiez la planification et assurez la continuité des soins.</p>
+            <p class="xl:w-[28rem] lg:w-[28rem] md:w-[24rem] xl:text-base lg:text-sm sm:w-[19rem] text-xs text-center mx-8 sm:mx-auto" /><p>Infiswap, la solution dédiée aux infirmiers libéraux pour gérer efficacement les remplacements.</p>
+            <p class="m-4">
+                Trouvez rapidement un remplaçant fiable, simplifiez la planification et assurez la continuité des soins.
+            </p>
             </p>
             <Button
                 variant="outline"
