@@ -15,10 +15,10 @@
                         Je cherche un remplacement à effectuer
                     </h3>
                     <p class="lg:w-[28rem] md:w-[22rem] sm:w-[19rem] xl:text-base lg:text-sm sm:text-xs">
-                        <strong>Vous cherchez un remplacement ?</strong> Avec InfiSwap,
-                        accédez en un clic aux annonces disponibles près de chez vous. Trouvez
-                        facilement des opportunités adaptées à votre emploi du temps et développez
-                        votre réseau tout en optimisant votre activité
+                        <strong>Vous cherchez un remplacement ?</strong>
+                        Avec InfiSwap, accédez en un clic aux annonces disponibles près de chez vous.
+                        Trouvez facilement des opportunités adaptées à votre emploi du temps et développez
+                        votre réseau tout en optimisant votre activité.
                     </p>
                     <div>
                         <Button

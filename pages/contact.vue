@@ -18,7 +18,7 @@
                             <Input
                                 v-model="formData.nom"
                                 type="text"
-                                placeholder="Nom"
+                                placeholder="Nom, prénom"
                                 class="text-sm"
                             />
                         </div>
@@ -92,7 +92,7 @@
                     <span>Téléphone</span>
                 </h4>
                 <p class="mt-6 text-sm text-center group-hover:text-white">
-                    0478023377
+                    0478.02.33.77
                 </p>
             </div>
 
@@ -102,7 +102,7 @@
                     <span>Emplacement</span>
                 </h4>
                 <p class="mt-6 text-sm text-center group-hover:text-white">
-                    Rue de la Résidence, 92/A 7131 Waudrez
+                    Rue de la Résistance 92/A 7131 Waudrez
                 </p>
             </div>
 
@@ -112,7 +112,7 @@
                     <span>Email</span>
                 </h4>
                 <p class="mt-6 text-sm text-center group-hover:text-white">
-                    INFO@infiswap.be
+                    info@infiswap.be
                 </p>
             </div>
 
@@ -127,7 +127,7 @@
             </div>
         </section>
 
-        <section class="mt-12 sm:w-[70%] lg:w-[55%] container">
+        <!-- <section class="mt-12 sm:w-[70%] lg:w-[55%] container">
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2520.9860057087326!2d4.262952197233401!3d50.81289797013747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3c6f75b8a8a8d%3A0x8f8a1b1436ea2521!2sH%C3%B4pital%20Erasme%20-%20Cliniques%20universitaires%20de%20Bruxelles!5e0!3m2!1sfr!2smg!4v1737985810191!5m2!1sfr!2smg"
                 loading="lazy"
@@ -136,7 +136,7 @@
             >
                 .
             </iframe>
-        </section>
+        </section> -->
     </div>
 </template>
 

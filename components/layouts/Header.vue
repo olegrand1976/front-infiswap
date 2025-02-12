@@ -48,6 +48,7 @@
                 </div>
                 <div class="flex flex-row items-center space-x-4">
                     <Button
+                        v-if="!isLoggedIn"
                         class="hidden sm:block font-semibold md:text-[0.7em] lg:text-xs"
                         href="/login"
                     >
@@ -61,8 +62,12 @@
                     </div>
                 </div>
             </div>
-
-            <div class="relative m-auto flex sm:hidden pt-12 justify-center items-center">
+            <div
+                :class="{
+                    'relative m-auto flex sm:hidden pt-12 justify-center items-center': route.path !== 'search-nurse',
+                    'hidden': route.path === '/search-nurse',
+                }"
+            >
                 <div class="absolute top-0">
                     <NuxtImg
                         src="/round_cont.png"
@@ -71,6 +76,7 @@
                 </div>
                 <div class="w-screen px-10">
                     <Button
+                        v-if="isLoggedIn"
                         variant="light"
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
                         href="/login"
@@ -87,7 +93,6 @@
 import { useRoute } from 'vue-router';
 
 const { isLoggedIn } = useAuth();
-const user = useUser();
 
 const navigationItems = [
     { label: 'ACCUEIL', route: '/' },

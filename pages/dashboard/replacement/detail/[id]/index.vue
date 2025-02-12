@@ -3,7 +3,7 @@
         <div class="flex space-x-6 justify-between">
             <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex justify-between items-center">
                 <Button
-                    class="text-sm"
+                    class="text-sm" 
                     href="/dashboard/replacement"
                 >
                     <span class="text-xs">Retour</span>
@@ -201,8 +201,8 @@ const respondedBy = computed(() => user.value?.id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const formData = ref({
-  replacementId: replacementId, // Remplacez par la vraie valeur
-  respondedBy: respondedBy, // Remplacez par l'ID de l'utilisateur actuel
+  replacementId: replacementId, 
+  respondedBy: respondedBy, 
   reason: '',
   comment: ''
 });
@@ -211,10 +211,9 @@ const handleSubmit = async () => {
     console.log('formData',formData.value);
     await replacementStore.submitForm(formData.value);
 
-  // Réinitialiser le formulaire après soumission
   formData.value = {
-        replacementId: "", // Conserver l'ID du remplacement
-        respondedBy: "", // Conserver l'utilisateur
+        replacementId: "",
+        respondedBy: "",
         reason: '',
         comment: ''
     };

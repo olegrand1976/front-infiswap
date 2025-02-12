@@ -1,12 +1,11 @@
 <template>
     <footer class="bg-muted">
-        <div class="flex lg:container flex-col md:flex-row justify-center md:justify-between md:space-x-4 items-center md:items-start pt-12 md:py-12 md:px-8">
+        <div class="flex lg:container flex-col md:flex-row justify-center md:justify-between md:space-x-4 items-center md:items-start pt-8 md:py-12 md:px-8">
             <div class="flex justify-center">
-                <!-- <LayoutsLogo class="h-10 lg:h-14" /> -->
-                <LayoutsLogo class="w-[20rem] h-32 sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
+                <LayoutsLogo class="h-16 lg:h-20" />
             </div>
 
-            <div class="flex flex-col w-full md:w-auto mt-40 lg:w-auto justify-center items-center shadow-upper md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
+            <div class="flex flex-col w-full md:w-auto lg:w-auto justify-center items-center md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
                 <div class="hidden md:block md:-mt-6">
                     <h3 class="font-semibold md:text-sm">
                         CONTACT
@@ -14,26 +13,26 @@
                     <div class="flex flex-col space-y-4 mt-4">
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <PhoneIcon class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">045789101112</span>
+                            <span class="md:text-xs lg:text-sm">0478.02.33.77</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <MapPinIcon class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">92 7131 BELGIQUE</span>
+                            <span class="md:text-xs lg:text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <Mail class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">INFO@infiswap.com</span>
+                            <span class="md:text-xs lg:text-sm">info@infiswap.com</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <Globe class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">WWW.infiswap.com</span>
+                            <span class="md:text-xs lg:text-sm">www.infiswap.be</span>
                         </p>
                     </div>
                 </div>
 
                 <div class="flex flex-col w-full md:w-96 lg:w-full space-y-4 py-8 md:py-0">
                     <h3 class="text-center md:text-start lg:text-base md:text-sm text-primary font-semibold">
-                        SUBSCRIBE
+                        S'inscrire à la newsletter
                     </h3>
                     <p class="hidden md:block md:w-96 lg:w-[28rem] text-sm md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
@@ -113,7 +112,7 @@
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
-                @2025 InfiSwap - Tous droits réservés
+                @2025 LL-IT Software & Computer - Tous droits réservés
             </p>
         </div>
     </footer>

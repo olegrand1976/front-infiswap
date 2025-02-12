@@ -1,5 +1,5 @@
 <template>
-    <div class="container flex lg:flex-col flex-col-reverse sm:space-y-20 lg:py-20 py-0">
+    <!-- <div class="container flex lg:flex-col flex-col-reverse sm:space-y-20 lg:py-20 py-0">
         <div class="flex lg:flex-row flex-col lg:space-x-10 lg:space-y-0 space-y-12 items-center">
             <div>
                 <NuxtImg
@@ -116,5 +116,5 @@
                 />
             </div>
         </div>
-    </div>
+    </div> -->
 </template>

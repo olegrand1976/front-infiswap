@@ -1,11 +1,11 @@
 <template>
-    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:-mt-40 lg:-mt-10 mb:pb-24 md:pb-20 pb-16 md:-mt-5 sm:-mt-4 mt-32 z-40">
-        <div class="hidden sm:block lg:container">
-            <div class="flex flex-row xl:space-x-6 md:space-x-4 sm:space-x-2 lg:ps-auto md:ps-6 sm:ps-5">
+    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:mt-52 lg:mt-36 mb:pb-24 md:pb-20 pb-16 mt-32 z-40">
+        <div class="hidden sm:block sm:container">
+            <div class="grid grid-cols-4 lg:gap-16 sm:gap-4">
                 <Card
                     v-for="(card, index) in cards"
                     :key="index"
-                    class="xl:w-[12rem] lg:w-[13rem] md:w-[10rem] sm:w-[9rem] flex flex-col rounded-lg xl:-mt-28 lg:-mt-16 md:-mt-12 sm:-mt-10"
+                    class="w-full flex flex-col rounded-lg xl:-mt-28 lg:-mt-16 md:-mt-12 sm:-mt-10"
                 >
                     <CardHeader>
                         <NuxtImg
@@ -120,21 +120,22 @@
                 <div class="flex flex-col md:space-y-4 sm:space-y-2 space-y-8 xl:mt-8 lg:mt-4 md:mt-4 mt-8 sm:mt-1">
                     <p class="xl:text-base lg:text-sm lg:w-96 md:text-xs sm:text-[0.75rem] sm:text-start text-center text-sm md:w-80 sm:w-72">
                         <strong>Besoin d'un remplacement ?</strong> Avec InfiSwap, publiez votre annonce en
-                        quelques secondes et trouvez rapidement un infirmier disponible près de chez vous. <br>
+                        quelques secondes et trouvez rapidement un(e) infirmier(e) disponible près de chez vous. <br>
                         Simplifiez la gestion de vos absences et assurez la continuité des soins en toute sérénité !
                     </p>
                     <p class="xl:text-base lg:text-sm lg:w-96 md:text-xs sm:text-[0.75rem] sm:text-start text-center text-sm md:w-80 sm:w-72">
-                        Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients en patients pendant
+                        Nos infirmier(e)s sont aussi souvent sur les routes et se déplacent de patients en patients pendant
                         leurs tournées qui sont planifiées de semaine en semaine.
                     </p>
                 </div>
+                <div>
                 <Button
-                    variant="outline"
-                    class="flex justify-center items-center w-36 mx-auto sm:inline-block mt-6 sm:mx-0 md:mt-8 sm:mt-4 rounded-full lg:text-sm sm:text-xs"
-                    href="/"
-                >
+                variant="outline"
+                class="rounded-full lg:text-sm text-xs mx-auto"
+                href="/">
                     En savoir plus
                 </Button>
+                </div>
             </div>
             <div>
                 <NuxtImg
@@ -184,7 +185,7 @@ import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 
 const cards = [
-    {
+     {
         image: '/home/Des_infirmiers.jpg',
         alt: 'Groupe d\'infirmiers',
         title: 'Me faire remplacer',
@@ -193,10 +194,10 @@ const cards = [
     {
         image: '/home/bon_infirmier.jpg',
         alt: 'Infirmier',
-        title: 'Cherche un remplacement',
+        title: 'Je cherche un remplacement',
         link: '/',
-    },
-    {
+    }, 
+     {
         image: '/home/Rectangle_24.png',
         alt: 'Infirmier',
         title: 'Mon planning',
@@ -207,7 +208,7 @@ const cards = [
         alt: 'Formation pic',
         title: 'Mes formations',
         link: '/',
-    },
+    }, 
 ];
 
 const currentIndex = ref(0);

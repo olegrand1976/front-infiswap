@@ -308,15 +308,13 @@ const schema = yup.object({
     .min(2, 'Le prénom doit contenir au moins 2 caractères')
     .max(50, 'Le prénom ne peut pas dépasser 50 caractères'),
 
-    city: yup.string()
+  zipCode: yup.string()
+    .required('Le code postal est obligatoire')
+    .matches(/^\d{4,5}$/, 'Le code postal doit contenir 4 ou 5 chiffres'),
+
+  city: yup.string()
     .required('La ville est obligatoire')
     .min(2, 'La ville doit contenir au moins 2 caractères'),
-
-
-    zipCode: yup.string()
-  .required('Le code postal est obligatoire')
-  .matches(/^[A-Za-z0-9\s-]{3,10}$/, 'Le code postal doit être valide'),
-
 
   phoneNumber: yup.string()
     .required('Le numéro de téléphone est obligatoire')

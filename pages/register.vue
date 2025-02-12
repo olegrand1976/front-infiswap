@@ -58,6 +58,7 @@
                                             v-model="formData.lastname"
                                             type="text"
                                             placeholder="Nom"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -75,6 +76,7 @@
                                             v-model="formData.firstname"
                                             type="text"
                                             placeholder="Prénom"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -92,6 +94,7 @@
                                             v-model="formData.email"
                                             type="email"
                                             placeholder="Email"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -107,8 +110,8 @@
                                         <PhoneIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
                                             v-model="formData.phoneNumber"
-                                            type="tel"
                                             placeholder="N° de téléphone"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -126,6 +129,7 @@
                                             v-model="formData.password"
                                             type="password"
                                             placeholder="Mot de passe"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -143,6 +147,7 @@
                                             v-model="formData.passwordConfirmation"
                                             type="password"
                                             placeholder="Confirmer mot de passe"
+                                            class="bg-transparent"
                                         />
                                     </div>
                                 </FormControl>
@@ -292,7 +297,7 @@
                                         >
                                             <NuxtImg
                                                 src="/icons/flag.png"
-                                                class="h-4"
+                                                class="h-4 ml-2"
                                             />
                                             <SelectValue
                                                 placeholder="Pays"
@@ -523,10 +528,10 @@ const genders = [
 
 const countries = [
     {
-        value: 'ru',
-        label: 'Russie',
-        name: 'russie',
-        icon: '/icons/russia.png',
+        value: 'be',
+        label: 'Belgique',
+        name: 'belgique',
+        icon: '/icons/belgium.png',
     },
     {
         value: 'fr',
@@ -538,9 +543,9 @@ const countries = [
 
 const languages = [
     {
-        value: 'ru',
-        label: 'Russe',
-        name: 'russe',
+        value: 'nl',
+        label: 'Nederlands',
+        name: 'nederlands',
     },
     {
         value: 'fr',
