@@ -27,12 +27,11 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 const errorMessage = computed(() => props.errors?.[0] ?? '');
 </script>
 
-
 <template>
     <div class="relative">
         <input
             v-model="modelValue"
-            :type="props.type || 'text'" 
+            :type="props.type || 'text'"
             :class="cn(inputVariants({ variant: props.variant, size: props.size }), props.class)"
             :placeholder="placeholder"
         >
@@ -44,4 +43,3 @@ const errorMessage = computed(() => props.errors?.[0] ?? '');
         </p>
     </div>
 </template>
-

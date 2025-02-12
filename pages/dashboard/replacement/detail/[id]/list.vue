@@ -8,7 +8,7 @@
 
         <div class="flex items-center space-x-6 mt-6 p-2">
             <h4 class="font-bold text-sm text-primary">
-                Période 
+                Période
             </h4>
             <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
                 <span class="text-xs text-white ms-3">Début</span>
@@ -54,7 +54,8 @@
 
                             <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
                                 <Form @submit="changeStatus(list.id)">
-                                    <Button type="submit"
+                                    <Button
+                                        type="submit"
                                         variant="transparent"
                                         class="bg-gray-200 group-hover:bg-white rounded-full w-24"
                                     >
@@ -86,6 +87,7 @@ import { useRoute } from 'vue-router';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { useSubmit } from '~/composables/useSubmit';
 import { useReplacementStore } from '@/stores/useReplacementStore';
+
 const replacementStore = useReplacementStore();
 
 const route = useRoute();
@@ -101,19 +103,19 @@ const formatDate = (isoString) => {
     return `${day}/${month}/${year}`;
 };
 
-const startDate = computed(() => 
-    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.start_date) : ''
+const startDate = computed(() =>
+    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.start_date) : '',
 );
 
-const endDate = computed(() => 
-    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : ''
+const endDate = computed(() =>
+    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
 );
 
 /*
 const submitStatus = useSubmit(async (responseId) => {
     const { changeStatus } = changeStatusReplacement(responseId, 'confirmed');
     await changeStatus();
-    await fetchListResponse(); 
+    await fetchListResponse();
 }, {
     onSuccess: () => {
     },
@@ -132,13 +134,10 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth'],
 });
 
 const changeStatus = async (id) => {
     await replacementStore.changeStatus(id);
-
-
 };
-
 </script>

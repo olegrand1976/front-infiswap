@@ -3,7 +3,7 @@
         <div class="flex space-x-6 justify-between">
             <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex justify-between items-center">
                 <Button
-                    class="text-sm" 
+                    class="text-sm"
                     href="/dashboard/replacement"
                 >
                     <span class="text-xs">Retour</span>
@@ -136,10 +136,14 @@
             </div>
         </div>
 
-        <div class="my-12"  v-if="user?.nurse && replacement.nurse_id !== user.nurse.id">
-            <Form  @submit="handleSubmit">
+        <div
+            v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
+            class="my-12"
+        >
+            <Form @submit="handleSubmit">
                 <div
-                class="border-2 border-primary rounded p-3 w-96">
+                    class="border-2 border-primary rounded p-3 w-96"
+                >
                     <label class="text-xs text-primary font-bold">
                         Parlez-nous un peu de vous
                     </label>
@@ -147,7 +151,7 @@
                         <FormItem class="mt-3">
                             <FormControl>
                                 <Textarea
-                                  v-model="formData.reason"
+                                    v-model="formData.reason"
 
                                     placeholder="Entrez votre description ici"
                                     class="bg-gray-200 text-xs h-36"
@@ -179,9 +183,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useReplacementStore } from '@/stores/useReplacementStore';
-const replacementStore = useReplacementStore();
-
 import {
     CalendarDaysIcon,
     ClockIcon,
@@ -190,34 +191,37 @@ import {
     ChevronRightIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate } from '@internationalized/date';
 import { ref } from 'vue';
+import { useReplacementStore } from '@/stores/useReplacementStore';
 
-import { useDetailReplacement, currentUser} from '~/composables/useReplacements';
-const {user } = currentUser();
+import { useDetailReplacement, currentUser } from '~/composables/useReplacements';
+
+const replacementStore = useReplacementStore();
+
+const { user } = currentUser();
 const route = useRoute();
 const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const formData = ref({
-  replacementId: replacementId, 
-  respondedBy: respondedBy, 
-  reason: '',
-  comment: ''
+    replacementId: replacementId,
+    respondedBy: respondedBy,
+    reason: '',
+    comment: '',
 });
 
 const handleSubmit = async () => {
-    console.log('formData',formData.value);
+    console.log('formData', formData.value);
     await replacementStore.submitForm(formData.value);
 
-  formData.value = {
-        replacementId: "",
-        respondedBy: "",
+    formData.value = {
+        replacementId: '',
+        respondedBy: '',
         reason: '',
-        comment: ''
+        comment: '',
     };
-
 };
 
 const formatDate = (isoString) => {
