@@ -102,6 +102,7 @@
                         <div class="flex">
                             <Button
                                 class="flex text-xs items-center space-x-2"
+                                @click="reinitializeData"
                             >
                                 Réinitialiser
                                 <ArrowPathRoundedSquareIcon class="w-6 h-6" />
@@ -764,7 +765,7 @@ const handleSearch = (period: string) => {
     showSuggestions.value[period] = true;
 };
 
-const selectPatient = (patient: Record<T>, period: string) => {
+const selectPatient = (patient, period) => {
     selectedPatient.value[period] = {
         id: patient.id,
         lastname: patient.lastname,
@@ -786,6 +787,23 @@ onMounted(() => {
         }
     });
 });
+
+const reinitializeData = () => {
+    ['morning', 'afternoon', 'evening'].forEach((period) => {
+        selectedPatient.value[period] = {
+            id: null,
+            lastname: '',
+            firstname: '',
+            securityNumber: '',
+            city: '',
+            zipCode: null,
+        };
+        selectedTimes.value[period] = [null, null];
+        selectedCareTypes.value[period] = [];
+    });
+
+    Object.keys(savedReplacements.value).forEach(key => delete savedReplacements.value[key]);
+}
 
 useHead({
     title: 'Créer un remplacement',
