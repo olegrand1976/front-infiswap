@@ -45,7 +45,7 @@
                 <div class="w-full max-w-md container">
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
-                            <FormField name="inami">
+                            <!-- <FormField name="inami">
                                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
@@ -59,9 +59,28 @@
                                         </div>
                                     </FormControl>
                                 </FormItem>
-                            </FormField>
+                            </FormField> -->
 
-                            <FormField name="password">
+                            <FormField name="inami">
+                            <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                                <FormControl>
+                                    <div class="flex w-full items-center space-x-1">
+                                        <span class="text-primary font-extrabold">N°</span>
+                                        <Input
+                                            v-model="inami"
+                                            type="text"
+                                            placeholder="INAMI"
+                                            class="text-sm"
+                                            v-bind="inamiAttrs" 
+                                        />
+                                    </div>
+                                    
+                                </FormControl>
+                            </FormItem>
+                            <ErrorMessage name="inami" class="text-red-500 text-xs mt-5     " />
+                        </FormField> 
+
+                            <!-- <FormField name="password">
                                 <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
@@ -75,6 +94,25 @@
                                         </div>
                                     </FormControl>
                                 </FormItem>
+                            </FormField> -->
+
+                            <FormField name="password">
+                                <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                                    <FormControl>
+                                        <div class="flex w-full items-center space-x-1">
+                                            <KeyIcon class="text-primary w-6 h-6" />
+                                            <Input
+                                                v-model="password"
+                                                type="password"
+                                                placeholder="Mot de passe"
+                                                class="text-sm"
+                                                v-bind="passwordAttrs" 
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                                <ErrorMessage name="password" class="text-red-500 text-xs mt-5     " />
+
                             </FormField>
                         </div>
 
@@ -163,7 +201,7 @@
                     @submit.prevent="submit"
                 >
                     <div class="flex flex-col space-y-6">
-                        <FormField name="inami">
+                         <FormField name="inami">
                             <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                 <FormControl>
                                     <div class="flex w-full items-center space-x-1">
@@ -173,11 +211,15 @@
                                             type="text"
                                             placeholder="INAMI"
                                             class="text-sm"
+                                            v-bind="inamiAttrs" 
                                         />
                                     </div>
+
                                 </FormControl>
                             </FormItem>
-                        </FormField>
+                        </FormField> 
+
+                       
 
                         <FormField name="password">
                             <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
@@ -253,6 +295,11 @@
 import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from "@/components/ui/input";
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+
 
 definePageMeta({
     layout: 'auth',
@@ -262,6 +309,43 @@ definePageMeta({
 useHead({
     title: 'Connexion',
 });
+
+
+configure({
+  generateMessage: localize({ fr }),
+  validateOnBlur: true,
+  validateOnInput: true,
+  validateOnChange: true,
+  validateOnModelUpdate: true,
+});
+
+
+
+const schema = yup.object({
+    password: yup.string()
+        .required('Le mot de passe est obligatoire')
+        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+        .max(50, 'Le mot de passe ne peut pas dépasser 50 caractères')
+        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
+        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
+        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre'),
+        //.matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
+
+    inami: yup.string()
+        .required('Le numéro INAMI est obligatoire')
+        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
+        .min(2, 'Le numéro INAMI doit contenir au moins 2 chiffres')
+        .max(50, 'Le numéro INAMI ne peut pas dépasser 50 chiffres'),
+});
+
+
+
+const { handleSubmit, defineField, errors } = useForm({
+  validationSchema: schema,
+});
+
+const [password, passwordAttrs] = defineField('password');
+const [inami, inamiAttrs] = defineField('inami');
 
 const router = useRouter();
 const route = useRoute();
@@ -276,16 +360,27 @@ const credentials = reactive({
     password: '',
 });
 
-const {
-    submit,
-    inProgress,
-    // validationErrors: errors,
-} = useSubmit(
-    () => {
-        status.value = '';
-        return login(credentials).then(() => router.push('/dashboard'));
-    },
-);
+const submit = handleSubmit(async () => {
+    status.value = '';
+    try {
+        await login({ inami: credentials.inami, password: credentials.password });
+        router.push('/dashboard');
+    } catch (error) {
+        console.error('Erreur de connexion:', error);
+        status.value = 'Échec de la connexion. Vérifiez vos identifiants.';
+    }
+});
+
+// const {
+//     submit,
+//     inProgress,
+//     // validationErrors: errors,
+// } = useSubmit(
+//     () => {
+//         status.value = '';
+//         return login(credentials).then(() => router.push('/dashboard'));
+//     },
+// );
 </script>
 
 <style scoped>
