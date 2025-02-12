@@ -1,11 +1,11 @@
 <template>
-    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:-mt-40 lg:-mt-10 mb:pb-24 md:pb-20 pb-16 md:-mt-5 sm:-mt-4 mt-32 z-40">
-        <div class="hidden sm:block lg:container">
-            <div class="flex flex-row xl:space-x-6 md:space-x-4 sm:space-x-2 lg:ps-auto md:ps-6 sm:ps-5">
+    <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:mt-52 lg:mt-36 mb:pb-24 md:pb-20 pb-16 mt-32 z-40">
+        <div class="hidden sm:block sm:container">
+            <div class="grid grid-cols-4 lg:gap-16 sm:gap-4">
                 <Card
                     v-for="(card, index) in cards"
                     :key="index"
-                    class="xl:w-[12rem] lg:w-[13rem] md:w-[10rem] sm:w-[9rem] flex flex-col rounded-lg xl:-mt-28 lg:-mt-16 md:-mt-12 sm:-mt-10"
+                    class="w-full flex flex-col rounded-lg xl:-mt-28 lg:-mt-16 md:-mt-12 sm:-mt-10"
                 >
                     <CardHeader>
                         <NuxtImg
@@ -186,7 +186,7 @@ import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 
 const cards = [
-/*     {
+     {
         image: '/home/Des_infirmiers.jpg',
         alt: 'Groupe d\'infirmiers',
         title: 'Me faire remplacer',
@@ -197,8 +197,8 @@ const cards = [
         alt: 'Infirmier',
         title: 'Je cherche un remplacement',
         link: '/',
-    }, */
-/*     {
+    }, 
+     {
         image: '/home/Rectangle_24.png',
         alt: 'Infirmier',
         title: 'Mon planning',
@@ -209,7 +209,7 @@ const cards = [
         alt: 'Formation pic',
         title: 'Mes formations',
         link: '/',
-    }, */
+    }, 
 ];
 
 const currentIndex = ref(0);
