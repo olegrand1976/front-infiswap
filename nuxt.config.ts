@@ -5,6 +5,7 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
         'nuxt-swiper',
+        '@pinia/nuxt'
     ].filter(Boolean),
 
     imports: {

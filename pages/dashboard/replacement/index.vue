@@ -41,7 +41,6 @@
                                             Codes postaux
                                         </h5>
                                         <Input
-                                            variant="light"
                                             :v-model="postalCode"
                                             placeholder="1000 - Bruxelles"
                                             class="w-32 text-xs my-0.5 rounded-full"
@@ -55,7 +54,6 @@
                             <FormItem>
                                 <FormControl>
                                     <Input
-                                        variant="light"
                                         :v-model="postalCode"
                                         placeholder="Ville"
                                         class="w-32 text-xs my-0.5 rounded-full bg-white shadow"
@@ -81,21 +79,21 @@
                 <Table>
                     <TableHeader class="w-full">
                         <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                            <TableHead class="w-48 bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                 Jour
                             </TableHead>
-                            <TableHead class="w-52 ml-5 bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
                                 <span>Matin</span>
                                 <span>Midi</span>
                                 <span>Soir</span>
                             </TableHead>
-                            <TableHead class="w-36 ml-[3.5rem] bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                 Codes postaux
                             </TableHead>
-                            <TableHead class="w-36 ml-7 bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                 Ville
                             </TableHead>
-                            <TableHead class="w-64 bg-primary ml-0 flex justify-center items-center rounded-lg text-white text-xs">
+                            <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                 Type de soin à pratiquer
                             </TableHead>
                         </TableRow>
@@ -107,7 +105,7 @@
                             :key="replacement.id"
                         >
                             <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
-                                <TableCell class="w-48 flex justify-center items-center bg-gray-100 text-xs">
+                                <TableCell class="flex justify-center items-center bg-gray-100 text-xs">
                                     <div class="flex h-8 py-1 px-2 rounded bg-gray-200 mx-auto justify-center items-center">
                                         <span>{{ formatDate(replacement.start_date) }}</span>
                                     </div>
@@ -117,7 +115,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="w-52 ml-5 grid grid-cols-3 justify-center items-center pl-6 bg-gray-100 text-xs">
+                                <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                     <Switch
                                         id="morning"
                                         :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'morning'"
@@ -135,8 +133,8 @@
                                     />
                                 </TableCell>
 
-                                <TableCell class-name="w-36 ml-[3.5rem] bg-gray-100 text-xs">
-                                    <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center overflow-hidden">
+                                <TableCell class="bg-gray-100 text-xs">
+                                    <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center">
                                         <span className="truncate w-full px-2">
                                             {{ replacement.details
                                                 ?.map((detail) => detail?.patient?.profile?.zip_code)
@@ -146,7 +144,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class-name="w-36 ml-7 bg-gray-100 text-xs">
+                                <TableCell class="bg-gray-100 text-xs">
                                     <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center overflow-hidden">
                                         <span className="truncate w-full px-2">
                                             {{ replacement.details
@@ -157,7 +155,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class-name="w-64 ml-0 bg-gray-100 text-xs">
+                                <TableCell class="bg-gray-100 text-xs pt-6">
                                     <div
                                         className="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                     >
@@ -167,7 +165,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="w-24 ml-20 text-xs overflow-x-hidden">
+                                <TableCell class="text-xs overflow-x-hidden">
                                     <Button
                                         class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacement/detail/${replacement.id}`"
@@ -185,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon, MagnifyingGlassIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
+import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { Switch } from '@/components/ui/switch';
 
 import { useGetReplacements } from '~/composables/useReplacements';
