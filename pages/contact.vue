@@ -9,21 +9,24 @@
             </div>
         </div>
 
-        <Form class="pt-8 sm:pt-24 container flex flex-col space-y-5 sm:w-[70%] lg:w-[55%]">
+        <form @submit.prevent="onSubmit" class="pt-8 sm:pt-24 container flex flex-col space-y-5 sm:w-[70%] lg:w-[55%]">
             <FormField name="nom">
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
                             <UserCircleIcon class="text-primary w-6 h-6" />
                             <Input
-                                v-model="formData.nom"
+                                v-model="nom"
                                 type="text"
                                 placeholder="Nom, prénom"
                                 class="text-sm"
+                                v-bind="nomAttrs" 
                             />
                         </div>
                     </FormControl>
                 </FormItem>
+                <ErrorMessage name="nom" class="text-red-500 text-xs mt-5     " />
+
             </FormField>
 
             <FormField name="email">
@@ -32,14 +35,18 @@
                         <div class="flex w-full items-center space-x-1">
                             <EnvelopeIcon class="text-primary w-6 h-6" />
                             <Input
-                                v-model="formData.email"
+                                v-model="email"
                                 type="email"
                                 placeholder="Email"
                                 class="text-sm"
+                                v-bind="emailAttrs" 
+
                             />
                         </div>
                     </FormControl>
                 </FormItem>
+                <ErrorMessage name="email" class="text-red-500 text-xs mt-5     " />
+
             </FormField>
 
             <FormField name="numero">
@@ -48,14 +55,18 @@
                         <div class="flex w-full items-center space-x-1">
                             <PhoneIcon class="text-primary w-6 h-6" />
                             <Input
-                                v-model="formData.numero"
-                                type="email"
+                                v-model="numeros"
+                                type="numeros"
                                 placeholder="N° de téléphone"
                                 class="text-sm w-96"
+                                v-bind="numerosAttrs" 
+
                             />
                         </div>
                     </FormControl>
                 </FormItem>
+                <ErrorMessage name="numeros" class="text-red-500 text-xs mt-5     " />
+
             </FormField>
 
             <FormField name="message">
@@ -69,12 +80,17 @@
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
                             <Textarea
+                               v-model="message"
                                 placeholder="Votre message..."
                                 class="bg-gray-200 h-40"
+                                v-bind="messageAttrs" 
+
                             />
                         </div>
                     </FormControl>
                 </FormItem>
+                <ErrorMessage name="message" class="text-red-500 text-xs mt-5     " />
+
             </FormField>
 
             <Button
@@ -83,7 +99,7 @@
             >
                 Envoyer
             </Button>
-        </Form>
+        </form>
 
         <section class="grid lg:grid-cols-4 grid-cols-2 container sm:w-[70%] lg:w-[55%] gap-4 mt-12">
             <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
@@ -141,6 +157,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+
 import {
     UserCircleIcon,
     EnvelopeIcon,
@@ -157,7 +178,68 @@ useHead({
 const formData = ref({
     nom: '',
     email: '',
-    numero: '',
+    numeros: '',
     message: '',
 });
+
+
+configure({
+  generateMessage: localize({ fr }),
+  validateOnBlur: true,
+  validateOnInput: true,
+  validateOnChange: true,
+  validateOnModelUpdate: true,
+});
+
+
+
+const schema = yup.object({
+    
+    // Validation pour le champ 'nom'
+    nom: yup.string()
+        .required('Le nom est obligatoire') // Le nom est obligatoire
+        .min(2, 'Le nom doit contenir au moins 2 caractères') // Minimum de 2 caractères
+        .max(50, 'Le nom ne peut pas dépasser 50 caractères') // Maximum de 50 caractères
+        .matches(/^[a-zA-Z\s]+$/, 'Le nom ne peut contenir que des lettres et des espaces'), // Permet seulement des lettres et des espaces
+
+    // Validation pour le champ 'email'
+    email: yup.string()
+        .email('L\'email doit être valide') // Vérification si l'email est valide
+        .required('L\'email est obligatoire') // L'email est obligatoire
+        .max(100, 'L\'email ne peut pas dépasser 100 caractères'), // Maximum de 100 caractères
+
+    // Validation pour le champ 'numero'
+    numeros: yup.string()
+        .required('Le numéro est obligatoire') // Le numéro est obligatoire
+        .matches(/^[0-9]+$/, 'Le numéro doit contenir uniquement des chiffres') // Vérifie si le numéro contient uniquement des chiffres
+        .min(10, 'Le numéro doit contenir au moins 10 chiffres') // Minimum de 10 chiffres
+        .max(15, 'Le numéro ne peut pas dépasser 15 chiffres'), // Maximum de 15 chiffres
+
+    // Validation pour le champ 'message'
+    message: yup.string()
+        .required('Le message est obligatoire') // Le message est obligatoire
+        .min(10, 'Le message doit contenir au moins 10 caractères') // Minimum de 10 caractères
+        .max(500, 'Le message ne peut pas dépasser 500 caractères') // Maximum de 500 caractères
+});
+
+
+
+const { handleSubmit, defineField, errors } = useForm({
+  validationSchema: schema,
+});
+
+const [nom, nomAttrs] = defineField('nom');
+const [email, emailAttrs] = defineField('email');
+const [numeros, numerosAttrs] = defineField('numeros');
+const [message, messageAttrs] = defineField('message');
+
+
+
+
+const onSubmit = handleSubmit(async values => {
+  console.log('Données du formulaire:', values);
+//   alert('Formulaire soumis avec succès !');
+});
+
+
 </script>
