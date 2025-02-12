@@ -26,7 +26,7 @@
                 src="/container_register.png"
                 class="w-full"  
             />
-            <div class="absolute ml-2 mr-16 2xl:bottom-[15%] xl:bottom-[12%] bottom-[5%] lg:text-sm sm:text-xs text-white left-6">
+            <div class="absolute ml-2 lg:mr-16 sm:mr-8 2xl:bottom-[15%] xl:bottom-[12%] bottom-[20%] xl:text-sm sm:text-[0.55rem] text-white left-6">
                 <h2 class="font-semibold">
                     Inscrivez-vous dès maintenant
                 </h2>
@@ -40,7 +40,7 @@
                 <Button
                     variant="secondary"
                     href="/register-beta"
-                    class="lg:mt-3 text-primary w-36 lg:text-sm md:text-xs md:mt-3"
+                    class="lg:mt-3 text-primary w-36 lg:text-sm sm:text-xs md:mt-3"
                 >
                     <span class="sm:text-xs md:text-sm">S'inscrire</span>
                 </Button>

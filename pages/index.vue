@@ -8,6 +8,9 @@
                 <HomeBanner />
             </section>
         </div>
+        <section class="sm:hidden">
+            <HomeRegisterBetaContainer />
+        </section>
         <section>
             <HomeGridCard />
         </section>
