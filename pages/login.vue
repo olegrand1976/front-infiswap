@@ -203,7 +203,7 @@
                     <div class="flex flex-col space-y-6">
                          <FormField name="inami">
                             <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
+                                <!-- <FormControl>
                                     <div class="flex w-full items-center space-x-1">
                                         <span class="text-primary font-extrabold">N°</span>
                                         <Input
@@ -215,15 +215,29 @@
                                         />
                                     </div>
 
+                                </FormControl> -->
+                                <FormControl>
+                                    <div class="flex w-full items-center space-x-1">
+                                        <span class="text-primary font-extrabold">N°</span>
+                                        <Input
+                                            v-model="inami"
+                                            type="text"
+                                            placeholder="INAMI"
+                                            class="text-sm"
+                                            v-bind="inamiAttrs" 
+                                        />
+                                    </div>
+                                    
                                 </FormControl>
                             </FormItem>
+                            
                         </FormField> 
 
                        
 
                         <FormField name="password">
                             <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
+                                <!-- <FormControl>
                                     <div class="flex w-full items-center space-x-1">
                                         <KeyIcon class="text-primary w-5 h-5" />
                                         <Input
@@ -234,7 +248,22 @@
                                         />
                                     </div>
                                 </FormControl>
+                                 -->
+                                 <FormControl>
+                                        <div class="flex w-full items-center space-x-1">
+                                            <KeyIcon class="text-primary w-6 h-6" />
+                                            <Input
+                                                v-model="password"
+                                                type="password"
+                                                placeholder="Mot de passe"
+                                                class="text-sm"
+                                                v-bind="passwordAttrs" 
+                                            />
+                                        </div>
+                                    </FormControl>
                             </FormItem>
+                            <ErrorMessage name="password" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -359,17 +388,34 @@ const credentials = reactive({
     inami: null,
     password: '',
 });
+const inProgress = ref(false);
 
-const {
-    submit,
-    inProgress,
-    // validationErrors: errors,
-} = useSubmit(
-    () => {
-        status.value = '';
-        return login(credentials).then(() => router.push('/dashboard/replacement'));
-    },
-);
+const submit = handleSubmit(async () => {
+    console.log('login',inami,password);
+    status.value = '';
+    inProgress.value = true;
+    try {
+        await login({ inami: inami.value, password: password.value });
+        inProgress.value = false;
+        router.push('/dashboard');
+    } catch (error) {
+        inProgress.value = false;
+
+        console.error('Erreur de connexion:', error);
+        status.value = 'Échec de la connexion. Vérifiez vos identifiants.';
+    }
+});
+
+// const {
+//     submit,
+//     inProgress,
+//     // validationErrors: errors,
+// } = useSubmit(
+//     () => {
+//         status.value = '';
+//         return login(credentials).then(() => router.push('/dashboard'));
+//     },
+// );
 </script>
 
 <style scoped>
