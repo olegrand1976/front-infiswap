@@ -46,6 +46,7 @@
                     <Button
                         variant="success"
                         class="w-full font-semibold"
+                        @click="signOut"
                     >
                         <PowerIcon class="w-6 h-6" />
                         Déconnexion
@@ -63,4 +64,9 @@ import { Badge } from '@/components/ui/badge';
 const search = ref('');
 const emailCount = ref(13);
 const notificationCount = ref(2);
+const { logout } = useAuth();
+
+async function signOut() {
+    await logout();
+}
 </script>

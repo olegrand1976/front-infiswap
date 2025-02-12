@@ -53,7 +53,7 @@ export const useAuth = () => {
         await $apifetch('api/logout', { method: 'post' });
         user.value = null;
 
-        await router.push('/login');
+        await router.push('/');
     }
 
     async function forgotPassword(email) {
