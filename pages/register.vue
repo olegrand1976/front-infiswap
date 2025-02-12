@@ -55,14 +55,17 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary w-7 h-7 ml-2" />
                                         <Input
-                                            v-model="formData.lastname"
+                                            v-model="lastname"
                                             type="text"
                                             placeholder="Nom"
                                             class="bg-transparent"
+                                            v-bind="lastnameAttrs" 
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="lastname" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -73,14 +76,17 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary ml-2 w-7 h-7" />
                                         <Input
-                                            v-model="formData.firstname"
+                                            v-model="firstname"
                                             type="text"
                                             placeholder="Prénom"
                                             class="bg-transparent"
+                                            v-bind="firstnameAttrs" 
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="firstname" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -91,14 +97,18 @@
                                     <div class="flex items-center">
                                         <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
-                                            v-model="formData.email"
+                                            v-model="email"
                                             type="email"
                                             placeholder="Email"
                                             class="bg-transparent"
+                                            v-bind="emailAttrs" 
+
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="email" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -109,13 +119,17 @@
                                     <div class="flex items-center">
                                         <PhoneIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
-                                            v-model="formData.phoneNumber"
+                                            v-model="phoneNumber"
                                             placeholder="N° de téléphone"
                                             class="bg-transparent"
+                                            v-bind="phoneNumberAttrs" 
+
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="phoneNumber" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -126,14 +140,18 @@
                                     <div class="flex items-center">
                                         <LockClosedIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="formData.password"
+                                            v-model="password"
                                             type="password"
                                             placeholder="Mot de passe"
                                             class="bg-transparent"
+                                            v-bind="passwordAttrs" 
+
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="password" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -144,14 +162,17 @@
                                     <div class="flex items-center">
                                         <LockClosedIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="formData.passwordConfirmation"
+                                            v-model="passwordConfirmation"
                                             type="password"
                                             placeholder="Confirmer mot de passe"
                                             class="bg-transparent"
+                                            v-bind="passwordConfirmationAttrs" 
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="passwordConfirmation" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -199,12 +220,15 @@
                                     <div class="flex items-center">
                                         <CalendarIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="formData.dateOfBirth"
+                                            v-model="dateOfBirth"
                                             type="date"
+                                            
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="dateOfBirth" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -444,14 +468,18 @@
                                     <div class="flex items-center">
                                         <IdentificationIcon class="text-primary w-6 h-6" />
                                         <Input
-                                            v-model="formData.identifierNumber"
+                                            v-model="identifierNumber"
                                             type="text"
                                             placeholder="Numéro INAMI"
                                             class="text-sm"
+                                            v-bind="identifierNumberAttrs" 
+
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <ErrorMessage name="identifierNumber" class="text-red-500 text-xs mt-5     " />
+
                         </FormField>
                     </div>
 
@@ -503,6 +531,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+
+// const inProgress = ref(false);
 
 definePageMeta({
     layout: 'auth',
@@ -602,6 +637,68 @@ const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
 );
 
+
+
+// Définir le schéma de validation
+const schema = yup.object({
+    lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
+    firstname: yup.string().required('Le prénom est obligatoire').min(2, 'Le prénom doit comporter au moins 2 caractères'),
+    email: yup.string().email('L\'email doit être valide').required('L\'email est obligatoire'),
+    password: yup.string()
+        .required('Le mot de passe est obligatoire')
+        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+        .max(50, 'Le mot de passe ne peut pas dépasser 50 caractères')
+        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
+        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
+        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
+        .matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
+    passwordConfirmation: yup.string()
+        .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
+        .required('La confirmation du mot de passe est obligatoire'),
+    accountType: yup.string().required('Le type de compte est obligatoire'),
+    gender: yup.string().required('Le genre est obligatoire'),
+    language: yup.string().required('La langue est obligatoire'),
+    phoneNumber: yup.string().matches(/^\+?\d{10,15}$/, 'Le numéro de téléphone est invalide'),
+    dateOfBirth: yup.date().required('La date de naissance est obligatoire').nullable(),
+    address: yup.object({
+        street: yup.string().required('L\'adresse est obligatoire'),
+        city: yup.string().required('La ville est obligatoire'),
+        zipCode: yup.string().required('Le code postal est obligatoire'),
+        country: yup.string().required('Le pays est obligatoire'),
+        additionnalInformation: yup.string(),
+    }).required('L\'adresse est obligatoire'),
+    identifierNumber: yup.string()
+        .required('Le numéro INAMI est obligatoire')
+        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
+        .min(2, 'Le numéro INAMI doit contenir au moins 2 chiffres')
+        .max(50, 'Le numéro INAMI ne peut pas dépasser 50 chiffres'),
+});
+
+// Définir le formulaire et les champs
+const { handleSubmit, defineField} = useForm({
+  validationSchema: schema,
+});
+
+// Définir les champs
+const [lastname, lastnameAttrs] = defineField('lastname');
+const [firstname, firstnameAttrs] = defineField('firstname');
+const [email, emailAttrs] = defineField('email');
+const [password, passwordAttrs] = defineField('password');
+const [passwordConfirmation, passwordConfirmationAttrs] = defineField('passwordConfirmation');
+const [accountType, accountTypeAttrs] = defineField('accountType');
+const [gender, genderAttrs] = defineField('gender');
+const [language, languageAttrs] = defineField('language');
+const [phoneNumber, phoneNumberAttrs] = defineField('phoneNumber');
+const [dateOfBirth, dateOfBirthAttrs] = defineField('dateOfBirth');
+const [identifierNumber, identifierNumberAttrs] = defineField('identifierNumber');
+const [address, addressAttrs] = defineField('address');
+const [street, streetAttrs] = defineField('address.street');
+const [city, cityAttrs] = defineField('address.city');
+const [zipCode, zipCodeAttrs] = defineField('address.zipCode');
+const [country, countryAttrs] = defineField('address.country');
+const [additionnalInformation, additionnalInformationAttrs] = defineField('address.additionnalInformation');
+
+
 const {
     submit,
     inProgress,
@@ -609,10 +706,55 @@ const {
 } = useSubmit(
     () => {
         status.value = '';
+        formData.firstname = firstname.value;
+        formData.lastname = lastname.value;
+        formData.email = email.value;
+        formData.password = password.value;
+        formData.passwordConfirmation = passwordConfirmation.value;
+        formData.phoneNumber = phoneNumber.value;
+        formData.dateOfBirth = dateOfBirth.value;
+        formData.identifierNumber = identifierNumber.value;
+        console.log('form data',formData);
         return register(formData);
     },
     {
         onSuccess: () => router.push('/login'),
     },
 );
+
+
+// const submit = handleSubmit(async values => {
+//     console.log('Données du formulaire:', values); // Affiche les données du formulaire
+//     status.value = '';
+//     inProgress.value = true;
+    
+//     try {
+//         // Envoi des données à la fonction `register`
+//         // await register(values); 
+//         // inProgress.value = false;
+        
+//         // Redirection après une soumission réussie
+//         // router.push('/login');
+//     } catch (error) {
+//         inProgress.value = false;
+        
+//         // En cas d'erreur, afficher un message d'erreur
+//         console.error('Erreur lors de l\'inscription:', error);
+//         status.value = 'Échec de l\'inscription. Veuillez réessayer.';
+//     }
+// });
+
+// const {
+//     submit,
+//     inProgress,
+//     validationErrors: errors,
+// } = useSubmit(
+//     () => {
+//         status.value = '';
+//         return register(formData);
+//     },
+//     {
+//         onSuccess: () => router.push('/login'),
+//     },
+// );
 </script>
