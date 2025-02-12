@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 
 definePageMeta({
-    middleware: ['auth', 'verified'],
+    middleware: ['auth'],
 });
 
 const isCollapsed = ref(false);

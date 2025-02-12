@@ -134,7 +134,7 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth'],
 });
 
 const changeStatus = async (id) => {
