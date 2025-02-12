@@ -165,7 +165,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="text-xs overflow-x-hidden">
+                                <TableCell class="text-xs pt-6 overflow-x-hidden">
                                     <Button
                                         class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacement/detail/${replacement.id}`"

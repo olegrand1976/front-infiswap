@@ -77,7 +77,6 @@
                                         <Input
                                             v-model="currentDate"
                                             title="Date suivante"
-                                            type="date"
                                             placeholder="jj/mm/aaaa"
                                             class="w-24 text-xs bg-transparent placeholder:text-white"
                                             disabled
@@ -440,6 +439,8 @@ import type { DateRange } from 'radix-vue';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 
+const router = useRouter();
+
 import { useReplacements } from '~/composables/useReplacements';
 
 const formData = reactive({
@@ -688,8 +689,16 @@ const onSavePatient = () => {
         selectedCareTypes.value[period] = [];
     });
 
+    const result = submitReplacement(formData)
+
     // Appel de la fonction de soumission avec tous les remplacements
-    submitReplacement(formData);
+    if (result) {
+        useNuxtApp().$toast.success('Création effectuée');
+    };
+
+    setTimeout(() => {
+        router.push('/dashboard/replacement');
+    }, 4000);
 };
 
 // Modification des fonctions de navigation pour charger les données sauvegardées
