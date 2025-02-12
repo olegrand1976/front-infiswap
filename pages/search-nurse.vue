@@ -1,3 +1,5 @@
+
+
 <!-- <script setup>
 import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
@@ -65,48 +67,10 @@ const onSubmit = handleSubmit(values => {
         </h1>
         </div>
         <div class="container mt-36 mb-24 w-[65%]">
-            <form @submit="handleSubmit">
+            <form @submit.prevent="onSubmit">
                 <div class="grid grid-cols-1 gap-4">
 
-
-
-                    
                     <FormField name="lastname">
-    <FormItem>
-        <FormControl>
-            <div class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%] 
-                        sm:grid-cols-[15%_85%] md:grid-cols-[12%_88%] lg:grid-cols-[10%_90%]">
-                <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full 
-                            flex items-center justify-center gap-2 px-2">
-                    <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
-                    <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
-                </div>
-                
-                <!-- Ajout de focus:border-primary et focus:text-primary -->
-                <Field v-model="formData.lastname" 
-       v-bind="lastnameAttrs" 
-       id="lastname" 
-       name="lastname"
-       class="w-full text-black placeholder:text-black/80 focus:border-primary" 
-       placeholder="Entrez votre nom" />
-
-            </div>
-            
-            <ErrorMessage name="lastname" class="text-red-500 text-xs mt-5" />
-        </FormControl>
-    </FormItem>
-</FormField>
-
-
-
-
-
-
-                 
-
-
-                
-                     <FormField name="fullname">
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[18%_82%] 
@@ -116,21 +80,22 @@ const onSubmit = handleSubmit(values => {
                                         <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
                                     </div>
+                                    
                                     <Input
-                                        v-model="formData.lastname"
+                                        v-model="lastname"
                                         placeholder="Nom"
                                         variant="transparent"
                                         class="w-full text-black placeholder:text-black/80"
+                                        v-bind="lastnameAttrs" 
                                     />
-                                    <ErrorMessage name="formData.lastname" class="text-red-500 text-xs mt-1" />
+
 
                                 </div>
+                                
+                                <ErrorMessage name="lastname" class="text-red-500 text-xs mt-5" />
                             </FormControl>
-                        </FormItem> 
-                    </FormField>  
-
-                   
-
+                        </FormItem>
+                    </FormField>
       
                     <FormField name="firstname">
                         <FormItem>
@@ -146,17 +111,14 @@ const onSubmit = handleSubmit(values => {
                                         </FormLabel>
                                     </div>
                                     <Input
-                                        v-model="formData.firstname"
+                                        v-model="firstname"
                                         variant="transparent"
                                         placeholder="Prenom"
                                         class="w-full text-black placeholder:text-black/80"
+                                        v-bind="firstnameAttrs" 
                                     />
                                 </div> 
-
-
-
-
-
+                                <ErrorMessage name="firstname" class="text-red-500 text-xs mt-1" />
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -177,30 +139,20 @@ const onSubmit = handleSubmit(values => {
                                             src="/icons/zip_code.png"
                                             class="w-4 h-4" />
                                     </div>
-
-
-
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
                                         </FormLabel>
                                     </div>
-
                                     <Input
-                                        v-model="formData.zipCode"
+                                        v-model="zipCode"
                                         variant="transparent"
                                         placeholder="Code Postal"
                                         class="w-full text-black placeholder:text-black/80"
                                         :maxlength="4"
                                         @paste.prevent
-
+                                        v-bind="zipCodeAttrs" 
                                     />
                                 </div>
-
-
-
-
-                             
-
-                                
+                                <ErrorMessage name="zipCode" class="text-red-500 text-xs mt-1" />
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -231,12 +183,15 @@ const onSubmit = handleSubmit(values => {
                                     </div>
 
                                     <Input
-                                        v-model="formData.city"
+                                        v-model="city"
                                         variant="transparent"
                                         placeholder="Ville"
                                         class="w-full text-black placeholder:text-black/80"
+                                        v-bind="cityAttrs" 
                                     />
                                 </div>
+                                <ErrorMessage name="city" class="text-red-500 text-xs mt-1" />
+
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -252,17 +207,16 @@ const onSubmit = handleSubmit(values => {
                                         </FormLabel>
                                     </div>
                                     <Input
-                                        v-model="formData.phoneNumber"
+                                        v-model="phoneNumber"
                                         variant="transparent"
                                         placeholder="97 12 25 - 123 - 45"
                                         class="w-full text-black placeholder:text-black/80"
+                                        v-bind="phoneNumberAttrs" 
                                     />
-
-
-
                                 </div> 
+                            
+                                <ErrorMessage name="phoneNumber" class="text-red-500 text-xs mt-1" />
 
-                             
 
                             </FormControl>
                         </FormItem>
@@ -309,31 +263,8 @@ const onSubmit = handleSubmit(values => {
         </div>
 
 
-        <div class="p-6 max-w-md mx-auto bg-white shadow-md rounded-lg">
-    <h2 class="text-xl font-bold mb-4">Formulaire de Nom</h2>
 
-    <form @submit="onSubmit">
-      <!-- Champ "name" -->
-      <div class="mb-4">
-        <label for="name" class="block text-sm font-medium text-gray-700">Nom :</label>
-        <Field v-model="name" v-bind="nameAttrs" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" placeholder="Entrez votre nom" />
-        <ErrorMessage name="name" class="text-red-500 text-xs mt-1" />
-      </div>
-
-
-      <div class="mb-4">
-        <label for="lastname" class="block text-sm font-medium text-gray-700">lastaname :</label>
-        <Field v-model="lastname" v-bind="lastnameAttrs" id="lastname" name="lastname" class="w-full px-3 py-2 border rounded-lg" placeholder="Entrez votre lastname" />
-        <ErrorMessage name="lastname" class="text-red-500 text-xs mt-1" />
-      </div> 
-
-
-      <!-- Bouton de soumission -->
-      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-        Envoyer
-      </button>
-    </form>
-  </div>
+    
 
     </div>
 </template>
@@ -352,35 +283,11 @@ import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validat
 import * as yup from 'yup';
 import { localize } from '@vee-validate/i18n';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
-
-
 useHead({
     title: 'Chercher un infirmier',
 });
-
-
 const patientStore = usePatientStore();
-const errorMessage = ref('');
 
-const formData = reactive({
-    lastname: '',
-    firstname: '',
-    dateOfBirth: '',
-    zipCode: '',
-    city: '',
-    phoneNumber: '',
-});
-
-/*
-const handleSubmit = async () => {
-    await patientStore.submitForm(formData);
-};
-*/
-
-
-
-
-// 📌 Configurer la validation en français
 configure({
   generateMessage: localize({ fr }),
   validateOnBlur: true,
@@ -389,44 +296,59 @@ configure({
   validateOnModelUpdate: true,
 });
 
-// 📌 Définir le schéma de validation
+
 const schema = yup.object({
-  name: yup.string()
+  lastname: yup.string()
     .required('Le nom est obligatoire')
     .min(3, 'Le nom doit contenir au moins 3 caractères')
     .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
 
-    lastname: yup.string()
-    .required('Le nom est obligatoire')
-    .min(3, 'Le nom doit contenir au moins 3 caractères')
-    .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
-  
   firstname: yup.string()
     .required('Le prénom est obligatoire')
-    .min(3, 'Le prénom doit contenir au moins 3 caractères')
+    .min(2, 'Le prénom doit contenir au moins 2 caractères')
     .max(50, 'Le prénom ne peut pas dépasser 50 caractères'),
 
-  fullname: yup.string()
-    .required('Le nom complet est obligatoire')
-    .min(3, 'Le nom complet doit contenir au moins 3 caractères')
-    .max(50, 'Le nom complet ne peut pas dépasser 50 caractères'),
+    city: yup.string()
+    .required('La ville est obligatoire')
+    .min(2, 'La ville doit contenir au moins 2 caractères'),
+
+
+    zipCode: yup.string()
+  .required('Le code postal est obligatoire')
+  .matches(/^[A-Za-z0-9\s-]{3,10}$/, 'Le code postal doit être valide'),
+
+
+  phoneNumber: yup.string()
+    .required('Le numéro de téléphone est obligatoire')
+    .matches(/^\d{10}$/, 'Le numéro de téléphone doit contenir 10 chiffres'),
+
+  accept: yup.boolean()
+    .oneOf([true], 'Vous devez accepter les conditions'),
 });
 
-// 📌 Initialiser le formulaire
-const { handleSubmit, defineField } = useForm({
+
+const { handleSubmit, defineField, errors } = useForm({
   validationSchema: schema,
-  initialValues: formData, // lier formData avec les valeurs initiales
-
 });
+
 
 const [name, nameAttrs] = defineField('name');
 const [lastname, lastnameAttrs] = defineField('lastname');
-const [fullname, fullnameAttrs] = defineField('fullname');
+const [firstname, firstnameAttrs] = defineField('firstname');
+const [zipCode, zipCodeAttrs] = defineField('zipCode');
+const [city, cityAttrs] = defineField('city');
+const [phoneNumber, phoneNumberAttrs] = defineField('phoneNumber');
 
-
-const onSubmit = handleSubmit(values => {
-  console.log('Données du formulaire:', values);
-  alert('Formulaire soumis avec succès !');
+const onSubmit = handleSubmit(async values => {
+//   console.log('Données du formulaire:', values);
+//   alert('Formulaire soumis avec succès !');
+  await patientStore.submitForm(values);
 });
 
 </script>
+
+
+
+
+
+
