@@ -1,5 +1,5 @@
 <template>
-    <div class="hidden sm:block pt-32 relative">
+    <div class="hidden sm:block pt-24 relative">
         <NuxtImg 
             src="/banner.png"
             alt="Bannière"
@@ -7,9 +7,9 @@
         />
 
         <div class="absolute flex flex-col lg:top-[30%] top-[35%] right-[25%]">
-            <h1 class="text-white xl:text-[4rem] lg:text-[3rem] md:text-[2.5rem] sm:text-[2rem]">
+            <h1 class="text-white text-xl md:text-4xl xl:text-7xl ">
                 je cherche <br>
-                <strong>un(e) infirmier(e)</strong>
+                <strong class="mt-2">un(e) infirmier(e)</strong>
             </h1>
             <Button
                 variant="secondary"
