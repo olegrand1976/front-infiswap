@@ -3,10 +3,10 @@
         <NuxtImg 
             src="/banner.png"
             alt="Bannière"
-            class="-ms-3"
+            class="-ms-3 w-[95vw]"
         />
 
-        <div class="absolute xl:top-40 xl:right-80 lg:top-36 lg:right-64 md:top-32 md:right-40 sm:top-36 sm:right-48">
+        <div class="absolute flex flex-col lg:top-[30%] top-[35%] right-[25%]">
             <h1 class="text-white xl:text-[4rem] lg:text-[3rem] md:text-[2.5rem] sm:text-[2rem]">
                 je cherche <br>
                 <strong>un(e) infirmier(e)</strong>
