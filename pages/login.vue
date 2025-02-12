@@ -360,11 +360,12 @@ const schema = yup.object({
         .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre'),
         //.matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
 
-    inami: yup.string()
-        .required('Le numéro INAMI est obligatoire')
-        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
-        .min(2, 'Le numéro INAMI doit contenir au moins 2 chiffres')
-        .max(50, 'Le numéro INAMI ne peut pas dépasser 50 chiffres'),
+        inami: yup.string()
+    .required('Le numéro INAMI est obligatoire')
+    .matches(/^[a-zA-Z0-9]+$/, 'Le numéro INAMI ne peut contenir que des lettres et des chiffres')
+    .min(2, 'Le numéro INAMI doit contenir au moins 2 caractères')
+    .max(50, 'Le numéro INAMI ne peut pas dépasser 50 caractères')
+
 });
 
 
