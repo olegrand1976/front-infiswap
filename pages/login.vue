@@ -294,16 +294,12 @@
 <script lang="ts" setup>
 import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
-<<<<<<< HEAD
 import { Input } from "@/components/ui/input";
 import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { localize } from '@vee-validate/i18n';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 
-=======
-import { Input } from '@/components/ui/input';
->>>>>>> origin/develop
 
 definePageMeta({
     layout: 'auth',
@@ -364,29 +360,6 @@ const credentials = reactive({
     password: '',
 });
 
-<<<<<<< HEAD
-const submit = handleSubmit(async () => {
-    status.value = '';
-    try {
-        await login({ inami: credentials.inami, password: credentials.password });
-        router.push('/dashboard');
-    } catch (error) {
-        console.error('Erreur de connexion:', error);
-        status.value = 'Échec de la connexion. Vérifiez vos identifiants.';
-    }
-});
-
-// const {
-//     submit,
-//     inProgress,
-//     // validationErrors: errors,
-// } = useSubmit(
-//     () => {
-//         status.value = '';
-//         return login(credentials).then(() => router.push('/dashboard'));
-//     },
-// );
-=======
 const {
     submit,
     inProgress,
@@ -397,7 +370,6 @@ const {
         return login(credentials).then(() => router.push('/dashboard/replacement'));
     },
 );
->>>>>>> origin/develop
 </script>
 
 <style scoped>

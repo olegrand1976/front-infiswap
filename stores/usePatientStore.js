@@ -9,7 +9,7 @@ export const usePatientStore = defineStore('usePatientStore', () => {
 
         const { $apifetch } = useNuxtApp();
 
-        await $apifetch('/api/', {
+        await $apifetch('/api/patients', {
             method: 'POST',
             body: data, // Convertir en JSON
             headers: {
