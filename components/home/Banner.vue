@@ -39,7 +39,7 @@
                 </p>
                 <Button
                     variant="secondary"
-                    href="/register"
+                    href="/register-beta"
                     class="lg:mt-3 text-primary w-36 lg:text-sm md:text-xs md:mt-3"
                 >
                     <span class="sm:text-xs md:text-sm">S'inscrire</span>
