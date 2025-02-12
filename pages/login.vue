@@ -283,7 +283,7 @@ const {
 } = useSubmit(
     () => {
         status.value = '';
-        return login(credentials).then(() => router.push('/dashboard'));
+        return login(credentials).then(() => router.push('/dashboard/replacement'));
     },
 );
 </script>

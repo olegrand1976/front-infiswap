@@ -22,7 +22,6 @@
             <p class="m-4">
                 Trouvez rapidement un remplaçant fiable, simplifiez la planification et assurez la continuité des soins.
             </p>
-            </p>
             <Button
                 variant="outline"
                 class="rounded-full lg:text-sm text-xs mx-auto"

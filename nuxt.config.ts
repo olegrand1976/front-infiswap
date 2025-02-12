@@ -74,8 +74,7 @@ export default defineNuxtConfig({
                 '/',
                 '/about',
                 '/contact',
-                '404',
-            ],
+          ],
         },
     },
 
