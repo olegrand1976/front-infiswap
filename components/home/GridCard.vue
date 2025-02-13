@@ -186,7 +186,7 @@ import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 
 const cards = [
-     {
+    {
         image: '/home/Des_infirmiers.jpg',
         alt: 'Groupe d\'infirmiers',
         title: 'Me faire remplacer',
@@ -197,7 +197,7 @@ const cards = [
         alt: 'Infirmier',
         title: 'Je cherche un remplacement',
         link: '/',
-    }, 
+    },
 /*      {
         image: '/home/Rectangle_24.png',
         alt: 'Infirmier',

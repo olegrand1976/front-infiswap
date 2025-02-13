@@ -1,6 +1,6 @@
 <template>
     <div class="hidden sm:block pt-24 relative">
-        <NuxtImg 
+        <NuxtImg
             src="/banner.png"
             alt="Bannière"
             class="-ms-3 w-[95vw]"
@@ -18,14 +18,14 @@
             >
                 Consulter
             </Button>
-        </div>    
+        </div>
     </div>
 
     <div class="sm:hidden relative">
-        <NuxtImg 
+        <NuxtImg
             src="/banner_mobile.png"
             alt="Bannière mobile"
-        /> 
+        />
         <div class="absolute bottom-12 left-[5.5rem] flex flex-col justify-center items-center space-y-6">
             <h1 class="text-white text-center text-3xl">
                 je cherche <br>
