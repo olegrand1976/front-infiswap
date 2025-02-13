@@ -1,6 +1,6 @@
 <template>
     <div class="hidden sm:flex space-x-8 container mt-8">
-        <div class="w-full bg-pink-200 shadow p-8 rounded-2xl flex lg:flex-row sm:flex-col lg:justify-start sm:justify-center sm:items-center sm:mx-auto space-x-6">
+        <div class="w-full shadow p-4 rounded-2xl flex lg:flex-row sm:flex-col lg:justify-start sm:justify-center sm:items-center sm:mx-auto space-x-6">
             <div class="xl:w-[40%] lg:w-[30%] grid gap-2 place-content-center h-full w-1/2">
                 <!-- <LayoutsLogo class="lg:w-auto sm:w-36" /> -->
                  <NuxtImg src="/home/mail-image.png"/>
