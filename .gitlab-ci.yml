@@ -30,7 +30,7 @@ build:
   script:
   - rm -rf node_modules
   - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
-  - npm install --include=dev
+  - npm install
   # Augmenter la mémoire allouée à Node pour le build (8 Go ici – adaptez selon vos ressources)
   - export NODE_OPTIONS=--max_old_space_size=8192
   # Lancer le build de l'application (assurez-vous que votre configuration Nuxt/Vite est optimisée pour la production)
