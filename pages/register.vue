@@ -59,13 +59,15 @@
                                             type="text"
                                             placeholder="Nom"
                                             class="bg-transparent"
-                                            v-bind="lastnameAttrs" 
+                                            v-bind="lastnameAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="lastname" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="lastname"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -80,13 +82,15 @@
                                             type="text"
                                             placeholder="Prénom"
                                             class="bg-transparent"
-                                            v-bind="firstnameAttrs" 
+                                            v-bind="firstnameAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="firstname" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="firstname"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -101,14 +105,15 @@
                                             type="email"
                                             placeholder="Email"
                                             class="bg-transparent"
-                                            v-bind="emailAttrs" 
-
+                                            v-bind="emailAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="email" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="email"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -122,14 +127,15 @@
                                             v-model="phoneNumber"
                                             placeholder="N° de téléphone"
                                             class="bg-transparent"
-                                            v-bind="phoneNumberAttrs" 
-
+                                            v-bind="phoneNumberAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="phoneNumber" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="phoneNumber"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -144,14 +150,15 @@
                                             type="password"
                                             placeholder="Mot de passe"
                                             class="bg-transparent"
-                                            v-bind="passwordAttrs" 
-
+                                            v-bind="passwordAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="password" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="password"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -166,13 +173,15 @@
                                             type="password"
                                             placeholder="Confirmer mot de passe"
                                             class="bg-transparent"
-                                            v-bind="passwordConfirmationAttrs" 
+                                            v-bind="passwordConfirmationAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="passwordConfirmation" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="passwordConfirmation"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -222,13 +231,14 @@
                                         <Input
                                             v-model="dateOfBirth"
                                             type="date"
-                                            
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="dateOfBirth" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="dateOfBirth"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -472,14 +482,15 @@
                                             type="text"
                                             placeholder="Numéro INAMI"
                                             class="text-sm"
-                                            v-bind="identifierNumberAttrs" 
-
+                                            v-bind="identifierNumberAttrs"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage name="identifierNumber" class="text-red-500 text-xs mt-5     " />
-
+                            <ErrorMessage
+                                name="identifierNumber"
+                                class="text-red-500 text-xs mt-5     "
+                            />
                         </FormField>
                     </div>
 
@@ -515,14 +526,10 @@ import {
     CalendarIcon,
 } from '@heroicons/vue/24/solid';
 
-import { cn } from '@/lib/utils';
-
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
-
+import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { localize } from '@vee-validate/i18n';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import {
     Select,
     SelectContent,
@@ -531,11 +538,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup';
-import { localize } from '@vee-validate/i18n';
-import fr from '@vee-validate/i18n/dist/locale/fr.json';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 // const inProgress = ref(false);
 
@@ -637,8 +645,6 @@ const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
 );
 
-
-
 // Définir le schéma de validation
 const schema = yup.object({
     lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
@@ -675,8 +681,8 @@ const schema = yup.object({
 });
 
 // Définir le formulaire et les champs
-const { handleSubmit, defineField} = useForm({
-  validationSchema: schema,
+const { handleSubmit, defineField } = useForm({
+    validationSchema: schema,
 });
 
 // Définir les champs
@@ -698,7 +704,6 @@ const [zipCode, zipCodeAttrs] = defineField('address.zipCode');
 const [country, countryAttrs] = defineField('address.country');
 const [additionnalInformation, additionnalInformationAttrs] = defineField('address.additionnalInformation');
 
-
 const {
     submit,
     inProgress,
@@ -714,7 +719,7 @@ const {
         formData.phoneNumber = phoneNumber.value;
         formData.dateOfBirth = dateOfBirth.value;
         formData.identifierNumber = identifierNumber.value;
-        console.log('form data',formData);
+        console.log('form data', formData);
         return register(formData);
     },
     {
@@ -722,22 +727,21 @@ const {
     },
 );
 
-
 // const submit = handleSubmit(async values => {
 //     console.log('Données du formulaire:', values); // Affiche les données du formulaire
 //     status.value = '';
 //     inProgress.value = true;
-    
+
 //     try {
 //         // Envoi des données à la fonction `register`
-//         // await register(values); 
+//         // await register(values);
 //         // inProgress.value = false;
-        
+
 //         // Redirection après une soumission réussie
 //         // router.push('/login');
 //     } catch (error) {
 //         inProgress.value = false;
-        
+
 //         // En cas d'erreur, afficher un message d'erreur
 //         console.error('Erreur lors de l\'inscription:', error);
 //         status.value = 'Échec de l\'inscription. Veuillez réessayer.';

@@ -138,16 +138,16 @@ const submitStatus = useSubmit(async (responseId) => {
 const changeStatus = async (id) => {
     try {
         await replacementStore.changeStatus(id);
-        
+
         useNuxtApp().$toast.success('Infirmier accepté');
 
         setTimeout(() => {
             router.push(`/dashboard/replacement/detail/${replacementId}`);
         }, 4000);
-
-    } catch (error) {
-        useNuxtApp().$toast.error("Une erreur s'est produite");
-        console.error("Erreur lors du changement de statut :", error);
+    }
+    catch (error) {
+        useNuxtApp().$toast.error('Une erreur s\'est produite');
+        console.error('Erreur lors du changement de statut :', error);
     }
 };
 

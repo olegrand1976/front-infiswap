@@ -52,7 +52,7 @@ export const useAuth = () => {
 
         await $apifetch('api/logout', { method: 'post' });
         user.value = null;
-        useCookie(AUTH_TOKEN).value; 
+        useCookie(AUTH_TOKEN).value;
 
         await router.push('/');
     }

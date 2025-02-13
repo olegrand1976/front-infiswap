@@ -5,8 +5,11 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
         'nuxt-swiper',
-        '@pinia/nuxt'
+        '@pinia/nuxt',
     ].filter(Boolean),
+    plugins: [
+        '~/plugins/vee-validate.js', // Ajouter le plugin ici
+    ],
 
     imports: {
         dirs: [
@@ -104,7 +107,4 @@ export default defineNuxtConfig({
         // Directory where the components live (par défaut "./components/ui")
         componentDir: './components/ui',
     },
-    plugins: [
-        '~/plugins/vee-validate.js', // Ajouter le plugin ici
-      ],
 });

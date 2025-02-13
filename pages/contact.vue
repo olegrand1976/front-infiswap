@@ -9,7 +9,10 @@
             </div>
         </div>
 
-        <form @submit.prevent="onSubmit" class="pt-8 sm:pt-24 container flex flex-col space-y-5 sm:w-[70%] lg:w-[55%]">
+        <form
+            class="pt-8 sm:pt-24 container flex flex-col space-y-5 sm:w-[70%] lg:w-[55%]"
+            @submit.prevent="onSubmit"
+        >
             <FormField name="nom">
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
@@ -20,13 +23,15 @@
                                 type="text"
                                 placeholder="Nom, prénom"
                                 class="text-sm"
-                                v-bind="nomAttrs" 
+                                v-bind="nomAttrs"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage name="nom" class="text-red-500 text-xs mt-5     " />
-
+                <ErrorMessage
+                    name="nom"
+                    class="text-red-500 text-xs mt-5     "
+                />
             </FormField>
 
             <FormField name="email">
@@ -39,14 +44,15 @@
                                 type="email"
                                 placeholder="Email"
                                 class="text-sm"
-                                v-bind="emailAttrs" 
-
+                                v-bind="emailAttrs"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage name="email" class="text-red-500 text-xs mt-5     " />
-
+                <ErrorMessage
+                    name="email"
+                    class="text-red-500 text-xs mt-5     "
+                />
             </FormField>
 
             <FormField name="numero">
@@ -59,14 +65,15 @@
                                 type="numeros"
                                 placeholder="N° de téléphone"
                                 class="text-sm w-96"
-                                v-bind="numerosAttrs" 
-
+                                v-bind="numerosAttrs"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage name="numeros" class="text-red-500 text-xs mt-5     " />
-
+                <ErrorMessage
+                    name="numeros"
+                    class="text-red-500 text-xs mt-5     "
+                />
             </FormField>
 
             <FormField name="message">
@@ -80,17 +87,18 @@
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
                             <Textarea
-                               v-model="message"
+                                v-model="message"
                                 placeholder="Votre message..."
                                 class="bg-gray-200 h-40"
-                                v-bind="messageAttrs" 
-
+                                v-bind="messageAttrs"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage name="message" class="text-red-500 text-xs mt-5     " />
-
+                <ErrorMessage
+                    name="message"
+                    class="text-red-500 text-xs mt-5     "
+                />
             </FormField>
 
             <Button
@@ -182,19 +190,16 @@ const formData = ref({
     message: '',
 });
 
-
 configure({
-  generateMessage: localize({ fr }),
-  validateOnBlur: true,
-  validateOnInput: true,
-  validateOnChange: true,
-  validateOnModelUpdate: true,
+    generateMessage: localize({ fr }),
+    validateOnBlur: true,
+    validateOnInput: true,
+    validateOnChange: true,
+    validateOnModelUpdate: true,
 });
 
-
-
 const schema = yup.object({
-    
+
     // Validation pour le champ 'nom'
     nom: yup.string()
         .required('Le nom est obligatoire') // Le nom est obligatoire
@@ -219,13 +224,11 @@ const schema = yup.object({
     message: yup.string()
         .required('Le message est obligatoire') // Le message est obligatoire
         .min(10, 'Le message doit contenir au moins 10 caractères') // Minimum de 10 caractères
-        .max(500, 'Le message ne peut pas dépasser 500 caractères') // Maximum de 500 caractères
+        .max(500, 'Le message ne peut pas dépasser 500 caractères'), // Maximum de 500 caractères
 });
 
-
-
 const { handleSubmit, defineField, errors } = useForm({
-  validationSchema: schema,
+    validationSchema: schema,
 });
 
 const [nom, nomAttrs] = defineField('nom');
@@ -233,13 +236,8 @@ const [email, emailAttrs] = defineField('email');
 const [numeros, numerosAttrs] = defineField('numeros');
 const [message, messageAttrs] = defineField('message');
 
-
-
-
-const onSubmit = handleSubmit(async values => {
-  console.log('Données du formulaire:', values);
+const onSubmit = handleSubmit(async (values) => {
+    console.log('Données du formulaire:', values);
 //   alert('Formulaire soumis avec succès !');
 });
-
-
 </script>

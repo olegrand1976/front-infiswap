@@ -51,19 +51,19 @@
                             v-if="listResponse.length == 0"
                             class="text-xs text-primary"
                         >
-                        Aucun
+                            Aucun
                         </span>
                         <span
                             v-else-if="listResponse.length == 1"
                             class="text-xs text-primary"
                         >
-                        1 intéressé
+                            1 intéressé
                         </span>
                         <span
                             v-else
                             class="text-xs text-primary"
                         >
-                        {{ listResponse.length }} intéressés
+                            {{ listResponse.length }} intéressés
                         </span>
                     </div>
                 </div>
@@ -210,7 +210,7 @@ import { CalendarDate } from '@internationalized/date';
 import { ref } from 'vue';
 import { useReplacementStore } from '@/stores/useReplacementStore';
 
-import { useDetailReplacement, useListResponse ,currentUser } from '~/composables/useReplacements';
+import { useDetailReplacement, useListResponse, currentUser } from '~/composables/useReplacements';
 
 const replacementStore = useReplacementStore();
 
