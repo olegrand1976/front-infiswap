@@ -16,10 +16,10 @@ const CSRF_HEADER = 'X-XSRF-TOKEN';
 export default defineNuxtPlugin(async (nuxtApp) => {
     const { $csrf } = useNuxtApp(); // Si nécessaire, vérifie la définition de $csrf
     const { API_URL, FRONT_END_URL } = useRuntimeConfig().public;
-
     const apifetch = $fetch.create({
         credentials: 'include',
         baseURL: API_URL,
+        // eslint-disable-next-line no-unused-vars
         async onRequest({ request, options }) {
             const event = typeof useEvent === 'function' ? useRequestEvent() : null;
             // Récupérer le CSRF Token depuis les cookies ou autre source appropriée

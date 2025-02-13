@@ -20,7 +20,7 @@ module.exports = {
         },
         extend: {
             fontFamily: {
-                sans: ['Inter', 'Arial', 'sans-serif'],
+                sans: ['Poppins', 'Arial', 'sans-serif'],
             },
             colors: {
                 border: 'hsl(var(--border))',

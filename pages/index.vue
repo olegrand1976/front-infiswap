@@ -1,14 +1,10 @@
 <template>
     <div>
         <div class="flex flex-col-reverse sm:flex-col">
-            <section>
-                <HomeSearchNurseContainer />
-            </section>
-            <section>
-                <HomeBanner />
-            </section>
+            <HomeBanner />
+            <HomeSearchNurseContainer />
         </div>
-        <section class="sm:hidden">
+        <section class="lg:hidden">
             <HomeRegisterBetaContainer />
         </section>
         <section>

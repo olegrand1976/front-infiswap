@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const props = defineProps<{
     defaultValue?: string | number;
     modelValue?: string | number;
-    type?: 'text' | 'password';
+    type?: 'text' | 'password' | 'email' | 'number';
     variant?: 'default' | 'transparent';
     size?: InputVariants['size'];
     placeholder?: string;
