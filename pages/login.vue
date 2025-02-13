@@ -309,15 +309,21 @@ const validateField = async (field: keyof typeof credentials) => {
 
 const { submit, inProgress, validationErrors } = useSubmit(
     () => {
+        status.value = '';
         return login(credentials).then(() => {
             Object.keys(credentials).forEach((key) => {
                 credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
+        });
+    },
+    {
+        onSuccess: (e) => {
+            useNuxtApp().$toast.error('Inscription réussie');
             setTimeout(() => {
                 router.push('/dashboard/replacement');
             }, 3000);
-        });
+        },
     },
     {
         onError: (e) => {

@@ -55,19 +55,22 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary w-7 h-7 ml-2" />
                                         <Input
-                                            v-model="lastname"
+                                            v-model="formData.lastname"
                                             type="text"
                                             placeholder="Nom"
                                             class="bg-transparent"
-                                            v-bind="lastnameAttrs"
+                                            @blur="validateField('lastname')"
+                                            @input="validateField('lastname')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="lastname"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.lastname"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.lastname }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -78,19 +81,22 @@
                                     <div class="flex items-center">
                                         <UserCircleIcon class="text-primary ml-2 w-7 h-7" />
                                         <Input
-                                            v-model="firstname"
+                                            v-model="formData.firstname"
                                             type="text"
                                             placeholder="Prénom"
                                             class="bg-transparent"
-                                            v-bind="firstnameAttrs"
+                                            @blur="validateField('firstname')"
+                                            @input="validateField('firstname')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="firstname"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.firstname"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.lastname }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -101,19 +107,22 @@
                                     <div class="flex items-center">
                                         <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
-                                            v-model="email"
+                                            v-model="formData.email"
                                             type="email"
                                             placeholder="Email"
                                             class="bg-transparent"
-                                            v-bind="emailAttrs"
+                                            @blur="validateField('email')"
+                                            @input="validateField('email')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="email"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.email"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.email }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -124,18 +133,21 @@
                                     <div class="flex items-center">
                                         <PhoneIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
-                                            v-model="phoneNumber"
+                                            v-model="formData.phoneNumber"
                                             placeholder="N° de téléphone"
                                             class="bg-transparent"
-                                            v-bind="phoneNumberAttrs"
+                                            @blur="validateField('phoneNumber')"
+                                            @input="validateField('phoneNumber')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="phoneNumber"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.phoneNumber"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.phoneNumber }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -146,19 +158,22 @@
                                     <div class="flex items-center">
                                         <LockClosedIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="password"
+                                            v-model="formData.password"
                                             type="password"
                                             placeholder="Mot de passe"
                                             class="bg-transparent"
-                                            v-bind="passwordAttrs"
+                                            @blur="validateField('password')"
+                                            @input="validateField('password')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="password"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.password"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.password }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -169,19 +184,22 @@
                                     <div class="flex items-center">
                                         <LockClosedIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="passwordConfirmation"
+                                            v-model="formData.passwordConfirmation"
                                             type="password"
                                             placeholder="Confirmer mot de passe"
                                             class="bg-transparent"
-                                            v-bind="passwordConfirmationAttrs"
+                                            @blur="validateField('passwordConfirmation')"
+                                            @input="validateField('passwordConfirmation')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="passwordConfirmation"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.passwordConfirmation"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.passwordConfirmation }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -229,16 +247,12 @@
                                     <div class="flex items-center">
                                         <CalendarIcon class="text-primary ml-3 h-6" />
                                         <Input
-                                            v-model="dateOfBirth"
+                                            v-model="formData.dateOfBirth"
                                             type="date"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="dateOfBirth"
-                                class="text-red-500 text-xs mt-5     "
-                            />
                         </FormField>
                     </div>
 
@@ -379,10 +393,18 @@
                                             type="text"
                                             placeholder="Code postal"
                                             class="text-sm"
+                                            @blur="validateField('address.zipCode')"
+                                            @input="validateField('address.zipCode')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
+                            <p
+                                v-if="error.address.zipCode"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.address.zipCode }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -478,19 +500,22 @@
                                     <div class="flex items-center">
                                         <IdentificationIcon class="text-primary w-6 h-6" />
                                         <Input
-                                            v-model="identifierNumber"
+                                            v-model="formData.identifierNumber"
                                             type="text"
                                             placeholder="Numéro INAMI"
                                             class="text-sm"
-                                            v-bind="identifierNumberAttrs"
+                                            @blur="validateField('identifierNumber')"
+                                            @input="validateField('identifierNumber')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="identifierNumber"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.identifierNumber"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.identifierNumber }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -526,10 +551,7 @@ import {
     CalendarIcon,
 } from '@heroicons/vue/24/solid';
 
-import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
-import { localize } from '@vee-validate/i18n';
-import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import {
     Select,
     SelectContent,
@@ -544,17 +566,6 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-
-// const inProgress = ref(false);
-
-definePageMeta({
-    layout: 'auth',
-    middleware: ['guest'],
-});
-
-useHead({
-    title: 'Inscription',
-});
 
 const genders = [
     {
@@ -633,6 +644,27 @@ const formData = reactive({
     },
 });
 
+const error = reactive({
+    lastname: '',
+    firstname: '',
+    email: '',
+    password: '',
+    accountType: '',
+    passwordConfirmation: '',
+    gender: '',
+    language: '',
+    phoneNumber: undefined,
+    dateOfBirth: null,
+    identifierNumber: null,
+    address: {
+        street: '',
+        city: '',
+        zipCode: '',
+        country: '',
+        additionnalInformation: '',
+    },
+});
+
 const df = new DateFormatter('fr-FR', {
     dateStyle: 'long',
 });
@@ -645,7 +677,6 @@ const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
 );
 
-// Définir le schéma de validation
 const schema = yup.object({
     lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
     firstname: yup.string().required('Le prénom est obligatoire').min(2, 'Le prénom doit comporter au moins 2 caractères'),
@@ -663,102 +694,73 @@ const schema = yup.object({
         .required('La confirmation du mot de passe est obligatoire'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
-    language: yup.string().required('La langue est obligatoire'),
-    phoneNumber: yup.string().matches(/^\+?\d{10,15}$/, 'Le numéro de téléphone est invalide'),
+    phoneNumber: yup.string().matches(/^\d{10}$/, 'Numéro invalide'),
     dateOfBirth: yup.date().required('La date de naissance est obligatoire').nullable(),
     address: yup.object({
         street: yup.string().required('L\'adresse est obligatoire'),
         city: yup.string().required('La ville est obligatoire'),
-        zipCode: yup.string().required('Le code postal est obligatoire'),
+        zipCode: yup.string().required('Le code postal est obligatoire').max(7, 'Le code postal ne doit pas dépasser 7 caractères'),
         country: yup.string().required('Le pays est obligatoire'),
         additionnalInformation: yup.string(),
     }).required('L\'adresse est obligatoire'),
     identifierNumber: yup.string()
         .required('Le numéro INAMI est obligatoire')
         .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
-        .min(2, 'Le numéro INAMI doit contenir au moins 2 chiffres')
-        .max(50, 'Le numéro INAMI ne peut pas dépasser 50 chiffres'),
+        .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
 });
 
-// Définir le formulaire et les champs
-const { handleSubmit, defineField } = useForm({
-    validationSchema: schema,
-});
+const validateField = async (field) => {
+    try {
+        if (field.includes('.')) {
+            // Sépare le champ imbriqué
+            const [parentField, childField] = field.split('.');
+            const childValue = formData[parentField] ? formData[parentField][childField] : undefined;
 
-// Définir les champs
-const [lastname, lastnameAttrs] = defineField('lastname');
-const [firstname, firstnameAttrs] = defineField('firstname');
-const [email, emailAttrs] = defineField('email');
-const [password, passwordAttrs] = defineField('password');
-const [passwordConfirmation, passwordConfirmationAttrs] = defineField('passwordConfirmation');
-const [accountType, accountTypeAttrs] = defineField('accountType');
-const [gender, genderAttrs] = defineField('gender');
-const [language, languageAttrs] = defineField('language');
-const [phoneNumber, phoneNumberAttrs] = defineField('phoneNumber');
-const [dateOfBirth, dateOfBirthAttrs] = defineField('dateOfBirth');
-const [identifierNumber, identifierNumberAttrs] = defineField('identifierNumber');
-const [address, addressAttrs] = defineField('address');
-const [street, streetAttrs] = defineField('address.street');
-const [city, cityAttrs] = defineField('address.city');
-const [zipCode, zipCodeAttrs] = defineField('address.zipCode');
-const [country, countryAttrs] = defineField('address.country');
-const [additionnalInformation, additionnalInformationAttrs] = defineField('address.additionnalInformation');
+            // Validation du champ imbriqué
+            await schema.fields[parentField].fields[childField].validate({ [childField]: childValue });
+        }
+        else {
+            // Validation pour un champ simple
+            await schema.validateAt(field, toRaw(formData));
+        }
 
-const {
-    submit,
-    inProgress,
-    validationErrors: errors,
-} = useSubmit(
+        // Si la validation réussit, on efface l'erreur
+        error[field] = '';
+    }
+    catch (err) {
+        // Si la validation échoue, on stocke l'erreur
+        error[field] = (err as yup.ValidationError).message;
+    }
+};
+
+const { submit, inProgress, validationErrors } = useSubmit(
     () => {
         status.value = '';
-        formData.firstname = firstname.value;
-        formData.lastname = lastname.value;
-        formData.email = email.value;
-        formData.password = password.value;
-        formData.passwordConfirmation = passwordConfirmation.value;
-        formData.phoneNumber = phoneNumber.value;
-        formData.dateOfBirth = dateOfBirth.value;
-        formData.identifierNumber = identifierNumber.value;
-        console.log('form data', formData);
-        return register(formData);
+        return register(formData).then(() => {
+            Object.keys(formData).forEach((key) => {
+                formData[key as keyof typeof formData] = key === 'accept' ? false : '';
+            });
+            inProgress.value = true;
+        });
     },
     {
-        onSuccess: () => router.push('/login'),
+        onSuccess: (e) => {
+            useNuxtApp().$toast.success('Inscription réussie');
+        },
+    },
+    {
+        onError: (e) => {
+            useNuxtApp().$toast.error('L\'inscription a échouée');
+        },
     },
 );
 
-// const submit = handleSubmit(async values => {
-//     console.log('Données du formulaire:', values); // Affiche les données du formulaire
-//     status.value = '';
-//     inProgress.value = true;
+definePageMeta({
+    layout: 'auth',
+    middleware: ['guest'],
+});
 
-//     try {
-//         // Envoi des données à la fonction `register`
-//         // await register(values);
-//         // inProgress.value = false;
-
-//         // Redirection après une soumission réussie
-//         // router.push('/login');
-//     } catch (error) {
-//         inProgress.value = false;
-
-//         // En cas d'erreur, afficher un message d'erreur
-//         console.error('Erreur lors de l\'inscription:', error);
-//         status.value = 'Échec de l\'inscription. Veuillez réessayer.';
-//     }
-// });
-
-// const {
-//     submit,
-//     inProgress,
-//     validationErrors: errors,
-// } = useSubmit(
-//     () => {
-//         status.value = '';
-//         return register(formData);
-//     },
-//     {
-//         onSuccess: () => router.push('/login'),
-//     },
-// );
+useHead({
+    title: 'Inscription',
+});
 </script>
