@@ -28,7 +28,7 @@ export const useReplacementStore = defineStore('useReplacementStore', () => {
             console.log('Données envoyées:');
 
             const { $apifetch } = useNuxtApp();
-            const apiUrl = `/api/replacement-responses/${response}/update-status?status=confirmed`; // Interpolation de la variable response dans l'URL
+            const apiUrl = `/api/replacement-responses/${response}/update-status?status=confirmed`;
 
             const res = await $apifetch(apiUrl, {
                 method: 'PUT',

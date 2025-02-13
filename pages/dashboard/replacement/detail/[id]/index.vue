@@ -20,7 +20,6 @@
                             <Input
                                 v-model="startDate"
                                 variant="transparent"
-                                type="date"
                                 class="text-xs text-primary w-[5.75rem]"
                                 disabled
                             />
@@ -33,7 +32,6 @@
                             <Input
                                 v-model="endDate"
                                 variant="transparent"
-                                type="date"
                                 class="text-xs text-primary w-[5.75rem]"
                                 disabled
                             />
@@ -49,7 +47,24 @@
                 <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
                     <div class="bg-white flex items-center justify-center shadow w-72 rounded-full">
-                        <span class="text-xs text-primary">27 intéressés</span>
+                        <span
+                            v-if="listResponse.length == 0"
+                            class="text-xs text-primary"
+                        >
+                        Aucun
+                        </span>
+                        <span
+                            v-else-if="listResponse.length == 1"
+                            class="text-xs text-primary"
+                        >
+                        1 intéressé
+                        </span>
+                        <span
+                            v-else
+                            class="text-xs text-primary"
+                        >
+                        {{ listResponse.length }} intéressés
+                        </span>
                     </div>
                 </div>
                 <Button
@@ -195,7 +210,7 @@ import { CalendarDate } from '@internationalized/date';
 import { ref } from 'vue';
 import { useReplacementStore } from '@/stores/useReplacementStore';
 
-import { useDetailReplacement, currentUser } from '~/composables/useReplacements';
+import { useDetailReplacement, useListResponse ,currentUser } from '~/composables/useReplacements';
 
 const replacementStore = useReplacementStore();
 
@@ -205,6 +220,8 @@ const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
+const { listResponse, fetchListResponse } = useListResponse(replacementId);
+
 const formData = ref({
     replacementId: replacementId,
     respondedBy: respondedBy,
@@ -265,6 +282,7 @@ const endDate = computed(() => {
 
 onMounted(() => {
     fetchReplacement();
+    fetchListResponse();
 });
 
 useHead({
@@ -273,6 +291,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth'],
 });
 </script>
