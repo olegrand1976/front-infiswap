@@ -28,6 +28,8 @@ build:
     - echo "Attente de la résolution DNS pour 'docker'..."
     - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
+    - rm -rf node_modules package-lock.json
+    - npm cache clean --force
     # Installation déterministe des dépendances
     - npm ci
     # Augmenter la mémoire allouée à Node pour le build (8 Go ici – adaptez selon vos ressources)
