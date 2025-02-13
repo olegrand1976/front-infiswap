@@ -108,7 +108,6 @@
                                         <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
                                         <Input
                                             v-model="formData.email"
-                                            type="email"
                                             placeholder="Email"
                                             class="bg-transparent"
                                             @blur="validateField('email')"
@@ -733,20 +732,17 @@ const validateField = async (field) => {
     }
 };
 
-const { submit, inProgress, validationErrors } = useSubmit(
+const { submit, inProgress } = useSubmit(
     () => {
         status.value = '';
         return register(formData).then(() => {
+            useNuxtApp().$toast.success('Inscription réussie');
+
             Object.keys(formData).forEach((key) => {
                 formData[key as keyof typeof formData] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
         });
-    },
-    {
-        onSuccess: (e) => {
-            useNuxtApp().$toast.success('Inscription réussie');
-        },
     },
     {
         onError: (e) => {

@@ -5,10 +5,8 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
         'nuxt-swiper',
-        '@pinia/nuxt',
     ].filter(Boolean),
     plugins: [
-        '~/plugins/vee-validate.js', // Ajouter le plugin ici
     ],
 
     imports: {

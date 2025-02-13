@@ -307,7 +307,7 @@ const validateField = async (field: keyof typeof credentials) => {
     }
 };
 
-const { submit, inProgress, validationErrors } = useSubmit(
+const { submit, inProgress } = useSubmit(
     () => {
         status.value = '';
         return login(credentials).then(() => {
@@ -315,18 +315,14 @@ const { submit, inProgress, validationErrors } = useSubmit(
                 credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
-        });
-    },
-    {
-        onSuccess: (e) => {
-            useNuxtApp().$toast.error('Inscription réussie');
+
             setTimeout(() => {
                 router.push('/dashboard/replacement');
             }, 3000);
-        },
+        });
     },
     {
-        onError: (e) => {
+        onError: () => {
             useNuxtApp().$toast.error('Identifiant ou mot de passe incorrect');
         },
     },

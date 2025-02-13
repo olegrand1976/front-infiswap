@@ -56,7 +56,7 @@
                                 </TableCell>
 
                                 <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
-                                    <Form @submit="changeStatus(list.id)">
+                                    <Form @submit="handlesubmit(list.id)">
                                         <Button
                                             type="submit"
                                             variant="transparent"
@@ -94,10 +94,8 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
-import { useSubmit } from '~/composables/useSubmit';
-import { useReplacementStore } from '@/stores/useReplacementStore';
 
-const replacementStore = useReplacementStore();
+const { changeStatus } = changeStatusReplacement();
 
 const route = useRoute();
 const router = useRouter();
@@ -121,33 +119,14 @@ const endDate = computed(() =>
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
 );
 
-/*
-const submitStatus = useSubmit(async (responseId) => {
-    const { changeStatus } = changeStatusReplacement(responseId, 'confirmed');
-    await changeStatus();
-    await fetchListResponse();
-}, {
-    onSuccess: () => {
-    },
-    onError: (error) => {
-        console.error('Erreur lors du changement de statut:', error);
-    }
-});
-*/
-
-const changeStatus = async (id) => {
+const handlesubmit = async (id) => {
     try {
-        await replacementStore.changeStatus(id);
-
+        await changeStatus(id);
         useNuxtApp().$toast.success('Infirmier accepté');
-
-        setTimeout(() => {
-            router.push(`/dashboard/replacement/detail/${replacementId}`);
-        }, 4000);
+        router.push('/dashboard/replacement');
     }
-    catch (error) {
+    catch (e) {
         useNuxtApp().$toast.error('Une erreur s\'est produite');
-        console.error('Erreur lors du changement de statut :', error);
     }
 };
 

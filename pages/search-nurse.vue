@@ -261,7 +261,7 @@ const validateField = async (field: keyof typeof formData) => {
     }
 };
 
-const { submit, inProgress, validationErrors } = useSubmit(
+const { submit, inProgress } = useSubmit(
     () => {
         return searchNurse().submitSearchNurse(formData).then(() => {
             useNuxtApp().$toast.success('Envoi de formulaire effectué');

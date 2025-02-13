@@ -155,7 +155,7 @@
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
             class="my-12"
         >
-            <Form @submit="handleSubmit">
+            <Form @submit="submit">
                 <div
                     class="border-2 border-primary rounded p-3 w-96"
                 >
@@ -207,12 +207,8 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { CalendarDate } from '@internationalized/date';
-import { ref } from 'vue';
-import { useReplacementStore } from '@/stores/useReplacementStore';
 
-import { useDetailReplacement, useListResponse, currentUser } from '~/composables/useReplacements';
-
-const replacementStore = useReplacementStore();
+import { useDetailReplacement, useListResponse, sendResponse, currentUser } from '~/composables/useReplacements';
 
 const { user } = currentUser();
 const route = useRoute();
@@ -222,24 +218,26 @@ const respondedBy = computed(() => user.value?.id || null);
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const { listResponse, fetchListResponse } = useListResponse(replacementId);
 
-const formData = ref({
+const formData = reactive({
     replacementId: replacementId,
     respondedBy: respondedBy,
     reason: '',
     comment: '',
 });
 
-const handleSubmit = async () => {
-    console.log('formData', formData.value);
-    await replacementStore.submitForm(formData.value);
-
-    formData.value = {
-        replacementId: '',
-        respondedBy: '',
-        reason: '',
-        comment: '',
-    };
-};
+const { submit } = useSubmit(
+    () => {
+        return sendResponse().submitResponse(formData).then(() => {
+            useNuxtApp().$toast.success('Demande envoyée');
+            formData.reason = '';
+        });
+    },
+    {
+        onError: () => {
+            useNuxtApp().$toast.error('Votre demande n\'a pas abouti');
+        },
+    },
+);
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
