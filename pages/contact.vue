@@ -13,24 +13,28 @@
             class="pt-8 sm:pt-24 container flex flex-col space-y-3 sm:w-[70%] lg:w-[55%]"
             @submit.prevent="submit"
         >
-            <FormField name="lastname">
+            <FormField name="fullname">
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
                             <UserCircleIcon class="text-primary w-6 h-6" />
                             <Input
-                                v-model="formData.lastname"
+                                v-model="formData.fullname"
                                 type="text"
                                 placeholder="Nom, prénom"
                                 class="text-sm"
+                                @blur="validateField('fullname')"
+                                @input="validateField('fullname')"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage
-                    name="nom"
-                    class="text-red-500 text-xs mt-5     "
-                />
+                <p
+                    v-if="error.fullname"
+                    class="text-red-500 text-xs mt-1 ms-[8%]"
+                >
+                    {{ error.fullname }}
+                </p>
             </FormField>
 
             <FormField name="email">
@@ -40,21 +44,23 @@
                             <EnvelopeIcon class="text-primary w-6 h-6" />
                             <Input
                                 v-model="formData.email"
-                                type="email"
                                 placeholder="Email"
                                 class="text-sm"
-                                v-bind="emailAttrs"
+                                @blur="validateField('email')"
+                                @input="validateField('email')"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage
-                    name="email"
-                    class="text-red-500 text-xs mt-5     "
-                />
+                <p
+                    v-if="error.email"
+                    class="text-red-500 text-xs mt-1 ms-[8%]"
+                >
+                    {{ error.email }}
+                </p>
             </FormField>
 
-            <FormField name="numero">
+            <FormField name="phoneNumber">
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
@@ -63,10 +69,18 @@
                                 v-model="formData.phoneNumber"
                                 placeholder="N° de téléphone"
                                 class="text-sm w-96"
+                                @blur="validateField('phoneNumber')"
+                                @input="validateField('phoneNumber')"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
+                <p
+                    v-if="error.phoneNumber"
+                    class="text-red-500 text-xs mt-1 ms-[8%]"
+                >
+                    {{ error.phoneNumber }}
+                </p>
             </FormField>
 
             <FormField name="message">
@@ -80,18 +94,13 @@
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
                             <Textarea
-                                v-model="message"
+                                v-model="formData.message"
                                 placeholder="Votre message..."
                                 class="bg-gray-200 h-40"
-                                v-bind="messageAttrs"
                             />
                         </div>
                     </FormControl>
                 </FormItem>
-                <ErrorMessage
-                    name="message"
-                    class="text-red-500 text-xs mt-5     "
-                />
             </FormField>
 
             <Button
@@ -169,21 +178,51 @@ import {
 import * as yup from 'yup';
 
 const formData = reactive({
-    lastname: '',
-    firstname: '',
-    city: '',
-    zipCode: '',
+    fullname: '',
+    email: '',
     phoneNumber: '',
-    accept: false
+    message: '',
+    accept: false,
 });
 
 const error = reactive({
-    lastname: '',
-    firstname: '',
-    city: '',
-    zipCode: '',
+    fullname: '',
+    email: '',
     phoneNumber: '',
 });
+
+const schema = yup.object().shape({
+    fullname: yup.string()
+        .required('Le nom complet est requis')
+        .min(2, 'Le nom doit avoir minimum 2 caractères'),
+    email: yup.string()
+        .required('L\'email est requis')
+        .email('Email invalide'),
+    phoneNumber: yup.string()
+        .required('Le numéro est requis')
+        .matches(/^\d{10}$/, 'Numéro invalide'),
+});
+
+const validateField = async (field: keyof typeof formData) => {
+    try {
+        await schema.validateAt(field, toRaw(formData));
+        error[field] = '';
+    }
+    catch (err) {
+        error[field] = (err as yup.ValidationError).message;
+    }
+};
+
+const { submit, inProgress, validationErrors } = useSubmit(
+    () => {
+        console.log('');
+    },
+    {
+        onError: (e) => {
+            useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
+        },
+    },
+);
 
 useHead({
     title: 'Contact',

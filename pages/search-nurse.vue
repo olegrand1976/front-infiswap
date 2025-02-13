@@ -1,7 +1,7 @@
 <template>
     <div class="mt-20">
         <div class="relative bg-tertiary/30 h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 flex flex-col items-center justify-center m-auto space-y-4 px-4 sm:px-8 md:px-16">
-            <LayoutsLogo class="w-[20rem]  sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
+            <LayoutsLogo class="w-[20rem] sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
             <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
                 <strong>Chercher</strong> un(e) infirmier(e) ?
             </h1>
@@ -26,7 +26,12 @@
                                         @input="validateField('lastname')"
                                     />
                                 </div>
-                                <p v-if="error.lastname" class="text-red-500 text-xs mt-1 ms-[25%]">{{ error.lastname }}</p>
+                                <p
+                                    v-if="error.lastname"
+                                    class="text-red-500 text-xs mt-1 ms-[25%]"
+                                >
+                                    {{ error.lastname }}
+                                </p>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -51,7 +56,12 @@
                                         @input="validateField('firstname')"
                                     />
                                 </div>
-                                <p v-if="error.firstname" class="text-red-500 text-xs mt-1 ms-[25%]">{{ error.firstname }}</p>
+                                <p
+                                    v-if="error.firstname"
+                                    class="text-red-500 text-xs mt-1 ms-[25%]"
+                                >
+                                    {{ error.firstname }}
+                                </p>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -63,7 +73,10 @@
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <div class="w-5 h-5 bg-primary flex items-center justify-center">
-                                                <NuxtImg src="/icons/zip_code.png" class="w-4 h-4" />
+                                                <NuxtImg
+                                                    src="/icons/zip_code.png"
+                                                    class="w-4 h-4"
+                                                />
                                             </div>
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
                                         </FormLabel>
@@ -77,7 +90,12 @@
                                         @input="validateField('zipCode')"
                                     />
                                 </div>
-                                <p v-if="error.zipCode" class="text-red-500 text-xs mt-1 ms-[25%]">{{ error.zipCode }}</p>
+                                <p
+                                    v-if="error.zipCode"
+                                    class="text-red-500 text-xs mt-1 ms-[25%]"
+                                >
+                                    {{ error.zipCode }}
+                                </p>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -89,7 +107,10 @@
                                     <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <div class="w-5 h-5 bg-primary flex items-center justify-center">
-                                                <NuxtImg src="/icons/city_white.png" class="w-4 h-4" />
+                                                <NuxtImg
+                                                    src="/icons/city_white.png"
+                                                    class="w-4 h-4"
+                                                />
                                             </div>
                                             <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Ville</span>
                                         </FormLabel>
@@ -103,7 +124,12 @@
                                         @input="validateField('city')"
                                     />
                                 </div>
-                                <p v-if="error.city" class="text-red-500 text-xs mt-1 ms-[25%]">{{ error.city }}</p>
+                                <p
+                                    v-if="error.city"
+                                    class="text-red-500 text-xs mt-1 ms-[25%]"
+                                >
+                                    {{ error.city }}
+                                </p>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -127,7 +153,12 @@
                                         @input="validateField('phoneNumber')"
                                     />
                                 </div>
-                                <p v-if="error.phoneNumber" class="text-red-500 text-xs mt-1 ms-[25%]">{{ error.phoneNumber }}</p>
+                                <p
+                                    v-if="error.phoneNumber"
+                                    class="text-red-500 text-xs mt-1 ms-[25%]"
+                                >
+                                    {{ error.phoneNumber }}
+                                </p>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -137,8 +168,8 @@
                     <FormItem class="mt-6">
                         <FormControl>
                             <Checkbox
-                                v-model="formData.accept"
                                 id="accept"
+                                v-model="formData.accept"
                                 class="mt-2"
                             />
                             <FormLabel
@@ -191,7 +222,7 @@ const formData = reactive({
     city: '',
     zipCode: '',
     phoneNumber: '',
-    accept: false
+    accept: false,
 });
 
 const error = reactive({
@@ -224,7 +255,8 @@ const validateField = async (field: keyof typeof formData) => {
     try {
         await schema.validateAt(field, toRaw(formData));
         error[field] = '';
-    } catch (err) {
+    }
+    catch (err) {
         error[field] = (err as yup.ValidationError).message;
     }
 };
@@ -233,7 +265,7 @@ const { submit, inProgress, validationErrors } = useSubmit(
     () => {
         return searchNurse().submitSearchNurse(formData).then(() => {
             useNuxtApp().$toast.success('Envoi de formulaire effectué');
-            Object.keys(formData).forEach(key => {
+            Object.keys(formData).forEach((key) => {
                 formData[key as keyof typeof formData] = key === 'accept' ? false : '';
             });
             setTimeout(() => {
@@ -243,10 +275,9 @@ const { submit, inProgress, validationErrors } = useSubmit(
     },
     {
         onError: (e) => {
-            useNuxtApp().$toast.error("Une erreur est survenue lors de l'envoi du formulaire");
-            console.error('Erreur lors de la soumission:', e);
-        }
-    }
+            useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
+        },
+    },
 );
 
 useHead({
