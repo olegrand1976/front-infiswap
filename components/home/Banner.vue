@@ -1,28 +1,25 @@
 <template>
-    <div class="hidden sm:flex space-x-8 container mt-8">
-        <div class="w-full shadow p-4 rounded-2xl flex lg:flex-row sm:flex-col lg:justify-start sm:justify-center sm:items-center sm:mx-auto space-x-6">
-            <div class="xl:w-[40%] lg:w-[30%] grid gap-2 place-content-center h-full w-1/2">
-                <!-- <LayoutsLogo class="lg:w-auto sm:w-36" /> -->
-                 <NuxtImg src="/home/mail-image.png"/>
+    <div class="container grid grid-cols-5 gap-4 justify-between mt-10">
+        <div class="col-span-3 grid grid-cols-2 items-center shadow-lg rounded-lg overflow-hidden">
+            <div class="relative col-span-1 h-full w-full bg-red-200">
+                 <NuxtImg
+                    src="/home/message_home_background.png"
+                    class="w-full h-full"
+                />
+                 <NuxtImg
+                    src="/home/mail-image.png"
+                    class="absolute w-36 top-1/2 bottom-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                 />
             </div>
-            <div class="xl:w-[60%] lg:w-[70%] sm:mx-auto lg:mx-0 sm:flex sm:flex-col sm:justify-center items-center lg:block ">
-                <div class="xl:text-base md:text-sm mt-4 sm:text-xs sm:text-center lg:text-start">
-                    <p class="font-semibold mb-4">Chers utilisateurs,</p>
-                    <p>Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de la deuxième moitié du mois de mars. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.</p>
+            <div class="p-4 font-light">
+                <p class="font-bold mb-4">Chers utilisateurs,</p>
+                <p class="mb-4">Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de la deuxième moitié du mois de mars. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.</p>
 
-                    <p>Merci de votre confiance et à très bientôt !</p>
-                </div>
-                <!-- <Button
-                    variant="outline"
-                    class="rounded-full mt-6"
-                    href="/contact"
-                >
-                    <span class="sm:text-xs md:text-sm lg:text-base">Contactez-nous</span>
-                </Button> -->
+                <p>Merci de votre confiance et à très bientôt !</p>
             </div>
         </div>
 
-        <div class="w-full relative hidden lg:block">
+        <div class="w-full col-span-2 relative">
             <NuxtImg
                 src="/container_register.png"
                 class="w-full"
@@ -56,10 +53,6 @@
         </div>
         <div>
             <p class="text-xs text-center">
-                <!-- Votre plateforme dédiée aux infirmiers libéraux, facilitant les remplacements, la
-                gestion des tournées et le suivi des formations. Elle optimise la planification, réduit
-                le temps administratif et améliore la coordination, offrant ainsi plus d'efficacité, de
-                flexibilité et une meilleure qualité de soins. -->
                 <p class="font-semibold mb-4">Chers utilisateurs,</p>
                 <p>Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de la deuxième moitié du mois de mars. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.</p>
 
