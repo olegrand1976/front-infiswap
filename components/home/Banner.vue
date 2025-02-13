@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="w-full relative">
+        <div class="w-full relative hidden lg:block">
             <NuxtImg
                 src="/container_register.png"
                 class="w-full"

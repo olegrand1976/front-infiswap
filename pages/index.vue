@@ -8,7 +8,7 @@
                 <HomeBanner />
             </section>
         </div>
-        <section class="sm:hidden">
+        <section class="lg:hidden">
             <HomeRegisterBetaContainer />
         </section>
         <section>
