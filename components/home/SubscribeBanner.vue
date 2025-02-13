@@ -1,5 +1,5 @@
 <template>
-    <div class="py-16 sm:shadow flex justify-center items-center mx-auto">
+    <!-- <div class="py-16 sm:shadow flex justify-center items-center mx-auto">
         <div class="container flex flex-col justify-center items-center lg:space-y-6 sm:space-y-4 w-96 sm:w-full shadow sm:shadow-none">
             <div class="bg-primary sm:bg-transparent p-4 rounded-t-2xl w-full sm:w-auto">
                 <h3 class="text-white text-center sm:text-primary xl:text-3xl md:text-2xl sm:text-xl font-bold">
@@ -41,7 +41,7 @@
                 </Button>
             </Form>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script lang="ts" setup>
