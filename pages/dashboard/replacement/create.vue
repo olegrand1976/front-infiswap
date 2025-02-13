@@ -690,7 +690,7 @@ const onSavePatient = () => {
         selectedCareTypes.value[period] = [];
     });
 
-    const result = submitReplacement(formData)
+    const result = submitReplacement(formData);
 
     // Appel de la fonction de soumission avec tous les remplacements
     if (result) {
