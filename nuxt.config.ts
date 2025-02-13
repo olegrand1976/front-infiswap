@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     devtools: { enabled: false },
 
     app: {
+        baseURL: '/',
         head: {
             titleTemplate: '%s | InfiSwap',
             meta: [
