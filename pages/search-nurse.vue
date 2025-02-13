@@ -1,7 +1,7 @@
 <template>
     <div class="mt-20">
         <div class="relative bg-tertiary/30 h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 flex flex-col items-center justify-center m-auto space-y-4 px-4 sm:px-8 md:px-16">
-            <LayoutsLogo class="w-[20rem] h-32 sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
+            <LayoutsLogo class="w-[20rem]  sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
             <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
                 <strong>Chercher</strong> un(e) infirmier(e) ?
             </h1>
