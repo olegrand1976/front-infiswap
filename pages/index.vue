@@ -4,9 +4,6 @@
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
-        <section class="lg:hidden">
-            <HomeRegisterBetaContainer />
-        </section>
         <section>
             <HomeGridCard />
         </section>
