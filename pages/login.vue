@@ -45,7 +45,7 @@
                 <div class="w-full max-w-md container">
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
-                            <!-- <FormField name="inami">
+                            <FormField name="inami">
                                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
@@ -59,30 +59,9 @@
                                         </div>
                                     </FormControl>
                                 </FormItem>
-                            </FormField> -->
-
-                            <FormField name="inami">
-                                <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex w-full items-center space-x-1">
-                                            <span class="text-primary font-extrabold">N°</span>
-                                            <Input
-                                                v-model="inami"
-                                                type="text"
-                                                placeholder="INAMI"
-                                                class="text-sm"
-                                                v-bind="inamiAttrs"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                                <ErrorMessage
-                                    name="inami"
-                                    class="text-red-500 text-xs mt-5     "
-                                />
                             </FormField>
 
-                            <!-- <FormField name="password">
+                            <FormField name="password">
                                 <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
@@ -92,31 +71,18 @@
                                                 type="password"
                                                 placeholder="Mot de passe"
                                                 class="text-sm"
+                                                @blur="validateField('password')"
+                                                @input="validateField('password')"
                                             />
                                         </div>
                                     </FormControl>
                                 </FormItem>
-                            </FormField> -->
-
-                            <FormField name="password">
-                                <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex w-full items-center space-x-1">
-                                            <KeyIcon class="text-primary w-6 h-6" />
-                                            <Input
-                                                v-model="password"
-                                                type="password"
-                                                placeholder="Mot de passe"
-                                                class="text-sm"
-                                                v-bind="passwordAttrs"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                                <ErrorMessage
-                                    name="password"
-                                    class="text-red-500 text-xs mt-5     "
-                                />
+                                <p
+                                    v-if="error.password"
+                                    class="text-red-500 text-xs mt-1 ms-[5%]"
+                                >
+                                    {{ error.password }}
+                                </p>
                             </FormField>
                         </div>
 
@@ -207,7 +173,7 @@
                     <div class="flex flex-col space-y-6">
                         <FormField name="inami">
                             <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <!-- <FormControl>
+                                <FormControl>
                                     <div class="flex w-full items-center space-x-1">
                                         <span class="text-primary font-extrabold">N°</span>
                                         <Input
@@ -215,20 +181,6 @@
                                             type="text"
                                             placeholder="INAMI"
                                             class="text-sm"
-                                            v-bind="inamiAttrs"
-                                        />
-                                    </div>
-
-                                </FormControl> -->
-                                <FormControl>
-                                    <div class="flex w-full items-center space-x-1">
-                                        <span class="text-primary font-extrabold">N°</span>
-                                        <Input
-                                            v-model="inami"
-                                            type="text"
-                                            placeholder="INAMI"
-                                            class="text-sm"
-                                            v-bind="inamiAttrs"
                                         />
                                     </div>
                                 </FormControl>
@@ -237,7 +189,7 @@
 
                         <FormField name="password">
                             <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <!-- <FormControl>
+                                <FormControl>
                                     <div class="flex w-full items-center space-x-1">
                                         <KeyIcon class="text-primary w-5 h-5" />
                                         <Input
@@ -245,27 +197,18 @@
                                             type="password"
                                             placeholder="Mot de passe"
                                             class="text-sm"
-                                        />
-                                    </div>
-                                </FormControl>
-                                 -->
-                                <FormControl>
-                                    <div class="flex w-full items-center space-x-1">
-                                        <KeyIcon class="text-primary w-6 h-6" />
-                                        <Input
-                                            v-model="password"
-                                            type="password"
-                                            placeholder="Mot de passe"
-                                            class="text-sm"
-                                            v-bind="passwordAttrs"
+                                            @blur="validateField('password')"
+                                            @input="validateField('password')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <ErrorMessage
-                                name="password"
-                                class="text-red-500 text-xs mt-5     "
-                            />
+                            <p
+                                v-if="error.password"
+                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                            >
+                                {{ error.password }}
+                            </p>
                         </FormField>
                     </div>
 
@@ -324,54 +267,9 @@
 
 <script lang="ts" setup>
 import { KeyIcon } from '@heroicons/vue/24/solid';
-import { useForm, defineRule, configure, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
-import { localize } from '@vee-validate/i18n';
-import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-
-definePageMeta({
-    layout: 'auth',
-    middleware: ['guest'],
-});
-
-useHead({
-    title: 'Connexion',
-});
-
-configure({
-    generateMessage: localize({ fr }),
-    validateOnBlur: true,
-    validateOnInput: true,
-    validateOnChange: true,
-    validateOnModelUpdate: true,
-});
-
-const schema = yup.object({
-    password: yup.string()
-        .required('Le mot de passe est obligatoire')
-        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
-        .max(50, 'Le mot de passe ne peut pas dépasser 50 caractères')
-        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
-        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
-        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre'),
-    // .matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
-
-    inami: yup.string()
-        .required('Le numéro INAMI est obligatoire')
-        .matches(/^[a-zA-Z0-9]+$/, 'Le numéro INAMI ne peut contenir que des lettres et des chiffres')
-        .min(2, 'Le numéro INAMI doit contenir au moins 2 caractères')
-        .max(50, 'Le numéro INAMI ne peut pas dépasser 50 caractères'),
-
-});
-
-const { handleSubmit, defineField, errors } = useForm({
-    validationSchema: schema,
-});
-
-const [password, passwordAttrs] = defineField('password');
-const [inami, inamiAttrs] = defineField('inami');
 
 const router = useRouter();
 const route = useRoute();
@@ -385,35 +283,57 @@ const credentials = reactive({
     inami: null,
     password: '',
 });
-const inProgress = ref(false);
 
-const submit = handleSubmit(async () => {
-    console.log('login', inami, password);
-    status.value = '';
-    inProgress.value = true;
-    try {
-        await login({ inami: inami.value, password: password.value });
-        inProgress.value = false;
-        router.push('/dashboard');
-    }
-    catch (error) {
-        inProgress.value = false;
-
-        console.error('Erreur de connexion:', error);
-        status.value = 'Échec de la connexion. Vérifiez vos identifiants.';
-    }
+const error = reactive({
+    password: '',
 });
 
-// const {
-//     submit,
-//     inProgress,
-//     // validationErrors: errors,
-// } = useSubmit(
-//     () => {
-//         status.value = '';
-//         return login(credentials).then(() => router.push('/dashboard'));
-//     },
-// );
+const schema = yup.object({
+    password: yup.string()
+        .required('Le mot de passe est obligatoire')
+        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
+        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
+        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre'),
+});
+
+const validateField = async (field: keyof typeof credentials) => {
+    try {
+        await schema.validateAt(field, toRaw(credentials));
+        error[field] = '';
+    }
+    catch (err) {
+        error[field] = (err as yup.ValidationError).message;
+    }
+};
+
+const { submit, inProgress, validationErrors } = useSubmit(
+    () => {
+        return login(credentials).then(() => {
+            Object.keys(credentials).forEach((key) => {
+                credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
+            });
+            inProgress.value = true;
+            setTimeout(() => {
+                router.push('/dashboard/replacement');
+            }, 3000);
+        });
+    },
+    {
+        onError: (e) => {
+            useNuxtApp().$toast.error('Identifiant ou mot de passe incorrect');
+        },
+    },
+);
+
+definePageMeta({
+    layout: 'auth',
+    middleware: ['guest'],
+});
+
+useHead({
+    title: 'Connexion',
+});
 </script>
 
 <style scoped>
