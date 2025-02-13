@@ -1,11 +1,15 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
+        '@zadigetvoltaire/nuxt-gtm',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
         'nuxt-swiper',
     ].filter(Boolean),
+    plugins: [
+        '~/plugins/vee-validate.js', // Ajouter le plugin ici
+    ],
 
     imports: {
         dirs: [
@@ -92,18 +96,30 @@ export default defineNuxtConfig({
     typescript: {
         strict: false,
     },
-
+    gtm: {
+        id: 'GTM-KFBFVVR3',
+        queryParams: {
+            gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
+            gtm_preview: 'env-4',
+            gtm_cookies_win: 'x',
+        },
+        defer: false,
+        compatibility: false,
+        nonce: '2726c7f26c',
+        enabled: true,
+        debug: process.env.NODE_ENV !== 'production',
+        loadScript: true,
+        enableRouterSync: true,
+        ignoredViews: ['dashboard'],
+        trackOnNextTick: true,
+        devtools: true,
+    },
     image: {
         dir: 'assets/images',
     },
 
     shadcn: {
-        // Prefix for all the imported components
         prefix: '',
-        // Directory where the components live (par défaut "./components/ui")
         componentDir: './components/ui',
     },
-    plugins: [
-        '~/plugins/vee-validate.js', // Ajouter le plugin ici
-      ],
 });
