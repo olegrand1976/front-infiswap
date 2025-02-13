@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     },
 
     // Active les devtools uniquement en développement
-    devtools: { enabled: process.env.NODE_ENV !== 'production' },
+    devtools: { enabled: false },
 
     app: {
         head: {
