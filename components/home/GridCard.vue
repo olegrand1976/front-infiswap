@@ -198,7 +198,7 @@ const cards = [
         title: 'Je cherche un remplacement',
         link: '/',
     }, 
-     {
+/*      {
         image: '/home/Rectangle_24.png',
         alt: 'Infirmier',
         title: 'Mon planning',
@@ -209,7 +209,7 @@ const cards = [
         alt: 'Formation pic',
         title: 'Mes formations',
         link: '/',
-    }, 
+    },  */
 ];
 
 const currentIndex = ref(0);

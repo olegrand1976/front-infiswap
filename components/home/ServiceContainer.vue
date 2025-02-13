@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+            <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                 <div class="hidden sm:flex flex-col space-y-8">
                     <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                         Gestion de ma tournée
@@ -96,9 +96,9 @@
                         En savoir plus
                     </Button>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+            <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                 <div class="z-10 w-full">
                     <NuxtImg
                         src="/home/cc62cd9.png"
@@ -141,9 +141,9 @@
                         En savoir plus
                     </Button>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+            <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                 <div class="hidden sm:flex flex-col space-y-8">
                     <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                         Créez facilement vos tournées
@@ -206,7 +206,7 @@
                         En savoir plus
                     </Button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
