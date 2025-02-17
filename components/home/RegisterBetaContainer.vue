@@ -1,10 +1,10 @@
 <template>
-    <div class="w-full relative">
+    <div class="w-full relative md:w-8/12 md:flex md:justify-center md:items-center md:mx-auto md:mt-10">
         <NuxtImg
             src="/container_register.png"
-            class="w-full"
+            class="w-full h-96"
         />
-        <div class="absolute bottom-[6%] text-xs text-white mx-8">
+        <div class="absolute bottom-[4%] text-xs text-white mx-8">
             <h2 class="font-semibold">
                 Inscrivez-vous dès maintenant
             </h2>

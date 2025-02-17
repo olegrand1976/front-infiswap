@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
+        '@zadigetvoltaire/nuxt-gtm',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
@@ -17,7 +18,7 @@ export default defineNuxtConfig({
     },
 
     // Active les devtools uniquement en développement
-    devtools: { enabled: process.env.NODE_ENV !== 'production' },
+    devtools: { enabled: false },
 
     app: {
         head: {
@@ -35,10 +36,14 @@ export default defineNuxtConfig({
             ],
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+                // {
+                //     rel: 'stylesheet',
+                //     href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+                // },
                 {
                     rel: 'stylesheet',
-                    href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-                },
+                    href: 'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap',
+                }
             ],
         },
     },
@@ -94,15 +99,30 @@ export default defineNuxtConfig({
     typescript: {
         strict: false,
     },
-
+    gtm: {
+        id: 'GTM-KFBFVVR3',
+        queryParams: {
+            gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
+            gtm_preview: 'env-4',
+            gtm_cookies_win: 'x',
+        },
+        defer: false,
+        compatibility: false,
+        nonce: '2726c7f26c',
+        enabled: true,
+        debug: process.env.NODE_ENV !== 'production',
+        loadScript: true,
+        enableRouterSync: true,
+        ignoredViews: ['dashboard'],
+        trackOnNextTick: true,
+        devtools: true,
+    },
     image: {
         dir: 'assets/images',
     },
 
     shadcn: {
-        // Prefix for all the imported components
         prefix: '',
-        // Directory where the components live (par défaut "./components/ui")
         componentDir: './components/ui',
     },
 });

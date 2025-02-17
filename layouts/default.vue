@@ -3,7 +3,7 @@
         <header>
             <LayoutsHeader />
         </header>
-        <main class="flex-1">
+        <main class="flex-1 md:mt-20">
             <NuxtPage />
         </main>
         <footer>
