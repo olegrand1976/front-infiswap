@@ -1,34 +1,34 @@
 <template>
     <div class="">
-        <div class="hidden sm:flex flex-row justify-center md:h-auto lg:pt-0 sm:pt-48">
+        <div class="hidden sm:flex flex-row justify-center md:h-auto xl:pt-0 sm:pt-48">
             <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
-                <div class="xl:absolute z-20 bottom-0 left-44">
+                <div class="xl:absolute z-20 bottom-0 left-1/3">
                     <NuxtImg
                         src="/auth/Group_1164.png"
-                        class="xl:w-[20rem] z-20 lg:w-64 mt-24 relative lg:flex lg:justify-center lg:mx-auto"
+                        class="xl:w-[20rem] z-20 lg:w-64 mt-24 relative flex justify-center mx-auto"
                     />
                 </div>
-                <div class="absolute lg:top-36 lg:left-20">
+                <div class="absolute top-36 left-20">
                     <NuxtImg
                         src="/icons/plus.png"
-                        class="xl:w-24 xl:h-24 lg:w-20 lg:h-20"
+                        class="xl:w-24 lg:w-20"
                     />
                 </div>
-                <div class="absolute md:bottom-32 lg:right-20">
+                <div class="absolute bottom-32 right-20">
                     <NuxtImg
                         src="/icons/Unin.png"
-                        class="xl:w-16 xl:h-16 lg:w-12 lg:h-12"
+                        class="xl:w-16 lg:w-12"
                     />
                 </div>
 
-                <div class="absolute md:right-6 md:top-6 sm:right-4 sm:top-3">
+                <div class="absolute right-6 top-6">
                     <LayoutsDropdownLang />
                 </div>
 
                 <div class="absolute bottom-24 left-24">
                     <NuxtImg
                         src="/icons/cog.png"
-                        class="w-52 h-52"
+                        class="w-52"
                     />
                 </div>
 
@@ -39,7 +39,7 @@
 
             <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col space-y-12 justify-center items-center">
                 <div>
-                    <LayoutsLogo class="lg:w-[22rem] lg:h-28 md:w-[20rem] md:h-[6.5rem] sm:w-[17rem] sm:h-[5rem]" />
+                    <LayoutsLogo class="lg:w-80 sm:w-72" />
                 </div>
 
                 <div class="w-full max-w-md container">
@@ -65,7 +65,7 @@
                                 <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex w-full items-center space-x-1">
-                                            <KeyIcon class="text-primary w-6 h-6" />
+                                            <KeyIcon class="text-primary w-6" />
                                             <Input
                                                 v-model="credentials.password"
                                                 type="password"
@@ -98,7 +98,7 @@
                             </div>
 
                             <NuxtLink
-                                to="/auth/reset-password"
+                                to="/password/reset/reset-password"
                                 class="text-primary"
                             >
                                 *Mot de passe oublié
@@ -113,7 +113,7 @@
                                 <NuxtImg
                                     src="/icons/google.png"
                                     alt="Google"
-                                    class="w-4 h-4"
+                                    class="w-4"
                                 />
                                 <span>
                                     Se connecter avec Google
@@ -161,7 +161,7 @@
                     </div>
                 </div>
                 <div class="mt-5 z-20 relative flex justify-center">
-                    <LayoutsLogo class="w-[15rem] h-20" />
+                    <LayoutsLogo class="w-[15rem]" />
                 </div>
             </div>
 
@@ -191,7 +191,7 @@
                             <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                 <FormControl>
                                     <div class="flex w-full items-center space-x-1">
-                                        <KeyIcon class="text-primary w-5 h-5" />
+                                        <KeyIcon class="text-primary w-5" />
                                         <Input
                                             v-model="credentials.password"
                                             type="password"
@@ -222,7 +222,7 @@
                         </div>
 
                         <NuxtLink
-                            to="/"
+                            to="/password/reset/reset-password"
                             class="text-primary"
                         >*Mot de passe oublié</NuxtLink>
                     </div>
@@ -235,7 +235,7 @@
                             <NuxtImg
                                 src="/icons/google.png"
                                 alt="Google"
-                                class="w-4 h-4"
+                                class="w-4"
                             />
                             <span>Se connecter avec Google</span>
                         </Button>

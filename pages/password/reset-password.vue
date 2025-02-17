@@ -1,34 +1,34 @@
 <template>
     <div>
-        <div class="flex flex-row justify-center h-auto sm:pt-52 xl:pt-0">
-            <div class="bg-tertiary/30 flex flex-col items-center lg:w-[115vw] sm:w-[85vw] relative container">
-                <div class="flex justify-center items-center mb-auto md:mt-36 sm:mt-32">
+        <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
+            <div class="bg-tertiary/30 sm:hidden lg:flex flex-col items-center lg:w-[115vw] relative container">
+                <div class="hidden lg:flex justify-center items-center mb-auto mt-[30%]">
                     <NuxtImg
                         src="/icons/unlock.png"
-                        class="lg:w-52 md:w-44 sm:w-32"
+                        class="lg:w-52"
                     />
                 </div>
-                <div class="absolute lg:top-24 lg:left-12 md:left-8 md:top-12 sm:top-12 sm:left-8">
+                <div class="absolute top-[10%] left-[4%]">
                     <NuxtImg
                         src="/icons/plus.png"
-                        class="lg:w-24 lg:h-24 md:w-20 md:h-20 sm:h-12 sm:w-12"
+                        class="lg:w-24"
                     />
                 </div>
-                <div class="absolute lg:bottom-32 lg:right-20 md:bottom-24 md:right-12 sm:bottom-20 sm:right-8">
+                <div class="absolute bottom-[18%] right-[6%]">
                     <NuxtImg
                         src="/icons/Unin.png"
-                        class="lg:w-16 lg:h-16 md:w-12 md:h-12 sm:h-8 sm:w-8"
+                        class="lg:w-16"
                     />
                 </div>
 
-                <div class="absolute md:right-6 md:top-6 sm:right-4 sm:top-3">
+                <div class="absolute right-6 top-6">
                     <LayoutsDropdownLang />
                 </div>
 
-                <div class="absolute lg:left-28 lg:bottom-40 md:left-16 md:bottom-28 sm:left-12 sm:bottom-24">
+                <div class="absolute bottom-[20%] left-[15%]">
                     <NuxtImg
                         src="/icons/cog_2.png"
-                        class="lg:w-52 lg:h-52 md:w-40 md:h-40 sm:h-28 sm:w-28"
+                        class="lg:w-52"
                     />
                 </div>
 
@@ -37,12 +37,9 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-[100vh] flex flex-col md:space-y-12 sm:space-y-8 justify-center items-center">
+            <div class="bg-white container w-full xl:h-screen flex flex-col space-y-12 justify-center items-center">
                 <div>
-                    <NuxtImg
-                        src="/logo.png"
-                        class="lg:w-[28rem] lg:h-36 md:w-[20rem] md:h-[6.5rem] sm:w-[17rem] sm:h-[5rem]"
-                    />
+                    <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
                     Réinitialiser votre <span class="font-bold">mot de passe</span>
@@ -51,13 +48,13 @@
                     <Form class="flex flex-col">
                         <FormField name="email">
                             <FormItem>
-                                <FormLabel class="md:text-xs sm:text-[0.7em] text-primary font-bold mb-12">
+                                <FormLabel class="text-xs text-primary font-bold mb-12">
                                     Votre adresse e-mail
                                 </FormLabel>
-                                <div class="flex flex-col space-x-1 px-4 lg:h-11 md:h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                                <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
                                     <FormControl>
                                         <div class="flex items-center space-x-1">
-                                            <EnvelopeIcon class="text-primary w-7 h-7" />
+                                            <EnvelopeIcon class="text-primary w-5" />
                                             <Input
                                                 v-model="email"
                                                 type="email"
@@ -70,8 +67,8 @@
                             </FormItem>
                         </FormField>
 
-                        <div class="md:px-8 sm:px-0 md:pt-12 sm:pt-8">
-                            <h4 class="font-light lg:text-sm md:text-xs sm:text-[0.7em] text-primary text-center">
+                        <div class="px-8 pt-12">
+                            <h4 class="font-light lg:text-sm text-xs text-primary text-center">
                                 Saisissez votre adresse éléctronique et nous vous enverrons un code
                                 pour réinitialiser votre mot de passe
                             </h4>
