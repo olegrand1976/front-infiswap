@@ -7,7 +7,7 @@
             <LayoutsLogo class="w-[26rem] h-32 md:w-[30rem] md:h-36" />
         </template>
 
-        <div class="mb-24">
+        <div>
             <form
                 class="pt-8 sm:pt-24 container flex flex-col space-y-3 sm:w-[70%] lg:w-[55%]"
                 @submit.prevent="submit"

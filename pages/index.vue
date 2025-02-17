@@ -5,7 +5,7 @@
             <HomeSearchNurseContainer />
         </div>
         <section>
-            <HomeGridCard />
+            <HomeReplaceMeContainer />
         </section>
         <section>
             <HomeServiceContainer />
