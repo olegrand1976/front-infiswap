@@ -13,6 +13,7 @@ const props = defineProps<{
     placeholder?: string;
     class?: HTMLAttributes['class'];
     errors?: Record<string, string[]>;
+    disabled?: boolean;
 }>();
 
 const emits = defineEmits<{
@@ -34,6 +35,7 @@ const errorMessage = computed(() => props.errors?.[0] ?? '');
             :type="props.type || 'text'"
             :class="cn(inputVariants({ variant: props.variant, size: props.size }), props.class)"
             :placeholder="placeholder"
+            :disabled="disabled"
         >
         <p
             v-if="errorMessage"

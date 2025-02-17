@@ -7,7 +7,7 @@
         </div>
 
         <template v-if="listResponse.length != 0">
-            <div class="flex items-center space-x-6 mt-6 p-2">
+            <div class="flex items-center space-x-8 mt-6 p-2">
                 <h4 class="font-bold text-sm text-primary">
                     Période
                 </h4>
@@ -15,7 +15,7 @@
                     <span class="text-xs text-white ms-3">Début</span>
                     <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
                         <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                        <div class="text-xs text-primary w-[5.75rem] h-9 flex items-center rounded-full bg-white">
+                        <div class="text-xs text-primary w-24 h-9 flex items-center rounded-full bg-white">
                             {{ startDate }}
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                     <span class="text-xs text-white ms-3">Fin</span>
                     <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
                         <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                        <div class="text-xs text-primary w-[5.75rem] h-9 flex items-center rounded-full bg-white">
+                        <div class="text-xs text-primary w-24 h-9 flex items-center rounded-full bg-white">
                             {{ endDate }}
                         </div>
                     </div>
@@ -59,8 +59,7 @@
                                     <Form @submit="handlesubmit(list.id)">
                                         <Button
                                             type="submit"
-                                            variant="transparent"
-                                            class="bg-gray-200 group-hover:bg-white rounded-full w-24"
+                                            class="bg-gray-200 group-hover:bg-white text-black rounded-full w-24"
                                         >
                                             <span class="text-xs">
                                                 Accepter
@@ -71,8 +70,7 @@
 
                                 <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
                                     <Button
-                                        variant="transparent"
-                                        class="bg-gray-200 group-hover:bg-white rounded-full"
+                                        class="bg-gray-200 group-hover:bg-white text-black rounded-full"
                                     >
                                         <span class="text-xs">Voir le profil</span>
                                     </Button>

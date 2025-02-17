@@ -11,39 +11,41 @@
 
                     <div class="p-5">
                         <FormField name="formData.startDate">
-                            <FormItem class="flex items-center space-x-8 text-white">
+                            <FormItem class="flex items-center gap-8 text-white">
                                 <FormLabel>
-                                    Début
+                                        Début
                                 </FormLabel>
                                 <FormControl>
-                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
+                                    <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input
-                                            v-model="formData.startDate"
-                                            placeholder="Date de début"
-                                            type="text"
-                                            class="text-xs w-full text-black"
+                                        <Input 
+                                            v-model="formData.startDate" 
+                                            placeholder="Date de début" 
+                                            type="text" 
+                                            class="w-full text-xs text-black" 
+                                            disabled
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
                         </FormField>
 
-                        <Separator class="opacity-70 my-4" />
+                        <Separator class="my-4 opacity-70" />
 
                         <FormField name="formData.endDate">
-                            <FormItem class="flex items-center space-x-[3.25rem] text-white">
+                            <FormItem class="flex items-center gap-[3.25rem] text-white">
                                 <FormLabel>
                                     Fin
                                 </FormLabel>
                                 <FormControl>
-                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
+                                    <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input
-                                            v-model="formData.endDate"
-                                            placeholder="Date de fin"
-                                            type="text"
-                                            class="text-xs w-full text-black"
+                                        <Input 
+                                            v-model="formData.endDate" 
+                                            placeholder="Date de fin" 
+                                            type="text" 
+                                            class="w-full text-xs text-black" 
+                                            disabled
                                         />
                                     </div>
                                 </FormControl>
@@ -63,12 +65,12 @@
             <div>
                 <div class="mt-10 h-12 flex items-center justify-between rounded-xl px-2 bg-gray-100">
                     <div class="flex space-x-3 items-center">
-                        <FormField name="startDate">
+                        <FormField name="startDate"> 
                             <FormItem>
                                 <FormControl>
                                     <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
                                         <ChevronLeftIcon
-                                            class="w-5 h-5 cursor-pointer"
+                                            class="w-5 cursor-pointer"
                                             title="Date précédente"
                                             :class="{ 'opacity-90': new Date(currentDate) <= new Date(formData.startDate) }"
                                             :disabled="new Date(currentDate) <= new Date(formData.startDate)"
@@ -82,7 +84,7 @@
                                             disabled
                                         />
                                         <ChevronRightIcon
-                                            class="w-5 h-5 cursor-pointer"
+                                            class="w-5 cursor-pointer"
                                             :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) >= new Date(formData.endDate) }"
                                             :disabled="new Date(currentDate) >= new Date(formData.endDate)"
                                             @click="incrementDate"
@@ -96,7 +98,7 @@
                                 class="flex text-xs items-center space-x-2"
                             >
                                 Copier le jour
-                                <Square2StackIcon class="w-6 h-6" />
+                                <Square2StackIcon class="w-6" />
                             </Button>
                         </div>
                         <div class="flex">
@@ -105,7 +107,7 @@
                                 @click="reinitializeData"
                             >
                                 Réinitialiser
-                                <ArrowPathRoundedSquareIcon class="w-6 h-6" />
+                                <ArrowPathRoundedSquareIcon class="w-6" />
                             </Button>
                         </div>
                     </div>
@@ -114,7 +116,7 @@
                             class="flex text-xs items-center space-x-2"
                         >
                             Copier tous les jours de la tournée
-                            <Square2StackIcon class="w-6 h-6" />
+                            <Square2StackIcon class="w-6" />
                         </Button>
                     </div>
                 </div>
@@ -174,7 +176,7 @@
                                         </Table>
 
                                         <PlusCircleIcon
-                                            class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary"
+                                            class="mt-6 w-8 flex justify-center items-center mx-auto text-primary"
                                             :class="{ 'cursor-pointer': formData.startDate && formData.endDate, 'opacity-50 cursor-not-allowed': !formData.startDate || !formData.endDate }"
                                             title="Choisir le patient"
                                             @click="formData.startDate && formData.endDate ? openModal(period) : null"
@@ -193,7 +195,7 @@
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <UserCircleIcon class="w-6 h-6" />
+                                                                        <UserCircleIcon class="w-6" />
                                                                         <span>Nom</span>
                                                                     </FormLabel>
                                                                     <Input
@@ -227,8 +229,8 @@
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex relative h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <UserCircleIcon class="w-6 h-6" />
-                                                                        <PlusIcon class="w-3 h-3 absolute top-0 left-4" />
+                                                                        <UserCircleIcon class="w-6" />
+                                                                        <PlusIcon class="w-3 absolute top-0 left-4" />
                                                                         <span>Prénoms</span>
                                                                     </FormLabel>
                                                                     <Input
@@ -246,7 +248,7 @@
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <CalendarIcon class="w-6 h-6" />
+                                                                        <CalendarIcon class="w-6" />
                                                                         <span>Numéro de sécurité</span>
                                                                     </FormLabel>
                                                                     <Input
@@ -267,7 +269,7 @@
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <NuxtImg
                                                                             src="/icons/city_white.png"
-                                                                            class="w-6 h-6"
+                                                                            class="w-6"
                                                                         />
                                                                         <span>Ville</span>
                                                                     </FormLabel>
@@ -288,7 +290,7 @@
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <NuxtImg
                                                                             src="/icons/zip_code.png"
-                                                                            class="w-6 h-6"
+                                                                            class="w-6"
                                                                         />
                                                                         <span>Code postal</span>
                                                                     </FormLabel>
@@ -454,8 +456,9 @@ const savedReplacements = ref<{ [key: string]: any[] }>({});
 
 const start = today(getLocalTimeZone());
 const end = null;
+const currentDate = ref('');
 
-/** Function for dynamic date selection in range calendar */
+/** FOR RANGE CALENDAR: SELECT & INCREMENT/DECREMENT */
 const value = ref({
     start,
     end,
@@ -472,28 +475,6 @@ watch(value, (newValue) => {
         formData.endDate = localEndDate.toLocaleDateString('fr-CA');
     }
 });
-
-const isTimeInSelectedRange = (time: number, period: string) => {
-    const startTime = selectedTimes.value[period][0];
-    const endTime = selectedTimes.value[period][1];
-
-    // Vérifier si on a des données sauvegardées
-    const savedData = getCurrentDateReplacements(period);
-    if (savedData) {
-        const savedStartTime = savedData.time[0];
-        const savedEndTime = savedData.time[1];
-        return time >= savedStartTime && time <= savedEndTime;
-    }
-
-    // Sinon vérifier les données en cours de sélection
-    if (startTime && endTime) {
-        return time >= startTime && time <= endTime;
-    }
-
-    return false;
-};
-
-const currentDate = ref('');
 
 const incrementDate = () => {
     if (!currentDate.value) return;
@@ -527,6 +508,28 @@ const decrementDate = () => {
     }
 };
 /** */
+
+
+const isTimeInSelectedRange = (time: number, period: string) => {
+    const startTime = selectedTimes.value[period][0];
+    const endTime = selectedTimes.value[period][1];
+
+    // Vérifier si on a des données sauvegardées
+    const savedData = getCurrentDateReplacements(period);
+    if (savedData) {
+        const savedStartTime = savedData.time[0];
+        const savedEndTime = savedData.time[1];
+        return time >= savedStartTime && time <= savedEndTime;
+    }
+
+    // Sinon vérifier les données en cours de sélection
+    if (startTime && endTime) {
+        return time >= startTime && time <= endTime;
+    }
+
+    return false;
+};
+
 
 /** Multiple times selection configuration */
 const hours = ref({
@@ -628,6 +631,7 @@ const toggleSelectionCare = (care, period) => {
         selectedCareTypes.value[period] = [...selectedList, care.id].sort((a, b) => a - b);
     }
 };
+/** */
 
 /** Submission purpose */
 const updateReplacementData = () => {
@@ -738,6 +742,7 @@ const loadSavedData = () => {
     });
 };
 
+/** SUGGEST FUNCTIONNALITY */
 const showSuggestions = ref({
     morning: false,
     afternoon: false,
@@ -787,7 +792,9 @@ onMounted(() => {
         }
     });
 });
+/** */
 
+/** REINITIALIZE ALL REPLACEMENT DATA */
 const reinitializeData = () => {
     ['morning', 'afternoon', 'evening'].forEach((period) => {
         selectedPatient.value[period] = {
@@ -804,6 +811,7 @@ const reinitializeData = () => {
 
     Object.keys(savedReplacements.value).forEach(key => delete savedReplacements.value[key]);
 };
+/** */
 
 useHead({
     title: 'Créer un remplacement',

@@ -1,6 +1,6 @@
 <template>
     <div class="pt-2">
-        <div class="flex space-x-6 justify-between">
+        <div class="flex space-x-3 justify-between">
             <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex justify-between items-center">
                 <Button
                     class="text-sm"
@@ -9,7 +9,7 @@
                     <span class="text-xs">Retour</span>
                 </Button>
 
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-8">
                     <h4 class="font-bold text-sm text-primary">
                         Période
                     </h4>
@@ -20,7 +20,7 @@
                             <Input
                                 v-model="startDate"
                                 variant="transparent"
-                                class="text-xs text-primary w-[5.75rem]"
+                                class="text-xs text-primary w-24"
                                 disabled
                             />
                         </div>
@@ -32,7 +32,7 @@
                             <Input
                                 v-model="endDate"
                                 variant="transparent"
-                                class="text-xs text-primary w-[5.75rem]"
+                                class="text-xs text-primary w-24"
                                 disabled
                             />
                         </div>
@@ -93,7 +93,7 @@
                 <div class="bg-gray-100 z-10 -ml-10 flex space-x-6 p-8 w-[48.25rem] relative rounded-2xl">
                     <div class="ml-8 w-64">
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
-                            <h4 class="text-white text-sm flex space-x-2 items-center">
+                            <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
                                 {{ getPeriodLabel(detail.start_at) }}
                             </h4>
@@ -103,24 +103,16 @@
                         </div>
                         <div class="bg-gray-200">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
-                                <h4 class="text-white text-sm text-center">
-                                    Zone géographique couverte
-                                </h4>
+                                <h4 class="text-white text-sm text-center">Zone géographique couverte</h4>
                             </div>
-                            <div class="py-16 px-3">
-                                <div class="bg-white text-xs flex items-center space-x-3 h-9 w-full border border-primary rounded-full">
-                                    <div class="bg-primary h-9 text-white flex space-x-1 justify-start px-2 items-center rounded-full w-32">
+                            <div class="py-16 px-3 space-y-3">
+                                <div v-for="(value, key) in { 'Code postal': detail.patient.profile.zip_code, 'Ville': detail.patient.profile.city }" 
+                                    class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
+                                    <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <HomeIcon class="w-5 h-5" />
-                                        <span>Code postal</span>
+                                        <span>{{ key }}</span>
                                     </div>
-                                    <span>{{ detail.patient.profile.zip_code }}</span>
-                                </div>
-                                <div class="bg-white text-xs flex items-center space-x-3 h-9 w-full border border-primary rounded-full mt-3">
-                                    <div class="bg-primary h-9 text-white flex space-x-1 justify-start px-2 items-center rounded-full w-32">
-                                        <HomeIcon class="w-5 h-5" />
-                                        <span>Ville</span>
-                                    </div>
-                                    <span>{{ detail.patient.profile.city }}</span>
+                                    <span>{{ value }}</span>
                                 </div>
                             </div>
                         </div>
@@ -128,24 +120,18 @@
 
                     <div class="w-72">
                         <div class="h-10 flex bg-primary rounded justify-center items-center">
-                            <h4 class="text-white text-sm text-center">
-                                Type de soin à effectuer
-                            </h4>
+                            <h4 class="text-white text-sm text-center">Type de soin à effectuer</h4>
                         </div>
-                        <div class="mt-2">
-                            <div
-                                v-for="caretype in replacement.details[0].care_types"
-                                class="bg-gray-200 text-xs py-2 rounded px-3 mb-3"
-                            >
+                        <div class="mt-2 space-y-3">
+                            <div v-for="caretype in replacement.details[0].care_types"
+                                class="bg-gray-200 text-xs py-2 rounded px-3">
                                 <span>{{ caretype.name }}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="absolute top-4 right-8">
-                        <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">
-                            .
-                        </div>
+                        <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">.</div>
                     </div>
                 </div>
             </div>

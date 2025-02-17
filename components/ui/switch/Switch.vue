@@ -26,7 +26,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     <SwitchRoot
         v-bind="forwarded"
         :class="cn(
-            'peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-gray-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-tertiary data-[state=unchecked]:bg-gray-200',
+            'peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-gray-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary/90 data-[state=unchecked]:bg-gray-400',
             props.class,
         )"
     >
