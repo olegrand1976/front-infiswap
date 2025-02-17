@@ -86,6 +86,55 @@
                 </div>
             </div>
         </div>
+
+        <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
+            <LayoutsHeaderMobile />
+
+            <h1 class="text-lg text-center text-primary mt-32">
+                Réinitialiser votre <span class="font-bold">mot de passe</span>
+            </h1>
+
+            <div class="w-full container mt-16">
+                <Form class="flex flex-col flex-grow">
+                    <FormField name="email">
+                        <FormItem>  
+                            <FormLabel class="text-xs text-primary font-bold mb-12">
+                                Votre adresse e-mail
+                            </FormLabel>
+                            <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                                <FormControl>
+                                    <div class="flex items-center space-x-1">
+                                        <EnvelopeIcon class="text-primary w-5" />
+                                        <Input
+                                            v-model="email"
+                                            type="email"
+                                            placeholder="Email"
+                                            class="text-xs"
+                                        />
+                                    </div>
+                                </FormControl>
+                            </div>
+                        </FormItem>
+                    </FormField>
+
+                    <div class="px-8 pt-16">
+                        <h4 class="font-light text-xs text-primary text-center">
+                            Saisissez votre adresse éléctronique et nous vous enverrons un code
+                            pour réinitialiser votre mot de passe
+                        </h4>
+                    </div>
+
+                    <div class="flex justify-center items-center mx-auto pt-20">
+                        <Button
+                            class="font-bold px-16 text-xs"
+                            href="/auth/verify-2fa"
+                        >
+                            Envoyer un email
+                        </Button>
+                    </div>
+                </Form>
+            </div>
+        </div>
     </div>
 </template>
 

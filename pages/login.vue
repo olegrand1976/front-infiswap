@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div>
         <div class="hidden sm:flex flex-row justify-center md:h-auto xl:pt-0 sm:pt-48">
             <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
                 <div class="xl:absolute z-20 bottom-0 left-1/3">
@@ -145,25 +145,7 @@
         </div>
 
         <div class="sm:hidden min-h-screen w-screen flex flex-col justify-between relative overflow-hidden">
-            <div class="relative flex flex-col">
-                <div class="absolute inset-0 z-0">
-                    <NuxtImg
-                        src="/Mask_group.png"
-                        class="w-full h-48"
-                    />
-                </div>
-                <div class="flex z-20 pt-2 relative space-x-3 justify-end items-center px-4">
-                    <div>
-                        <LayoutsDropdownLang />
-                    </div>
-                    <div>
-                        <LayoutsSheetMenu />
-                    </div>
-                </div>
-                <div class="mt-5 z-20 relative flex justify-center">
-                    <LayoutsLogo class="w-[15rem]" />
-                </div>
-            </div>
+            <LayoutsHeaderMobile />
 
             <div class="flex flex-col justify-center items-center px-6 flex-grow">
                 <form
