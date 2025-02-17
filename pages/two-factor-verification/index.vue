@@ -1,15 +1,15 @@
 <template>
     <div>
-        <div class="flex flex-row justify-center sm:h-[80vh] lg:h-auto sm:pt-52 xl:pt-0">
-            <div class="bg-tertiary/30 flex flex-col items-center lg:w-[115vw] sm:w-1/2 relative container">
-                <div class="flex justify-center items-center mb-auto xl:mt-36 lg:mt-64 md:mt-48 sm:mt-36">
+        <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
+            <div class="bg-tertiary/30 hidden lg:flex flex-col items-center lg:w-[115vw] relative container">
+                <div class="flex justify-center items-center my-auto">
                     <NuxtImg
                         src="/auth/Group_1170.png"
-                        class="xl:w-96 lg:w-80 md:w-52 sm:w-44"
+                        class="w-80"
                     />
                 </div>
 
-                <div class="absolute md:right-6 md:top-6 sm:right-4 sm:top-3">
+                <div class="absolute right-6 top-6">
                     <LayoutsDropdownLang />
                 </div>
 
@@ -18,14 +18,14 @@
                 </div>
             </div>
 
-            <div class="bg-white container lg:w-full sm:w-1/2 xl:h-[100vh] lg:h-[65vh] sm:h-auto flex flex-col lg:space-y-8 md:space-y-6 sm:space-y-4 justify-center items-center">
+            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col lg:space-y-8 space-y-12 justify-center items-center">
                 <div>
-                    <LayoutsLogo class="xl:w-[28rem] xl:h-36 lg:w-[20rem] lg:h-24 md:w-72 md:h-20 sm:w-[14rem] sm:h-16" />
+                    <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
-                <h1 class="xl:text-2xl lg:text-xl md:text-lg sm:text-base text-center text-primary">
+                <h1 class="md:text-2xl sm:text-xl text-center text-primary">
                     Vérifiez votre <span class="font-bold">email</span>
                 </h1>
-                <p class="text-center md:w-96 sm:w-64 xl:text-base md:text-sm sm:text-xs">
+                <p class="text-center lg:w-96 xl:text-base sm:text-sm">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
                     <span>
                         z*******@mews.com
@@ -33,7 +33,7 @@
                 </p>
                 <NuxtLink
                     to="/"
-                    class="underline text-blue-500 xl:text-sm md:text-xs sm:text-[0.7rem]"
+                    class="underline text-blue-500 xl:text-sm sm:text-xs"
                 >
                     Renvoyer l'email
                 </NuxtLink>
@@ -55,7 +55,7 @@
                                                 :key="id"
                                             >
                                                 <PinInputInput
-                                                    class="rounded-md border xl:h-12 xl:w-12 lg:h-10 lg:w-10 md:h-9 md:w-9 sm:h-7 sm:w-7"
+                                                    class="rounded-md border xl:w-12 xl:h-12 sm:w-10 sm:h-10"
                                                     :index="index"
                                                 />
                                                 <template v-if="index !== 5">
@@ -76,7 +76,7 @@
                                     <Checkbox id="ask" />
                                     <label
                                         for="ask"
-                                        class="font-sans xl:text-sm md:text-xs sm:text-[0.65rem] font-light text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        class="font-sans xl:text-sm sm:text-xs font-light text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     >
                                         Ne plus demander sur cet appareil pendant 3 jours
                                     </label>
@@ -85,12 +85,12 @@
                         </FormItem>
                     </FormField>
 
-                    <div class="flex flex-row justify-center xl:space-x-12 md:space-x-10 sm:space-x-8 xl:mt-20 md:mt-16 sm:mt-8">
+                    <div class="flex flex-row justify-center space-x-12 mt-16">
                         <div>
                             <NuxtLink to="/">
                                 <Button
                                     variant="outline"
-                                    class="w-full lg:px-16 md:px-12 sm:px-7 rounded-full font-bold xl:text-base lg:text-sm md:text-sm sm:text-xs"
+                                    class="w-full px-16 rounded-full font-bold xl:text-base text-sm"
                                 >
                                     Retour
                                 </Button>
@@ -99,7 +99,7 @@
                         <div>
                             <Button
                                 type="submit"
-                                class="w-full lg:px-16 md:px-12 sm:px-7 font-bold xl:text-base md:text-sm sm:text-xs"
+                                class="w-full px-16 font-bold xl:text-base text-sm"
                             >
                                 Vérifier
                             </Button>
@@ -107,6 +107,97 @@
                     </div>
                 </Form>
             </div>
+        </div>
+
+        <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
+            <LayoutsHeaderMobile />
+
+            <div class="container mt-32 flex flex-col space-y-8">
+                <h1 class="text-lg text-center text-primary">
+                    Vérifiez votre <span class="font-bold">email</span>
+                </h1>
+                <p class="text-center text-sm">
+                    Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
+                    <span>
+                        z*******@mews.com
+                    </span>
+                </p>
+                <NuxtLink
+                    to="/"
+                    class="underline text-blue-500 text-xs text-center"
+                >
+                    Renvoyer l'email
+                </NuxtLink>
+            </div>
+
+            <Form class="mt-12">
+                <FormField name="code">
+                    <FormItem>
+                        <FormControl>
+                            <div class="flex items-center justify-center">
+                                <PinInput
+                                    id="pin-input"
+                                    v-model="code"
+                                    placeholder=""
+                                    @complete="handleComplete"
+                                >
+                                    <PinInputGroup class="gap-x-4">
+                                        <template
+                                            v-for="(id, index) in 6"
+                                            :key="id"
+                                        >
+                                            <PinInputInput
+                                                class="rounded-md border w-10 h-10"
+                                                :index="index"
+                                            />
+                                            <template v-if="index !== 5">
+                                                <PinInputSeparator class="hidden" />
+                                            </template>
+                                        </template>
+                                    </PinInputGroup>
+                                </PinInput>
+                            </div>
+                        </FormControl>
+                    </FormItem>
+                </FormField>
+
+                <FormField name="ask">
+                    <FormItem>
+                        <FormControl>
+                            <div class="flex justify-center items-center space-x-2 mt-6">
+                                <Checkbox id="ask" />
+                                <label
+                                    for="ask"
+                                    class="font-sans text-xs font-light text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Ne plus demander sur cet appareil pendant 3 jours
+                                </label>
+                            </div>
+                        </FormControl>
+                    </FormItem>
+                </FormField>
+
+                <div class="flex flex-row justify-center space-x-8 mt-16">
+                    <div>
+                        <NuxtLink to="/">
+                            <Button
+                                variant="outline"
+                                class="w-full px-10 rounded-full font-bold xl:text-base text-sm"
+                            >
+                                Retour
+                            </Button>
+                        </NuxtLink>
+                    </div>
+                    <div>
+                        <Button
+                            type="submit"
+                            class="w-full px-16 font-bold xl:text-base text-sm"
+                        >
+                            Vérifier
+                        </Button>
+                    </div>
+                </div>
+            </Form>
         </div>
     </div>
 </template>

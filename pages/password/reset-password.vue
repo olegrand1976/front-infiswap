@@ -97,7 +97,7 @@
             <div class="w-full container mt-16">
                 <Form class="flex flex-col flex-grow">
                     <FormField name="email">
-                        <FormItem>  
+                        <FormItem>
                             <FormLabel class="text-xs text-primary font-bold mb-12">
                                 Votre adresse e-mail
                             </FormLabel>
