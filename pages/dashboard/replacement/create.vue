@@ -13,16 +13,16 @@
                         <FormField name="formData.startDate">
                             <FormItem class="flex items-center gap-8 text-white">
                                 <FormLabel>
-                                        Début
+                                    Début
                                 </FormLabel>
                                 <FormControl>
                                     <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input 
-                                            v-model="formData.startDate" 
-                                            placeholder="Date de début" 
-                                            type="text" 
-                                            class="w-full text-xs text-black" 
+                                        <Input
+                                            v-model="formData.startDate"
+                                            placeholder="Date de début"
+                                            type="text"
+                                            class="w-full text-xs text-black"
                                             disabled
                                         />
                                     </div>
@@ -40,11 +40,11 @@
                                 <FormControl>
                                     <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input 
-                                            v-model="formData.endDate" 
-                                            placeholder="Date de fin" 
-                                            type="text" 
-                                            class="w-full text-xs text-black" 
+                                        <Input
+                                            v-model="formData.endDate"
+                                            placeholder="Date de fin"
+                                            type="text"
+                                            class="w-full text-xs text-black"
                                             disabled
                                         />
                                     </div>
@@ -65,7 +65,7 @@
             <div>
                 <div class="mt-10 h-12 flex items-center justify-between rounded-xl px-2 bg-gray-100">
                     <div class="flex space-x-3 items-center">
-                        <FormField name="startDate"> 
+                        <FormField name="startDate">
                             <FormItem>
                                 <FormControl>
                                     <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
@@ -509,7 +509,6 @@ const decrementDate = () => {
 };
 /** */
 
-
 const isTimeInSelectedRange = (time: number, period: string) => {
     const startTime = selectedTimes.value[period][0];
     const endTime = selectedTimes.value[period][1];
@@ -529,7 +528,6 @@ const isTimeInSelectedRange = (time: number, period: string) => {
 
     return false;
 };
-
 
 /** Multiple times selection configuration */
 const hours = ref({

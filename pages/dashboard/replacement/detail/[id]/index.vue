@@ -103,11 +103,15 @@
                         </div>
                         <div class="bg-gray-200">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
-                                <h4 class="text-white text-sm text-center">Zone géographique couverte</h4>
+                                <h4 class="text-white text-sm text-center">
+                                    Zone géographique couverte
+                                </h4>
                             </div>
                             <div class="py-16 px-3 space-y-3">
-                                <div v-for="(value, key) in { 'Code postal': detail.patient.profile.zip_code, 'Ville': detail.patient.profile.city }" 
-                                    class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
+                                <div
+                                    v-for="(value, key) in { 'Code postal': detail.patient.profile.zip_code, 'Ville': detail.patient.profile.city }"
+                                    class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full"
+                                >
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <HomeIcon class="w-5 h-5" />
                                         <span>{{ key }}</span>
@@ -120,18 +124,24 @@
 
                     <div class="w-72">
                         <div class="h-10 flex bg-primary rounded justify-center items-center">
-                            <h4 class="text-white text-sm text-center">Type de soin à effectuer</h4>
+                            <h4 class="text-white text-sm text-center">
+                                Type de soin à effectuer
+                            </h4>
                         </div>
                         <div class="mt-2 space-y-3">
-                            <div v-for="caretype in replacement.details[0].care_types"
-                                class="bg-gray-200 text-xs py-2 rounded px-3">
+                            <div
+                                v-for="caretype in replacement.details[0].care_types"
+                                class="bg-gray-200 text-xs py-2 rounded px-3"
+                            >
                                 <span>{{ caretype.name }}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="absolute top-4 right-8">
-                        <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">.</div>
+                        <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">
+                            .
+                        </div>
                     </div>
                 </div>
             </div>
