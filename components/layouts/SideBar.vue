@@ -38,7 +38,7 @@
                                             <div class="flex space-x-2 items-center">
                                                 <component
                                                     :is="item.icon"
-                                                    class="w-6 h-6 opacity-80"
+                                                    class="w-6 opacity-80"
                                                 />
                                                 <span>{{ item.label }}</span>
                                             </div>
@@ -54,9 +54,9 @@
 
                     <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
                         <SidebarGroupContent
-                            class="mt-2 w-52 flex space-x-1 justify-center items-center mx-auto"
+                            class="w-52 flex space-y-3 flex-col justify-center items-center mx-auto"
                         >
-                            <div class="flex justify-center items-center w-40">
+                            <div>
                                 <NuxtImg
                                     src="/home/infirmier_homme.png"
                                     class="rounded-full h-12 w-12"
@@ -66,11 +66,10 @@
                                 Richard Dupont
                             </p>
                             <Button
-                                variant="secondary"
-                                class="text-black/70"
+                                class="text-white w-full"
                                 href="/"
                             >
-                                <PencilSquareIcon class="w-6 h-6" />
+                                <PencilSquareIcon class="w-6" />
                                 Editer
                             </Button>
                         </SidebarGroupContent>
@@ -142,15 +141,9 @@ const navigationItems = [
         icon: MapIcon,
     },
     {
-        label: 'Groupes',
+        label: 'Mon équipe',
         route: '/',
-        count: 1,
         icon: UserGroupIcon,
-    },
-    {
-        label: 'Liste des membres',
-        route: '/',
-        icon: IdentificationIcon,
     },
     {
         label: 'Remplacement',
@@ -158,24 +151,9 @@ const navigationItems = [
         icon: UserPlusIcon,
     },
     {
-        label: 'Planning',
-        route: '/',
-        icon: ClipboardDocumentIcon,
-    },
-    {
-        label: 'Formations',
-        route: '/',
-        icon: AcademicCapIcon,
-    },
-    {
         label: 'Documents',
         route: '/',
         icon: FolderIcon,
-    },
-    {
-        label: 'Profil',
-        route: '/',
-        icon: UserCircleIcon,
     },
     {
         label: 'Paramètres',
