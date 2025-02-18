@@ -202,12 +202,12 @@ const validateField = async (field: keyof typeof formData) => {
     }
 };
 
-const { submit, inProgress, validationErrors } = useSubmit(
+const { submit } = useSubmit(
     () => {
         console.log('');
     },
     {
-        onError: (e) => {
+        onError: () => {
             useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
         },
     },

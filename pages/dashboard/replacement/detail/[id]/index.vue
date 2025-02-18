@@ -76,7 +76,8 @@
         </div>
 
         <div
-            v-for="detail in replacement.details"
+            v-for="(detail, index) in replacement.details"
+            :key="index"
             class="mt-6 mb-8 h-auto overflow-hidden"
         >
             <div
@@ -110,6 +111,7 @@
                             <div class="py-16 px-3 space-y-3">
                                 <div
                                     v-for="(value, key) in { 'Code postal': detail.patient.profile.zip_code, 'Ville': detail.patient.profile.city }"
+                                    :key="key"
                                     class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full"
                                 >
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
@@ -130,7 +132,8 @@
                         </div>
                         <div class="mt-2 space-y-3">
                             <div
-                                v-for="caretype in replacement.details[0].care_types"
+                                v-for="(caretype, mark) in replacement.details[0].care_types"
+                                :key="mark"
                                 class="bg-gray-200 text-xs py-2 rounded px-3"
                             >
                                 <span>{{ caretype.name }}</span>

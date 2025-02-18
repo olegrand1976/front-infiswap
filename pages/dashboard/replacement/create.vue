@@ -331,7 +331,7 @@
                                                                                     <SelectItem
                                                                                         v-for="time in times"
                                                                                         :key="time"
-                                                                                        :value="time"
+                                                                                        :value="formatHour(time)"
                                                                                     >
                                                                                         {{ formatHour(time) }}
                                                                                     </SelectItem>
@@ -351,7 +351,7 @@
                                                                                     <SelectItem
                                                                                         v-for="time in times"
                                                                                         :key="time"
-                                                                                        :value="time"
+                                                                                        :value="formatHour(time)"
                                                                                     >
                                                                                         {{ formatHour(time) }}
                                                                                     </SelectItem>
@@ -452,7 +452,7 @@ const formData = reactive({
     replacement: [],
 });
 
-const savedReplacements = ref<{ [key: string]: any[] }>({});
+const savedReplacements = ref({});
 
 const start = today(getLocalTimeZone());
 const end = null;
@@ -807,7 +807,7 @@ const reinitializeData = () => {
         selectedCareTypes.value[period] = [];
     });
 
-    Object.keys(savedReplacements.value).forEach(key => delete savedReplacements.value[key]);
+    Object.keys(savedReplacements.value).forEach(key => Reflect.deleteProperty(savedReplacements.value, key));
 };
 /** */
 

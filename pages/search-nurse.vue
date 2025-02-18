@@ -266,7 +266,7 @@ const { submit, inProgress } = useSubmit(
         return searchNurse().submitSearchNurse(formData).then(() => {
             useNuxtApp().$toast.success('Envoi de formulaire effectué');
             Object.keys(formData).forEach((key) => {
-                formData[key as keyof typeof formData] = key === 'accept' ? false : '';
+                (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
             });
             setTimeout(() => {
                 router.push('/');
@@ -274,7 +274,7 @@ const { submit, inProgress } = useSubmit(
         });
     },
     {
-        onError: (e) => {
+        onError: () => {
             useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
         },
     },
