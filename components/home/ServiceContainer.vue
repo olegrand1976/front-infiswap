@@ -1,7 +1,7 @@
 <template>
     <div class="pt-16 sm:pt-24 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
-        <div class="flex flex-col space-y-8 sm:space-y-24">
-            <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+        <div class="flex flex-col space-y-8 sm:space-y-24 container">
+            <div class="flex relative flex-col sm:container sm:flex-row justify-between items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                 <div class="z-10">
                     <NuxtImg
                         src="/home/Group_2217.png"
