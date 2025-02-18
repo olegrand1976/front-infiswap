@@ -1,5 +1,5 @@
 <template>
-    <!-- <NuxtLayout name="home">
+    <!-- <NuxtLayout name="guest">
         <template #title>
             Nos <strong>services</strong>
         </template>

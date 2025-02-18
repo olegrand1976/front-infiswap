@@ -1,5 +1,5 @@
 <template>
-    <!-- <NuxtLayout name="home">
+    <!-- <NuxtLayout name="guest">
         <template #title>
             <LayoutsLogo class="w-96 flex justify-center items-center mx-auto" />
         </template>
