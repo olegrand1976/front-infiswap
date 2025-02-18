@@ -7,15 +7,15 @@
     </NuxtLayout>
 
     <!-- Section Hero -->
-    <section class="flex flex-col md:flex-row items-center justify-between gap-10 px-10 py-16">
+    <section class="flex flex-col md:flex-row items-center justify-between gap-10 px-5 py-10 md:px-10 md:py-16">
         <div class="md:w-1/2">
-            <img src="../assets/images/home/black_nurse.png" alt="Infirmier en action"
+            <img src="../assets/images/home/online_medical.webp" alt="Infirmier en action"
                 class="w-full h-auto rounded-xl shadow-lg" />
         </div>
         <div class="md:w-1/2 text-left">
-            <h2 class="text-4xl font-bold text-red-500">Le module "Planning"</h2>
-            <h2 class="text-4xl text-red-500">de notre plateforme</h2>
-            <h2 class="text-2xl mt-3">Offre une solution en ligne intuitive</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold text-red-500">Le module "Planning"</h2>
+            <h2 class="text-3xl sm:text-4xl text-red-500">de notre plateforme</h2>
+            <h2 class="text-xl sm:text-2xl mt-3">Offre une solution en ligne intuitive</h2>
 
             <p class="text-gray-700 mt-4 leading-relaxed">
                 Offre une solution en ligne intuitive pour les bureaux de tarification
@@ -33,83 +33,56 @@
         <div class="flex flex-col md:flex-row gap-10 items-stretch">
             <!-- Colonne gauche avec ligne et texte -->
             <div class="w-full md:w-2/3 flex flex-col justify-between">
-                <h3 class="text-3xl font-bold text-red-500 mb-8 text-center">
-                    Fonctionnalités clés du Module "Planning"
+                <h3 class="text-2xl sm:text-3xl font-bold text-red-500 ml-5 sm:ml-20">
+                    Fonctionnalités clés
                 </h3>
-                <div class="relative flex space-x-6">
-                    <!-- Barre verticale -->
-                    <div class="relative w-1 bg-red-500 rounded-full"></div>
+
+                <h3 class="text-2xl sm:text-3xl text-red-500 ml-5 sm:ml-20 mb-4">
+                    du Module "Planning"
+                </h3>
+
+                <div class="relative flex justify-center space-x-12 sm:space-x-16">
+                    <!-- Barre verticale avec flex pour centrer les points -->
+                    <div class="relative flex flex-col items-center w-1 bg-red-500 rounded-full h-full">
+                        <!-- Points rouges alignés au centre -->
+                        <div class="absolute top-1/6 w-6 h-6 bg-red-500 rounded-full"></div>
+                        <div class="absolute top-1/4 w-6 h-6 bg-red-500 rounded-full"></div>
+                        <div class="absolute top-1/2 w-6 h-6 bg-red-500 rounded-full -translate-y-1/2"></div>
+                        <div class="absolute top-2/3 w-6 h-6 bg-red-500 rounded-full"></div>
+                        <div class="absolute top-4/2 w-6 h-6 bg-red-500 rounded-full"></div>
+                    </div>
 
                     <!-- Conteneur des éléments -->
-                    <div class="space-y-12">
+                    <div class="space-y-10 sm:space-y-20 pl-5 sm:pl-10">
                         <!-- Élément 1 -->
-                        <div class="relative bg-pink-100 p-6 rounded-lg shadow-md">
-                            <div
-                                class="absolute left-[-2rem] top-1/2 transform -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full">
-                            </div>
-                            <h4 class="text-xl font-semibold text-red-500">
-                                Création et gestion des tournées
-                            </h4>
-                            <p class="text-gray-700 mt-2">
-                                Planifiez vos tournées selon vos plages horaires et optimisez
-                                les déplacements en ajoutant les détails des visites.
-                            </p>
+                        <div class="relative bg-pink-100 p-6 sm:p-8 rounded-lg shadow-md">
+                            <h4 class="text-lg sm:text-xl font-semibold text-red-500">Création et gestion des tournées</h4>
+                            <p class="text-gray-700 mt-2">Planifiez vos tournées selon vos plages horaires et optimisez
+                                les déplacements en ajoutant les détails des visites.</p>
                         </div>
 
                         <!-- Élément 2 -->
-                        <div class="relative bg-pink-100 p-6 rounded-lg shadow-md">
-                            <div
-                                class="absolute left-[-2rem] top-1/2 transform -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full">
-                            </div>
-                            <h4 class="text-xl font-semibold text-red-500">
-                                Tableau de bord interactif
-                            </h4>
-                            <p class="text-gray-700 mt-2">
-                                Visualisez l'ensemble des tournées et accédez aux informations
-                                des patients en un clic.
-                            </p>
+                        <div class="relative bg-pink-100 p-6 sm:p-8 rounded-lg shadow-md">
+                            <h4 class="text-lg sm:text-xl font-semibold text-red-500">Tableau de bord interactif</h4>
+                            <p class="text-gray-700 mt-2">Visualisez l'ensemble des tournées et accédez aux informations des patients en un clic.</p>
                         </div>
 
                         <!-- Élément 3 -->
-                        <div class="relative bg-pink-100 p-6 rounded-lg shadow-md">
-                            <div
-                                class="absolute left-[-2rem] top-1/2 transform -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full">
-                            </div>
-                            <h4 class="text-xl font-semibold text-red-500">
-                                Agenda synchronisé et mobile-friendly
-                            </h4>
-                            <p class="text-gray-700 mt-2">
-                                Synchronisez vos tournées avec un agenda personnel pour y
-                                accéder en permanence sur PC et mobile.
-                            </p>
+                        <div class="relative bg-pink-100 p-6 sm:p-8 rounded-lg shadow-md">
+                            <h4 class="text-lg sm:text-xl font-semibold text-red-500">Agenda synchronisé et mobile-friendly</h4>
+                            <p class="text-gray-700 mt-2">Synchronisez vos tournées avec un agenda personnel pour y accéder en permanence sur PC et mobile.</p>
                         </div>
 
                         <!-- Élément 4 -->
-                        <div class="relative bg-pink-100 p-6 rounded-lg shadow-md">
-                            <div
-                                class="absolute left-[-2rem] top-1/2 transform -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full">
-                            </div>
-                            <h4 class="text-xl font-semibold text-red-500">
-                                Personnalisation avancée
-                            </h4>
-                            <p class="text-gray-700 mt-2">
-                                Paramétrez chaque tournée selon vos besoins et dupliquez les
-                                tournées récurrentes.
-                            </p>
+                        <div class="relative bg-pink-100 p-6 sm:p-8 rounded-lg shadow-md">
+                            <h4 class="text-lg sm:text-xl font-semibold text-red-500">Personnalisation avancée</h4>
+                            <p class="text-gray-700 mt-2">Paramétrez chaque tournée selon vos besoins et dupliquez les tournées récurrentes.</p>
                         </div>
 
                         <!-- Élément 5 -->
-                        <div class="relative bg-pink-100 p-6 rounded-lg shadow-md">
-                            <div
-                                class="absolute left-[-2rem] top-1/2 transform -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full">
-                            </div>
-                            <h4 class="text-xl font-semibold text-red-500">
-                                Collaboration fluide
-                            </h4>
-                            <p class="text-gray-700 mt-2">
-                                Partagez les plannings avec votre équipe et assurez une
-                                meilleure coordination.
-                            </p>
+                        <div class="relative bg-pink-100 p-6 sm:p-8 rounded-lg shadow-md">
+                            <h4 class="text-lg sm:text-xl font-semibold text-red-500">Collaboration fluide</h4>
+                            <p class="text-gray-700 mt-2">Partagez les plannings avec votre équipe et assurez une meilleure coordination.</p>
                         </div>
                     </div>
                 </div>
@@ -142,20 +115,20 @@
         </div>
     </section>
 
-    <section class="bg-red-500 text-white text-center py-4 px-6">
-        <h3 class="text-2xl font-bold">
+    <section class="bg-red-500 text-white text-center py-4 px-6 max-w-7xl mx-auto">
+        <h3 class="text-2xl sm:text-3xl font-bold">
             Avantages pour les Infirmiers et Bureaux de Tarification
         </h3>
     </section>
 
-    <section class="bg-red-500 text-white text-center py-4 px-4 mt-4">
-        <h3 class="text-2xl font-bold">
-            Un Outil Moderne et Performent au Service des Soins
+    <section class="bg-red-500 text-white text-center py-4 px-4 mt-4 max-w-7xl mx-auto">
+        <h3 class="text-2xl sm:text-3xl font-bold">
+            Un Outil Moderne et Performant au Service des Soins
         </h3>
     </section>
 
-    <section class="bg-red-500 text-white text-center py-6 px-6 mt-4 mb-5">
-        <h3 class="text-2xl font-bold">
+    <section class="bg-red-500 text-white text-center py-6 px-6 mt-4 mb-5 max-w-7xl mx-auto">
+        <h3 class="text-2xl sm:text-3xl font-bold">
             Simplifiez vos tournées, restez connectés
         </h3>
         <p class="mt-2">
@@ -164,7 +137,3 @@
         </p>
     </section>
 </template>
-
-<script lang="ts" setup>
-useHead({ title: "Mon planning" });
-</script>
