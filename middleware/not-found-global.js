@@ -1,9 +1,9 @@
 import { defineNuxtRouteMiddleware, useRouter, navigateTo } from '#app';
 
+// eslint-disable-next-line no-unused-vars
 export default defineNuxtRouteMiddleware((to, from) => {
     if (import.meta.server) return;
 
-    // Vérifier si la page existe
     const routeExists = useRouter().resolve(to.fullPath).name;
 
     if (!routeExists) {

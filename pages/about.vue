@@ -1,5 +1,5 @@
 <template>
-    <!-- <NuxtLayout name="guest">
+    <NuxtLayout name="guest">
         <template #title>
             <LayoutsLogo class="w-96 flex justify-center items-center mx-auto" />
         </template>
@@ -129,38 +129,55 @@
                     </CardHeader>
 
                     <CardContent class="p-4 text-sm text-black">
-                        <span v-html="formatContent(card.content)" />
+                        <p
+                            v-for="(item, key) in card.content"
+                            :key="key"
+                            class="m-0 p-0 leading-5"
+                        >
+                            {{ item }}
+                        </p>
                     </CardContent>
                 </Card>
             </div>
         </div>
-    </NuxtLayout> -->
-    <ErrorUnderConstruction />
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 const cards = [
     {
         title: 'Recherche rapide et ciblée',
-        content: 'Accédez en quelques clics aux offres de remplacement disponibles. Filtrez les annonces par localisation, date et type de soins. Recevez des notifications en temps réel dès qu\'une nouvelle opportunité correspond à vos critères.',
+        content: [
+            'Recherchez facilement les offres de remplacement disponibles.',
+            'Filtrez les annonces par localisation, date et type de soins.',
+            'Recevez des notifications en temps réel dès qu\'une nouvelle opportunité correspond à vos critères.',
+        ],
     },
     {
         title: 'Mise en relation instantanée',
-        content: 'Contactez directement l\'infirmier ou l\'établissement en quelques secondes. Obtenez toutes les informations nécessaires sur la mission avant de postuler. Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
+        content: [
+            'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
+            'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
+            'Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
+        ],
     },
     {
         title: 'Gestion flexible et optimisée',
-        content: 'Planifiez vos remplacements en fonction de vos disponibilités. Ajoutez directement les missions acceptées à votre agenda. Suivez l\'historique de vos remplacements et optimisez votre planning',
+        content: [
+            'Planifiez vos remplacements en fonction de vos disponibilités.',
+            'Ajoutez directement les missions acceptées à votre agenda.',
+            'Suivez l\'historique de vos remplacements et optimisez votre planning.',
+        ],
     },
     {
         title: 'Développez votre activité et votre réseau',
-        content: 'Multipliez les opportunités de travail sans effort. Renforcez votre réseau professionnel avec de nouvelles collaborations. Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
+        content: [
+            'Multipliez les opportunités de travail sans effort.',
+            'Renforcez votre réseau professionnel avec de nouvelles collaborations.',
+            'Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
+        ],
     },
 ];
-
-const formatContent = (content) => {
-    return content.replace(/\.\s*/g, '.<br>');
-};
 
 useHead({
     title: 'A propos',

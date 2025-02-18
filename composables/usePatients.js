@@ -1,3 +1,5 @@
+import { useState, useNuxtApp } from '#app';
+
 export const searchNurse = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -14,9 +16,6 @@ export const searchNurse = () => {
             const response = await $apifetch('/api/patients', {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
             });
 
             success.value = true;

@@ -1,7 +1,6 @@
 import { useState, useNuxtApp } from '#app';
 
 export const currentUser = () => {
-    const { $apifetch } = useNuxtApp();
     const user = useState('user');
     console.log('user', user);
     return {
@@ -30,9 +29,6 @@ export const useReplacements = () => {
             const response = await $apifetch('/api/replacements', {
                 method: 'POST',
                 body: JSON.stringify(cleanFormData, null, 2),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
             });
 
             if (response.success) {
