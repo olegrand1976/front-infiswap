@@ -1,11 +1,12 @@
 <template>
-    <div class="mt-20">
-        <div class="relative bg-tertiary/30 h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 flex flex-col items-center justify-center m-auto space-y-4 px-4 sm:px-8 md:px-16">
-            <LayoutsLogo class="w-[20rem] sm:w-[22rem] md:w-[25rem] lg:w-[27rem] xl:w-[30rem] 2xl:w-[32rem]" />
-            <h1 class="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center">
-                <strong>Chercher</strong> un(e) infirmier(e) ?
-            </h1>
-        </div>
+    <NuxtLayout name="guest">
+        <template #title>
+            <strong>Chercher</strong> un(e) infirmier(e) ?
+        </template>
+        <template #logo>
+            <LayoutsLogo class="w-96 md:w-80" />
+        </template>
+
         <div class="container mt-36 mb-24 w-[65%]">
             <form @submit.prevent="submit">
                 <div class="grid grid-cols-1 gap-4">
@@ -13,9 +14,9 @@
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center gap-2 pl-4 pr-2">
-                                        <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
-                                        <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Nom</span>
+                                    <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center gap-2 pl-4 pr-2">
+                                        <UserCircleIcon class="w-6 text-primary sm:text-white" />
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Nom</span>
                                     </div>
                                     <Input
                                         v-model="formData.lastname"
@@ -40,11 +41,11 @@
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
+                                    <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <UserCircleIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
-                                            <PlusIcon class="w-3 h-3 text-primary sm:text-white md:text-white lg:text-white absolute top-0 left-1" />
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Prénoms</span>
+                                            <UserCircleIcon class="w-6 text-primary sm:text-white" />
+                                            <PlusIcon class="w-3 text-primary sm:text-white absolute top-0 left-1" />
+                                            <span class="font-light hidden sm:inline text-primary sm:text-white">Prénoms</span>
                                         </FormLabel>
                                     </div>
                                     <Input
@@ -70,15 +71,15 @@
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
+                                    <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <div class="w-5 h-5 bg-primary flex items-center justify-center">
                                                 <NuxtImg
                                                     src="/icons/zip_code.png"
-                                                    class="w-4 h-4"
+                                                    class="w-4"
                                                 />
                                             </div>
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Code postal</span>
+                                            <span class="font-light hidden sm:inline text-primary sm:text-white">Code postal</span>
                                         </FormLabel>
                                     </div>
                                     <Input
@@ -104,15 +105,15 @@
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
+                                    <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
                                             <div class="w-5 h-5 bg-primary flex items-center justify-center">
                                                 <NuxtImg
                                                     src="/icons/city_white.png"
-                                                    class="w-4 h-4"
+                                                    class="w-4"
                                                 />
                                             </div>
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">Ville</span>
+                                            <span class="font-light hidden sm:inline text-primary sm:text-white">Ville</span>
                                         </FormLabel>
                                     </div>
                                     <Input
@@ -138,10 +139,10 @@
                         <FormItem>
                             <FormControl>
                                 <div class="h-10 rounded-full border border-primary grid grid-cols-[25%_75%]">
-                                    <div class="bg-transparent sm:bg-primary md:bg-primary lg:bg-primary rounded-s-full flex items-center">
+                                    <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                         <FormLabel class="flex space-x-4 text-white items-center ms-4 relative">
-                                            <PhoneIcon class="w-6 h-6 text-primary sm:text-white md:text-white lg:text-white" />
-                                            <span class="font-light hidden sm:inline text-primary sm:text-white md:text-white lg:text-white">N° de téléphone</span>
+                                            <PhoneIcon class="w-6 text-primary sm:text-white" />
+                                            <span class="font-light hidden sm:inline text-primary sm:text-white">N° de téléphone</span>
                                         </FormLabel>
                                     </div>
                                     <Input
@@ -202,7 +203,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
