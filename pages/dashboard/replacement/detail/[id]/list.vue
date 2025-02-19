@@ -101,6 +101,7 @@ const { changeStatus } = changeStatusReplacement();
 const route = useRoute();
 const router = useRouter();
 const replacementId = route.params.id;
+const { $toast } = useNuxtApp();
 
 const { listResponse, fetchListResponse } = useListResponse(replacementId);
 
@@ -123,11 +124,18 @@ const endDate = computed(() =>
 const handlesubmit = async (id) => {
     try {
         await changeStatus(id);
-        useNuxtApp().$toast.success('Infirmier accepté');
+        $toast({
+            title: 'Succès',
+            description: 'Infirmier accepté',
+        });
         router.push('/dashboard/replacement');
     }
     catch (e) {
-        useNuxtApp().$toast.error('Une erreur s\'est produite');
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Veuillez réessayer',
+            variant: 'destructive',
+        });
         console.log(e);
     }
 };

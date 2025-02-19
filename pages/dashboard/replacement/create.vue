@@ -445,6 +445,7 @@ import { RangeCalendar } from '@/components/ui/range-calendar';
 import { useReplacements } from '~/composables/useReplacements';
 
 const router = useRouter();
+const { $toast } = useNuxtApp();
 
 const formData = reactive({
     startDate: '',
@@ -565,6 +566,7 @@ const openModal = (period: string) => {
 const closeModal = (period: string) => {
     isOpen.value[period] = false;
 };
+
 /** */
 
 /** Patient configuration */
@@ -696,7 +698,10 @@ const onSavePatient = () => {
 
     // Appel de la fonction de soumission avec tous les remplacements
     if (result) {
-        useNuxtApp().$toast.success('Création effectuée');
+        $toast({
+            title: 'Succès!',
+            description: 'Création de remplacement effectuée',
+        });
     };
 
     setTimeout(() => {

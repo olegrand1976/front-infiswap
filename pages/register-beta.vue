@@ -120,6 +120,8 @@ const router = useRouter();
 const route = useRoute();
 const { registerBeta } = useAuth();
 
+const { $toast } = useNuxtApp();
+
 const goBack = () => {
     if (window.history.length > 1) {
         router.back();
@@ -149,7 +151,10 @@ const {
     () => {
         status.value = '';
         return registerBeta(credentials).then(() => {
-            useNuxtApp().$toast.success('Inscription réussie');
+            $toast({
+                title: 'Succès !',
+                description: 'Inscription réussie',
+            });
 
             setTimeout(() => {
                 router.push('/');

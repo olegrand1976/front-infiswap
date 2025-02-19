@@ -217,6 +217,8 @@ import {
 import * as yup from 'yup';
 import { searchNurse } from '~/composables/usePatients';
 
+const { $toast } = useNuxtApp();
+
 const router = useRouter();
 
 const formData = reactive({
@@ -267,7 +269,11 @@ const validateField = async (field: keyof typeof formData) => {
 const { submit, inProgress } = useSubmit(
     () => {
         return searchNurse().submitSearchNurse(formData).then(() => {
-            useNuxtApp().$toast.success('Envoi de formulaire effectué');
+            $toast({
+                title: 'Succès',
+                description: 'Envoi de formulaire effectué',
+            });
+
             Object.keys(formData).forEach((key) => {
                 (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
             });
@@ -278,7 +284,11 @@ const { submit, inProgress } = useSubmit(
     },
     {
         onError: () => {
-            useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
+            $toast({
+                title: 'Oups! Une erreur s\'est produite',
+                description: 'Echec de l\'envoi de formulaire',
+                variant: 'destructive',
+            });
         },
     },
 );

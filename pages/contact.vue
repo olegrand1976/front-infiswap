@@ -166,6 +166,8 @@ import {
 
 import * as yup from 'yup';
 
+const { $toast } = useNuxtApp();
+
 const formData = reactive({
     fullname: '',
     email: '',
@@ -204,11 +206,18 @@ const validateField = async (field: keyof typeof formData) => {
 
 const { submit } = useSubmit(
     () => {
-        console.log('');
+        $toast({
+            title: 'Scheduled: Catch up',
+            description: 'Friday, February 10, 2023 at 5:57 PM',
+        });
     },
     {
         onError: () => {
-            useNuxtApp().$toast.error('Une erreur est survenue lors de l\'envoi du formulaire');
+            $toast({
+                title: 'Oups ! Une erreur s\'est produite',
+                description: 'Veuillez réessayer',
+                variant: 'destructive',
+            });
         },
     },
 );

@@ -213,6 +213,7 @@ const { user } = currentUser();
 const route = useRoute();
 const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
+const { $toast } = useNuxtApp();
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const { listResponse, fetchListResponse } = useListResponse(replacementId);
@@ -227,13 +228,20 @@ const formData = reactive({
 const { submit } = useSubmit(
     () => {
         return sendResponse().submitResponse(formData).then(() => {
-            useNuxtApp().$toast.success('Demande envoyée');
+            $toast({
+                title: 'Demande envoyée',
+                description: 'Envoi de formulaire effectuée',
+            });
             formData.reason = '';
         });
     },
     {
         onError: () => {
-            useNuxtApp().$toast.error('Votre demande n\'a pas abouti');
+            $toast({
+                title: 'Oups! Une erreur s\'est produite',
+                description: 'Votre demande n\'a pas aboutie',
+                variant: 'destructive',
+            });
         },
     },
 );

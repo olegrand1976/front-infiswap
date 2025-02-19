@@ -1,13 +1,15 @@
-import Vue3Toastify, { toast } from 'vue3-toastify';
 import { defineNuxtPlugin } from '#app';
-import 'vue3-toastify/dist/index.css';
+import { useToast } from '@/components/ui/toast/use-toast';
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(Vue3Toastify, { autoClose: 3000 });
+    const { toast } = useToast();
 
-    return {
-        provide: {
-            toast,
-        },
+    const customToast = (options) => {
+        toast({
+            ...options,
+            duration: 3000,
+        });
     };
+
+    nuxtApp.provide('toast', customToast);
 });
