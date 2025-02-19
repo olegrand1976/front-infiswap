@@ -4,11 +4,7 @@
             <LayoutsLogo class="w-96 flex justify-center items-center mx-auto" />
         </template>
 
-        <div class="mt-48">
-            <LayoutsGridCard />
-        </div>
-
-        <div class="my-16 z-20 bg-tertiary/30 p-20">
+        <div class="my-16 z-20 bg-tertiary/30 py-20">
             <div class="relative grid grid-cols-2 gap-44 items-center container">
                 <div class="space-y-6">
                     <h3 class="text-primary text-3xl">
