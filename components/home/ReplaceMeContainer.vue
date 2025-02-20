@@ -3,15 +3,15 @@
         <NuxtImg
             src="/triangle_image.png"
             alt="Des infirmiers"
-            class="absolute h-full right-0 top-0"
+            class="absolute h-1/2 lg:h-full right-0 bottom-0"
         />
         <div class="container mx-auto z-10 grid grid-cols-2 gap-16 justify-between items-center">
-            <div class="space-y-2 md:space-y-4 lg:space-y-8">
-                <h3 class="xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl text-3xl text-center sm:text-start text-primary font-bold">
-                    Me faire remplacer
+            <div class="col-span-2 lg:col-span-1 space-y-6 text-center lg:text-start">
+                <h3 class="xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl text-3xl text-primary">
+                    <span>Me faire</span> <span class="font-bold">remplacer</span>
                 </h3>
                 <p>
-                    <strong>Besoin d'un remplacement ?</strong> Avec InfiSwap, publiez votre annonce en
+                    <strong>Besoin d'un remplacement ?</strong><br class="lg:hidden"> Avec InfiSwap, publiez votre annonce en
                     quelques secondes et trouvez rapidement un(e) infirmier(e) disponible près de chez vous. <br>
                     Simplifiez la gestion de vos absences et assurez la continuité des soins en toute sérénité !
                 </p>
@@ -29,19 +29,21 @@
                     </Button>
                 </div>
             </div>
-            <NuxtImg
-                src="/home/Des_infirmiers.jpg"
-                alt="Des infirmiers"
-                class="ml-auto rounded-3xl xl:w-[35rem] xl:h-[36rem] lg:h-[29rem] lg:w-auto md:h-[20rem] sm:h-[16rem] h-96 object-cover object-center"
-            />
+            <div class="col-span-2 lg:col-span-1">
+                <NuxtImg
+                    src="/home/Des_infirmiers.jpg"
+                    alt="Des infirmiers"
+                    class="ml-auto rounded-3xl xl:w-[35rem] xl:h-[36rem] lg:h-[29rem] lg:w-auto md:h-[20rem] sm:h-[16rem] h-96 object-cover object-center"
+                />
+            </div>
 
             <NuxtImg
                 src="/icons/Unin.png"
-                class="z-0 w-20 absolute transform -translate-y-1/3 bottom-1/4"
+                class="hidden md:inline-block z-0 w-20 lg:absolute transform -translate-y-1/3 bottom-1/4"
             />
             <NuxtImg
                 src="/stetho.png"
-                class="z-0 w-28 absolute top-28"
+                class="hidden md:inline-block z-0 w-28 lg:absolute top-28"
             />
         </div>
     </div>

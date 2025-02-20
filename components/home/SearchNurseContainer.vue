@@ -14,8 +14,12 @@
 
         <div class="absolute top-1/2 w-full transform -translate-y-1/5 lg:-translate-y-1/2 text-white font-secondary italic">
             <div class="container mx-auto grid place-content-center text-center lg:text-left">
-                <p class="text-3xl sm:text-5xl lg:text-6xl font-extralight">Je cherche</p>
-                <p class="mt-2 text-4xl lg:text-7xl 3xl:text-12xl font-bold">Un(e) infirmier(e)</p>
+                <p class="text-3xl sm:text-5xl lg:text-6xl font-extralight">
+                    Je cherche
+                </p>
+                <p class="mt-2 text-4xl lg:text-7xl 3xl:text-12xl font-bold">
+                    Un(e) infirmier(e)
+                </p>
 
                 <Button
                     variant="secondary"
