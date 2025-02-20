@@ -25,7 +25,7 @@
                     class="font-semibold text-sm my-4"
                     href="/register-beta"
                 >
-                    Pré-inscription
+                    Préinscription
                 </Button>
             </div>
         </div>

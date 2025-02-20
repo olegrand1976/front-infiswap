@@ -1,7 +1,5 @@
 <template>
     <div class="relative flex flex-col xl:space-y-32 lg:space-y-28 md:space-y-24 space-y-16 xl:mt-52 lg:mt-36 mb:pb-24 md:pb-20 pb-16 mt-32 z-40">
-        <LayoutsGridCard />
-
         <div class="container z-20 flex flex-col sm:flex-row justify-center items-center xl:space-x-36 lg:space-x-28 md:space-x-20 sm:space-x-12 sm:space-y-0 space-y-8 mx-auto">
             <div>
                 <h3 class="xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl text-3xl text-center sm:text-start text-primary font-bold">

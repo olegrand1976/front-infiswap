@@ -28,7 +28,7 @@
                     class="font-semibold text-base"
                     href="/register-beta"
                 >
-                    Pré-inscription
+                    Préinscription
                 </Button>
                 <Button
                     v-if="isLoggedIn"
