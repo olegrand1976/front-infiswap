@@ -1,6 +1,6 @@
 <template>
     <div class="sm:mt-0 mt-16">
-        <div class="flex flex-col-reverse sm:flex-col">
+        <div class="flex flex-col">
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
