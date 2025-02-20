@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { isVNode } from 'vue';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid';
 import { useToast } from './use-toast';
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '.';
 
 const { toasts } = useToast();
+
+const getIcon = (variant?: string) => (variant === 'destructive' ? XCircleIcon : CheckCircleIcon);
 </script>
 
 <template>
@@ -21,7 +24,14 @@ const { toasts } = useToast();
                     <ToastDescription v-if="isVNode(toast.description)">
                         <component :is="toast.description" />
                     </ToastDescription>
-                    <ToastDescription v-else>
+                    <ToastDescription
+                        v-else
+                        class="flex items-center gap-2"
+                    >
+                        <component
+                            :is="getIcon(toast.variant)"
+                            class="w-5 text-white"
+                        />
                         {{ toast.description }}
                     </ToastDescription>
                 </template>

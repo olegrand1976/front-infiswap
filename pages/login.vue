@@ -250,10 +250,6 @@ const credentials = reactive({
     password: '',
 });
 
-const error = reactive({
-    password: '',
-});
-
 const { submit, inProgress } = useSubmit(
     () => {
         status.value = '';
