@@ -1,5 +1,5 @@
 <template>
-    <div class="container font-light grid grid-cols-5 gap-8 justify-between mt-10">
+    <div class="container font-light grid grid-cols-5 gap-8 justify-between mt-12">
         <div class="col-span-5 lg:col-span-3 grid grid-cols-2 items-center shadow-lg rounded-lg overflow-hidden">
             <div class="relative h-60 col-span-2 lg:col-span-1 lg:h-full w-full bg-red-200">
                 <NuxtImg
