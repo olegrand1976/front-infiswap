@@ -48,9 +48,12 @@
 
                     <TableBody>
                         <template
-                            v-for="list in listResponse"
+                            v-for="(list, index) in listResponse"
+                            :key="index"
                         >
-                            <TableRow class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border border-none group">
+                            <TableRow
+                                class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border border-none group"
+                            >
                                 <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-100 group-hover:bg-primary">
                                     <span class="group-hover:text-white">{{ list.repondedBy.firstname }} {{ list.repondedBy.lastname }}</span>
                                 </TableCell>
@@ -98,6 +101,7 @@ const { changeStatus } = changeStatusReplacement();
 const route = useRoute();
 const router = useRouter();
 const replacementId = route.params.id;
+const { $toast } = useNuxtApp();
 
 const { listResponse, fetchListResponse } = useListResponse(replacementId);
 
@@ -120,11 +124,19 @@ const endDate = computed(() =>
 const handlesubmit = async (id) => {
     try {
         await changeStatus(id);
-        useNuxtApp().$toast.success('Infirmier accepté');
+        $toast({
+            title: 'Succès',
+            description: 'Infirmier accepté',
+        });
         router.push('/dashboard/replacement');
     }
     catch (e) {
-        useNuxtApp().$toast.error('Une erreur s\'est produite');
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Veuillez réessayer',
+            variant: 'destructive',
+        });
+        console.log(e);
     }
 };
 

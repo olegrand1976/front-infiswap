@@ -256,6 +256,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 const router = useRouter();
 const route = useRoute();
 const { login } = useAuth();
+const { $toast } = useNuxtApp();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -305,7 +306,11 @@ const { submit, inProgress } = useSubmit(
     },
     {
         onError: () => {
-            useNuxtApp().$toast.error('Identifiant ou mot de passe incorrect');
+            $toast({
+                title: 'Erreur',
+                description: 'Identifiant ou mot de passe incorrect',
+                variant: 'destructive',
+            });
         },
     },
 );

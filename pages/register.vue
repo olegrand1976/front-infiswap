@@ -247,7 +247,6 @@
                                         <CalendarIcon class="text-primary ml-3 h-6" />
                                         <Input
                                             v-model="formData.dateOfBirth"
-                                            type="date"
                                         />
                                     </div>
                                 </FormControl>
@@ -534,11 +533,6 @@
 
 <script lang="ts" setup>
 import {
-    DateFormatter,
-    getLocalTimeZone,
-} from '@internationalized/date';
-
-import {
     UserCircleIcon,
     EnvelopeIcon,
     PhoneIcon,
@@ -559,12 +553,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 
 const genders = [
     {
@@ -664,11 +652,6 @@ const error = reactive({
     },
 });
 
-const df = new DateFormatter('fr-FR', {
-    dateStyle: 'long',
-});
-
-const router = useRouter();
 const route = useRoute();
 const { register } = useAuth();
 
@@ -745,7 +728,7 @@ const { submit, inProgress } = useSubmit(
         });
     },
     {
-        onError: (e) => {
+        onError: () => {
             useNuxtApp().$toast.error('L\'inscription a échouée');
         },
     },

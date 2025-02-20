@@ -4,63 +4,61 @@
             <LayoutsLogo class="w-96 flex justify-center items-center mx-auto" />
         </template>
 
-        <div class="mt-48">
-            <LayoutsGridCard />
-        </div>
+        <div class="my-16 z-20 bg-tertiary/30 py-20">
+            <div class="relative grid grid-cols-2 gap-44 items-center container">
+                <div class="space-y-6">
+                    <h3 class="text-primary text-3xl">
+                        Infiswap...
+                    </h3>
+                    <p>
+                        est une plateforme innovante conçue pour optimiser
+                        la gestion des infirmiers libéraux. Elle simplifie les
+                        remplacements, la planification des tournées et le suivi
+                        des formations. Grâce à des outils intelligents et automatisés,
+                        Infiswap améliore la coordination, réduit le temps administratif
+                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
+                        qualité de soins et un gain de temps précieux.
+                    </p>
+                    <p>
+                        la gestion des tournées est optimisée avec une planification automatisée,
+                        prenant en compte les contraintes horaires, les types de soins et la
+                        réduction des déplacements inutiles.
+                    </p>
+                    <p>
+                        Infiswap permet également un suivi complet des formations professionnelles,
+                        assurant la conformité aux obligations légales avec des rappels et une gestion
+                        simplifiée des inscriptions. <br>
+                        Le suivi des patients est amélioré par un historique détaillé des soins,
+                        facilitant la transmission entre soignants.
+                    </p>
+                    <Button
+                        href="/register"
+                    >
+                        S'inscrire
+                    </Button>
+                </div>
 
-        <div class="my-16 z-20 relative grid grid-cols-2 gap-44 items-center bg-tertiary/30 p-20">
-            <div class="space-y-6">
-                <h3 class="text-primary text-3xl">
-                    Infiswap...
-                </h3>
-                <p>
-                    est une plateforme innovante conçue pour optimiser
-                    la gestion des infirmiers libéraux. Elle simplifie les
-                    remplacements, la planification des tournées et le suivi
-                    des formations. Grâce à des outils intelligents et automatisés,
-                    Infiswap améliore la coordination, réduit le temps administratif
-                    et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                    qualité de soins et un gain de temps précieux.
-                </p>
-                <p>
-                    la gestion des tournées est optimisée avec une planification automatisée,
-                    prenant en compte les contraintes horaires, les types de soins et la
-                    réduction des déplacements inutiles.
-                </p>
-                <p>
-                    Infiswap permet également un suivi complet des formations professionnelles,
-                    assurant la conformité aux obligations légales avec des rappels et une gestion
-                    simplifiée des inscriptions. <br>
-                    Le suivi des patients est amélioré par un historique détaillé des soins,
-                    facilitant la transmission entre soignants.
-                </p>
-                <Button
-                    href="/register"
-                >
-                    S'inscrire
-                </Button>
-            </div>
+                <div>
+                    <NuxtImg
+                        src="/home/nurse_with_old_woman2.png"
+                        alt="Infirmière avec une vieille femme"
+                        class="w-full z-20"
+                    />
+                </div>
 
-            <div>
-                <NuxtImg
-                    src="/home/nurse_with_old_woman2.png"
-                    alt="Infirmière avec une vieille femme"
-                    class="w-full z-20"
-                />
-            </div>
+                <div class="absolute bottom-0 right-0">
+                    <NuxtImg
+                        src="/Vector_2.png"
+                        class="w-[32rem] -z-10 relative"
+                    />
+                </div>
 
-            <div class="absolute bottom-0 right-0">
-                <NuxtImg
-                    src="/Vector_2.png"
-                    class="w-[32rem] -z-10 relative"
-                />
-            </div>
-
-            <div class="absolute bottom-[20%] left-2">
-                <NuxtImg
-                    src="/icons/Unin.png"
-                    class="w-12 -z-10 relative"
-                />
+                <div class="absolute bottom-[20%] left-2">
+                    <NuxtImg
+                        src="/icons/Unin.png"
+                        class="w-12 -z-10 relative"
+                    />
+                </div>
             </div>
         </div>
 
@@ -184,7 +182,6 @@ useHead({
 });
 
 definePageMeta({
-    layout: 'auth',
     middleware: ['guest'],
 });
 </script>
