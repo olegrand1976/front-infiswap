@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="collapsed ? 'w-[5vw]' : 'w-[20vw]'"
+        :class="collapsed ? 'w-[3vw]' : 'w-[20vw]'"
         class="transition-all duration-300 bg-white h-screen flex flex-col"
     >
         <SidebarProvider>
@@ -16,7 +16,7 @@
 
                         <SidebarGroupContent
                             class="mt-2 mx-auto"
-                            :class="collapsed ? 'w-10' : 'w-52'"
+                            :class="collapsed ? 'w-10' : 'xl:w-52 lg:w-44'"
                         >
                             <SidebarMenu>
                                 <SidebarMenuItem
@@ -29,7 +29,7 @@
                                     >
                                         <NuxtLink
                                             :href="item.route"
-                                            class="w-full flex justify-between items-center p-3 rounded-lg"
+                                            class="w-full flex justify-between items-center xl:text-base lg:text-xs p-3 rounded-lg"
                                             :class="{
                                                 'bg-primary text-white': isActiveRoute(item.route),
                                                 'bg-gray-200 text-neutral-700': !isActiveRoute(item.route),
@@ -54,7 +54,7 @@
 
                     <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
                         <SidebarGroupContent
-                            class="w-52 flex space-y-3 flex-col justify-center items-center mx-auto"
+                            class="flex space-y-3 flex-col justify-center items-center mx-auto"
                         >
                             <div>
                                 <NuxtImg
