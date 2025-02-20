@@ -71,18 +71,10 @@
                                                 type="password"
                                                 placeholder="Mot de passe"
                                                 class="text-sm"
-                                                @blur="validateField('password')"
-                                                @input="validateField('password')"
                                             />
                                         </div>
                                     </FormControl>
                                 </FormItem>
-                                <p
-                                    v-if="error.password"
-                                    class="text-red-500 text-xs mt-1 ms-[5%]"
-                                >
-                                    {{ error.password }}
-                                </p>
                             </FormField>
                         </div>
 
@@ -179,18 +171,10 @@
                                             type="password"
                                             placeholder="Mot de passe"
                                             class="text-sm"
-                                            @blur="validateField('password')"
-                                            @input="validateField('password')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
-                            <p
-                                v-if="error.password"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.password }}
-                            </p>
                         </FormField>
                     </div>
 
@@ -249,7 +233,6 @@
 
 <script lang="ts" setup>
 import { KeyIcon } from '@heroicons/vue/24/solid';
-import * as yup from 'yup';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -270,25 +253,6 @@ const credentials = reactive({
 const error = reactive({
     password: '',
 });
-
-const schema = yup.object({
-    password: yup.string()
-        .required('Le mot de passe est obligatoire')
-        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
-        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
-        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
-        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre'),
-});
-
-const validateField = async (field: keyof typeof credentials) => {
-    try {
-        await schema.validateAt(field, toRaw(credentials));
-        error[field] = '';
-    }
-    catch (err) {
-        error[field] = (err as yup.ValidationError).message;
-    }
-};
 
 const { submit, inProgress } = useSubmit(
     () => {
