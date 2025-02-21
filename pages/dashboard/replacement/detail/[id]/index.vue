@@ -291,26 +291,9 @@ const endDate = computed(() => {
     return replacement.value.end_date ? formatDate(replacement.value.end_date) : '';
 });
 
-const refreshing = ref(false);
-
-const refreshAll = async () => {
-    refreshing.value = true;
-    try {
-        await refreshNuxtData();
-    }
-    finally {
-        refreshing.value = false;
-    }
-};
-
-onMounted(() => {
-    if (refreshing.value) {
-        refreshAll();
-    }
-    else {
-        fetchReplacement();
-        fetchListResponse();
-    }
+onMounted(async () => {
+    await fetchReplacement();
+    await fetchListResponse();
 });
 
 useHead({

@@ -261,6 +261,7 @@ const { submit, inProgress } = useSubmit(
 
             setTimeout(() => {
                 router.push('/dashboard/replacement');
+                window.location.reload();
             }, 3000);
         });
     },
