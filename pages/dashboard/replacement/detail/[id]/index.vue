@@ -155,26 +155,6 @@
             class="my-12"
         >
             <Form @submit="submit">
-                <div
-                    class="border-2 border-primary rounded p-3 w-96"
-                >
-                    <label class="text-xs text-primary font-bold">
-                        Parlez-nous un peu de vous
-                    </label>
-                    <FormField name="description">
-                        <FormItem class="mt-3">
-                            <FormControl>
-                                <Textarea
-                                    v-model="formData.comment"
-
-                                    placeholder="Entrez votre description ici"
-                                    class="bg-gray-200 text-xs h-36"
-                                />
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-                </div>
-
                 <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
                         <Button type="submit">
@@ -225,30 +205,16 @@ const { listResponse, fetchListResponse } = useListResponse(replacementId);
 const formData = reactive({
     replacementId: replacementId,
     respondedBy: respondedBy,
-    reason: '',
     comment: '',
 });
 
 const { submit } = useSubmit(
     () => {
-        if (!formData.comment.trim()) {
-            return Promise.reject(new Error('La raison est vide'));
-        }
-
         return sendResponse().submitResponse(formData).then(() => {
             $toast({
                 description: 'Réponse envoyée avec succès.',
             });
-            formData.comment = '';
         });
-    },
-    {
-        onError: () => {
-            $toast({
-                description: 'Veuillez remplir le formulaire',
-                variant: 'destructive',
-            });
-        },
     },
 );
 
