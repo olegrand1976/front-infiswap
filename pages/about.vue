@@ -12,7 +12,7 @@
             <div class="absolute inset-0 bg-tertiary/30 h-[200px] lg:h-full w-full"></div>
             <div class="container">
                 <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20">
-                    <div class="lg:hidden text-center mb-8">
+                    <div class="lg:hidden text-center mb-8 mt-12">
                         <h2 class="text-primary text-4xl font-semibold">À propos</h2>
                     </div>
                     <div class="space-y-6 order-2 lg:order-1 relative z-30">
