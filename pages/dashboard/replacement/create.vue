@@ -206,10 +206,13 @@
                                                                         <span>Vos patients</span>
                                                                     </FormLabel>
                                                                     <Select v-model="selectedPatient[period]">
-                                                                        <SelectTrigger class="border border-none bg-white shadow">
-                                                                            <span class="w-full text-black/70">
-                                                                                {{ selectedPatient[period]?.lastname ? `${selectedPatient[period].lastname} ${selectedPatient[period].firstname}` : 'Choisir un patient' }}
-                                                                            </span>
+                                                                        <SelectTrigger
+                                                                            class="border border-none shadow"
+                                                                        >
+                                                                            <SelectValue
+                                                                                class="text-nowrap"
+                                                                                :value="fullname[period] || 'Choisir le patient'"
+                                                                            />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
                                                                             <SelectGroup>
@@ -241,6 +244,7 @@
                                                                         v-model="selectedPatient[period].lastname"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
                                                                 </div>
                                                             </FormControl>
@@ -260,25 +264,27 @@
                                                                         v-model="selectedPatient[period].firstname"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
                                                                 </div>
                                                             </FormControl>
                                                         </FormItem>
                                                     </FormField>
 
-                                                    <FormField name="patientSecurityNumber">
+                                                    <FormField name="social_security_number">
                                                         <FormItem>
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <CalendarIcon class="w-6 h-6" />
-                                                                        <span>Numéro de sécurité</span>
+                                                                        <span>Numéro de sécurité social</span>
                                                                     </FormLabel>
                                                                     <Input
-                                                                        v-model="selectedPatient[period].securityNumber"
+                                                                        v-model="selectedPatient[period].social_security_number"
                                                                         type="text"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
                                                                 </div>
                                                             </FormControl>
@@ -468,9 +474,11 @@ import {
 import type { DateRange } from 'radix-vue';
 import { CalendarDate, getLocalTimeZone, today as todayFn } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
-import { useReplacements } from '~/composables/useReplacements';
+import { useReplacements, useGetReplacements } from '~/composables/useReplacements';
 
 const router = useRouter();
+
+const { replacements, fetchReplacements } = useGetReplacements();
 
 const { $toast } = useNuxtApp();
 
@@ -666,7 +674,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -674,7 +682,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -682,7 +690,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -693,16 +701,6 @@ const selectedPatient = ref({
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 const { nursePatients, fetchNursePatients } = useNursePatients();
-
-onMounted(() => {
-    const now = new Date();
-    const currentDateStr = now.toISOString().split('T')[0];
-    formData.startDate = currentDateStr;
-    currentDate.value = currentDateStr;
-
-    fetchNursePatients();
-    fetchCareTypes();
-});
 
 const selectedCareTypes = ref({
     morning: [],
@@ -768,9 +766,17 @@ const getCurrentDateReplacements = (period: string) => {
 
 const { submitReplacement } = useReplacements();
 
-// Modification de la fonction onSavePatient
 const onSavePatient = () => {
     updateReplacementData();
+
+    if (formData.replacement.length === 0) {
+        $toast({
+            title: 'Erreur',
+            description: 'Information manquante',
+            variant: 'destructive',
+        });
+        return;
+    }
 
     // Réinitialisation des champs après sauvegarde
     ['morning', 'afternoon', 'evening'].forEach((period) => {
@@ -787,17 +793,16 @@ const onSavePatient = () => {
     });
 
     const result = submitReplacement(formData);
-
-    // Appel de la fonction de soumission avec tous les remplacements
     if (result) {
         $toast({
             description: 'Création effectuée',
         });
-    };
 
-    setTimeout(() => {
-        router.push('/dashboard/replacement');
-    }, 4000);
+        setTimeout(() => {
+            const replacementId = replacements.value?.data?.[0]?.id || null;
+            router.push(`/dashboard/replacement/detail/${replacementId + 1}`);
+        }, 3000);
+    };
 };
 
 // Modification des fonctions de navigation pour charger les données sauvegardées
@@ -836,7 +841,13 @@ const loadSavedData = () => {
     });
 };
 
-const handlePatientSelect = (patient: any, period: string) => {
+const fullname = {
+    morning: '',
+    afternoon: '',
+    evening: '',
+};
+
+const handlePatientSelect = (patient, period) => {
     selectedPatient.value[period] = {
         id: patient.id,
         lastname: patient.lastname,
@@ -845,6 +856,8 @@ const handlePatientSelect = (patient: any, period: string) => {
         city: patient.city,
         zipCode: patient.zipCode,
     };
+
+    fullname.value[period] = selectedPatient.value[period].lastname + ' ' + selectedPatient.value[period].firstname;
 };
 
 const reinitializeData = () => {
@@ -863,6 +876,17 @@ const reinitializeData = () => {
 
     Object.keys(savedReplacements.value).forEach(key => delete savedReplacements.value[key]);
 };
+
+onMounted(() => {
+    const now = new Date();
+    const currentDateStr = now.toISOString().split('T')[0];
+    formData.startDate = currentDateStr;
+    currentDate.value = currentDateStr;
+
+    fetchReplacements();
+    fetchNursePatients();
+    fetchCareTypes();
+});
 
 useHead({
     title: 'Créer un remplacement',

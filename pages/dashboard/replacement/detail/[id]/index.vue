@@ -96,7 +96,7 @@
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
-                                {{ getPeriodLabel(detail.start_at) }}
+                                {{ getPeriodLabel(detail.start_at) }} - {{ formatDate(detail.date) }}
                             </h4>
                         </div>
                         <div class="rounded text-xs bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
@@ -165,7 +165,7 @@
                         <FormItem class="mt-3">
                             <FormControl>
                                 <Textarea
-                                    v-model="formData.reason"
+                                    v-model="formData.comment"
 
                                     placeholder="Entrez votre description ici"
                                     class="bg-gray-200 text-xs h-36"
@@ -227,19 +227,21 @@ const formData = reactive({
 
 const { submit } = useSubmit(
     () => {
+        if (!formData.comment.trim()) {
+            return Promise.reject(new Error('La raison est vide'));
+        }
+
         return sendResponse().submitResponse(formData).then(() => {
             $toast({
-                title: 'Demande envoyée',
-                description: 'Envoi de formulaire effectuée',
+                description: 'Réponse envoyée avec succès.',
             });
-            formData.reason = '';
+            formData.comment = '';
         });
     },
     {
         onError: () => {
             $toast({
-                title: 'Oups! Une erreur s\'est produite',
-                description: 'Votre demande n\'a pas aboutie',
+                description: 'Veuillez remplir le formulaire',
                 variant: 'destructive',
             });
         },
