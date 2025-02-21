@@ -3,10 +3,10 @@
         <NuxtImg
             src="/triangle_image.png"
             alt="Des infirmiers"
-            class="absolute h-1/2 lg:h-full right-0 bottom-0"
+            class="absolute h-1/2 md:h-full right-0 bottom-0"
         />
-        <div class="container mx-auto z-10 grid grid-cols-2 gap-16 justify-between items-center">
-            <div class="col-span-2 lg:col-span-1 space-y-6 text-center lg:text-start">
+        <div class="container z-10 grid grid-cols-2 justify-between items-center mx-auto gap-8 md:gap-16">
+            <div class="col-span-2 md:col-span-1 space-y-4 md:space-y-6 text-center md:text-start">
                 <h3 class="xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl text-3xl text-primary">
                     <span>Me faire</span> <span class="font-bold">remplacer</span>
                 </h3>
@@ -29,21 +29,21 @@
                     </Button>
                 </div>
             </div>
-            <div class="col-span-2 lg:col-span-1">
+            <div class="col-span-2 md:col-span-1">
                 <NuxtImg
                     src="/home/Des_infirmiers.jpg"
                     alt="Des infirmiers"
-                    class="ml-auto rounded-3xl xl:w-[35rem] xl:h-[36rem] lg:h-[29rem] lg:w-auto md:h-[20rem] sm:h-[16rem] h-96 object-cover object-center"
+                    class="ml-auto rounded-3xl h-96 w-full object-cover object-center"
                 />
             </div>
 
             <NuxtImg
                 src="/icons/Unin.png"
-                class="hidden md:inline-block z-0 w-20 lg:absolute transform -translate-y-1/3 bottom-1/4"
+                class="hidden md:inline-block z-0 w-14 md:absolute transform left-2 bottom-10"
             />
             <NuxtImg
                 src="/stetho.png"
-                class="hidden md:inline-block z-0 w-28 lg:absolute top-28"
+                class="hidden md:inline-block z-0 w-24 md:absolute top-8 left-2"
             />
         </div>
     </div>

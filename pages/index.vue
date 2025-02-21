@@ -6,8 +6,6 @@
         </div>
         <section>
             <HomeReplaceMeContainer />
-        </section>
-        <section>
             <HomeServiceContainer />
         </section>
         <section>
