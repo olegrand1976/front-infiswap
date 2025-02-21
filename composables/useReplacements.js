@@ -1,13 +1,5 @@
 import { useState, useNuxtApp } from '#app';
 
-export const currentUser = () => {
-    const user = useState('user');
-    console.log('user', user);
-    return {
-        user,
-    };
-};
-
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
 

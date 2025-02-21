@@ -178,7 +178,12 @@
                 <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
                         <Button type="submit">
-                            Je suis disponible
+                            <span v-if="user.gender == 'M'">
+                                Je suis intéressé
+                            </span>
+                            <span v-if="user.gender == 'F'">
+                                Je suis intéressée
+                            </span>
                         </Button>
                     </div>
 
@@ -206,10 +211,9 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { CalendarDate } from '@internationalized/date';
+import { useDetailReplacement, useListResponse, sendResponse } from '~/composables/useReplacements';
 
-import { useDetailReplacement, useListResponse, sendResponse, currentUser } from '~/composables/useReplacements';
-
-const { user } = currentUser();
+const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
@@ -287,9 +291,26 @@ const endDate = computed(() => {
     return replacement.value.end_date ? formatDate(replacement.value.end_date) : '';
 });
 
+const refreshing = ref(false);
+
+const refreshAll = async () => {
+    refreshing.value = true;
+    try {
+        await refreshNuxtData();
+    }
+    finally {
+        refreshing.value = false;
+    }
+};
+
 onMounted(() => {
-    fetchReplacement();
-    fetchListResponse();
+    if (refreshing.value) {
+        refreshAll();
+    }
+    else {
+        fetchReplacement();
+        fetchListResponse();
+    }
 });
 
 useHead({
