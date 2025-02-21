@@ -54,7 +54,7 @@
                                                 v-model="credentials.inami"
                                                 type="text"
                                                 placeholder="INAMI"
-                                                class="text-sm"
+                                                class="text-sm w-full"
                                             />
                                         </div>
                                     </FormControl>
@@ -70,7 +70,7 @@
                                                 v-model="credentials.password"
                                                 type="password"
                                                 placeholder="Mot de passe"
-                                                class="text-sm"
+                                                class="text-sm w-full"
                                             />
                                         </div>
                                     </FormControl>
