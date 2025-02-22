@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-white flex">
+    <div class="bg-white flex 2xl:mr-4">
         <div
-            :class="isCollapsed ? 'w-[4vw]' : 'w-[20vw]'"
+            :class="isCollapsed ? 'lg:w-[5vw] 2xl:w-[2vw]' : 'xl:w-[20vw] 2xl:w-[15vw]'"
             class="transition-all duration-300 bg-white h-screen"
         >
             <LayoutsSideBar
@@ -10,7 +10,7 @@
             />
         </div>
 
-        <div class="flex flex-col flex-grow space-y-3 p-4">
+        <div class="flex flex-col flex-grow xl:w-auto lg:w-64 space-y-3 p-4">
             <LayoutsToolbar />
             <NuxtPage />
         </div>

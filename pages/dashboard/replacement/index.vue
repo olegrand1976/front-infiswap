@@ -10,7 +10,7 @@
         </div>
 
         <div class="flex justify-between mt-6">
-            <Form class="flex justify-between space-x-52">
+            <Form class="flex justify-between xl:space-x-52 lg:space-x-4">
                 <FormField name="search">
                     <FormItem>
                         <FormControl>
@@ -78,7 +78,7 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center rounded-lg text-white text-xs">
                             Jour
                         </TableHead>
                         <TableHead class="bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
@@ -104,7 +104,7 @@
                         :key="replacement.id"
                     >
                         <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
-                            <TableCell class="flex justify-center items-center bg-gray-100 text-[0.75em]">
+                            <TableCell class="flex justify-center items-center bg-gray-100 xl:text-[0.75em] lg:text-[0.5em]">
                                 <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
                                     <span>{{ formatDate(replacement.start_date) }}</span>
                                 </div>

@@ -1,6 +1,6 @@
 <template>
-    <div class="container h-20 py-3 flex items-center rounded-lg -mt-2 bg-gray-100">
-        <div class="flex justify-between w-full">
+    <div class="h-20 py-3 flex items-center rounded-lg -mt-2 bg-gray-100">
+        <div class="flex justify-between w-full mx-4">
             <div>
                 <Form>
                     <FormField name="search">

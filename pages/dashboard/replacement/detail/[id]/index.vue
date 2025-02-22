@@ -96,7 +96,7 @@
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
-                                {{ getPeriodLabel(detail.start_at) }}
+                                {{ getPeriodLabel(detail.start_at) }} - {{ formatDate(detail.date) }}
                             </h4>
                         </div>
                         <div class="rounded text-xs bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
@@ -155,30 +155,15 @@
             class="my-12"
         >
             <Form @submit="submit">
-                <div
-                    class="border-2 border-primary rounded p-3 w-96"
-                >
-                    <label class="text-xs text-primary font-bold">
-                        Parlez-nous un peu de vous
-                    </label>
-                    <FormField name="description">
-                        <FormItem class="mt-3">
-                            <FormControl>
-                                <Textarea
-                                    v-model="formData.reason"
-
-                                    placeholder="Entrez votre description ici"
-                                    class="bg-gray-200 text-xs h-36"
-                                />
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-                </div>
-
                 <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
                         <Button type="submit">
-                            Je suis disponible
+                            <span v-if="user.gender == 'M'">
+                                Je suis intéressé
+                            </span>
+                            <span v-if="user.gender == 'F'">
+                                Je suis intéressée
+                            </span>
                         </Button>
                     </div>
 
@@ -206,10 +191,9 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { CalendarDate } from '@internationalized/date';
+import { useDetailReplacement, useListResponse, sendResponse } from '~/composables/useReplacements';
 
-import { useDetailReplacement, useListResponse, sendResponse, currentUser } from '~/composables/useReplacements';
-
-const { user } = currentUser();
+const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
@@ -221,7 +205,6 @@ const { listResponse, fetchListResponse } = useListResponse(replacementId);
 const formData = reactive({
     replacementId: replacementId,
     respondedBy: respondedBy,
-    reason: '',
     comment: '',
 });
 
@@ -229,20 +212,9 @@ const { submit } = useSubmit(
     () => {
         return sendResponse().submitResponse(formData).then(() => {
             $toast({
-                title: 'Demande envoyée',
-                description: 'Envoi de formulaire effectuée',
+                description: 'Réponse envoyée avec succès.',
             });
-            formData.reason = '';
         });
-    },
-    {
-        onError: () => {
-            $toast({
-                title: 'Oups! Une erreur s\'est produite',
-                description: 'Votre demande n\'a pas aboutie',
-                variant: 'destructive',
-            });
-        },
     },
 );
 
@@ -285,9 +257,9 @@ const endDate = computed(() => {
     return replacement.value.end_date ? formatDate(replacement.value.end_date) : '';
 });
 
-onMounted(() => {
-    fetchReplacement();
-    fetchListResponse();
+onMounted(async () => {
+    await fetchReplacement();
+    await fetchListResponse();
 });
 
 useHead({

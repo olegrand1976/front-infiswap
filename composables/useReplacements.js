@@ -1,12 +1,5 @@
+import { useRouter } from 'vue-router';
 import { useState, useNuxtApp } from '#app';
-
-export const currentUser = () => {
-    const user = useState('user');
-    console.log('user', user);
-    return {
-        user,
-    };
-};
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
@@ -109,6 +102,7 @@ export const useDetailReplacement = (replacementId) => {
 
 export const sendResponse = () => {
     const { $apifetch } = useNuxtApp();
+    const { $toast } = useNuxtApp();
 
     const error = useState('sendResponseError', () => null);
     const loading = useState('sendResponseLoading', () => false);
@@ -126,6 +120,12 @@ export const sendResponse = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+            }).then(() => {
+                $toast({
+                    description: 'Création effectuée',
+                });
+            }).catch((error) => {
+                console.error(error);
             });
 
             if (response.success) {

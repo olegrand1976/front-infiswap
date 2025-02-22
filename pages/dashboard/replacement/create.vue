@@ -11,41 +11,43 @@
 
                     <div class="p-5">
                         <FormField name="formData.startDate">
-                            <FormItem class="flex items-center gap-8 text-white">
+                            <FormItem class="flex items-center space-x-8 text-white">
                                 <FormLabel>
                                     Début
                                 </FormLabel>
                                 <FormControl>
-                                    <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
+                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
                                         <Input
                                             v-model="formData.startDate"
-                                            placeholder="Date de début"
-                                            type="text"
-                                            class="w-full text-xs text-black"
-                                            disabled
+                                            placeholder="YYYY-MM-DD"
+                                            type="date"
+                                            :min="today"
+                                            class="text-xs w-full text-black/70 bg-transparent"
+                                            @input="handleDateInput('start')"
                                         />
                                     </div>
                                 </FormControl>
                             </FormItem>
                         </FormField>
 
-                        <Separator class="my-4 opacity-70" />
+                        <Separator class="opacity-70 my-4" />
 
                         <FormField name="formData.endDate">
-                            <FormItem class="flex items-center gap-[3.25rem] text-white">
+                            <FormItem class="flex items-center space-x-[3.25rem] text-white">
                                 <FormLabel>
                                     Fin
                                 </FormLabel>
                                 <FormControl>
-                                    <div class="flex items-center gap-1 w-40 h-10 px-4 bg-white rounded-full">
+                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
                                         <CalendarIcon class="w-6 h-6 text-primary" />
                                         <Input
                                             v-model="formData.endDate"
-                                            placeholder="Date de fin"
-                                            type="text"
-                                            class="w-full text-xs text-black"
-                                            disabled
+                                            placeholder="YYYY-MM-DD"
+                                            type="date"
+                                            :min="formData.startDate || today"
+                                            class="text-xs w-full text-black/70 bg-transparent"
+                                            @input="handleDateInput('end')"
                                         />
                                     </div>
                                 </FormControl>
@@ -57,6 +59,7 @@
                 <div>
                     <RangeCalendar
                         v-model="value"
+                        :minValue="todayCalendar"
                         class="rounded-md shadow-lg"
                     />
                 </div>
@@ -70,7 +73,7 @@
                                 <FormControl>
                                     <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
                                         <ChevronLeftIcon
-                                            class="w-5 cursor-pointer"
+                                            class="w-5 h-5 cursor-pointer"
                                             title="Date précédente"
                                             :class="{ 'opacity-90': new Date(currentDate) <= new Date(formData.startDate) }"
                                             :disabled="new Date(currentDate) <= new Date(formData.startDate)"
@@ -84,7 +87,7 @@
                                             disabled
                                         />
                                         <ChevronRightIcon
-                                            class="w-5 cursor-pointer"
+                                            class="w-5 h-5 cursor-pointer"
                                             :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) >= new Date(formData.endDate) }"
                                             :disabled="new Date(currentDate) >= new Date(formData.endDate)"
                                             @click="incrementDate"
@@ -98,7 +101,7 @@
                                 class="flex text-xs items-center space-x-2"
                             >
                                 Copier le jour
-                                <Square2StackIcon class="w-6" />
+                                <Square2StackIcon class="w-6 h-6" />
                             </Button>
                         </div>
                         <div class="flex">
@@ -107,7 +110,7 @@
                                 @click="reinitializeData"
                             >
                                 Réinitialiser
-                                <ArrowPathRoundedSquareIcon class="w-6" />
+                                <ArrowPathRoundedSquareIcon class="w-6 h-6" />
                             </Button>
                         </div>
                     </div>
@@ -116,7 +119,7 @@
                             class="flex text-xs items-center space-x-2"
                         >
                             Copier tous les jours de la tournée
-                            <Square2StackIcon class="w-6" />
+                            <Square2StackIcon class="w-6 h-6" />
                         </Button>
                     </div>
                 </div>
@@ -176,8 +179,8 @@
                                         </Table>
 
                                         <PlusCircleIcon
-                                            class="mt-6 w-8 flex justify-center items-center mx-auto text-primary"
-                                            :class="{ 'cursor-pointer': formData.startDate && formData.endDate, 'opacity-50 cursor-not-allowed': !formData.startDate || !formData.endDate }"
+                                            class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary"
+                                            :class="{ 'cursor-pointer': formData.startDate && formData.endDate, 'opacity-50 cursor-not-allowed': !formData.startDate || !formData.endDate}"
                                             title="Choisir le patient"
                                             @click="formData.startDate && formData.endDate ? openModal(period) : null"
                                         />
@@ -185,40 +188,64 @@
                                         <Dialog v-model:open="isOpen[period]">
                                             <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
                                                 <DialogHeader>
-                                                    <DialogTitle>Détail du patient</DialogTitle>
+                                                    <DialogTitle class="flex space-x-2">
+                                                        <UserCircleIcon class="w-5" />
+                                                        <span>
+                                                            Détail du patient
+                                                        </span>
+                                                    </DialogTitle>
                                                     <DialogDescription>Veuillez confirmer ici les détails concernant le patient</DialogDescription>
                                                 </DialogHeader>
 
-                                                <div class="mt-6 grid grid-cols-1 gap-4 mx-8">
+                                                <div class="mt-6 grid grid-cols-1 gap-4">
+                                                    <FormField name="patient">
+                                                        <FormItem>
+                                                            <FormControl class="grid grid-cols-[30%_70%] justify-center items-center mb-8">
+                                                                <div>
+                                                                    <FormLabel class="flex text-sm items-center pl-4">
+                                                                        <span>Vos patients</span>
+                                                                    </FormLabel>
+                                                                    <Select v-model="selectedPatient[period]">
+                                                                        <SelectTrigger
+                                                                            class="border border-none shadow"
+                                                                        >
+                                                                            <SelectValue
+                                                                                class="text-nowrap"
+                                                                                :value="fullname[period] || 'Choisir le patient'"
+                                                                            />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            <SelectGroup>
+                                                                                <SelectItem
+                                                                                    v-for="patient in nursePatients"
+                                                                                    :key="patient.id"
+                                                                                    :value="patient"
+                                                                                    @click="handlePatientSelect(patient, period)"
+                                                                                >
+                                                                                    {{ patient.lastname }} {{ patient.firstname }}
+                                                                                </SelectItem>
+                                                                            </SelectGroup>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    </FormField>
+
                                                     <FormField name="lastname">
                                                         <FormItem>
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <UserCircleIcon class="w-6" />
+                                                                        <UserCircleIcon class="w-6 h-6" />
                                                                         <span>Nom</span>
                                                                     </FormLabel>
                                                                     <Input
                                                                         v-model="selectedPatient[period].lastname"
                                                                         variant="transparent"
                                                                         class="text-black"
-                                                                        @input="handleSearch(period)"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
-                                                                    <div
-                                                                        v-if="showSuggestions[period] && filteredPatients[period].length > 0"
-                                                                        class="absolute z-50 w-96 top-36 left-28 bg-white border border-gray-200 rounded-md shadow-lg"
-                                                                    >
-                                                                        <ul class="py-1">
-                                                                            <li
-                                                                                v-for="patient in filteredPatients[period]"
-                                                                                :key="patient.id"
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                                                                @click="selectPatient(patient, period)"
-                                                                            >
-                                                                                {{ patient.lastname }} {{ patient.firstname }}
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
                                                                 </div>
                                                             </FormControl>
                                                         </FormItem>
@@ -229,33 +256,35 @@
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex relative h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <UserCircleIcon class="w-6" />
-                                                                        <PlusIcon class="w-3 absolute top-0 left-4" />
+                                                                        <UserCircleIcon class="w-6 h-6" />
+                                                                        <PlusIcon class="w-3 h-3 absolute top-0 left-4" />
                                                                         <span>Prénoms</span>
                                                                     </FormLabel>
                                                                     <Input
                                                                         v-model="selectedPatient[period].firstname"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
                                                                 </div>
                                                             </FormControl>
                                                         </FormItem>
                                                     </FormField>
 
-                                                    <FormField name="patientSecurityNumber">
+                                                    <FormField name="social_security_number">
                                                         <FormItem>
                                                             <FormControl class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
                                                                 <div>
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
-                                                                        <CalendarIcon class="w-6" />
-                                                                        <span>Numéro de sécurité</span>
+                                                                        <CalendarIcon class="w-6 h-6" />
+                                                                        <span>Numéro de sécurité social</span>
                                                                     </FormLabel>
                                                                     <Input
-                                                                        v-model="selectedPatient[period].securityNumber"
+                                                                        v-model="selectedPatient[period].social_security_number"
                                                                         type="text"
                                                                         variant="transparent"
                                                                         class="text-black"
+                                                                        :disabled="selectedPatient[period].id !== null"
                                                                     />
                                                                 </div>
                                                             </FormControl>
@@ -269,7 +298,7 @@
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <NuxtImg
                                                                             src="/icons/city_white.png"
-                                                                            class="w-6"
+                                                                            class="w-6 h-6"
                                                                         />
                                                                         <span>Ville</span>
                                                                     </FormLabel>
@@ -290,7 +319,7 @@
                                                                     <FormLabel class="flex h-9 rounded-s-full text-xs bg-primary text-white space-x-4 items-center pl-4">
                                                                         <NuxtImg
                                                                             src="/icons/zip_code.png"
-                                                                            class="w-6"
+                                                                            class="w-6 h-6"
                                                                         />
                                                                         <span>Code postal</span>
                                                                     </FormLabel>
@@ -306,12 +335,12 @@
                                                 </div>
 
                                                 <FormField name="time">
-                                                    <FormLabel class="flex items-center space-x-3 mt-6">
-                                                        <ClockIcon class="w-5 h-5" />
+                                                    <FormLabel class="flex items-center space-x-2 mt-6">
+                                                        <ClockIcon class="w-5" />
                                                         <span class="text-base font-bold">Choisir une période et l'heure de prestation</span>
                                                     </FormLabel>
 
-                                                    <FormItem class="flex flex-col space-y-3 mx-8 text-sm">
+                                                    <FormItem class="flex flex-col space-y-3 text-sm">
                                                         <div :key="period">
                                                             <FormControl>
                                                                 <div class="grid grid-cols-[30%_70%] items-center rounded-full border border-primary">
@@ -331,7 +360,7 @@
                                                                                     <SelectItem
                                                                                         v-for="time in times"
                                                                                         :key="time"
-                                                                                        :value="formatHour(time)"
+                                                                                        :value="time"
                                                                                     >
                                                                                         {{ formatHour(time) }}
                                                                                     </SelectItem>
@@ -351,7 +380,7 @@
                                                                                     <SelectItem
                                                                                         v-for="time in times"
                                                                                         :key="time"
-                                                                                        :value="formatHour(time)"
+                                                                                        :value="time"
                                                                                     >
                                                                                         {{ formatHour(time) }}
                                                                                     </SelectItem>
@@ -367,12 +396,15 @@
 
                                                 <FormField name="careTypes">
                                                     <FormItem class="my-4">
-                                                        <FormLabel class="font-bold text-lg">
-                                                            Sélectionnez le type de soin
+                                                        <FormLabel class="font-bold text-lg flex space-x-2">
+                                                            <UserPlusIcon class="w-5" />
+                                                            <span>
+                                                                Sélectionnez le type de soin
+                                                            </span>
                                                         </FormLabel>
 
                                                         <div key="period">
-                                                            <ul class="grid grid-cols-2 container gap-4">
+                                                            <ul class="grid grid-cols-2 gap-4">
                                                                 <li
                                                                     v-for="care in careTypes"
                                                                     :key="care.id"
@@ -432,6 +464,7 @@ import {
     ChevronRightIcon,
     PlusCircleIcon,
     UserCircleIcon,
+    UserPlusIcon,
     PlusIcon,
     Square2StackIcon,
     ArrowPathRoundedSquareIcon,
@@ -439,12 +472,14 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import type { DateRange } from 'radix-vue';
-import { getLocalTimeZone, today } from '@internationalized/date';
+import { CalendarDate, getLocalTimeZone, today as todayFn } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
-
-import { useReplacements } from '~/composables/useReplacements';
+import { useReplacements, useGetReplacements } from '~/composables/useReplacements';
 
 const router = useRouter();
+
+const { replacements, fetchReplacements } = useGetReplacements();
+
 const { $toast } = useNuxtApp();
 
 const formData = reactive({
@@ -453,29 +488,114 @@ const formData = reactive({
     replacement: [],
 });
 
-const savedReplacements = ref({});
+const savedReplacements = ref<{ [key: string]: any[] }>({});
 
-const start = today(getLocalTimeZone());
-const end = null;
-const currentDate = ref('');
+const today = computed(() => {
+    const date = new Date();
+    return date.toISOString().split('T')[0];
+});
 
-/** FOR RANGE CALENDAR: SELECT & INCREMENT/DECREMENT */
+// Get today's date for the calendar
+const todayCalendar = computed(() => {
+    return todayFn(getLocalTimeZone());
+});
+
+// Initialiser value avec la date actuelle
 const value = ref({
-    start,
-    end,
+    start: new CalendarDate(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        new Date().getDate(),
+    ),
+    end: null,
 }) as Ref<DateRange>;
 
+// Initialiser currentDate avec la date actuelle
+const currentDate = ref(new Date().toISOString().split('T')[0]);
+
+const handleDateInput = (type: 'start' | 'end') => {
+    const date = type === 'start' ? formData.startDate : formData.endDate;
+    if (!date) {
+        if (type === 'end') {
+            value.value = {
+                start: value.value.start,
+                end: null,
+            };
+        }
+        return;
+    }
+
+    // Prevent selecting dates before today
+    if (new Date(date) < new Date(today.value)) {
+        if (type === 'start') {
+            formData.startDate = today.value;
+        }
+        else {
+            formData.endDate = today.value;
+        }
+        return;
+    }
+
+    // For end date, ensure it's not before start date
+    if (type === 'end' && formData.startDate && date < formData.startDate) {
+        formData.endDate = formData.startDate;
+        return;
+    }
+
+    // Update calendar value
+    const [year, month, day] = date.split('-').map(Number);
+    const calendarDate = new CalendarDate(year, month, day);
+
+    if (type === 'start') {
+        value.value = {
+            start: calendarDate,
+            end: value.value.end,
+        };
+        currentDate.value = date;
+    }
+    else {
+        value.value = {
+            start: value.value.start,
+            end: calendarDate,
+        };
+    }
+};
+
+// Modifier le watch pour gérer correctement les changements de dates
 watch(value, (newValue) => {
     if (newValue?.start) {
-        const localStartDate = new Date(newValue.start.year, newValue.start.month - 1, newValue.start.day);
-        formData.startDate = localStartDate.toLocaleDateString('fr-CA');
-        currentDate.value = formData.startDate;
+        const startDate = `${newValue.start.year}-${String(newValue.start.month).padStart(2, '0')}-${String(newValue.start.day).padStart(2, '0')}`;
+        formData.startDate = startDate;
+        currentDate.value = startDate;
     }
     if (newValue?.end) {
-        const localEndDate = new Date(newValue.end.year, newValue.end.month - 1, newValue.end.day);
-        formData.endDate = localEndDate.toLocaleDateString('fr-CA');
+        const endDate = `${newValue.end.year}-${String(newValue.end.month).padStart(2, '0')}-${String(newValue.end.day).padStart(2, '0')}`;
+        formData.endDate = endDate;
     }
-});
+    else {
+        formData.endDate = '';
+    }
+}, { deep: true });
+
+const isTimeInSelectedRange = (time: number, period: string) => {
+    const startTime = selectedTimes.value[period][0];
+    const endTime = selectedTimes.value[period][1];
+
+    // Vérifier si on a des données sauvegardées
+    const savedData = getCurrentDateReplacements(period);
+    if (savedData) {
+        const savedStartTime = savedData.time[0];
+        const savedEndTime = savedData.time[1];
+        return time >= savedStartTime && time <= savedEndTime;
+    }
+
+    // Sinon vérifier les données en cours de sélection
+    if (startTime && endTime) {
+        return time >= startTime && time <= endTime;
+    }
+
+    return false;
+};
 
 const incrementDate = () => {
     if (!currentDate.value) return;
@@ -509,26 +629,6 @@ const decrementDate = () => {
     }
 };
 /** */
-
-const isTimeInSelectedRange = (time: number, period: string) => {
-    const startTime = selectedTimes.value[period][0];
-    const endTime = selectedTimes.value[period][1];
-
-    // Vérifier si on a des données sauvegardées
-    const savedData = getCurrentDateReplacements(period);
-    if (savedData) {
-        const savedStartTime = savedData.time[0];
-        const savedEndTime = savedData.time[1];
-        return time >= savedStartTime && time <= savedEndTime;
-    }
-
-    // Sinon vérifier les données en cours de sélection
-    if (startTime && endTime) {
-        return time >= startTime && time <= endTime;
-    }
-
-    return false;
-};
 
 /** Multiple times selection configuration */
 const hours = ref({
@@ -566,7 +666,6 @@ const openModal = (period: string) => {
 const closeModal = (period: string) => {
     isOpen.value[period] = false;
 };
-
 /** */
 
 /** Patient configuration */
@@ -575,7 +674,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -583,7 +682,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -591,7 +690,7 @@ const selectedPatient = ref({
         id: null,
         lastname: '',
         firstname: '',
-        securityNumber: '',
+        social_security_number: '',
         city: '',
         zipCode: null,
     },
@@ -601,15 +700,7 @@ const selectedPatient = ref({
 /** Caretype configuration */
 const { careTypes, fetchCareTypes } = useCareTypes();
 
-onMounted(() => {
-    fetchCareTypes();
-});
-
 const { nursePatients, fetchNursePatients } = useNursePatients();
-
-onMounted(() => {
-    fetchNursePatients();
-});
 
 const selectedCareTypes = ref({
     morning: [],
@@ -631,7 +722,6 @@ const toggleSelectionCare = (care, period) => {
         selectedCareTypes.value[period] = [...selectedList, care.id].sort((a, b) => a - b);
     }
 };
-/** */
 
 /** Submission purpose */
 const updateReplacementData = () => {
@@ -676,9 +766,17 @@ const getCurrentDateReplacements = (period: string) => {
 
 const { submitReplacement } = useReplacements();
 
-// Modification de la fonction onSavePatient
 const onSavePatient = () => {
     updateReplacementData();
+
+    if (formData.replacement.length === 0) {
+        $toast({
+            title: 'Erreur',
+            description: 'Information manquante',
+            variant: 'destructive',
+        });
+        return;
+    }
 
     // Réinitialisation des champs après sauvegarde
     ['morning', 'afternoon', 'evening'].forEach((period) => {
@@ -695,18 +793,16 @@ const onSavePatient = () => {
     });
 
     const result = submitReplacement(formData);
-
-    // Appel de la fonction de soumission avec tous les remplacements
     if (result) {
         $toast({
-            title: 'Succès!',
-            description: 'Création de remplacement effectuée',
+            description: 'Création effectuée',
         });
-    };
 
-    setTimeout(() => {
-        router.push('/dashboard/replacement');
-    }, 4000);
+        setTimeout(() => {
+            const replacementId = replacements.value?.data?.[0]?.id || null;
+            router.push(`/dashboard/replacement/detail/${replacementId + 1}`);
+        }, 3000);
+    };
 };
 
 // Modification des fonctions de navigation pour charger les données sauvegardées
@@ -745,59 +841,25 @@ const loadSavedData = () => {
     });
 };
 
-/** SUGGEST FUNCTIONNALITY */
-const showSuggestions = ref({
-    morning: false,
-    afternoon: false,
-    evening: false,
-});
-
-const filteredPatients = ref({
-    morning: [],
-    afternoon: [],
-    evening: [],
-});
-
-const handleSearch = (period: string) => {
-    const searchTerm = selectedPatient.value[period].lastname.toLowerCase();
-    if (searchTerm.length < 1) {
-        showSuggestions.value[period] = false;
-        filteredPatients.value[period] = [];
-        return;
-    }
-
-    filteredPatients.value[period] = nursePatients.value.filter(patient =>
-        patient.lastname.toLowerCase().includes(searchTerm)
-        || patient.firstname.toLowerCase().includes(searchTerm),
-    );
-    showSuggestions.value[period] = true;
+const fullname = {
+    morning: '',
+    afternoon: '',
+    evening: '',
 };
 
-const selectPatient = (patient, period) => {
+const handlePatientSelect = (patient, period) => {
     selectedPatient.value[period] = {
         id: patient.id,
         lastname: patient.lastname,
         firstname: patient.firstname,
-        securityNumber: patient.social_security_number || '',
-        city: patient.city || '',
-        zipCode: patient.zipCode || null,
+        securityNumber: patient.social_security_number,
+        city: patient.city,
+        zipCode: patient.zipCode,
     };
-    showSuggestions.value[period] = false;
+
+    fullname.value[period] = selectedPatient.value[period].lastname + ' ' + selectedPatient.value[period].firstname;
 };
 
-onMounted(() => {
-    document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        if (!target.closest('input')) {
-            Object.keys(showSuggestions.value).forEach((period) => {
-                showSuggestions.value[period] = false;
-            });
-        }
-    });
-});
-/** */
-
-/** REINITIALIZE ALL REPLACEMENT DATA */
 const reinitializeData = () => {
     ['morning', 'afternoon', 'evening'].forEach((period) => {
         selectedPatient.value[period] = {
@@ -812,9 +874,19 @@ const reinitializeData = () => {
         selectedCareTypes.value[period] = [];
     });
 
-    Object.keys(savedReplacements.value).forEach(key => Reflect.deleteProperty(savedReplacements.value, key));
+    Object.keys(savedReplacements.value).forEach(key => delete savedReplacements.value[key]);
 };
-/** */
+
+onMounted(() => {
+    const now = new Date();
+    const currentDateStr = now.toISOString().split('T')[0];
+    formData.startDate = currentDateStr;
+    currentDate.value = currentDateStr;
+
+    fetchReplacements();
+    fetchNursePatients();
+    fetchCareTypes();
+});
 
 useHead({
     title: 'Créer un remplacement',
