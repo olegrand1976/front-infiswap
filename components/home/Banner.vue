@@ -1,5 +1,5 @@
 <template>
-    <div class="container font-light grid grid-cols-5 gap-8 justify-between mt-10">
+    <div class="container font-light grid grid-cols-5 gap-8 justify-between mt-12">
         <div class="col-span-5 lg:col-span-3 grid grid-cols-2 items-center shadow-lg rounded-lg overflow-hidden">
             <div class="relative h-60 col-span-2 lg:col-span-1 lg:h-full w-full bg-red-200">
                 <NuxtImg
@@ -16,36 +16,25 @@
                     Chers utilisateurs,
                 </p>
                 <p class="mb-4">
-                    Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de la deuxième moitié du mois de mars. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.
+                    Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de <strong class="text-primary font-semibold">la deuxième moitié du mois de mars</strong>. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.
                 </p>
 
                 <p>Merci de votre confiance et à très bientôt !</p>
+
+                <Button
+                    class="font-semibold text-sm my-4"
+                    href="/register-beta"
+                >
+                    Préinscription
+                </Button>
             </div>
         </div>
 
         <div class="col-span-5 lg:col-span-2 grid place-content-center relative bg-rose-400 shadow-lg rounded-lg overflow-hidden p-4">
             <div class="text-white">
-                <h2 class="text-center font-semibold mb-4">
-                    Inscrivez-vous dès maintenant
-                </h2>
                 <p>
-                    Profitez d'une remise incroyable de 50 % sur votre abonnement dès aujourd'hui.
-                    Accédez à toutes nos fonctionnalités premium et bénéficiez d’un service de qualité
-                    à moitié prix ! Cette offre est limitée, alors n’attendez plus pour vous inscrire
-                    et démarrer votre expérience à prix réduit.
+                    Soyez averti dès le lancement de la plate-forme au alentour du 15/03! N’attendez plus pour vous inscrire!
                 </p>
-                <p class="mt-1 mb-4">
-                    Inscrivez-vous maintenant et économisez dès votre première année !
-                </p>
-                <div class="text-center">
-                    <Button
-                        variant="secondary"
-                        href="/register-beta"
-                        class="lg:mt-3 text-primary w-36 lg:text-sm sm:text-xs md:mt-3"
-                    >
-                        S'inscrire
-                    </Button>
-                </div>
             </div>
         </div>
     </div>

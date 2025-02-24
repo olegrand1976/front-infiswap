@@ -1,23 +1,34 @@
 <template>
-    <div class="hidden sm:block pt-24 relative">
+    <div class="relative mt-12 lg:max-h-full">
         <NuxtImg
-            src="/banner.png"
-            alt="Bannière"
-            class="-ms-3 w-[95vw]"
+            src="/home/search_nurse_mobile.png"
+            alt="Bannière rechercher une infirmière"
+            class="w-full object-cover md:h-96 lg:hidden"
         />
 
-        <div class="absolute flex flex-col lg:top-[30%] top-[35%] right-[25%]">
-            <h1 class="text-white text-xl md:text-4xl xl:text-7xl ">
-                je cherche <br>
-                <strong class="mt-2">un(e) infirmier(e)</strong>
-            </h1>
-            <Button
-                variant="secondary"
-                class="w-52 text-primary md:mt-12 sm:mt-8"
-                href="/search-nurse"
-            >
-                Consulter
-            </Button>
+        <NuxtImg
+            src="/home/search_nurse_image.png"
+            alt="Bannière rechercher une infirmière"
+            class="hidden lg:inline-block -ml-20 w-full object-cover"
+        />
+
+        <div class="absolute top-1/2 w-full transform -translate-y-1/5 lg:-translate-y-1/2 text-white font-secondary italic">
+            <div class="container mx-auto grid place-content-center text-center lg:text-left">
+                <p class="text-3xl sm:text-5xl lg:text-6xl font-extralight">
+                    Je cherche
+                </p>
+                <p class="mt-2 text-4xl lg:text-7xl 3xl:text-12xl font-bold">
+                    Un(e) infirmier(e)
+                </p>
+
+                <Button
+                    variant="secondary"
+                    href="/search-nurse"
+                    class="mt-4 lg:mt-6 font-bold text-primary w-full max-w-32 mx-auto lg:mx-0"
+                >
+                    Consulter
+                </Button>
+            </div>
         </div>
     </div>
 </template>

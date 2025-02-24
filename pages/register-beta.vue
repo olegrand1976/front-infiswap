@@ -24,7 +24,7 @@
             </div>
             <div class="container w-full max-w-lg mx-auto mt-10 md:mt-0">
                 <h1 class="text-xl lg:text-2xl mb-10 lg:mb-5">
-                    <span class="font-bold">Inscription</span> <span class="font-extralight">BETA</span>
+                    <span class="font-bold">Pré-inscription</span>
                 </h1>
                 <form
                     class="w-full flex flex-col gap-4 lg:gap-6"
@@ -93,6 +93,7 @@
                     </div>
                 </form>
             </div>
+            <p class="py-4 font-bold">Ouverture vers le 15 Mars 2025</p>
         </div>
     </div>
 </template>
