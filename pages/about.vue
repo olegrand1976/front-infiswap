@@ -106,7 +106,7 @@
                         sérénité!
                     </p>
                     <Button
-                        href="/register"
+                        href="/register" class="px-10"
                     >
                         S'inscrire
                     </Button>

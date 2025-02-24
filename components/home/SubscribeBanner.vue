@@ -1,8 +1,8 @@
 <template>
-    <div class="py-16 sm:shadow flex justify-center items-center mx-auto">
+    <div class="py-10 sm:shadow flex justify-center items-center mx-auto mt-16 lg:bg-primary sm:bg-primary">
         <div class="container flex flex-col justify-center items-center lg:space-y-6 sm:space-y-4 w-96 sm:w-full shadow sm:shadow-none">
-            <div class="bg-primary sm:bg-transparent p-4 rounded-t-2xl w-full sm:w-auto">
-                <h3 class="text-white text-center sm:text-primary xl:text-3xl md:text-2xl sm:text-xl font-bold">
+            <div class="bg-primary sm:bg-transparent py-4 rounded-t-2xl w-full sm:w-auto">
+                <h3 class="text-white text-center xl:text-3xl md:text-2xl sm:text-xl font-bold">
                     S'inscrire à la newsletter
                 </h3>
             </div>
@@ -17,16 +17,16 @@
                     Cliquez ici
                 </NuxtLink>
             </p>
-            <Form class="hidden bg-primary lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10">
+            <Form class="hidden bg-white lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10">
                 <FormField name="email">
                     <FormItem class="flex rounded-full border border-transparent">
                         <FormControl>
                             <div class="flex items-center">
-                                <EnvelopeIcon class="text-white w-5 h-5 ms-4" />
+                                <EnvelopeIcon class="text-primary w-5 h-5 ms-4" />
                                 <Input
                                     v-model="email"
                                     placeholder="Email"
-                                    class="text-sm text-white bg-transparent placeholder:text-white lg:w-80 sm:w-64"
+                                    class="text-sm text-primary bg-transparent placeholder:text-primary lg:w-80 sm:w-64"
                                 />
                             </div>
                         </FormControl>
@@ -35,7 +35,7 @@
                 <Button
                     variant="secondary"
                     type="submit"
-                    class="mt-0.5 me-0.5 text-primary"
+                    class="mt-0.5 me-0.5 bg-primary text-white"
                 >
                     Enregistrer
                 </Button>
