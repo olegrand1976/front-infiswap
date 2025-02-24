@@ -3,6 +3,8 @@ import { useState, useNuxtApp } from '#app';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
+    const router = useRouter();
+    const { $toast } = useNuxtApp();
 
     const error = useState('replacementError', () => null);
     const loading = useState('replacementLoading', () => false);
@@ -19,18 +21,33 @@ export const useReplacements = () => {
         try {
             const cleanFormData = JSON.parse(JSON.stringify(formData));
             console.log('Données envoyées :', JSON.stringify(cleanFormData, null, 2));
-            const response = await $apifetch('/api/replacements', {
+
+            let response;
+
+            await $apifetch('/api/replacements', {
                 method: 'POST',
                 body: JSON.stringify(cleanFormData, null, 2),
+            }).then((res) => {
+                response = res;
+                $toast({
+                    description: 'Création effectuée',
+                });
+
+                setTimeout(() => {
+                    router.replace('detail/' + response.replacement.id);
+                }, 3000);
+            }).catch((err) => {
+                console.error('Erreur API :', err);
+                throw err;
             });
 
-            if (response.success) {
+            if (response?.success) {
                 success.value = true;
             }
         }
         catch (err) {
             error.value = err;
-            console.error('Erreur API :', err);
+            console.error('Erreur lors de la soumission :', err);
         }
         finally {
             loading.value = false;
@@ -102,7 +119,6 @@ export const useDetailReplacement = (replacementId) => {
 
 export const sendResponse = () => {
     const { $apifetch } = useNuxtApp();
-    const { $toast } = useNuxtApp();
 
     const error = useState('sendResponseError', () => null);
     const loading = useState('sendResponseLoading', () => false);
@@ -120,12 +136,6 @@ export const sendResponse = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            }).then(() => {
-                $toast({
-                    description: 'Création effectuée',
-                });
-            }).catch((error) => {
-                console.error(error);
             });
 
             if (response.success) {

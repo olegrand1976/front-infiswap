@@ -210,7 +210,7 @@
                                                                             class="border border-none shadow"
                                                                         >
                                                                             <SelectValue
-                                                                                class="text-nowrap"
+                                                                                class="text-nowrap text-black"
                                                                                 :value="fullname[period] || 'Choisir le patient'"
                                                                             />
                                                                         </SelectTrigger>
@@ -474,11 +474,9 @@ import {
 import type { DateRange } from 'radix-vue';
 import { CalendarDate, getLocalTimeZone, today as todayFn } from '@internationalized/date';
 import { RangeCalendar } from '@/components/ui/range-calendar';
-import { useReplacements, useGetReplacements } from '~/composables/useReplacements';
+import { useReplacements } from '~/composables/useReplacements';
 
 const router = useRouter();
-
-const { replacements, fetchReplacements } = useGetReplacements();
 
 const { $toast } = useNuxtApp();
 
@@ -792,17 +790,7 @@ const onSavePatient = () => {
         selectedCareTypes.value[period] = [];
     });
 
-    const result = submitReplacement(formData);
-    if (result) {
-        $toast({
-            description: 'Création effectuée',
-        });
-
-        setTimeout(() => {
-            const replacementId = replacements.value?.data?.[0]?.id || null;
-            router.push(`/dashboard/replacement/detail/${replacementId + 1}`);
-        }, 3000);
-    };
+    submitReplacement(formData);
 };
 
 // Modification des fonctions de navigation pour charger les données sauvegardées
@@ -857,7 +845,7 @@ const handlePatientSelect = (patient, period) => {
         zipCode: patient.zipCode,
     };
 
-    fullname.value[period] = selectedPatient.value[period].lastname + ' ' + selectedPatient.value[period].firstname;
+    fullname[period] = selectedPatient.value[period].lastname + ' ' + selectedPatient.value[period].firstname;
 };
 
 const reinitializeData = () => {
@@ -883,7 +871,6 @@ onMounted(() => {
     formData.startDate = currentDateStr;
     currentDate.value = currentDateStr;
 
-    fetchReplacements();
     fetchNursePatients();
     fetchCareTypes();
 });
