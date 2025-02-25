@@ -4,10 +4,10 @@
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
-        <section>
+        <div>
             <HomeReplaceMeContainer />
             <HomeServiceContainer />
-        </section>
+        </div>
         <section>
             <HomePlanningContainer />
         </section>
