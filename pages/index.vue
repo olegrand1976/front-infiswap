@@ -10,7 +10,10 @@
         <!-- <section class="container">
             <HomeServiceContainer />
         </section> -->
-        <section class="container lg:px-2 xl:px-28">
+        <!-- <section class="container mx-auto lg:w-[90%] xl:w-[90%]">
+            <HomeServiceContainer />
+        </section> -->
+        <section class="container mx-auto lg:px-8 xl:px-16">
             <HomeServiceContainer />
         </section>
         <section>
