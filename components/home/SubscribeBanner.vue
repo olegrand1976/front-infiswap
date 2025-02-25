@@ -1,12 +1,12 @@
 <template>
     <div class="py-16 sm:shadow flex justify-center items-center mx-auto">
-        <div class="container flex flex-col justify-center items-center lg:space-y-6 sm:space-y-4 w-96 sm:w-full shadow sm:shadow-none">
+        <div class="container flex flex-col justify-center items-center lg:space-y-6 sm:space-y-4 w-96 sm:w-full">
             <div class="bg-primary sm:bg-transparent p-4 rounded-t-2xl w-full sm:w-auto">
                 <h3 class="text-white text-center sm:text-primary xl:text-3xl md:text-2xl sm:text-xl font-bold">
                     S'inscrire à la newsletter
                 </h3>
             </div>
-            <p class="lg:w-[34rem] sm:w-[24rem] w-full text-center xl:text-base lg:text-sm text-xs pt-6 pb-16 px-9 sm:py-0 sm:px-0">
+            <p class="lg:w-[34rem] w-full text-center xl:text-base lg:text-sm pt-6 pb-16 px-9 sm:py-0 sm:px-0">
                 Inscrivez-vous à notre newsletter pour recevoir nos futures
                 communications. Vous pouvez vous désabonner à tout moment. Pour en
                 savoir plus sur notre politique de protection des données,

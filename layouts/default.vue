@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white flex flex-col">
+    <div class="bg-white flex flex-col font-light">
         <header class="hidden sm:block">
             <LayoutsHeader />
         </header>
