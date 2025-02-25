@@ -156,7 +156,7 @@
 <script lang="ts" setup>
 const cards = [
     {
-        title: 'Recherche rapide et ciblée',
+        title: '🔍 Recherche rapide et ciblée',
         content: [
             'Recherchez facilement les offres de remplacement disponibles.',
             'Filtrez les annonces par localisation, date et type de soins.',
@@ -164,7 +164,7 @@ const cards = [
         ],
     },
     {
-        title: 'Mise en relation instantanée',
+        title: '🤝 Mise en relation instantanée',
         content: [
             'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
             'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
@@ -172,7 +172,7 @@ const cards = [
         ],
     },
     {
-        title: 'Gestion flexible et optimisée',
+        title: '📅 Gestion flexible et optimisée',
         content: [
             'Planifiez vos remplacements en fonction de vos disponibilités.',
             'Ajoutez directement les missions acceptées à votre agenda.',
@@ -180,7 +180,7 @@ const cards = [
         ],
     },
     {
-        title: 'Développez votre activité et votre réseau',
+        title: '🚀 Développez votre activité et votre réseau',
         content: [
             'Multipliez les opportunités de travail sans effort.',
             'Renforcez votre réseau professionnel avec de nouvelles collaborations.',

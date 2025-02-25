@@ -7,7 +7,10 @@
         <section>
             <HomeReplaceMeContainer />
         </section>
-        <section>
+        <!-- <section class="container">
+            <HomeServiceContainer />
+        </section> -->
+        <section class="container lg:px-2 xl:px-28">
             <HomeServiceContainer />
         </section>
         <section>
