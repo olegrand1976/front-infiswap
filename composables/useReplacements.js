@@ -63,19 +63,58 @@ export const useReplacements = () => {
     };
 };
 
-export const useGetReplacements = () => {
+// export const useGetReplacements = () => {
+//     const { $apifetch } = useNuxtApp();
+
+//     const replacements = useState('replacements', () => []);
+//     const error = useState('replacementError', () => null);
+//     const loading = useState('replacementLoading', () => false);
+
+//     async function fetchReplacements() {
+//         loading.value = true;
+//         error.value = null;
+
+//         try {
+//             const response = await $apifetch(`/api/replacements/search`, { method: 'GET' });
+//             console.log('Données récupérées :', response.replacements);
+//             replacements.value = response.replacements;
+//         }
+//         catch (err) {
+//             error.value = err;
+//         }
+//         finally {
+//             loading.value = false;
+//         }
+//     }
+
+//     return { replacements, error, loading, fetchReplacements };
+// };
+
+export const useSearchReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
     const replacements = useState('replacements', () => []);
     const error = useState('replacementError', () => null);
     const loading = useState('replacementLoading', () => false);
 
-    async function fetchReplacements() {
+    async function fetchReplacements({ postalCode = [], cities = [], selectedDays = [] } = {}) {
         loading.value = true;
         error.value = null;
 
         try {
-            const response = await $apifetch(`/api/replacements`, { method: 'GET' });
+            const params = {
+                zipCodes: postalCode.length ? postalCode : undefined,
+                cities: cities.length ? cities : undefined,
+                days: selectedDays.length ? selectedDays : undefined,
+            };
+
+            console.log('Paramètres envoyés :', params);
+
+            const response = await $apifetch(`/api/replacements/search`, {
+                method: 'GET',
+                params: { params: JSON.stringify(params) },
+            });
+
             console.log('Données récupérées :', response.replacements);
             replacements.value = response.replacements;
         }
