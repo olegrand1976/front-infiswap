@@ -76,7 +76,7 @@
                 icon-class="text-primary"
                 input-class="text-primary placeholder:text-primary"
                 button-class="bg-primary text-white"
-                link-class="text-black"
+                link-class="sm:text-white text-primary"
             />
         </div>
 
