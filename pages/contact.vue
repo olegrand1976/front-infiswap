@@ -28,12 +28,12 @@
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
-                            <UserCircleIcon class="text-primary w-6 h-6" />
+                            <UserCircleIcon class="text-primary w-6" />
                             <Input
                                 v-model="formData.fullname"
                                 type="text"
                                 placeholder="Nom, prénom"
-                                class="text-sm"
+                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
                                 @blur="validateField('fullname')"
                                 @input="validateField('fullname')"
                             />
@@ -52,11 +52,11 @@
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
-                            <EnvelopeIcon class="text-primary w-6 h-6" />
+                            <EnvelopeIcon class="text-primary w-6" />
                             <Input
                                 v-model="formData.email"
                                 placeholder="Email"
-                                class="text-sm"
+                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
                                 @blur="validateField('email')"
                                 @input="validateField('email')"
                             />
@@ -75,11 +75,11 @@
                 <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <FormControl>
                         <div class="flex w-full items-center space-x-1">
-                            <PhoneIcon class="text-primary w-6 h-6" />
+                            <PhoneIcon class="text-primary w-6" />
                             <Input
                                 v-model="formData.phoneNumber"
                                 placeholder="N° de téléphone"
-                                class="text-sm w-96"
+                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
                                 @blur="validateField('phoneNumber')"
                                 @input="validateField('phoneNumber')"
                             />

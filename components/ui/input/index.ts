@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export { default as Input } from './Input.vue';
 
 export const inputVariants = cva(
-    'flex h-9 w-full rounded-md border border-none font-sans bg-background px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-90',
+    'flex h-9 rounded-md border border-none font-sans bg-background px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-90',
     {
         variants: {
             variant: {
