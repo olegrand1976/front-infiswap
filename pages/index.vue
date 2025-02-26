@@ -6,8 +6,10 @@
         </div>
         <div>
             <HomeReplaceMeContainer />
-            <HomeServiceContainer />
         </div>
+        <section class="lg:container l:mx-auto lg:px-8 xl:px-16 2xl:px-32">
+            <HomeServiceContainer />
+        </section>
         <section>
             <HomePlanningContainer />
         </section>

@@ -1,49 +1,31 @@
 <template>
-    <div class="py-20 bg-tertiary/25 bg-white">
-        <div class="container">
-            <div class="lg:px-32 flex flex-col space-y-8 sm:space-y-24">
-                <div class="relative grid grid-cols-2 gap-16">
-                    <div class="z-10 col-span-2 md:col-span-1">
-                        <NuxtImg
-                            src="/home/Group_2217.png"
-                            alt="Image d'une femme"
-                            class="w-full h-full lg:object-contain lg:rounded-none sm:object-cover sm:rounded-3xl"
-                        />
-                    </div>
+    <div class="pt-16 sm:pt-24 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
+        <div class="flex flex-col space-y-8 sm:space-y-24">
+            <div class="flex relative flex-col sm:container sm:flex-row items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+                <div class="z-10 mx-6 sm:mx-0 lg:mx-0">
+                    <NuxtImg
+                        src="/home/Group_2217.png"
+                        alt="Image d'une femme"
+                        class="w-full lg:h-auto lg:w-[33rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
+                    />
+                </div>
 
-                    <div class="hidden md:flex h-full md:flex-col gap-4 justify-around">
-                        <h3 class="xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold">
-                            Je cherche <br>un remplacement <br>à effectuer
-                        </h3>
-                        <div>
-                            <p class="">
-                                <strong>Vous cherchez un remplacement ?</strong>
-                                Avec InfiSwap, accédez en un clic aux annonces disponibles près de chez vous.
-                                Trouvez facilement des opportunités adaptées à votre emploi du temps et développez
-                                votre réseau tout en optimisant votre activité.
-                            </p>
-                            <Button
-                                href="/"
-                                class="mt-4 lg:mt-8 inline-flex lg:text-sm sm:text-xs"
-                            >
-                                En savoir plus
-                            </Button>
-                        </div>
-                    </div>
-
-                    <div class="sm:hidden bg-white flex flex-col space-y-4 py-4 text-center rounded-3xl absolute -bottom-16 z-20 transform left-1/2 -translate-x-1/2 w-11/12">
-                        <div class="absolute right-32 -top-5">
-                            <NuxtImg
-                                src="/icons/croix.png"
-                                class="z-30 w-10 h-10"
-                            />
-                        </div>
-                        <h3 class="font-bold text-primary">
-                            Chercher un remplacement
-                        </h3>
+                <div class="hidden sm:flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4">
+                    <h3 class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
+                        Je cherche
+                        <br> un remplacement
+                        <br> à effectuer
+                    </h3>
+                    <p class="lg:w-[34rem] md:w-[22rem] sm:w-[19rem] xl:text-sm lg:text-sm sm:text-xs">
+                        <strong>Vous cherchez un remplacement ?</strong> Avec InfiSwap,
+                        <br> accédez en un clic aux annonces disponibles près de chez vous.
+                        <br> Trouvez facilement des opportunités adaptées à votre emploi du temps
+                        <br> et développez votre réseau tout en optimisant votre activité.
+                    </p>
+                    <div>
                         <Button
-                            class="mx-auto"
                             href="/"
+                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
                         >
                             En savoir plus
                         </Button>
