@@ -13,7 +13,7 @@
         <section>
             <HomePlanningContainer />
         </section>
-        <section>
+        <section class="sm:-mt-16">
             <HomeSubscribeBanner
                 bg-class="bg-white"
                 title-class="text-white sm:text-primary"
