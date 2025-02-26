@@ -104,6 +104,7 @@ import {
     FolderIcon,
     Cog8ToothIcon,
     PencilSquareIcon,
+    IdentificationIcon,
 } from '@heroicons/vue/24/solid';
 
 import { Badge } from '@/components/ui/badge';
@@ -136,6 +137,11 @@ const navigationItems = [
         label: 'Tournées',
         route: '/',
         icon: MapIcon,
+    },
+    {
+        label: 'Mes patients',
+        route: '/dashboard/patient',
+        icon: IdentificationIcon,
     },
     {
         label: 'Mon équipe',

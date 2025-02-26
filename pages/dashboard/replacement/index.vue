@@ -14,7 +14,7 @@
                 class="flex justify-between xl:space-x-52 lg:space-x-4"
             >
                 <div class="flex space-x-4">
-                    <FormField name="postalCode">
+                    <FormField name="days">
                         <FormItem>
                             <FormControl>
                                 <div class="flex bg-primary space-x-3 rounded-full items-center justify-between ps-3 pe-1">
