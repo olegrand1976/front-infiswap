@@ -1,8 +1,8 @@
 <template>
-    <div class="sm:mt-12 relative overflow-hidden bg-white lg:bg-tertiary/25 lg:py-40">
+    <div class="md:mt-12 mt-24 relative overflow-hidden bg-white lg:bg-tertiary/25 lg:py-40">
         <div class="container">
             <div class="grid grid-cols-2 items-center gap-12">
-                <div class="col-span-2 order-2 lg:order-none lg:col-span-1 z-20 mt-6 sm:mt-0">
+                <div class="mx-auto col-span-2 order-2 lg:order-none lg:col-span-1 z-20 mt-6 sm:mt-0">
                     <NuxtImg
                         src="/home/planing_image.jpeg"
                         alt="Image de planification sur paperasse"
@@ -36,7 +36,7 @@
             <div class="hidden sm:block absolute z-20 top-12 right-28  lg:right-40 transform -translate-x-1/2">
                 <NuxtImg
                     src="/stethoscope_2.png"
-                    class="relative xl:w-52 lg:w-40 md:w-32 sm:w-24"
+                    class="relative xl:w-52 w-40 lg-block hidden"
                 />
             </div>
         </div>

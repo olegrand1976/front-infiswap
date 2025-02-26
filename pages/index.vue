@@ -7,14 +7,21 @@
         <div>
             <HomeReplaceMeContainer />
         </div>
-        <section class="lg:container l:mx-auto lg:px-8 xl:px-16 2xl:px-32">
+        <section class="lg:container lg:mx-auto lg:px-8 xl:px-16 2xl:px-8">
             <HomeServiceContainer />
         </section>
         <section>
             <HomePlanningContainer />
         </section>
         <section>
-            <HomeSubscribeBanner />
+            <HomeSubscribeBanner
+                bg-class="bg-white"
+                title-class="text-white sm:text-primary"
+                form-class="bg-primary"
+                icon-class="text-white"
+                input-class="text-white placeholder:text-white"
+                button-class="text-primary"
+            />
         </section>
         <section>
             <HomeAppDownloadSection />
