@@ -34,7 +34,10 @@
                             Le suivi des patients est amélioré par un historique détaillé des soins,
                             facilitant la transmission entre soignants.
                         </p>
-                        <Button href="/register">
+                        <Button
+                            href="/register"
+                            class="w-64 mx-auto flex justify-center items-center"
+                        >
                             S'inscrire
                         </Button>
                     </div>
@@ -73,6 +76,7 @@
                 icon-class="text-primary"
                 input-class="text-primary placeholder:text-primary"
                 button-class="bg-primary text-white"
+                link-class="text-black"
             />
         </div>
 

@@ -7,7 +7,7 @@
         <div>
             <HomeReplaceMeContainer />
         </div>
-        <section class="lg:container lg:mx-auto lg:px-8 xl:px-16 2xl:px-8">
+        <section class="lg:container lg:mx-auto lg:px-32">
             <HomeServiceContainer />
         </section>
         <section>
@@ -21,6 +21,7 @@
                 icon-class="text-white"
                 input-class="text-white placeholder:text-white"
                 button-class="text-primary"
+                link-class="text-primary"
             />
         </section>
         <section>

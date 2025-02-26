@@ -15,13 +15,15 @@
             <p class="lg:w-[34rem] sm:w-[24rem] w-full text-center xl:text-base lg:text-sm text-xs pt-6 pb-16 px-9 sm:py-0 sm:px-0">
                 Inscrivez-vous à notre newsletter pour recevoir nos futures
                 communications. Vous pouvez vous désabonner à tout moment. Pour en
-                savoir plus sur notre politique de protection des données,
-                <NuxtLink
-                    to="/"
-                    class="text-primary"
-                >
-                    Cliquez ici
-                </NuxtLink>
+                savoir plus sur notre politique de protection des données.
+                <span>
+                    <NuxtLink
+                        to="/"
+                        :class="linkClass"
+                    >
+                        Cliquez ici
+                    </NuxtLink>
+                </span>
             </p>
             <Form
                 class="hidden lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10"
@@ -70,5 +72,6 @@ defineProps({
     inputClass: String,
     iconClass: String,
     buttonClass: String,
+    linkClass: String,
 });
 </script>
