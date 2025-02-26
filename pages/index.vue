@@ -7,7 +7,7 @@
         <section>
             <HomeReplaceMeContainer />
         </section>
-        <section class="container mx-auto lg:px-8 xl:px-16">
+        <section class="container mx-auto lg:px-8 xl:px-16 2xl:px-32">
             <HomeServiceContainer />
         </section>
         <section>
