@@ -97,7 +97,7 @@
             <FormField name="message">
                 <FormItem class="flex flex-col py-2 px-4 rounded-3xl border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
                     <div class="flex space-x-3 items-center">
-                        <EnvelopeIcon class="text-primary w-6 h-6" />
+                        <EnvelopeIcon class="text-primary w-6" />
                         <span class="text-primary text-sm">
                             Message
                         </span>
@@ -107,7 +107,7 @@
                             <Textarea
                                 v-model="formData.message"
                                 placeholder="Votre message..."
-                                class="bg-gray-200 h-40"
+                                class="bg-white h-40"
                             />
                         </div>
                     </FormControl>
