@@ -9,7 +9,7 @@
                             À propos
                         </h2>
                     </div>
-                    <div class="space-y-6 order-2 lg:order-1 relative z-30">
+                    <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
                         <h3 class="text-primary md:text-3xl text-2xl text-center md:text-left">
                             Infiswap...
                         </h3>
@@ -36,7 +36,7 @@
                         </p>
                         <Button
                             href="/register"
-                            class="w-64 mx-auto flex justify-center items-center"
+                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
                         >
                             S'inscrire
                         </Button>
@@ -110,15 +110,23 @@
                         coordination, offrant ainsi plus d'efficacité, de flexibilité et une
                         meilleure qualité de soins.
                     </p>
-                    <p>
-                        Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité
-                        pour les annonces, une recherche optimisée par localisation et une mise en relation
-                        rapide entre infirmiers. Gagnez du temps, développez votre réseau et exercez en toute
-                        sérénité!
-                    </p>
+                    <div>
+                        <h5 class="font-semibold">
+                            Infiswap:
+                            <span class="text-primary">
+                                Plus de temps pour soigner, Moins de temps à gérer
+                            </span>
+                        </h5>
+                        <p>
+                            Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité
+                            pour les annonces, une recherche optimisée par localisation et une mise en relation
+                            rapide entre infirmiers. Gagnez du temps, développez votre réseau et exercez en toute
+                            sérénité!
+                        </p>
+                    </div>
                     <Button
                         href="/register"
-                        class="px-10"
+                        class="w-44 mx-auto flex justify-center items-center lg:mx-0"
                     >
                         S'inscrire
                     </Button>
