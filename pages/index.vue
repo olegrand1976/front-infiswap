@@ -4,15 +4,25 @@
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
-        <section>
+        <div>
             <HomeReplaceMeContainer />
+        </div>
+        <section class="lg:container lg:mx-auto lg:px-32">
             <HomeServiceContainer />
         </section>
         <section>
             <HomePlanningContainer />
         </section>
-        <section>
-            <HomeSubscribeBanner />
+        <section class="sm:-mt-16">
+            <HomeSubscribeBanner
+                bg-class="bg-white"
+                title-class="text-white sm:text-primary"
+                form-class="bg-primary"
+                icon-class="text-white"
+                input-class="text-white placeholder:text-white"
+                button-class="text-primary"
+                link-class="text-primary"
+            />
         </section>
         <section>
             <HomeAppDownloadSection />

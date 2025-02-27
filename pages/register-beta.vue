@@ -93,7 +93,9 @@
                     </div>
                 </form>
             </div>
-            <p class="py-4 font-bold">Ouverture vers le 15 Mars 2025</p>
+            <p class="py-4 font-bold">
+                Ouverture vers le 15 Mars 2025
+            </p>
         </div>
     </div>
 </template>
