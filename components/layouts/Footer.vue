@@ -21,7 +21,7 @@
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <Mail class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">info@infiswap.com</span>
+                            <span class="md:text-xs lg:text-sm">info@infiswap.be</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <Globe class="text-primary w-4 h-4" />
@@ -30,11 +30,11 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col w-full md:w-96 lg:w-full space-y-4 py-8 md:py-0">
+                <div class="flex flex-col w-96 space-y-4 py-8 md:py-0">
                     <h3 class="text-center md:text-start lg:text-base md:text-sm text-primary font-semibold">
                         S'inscrire à la newsletter
                     </h3>
-                    <p class="hidden md:block md:w-96 lg:w-[28rem] text-sm md:text-xs lg:text-sm">
+                    <p class="hidden md:block text-sm md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                         Vous pouvez vous désabonner à tout moment. Pour en savoir plus sur notre politique
                         de protection des données cliquez ici.
@@ -42,13 +42,13 @@
                     <p class="md:hidden w-80 mx-auto text-center text-sm md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                     </p>
-                    <div class="w-80 mx-auto md:mx-0 md:w-96 lg:w-full bg-primary flex flex-row justify-between items-center h-9 rounded-full">
+                    <div class="mx-auto md:mx-0 bg-primary flex flex-row justify-between items-center h-9 rounded-full">
                         <div class="flex flex-row justify-start items-center">
                             <Mail class="text-white w-4 h-4 ms-3" />
                             <Input
                                 variant="transparent"
                                 placeholder="Email"
-                                class="w-44 md:w-52 lg:w-72 text-white text-sm"
+                                class="w-44 md:w-52 lg:w-full text-white text-sm"
                             />
                         </div>
                         <Button
@@ -59,36 +59,28 @@
                         </Button>
                     </div>
                     <div class="flex flex-row justify-center md:justify-start space-x-4 pt-4 md:pt-0">
-                        <NuxtLink to="/">
-                            <NuxtImg
-                                src="/icons/twitter.png"
-                                alt="Twitter"
-                                title="Twitter"
-                                class="w-5 h-5"
-                            />
-                        </NuxtLink>
-                        <NuxtLink to="/">
+                        <NuxtLink to="https://web.facebook.com/profile.php?viewas=100000686899395&id=61572833867576">
                             <NuxtImg
                                 src="/icons/facebook.png"
                                 alt="Facebook"
                                 title="Facebook"
-                                class="w-5 h-5"
+                                class="w-5"
                             />
                         </NuxtLink>
-                        <NuxtLink to="/">
+                        <NuxtLink to="https://www.instagram.com/infiswapsoins/">
                             <NuxtImg
                                 src="/icons/instagram.png"
                                 alt="Instagram"
                                 title="Instagram"
-                                class="w-5 h-5"
+                                class="w-5"
                             />
                         </NuxtLink>
-                        <NuxtLink to="/">
+                        <NuxtLink to="https://www.linkedin.com/company/infiswap-vos-soins-sans-interruption/?viewAsMember=true">
                             <NuxtImg
-                                src="/icons/youtube.png"
-                                alt="Youtube"
-                                title="Youtube"
-                                class="w-5 h-5"
+                                src="/icons/linkedin.png"
+                                alt="Linkedin"
+                                title="Linkedin"
+                                class="w-5"
                             />
                         </NuxtLink>
                     </div>
