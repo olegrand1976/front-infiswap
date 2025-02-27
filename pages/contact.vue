@@ -21,25 +21,21 @@
         </div>
 
         <form
-            class="sm:pt-24 pt-12 container flex flex-col space-y-3 sm:w-[70%] lg:w-[55%]"
+            class="sm:pt-24 pt-12 container flex flex-col space-y-3 sm:w-[70%] lg:w-[55%] xl:w-[40%]"
             @submit.prevent="submit"
         >
             <FormField name="name">
-                <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
-                    <FormControl>
-                        <div class="flex w-full items-center space-x-1">
-                            <UserCircleIcon class="text-primary w-6" />
-                            <Input
-                                v-model="formData.name"
-                                type="text"
-                                placeholder="Nom, prénom"
-                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
-                                @blur="validateField('name')"
-                                @input="validateField('name')"
-                            />
-                        </div>
-                    </FormControl>
-                </FormItem>
+                <div class="relative w-full items-center">
+                    <InputIcon
+                        v-model="formData.name"
+                        :icon="UserCircleIcon"
+                        size="md"
+                        placeholder="Nom, Prénom"
+                        :errors="validationErrors.name"
+                        @blur="validateField('name')"
+                        @input="validateField('name')"
+                    />
+                </div>
                 <p
                     v-if="error.name"
                     class="text-red-500 text-xs mt-1 ms-[8%]"
@@ -49,20 +45,17 @@
             </FormField>
 
             <FormField name="email">
-                <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
-                    <FormControl>
-                        <div class="flex w-full items-center space-x-1">
-                            <EnvelopeIcon class="text-primary w-6" />
-                            <Input
-                                v-model="formData.email"
-                                placeholder="Email"
-                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
-                                @blur="validateField('email')"
-                                @input="validateField('email')"
-                            />
-                        </div>
-                    </FormControl>
-                </FormItem>
+                <div class="relative w-full items-center">
+                    <InputIcon
+                        v-model="formData.email"
+                        :icon="EnvelopeIcon"
+                        size="md"
+                        placeholder="Email"
+                        :errors="validationErrors.email"
+                        @blur="validateField('email')"
+                        @input="validateField('email')"
+                    />
+                </div>
                 <p
                     v-if="error.email"
                     class="text-red-500 text-xs mt-1 ms-[8%]"
@@ -72,20 +65,17 @@
             </FormField>
 
             <FormField name="phoneNumber">
-                <FormItem class="flex space-x-1 px-4 items-center rounded-full border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
-                    <FormControl>
-                        <div class="flex w-full items-center space-x-1">
-                            <PhoneIcon class="text-primary w-6" />
-                            <Input
-                                v-model="formData.phoneNumber"
-                                placeholder="N° de téléphone"
-                                class="text-sm 2xl:w-[48vw] xl:w-[42vw] lg:w-[38vw] md:w-[55vw] sm:w-[50vw]"
-                                @blur="validateField('phoneNumber')"
-                                @input="validateField('phoneNumber')"
-                            />
-                        </div>
-                    </FormControl>
-                </FormItem>
+                <div class="relative w-full items-center">
+                    <InputIcon
+                        v-model="formData.phoneNumber"
+                        :icon="PhoneIcon"
+                        size="md"
+                        placeholder="N° de téléphone"
+                        :errors="validationErrors.phoneNumber"
+                        @blur="validateField('phoneNumber')"
+                        @input="validateField('phoneNumber')"
+                    />
+                </div>
                 <p
                     v-if="error.phoneNumber"
                     class="text-red-500 text-xs mt-1 ms-[8%]"
@@ -117,6 +107,7 @@
             <Button
                 class="mt-4 md:mx-44 mx-20 font-bold"
                 type="submit"
+                :in-progress="inProgress"
             >
                 Envoyer
             </Button>
@@ -176,7 +167,9 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import * as yup from 'yup';
-import { sendContact } from '~/composables/useContact';
+import { submitContact } from '~/composables/useContact';
+
+const { $toast } = useNuxtApp();
 
 const formData = reactive({
     name: '',
@@ -193,13 +186,10 @@ const error = reactive({
 
 const schema = yup.object().shape({
     name: yup.string()
-        .required('Le nom complet est requis')
         .min(2, 'Le nom doit avoir minimum 2 caractères'),
     email: yup.string()
-        .required('L\'email est requis')
         .email('Email invalide'),
     phoneNumber: yup.string()
-        .required('Le numéro est requis')
         .matches(/^\d{10}$/, 'Numéro invalide'),
 });
 
@@ -213,9 +203,17 @@ const validateField = async (field: keyof typeof formData) => {
     }
 };
 
-const { submit } = useSubmit(
+const {
+    submit,
+    inProgress,
+    validationErrors,
+} = useSubmit(
     () => {
-        return sendContact().submitContact(formData).then(() => {
+        return submitContact(formData).then(() => {
+            $toast({
+                description: 'Votre message a été envoyé avec succès !',
+            });
+
             formData.name = '';
             formData.email = '';
             formData.phoneNumber = '';
