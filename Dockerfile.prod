@@ -29,6 +29,8 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/nuxt.config.* ./
 COPY --from=build /app/static ./static
+COPY --from=build /app/.output .output
+
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
@@ -36,4 +38,5 @@ ENV NUXT_PORT=3000
 EXPOSE 3000
 
 # Commande de démarrage (server mode)
-CMD ["npm", "run", "start"]
+# CMD ["npm", "run", "start"]
+CMD [ "node", ".output/server/index.mjs" ]
