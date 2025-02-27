@@ -59,7 +59,7 @@
                 <div>
                     <RangeCalendar
                         v-model="value"
-                        :minValue="todayCalendar"
+                        :min-value="todayCalendar"
                         class="rounded-md shadow-lg"
                     />
                 </div>
@@ -180,7 +180,7 @@
 
                                         <PlusCircleIcon
                                             class="mt-6 w-8 h-8 flex justify-center items-center mx-auto text-primary"
-                                            :class="{ 'cursor-pointer': formData.startDate && formData.endDate, 'opacity-50 cursor-not-allowed': !formData.startDate || !formData.endDate}"
+                                            :class="{ 'cursor-pointer': formData.startDate && formData.endDate, 'opacity-50 cursor-not-allowed': !formData.startDate || !formData.endDate }"
                                             title="Choisir le patient"
                                             @click="formData.startDate && formData.endDate ? openModal(period) : null"
                                         />
