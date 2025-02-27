@@ -60,7 +60,7 @@
 
         <div class="lg:hidden absolute z-5 bottom-0 left-0">
             <NuxtImg
-                src="/Vector_1.png"
+                src="/triangle_left.png"
                 alt="Vecteur"
                 class="w-80 h-96 sm:w-96 sm:h-[26rem] md:w-[28rem] md:h-[32rem] relative"
             />

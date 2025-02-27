@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-20 sm:block lg:flex lg:justify-center items-center">
+    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-20 sm:block lg:flex lg:justify-center items-center md:py-5">
         <div class="hidden md:flex justify-between items-center container">
             <div>
                 <LayoutsLogo class="h-10 lg:h-14" />
@@ -52,7 +52,7 @@
                         class="hidden sm:block font-semibold md:text-[0.7em] lg:text-xs"
                         href="/register-beta"
                     >
-                        Pré-inscription
+                        Préinscription
                     </Button>
                     <div>
                         <LayoutsDropdownLang />
@@ -64,8 +64,8 @@
             </div>
             <div
                 :class="{
-                    'relative m-auto flex sm:hidden pt-12 justify-center items-center': route.path !== 'search-nurse',
-                    'hidden': route.path === '/search-nurse',
+                    'relative m-auto flex sm:hidden pt-12 justify-center items-center': route.path === '/',
+                    'hidden': route.path != '/',
                 }"
             >
                 <div class="absolute top-0">

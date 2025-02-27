@@ -51,8 +51,13 @@
                         to="/dashboard/home"
                         class="text-primary font-bold flex space-x-3"
                     >
-                        <ArrowRightIcon class="w-4 h-4" />
-                        <span class="text-sm">Tableau de bord</span>
+                        <ArrowRightIcon class="w-4" />
+                        <NuxtLink
+                            to="/register-beta"
+                            class="text-sm sm:hidden"
+                        >
+                            Préinscription
+                        </NuxtLink>
                     </NuxtLink>
                 </div>
 
