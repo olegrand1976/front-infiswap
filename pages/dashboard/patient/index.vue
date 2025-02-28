@@ -80,7 +80,9 @@
                                     </span>
 
                                     <div class="flex space-x-4">
-                                        <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
+                                        <NuxtLink :to="`/dashboard/patient/detail/${patient.id}`">
+                                            <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
+                                        </NuxtLink>
                                         <TrashIcon class="w-5 cursor-pointer hover:text-primary" />
                                     </div>
                                 </div>
@@ -103,7 +105,8 @@
                                 <div
                                     class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
-                                    .
+                                    {{ patient.care_types?.map((careType) => careType.name || [])
+                                        .join(', ') }}
                                 </div>
                             </TableCell>
                         </TableRow>
