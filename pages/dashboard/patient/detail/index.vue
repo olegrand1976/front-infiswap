@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 gap-4">
             <section class="flex flex-col space-y-6">
                 <div class="flex flex-col space-y-6 pt-4 rounded bg-gray-100">
                     <div class="flex space-x-3 items-center px-6">
@@ -89,30 +89,68 @@
 
                     <div class="space-y-6 mt-6">
                         <div>
-                            <h5>
-                                Matin
+                            <h5 class="font-semibold">
+                                Lundi
                             </h5>
-                            <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary w-40">
-                                <ClockIcon class="w-5 text-primary" />
-                                <p>7h - 11h</p>
+                            <div class="grid grid-cols-[30%_70%] items-center">
+                                <span>Matin</span>
+                                <div class="rounded-full w-[14.5rem] h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
+                                    <div class="flex items-center space-x-1">
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                        <p>-</p>
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <div>
-                            <h5>
-                                Après-midi
+                            <h5 class="font-semibold">
+                                Mardi
                             </h5>
-                            <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary w-40">
-                                <ClockIcon class="w-5 text-primary" />
-                                <p>13h - 17h</p>
+                            <div class="grid grid-cols-[30%_70%] items-center">
+                                <span>Après-midi</span>
+                                <div class="rounded-full w-[14.5rem] h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
+                                    <div class="flex items-center space-x-1">
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                        <p>-</p>
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <div>
-                            <h5>
-                                Soir
+                            <h5 class="font-semibold">
+                                Jeudi
                             </h5>
-                            <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary w-40">
-                                <ClockIcon class="w-5 text-primary" />
-                                <p>18h - 21h</p>
+                            <div class="grid grid-cols-[30%_70%] items-center">
+                                <span>Soir</span>
+                                <div class="rounded-full w-[14.5rem] h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
+                                    <div class="flex items-center space-x-1">
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                        <p>-</p>
+                                        <Input
+                                            type="time"
+                                            class="bg-transparent"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,25 +158,34 @@
             </section>
 
             <section class="flex flex-col space-y-6">
-                <div class="rounded-b bg-gray-100">
-                    <h1 class="p-4 bg-primary text-white rounded-t">
-                        Période de passage
-                    </h1>
-                    <p class="p-4">
-                        Après-midi
-                    </p>
-                </div>
+                <div>
+                    <div class="rounded-b pb-2 bg-gray-100">
+                        <h1 class="p-4 bg-primary text-white rounded-t">
+                            Date de début d'intervention
+                        </h1>
+                        <div class="flex my-4 w-48 bg-primary px-2 rounded-full text-white justify-center mx-auto items-center h-10 border border-primary">
+                            <CalendarDaysIcon class="w-5" />
+                            <Input
+                                type="date"
+                                class="bg-transparent text-white"
+                            />
+                        </div>
+                    </div>
 
-                <div class="rounded-b bg-gray-100">
-                    <h1 class="p-4 bg-primary text-white rounded-t">
-                        Jours de visite
-                    </h1>
-                    <p class="p-4">
-                        Lundi
-                    </p>
+                    <div class="rounded-b pb-2 bg-gray-100 mt-6">
+                        <h1 class="p-4 bg-primary text-white rounded-t">
+                            Date de fin d'intervention
+                        </h1>
+                        <div class="flex my-4 w-48 bg-primary px-2 rounded-full text-white justify-center mx-auto items-center h-10 border border-primary">
+                            <CalendarDaysIcon class="w-5" />
+                            <Input
+                                type="date"
+                                class="bg-transparent text-white"
+                            />
+                        </div>
+                    </div>
                 </div>
-
-                <div class="p-4 rounded bg-gray-100">
+                <div class="mt-6 p-4 rounded bg-gray-100">
                     <h4 class="text-primary">
                         Disponibilité
                     </h4>
@@ -246,106 +293,12 @@
                     </div>
                 </div>
             </section>
-
-            <section>
-                <div class="p-4 rounded bg-gray-100">
-                    <h4 class="text-primary">
-                        Créneaux horaires
-                    </h4>
-
-                    <div class="my-4">
-                        <h5>
-                            A ce créneau
-                        </h5>
-                        <div class="flex items-center space-x-4 justify-between">
-                            <Select>
-                                <SelectTrigger
-                                    class="flex my-4 rounded-full border border-gray-300"
-                                    position="right"
-                                >
-                                    <SelectValue placeholder="Lundi" />
-                                </SelectTrigger>
-
-                                <SelectContent class="border border-none">
-                                    .
-                                </SelectContent>
-                            </Select>
-
-                            <div class="flex bg-white px-2 rounded-full items-center h-10 border border-primary">
-                                <CalendarDaysIcon class="w-5 text-primary" />
-                                <Input
-                                    type="date"
-                                    class="bg-transparent"
-                                />
-                            </div>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-3 justify-between">
-                            <div>
-                                <h5>
-                                    Matin
-                                </h5>
-                                <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
-                                    <ClockIcon class="w-5 text-primary" />
-                                    <p>7h - 11h</p>
-                                </div>
-                            </div>
-                            <div>
-                                <h5>
-                                    Après-midi
-                                </h5>
-                                <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
-                                    <ClockIcon class="w-5 text-primary" />
-                                    <p>13h - 17h</p>
-                                </div>
-                            </div>
-                            <div>
-                                <h5>
-                                    Soir
-                                </h5>
-                                <div class="rounded-full h-9 px-3 mt-2 flex items-center space-x-3 bg-white border border-primary">
-                                    <ClockIcon class="w-5 text-primary" />
-                                    <p>18h - 21h</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <div class="rounded-b pb-2 bg-gray-100">
-                        <h1 class="p-4 bg-primary text-white rounded-t">
-                            Date de début d'intervention
-                        </h1>
-                        <div class="flex my-4 w-48 bg-primary px-2 rounded-full text-white justify-center mx-auto items-center h-10 border border-primary">
-                            <CalendarDaysIcon class="w-5" />
-                            <Input
-                                type="date"
-                                class="bg-transparent text-white"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="rounded-b pb-2 bg-gray-100 mt-6">
-                        <h1 class="p-4 bg-primary text-white rounded-t">
-                            Date de fin d'intervention
-                        </h1>
-                        <div class="flex my-4 w-48 bg-primary px-2 rounded-full text-white justify-center mx-auto items-center h-10 border border-primary">
-                            <CalendarDaysIcon class="w-5" />
-                            <Input
-                                type="date"
-                                class="bg-transparent text-white"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
 </template>
 
 <script setup>
 import {
-    ClockIcon,
     ArrowDownTrayIcon,
     CalendarDaysIcon,
 } from '@heroicons/vue/24/solid';
@@ -356,6 +309,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    // middleware: ['auth'],
+    middleware: ['auth'],
 });
 </script>
