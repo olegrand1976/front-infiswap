@@ -111,7 +111,7 @@
 
             <div class="hidden lg:block absolute -top-28 xl:left-52 lg:left-44">
                 <NuxtImg
-                    src="/Group_1043.png"
+                    src="/stethoscope_2.png"
                     class="xl:w-40 xl:h-44 lg:w-36 lg:h-40"
                 />
             </div>

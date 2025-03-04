@@ -10,38 +10,60 @@
         </div>
 
         <div class="flex justify-between mt-6">
-            <Form class="flex justify-between xl:space-x-52 lg:space-x-4">
-                <FormField name="search">
-                    <FormItem>
-                        <FormControl>
-                            <div class="flex w-64 bg-gray-100 rounded-full items-center justify-between ps-3 pe-1">
-                                <Input
-                                    :v-model="search"
-                                    placeholder="Rechercher"
-                                    class="w-full text-xs bg-transparent"
-                                />
-                                <Button
-                                    type="submit"
-                                    class="bg-primary text-white w-7 h-7 rounded-full"
-                                >
-                                    <MagnifyingGlassIcon class="h-7 w-7" />
-                                </Button>
-                            </div>
-                        </FormControl>
-                    </FormItem>
-                </FormField>
-
+            <Form
+                class="flex justify-between xl:space-x-52 lg:space-x-4"
+            >
                 <div class="flex space-x-4">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
-                                <div class="flex space-x-6 bg-primary rounded-full items-center justify-between ps-3 pe-1">
+                                <div class="flex bg-primary space-x-3 rounded-full items-center justify-between ps-3 pe-1">
+                                    <h5 class="text-white text-xs">
+                                        Jours
+                                    </h5>
+                                    <Select>
+                                        <SelectTrigger
+                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            position="right"
+                                        >
+                                            <SelectValue
+                                                :placeholder="selectedDaysPlaceholder"
+                                                class="text-xs w-[200%] truncate"
+                                            />
+                                        </SelectTrigger>
+
+                                        <SelectContent class="border border-none">
+                                            <SelectGroup class="w-32">
+                                                <div
+                                                    v-for="(day, index) in days"
+                                                    :key="index"
+                                                    class="flex items-center space-2 mb-2"
+                                                >
+                                                    <Checkbox
+                                                        class="mr-2"
+                                                        :checked="formData.selectedDays.includes(day)"
+                                                        @update:checked="toggleDay(day)"
+                                                    />
+                                                    <label class="text-xs">{{ frenchDays[day] }}</label>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </FormControl>
+                        </FormItem>
+                    </FormField>
+
+                    <FormField name="postalCode">
+                        <FormItem>
+                            <FormControl>
+                                <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
                                     <h5 class="text-white text-xs">
                                         Codes postaux
                                     </h5>
                                     <Input
-                                        :v-model="postalCode"
-                                        placeholder="1000 - Bruxelles"
+                                        v-model="formData.postalCode"
+                                        placeholder="1000,7687,5455"
                                         class="w-32 text-xs my-0.5 rounded-full"
                                     />
                                 </div>
@@ -53,13 +75,21 @@
                         <FormItem>
                             <FormControl>
                                 <Input
-                                    :v-model="postalCode"
+                                    v-model="formData.cities"
                                     placeholder="Ville"
-                                    class="w-32 text-xs my-0.5 rounded-full bg-white shadow"
+                                    class="w-32 text-xs my-0.5 rounded-full bg-gray-100 shadow"
                                 />
                             </FormControl>
                         </FormItem>
                     </FormField>
+
+                    <Button
+                        class="text-sm bg-primary"
+                        @click="submit"
+                    >
+                        <MagnifyingGlassIcon class="w-6" />
+                        Rechercher
+                    </Button>
                 </div>
             </Form>
 
@@ -68,8 +98,7 @@
                     class="text-sm"
                     href="/dashboard/replacement/create"
                 >
-                    <PlusIcon class="w-6 h-6" />
-                    Créer
+                    Créer remplacement
                 </Button>
             </div>
         </div>
@@ -93,7 +122,7 @@
                             Ville
                         </TableHead>
                         <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
-                            Type de soin à pratiquer
+                            Type de soin
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -117,26 +146,32 @@
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                 <Switch
                                     id="morning"
-                                    :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'morning'"
+                                    :checked="getShift(replacement.details[0].start_at) === 'morning'"
                                     disabled
                                 />
                                 <Switch
                                     id="afternoon"
-                                    :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'afternoon'"
+                                    :checked="getShift(replacement.details[0].start_at) === 'afternoon'"
                                     disabled
                                 />
                                 <Switch
                                     id="evening"
-                                    :checked="getShift(replacement.details[0].start_at, replacement.details[0].end_at) === 'evening'"
+                                    :checked="getShift(replacement.details[0].start_at) === 'evening'"
                                     disabled
                                 />
                             </TableCell>
 
                             <TableCell class="bg-gray-100 text-xs">
-                                <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center">
-                                    <span className="truncate w-full px-2">
+                                <div
+                                    class="flex h-10 rounded mt-3 justify-center items-center"
+                                    :class="[
+                                        'bg-gray-200',
+                                        hasMatchingZipCode(replacement.details) ? 'bg-success text-white' : '',
+                                    ]"
+                                >
+                                    <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.zip_code)
+                                            ?.map((detail) => detail?.patient?.zip_code)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -144,10 +179,16 @@
                             </TableCell>
 
                             <TableCell class="bg-gray-100 text-xs">
-                                <div className="flex h-10 rounded bg-gray-200 mt-3 justify-center items-center overflow-hidden">
-                                    <span className="truncate w-full px-2">
+                                <div
+                                    class="flex h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                    :class="[
+                                        'bg-gray-200',
+                                        hasMatchingCity(replacement.details) ? 'bg-success text-white' : '',
+                                    ]"
+                                >
+                                    <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.city)
+                                            ?.map((detail) => detail?.patient?.city)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -156,7 +197,7 @@
 
                             <TableCell class="bg-gray-100 text-xs pt-6">
                                 <div
-                                    className="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                    class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
                                     {{ replacement.details
                                         ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
@@ -181,16 +222,16 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { Switch } from '@/components/ui/switch';
 
-import { useGetReplacements } from '~/composables/useReplacements';
+import { useSearchReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Liste des remplacements',
 });
 
-const { replacements, fetchReplacements } = useGetReplacements();
+const { replacements, fetchReplacements } = useSearchReplacements();
 
 onMounted(() => {
     fetchReplacements();
@@ -204,8 +245,8 @@ const formatDate = (isoString) => {
     return `${day}/${month}/${year}`;
 };
 
-const getShift = (startAt, endAt) => {
-    if (!startAt || !endAt) return null;
+const getShift = (startAt) => {
+    if (!startAt) return null;
 
     const startHour = parseInt(startAt.split(':')[0], 10);
 
@@ -220,8 +261,83 @@ const getShift = (startAt, endAt) => {
     }
 };
 
-const search = ref('');
-const postalCode = ref('');
+const formData = reactive({
+    postalCode: '',
+    cities: '',
+    selectedDays: [],
+});
+
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
+const frenchDays = {
+    monday: 'Lundi',
+    tuesday: 'Mardi',
+    wednesday: 'Mercredi',
+    thursday: 'Jeudi',
+    friday: 'Vendredi',
+    Saturday: 'Samedi',
+    Sunday: 'Dimanche',
+};
+
+const toggleDay = (day) => {
+    if (formData.selectedDays.includes(day)) {
+        const index = formData.selectedDays.indexOf(day);
+        formData.selectedDays.splice(index, 1);
+    }
+    else {
+        formData.selectedDays.push(day);
+    }
+};
+
+const selectedDaysPlaceholder = computed(() => {
+    if (formData.selectedDays.length === 0) {
+        return 'Sélectionner';
+    }
+    return formData.selectedDays.map(day => frenchDays[day]).join(', ');
+});
+
+const isSubmitted = ref(false);
+
+const postalCodeArray = computed(() =>
+    formData.postalCode
+        .split(',')
+        .map(code => code.trim())
+        .filter(Boolean),
+);
+
+const citiesArray = computed(() =>
+    formData.cities
+        .split(',')
+        .map(city => city.trim())
+        .filter(Boolean),
+);
+
+const hasMatchingZipCode = (details) => {
+    if (!isSubmitted.value) return false;
+    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
+    return zipCodes.some(zip => postalCodeArray.value.includes(zip));
+};
+
+const hasMatchingCity = (details) => {
+    if (!isSubmitted.value) return false;
+    const cities = details?.map(detail => detail?.patient?.city) || [];
+    return cities.some(city => citiesArray.value.includes(city));
+};
+
+const submit = () => {
+    isSubmitted.value = true;
+    fetchReplacements({
+        selectedDays: Array.from(formData.selectedDays),
+        postalCode: postalCodeArray.value,
+        cities: citiesArray.value,
+    });
+};
+
+watch(() => formData.postalCode, () => {
+    if (isSubmitted.value) isSubmitted.value = false;
+});
+watch(() => formData.cities, () => {
+    if (isSubmitted.value) isSubmitted.value = false;
+});
 
 definePageMeta({
     layout: 'dashboard',
