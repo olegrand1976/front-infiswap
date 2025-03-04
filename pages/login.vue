@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="flex flex-col justify-center items-center mx-auto mt-12 space-y-7">
-                            <Button
+                            <!-- <Button
                                 variant="secondary"
                                 class="md:w-80 sm:w-64 shadow flex justify-center space-x-2 items-center md:text-base sm:text-xs"
                             >
@@ -110,7 +110,7 @@
                                 <span>
                                     Se connecter avec Google
                                 </span>
-                            </Button>
+                            </Button> -->
                             <Button
                                 class="md:w-80 sm:w-64 hover:shadow-lg md:text-base sm:text-xs"
                                 type="submit"
@@ -259,10 +259,7 @@ const { submit, inProgress } = useSubmit(
             });
             inProgress.value = true;
 
-            setTimeout(() => {
-                router.push('/dashboard/replacement');
-                window.location.reload();
-            }, 3000);
+            router.push('/dashboard/replacement');
         });
     },
     {
