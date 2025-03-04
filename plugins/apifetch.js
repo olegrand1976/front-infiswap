@@ -1,6 +1,6 @@
 import { $fetch } from 'ofetch';
 import { parseCookies } from 'h3';
-import { AUTH_TOKEN } from '~/lib/constants';
+import { AUTH_TOKEN, LANGUAGE } from '~/lib/constants';
 import {
     useCookie,
     useRuntimeConfig,
@@ -14,18 +14,19 @@ const CSRF_COOKIE = 'XSRF-TOKEN';
 const CSRF_HEADER = 'X-XSRF-TOKEN';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    const { $csrf } = useNuxtApp(); // Si nécessaire, vérifie la définition de $csrf
+    const { $csrf } = useNuxtApp();
     const { API_URL, FRONT_END_URL } = useRuntimeConfig().public;
+    const language = useCookie(LANGUAGE)?.value ?? 'fr';
+
     const apifetch = $fetch.create({
         credentials: 'include',
         baseURL: API_URL,
         // eslint-disable-next-line no-unused-vars
         async onRequest({ request, options }) {
             const event = typeof useEvent === 'function' ? useRequestEvent() : null;
-            // Récupérer le CSRF Token depuis les cookies ou autre source appropriée
             let token = event
-                ? parseCookies(event)[CSRF_COOKIE] // Récupération depuis les cookies si l'événement est défini
-                : useCookie(CSRF_COOKIE).value; // Sinon, utiliser le cookie côté client
+                ? parseCookies(event)[CSRF_COOKIE]
+                : useCookie(CSRF_COOKIE).value;
 
             if (
                 import.meta.client
@@ -33,9 +34,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                         options?.method?.toLowerCase() ?? '',
                     )
             ) {
-                // Si $csrf est censé être un jeton de cookie, on peut vérifier sa présence ici sans l'appeler comme une fonction
                 if ($csrf) {
-                    token = $csrf; // Assurer que $csrf n'est pas une fonction, mais la valeur du token
+                    token = $csrf;
                 }
             }
 
@@ -43,8 +43,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${useCookie(AUTH_TOKEN).value ?? ''}`,
+                'Accept-Language': language,
                 ...options?.headers,
-                ...(token && { [CSRF_HEADER]: token }), // Ajouter le CSRF Token aux headers si disponible
+                ...(token && { [CSRF_HEADER]: token }),
             };
 
             if (import.meta.server) {
