@@ -38,3 +38,16 @@ export const searchNurse = () => {
         submitSearchNurse,
     };
 };
+
+export const detailPatient = (patientId) => {
+    const { $apifetch } = useNuxtApp();
+
+    const patient = useState('patient', () => []);
+
+    async function fetchDetailPatient() {
+        const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
+        patient.value = response.data;
+    }
+
+    return { patient, fetchDetailPatient };
+};
