@@ -63,33 +63,6 @@ export const useReplacements = () => {
     };
 };
 
-// export const useGetReplacements = () => {
-//     const { $apifetch } = useNuxtApp();
-
-//     const replacements = useState('replacements', () => []);
-//     const error = useState('replacementError', () => null);
-//     const loading = useState('replacementLoading', () => false);
-
-//     async function fetchReplacements() {
-//         loading.value = true;
-//         error.value = null;
-
-//         try {
-//             const response = await $apifetch(`/api/replacements/search`, { method: 'GET' });
-//             console.log('Données récupérées :', response.replacements);
-//             replacements.value = response.replacements;
-//         }
-//         catch (err) {
-//             error.value = err;
-//         }
-//         finally {
-//             loading.value = false;
-//         }
-//     }
-
-//     return { replacements, error, loading, fetchReplacements };
-// };
-
 export const useSearchReplacements = () => {
     const { $apifetch } = useNuxtApp();
 

@@ -104,6 +104,7 @@ import {
     FolderIcon,
     Cog8ToothIcon,
     PencilSquareIcon,
+    IdentificationIcon,
 } from '@heroicons/vue/24/solid';
 
 import { Badge } from '@/components/ui/badge';
@@ -122,24 +123,29 @@ const navigationItems = [
     },
     {
         label: 'Messages',
-        route: '/',
+        route: '/dashboard/home',
         count: 13,
         icon: EnvelopeIcon,
     },
     {
         label: 'Notifications',
-        route: '/',
+        route: '/dashboard/home',
         count: 3,
         icon: BellAlertIcon,
     },
     {
         label: 'Tournées',
-        route: '/',
+        route: '/dashboard/home',
         icon: MapIcon,
     },
     {
+        label: 'Mes patients',
+        route: '/dashboard/patient',
+        icon: IdentificationIcon,
+    },
+    {
         label: 'Mon équipe',
-        route: '/',
+        route: '/dashboard/home',
         icon: UserGroupIcon,
     },
     {
@@ -149,18 +155,18 @@ const navigationItems = [
     },
     {
         label: 'Documents',
-        route: '/',
+        route: '/dashboard/home',
         icon: FolderIcon,
     },
     {
         label: 'Paramètres',
-        route: '/',
+        route: '/dashboard/home',
         icon: Cog8ToothIcon,
     },
 ];
 
 const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+const isActiveRoute = (routePath: string) => route.path.startsWith(routePath);
 </script>
 
 <style scoped>
