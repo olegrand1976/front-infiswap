@@ -152,7 +152,7 @@
                                             :key="index"
                                             class="mb-2"
                                         >
-                                            <div class="grid grid-cols-[30%_70%]">
+                                            <div class="grid grid-cols-[20%_80%]">
                                                 <TableCell class="flex h-9 items-center border border-gray-200">
                                                     {{ patient.time }}
                                                 </TableCell>
@@ -233,26 +233,56 @@
                                     <!-- Affichage des informations de ville et code postal -->
                                     <div
                                         v-if="selectedPatient"
-                                        class="mt-4 p-2 bg-gray-50 space-y-3 rounded-md text-sm"
+                                        class="mt-4 p-2 space-y-3 rounded-md text-sm"
                                     >
-                                        <p>
-                                            <span class="font-semibold">Nom: </span> {{ selectedPatient.lastname }}
-                                        </p>
-                                        <p>
-                                            <span class="font-semibold">Prénoms: </span> {{ selectedPatient.firstname }}
-                                        </p>
-                                        <p>
-                                            <span class="font-semibold">Numéro de sécurité social: </span> {{ selectedPatient.social_security_number }}
-                                        </p>
-                                        <p>
-                                            <span class="font-semibold">Numéro de téléphone: </span> {{ selectedPatient.phone_number }}
-                                        </p>
-                                        <p>
-                                            <span class="font-semibold">Ville: </span> {{ selectedPatient.profile.city }}
-                                        </p>
-                                        <p>
-                                            <span class="font-semibold">Code postal: </span> {{ selectedPatient.profile.zip_code }}
-                                        </p>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Nom
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.lastname }}
+                                            </p>
+                                        </div>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Prénoms
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.firstname }}
+                                            </p>
+                                        </div>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Sécurité sociale
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.social_security_number }}
+                                            </p>
+                                        </div>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Téléphone
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.phone_number }}
+                                            </p>
+                                        </div>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Ville
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.profile.city }}
+                                            </p>
+                                        </div>
+                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Ville
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.profile.zip_code }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -260,7 +290,7 @@
                                     <h5 class="font-semibold text-primary">
                                         Sélectionnez l'heure
                                     </h5>
-                                    <div class="flex items-center space-x-8">
+                                    <div class="flex items-center space-x-8 mt-4">
                                         <label>Heure:</label>
 
                                         <div class="flex justify-center items-center h-9 border border-primary w-32 rounded-full">
@@ -472,6 +502,20 @@ const decrementDate = () => {
     }
 };
 
+const determineTimePeriod = (time: string): string => {
+    const hour = parseInt(time.split(':')[0]);
+
+    if (hour >= 5 && hour < 12) {
+        return 'morning';
+    }
+    else if (hour >= 12 && hour < 18) {
+        return 'afternoon';
+    }
+    else {
+        return 'evening';
+    }
+};
+
 /** Multiple times selection configuration */
 const periodLabels = {
     morning: 'Matin',
@@ -522,12 +566,11 @@ const openDialog = (period = 'morning') => {
 
 const addPatientToTable = () => {
     if (!selectedPatient.value || !selectedTime.value || !currentDate.value) {
-        console.log('Données manquantes:', { patient: selectedPatient.value, time: selectedTime.value, date: currentDate.value });
         return;
     }
 
-    // Utiliser la période sélectionnée directement plutôt que de la déterminer à partir de l'heure
-    const period = selectedPeriod.value;
+    // Déterminer la période en fonction de l'heure sélectionnée
+    const actualPeriod = determineTimePeriod(selectedTime.value);
 
     // Initialiser la structure si nécessaire
     if (!datePatients.value[currentDate.value]) {
@@ -539,7 +582,7 @@ const addPatientToTable = () => {
     }
 
     // Ajouter le patient à la période appropriée pour la date courante
-    datePatients.value[currentDate.value][period].push({
+    datePatients.value[currentDate.value][actualPeriod].push({
         id: selectedPatient.value.id,
         firstname: selectedPatient.value.firstname,
         lastname: selectedPatient.value.lastname,
@@ -547,12 +590,12 @@ const addPatientToTable = () => {
         phone_number: selectedPatient.value.phone_number,
         city: selectedPatient.value.profile.city,
         zipCode: selectedPatient.value.profile.zip_code,
-        careTypes: [...selectedCareTypes.value], // Ajouter les care types sélectionnés
+        careTypes: [...selectedCareTypes.value],
         time: selectedTime.value,
     });
 
     // Trier les patients par heure
-    datePatients.value[currentDate.value][period].sort((a, b) => a.time[0].localeCompare(b.time[0]));
+    datePatients.value[currentDate.value][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
 
     // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();
