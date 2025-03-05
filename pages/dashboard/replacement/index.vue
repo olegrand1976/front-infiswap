@@ -171,7 +171,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.zip_code)
+                                            ?.map((detail) => detail?.patient?.profile?.zip_code)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -188,7 +188,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.city)
+                                            ?.map((detail) => detail?.patient?.profile?.city)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -248,17 +248,15 @@ const formatDate = (isoString) => {
 const getShift = (startAt) => {
     if (!startAt) return null;
 
-    const startHour = parseInt(startAt.split(':')[0], 10);
+    const startHour = Number(startAt.split(':')[0]);
 
-    if (startHour >= 1 && startHour < 12) {
+    if (startHour >= 0 && startHour < 12) {
         return 'morning';
     }
-    else if (startHour >= 12 && startHour < 18) {
+    if (startHour >= 12 && startHour < 18) {
         return 'afternoon';
     }
-    else {
-        return 'evening';
-    }
+    return 'evening';
 };
 
 const formData = reactive({
@@ -313,13 +311,13 @@ const citiesArray = computed(() =>
 
 const hasMatchingZipCode = (details) => {
     if (!isSubmitted.value) return false;
-    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
+    const zipCodes = details?.map(detail => detail?.patient?.profile?.zip_code) || [];
     return zipCodes.some(zip => postalCodeArray.value.includes(zip));
 };
 
 const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
-    const cities = details?.map(detail => detail?.patient?.city) || [];
+    const cities = details?.map(detail => detail?.patient?.profile?.city) || [];
     return cities.some(city => citiesArray.value.includes(city));
 };
 
