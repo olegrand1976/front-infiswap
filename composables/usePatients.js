@@ -1,4 +1,4 @@
-import { useState, useNuxtApp } from '#app';
+import { useState, useNuxtApp, reloadNuxtApp } from '#app';
 
 export const searchNurse = () => {
     const { $apifetch } = useNuxtApp();
@@ -50,4 +50,19 @@ export const detailPatient = (patientId) => {
     }
 
     return { patient, fetchDetailPatient };
+};
+
+export const deletePatient = async (patientId) => {
+    const { $apifetch } = useNuxtApp();
+    const { $toast } = useNuxtApp();
+
+    await $apifetch(`/api/patients/${patientId}`, { method: 'DELETE' }).then(() => {
+        setTimeout(() => {
+            reloadNuxtApp({ persistState: true });
+        }, 500);
+
+        $toast({
+            description: 'Suppression effectuée',
+        });
+    });
 };

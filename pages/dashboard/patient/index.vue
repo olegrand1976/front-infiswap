@@ -16,12 +16,12 @@
                         <FormItem>
                             <FormControl>
                                 <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white text-xs">
+                                    <h5 class="text-white s">
                                         Codes postaux
                                     </h5>
                                     <Input
                                         placeholder="1000,7687,5455"
-                                        class="w-32 text-xs my-0.5 rounded-full"
+                                        class="w-32 s my-0.5 rounded-full"
                                     />
                                 </div>
                             </FormControl>
@@ -30,8 +30,7 @@
                 </div>
 
                 <Button
-                    class="text-sm bg-primary"
-                    @click="submit"
+                    class="bg-primary"
                 >
                     <MagnifyingGlassIcon class="w-6" />
                     Rechercher
@@ -40,7 +39,6 @@
 
             <div>
                 <Button
-                    class="text-sm"
                     href="/dashboard/patient/create"
                 >
                     Créer patient
@@ -52,16 +50,16 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-4 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
                             Code postal
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
                             Type de soin à pratiquer
                         </TableHead>
                     </TableRow>
@@ -69,11 +67,19 @@
 
                 <TableBody>
                     <template
+                        v-if="nursePatients.length == 0"
+                    >
+                        <p class="mt-16 text-center text-black/60">
+                            Vous n'avez aucun patient pour le moment
+                        </p>
+                    </template>
+                    <template
                         v-for="patient in nursePatients"
+                        v-else
                         :key="patient.id"
                     >
                         <TableRow class="grid grid-cols-4 gap-2 border border-none overflow-x-hidden">
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-gray-100 s">
                                 <div class="flex h-10 rounded mt-3 bg-gray-200 justify-between items-center">
                                     <span class="truncate w-full px-2 text-center mx-auto">
                                         {{ patient.firstname }} {{ patient.lastname }}
@@ -83,25 +89,53 @@
                                         <NuxtLink :to="`/dashboard/patient/detail/${patient.id}`">
                                             <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
                                         </NuxtLink>
-                                        <TrashIcon class="w-5 cursor-pointer hover:text-primary" />
+                                        <TrashIcon
+                                            class="w-5 cursor-pointer hover:text-primary"
+                                            @click="openDialog"
+                                        />
+
+                                        <Dialog v-model:open="isDialogOpen">
+                                            <DialogContent class="h-[28vh]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                                                    <DialogDescription>
+                                                        Etes-vous sur de vouloir supprimer ce patient ?
+                                                    </DialogDescription>
+                                                </DialogHeader>
+
+                                                <div class="flex space-x-8 justify-end items-center">
+                                                    <Button
+                                                        variant="secondary"
+                                                        @click="closeDialog"
+                                                    >
+                                                        Annuler
+                                                    </Button>
+                                                    <Button
+                                                        @click="submitDelete(patient.id)"
+                                                    >
+                                                        Oui
+                                                    </Button>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
                                     </div>
                                 </div>
                             </TableCell>
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-gray-100 s">
                                 <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
                                     <span class="truncate w-full px-2 text-center mx-auto">
                                         {{ patient.profile.zip_code }}
                                     </span>
                                 </div>
                             </TableCell>
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-gray-100 s">
                                 <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
                                     <span class="truncate w-full px-2 text-center mx-auto">
                                         {{ patient.profile.city }}
                                     </span>
                                 </div>
                             </TableCell>
-                            <TableCell class="bg-gray-100 text-xs pt-6">
+                            <TableCell class="bg-gray-100 s pt-6">
                                 <div
                                     class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
@@ -120,6 +154,7 @@
 <script setup lang="ts">
 import { MagnifyingGlassIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { useNursePatients } from '~/composables/useNursePatients';
+import { deletePatient } from '~/composables/usePatients';
 
 useHead({
     title: 'Liste des patients',
@@ -127,7 +162,20 @@ useHead({
 
 const { nursePatients, fetchNursePatients } = useNursePatients();
 
-const submit = () => {
+const isDialogOpen = ref(false);
+
+const openDialog = () => {
+    isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+    isDialogOpen.value = false;
+};
+
+const submitDelete = async (patientId) => {
+    await deletePatient(patientId);
+    closeDialog();
+    navigateTo(useRoute().fullPath, { replace: true });
 };
 
 onMounted(() => {
