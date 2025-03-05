@@ -175,41 +175,27 @@ export const useListResponse = (replacementId) => {
     const { $apifetch } = useNuxtApp();
 
     const listResponse = useState('listResponse', () => []);
-    const error = useState('listError', () => null);
-    const loading = useState('listLoading', () => false);
 
     async function fetchListResponse() {
-        loading.value = true;
-        error.value = null;
-
         try {
             const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
             console.log('Données récupérées de la liste des réponses :', response.responses);
             listResponse.value = response.responses;
         }
         catch (err) {
-            error.value = err;
-        }
-        finally {
-            loading.value = false;
+            console.log(err);
         }
     }
 
-    return { listResponse, error, loading, fetchListResponse };
+    return { listResponse, fetchListResponse };
 };
 
 export const changeStatusReplacement = () => {
     const { $apifetch } = useNuxtApp();
 
-    const error = useState('statusError', () => null);
-    const loading = useState('statusLoading', () => false);
     const success = useState('statusSuccess', () => false);
 
     const changeStatus = async (responseId) => {
-        loading.value = true;
-        error.value = null;
-        success.value = false;
-
         try {
             const response = await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=confirmed`, {
                 method: 'PUT',
@@ -223,12 +209,9 @@ export const changeStatusReplacement = () => {
             }
         }
         catch (err) {
-            error.value = err;
-        }
-        finally {
-            loading.value = false;
+            console.log(err);
         }
     };
 
-    return { error, loading, success, changeStatus };
+    return { changeStatus };
 };

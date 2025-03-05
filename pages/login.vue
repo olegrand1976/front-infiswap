@@ -240,6 +240,7 @@ const router = useRouter();
 const route = useRoute();
 const { login } = useAuth();
 const { $toast } = useNuxtApp();
+import { reloadNuxtApp } from '#app';
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -258,8 +259,8 @@ const { submit, inProgress } = useSubmit(
                 credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
-
             router.push('/dashboard/replacement');
+            reloadNuxtApp({ persistState: true });
         });
     },
     {

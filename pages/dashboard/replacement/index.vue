@@ -171,7 +171,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.zip_code)
+                                            ?.map((detail) => detail?.patient?.zip_code)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -188,7 +188,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.city)
+                                            ?.map((detail) => detail?.patient?.city)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -311,13 +311,13 @@ const citiesArray = computed(() =>
 
 const hasMatchingZipCode = (details) => {
     if (!isSubmitted.value) return false;
-    const zipCodes = details?.map(detail => detail?.patient?.profile?.zip_code) || [];
+    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
     return zipCodes.some(zip => postalCodeArray.value.includes(zip));
 };
 
 const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
-    const cities = details?.map(detail => detail?.patient?.profile?.city) || [];
+    const cities = details?.map(detail => detail?.patient?.city) || [];
     return cities.some(city => citiesArray.value.includes(city));
 };
 

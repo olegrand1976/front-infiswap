@@ -99,8 +99,8 @@
                                 {{ getPeriodLabel(detail.start_at) }} - {{ formatDate(detail.date) }}
                             </h4>
                         </div>
-                        <div class="rounded text-xs bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
-                            {{ formatTime(detail.start_at) }} - {{ formatTime(detail.end_at) }}
+                        <div class="rounded text-sm bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
+                            {{ formatTime(detail.start_at) }}
                         </div>
                         <div class="bg-gray-200">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
@@ -157,7 +157,10 @@
             <Form @submit="submit">
                 <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
-                        <Button type="submit">
+                        <Button
+                            type="submit"
+                            :in-progress="inProgress"
+                        >
                             <span v-if="user.gender == 'M'">
                                 Je suis intéressé
                             </span>
@@ -181,7 +184,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import {
     CalendarDaysIcon,
     ClockIcon,
@@ -208,7 +211,10 @@ const formData = reactive({
     comment: '',
 });
 
-const { submit } = useSubmit(
+const {
+    submit,
+    inProgress,
+} = useSubmit(
     () => {
         return sendResponse().submitResponse(formData).then(() => {
             $toast({
@@ -226,14 +232,14 @@ const formatDate = (isoString) => {
     return `${day}/${month}/${year}`;
 };
 
-const parseDateValue = (dateString: string) => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    return new CalendarDate(year, month, day);
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
 };
 
-const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':');
-    return `${hours}h${minutes}`;
+const parseDateValue = (dateString) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new CalendarDate(year, month, day);
 };
 
 const getPeriodLabel = (timeString) => {
