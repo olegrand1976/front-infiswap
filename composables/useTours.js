@@ -9,8 +9,8 @@ export const useTours = () => {
     const loading = useState('toursLoading', () => false);
 
     const nurseId = 1;
-    const startDate = '2025-03-06';
-    const endDate = '2025-03-26';
+    // const startDate = '2025-03-06';
+    // const endDate = '2025-03-26';
 
     async function fetchTours(startDate, endDate) {
         loading.value = true;
@@ -26,7 +26,7 @@ export const useTours = () => {
             const response = await $apifetch(`/api/tours?${params}`, { method: 'GET' });
 
             // console.log('Données récupérées:', response);
-            tours.value = response.patient; 
+            tours.value = response.patient;
         } 
         catch (err) {
             error.value = err;
