@@ -39,6 +39,14 @@ export const searchNurse = () => {
     };
 };
 
+export const createPatient = async (formData) => {
+    const { $apifetch } = useNuxtApp();
+
+    await $apifetch('/api/patients',
+        { method: 'post', body: formData },
+    );
+};
+
 export const detailPatient = (patientId) => {
     const { $apifetch } = useNuxtApp();
 

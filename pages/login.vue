@@ -235,12 +235,12 @@
 import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { reloadNuxtApp } from '#app';
 
 const router = useRouter();
 const route = useRoute();
 const { login } = useAuth();
 const { $toast } = useNuxtApp();
-import { reloadNuxtApp } from '#app';
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
