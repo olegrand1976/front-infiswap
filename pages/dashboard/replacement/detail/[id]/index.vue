@@ -89,6 +89,7 @@
                         :weekday-format="'short'"
                         class="rounded-xl bg-white shadow"
                     />
+                    {{ detail.date }}
                 </div>
 
                 <div class="bg-gray-100 z-10 -ml-10 flex space-x-6 p-8 w-[48.25rem] relative rounded-2xl">
@@ -110,7 +111,7 @@
                             </div>
                             <div class="py-16 px-3 space-y-3">
                                 <div
-                                    v-for="(value, key) in { 'Code postal': detail.patient.profile.zip_code, 'Ville': detail.patient.profile.city }"
+                                    v-for="(value, key) in { 'Code postal': detail.patient.zip_code, 'Ville': detail.patient.city }"
                                     :key="key"
                                     class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full"
                                 >
