@@ -96,10 +96,7 @@ import { useRoute } from 'vue-router';
 
 import {
     UserCircleIcon,
-    EnvelopeIcon,
-    BellAlertIcon,
     MapIcon,
-    UserGroupIcon,
     UserPlusIcon,
     FolderIcon,
     Cog8ToothIcon,
@@ -122,18 +119,6 @@ const navigationItems = [
         icon: UserCircleIcon,
     },
     {
-        label: 'Messages',
-        route: '/dashboard/messages',
-        count: 13,
-        icon: EnvelopeIcon,
-    },
-    // {
-    //     label: 'Notifications',
-    //     route: '/dashboard/home',
-    //     count: 3,
-    //     icon: BellAlertIcon,
-    // },
-    {
         label: 'Tournées',
         route: '/dashboard/tours',
         icon: MapIcon,
@@ -142,11 +127,6 @@ const navigationItems = [
         label: 'Mes patients',
         route: '/dashboard/patient',
         icon: IdentificationIcon,
-    },
-    {
-        label: 'Mon équipe',
-        route: '/dashboard/team',
-        icon: UserGroupIcon,
     },
     {
         label: 'Remplacement',

@@ -89,7 +89,6 @@
                         :weekday-format="'short'"
                         class="rounded-xl bg-white shadow"
                     />
-                    {{ detail.date }}
                 </div>
 
                 <div class="bg-gray-100 z-10 -ml-10 flex space-x-6 p-8 w-[48.25rem] relative rounded-2xl">
