@@ -259,7 +259,7 @@ const { submit, inProgress } = useSubmit(
                 credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
-            router.push('/dashboard/replacement');
+            router.push('/dashboard/home');
             reloadNuxtApp({ persistState: true });
         });
     },
