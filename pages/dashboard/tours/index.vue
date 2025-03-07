@@ -263,7 +263,7 @@ watch(value, (newValue) => {
 watch(tours, (newTours) => {
     if (newTours.length > 0) {
         if (!selectedPatientId.value) {
-            selectedPatientId.value = newTours[0].id; 
+            selectedPatientId.value = newTours[0].id;
             fetchCareType(selectedPatientId.value);
             fetchPatient(selectedPatientId.value);
         }
