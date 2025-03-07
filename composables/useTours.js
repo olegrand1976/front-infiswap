@@ -23,10 +23,10 @@ export const useTours = () => {
 
             const response = await $apifetch(`/api/tours?${params}`, { method: 'GET' });
             tours.value = response.patient;
-        } 
+        }
         catch (err) {
             error.value = err;
-        } 
+        }
         finally {
             loading.value = false;
         }
@@ -37,36 +37,38 @@ export const useTours = () => {
 
 export const useCareType = () => {
     const { $apifetch } = useNuxtApp();
-  
+
     // Utilisation de useState au lieu de ref
     const careType = useState('careType', () => null);
     const careTypeLoading = useState('careTypeLoading', () => false);
     const careTypeError = useState('careTypeError', () => null);
-  
+
     const fetchCareType = async (patientId) => {
-      careTypeLoading.value = true;
-      careTypeError.value = null;
-      try {
-        const response = await $apifetch(`/api/patients/${patientId}/care-type`, { method: 'GET' });
-        careType.value = response;
-      } catch (err) {
-        careTypeError.value = err;
-      } finally {
-        careTypeLoading.value = false;
-      }
+        careTypeLoading.value = true;
+        careTypeError.value = null;
+        try {
+            const response = await $apifetch(`/api/patients/${patientId}/care-type`, { method: 'GET' });
+            careType.value = response;
+        }
+        catch (err) {
+            careTypeError.value = err;
+        }
+        finally {
+            careTypeLoading.value = false;
+        }
     };
-  
+
     return { careType, careTypeLoading, careTypeError, fetchCareType };
 };
 
 export const usePatient = () => {
     const { $apifetch } = useNuxtApp();
-  
+
     // Utilisation de useState au lieu de ref
     const patient = useState('patient', () => null);
     const patientLoading = useState('patientLoading', () => false);
     const patientError = useState('patientError', () => null);
-  
+
     const fetchPatient = async (patientId) => {
         patientLoading.value = true;
         patientError.value = null;
@@ -81,6 +83,6 @@ export const usePatient = () => {
             patientLoading.value = false;
         }
     };
-  
+
     return { patient, patientError, patientLoading, fetchPatient };
 };
