@@ -135,7 +135,7 @@ const navigationItems = [
     },
     {
         label: 'Tournées',
-        route: '/dashboard/home',
+        route: '/dashboard/tours',
         icon: MapIcon,
     },
     {
