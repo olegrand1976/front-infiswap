@@ -123,16 +123,16 @@ const navigationItems = [
     },
     {
         label: 'Messages',
-        route: '/dashboard/home',
+        route: '/dashboard/messages',
         count: 13,
         icon: EnvelopeIcon,
     },
-    {
-        label: 'Notifications',
-        route: '/dashboard/home',
-        count: 3,
-        icon: BellAlertIcon,
-    },
+    // {
+    //     label: 'Notifications',
+    //     route: '/dashboard/home',
+    //     count: 3,
+    //     icon: BellAlertIcon,
+    // },
     {
         label: 'Tournées',
         route: '/dashboard/tours',
@@ -145,7 +145,7 @@ const navigationItems = [
     },
     {
         label: 'Mon équipe',
-        route: '/dashboard/home',
+        route: '/dashboard/team',
         icon: UserGroupIcon,
     },
     {
@@ -155,12 +155,12 @@ const navigationItems = [
     },
     {
         label: 'Documents',
-        route: '/dashboard/home',
+        route: '/dashboard/document',
         icon: FolderIcon,
     },
     {
         label: 'Paramètres',
-        route: '/dashboard/home',
+        route: '/dashboard/setting',
         icon: Cog8ToothIcon,
     },
 ];

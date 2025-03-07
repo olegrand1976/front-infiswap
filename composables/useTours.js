@@ -27,10 +27,10 @@ export const useTours = () => {
 
             // console.log('Données récupérées:', response);
             tours.value = response.patient;
-        } 
+        }
         catch (err) {
             error.value = err;
-        } 
+        }
         finally {
             loading.value = false;
         }

@@ -20,29 +20,36 @@
                             <div class="bg-primary rounded-lg flex items-center ps-4 h-10 text-white shadow-sm">
                                 <p class="flex justify-between w-full">
                                     <span>Marc Hugue</span>
-                                <div class="flex mr-4">
+                                </p><div class="flex mr-4">
                                     <XCircleIcon class="h-6 w-6 mr-2 text-transparent stroke-white stroke-2" />
                                     <!-- <CheckCircleIcon class="h-6 w-6 text-white" /> -->
                                 </div>
-                                </p>
                             </div>
                             <div>
-                                <div v-if="loading" class="flex justify-center items-center">
+                                <div
+                                    v-if="loading"
+                                    class="flex justify-center items-center"
+                                >
                                     <p>Chargement...</p>
                                 </div>
-                                <div v-if="error" class="flex justify-center items-center text-red-500">
+                                <div
+                                    v-if="error"
+                                    class="flex justify-center items-center text-red-500"
+                                >
                                     <p>Erreur lors du chargement des données : {{ error.message }}</p>
                                 </div>
                                 <div v-if="tours.length > 0 && !loading && !error">
-                                    <div v-for="patient in tours" :key="patient.id">
+                                    <div
+                                        v-for="patient in tours"
+                                        :key="patient.id"
+                                    >
                                         <div class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2">
                                             <p class="flex justify-between w-full">
                                                 <span>{{ patient.firstname }} {{ patient.lastname }}</span>
-                                            <div class="flex mr-4">
+                                            </p><div class="flex mr-4">
                                                 <XCircleIcon class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2" />
                                                 <!-- <CheckCircleIcon class="h-6 w-6 text-primary" /> -->
                                             </div>
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -66,8 +73,12 @@
                                     />
                                 </div>
                                 <div class="ml-4 flex flex-grow justify-between items-center">
-                                    <div class="text-lg">Marta <span class="font-semibold">Hugue</span></div>
-                                    <div class="text-xs pr-4"><span class="font-semibold">Age:</span> 47</div>
+                                    <div class="text-lg">
+                                        Marta <span class="font-semibold">Hugue</span>
+                                    </div>
+                                    <div class="text-xs pr-4">
+                                        <span class="font-semibold">Age:</span> 47
+                                    </div>
                                 </div>
                             </div>
 
@@ -144,16 +155,34 @@
                                 <div class="bg-primary text-white p-4 rounded-t-lg text-center font-bold text-lg">
                                     Liste des types de soins
                                 </div>
-                                <div class="p-4 space-y-2"> 
-                                    <div class="bg-gray-200 p-3 rounded-lg">Bandages</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Surveillance des signes vitaux</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Prise en charge de la douleur</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Soin de confort</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Pansement</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Administration des médicaments</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Soin de confort</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Pansement</div>
-                                    <div class="bg-gray-200 p-3 rounded-lg">Administration des médicaments</div>
+                                <div class="p-4 space-y-2">
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Bandages
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Surveillance des signes vitaux
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Prise en charge de la douleur
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Soin de confort
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Pansement
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Administration des médicaments
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Soin de confort
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Pansement
+                                    </div>
+                                    <div class="bg-gray-200 p-3 rounded-lg">
+                                        Administration des médicaments
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -198,7 +227,7 @@ const value = ref({
 watch(value, (newValue) => {
     const startDate = newValue.start;
     const formattedStart = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
-    console.log("Date sélectionnée (start) :", formattedStart);
+    console.log('Date sélectionnée (start) :', formattedStart);
     fetchTours(formattedStart, formattedStart);
 }, { deep: true });
 
