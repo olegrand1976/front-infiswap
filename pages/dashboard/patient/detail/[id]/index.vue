@@ -1,6 +1,10 @@
 <template>
-    <Form class="grid grid-cols-[40%_57.5%] gap-6">
-        <section class="flex flex-col justify-between">
+    <Form
+        v-if="patient"
+        class="grid grid-cols-[40%_57.5%] gap-6"
+        @submit="submit"
+    >
+        <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
                 <div class="bg-primary p-6 rounded-xl flex flex-col space-y-3 justify-center items-center px-auto">
                     <UserCircleIcon class="text-white w-28" />
@@ -35,7 +39,6 @@
                                     <Input
                                         v-model="formData.lastname"
                                         type="text"
-                                        :placeholder="patient.lastname"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -46,7 +49,6 @@
                                     <Input
                                         v-model="formData.firstname"
                                         type="text"
-                                        :placeholder="patient.firstname"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -57,7 +59,6 @@
                                     <Input
                                         v-model="formData.email"
                                         type="email"
-                                        :placeholder="patient.email"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -68,7 +69,6 @@
                                     <Input
                                         v-model="formData.socialSecurityNumber"
                                         type="text"
-                                        :placeholder="patient.social_security_number"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -79,7 +79,6 @@
                                     <Input
                                         v-model="formData.phoneNumber"
                                         type="text"
-                                        :placeholder="patient.phone_number"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -90,7 +89,6 @@
                                     <Input
                                         v-model="formData.zipCode"
                                         type="text"
-                                        :placeholder="patient.profile.zip_code"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -101,7 +99,6 @@
                                     <Input
                                         v-model="formData.city"
                                         type="text"
-                                        :placeholder="patient.profile.city"
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
@@ -123,46 +120,45 @@
                         <PencilSquareIcon class="w-5 text-white" />
                     </h3>
 
-                    <div class="px-4 py-6 space-y-5">
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <h6 class="font-semibold">
-                                Sexe
-                            </h6>
-                            <p>
-                                Masculin
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <h6 class="font-semibold">
-                                Type de maladie
-                            </h6>
-                            <p>
-                                Allergie
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <h6 class="font-semibold">
-                                Facteur
-                            </h6>
-                            <p>
-                                Pollen
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <h6 class="font-semibold">
-                                Gravité
-                            </h6>
-                            <p>
-                                Moyenne
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <h6 class="font-semibold">
-                                Dernier traitement
-                            </h6>
-                            <p>
-                                01/03/2024
-                            </p>
+                    <div class="px-4 py-6">
+                        <div
+                            v-for="(careInformation, careIndex) in patient.care_informations"
+                            :key="careIndex"
+                            class="space-y-5"
+                        >
+                            <div class="grid grid-cols-[40%_60%] gap-4">
+                                <h6 class="font-semibold">
+                                    Type de maladie
+                                </h6>
+                                <p>
+                                    {{ careInformation.record_type }}
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-[40%_60%] gap-4">
+                                <h6 class="font-semibold">
+                                    Facteur
+                                </h6>
+                                <p>
+                                    {{ careInformation.record_name }}
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-[40%_60%] gap-4">
+                                <h6 class="font-semibold">
+                                    Gravité
+                                </h6>
+                                <p>
+                                    {{ severities[careInformation.record_severity] }}
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-[40%_60%] gap-4">
+                                <h6 class="font-semibold">
+                                    Détail
+                                </h6>
+                                <p>
+                                    {{ careInformation.record_details }}
+                                </p>
+                            </div>
+                            <hr class="border border-gray-200">
                         </div>
                     </div>
                 </div>
@@ -171,12 +167,13 @@
             <Button
                 class="mt-8"
                 type="submit"
+                :in-progress="inProgress"
             >
                 Enregistrer
             </Button>
         </section>
 
-        <section>
+        <section class="mb-8">
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <h3 class="p-2 bg-primary text-white rounded-t">
@@ -186,8 +183,7 @@
                         <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
                             <CalendarDaysIcon class="w-5" />
                             <Input
-                                v-model="formData.careStartDate"
-                                v-model:model-value="patient.care_start_date"
+                                v-model="patient.care_start_date"
                                 type="date"
                                 class="bg-transparent"
                             />
@@ -203,7 +199,6 @@
                             <CalendarDaysIcon class="w-5" />
                             <Input
                                 v-model="formData.careEndDate"
-                                v-model:model-value="patient.care_end_date"
                                 type="date"
                                 class="bg-transparent"
                             />
@@ -214,7 +209,7 @@
 
             <div class="flex flex-col space-y-4 mt-6">
                 <div
-                    v-for="(visit, visitIndex) in patient.visit_times"
+                    v-for="(visit, visitIndex) in formData.visits"
                     :key="visitIndex"
                     class="w-full"
                 >
@@ -223,37 +218,115 @@
                             <h3 class="text-primary">
                                 Heure de visite théorique
                             </h3>
+                            <button
+                                v-if="formData.visits.length > 1"
+                                class="text-red-500 hover:text-red-700"
+                                type="button"
+                                @click="removeVisit(visitIndex)"
+                            >
+                                Supprimer ce jour
+                            </button>
                         </div>
 
                         <div class="grid grid-cols-[30%_70%] items-center mt-4">
                             <h5>Jour</h5>
-                            <p>
-                                {{ days[visit.day_of_visit] }}
-                            </p>
+                            <Select v-model="visit.dayOfVisit">
+                                <SelectTrigger
+                                    class="w-full bg-white shadow rounded-full text-nowrap border border-none"
+                                    position="right"
+                                >
+                                    <SelectValue />
+                                </SelectTrigger>
+
+                                <SelectContent class="border border-none">
+                                    <template
+                                        v-for="[key, value] in Object.entries(days)"
+                                        :key="key"
+                                    >
+                                        <SelectItem :value="key">
+                                            {{ value }}
+                                        </SelectItem>
+                                    </template>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div
-                            v-for="(timeSlot, timeIndex) in JSON.parse(visit.theoretical_visit_times)"
+                            v-for="(timeSlot, timeIndex) in visit.theoreticalVisitTimes"
                             :key="timeIndex"
                         >
                             <hr class="border border-gray-200 my-5">
 
+                            <div class="flex justify-end items-center">
+                                <XMarkIcon
+                                    v-if="visit.theoreticalVisitTimes.length > 1"
+                                    class="w-5 text-primary cursor-pointer"
+                                    @click="removeTimeSlot(visitIndex, timeIndex)"
+                                />
+                            </div>
+
                             <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                 <h5>Heure</h5>
-                                <p>
-                                    {{ timeSlot.time }}
-                                </p>
+                                <Input
+                                    v-model="timeSlot.time"
+                                    type="time"
+                                    class="w-24 bg-white shadow rounded-full"
+                                />
                             </div>
 
                             <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                 <h5>Type de soin</h5>
-                                <p>
-                                    {{ timeSlot.care_types.join(', ') }}
-                                </p>
+                                <Select
+                                    v-model="timeSlot.careTypeId"
+                                    multiple
+                                >
+                                    <SelectTrigger
+                                        class="w-full bg-white shadow rounded-full text-nowrap border border-none"
+                                        position="right"
+                                    >
+                                        <SelectValue class="truncate w-[35rem]">
+                                            {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
+                                        </SelectValue>
+                                    </SelectTrigger>
+
+                                    <SelectContent class="border border-none">
+                                        <SelectGroup class="w-32">
+                                            <div
+                                                v-for="careType in careTypes"
+                                                :key="careType.id"
+                                                class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                @click="handleCareTypeClick(timeSlot, careType.id)"
+                                            >
+                                                <Checkbox
+                                                    :checked="timeSlot.careTypeId.includes(careType.id)"
+                                                    class="mr-2"
+                                                />
+                                                <label class="text-xs text-nowrap cursor-pointer">
+                                                    {{ careType.name }}
+                                                </label>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
+
+                        <PlusIcon
+                            class="w-6 text-primary mt-8 ml-auto cursor-pointer"
+                            title="Ajouter un autre heure"
+                            @click="addTimeSlot(visitIndex)"
+                        />
                     </div>
                 </div>
+
+                <Button
+                    class="flex justify-center items-center mx-auto mt-4"
+                    type="button"
+                    @click="addVisit"
+                >
+                    <PlusIcon class="w-5 h-5 mr-2" />
+                    <span>Ajouter un autre jour</span>
+                </Button>
             </div>
 
             <div class="bg-gray-100 p-6 rounded mt-8">
@@ -304,21 +377,89 @@
     </Form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
     PlusIcon,
     UserCircleIcon,
     CloudArrowDownIcon,
     PencilSquareIcon,
+    XMarkIcon,
+    CalendarDaysIcon,
 } from '@heroicons/vue/20/solid';
+import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient } from '~/composables/usePatients';
 
+const { careTypes, fetchCareTypes } = useCareTypes();
+
 const route = useRoute();
-const patientId = route.params.id;
+const patientId = route.params.id as string;
 
 const { patient, fetchDetailPatient } = detailPatient(patientId);
+const user = useState('user');
 
-const formData = reactive({
+// Fonction pour trouver l'ID du type de soin par son nom
+const findCareTypeIdByName = (name) => {
+    return careTypes.value.find(ct => ct.name === name)?.id;
+};
+
+const { $toast } = useNuxtApp();
+
+// Fonction de migration des horaires de visite
+const migrateVisitTimes = (oldVisitTimes) => {
+    if (!oldVisitTimes) return [];
+
+    // Créer une Map pour stocker les visites par jour
+    const visitsByDay = new Map();
+
+    // Parcourir les anciennes visites et les organiser par jour
+    oldVisitTimes.forEach((oldVisit) => {
+        const dayVisits = visitsByDay.get(oldVisit.day_of_visit) || {
+            dayOfVisit: oldVisit.day_of_visit,
+            theoreticalVisitTimes: [],
+        };
+
+        // Ajouter les nouvelles heures de visite
+        oldVisit.visits.forEach((visit) => {
+            const careTypeIds = visit.care_types
+                .map(name => findCareTypeIdByName(name))
+                .filter(id => id !== undefined);
+
+            // Vérifier si cette heure existe déjà
+            const existingTimeSlot = dayVisits.theoreticalVisitTimes.find(
+                slot => slot.time === visit.time.substring(0, 5),
+            );
+
+            if (existingTimeSlot) {
+                // Fusionner les types de soins sans doublons
+                existingTimeSlot.careTypeId = Array.from(new Set([
+                    ...existingTimeSlot.careTypeId,
+                    ...careTypeIds,
+                ]));
+            }
+            else {
+                // Ajouter un nouveau créneau horaire
+                dayVisits.theoreticalVisitTimes.push({
+                    time: formatTime(visit.time),
+                    careTypeId: careTypeIds,
+                });
+            }
+        });
+
+        // Trier les heures de visite
+        dayVisits.theoreticalVisitTimes.sort((a, b) => a.time.localeCompare(b.time));
+
+        visitsByDay.set(oldVisit.day_of_visit, dayVisits);
+    });
+
+    return Array.from(visitsByDay.values()).sort((a, b) => {
+        const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        return dayOrder.indexOf(a.dayOfVisit) - dayOrder.indexOf(b.dayOfVisit);
+    });
+};
+
+// Attendre que les données du patient soient chargées avant d'initialiser formData
+const formData = ref({
+    nurseId: '',
     lastname: '',
     firstname: '',
     email: '',
@@ -328,22 +469,35 @@ const formData = reactive({
     city: '',
     careStartDate: '',
     careEndDate: '',
-    availability: '',
+    availability: [],
     care_informations: [],
-    visits: [
-        {
-            dayOfVisit: '',
-            theoreticalVisitTimes: [
-                {
-                    time: '',
-                    careTypeId: [],
-                },
-            ],
-        },
-    ],
+    visits: [],
     patient_care_type: [],
     patient_documents: [],
 });
+
+// Le reste de votre code reste exactement le même
+const initializeFormData = () => {
+    if (patient.value && user.value?.nurse) {
+        formData.value = {
+            nurseId: user.value.nurse.id,
+            lastname: patient.value.lastname || '',
+            firstname: patient.value.firstname || '',
+            email: patient.value.email || '',
+            socialSecurityNumber: patient.value.social_security_number || '',
+            phoneNumber: patient.value.phone_number || '',
+            zipCode: patient.value.profile?.zip_code || '',
+            city: patient.value.profile?.city || '',
+            careStartDate: patient.value.care_start_date || '',
+            careEndDate: patient.value.care_end_date || '',
+            availability: patient.value.availability || [],
+            care_informations: patient.value.care_informations || [],
+            visits: migrateVisitTimes(patient.value.visit_times || []),
+            patient_care_type: patient.value.patient_care_type || [],
+            patient_documents: patient.value.patient_documents || [],
+        };
+    }
+};
 
 const days = {
     monday: 'Lundi',
@@ -353,6 +507,12 @@ const days = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
+};
+
+const severities = {
+    low: 'Faible',
+    medium: 'Moyen',
+    high: 'Elevé',
 };
 
 const isOpenDialog = ref(false);
@@ -365,7 +525,72 @@ const closeDialog = () => {
     isOpenDialog.value = false;
 };
 
-const prescriptions = [
+const formatTime = (time) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+};
+
+const addVisit = () => {
+    formData.value.visits.push({
+        dayOfVisit: '',
+        theoreticalVisitTimes: [
+            {
+                time: '',
+                careTypeId: [],
+            },
+        ],
+    });
+};
+
+const removeVisit = (visitIndex) => {
+    formData.value.visits.splice(visitIndex, 1);
+};
+
+const addTimeSlot = (visitIndex) => {
+    formData.value.visits[visitIndex].theoreticalVisitTimes.push({
+        time: '',
+        careTypeId: [],
+    });
+};
+
+const removeTimeSlot = (visitIndex, timeIndex) => {
+    formData.value.visits[visitIndex].theoreticalVisitTimes.splice(timeIndex, 1);
+};
+
+const handleCareTypeClick = (timeSlot, careTypeId) => {
+    const index = timeSlot.careTypeId.indexOf(careTypeId);
+    if (index === -1) {
+        timeSlot.careTypeId.push(careTypeId);
+    }
+    else {
+        timeSlot.careTypeId.splice(index, 1);
+    }
+    timeSlot.careTypeId = [...timeSlot.careTypeId];
+};
+
+const getSelectedCareTypesText = (selectedIds) => {
+    return careTypes.value
+        .filter(ct => selectedIds.includes(ct.id))
+        .map(ct => ct.name)
+        .join(', ');
+};
+
+const updatePatientCareTypes = () => {
+    const careTypeSet = new Set();
+
+    formData.value.visits.forEach((visit) => {
+        visit.theoreticalVisitTimes.forEach((timeSlot) => {
+            timeSlot.careTypeId.forEach((careTypeId) => {
+                careTypeSet.add(careTypeId);
+            });
+        });
+    });
+
+    formData.value.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
+};
+
+const prescriptions = ref([
     {
         id: 1,
         name: 'Maladie cardiaque',
@@ -374,15 +599,41 @@ const prescriptions = [
         id: 2,
         name: 'Soins de la peau',
     },
-];
+]);
+
+const router = useRouter();
+
+const {
+    submit,
+    inProgress,
+} = useSubmit(
+    () => {
+        updatePatientCareTypes();
+        return updatePatient(patient.value.id, formData.value).then(() => {
+            $toast({
+                description: 'Mise à jour du patient avec succès',
+            });
+
+            setTimeout(() => {
+                router.push('/dashboard/patient');
+            }, 3000);
+        });
+    },
+);
 
 useHead({
     title: 'Editer le profil',
 });
 
-onMounted(() => {
-    fetchDetailPatient();
+onMounted(async () => {
+    await fetchDetailPatient();
+    await fetchCareTypes();
+    initializeFormData();
 });
+
+watch(() => patient.value, () => {
+    initializeFormData();
+}, { deep: true });
 
 definePageMeta({
     layout: 'dashboard',
