@@ -9,8 +9,6 @@ export const useTours = () => {
     const loading = useState('toursLoading', () => false);
 
     const nurseId = 1;
-    // const startDate = '2025-03-06';
-    // const endDate = '2025-03-26';
 
     async function fetchTours(startDate, endDate) {
         loading.value = true;
@@ -24,8 +22,6 @@ export const useTours = () => {
             }).toString();
 
             const response = await $apifetch(`/api/tours?${params}`, { method: 'GET' });
-
-            // console.log('Données récupérées:', response);
             tours.value = response.patient;
         } 
         catch (err) {
@@ -37,4 +33,54 @@ export const useTours = () => {
     }
 
     return { tours, error, loading, fetchTours };
+};
+
+export const useCareType = () => {
+    const { $apifetch } = useNuxtApp();
+  
+    // Utilisation de useState au lieu de ref
+    const careType = useState('careType', () => null);
+    const careTypeLoading = useState('careTypeLoading', () => false);
+    const careTypeError = useState('careTypeError', () => null);
+  
+    const fetchCareType = async (patientId) => {
+      careTypeLoading.value = true;
+      careTypeError.value = null;
+      try {
+        const response = await $apifetch(`/api/patients/${patientId}/care-type`, { method: 'GET' });
+        careType.value = response;
+      } catch (err) {
+        careTypeError.value = err;
+      } finally {
+        careTypeLoading.value = false;
+      }
+    };
+  
+    return { careType, careTypeLoading, careTypeError, fetchCareType };
+};
+
+export const usePatient = () => {
+    const { $apifetch } = useNuxtApp();
+  
+    // Utilisation de useState au lieu de ref
+    const patient = useState('patient', () => null);
+    const patientLoading = useState('patientLoading', () => false);
+    const patientError = useState('patientError', () => null);
+  
+    const fetchPatient = async (patientId) => {
+        patientLoading.value = true;
+        patientError.value = null;
+        try {
+            const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
+            patient.value = response;
+        }
+        catch (err) {
+            patientError.value = err;
+        }
+        finally {
+            patientLoading.value = false;
+        }
+    };
+  
+    return { patient, patientError, patientLoading, fetchPatient };
 };
