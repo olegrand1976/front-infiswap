@@ -31,11 +31,14 @@
                                     <p>Erreur lors du chargement des données : {{ error.message }}</p>
                                 </div>
                                 <div v-if="tours.length > 0 && !loading && !error">
-                                    <div v-for="(patient, index) in tours" :key="patient.id">
+                                    <div
+                                        v-for="(patient, index) in tours"
+                                        :key="patient.id"
+                                    >
                                         <div
                                             class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer"
                                             :class="{
-                                                'bg-primary text-white': selectedPatientId === patient.id || (index === 0 && !selectedPatientId)
+                                                'bg-primary text-white': selectedPatientId === patient.id || (index === 0 && !selectedPatientId),
                                             }"
                                             @click="handleFetchCareType(patient.id)"
                                         >
@@ -103,7 +106,10 @@
                                             <span class="w-2/3 text-left">
                                                 <div v-if="patient?.data?.care_informations && patient.data.care_informations.length > 0">
                                                     <div>
-                                                        <span v-for="(careInfo, index) in patient.data.care_informations" :key="careInfo.record_name">
+                                                        <span
+                                                            v-for="(careInfo, index) in patient.data.care_informations"
+                                                            :key="careInfo.record_name"
+                                                        >
                                                             {{ careInfo.record_name }}
                                                             <span v-if="index < patient.data.care_informations.length - 1">, </span>
                                                         </span>
@@ -156,8 +162,14 @@
                                         <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
                                     <div v-if="patient?.data?.visit_times && patient.data.visit_times.length > 0">
-                                        <div v-for="visit in patient.data.visit_times" :key="visit.patient_id">
-                                            <div v-for="visitItem in visit.visits" :key="visitItem.time">
+                                        <div
+                                            v-for="visit in patient.data.visit_times"
+                                            :key="visit.patient_id"
+                                        >
+                                            <div
+                                                v-for="visitItem in visit.visits"
+                                                :key="visitItem.time"
+                                            >
                                                 <div class="w-full flex flex-col items-center">
                                                     <div class="w-full rounded-lg mt-4 py-4 px-20 bg-primary text-white text-center">
                                                         {{ visitItem.visit_period }}

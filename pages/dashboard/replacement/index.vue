@@ -144,20 +144,17 @@
                             </TableCell>
 
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
-                                <Switch
-                                    id="morning"
-                                    :checked="getShift(replacement.details[0].start_at) === 'morning'"
-                                    disabled
+                                <CheckCircleIcon
+                                    v-if="getShift(replacement.details[0].start_at) === 'morning'"
+                                    class="h-6 mx-auto text-green-500"
                                 />
-                                <Switch
-                                    id="afternoon"
-                                    :checked="getShift(replacement.details[0].start_at) === 'afternoon'"
-                                    disabled
+                                <CheckCircleIcon
+                                    v-if="getShift(replacement.details[0].start_at) === 'afternoon'"
+                                    class="h-6 mx-auto text-green-500"
                                 />
-                                <Switch
-                                    id="evening"
-                                    :checked="getShift(replacement.details[0].start_at) === 'evening'"
-                                    disabled
+                                <CheckCircleIcon
+                                    v-if="getShift(replacement.details[0].start_at) === 'evening'"
+                                    class="h-6 mx-auto text-green-500"
                                 />
                             </TableCell>
 
@@ -222,8 +219,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
-import { Switch } from '@/components/ui/switch';
+import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
 
