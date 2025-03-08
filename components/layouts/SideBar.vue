@@ -6,11 +6,8 @@
         <SidebarProvider>
             <Sidebar>
                 <SidebarContent class="p-2 flex flex-col h-full justify-between sidebar-content">
-                    <SidebarGroup class="bg-gray-100 rounded-xl pb-6">
+                    <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
                         <SidebarHeader class="flex flex-col justify-center items-center">
-                            <h2 class="text-primary font-bold text-center">
-                                Mon compte
-                            </h2>
                             <LayoutsLogo class="w-36 h-10" />
                         </SidebarHeader>
 
@@ -29,10 +26,10 @@
                                     >
                                         <NuxtLink
                                             :href="item.route"
-                                            class="w-full flex justify-between items-center xl:text-base lg:text-xs p-3 rounded-lg"
+                                            class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
                                             :class="{
-                                                'bg-primary text-white': isActiveRoute(item.route),
-                                                'bg-gray-200 text-neutral-700': !isActiveRoute(item.route),
+                                                'bg-primary text-white font-bold': isActiveRoute(item.route),
+                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
                                             }"
                                         >
                                             <div class="flex space-x-2 items-center">
@@ -52,7 +49,7 @@
                         </SidebarGroupContent>
                     </SidebarGroup>
 
-                    <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
+                    <!-- <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
                         <SidebarGroupContent
                             class="flex space-y-3 flex-col justify-center items-center mx-auto"
                         >
@@ -73,7 +70,7 @@
                                 Editer
                             </Button>
                         </SidebarGroupContent>
-                    </SidebarGroup>
+                    </SidebarGroup> -->
                 </SidebarContent>
             </Sidebar>
 
@@ -95,14 +92,14 @@
 import { useRoute } from 'vue-router';
 
 import {
-    UserCircleIcon,
+    SquaresPlusIcon,
     MapIcon,
     UserPlusIcon,
     FolderIcon,
     Cog8ToothIcon,
     PencilSquareIcon,
     IdentificationIcon,
-} from '@heroicons/vue/24/solid';
+} from '@heroicons/vue/24/outline';
 
 import { Badge } from '@/components/ui/badge';
 
@@ -114,9 +111,9 @@ const emit = defineEmits(['toggle-collapse']);
 
 const navigationItems = [
     {
-        label: 'Information',
-        route: '/dashboard/home',
-        icon: UserCircleIcon,
+        label: 'Informations',
+        route: '/dashboard',
+        icon: SquaresPlusIcon,
     },
     {
         label: 'Tournées',
@@ -129,7 +126,7 @@ const navigationItems = [
         icon: IdentificationIcon,
     },
     {
-        label: 'Remplacement',
+        label: 'Remplacements',
         route: '/dashboard/replacement',
         icon: UserPlusIcon,
     },
@@ -146,7 +143,7 @@ const navigationItems = [
 ];
 
 const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path.startsWith(routePath);
+const isActiveRoute = (routePath: string) => route.path === routePath;
 </script>
 
 <style scoped>

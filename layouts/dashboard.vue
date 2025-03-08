@@ -25,4 +25,8 @@ const isCollapsed = ref(false);
 const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;
 };
+
+definePageMeta({
+    ssr: false,
+});
 </script>
