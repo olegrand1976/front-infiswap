@@ -289,7 +289,8 @@ watch(tours, (newTours) => {
 }, { immediate: true, deep: true });
 
 onMounted(() => {
-    const initialStartDate = value.value.start || new CalendarDate(new Date());
+    const now = new Date();
+    const initialStartDate = value.value.start || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
     const formattedInitialStart = formatDate(initialStartDate);
     fetchTours(formattedInitialStart, formattedInitialStart);
 });

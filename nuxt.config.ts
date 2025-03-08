@@ -99,6 +99,8 @@ export default defineNuxtConfig({
 
     typescript: {
         strict: false,
+        shim: false,
+        typeCheck: false,
     },
     gtm: {
         id: 'GTM-KFBFVVR3',
