@@ -129,7 +129,39 @@
 
                 <TableBody>
                     <template
+                        v-for="(_, index) in Array.from({ length: 10 })"
+                        v-if="loading"
+                        :key="index"
+                    >
+                        <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+
+                            <TableCell>
+                                <Skeleton class="h-10 w-full bg-gray-100" />
+                            </TableCell>
+                        </TableRow>
+                    </template>
+                    <template
                         v-for="replacement in replacements.data"
+                        v-else
                         :key="replacement.id"
                     >
                         <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
@@ -227,7 +259,7 @@ useHead({
     title: 'Liste des remplacements',
 });
 
-const { replacements, fetchReplacements } = useSearchReplacements();
+const { loading, replacements, fetchReplacements } = useSearchReplacements();
 
 onMounted(() => {
     fetchReplacements();
