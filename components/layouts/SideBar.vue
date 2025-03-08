@@ -45,7 +45,7 @@
                                             </div>
                                         </NuxtLink>
                                     </SidebarMenuButton>
-                                    
+ 
                                     <SidebarMenuButton
                                         v-else
                                         as-child
@@ -76,28 +76,14 @@
                         </SidebarGroupContent>
                     </SidebarGroup>
 
-                    <!-- <SidebarGroup class="bg-gray-100 rounded-xl py-3 mt-4 mb-1">
+                    <SidebarGroup class="py-3 mt-4 mb-1">
                         <SidebarGroupContent
-                            class="flex space-y-3 flex-col justify-center items-center mx-auto"
+                            class="flex space-y-3 flex-col justify-center text-center items-center mx-auto"
                         >
-                            <div>
-                                <NuxtImg
-                                    src="/home/infirmier_homme.png"
-                                    class="rounded-full h-12 w-12"
-                                />
-                            </div>
-                            <p class="text-primary font-bold text-sm text-center">
-                                Richard Dupont
-                            </p>
-                            <Button
-                                class="text-white w-full"
-                                href="/"
-                            >
-                                <PencilSquareIcon class="w-6" />
-                                Editer
-                            </Button>
+                            <p class="font-bold">Version test</p>
+                            <p>Données supprimées avant le lancement du 15/03/2025</p>
                         </SidebarGroupContent>
-                    </SidebarGroup> -->
+                    </SidebarGroup>
                 </SidebarContent>
             </Sidebar>
 
