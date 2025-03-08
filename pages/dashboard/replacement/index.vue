@@ -128,12 +128,12 @@
                 </TableHeader>
 
                 <TableBody>
-                    <template
-                        v-for="(_, index) in Array.from({ length: 10 })"
-                        v-if="loading"
-                        :key="index"
-                    >
-                        <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
+                    <div v-if="loading">
+                        <TableRow
+                            v-for="(_, index) in Array.from({ length: 10 })"
+                            :key="index"
+                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
+                        >
                             <TableCell>
                                 <Skeleton class="h-10 w-full bg-gray-100" />
                             </TableCell>
@@ -158,13 +158,13 @@
                                 <Skeleton class="h-10 w-full bg-gray-100" />
                             </TableCell>
                         </TableRow>
-                    </template>
-                    <template
-                        v-for="replacement in replacements.data"
-                        v-else
-                        :key="replacement.id"
-                    >
-                        <TableRow class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden">
+                    </div>
+                    <div v-else>
+                        <TableRow
+                            v-for="replacement in replacements.data"
+                            :key="replacement.id"
+                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
+                        >
                             <TableCell class="flex justify-center items-center bg-gray-100 xl:text-[0.75em] lg:text-[0.5em]">
                                 <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
                                     <span>{{ formatDate(replacement.start_date) }}</span>
@@ -243,7 +243,7 @@
                                 </Button>
                             </TableCell>
                         </TableRow>
-                    </template>
+                    </div>
                 </TableBody>
             </Table>
         </div>
