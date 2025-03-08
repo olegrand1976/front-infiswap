@@ -7,8 +7,8 @@
             <Sidebar>
                 <SidebarContent class="p-2 flex flex-col h-full justify-between sidebar-content">
                     <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
-                        <SidebarHeader class="flex flex-col justify-center items-center">
-                            <LayoutsLogo class="w-36 h-10" />
+                        <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
+                            <LayoutsLogo class="w-36" />
                         </SidebarHeader>
 
                         <SidebarGroupContent
@@ -17,10 +17,37 @@
                         >
                             <SidebarMenu>
                                 <SidebarMenuItem
-                                    v-for="item in navigationItems"
-                                    :key="item.label"
+                                    v-for="(item, index) in navigationItems"
+                                    :key="index"
                                 >
                                     <SidebarMenuButton
+                                        v-if="item.children && item.children.length > 0"
+                                        as-child
+                                        class="h-12"
+                                    >
+                                        <NuxtLink
+                                            :href="item.route"
+                                            class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
+                                            :class="{
+                                                'bg-primary text-white font-bold': isActiveRoute(item.route),
+                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
+                                            }"
+                                        >
+                                            <div class="flex space-x-2 items-center">
+                                                <component
+                                                    :is="item.icon"
+                                                    class="w-6 opacity-80"
+                                                />
+                                                <span>{{ item.label }}</span>
+                                            </div>
+                                            <div v-if="item.count">
+                                                <Badge>{{ item.count }}</Badge>
+                                            </div>
+                                        </NuxtLink>
+                                    </SidebarMenuButton>
+                                    
+                                    <SidebarMenuButton
+                                        v-else
                                         as-child
                                         class="h-12"
                                     >
@@ -124,6 +151,18 @@ const navigationItems = [
         label: 'Mes patients',
         route: '/dashboard/patient',
         icon: IdentificationIcon,
+        children: [
+            {
+                label: 'Liste',
+                route: '/dashboard/patient/list',
+                icon: SquaresPlusIcon,
+            },
+            {
+                label: 'Nouveau',
+                route: '/dashboard/patient/new',
+                icon: UserPlusIcon,
+            },
+        ],
     },
     {
         label: 'Remplacements',
