@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="hidden md:block">
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"

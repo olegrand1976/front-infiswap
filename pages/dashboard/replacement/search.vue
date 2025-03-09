@@ -2,18 +2,18 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Liste des
+                Rechercher des
                 <strong>
                     remplacements
                 </strong>
             </h1>
         </div>
 
-        <div class="flex justify-between mt-6">
+        <div class="flex mt-6">
             <Form
-                class="flex justify-between xl:space-x-52 lg:space-x-4"
+                class="grid grid-cols-4 w-full gap-4"
             >
-                <div class="flex space-x-4">
+                <div class="col-span-4  md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -53,13 +53,15 @@
                             </FormControl>
                         </FormItem>
                     </FormField>
-
+                </div>
+                <div class="col-span-4  md:col-span-2 lg:col-span-1">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
                                 <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
                                     <h5 class="text-white text-xs">
-                                        Codes postaux
+                                        <span class="xl:hidden">CP</span>
+                                        <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
                                     <Input
                                         v-model="formData.postalCode"
@@ -70,37 +72,29 @@
                             </FormControl>
                         </FormItem>
                     </FormField>
-
+                </div>
+                <div class="col-span-4  md:col-span-2 lg:col-span-1">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
                                 <Input
                                     v-model="formData.cities"
                                     placeholder="Ville"
-                                    class="w-32 text-xs my-0.5 rounded-full bg-gray-100 shadow"
+                                    class="w-full text-xs my-0.5 rounded-full bg-gray-100 shadow"
                                 />
                             </FormControl>
                         </FormItem>
                     </FormField>
-
-                    <Button
-                        class="text-sm bg-primary"
-                        @click="submit"
-                    >
-                        <MagnifyingGlassIcon class="w-6" />
-                        Rechercher
-                    </Button>
                 </div>
-            </Form>
 
-            <div>
                 <Button
-                    class="text-sm"
-                    href="/dashboard/replacement/create"
+                    class="col-span-4 md:col-span-2 lg:col-span-1 text-sm bg-primary"
+                    @click="submit"
                 >
-                    Créer remplacement
+                    <MagnifyingGlassIcon class="w-6" />
+                    Rechercher
                 </Button>
-            </div>
+            </Form>
         </div>
 
         <div class="grid my-8">

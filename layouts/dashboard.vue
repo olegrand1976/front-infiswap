@@ -1,10 +1,10 @@
 <template>
     <SidebarProvider>
-        <Sidebar>
+        <Sidebar class="bg-white">
             <LayoutsAppSidebar />
         </Sidebar>
         <SidebarInset>
-            <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1" />
                     <Separator
@@ -39,9 +39,9 @@
                             <Avatar>
                                 <AvatarImage
                                     src="https://github.com/unovue.png"
-                                    alt="@unovue"
+                                    alt="Infiswap-user-profile"
                                 />
-                                <AvatarFallback>CN</AvatarFallback>
+                                <AvatarFallback>IS</AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent class="mr-6">
@@ -55,7 +55,7 @@
                     </DropdownMenu>
                 </div>
             </header>
-            <div class="flex flex-1 flex-col gap-4 p-4 pt-0 max-w-full overflow-hidden">
+            <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <NuxtPage />
             </div>
         </SidebarInset>

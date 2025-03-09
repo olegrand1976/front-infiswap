@@ -1,99 +1,13 @@
 <template>
     <div>
-        <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
+        <div class="bg-gray-100 flex px-4 rounded-lg items-center h-12">
             <h1 class="text-primary">
                 Liste des
                 <strong>
                     remplacements
                 </strong>
             </h1>
-        </div>
-
-        <div class="flex justify-between mt-6">
-            <Form
-                class="flex justify-between xl:space-x-52 lg:space-x-4"
-            >
-                <div class="flex space-x-4">
-                    <FormField name="days">
-                        <FormItem>
-                            <FormControl>
-                                <div class="flex bg-primary space-x-3 rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white text-xs">
-                                        Jours
-                                    </h5>
-                                    <Select>
-                                        <SelectTrigger
-                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
-                                            position="right"
-                                        >
-                                            <SelectValue
-                                                :placeholder="selectedDaysPlaceholder"
-                                                class="text-xs w-[200%] truncate"
-                                            />
-                                        </SelectTrigger>
-
-                                        <SelectContent class="border border-none">
-                                            <SelectGroup class="w-32">
-                                                <div
-                                                    v-for="(day, index) in days"
-                                                    :key="index"
-                                                    class="flex items-center space-2 mb-2"
-                                                >
-                                                    <Checkbox
-                                                        class="mr-2"
-                                                        :checked="formData.selectedDays.includes(day)"
-                                                        @update:checked="toggleDay(day)"
-                                                    />
-                                                    <label class="text-xs">{{ frenchDays[day] }}</label>
-                                                </div>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
-                    <FormField name="postalCode">
-                        <FormItem>
-                            <FormControl>
-                                <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white text-xs">
-                                        Codes postaux
-                                    </h5>
-                                    <Input
-                                        v-model="formData.postalCode"
-                                        placeholder="1000,7687,5455"
-                                        class="w-32 text-xs my-0.5 rounded-full"
-                                    />
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
-                    <FormField name="city">
-                        <FormItem>
-                            <FormControl>
-                                <Input
-                                    v-model="formData.cities"
-                                    placeholder="Ville"
-                                    class="w-32 text-xs my-0.5 rounded-full bg-gray-100 shadow"
-                                />
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
-                    <Button
-                        class="text-sm bg-primary"
-                        @click="submit"
-                    >
-                        <MagnifyingGlassIcon class="w-6" />
-                        Rechercher
-                    </Button>
-                </div>
-            </Form>
-
-            <div>
+            <div class="ml-auto">
                 <Button
                     class="text-sm"
                     href="/dashboard/replacement/create"
@@ -251,7 +165,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon } from '@heroicons/vue/24/outline';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
 
@@ -291,34 +205,6 @@ const formData = reactive({
     postalCode: '',
     cities: '',
     selectedDays: [],
-});
-
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
-const frenchDays = {
-    monday: 'Lundi',
-    tuesday: 'Mardi',
-    wednesday: 'Mercredi',
-    thursday: 'Jeudi',
-    friday: 'Vendredi',
-    Saturday: 'Samedi',
-    Sunday: 'Dimanche',
-};
-
-const toggleDay = (day) => {
-    if (formData.selectedDays.includes(day)) {
-        const index = formData.selectedDays.indexOf(day);
-        formData.selectedDays.splice(index, 1);
-    }
-    else {
-        formData.selectedDays.push(day);
-    }
-};
-
-const selectedDaysPlaceholder = computed(() => {
-    if (formData.selectedDays.length === 0) {
-        return 'Sélectionner';
-    }
-    return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
 const isSubmitted = ref(false);
