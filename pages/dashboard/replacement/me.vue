@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Rechercher des
+                Mes
                 <strong>
                     remplacements
                 </strong>
