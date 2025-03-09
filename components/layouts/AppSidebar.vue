@@ -148,18 +148,18 @@ const navigationItems = [
     },
     {
         label: 'Mes patients',
-        route: '/dashboard/patient',
+        route: '/dashboard/patients',
         icon: UserGroupIcon,
         isActive: true,
         children: [
             {
                 label: 'Listes',
-                route: '/dashboard/patient',
+                route: '/dashboard/patients',
                 icon: ClipboardDocumentListIcon,
             },
             {
                 label: 'Nouveau',
-                route: '/dashboard/patient/create',
+                route: '/dashboard/patients/create',
                 icon: UserPlusIcon,
             },
         ],
@@ -171,27 +171,27 @@ const navigationItems = [
     },
     {
         label: 'Remplacements',
-        route: '/dashboard/replacement',
+        route: '/dashboard/replacements',
         icon: ArrowPathIcon,
         children: [
             {
                 label: 'Listes',
-                route: '/dashboard/replacement',
+                route: '/dashboard/replacements',
                 icon: QueueListIcon,
             },
             {
                 label: 'Rechercher',
-                route: '/dashboard/replacement/search',
+                route: '/dashboard/replacements/search',
                 icon: DocumentMagnifyingGlassIcon,
             },
             {
                 label: 'Mes remplacements',
-                route: '/dashboard/replacement/me',
+                route: '/dashboard/replacements/me',
                 icon: ListBulletIcon,
             },
             {
                 label: 'Nouveau',
-                route: '/dashboard/replacement/create',
+                route: '/dashboard/replacements/create',
                 icon: DocumentPlusIcon,
             },
         ],
