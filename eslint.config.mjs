@@ -8,6 +8,7 @@ export default createConfigForNuxt({
             quotes: 'single',
         },
         typescript: true,
+        vue: true,
     },
     rules: {
         'no-unused-vars': 'warn',
