@@ -104,6 +104,15 @@
             </SidebarGroup>
             <SidebarGroup>
                 <SidebarMenuButton
+                    class="bg-yellow-600 h-16 text-white"
+                >
+                    Version Test :
+
+                    Données supprimées avant le 15 mars 2025.
+                </SidebarMenuButton>
+            </SidebarGroup>
+            <SidebarGroup>
+                <SidebarMenuButton
                     class="bg-red-500 text-white"
                     @click="logout"
                 >
