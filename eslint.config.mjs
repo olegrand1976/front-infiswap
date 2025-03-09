@@ -7,7 +7,7 @@ export default createConfigForNuxt({
             indent: 4,
             quotes: 'single',
         },
-        typescript: false,
+        typescript: true,
     },
     rules: {
         'no-unused-vars': 'warn',

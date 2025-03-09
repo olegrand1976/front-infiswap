@@ -212,13 +212,8 @@ import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const router = useRouter();
-const route = useRoute();
 const { login } = useAuth();
 const { $toast } = useNuxtApp();
-
-const status = ref(
-    (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
-);
 
 const credentials = reactive({
     inami: null,
@@ -227,12 +222,7 @@ const credentials = reactive({
 
 const { submit, inProgress } = useSubmit(
     () => {
-        status.value = '';
         return login(credentials).then(() => {
-            Object.keys(credentials).forEach((key) => {
-                credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
-            });
-            inProgress.value = true;
             router.push('/dashboard');
         });
     },

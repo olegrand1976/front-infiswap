@@ -6,7 +6,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const user = useUser();
     const { $apifetch } = useNuxtApp();
 
-    const fetchCurrentUser = async () : Promise<User> => {
+    const fetchCurrentUser = async (): Promise<User> => {
         try {
             return await $apifetch('/api/user');
         }

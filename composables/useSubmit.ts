@@ -3,11 +3,11 @@ export type ValidationErrors = Record<string, string[]>;
 export type UseSubmitOptions = {
     onSuccess?: (result: any) => any;
     onError?: (error: Error) => any;
-  };
+};
 
 export function useSubmit<T>(
     fetchable: () => Promise<T>,
-     options: UseSubmitOptions = {}) {
+    options: UseSubmitOptions = {}) {
     const validationErrors = ref<ValidationErrors>({});
     const error = ref(null);
     const inProgress = ref(false);
