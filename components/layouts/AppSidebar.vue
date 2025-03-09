@@ -1,25 +1,24 @@
 <template>
-    <Collapsible
-        :default-open="false"
-        class="group/collapsible"
-    >
-        <Sidebar>
-            <SidebarContent class="p-2 flex flex-col h-full justify-between sidebar-content">
-                <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
-                    <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
-                        <LayoutsLogo class="w-36" />
-                    </SidebarHeader>
+    <Sidebar>
+        <SidebarContent class="p-2 flex flex-col h-full justify-between sidebar-content">
+            <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
+                <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
+                    <LayoutsLogo class="w-36" />
+                </SidebarHeader>
 
-                    <SidebarGroupContent
-                        class="mt-2 mx-auto"
-                        :class="collapsed ? 'w-10' : 'xl:w-52 lg:w-44'"
-                    >
-                        <SidebarMenu>
-                            <section
-                                v-for="(item, index) in navigationItems"
-                                :key="index"
-                            >
-                                <SidebarMenuItem v-if="item?.children?.length > 0">
+                <SidebarGroupContent
+                    class="mt-2 mx-auto"
+                    :class="collapsed ? 'w-10' : 'xl:w-52 lg:w-44'"
+                >
+                    <SidebarMenu>
+                        <section
+                            v-for="(item, index) in navigationItems"
+                            :key="index"
+                        >
+                            <SidebarMenuItem v-if="item?.children?.length > 0">
+                                <Collapsible
+                                    class="group/collapsible transition-all duration-500"
+                                >
                                     <CollapsibleTrigger as-child>
                                         <SidebarMenuButton
                                             class="h-12"
@@ -74,37 +73,37 @@
                                             </SidebarMenuSubItem>
                                         </SidebarMenuSub>
                                     </CollapsibleContent>
-                                </SidebarMenuItem>
-                                <SidebarMenuItem v-else>
-                                    <SidebarMenuButton
-                                        as-child
-                                        class="h-12"
+                                </Collapsible>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem v-else>
+                                <SidebarMenuButton
+                                    as-child
+                                    class="h-12"
+                                >
+                                    <NuxtLink
+                                        :href="item.route"
+                                        class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
+                                        :class="{
+                                            'bg-primary text-white font-bold': isActiveRoute(item.route),
+                                            'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
+                                        }"
                                     >
-                                        <NuxtLink
-                                            :href="item.route"
-                                            class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
-                                            :class="{
-                                                'bg-primary text-white font-bold': isActiveRoute(item.route),
-                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
-                                            }"
-                                        >
-                                            <div class="flex space-x-2 items-center">
-                                                <component
-                                                    :is="item.icon"
-                                                    class="w-6 opacity-80"
-                                                />
-                                                <span>{{ item.label }}</span>
-                                            </div>
-                                        </NuxtLink>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            </section>
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-        </Sidebar>
-    </Collapsible>
+                                        <div class="flex space-x-2 items-center">
+                                            <component
+                                                :is="item.icon"
+                                                class="w-6 opacity-80"
+                                            />
+                                            <span>{{ item.label }}</span>
+                                        </div>
+                                    </NuxtLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </section>
+                    </SidebarMenu>
+                </SidebarGroupContent>
+            </SidebarGroup>
+        </SidebarContent>
+    </Sidebar>
 </template>
 
 <script lang="ts" setup>
@@ -121,6 +120,8 @@ import {
     QueueListIcon,
     ListBulletIcon,
     DocumentPlusIcon, DocumentMagnifyingGlassIcon,
+    UserPlusIcon,
+    ClipboardDocumentListIcon,
 } from '@heroicons/vue/24/outline';
 
 defineProps({
@@ -137,6 +138,19 @@ const navigationItems = [
         label: 'Mes patients',
         route: '/dashboard/patient',
         icon: UserGroupIcon,
+        isActive: true,
+        children: [
+            {
+                label: 'Listes',
+                route: '/dashboard/patient',
+                icon: ClipboardDocumentListIcon,
+            },
+            {
+                label: 'Nouveau',
+                route: '/dashboard/patient/create',
+                icon: UserPlusIcon,
+            },
+        ],
     },
     {
         label: 'Tournées',
