@@ -9,7 +9,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         if (existingToken) return existingToken;
 
         await $fetch('/sanctum/csrf-cookie', {
-            baseURL: API_BASE_URL,
+            baseURL: API_BASE_URL as string,
             credentials: 'include',
         });
 

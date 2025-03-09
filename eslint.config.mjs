@@ -7,6 +7,7 @@ export default createConfigForNuxt({
             indent: 4,
             quotes: 'single',
         },
+        typescript: false,
     },
     rules: {
         'no-unused-vars': 'warn',
@@ -19,11 +20,5 @@ export default createConfigForNuxt({
         'vue/html-closing-bracket-newline': ['error', { multiline: 'always' }],
         'vue/html-indent': ['error', 4],
         'indent': ['error', 4],
-
-        '@typescript-eslint/no-unused-vars': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/ban-ts-comment': 'off',
-        '@typescript-eslint/no-namespace': 'off',
-        '@typescript-eslint/no-inferrable-types': 'off',
     },
 });

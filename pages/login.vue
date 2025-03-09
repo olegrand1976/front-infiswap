@@ -45,37 +45,25 @@
                 <div class="w-full max-w-md container">
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
-                            <FormField name="inami">
-                                <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex w-full items-center space-x-1">
-                                            <span class="text-primary font-extrabold">N°</span>
-                                            <Input
-                                                v-model="credentials.inami"
-                                                type="text"
-                                                placeholder="INAMI"
-                                                class="text-sm w-full"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            </FormField>
+                            <div class="flex w-full items-center space-x-1">
+                                <InputIcon
+                                    v-model="credentials.inami"
+                                    :icon="UserIcon"
+                                    type="text"
+                                    placeholder="INAMI"
+                                    class="text-sm w-full"
+                                />
+                            </div>
 
-                            <FormField name="password">
-                                <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex w-full items-center space-x-1">
-                                            <KeyIcon class="text-primary w-6" />
-                                            <Input
-                                                v-model="credentials.password"
-                                                type="password"
-                                                placeholder="Mot de passe"
-                                                class="text-sm w-full"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            </FormField>
+                            <div class="flex w-full items-center space-x-1">
+                                <InputIcon
+                                    v-model="credentials.password"
+                                    :icon="LockClosedIcon"
+                                    type="password"
+                                    placeholder="Mot de passe"
+                                    class="text-sm w-full"
+                                />
+                            </div>
                         </div>
 
                         <div class="flex justify-between lg:text-sm text-xs items-center md:mt-6 sm:mt-4">
@@ -145,37 +133,25 @@
                     @submit.prevent="submit"
                 >
                     <div class="flex flex-col space-y-6">
-                        <FormField name="inami">
-                            <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex w-full items-center space-x-1">
-                                        <span class="text-primary font-extrabold">N°</span>
-                                        <Input
-                                            v-model="credentials.inami"
-                                            type="text"
-                                            placeholder="INAMI"
-                                            class="text-sm"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                        <div class="flex w-full items-center space-x-1">
+                            <InputIcon
+                                v-model="credentials.inami"
+                                :icon="UserIcon"
+                                type="text"
+                                placeholder="INAMI"
+                                class="text-sm w-full"
+                            />
+                        </div>
 
-                        <FormField name="password">
-                            <FormItem class="flex justify-between px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex w-full items-center space-x-1">
-                                        <KeyIcon class="text-primary w-5" />
-                                        <Input
-                                            v-model="credentials.password"
-                                            type="password"
-                                            placeholder="Mot de passe"
-                                            class="text-sm"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                        <div class="flex w-full items-center space-x-1">
+                            <InputIcon
+                                v-model="credentials.password"
+                                :icon="LockClosedIcon"
+                                type="password"
+                                placeholder="Mot de passe"
+                                class="text-sm w-full"
+                            />
+                        </div>
                     </div>
 
                     <div class="flex justify-between text-xs mt-4">
@@ -194,7 +170,7 @@
                     </div>
 
                     <div class="flex flex-col justify-center items-center mx-auto mt-12 space-y-7">
-                        <Button
+                        <!-- <Button
                             variant="secondary"
                             class="w-80"
                         >
@@ -204,7 +180,7 @@
                                 class="w-4"
                             />
                             <span>Se connecter avec Google</span>
-                        </Button>
+                        </Button> -->
                         <Button
                             class="w-80"
                             type="submit"
@@ -232,8 +208,7 @@
 </template>
 
 <script lang="ts" setup>
-import { KeyIcon } from '@heroicons/vue/24/solid';
-import { Input } from '@/components/ui/input';
+import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const router = useRouter();

@@ -8,23 +8,23 @@ import {
     useRequestEvent,
     useRequestHeaders,
     defineNuxtPlugin,
+    type NuxtApp,
 } from '#app';
 
 const CSRF_COOKIE = 'XSRF-TOKEN';
 const CSRF_HEADER = 'X-XSRF-TOKEN';
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
     const { $csrf } = useNuxtApp();
-    const { API_URL, FRONT_END_URL } = useRuntimeConfig().public;
+    const { API_URL } = useRuntimeConfig().public;
     const language = useCookie(LANGUAGE)?.value ?? 'fr';
-
+    let token: string = '';
     const apifetch = $fetch.create({
         credentials: 'include',
         baseURL: API_URL,
-        // eslint-disable-next-line no-unused-vars
-        async onRequest({ request, options }) {
+        async onRequest({ options }) {
             const event = typeof useEvent === 'function' ? useRequestEvent() : null;
-            let token = event
+            token = event
                 ? parseCookies(event)[CSRF_COOKIE]
                 : useCookie(CSRF_COOKIE).value;
 
@@ -35,7 +35,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                     )
             ) {
                 if ($csrf) {
-                    token = $csrf;
+                    token = $csrf as string;
                 }
             }
 
@@ -56,7 +56,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 headers = {
                     ...headers,
                     ...(cookieString && { cookie: cookieString }),
-                    referer: FRONT_END_URL,
                 };
             }
 

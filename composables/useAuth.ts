@@ -52,19 +52,19 @@ export const useAuth = () => {
 
         await $apifetch('api/logout', { method: 'post' });
         user.value = null;
-        useCookie(AUTH_TOKEN).value;
+        useCookie(AUTH_TOKEN).value = '';
 
         await router.push('/');
     }
 
-    async function forgotPassword(email) {
+    async function forgotPassword(email: string) {
         return await $apifetch('api/forgot-password', {
             method: 'post',
             body: { email },
         });
     }
 
-    async function resetPassword(credentials) {
+    async function resetPassword(credentials: Record<string, unknown>) {
         return await $apifetch('api/reset-password', {
             method: 'post',
             body: credentials,
