@@ -198,12 +198,12 @@ const navigationItems = [
     },
     {
         label: 'Documents',
-        route: '/dashboard/document',
+        route: '/dashboard/documents',
         icon: FolderIcon,
     },
     {
         label: 'Paramètres',
-        route: '/dashboard/setting',
+        route: '/dashboard/settings',
         icon: Cog8ToothIcon,
     },
 ];
