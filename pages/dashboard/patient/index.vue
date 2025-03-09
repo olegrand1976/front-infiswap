@@ -1,5 +1,5 @@
 <template>
-    <!-- <div>
+    <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
                 Mes
@@ -148,9 +148,6 @@
                 </TableBody>
             </Table>
         </div>
-    </div> -->
-    <div class="w-full">
-        Mes patients
     </div>
 </template>
 

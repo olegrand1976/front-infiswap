@@ -4,29 +4,58 @@
             <LayoutsAppSidebar />
         </Sidebar>
         <SidebarInset>
-            <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                <div class="flex items-center gap-2 px-4">
+            <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1" />
                     <Separator
                         orientation="vertical"
                         class="mr-2 h-4"
                     />
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem class="hidden md:block">
-                                <BreadcrumbLink href="#">
-                                    Building Your Application
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator class="hidden md:block" />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+                    <Form>
+                        <FormField name="search">
+                            <FormItem>
+                                <FormControl>
+                                    <div class="flex w-32 lg:w-96 bg-gray-200 rounded-full items-center justify-between ps-3 pe-1">
+                                        <Input
+                                            :v-model="search"
+                                            placeholder="Rechercher"
+                                            class="w-80 text-xs bg-transparent"
+                                        />
+                                        <Button
+                                            type="submit"
+                                            class="bg-primary text-white w-7 h-7 rounded-full"
+                                        >
+                                            <MagnifyingGlassIcon class="h-7 w-7" />
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+                    </Form>
+                </div>
+                <div class="ml-auto mr-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Avatar>
+                                <AvatarImage
+                                    src="https://github.com/unovue.png"
+                                    alt="@unovue"
+                                />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent class="mr-6">
+                            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Abonnement</DropdownMenuItem>
+                            <DropdownMenuItem>Parametres</DropdownMenuItem>
+                            <DropdownMenuItem>Deconnexion</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </header>
-            <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div class="flex flex-1 flex-col gap-4 p-4 pt-0 max-w-full overflow-hidden">
                 <NuxtPage />
             </div>
         </SidebarInset>
@@ -34,109 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 
-import {
-    SquaresPlusIcon,
-    MapIcon,
-    FolderIcon,
-    Cog8ToothIcon,
-    ArrowPathIcon,
-    UserGroupIcon,
-    ChevronRightIcon,
-    QueueListIcon,
-    ListBulletIcon,
-    DocumentPlusIcon, DocumentMagnifyingGlassIcon,
-} from '@heroicons/vue/24/outline';
-
-defineProps({
-    collapsed: Boolean,
-});
-
-const emit = defineEmits(['toggle-collapse']);
-
-const navigationItems = [
-    {
-        label: 'Informations',
-        route: '/dashboard',
-        icon: SquaresPlusIcon,
-    },
-    {
-        label: 'Mes patients',
-        route: '/dashboard/patient',
-        icon: UserGroupIcon,
-    },
-    {
-        label: 'Tournées',
-        route: '/dashboard/tours',
-        icon: MapIcon,
-    },
-    {
-        label: 'Remplacements',
-        route: '/dashboard/replacement',
-        icon: ArrowPathIcon,
-        children: [
-            {
-                label: 'Listes',
-                route: '/dashboard/replacement',
-                icon: QueueListIcon,
-            },
-            {
-                label: 'Rechercher',
-                route: '/dashboard/replacement/search',
-                icon: DocumentMagnifyingGlassIcon,
-            },
-            {
-                label: 'Mes remplacements',
-                route: '/dashboard/replacement/me',
-                icon: ListBulletIcon,
-            },
-            {
-                label: 'Nouveau',
-                route: '/dashboard/replacement/create',
-                icon: DocumentPlusIcon,
-            },
-        ],
-    },
-    {
-        label: 'Documents',
-        route: '/dashboard/document',
-        icon: FolderIcon,
-    },
-    {
-        label: 'Paramètres',
-        route: '/dashboard/setting',
-        icon: Cog8ToothIcon,
-    },
-];
-
-const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+const search = ref('');
 </script>
-
-<style scoped>
-/* :deep(.sidebar-content) {
-    overflow-y: auto;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar) {
-    width: 6px;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar-thumb) {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar-track) {
-    background: transparent;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar) {
-    width: 0;
-}
-
-:deep(.sidebar-content:hover::-webkit-scrollbar) {
-    width: 6px;
-} */
-</style>

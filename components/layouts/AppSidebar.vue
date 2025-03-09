@@ -1,6 +1,6 @@
 <template>
     <Collapsible
-        default-open
+        :default-open="false"
         class="group/collapsible"
     >
         <Sidebar>
@@ -126,8 +126,6 @@ import {
 defineProps({
     collapsed: Boolean,
 });
-
-const emit = defineEmits(['toggle-collapse']);
 
 const navigationItems = [
     {
