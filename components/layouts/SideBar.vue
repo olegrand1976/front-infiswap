@@ -21,33 +21,6 @@
                                     :key="index"
                                 >
                                     <SidebarMenuButton
-                                        v-if="item.children && item.children.length > 0"
-                                        as-child
-                                        class="h-12"
-                                    >
-                                        <NuxtLink
-                                            :href="item.route"
-                                            class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
-                                            :class="{
-                                                'bg-primary text-white font-bold': isActiveRoute(item.route),
-                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
-                                            }"
-                                        >
-                                            <div class="flex space-x-2 items-center">
-                                                <component
-                                                    :is="item.icon"
-                                                    class="w-6 opacity-80"
-                                                />
-                                                <span>{{ item.label }}</span>
-                                            </div>
-                                            <div v-if="item.count">
-                                                <Badge>{{ item.count }}</Badge>
-                                            </div>
-                                        </NuxtLink>
-                                    </SidebarMenuButton>
- 
-                                    <SidebarMenuButton
-                                        v-else
                                         as-child
                                         class="h-12"
                                     >
@@ -110,8 +83,8 @@ import {
     UserPlusIcon,
     FolderIcon,
     Cog8ToothIcon,
-    PencilSquareIcon,
-    IdentificationIcon,
+    ArrowPathIcon,
+    UserGroupIcon,
 } from '@heroicons/vue/24/outline';
 
 import { Badge } from '@/components/ui/badge';
@@ -129,31 +102,19 @@ const navigationItems = [
         icon: SquaresPlusIcon,
     },
     {
+        label: 'Mes patients',
+        route: '/dashboard/patient',
+        icon: UserGroupIcon,
+    },
+    {
         label: 'Tournées',
         route: '/dashboard/tours',
         icon: MapIcon,
     },
     {
-        label: 'Mes patients',
-        route: '/dashboard/patient',
-        icon: IdentificationIcon,
-        children: [
-            {
-                label: 'Liste',
-                route: '/dashboard/patient/list',
-                icon: SquaresPlusIcon,
-            },
-            {
-                label: 'Nouveau',
-                route: '/dashboard/patient/new',
-                icon: UserPlusIcon,
-            },
-        ],
-    },
-    {
         label: 'Remplacements',
         route: '/dashboard/replacement',
-        icon: UserPlusIcon,
+        icon: ArrowPathIcon,
     },
     {
         label: 'Documents',
