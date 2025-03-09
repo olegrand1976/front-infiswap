@@ -60,7 +60,7 @@ export const detailPatient = (patientId) => {
     return { patient, fetchDetailPatient };
 };
 
-export const updatePatient = async (patientId, formData) => {
+export const updatePatient = async (patientId: number, formData) => {
     const { $apifetch } = useNuxtApp();
 
     await $apifetch(`/api/patients/${patientId}`, {

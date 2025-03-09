@@ -27,6 +27,8 @@ export type User = {
     trial_ends_at?: string | null;
     nurse: Nurse;
     profile: Profile;
+    created_at: string;
+    updated_at: string;
 };
 
 export interface Nurse {
@@ -48,6 +50,28 @@ export type Profile = {
     social_media_links?: Record<string, any> | null;
     emergency_contact_name?: string | null;
     emergency_contact_phone?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Patient = {
+    id: number;
+    nurse_id?: number | null;
+    lastname: string;
+    firstname: string;
+    email?: string | null;
+    gender?: 'M' | 'F' | null;
+    social_security_number: string;
+    phone_number?: string | null;
+    care_start_date?: string | null;
+    care_end_date?: string | null;
+    availability: 'available' | 'unavailable' | 'absent' | 'hospitalized';
+    created_at: string;
+    updated_at: string;
+};
+
+export type CareType = {
+    id: number;
+    name: string;
+    price: number;
 };

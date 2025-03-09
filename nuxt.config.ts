@@ -96,12 +96,6 @@ export default defineNuxtConfig({
             minify: 'esbuild',
         },
     },
-
-    typescript: {
-        strict: false,
-        shim: false,
-        typeCheck: false,
-    },
     gtm: {
         id: 'GTM-KFBFVVR3',
         queryParams: {

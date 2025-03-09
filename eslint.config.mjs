@@ -11,6 +11,9 @@ export default createConfigForNuxt({
         vue: true,
     },
     rules: {
+        'no-explicit-any': 'off',
+        '@typescript-eslint/no-explicit-any': 'true',
+
         'no-unused-vars': 'warn',
         'no-undef': 'warn',
         'no-console': 'warn',
