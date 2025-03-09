@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <Button
-                    :href="`/dashboard/replacement/detail/${replacement.id}/list`"
+                    :href="`/dashboard/replacements/detail/${replacement.id}/list`"
                 >
                     <span class="text-xs">Liste</span>
                 </Button>

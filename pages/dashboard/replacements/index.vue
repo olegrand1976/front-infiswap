@@ -10,7 +10,7 @@
             <div class="ml-auto">
                 <Button
                     class="text-sm"
-                    href="/dashboard/replacement/create"
+                    href="/dashboard/replacements/create"
                 >
                     Créer remplacement
                 </Button>
@@ -151,7 +151,7 @@
                             <TableCell class="text-xs pt-6 overflow-x-hidden">
                                 <Button
                                     class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
-                                    :href="`/dashboard/replacement/detail/${replacement.id}`"
+                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
                                     <span class="text-xs">Voir plus</span>
                                 </Button>

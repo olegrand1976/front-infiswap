@@ -39,7 +39,7 @@
 
             <div>
                 <Button
-                    href="/dashboard/patient/create"
+                    href="/dashboard/patients/create"
                 >
                     Créer patient
                 </Button>
@@ -86,7 +86,7 @@
                                     </span>
 
                                     <div class="flex space-x-4">
-                                        <NuxtLink :to="`/dashboard/patient/detail/${patient.id}`">
+                                        <NuxtLink :to="`/dashboard/patients/detail/${patient.id}`">
                                             <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
                                         </NuxtLink>
                                         <TrashIcon
