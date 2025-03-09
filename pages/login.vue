@@ -235,7 +235,6 @@
 import { KeyIcon } from '@heroicons/vue/24/solid';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { reloadNuxtApp } from '#app';
 
 const router = useRouter();
 const route = useRoute();
@@ -259,8 +258,7 @@ const { submit, inProgress } = useSubmit(
                 credentials[key as keyof typeof credentials] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
-            router.push('/dashboard/home');
-            reloadNuxtApp({ persistState: true });
+            router.push('/dashboard');
         });
     },
     {
