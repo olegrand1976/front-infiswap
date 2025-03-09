@@ -10,7 +10,7 @@ export const useTours = () => {
 
     const nurseId = 1;
 
-    async function fetchTours(startDate, endDate) {
+    async function fetchTours(startDate: string, endDate: string) {
         loading.value = true;
         error.value = null;
 
