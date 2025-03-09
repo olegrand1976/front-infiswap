@@ -9,8 +9,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         try {
             return await $apifetch('/api/user');
         }
-        catch (error) {
-            console.error('Failed to fetch user:', error);
+        catch {
             return null;
         }
     };
