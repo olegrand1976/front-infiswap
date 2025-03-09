@@ -1,8 +1,9 @@
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { AUTH_TOKEN } from '~/lib/constants';
+import type { User } from '~/lib/types';
 
 export const useUser = () => {
-    return useState('user', () => undefined);
+    return useState<User | undefined>('user', () => undefined);
 };
 
 export const useAuth = () => {
@@ -13,14 +14,14 @@ export const useAuth = () => {
 
     async function refresh() {
         try {
-            user.value = await $fetchCurrentUser;
+            user.value = await $fetchCurrentUser();
         }
         catch {
             user.value = null;
         }
     }
 
-    async function login(credentials) {
+    async function login(credentials : { inami: string; password: string}) {
         if (isLoggedIn.value) return;
 
         await $apifetch('api/login', { method: 'post', body: credentials })
