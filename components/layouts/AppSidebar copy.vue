@@ -130,12 +130,7 @@
                     </Container>
                 </Navbar>
                 <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div class="aspect-video rounded-xl bg-muted/50" />
-                        <div class="aspect-video rounded-xl bg-muted/50" />
-                        <div class="aspect-video rounded-xl bg-muted/50" />
-                    </div>
-                    <div class="min-h-[100vh] flex-1 rounded-xl bg-primary md:min-h-min">
+                    <div class="min-h-[100vh] flex-1 w-full rounded-xl bg-primary md:min-h-min">
                         <NuxtPage />
                     </div>
                 </div>
@@ -150,21 +145,15 @@ import { useRoute } from 'vue-router';
 import {
     SquaresPlusIcon,
     MapIcon,
-    UserPlusIcon,
     FolderIcon,
     Cog8ToothIcon,
     ArrowPathIcon,
     UserGroupIcon,
-    ChevronDownIcon,
-    UserIcon,
     ChevronRightIcon,
     QueueListIcon,
     ListBulletIcon,
     DocumentPlusIcon, DocumentMagnifyingGlassIcon,
 } from '@heroicons/vue/24/outline';
-
-import { Badge } from '@/components/ui/badge';
-import { NuxtLink } from '#components';
 
 defineProps({
     collapsed: Boolean,
@@ -230,30 +219,3 @@ const navigationItems = [
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
 </script>
-
-<style scoped>
-:deep(.sidebar-content) {
-    overflow-y: auto;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar) {
-    width: 6px;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar-thumb) {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar-track) {
-    background: transparent;
-}
-
-:deep(.sidebar-content::-webkit-scrollbar) {
-    width: 0;
-}
-
-:deep(.sidebar-content:hover::-webkit-scrollbar) {
-    width: 6px;
-}
-</style>
