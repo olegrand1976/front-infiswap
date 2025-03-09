@@ -103,7 +103,10 @@
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
-                <SidebarMenuButton class="bg-red-500 text-white" @click="logout">
+                <SidebarMenuButton
+                    class="bg-red-500 text-white"
+                    @click="logout"
+                >
                     <div class="flex space-x-2 items-center">
                         <PowerIcon class="w-6 opacity-80" />
                         <span>Deconnexion</span>
