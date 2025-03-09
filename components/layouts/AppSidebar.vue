@@ -102,6 +102,14 @@
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>
+            <SidebarGroup>
+                <SidebarMenuButton class="bg-red-500 text-white" @click="logout">
+                    <div class="flex space-x-2 items-center">
+                        <PowerIcon class="w-6 opacity-80" />
+                        <span>Deconnexion</span>
+                    </div>
+                </SidebarMenuButton>
+            </SidebarGroup>
         </SidebarContent>
     </Sidebar>
 </template>
@@ -122,6 +130,7 @@ import {
     DocumentPlusIcon, DocumentMagnifyingGlassIcon,
     UserPlusIcon,
     ClipboardDocumentListIcon,
+    PowerIcon,
 } from '@heroicons/vue/24/outline';
 
 defineProps({
@@ -198,4 +207,6 @@ const navigationItems = [
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
+
+const { logout } = useAuth();
 </script>
