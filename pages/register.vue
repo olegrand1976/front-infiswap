@@ -43,484 +43,335 @@
                 Inscription
             </h1>
 
-            <div class="w-full max-w-lg">
+            <div class="w-full max-w-lg overflow-x-hidden">
                 <form
                     class="grid grid-cols-2 lg:grid-cols-4 gap-4"
                     @submit.prevent="submit"
                 >
-                    <div class="col-span-2">
-                        <FormField name="lastname">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <UserCircleIcon class="text-primary w-7 h-7 ml-2" />
-                                        <Input
-                                            v-model="formData.lastname"
-                                            type="text"
-                                            placeholder="Nom"
-                                            class="bg-transparent"
-                                            @blur="validateField('lastname')"
-                                            @input="validateField('lastname')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.lastname"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.lastname }}
-                            </p>
-                        </FormField>
+                    <div class="col-span-2 relative w-full items-center">
+                        <InputIcon
+                            v-model="formData.lastname"
+                            :icon="UserCircleIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Nom"
+                            @blur="validateField('lastname')"
+                            @input="validateField('lastname')"
+                        />
+                        <p
+                            v-if="error.lastname"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.lastname }}
+                        </p>
+                    </div>
+
+                    <div class="col-span-2 relative w-full items-center">
+                        <InputIcon
+                            v-model="formData.firstname"
+                            :icon="UserCircleIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Prénoms"
+                            @blur="validateField('lastname')"
+                            @input="validateField('lastname')"
+                        />
+                        <p
+                            v-if="error.firstname"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.firstname }}
+                        </p>
+                    </div>
+
+                    <div class="col-span-2 relative w-full items-center">
+                        <InputIcon
+                            v-model="formData.email"
+                            :icon="EnvelopeIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Email"
+                            @blur="validateField('email')"
+                            @input="validateField('email')"
+                        />
+                        <p
+                            v-if="error.email"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.email }}
+                        </p>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="firstname">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <UserCircleIcon class="text-primary ml-2 w-7 h-7" />
-                                        <Input
-                                            v-model="formData.firstname"
-                                            type="text"
-                                            placeholder="Prénom"
-                                            class="bg-transparent"
-                                            @blur="validateField('firstname')"
-                                            @input="validateField('firstname')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.firstname"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.lastname }}
-                            </p>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.phoneNumber"
+                            :icon="PhoneIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="N° de téléphone"
+                            @blur="validateField('phoneNumber')"
+                            @input="validateField('phoneNumber')"
+                        />
+                        <p
+                            v-if="error.phoneNumber"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.phoneNumber }}
+                        </p>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="email">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <EnvelopeIcon class="text-primary ml-3 w-6 h-6" />
-                                        <Input
-                                            v-model="formData.email"
-                                            placeholder="Email"
-                                            class="bg-transparent"
-                                            @blur="validateField('email')"
-                                            @input="validateField('email')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.email"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.email }}
-                            </p>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.password"
+                            :icon="LockClosedIcon"
+                            size="md"
+                            type="password"
+                            class="border border-gray-300"
+                            placeholder="Mot de passe"
+                            @blur="validateField('password')"
+                            @input="validateField('password')"
+                        />
+                        <p
+                            v-if="error.password"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.password }}
+                        </p>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="email">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <PhoneIcon class="text-primary ml-3 w-6 h-6" />
-                                        <Input
-                                            v-model="formData.phoneNumber"
-                                            placeholder="N° de téléphone"
-                                            class="bg-transparent"
-                                            @blur="validateField('phoneNumber')"
-                                            @input="validateField('phoneNumber')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.phoneNumber"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.phoneNumber }}
-                            </p>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.passwordConfirmation"
+                            :icon="LockClosedIcon"
+                            size="md"
+                            type="password"
+                            placeholder="Mot de passe"
+                            class="border border-gray-300"
+                            @blur="validateField('passwordConfirmation')"
+                            @input="validateField('passwordConfirmation')"
+                        />
+                        <p
+                            v-if="error.passwordConfirmation"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.passwordConfirmation }}
+                        </p>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="password">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <LockClosedIcon class="text-primary ml-3 h-6" />
-                                        <Input
-                                            v-model="formData.password"
-                                            type="password"
-                                            placeholder="Mot de passe"
-                                            class="bg-transparent"
-                                            @blur="validateField('password')"
-                                            @input="validateField('password')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.password"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.password }}
-                            </p>
-                        </FormField>
-                    </div>
-
-                    <div class="col-span-2">
-                        <FormField name="passwordConfirm">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <LockClosedIcon class="text-primary ml-3 h-6" />
-                                        <Input
-                                            v-model="formData.passwordConfirmation"
-                                            type="password"
-                                            placeholder="Confirmer mot de passe"
-                                            class="bg-transparent"
-                                            @blur="validateField('passwordConfirmation')"
-                                            @input="validateField('passwordConfirmation')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.passwordConfirmation"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.passwordConfirmation }}
-                            </p>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.dateOfBirth"
+                            :icon="CalendarDateRangeIcon"
+                            size="md"
+                            type="date"
+                            class="text-black/80 border border-gray-300"
+                        />
+                        <p
+                            v-if="error.dateOfBirth"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.dateOfBirth }}
+                        </p>
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
-                        <!-- <FormField name="naissance">
-                            <FormItem class="w-full">
-                                <Popover>
-                                    <PopoverTrigger as-child>
-                                        <FormControl>
-                                            <Button
-                                                variant="outline"
-                                                :class="cn(
-                                                    'w-full flex justify-start items-center rounded-full font-light border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90',
-                                                    !formData.dateOfBirth && 'text-gray-400',
-                                                )"
-                                            >
-                                                <CalendarIcon class="mr-2 text-primary" />
-                                                <span
-                                                    v-if="formData.dateOfBirth"
-                                                    class="text-black/90 xl:text-sm sm:text-xs"
-                                                >
-                                                    {{ df.format(formData.dateOfBirth.toDate(getLocalTimeZone())) }}
-                                                </span>
-                                                <span
-                                                    v-else
-                                                    class="text-gray-400 text-sm"
-                                                >
-                                                    Naissance
-                                                </span>
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent class="w-auto p-0">
-                                        <Calendar
-                                            v-model="formData.dateOfBirth"
-                                            initial-focus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                            </FormItem>
-                        </FormField> -->
-                        <FormField name="dateOfBird">
-                            <FormItem class="w-full items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <CalendarIcon class="text-primary ml-3 h-6" />
-                                        <Input
-                                            v-model="formData.dateOfBirth"
-                                        />
+                        <Select v-model="formData.gender">
+                            <SelectTrigger
+                                class="flex xl:h-auto sm:h-8 items-center rounded-full border border-gray-300"
+                                position="right"
+                            >
+                                <NuxtImg
+                                    src="/icons/gender.png"
+                                    class="h-5"
+                                />
+                                <SelectValue
+                                    placeholder="Sexe"
+                                    class="ml-3"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none">
+                                <SelectGroup>
+                                    <div
+                                        v-for="gender in genders"
+                                        :key="gender.value"
+                                        class="flex justify-center items-center -ms-3"
+                                    >
+                                        <SelectItem :value="gender.value">
+                                            <span class="text-sm">{{ gender.label }}</span>
+                                        </SelectItem>
                                     </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <InputIcon
+                            v-model="formData.address.street"
+                            :icon="MapPinIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Rue"
+                        />
+                    </div>
+
+                    <div class="col-span-2">
+                        <InputIcon
+                            v-model="formData.address.city"
+                            :icon="BuildingOffice2Icon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Ville"
+                        />
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
-                        <FormField name="gender">
-                            <FormItem>
-                                <Select v-model="formData.gender">
-                                    <FormControl>
-                                        <SelectTrigger
-                                            class="flex xl:h-auto sm:h-8 items-center rounded-full border border-gray-300"
-                                            position="right"
-                                        >
-                                            <NuxtImg
-                                                src="/icons/gender.png"
-                                                class="h-5"
-                                            />
-                                            <SelectValue
-                                                placeholder="Sexe"
-                                                class="ml-3"
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent class="border border-none">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="gender in genders"
-                                                :key="gender.value"
-                                                class="flex justify-center items-center -ms-3"
-                                            >
-                                                <SelectItem :value="gender.value">
-                                                    <span class="text-sm">{{ gender.label }}</span>
-                                                </SelectItem>
+                        <Select v-model="formData.address.country">
+                            <SelectTrigger
+                                class="flex justify-between items-center rounded-full border border-gray-300"
+                                position="right"
+                            >
+                                <NuxtImg
+                                    src="/icons/flag.png"
+                                    class="h-4 ml-2"
+                                />
+                                <SelectValue
+                                    placeholder="Pays"
+                                    class="ml-3"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none">
+                                <SelectGroup>
+                                    <div
+                                        v-for="country in countries"
+                                        :key="country.value"
+                                        class="flex justify-center items-center -ms-3"
+                                    >
+                                        <SelectItem :value="country.value">
+                                            <div class="flex space-x-1">
+                                                <NuxtImg
+                                                    :src="country.icon"
+                                                    :alt="country.name"
+                                                    class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
+                                                    format="png"
+                                                />
+                                                <span class="sm:text-xs xl:text-sm">{{ country.label }}</span>
                                             </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        </FormField>
+                                        </SelectItem>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="streer_address">
-                            <FormItem class="flex w-full space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <NuxtImg
-                                            src="/icons/road.png"
-                                            class="h-5"
-                                        />
-                                        <Input
-                                            v-model="formData.address.street"
-                                            type="text"
-                                            placeholder="Rue"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.address.zipCode"
+                            :icon="InboxArrowDownIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Code postal"
+                            @blur="validateField('address.zipCode')"
+                            @input="validateField('address.zipCode')"
+                        />
+                        <p
+                            v-if="error.address.zipCode"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.address.zipCode }}
+                        </p>
                     </div>
 
                     <div class="col-span-2">
-                        <FormField name="City">
-                            <FormItem class="flex w-full space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center space-x-1">
-                                        <NuxtImg
-                                            src="/icons/city.png"
-                                            class="w-6 h-6"
-                                        />
-                                        <Input
-                                            v-model="formData.address.city"
-                                            type="text"
-                                            placeholder="Ville"
-                                            clas="text-sm"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.address.additionnalInformation"
+                            :icon="EllipsisHorizontalCircleIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Complément"
+                        />
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
-                        <FormField name="country">
-                            <FormItem class="w-full">
-                                <Select v-model="formData.address.country">
-                                    <FormControl>
-                                        <SelectTrigger
-                                            class="flex justify-between items-center rounded-full border border-gray-300"
-                                            position="right"
-                                        >
-                                            <NuxtImg
-                                                src="/icons/flag.png"
-                                                class="h-4 ml-2"
-                                            />
-                                            <SelectValue
-                                                placeholder="Pays"
-                                                class="ml-3"
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent class="border border-none">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="country in countries"
-                                                :key="country.value"
-                                                class="flex justify-center items-center -ms-3"
-                                            >
-                                                <SelectItem :value="country.value">
-                                                    <div class="flex space-x-1">
-                                                        <NuxtImg
-                                                            :src="country.icon"
-                                                            :alt="country.name"
-                                                            class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
-                                                            format="png"
-                                                        />
-                                                        <span class="sm:text-xs xl:text-sm">{{ country.label }}</span>
-                                                    </div>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        </FormField>
-                    </div>
-
-                    <div class="col-span-1 lg:col-span-2">
-                        <FormField name="codePostal">
-                            <FormItem class="flex space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <NuxtImg
-                                            src="/icons/boite.png"
-                                            class="h-4"
-                                        />
-                                        <Input
-                                            v-model="formData.address.zipCode"
-                                            type="text"
-                                            placeholder="Code postal"
-                                            class="text-sm"
-                                            @blur="validateField('address.zipCode')"
-                                            @input="validateField('address.zipCode')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.address.zipCode"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
+                        <Select v-model="formData.accountType">
+                            <SelectTrigger
+                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                                position="right"
+                                disabled
                             >
-                                {{ error.address.zipCode }}
-                            </p>
-                        </FormField>
-                    </div>
-
-                    <div class="col-span-2">
-                        <FormField name="complement">
-                            <FormItem class="flex w-full space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center space-x-1">
-                                        <EllipsisHorizontalCircleIcon class="w-6 h-6 text-primary" />
-                                        <Input
-                                            v-model="formData.address.additionnalInformation"
-                                            type="text"
-                                            placeholder="Autres"
-                                        />
+                                <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
+                                <SelectValue
+                                    placeholder="Compte"
+                                    class="text-nowrap w-full text-sm ml-3 my-auto"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none">
+                                <SelectGroup>
+                                    <div
+                                        v-for="accountOption in accountOptions"
+                                        :key="accountOption.value"
+                                        class="flex justify-center items-center -ms-3"
+                                    >
+                                        <SelectItem :value="accountOption.value">
+                                            <span class="xl:text-sm sm:text-xs">{{ accountOption.label }}</span>
+                                        </SelectItem>
                                     </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
-                        <FormField name="accountType">
-                            <FormItem class="w-full">
-                                <Select v-model="formData.accountType">
-                                    <FormControl>
-                                        <SelectTrigger
-                                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border border-gray-300"
-                                            position="right"
-                                        >
-                                            <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
-                                            <SelectValue
-                                                placeholder="Compte"
-                                                class="text-nowrap w-full text-sm ml-3 my-auto"
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent class="border border-none">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="accountOption in accountOptions"
-                                                :key="accountOption.value"
-                                                class="flex justify-center items-center -ms-3"
-                                            >
-                                                <SelectItem :value="accountOption.value">
-                                                    <span class="xl:text-sm sm:text-xs">{{ accountOption.label }}</span>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        </FormField>
-                    </div>
-
-                    <div class="col-span-1 lg:col-span-2">
-                        <FormField name="language">
-                            <FormItem class="w-full">
-                                <Select v-model="formData.language">
-                                    <FormControl>
-                                        <SelectTrigger
-                                            class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
-                                            position="right"
-                                        >
-                                            <LanguageIcon class="text-primary w-6 h-6" />
-                                            <SelectValue
-                                                placeholder="Langue"
-                                                class="text-sm ml-3 my-auto"
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent class="border border-none">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="language in languages"
-                                                :key="language.value"
-                                                class="flex justify-center items-center -ms-3"
-                                            >
-                                                <SelectItem :value="language.value">
-                                                    <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        </FormField>
+                        <Select v-model="formData.language">
+                            <SelectTrigger
+                                class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
+                                position="right"
+                            >
+                                <LanguageIcon class="text-primary w-6 h-6" />
+                                <SelectValue
+                                    placeholder="Langue"
+                                    class="text-sm ml-3 my-auto"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none">
+                                <SelectGroup>
+                                    <div
+                                        v-for="language in languages"
+                                        :key="language.value"
+                                        class="flex justify-center items-center -ms-3"
+                                    >
+                                        <SelectItem :value="language.value">
+                                            <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
+                                        </SelectItem>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div class="col-span-2 sm:col-span-1 lg:col-span-2">
-                        <FormField name="identifierNumber">
-                            <FormItem class="flex w-full space-x-1 px-4 items-center rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center">
-                                        <IdentificationIcon class="text-primary w-6 h-6" />
-                                        <Input
-                                            v-model="formData.identifierNumber"
-                                            type="text"
-                                            placeholder="Numéro INAMI"
-                                            class="text-sm"
-                                            @blur="validateField('identifierNumber')"
-                                            @input="validateField('identifierNumber')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                            <p
-                                v-if="error.identifierNumber"
-                                class="text-red-500 text-xs mt-1 ms-[5%]"
-                            >
-                                {{ error.identifierNumber }}
-                            </p>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.identifierNumber"
+                            :icon="IdentificationIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Numéro INAMI"
+                            @blur="validateField('identifierNumber')"
+                            @input="validateField('identifierNumber')"
+                        />
+                        <p
+                            v-if="error.identifierNumber"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.identifierNumber }}
+                        </p>
                     </div>
 
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
                         <Button
                             class="w-[50%]"
                             type="submit"
+                            :in-progress="inProgress"
                         >
                             S'inscrire
                         </Button>
@@ -541,7 +392,10 @@ import {
     LanguageIcon,
     IdentificationIcon,
     UsersIcon,
-    CalendarIcon,
+    CalendarDateRangeIcon,
+    BuildingOffice2Icon,
+    MapPinIcon,
+    InboxArrowDownIcon,
 } from '@heroicons/vue/24/solid';
 
 import * as yup from 'yup';
@@ -553,6 +407,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+
+const { $toast } = useNuxtApp();
+const router = useRouter();
 
 const genders = [
     {
@@ -575,31 +432,27 @@ const countries = [
         icon: '/icons/belgium.png',
     },
     {
-        value: 'fr',
-        label: 'France',
-        name: 'france',
-        icon: '/icons/fr.png',
+        value: 'nl',
+        label: 'Pays-Bas',
+        name: 'paysBas',
+        icon: '/icons/pays-bas.png',
     },
 ];
 
 const languages = [
     {
-        value: 'nl',
-        label: 'Nederlands',
-        name: 'nederlands',
-    },
-    {
         value: 'fr',
         label: 'Français',
         name: 'francais',
     },
+    {
+        value: 'nl',
+        label: 'Nederlands',
+        name: 'nederlands',
+    },
 ];
 
 const accountOptions = [
-    {
-        label: 'Patient',
-        value: 'patient',
-    },
     {
         label: 'Infirmière',
         value: 'nurse',
@@ -615,10 +468,10 @@ const formData = reactive({
     firstname: '',
     email: '',
     password: '',
-    accountType: '',
+    accountType: accountOptions[0].value,
     passwordConfirmation: '',
     gender: '',
-    language: '',
+    language: languages[0].value,
     phoneNumber: undefined,
     dateOfBirth: null,
     identifierNumber: null,
@@ -626,7 +479,7 @@ const formData = reactive({
         street: '',
         city: '',
         zipCode: '',
-        country: '',
+        country: countries[0].value,
         additionnalInformation: '',
     },
 });
@@ -665,18 +518,13 @@ const schema = yup.object({
     email: yup.string().email('L\'email doit être valide').required('L\'email est obligatoire'),
     password: yup.string()
         .required('Le mot de passe est obligatoire')
-        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
-        .max(50, 'Le mot de passe ne peut pas dépasser 50 caractères')
-        .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
-        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
-        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
-        .matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
+        .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
     passwordConfirmation: yup.string()
         .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
         .required('La confirmation du mot de passe est obligatoire'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
-    phoneNumber: yup.string().matches(/^\d{10}$/, 'Numéro invalide'),
+    phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
     dateOfBirth: yup.date().required('La date de naissance est obligatoire').nullable(),
     address: yup.object({
         street: yup.string().required('L\'adresse est obligatoire'),
@@ -719,12 +567,18 @@ const { submit, inProgress } = useSubmit(
     () => {
         status.value = '';
         return register(formData).then(() => {
-            useNuxtApp().$toast.success('Inscription réussie');
+            $toast({
+                description: 'Inscription réussie',
+            });
 
             Object.keys(formData).forEach((key) => {
                 formData[key as keyof typeof formData] = key === 'accept' ? false : '';
             });
             inProgress.value = true;
+
+            setTimeout(() => {
+                router.push('auth/verify-email');
+            }, 2000);
         });
     },
     {
