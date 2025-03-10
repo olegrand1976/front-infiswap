@@ -41,7 +41,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                         <CalendarHeadCell
                             v-for="day in weekDays"
                             :key="day"
-                            class="w-16 h-8"
+                            class="w-full h-8"
                         >
                             {{ day }}
                         </CalendarHeadCell>
@@ -57,7 +57,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                             v-for="weekDate in weekDates"
                             :key="weekDate.toString()"
                             :date="weekDate"
-                            class="w-16 text-lg"
+                            class="w-full text-lg"
                         >
                             <CalendarCellTrigger
                                 :day="weekDate"

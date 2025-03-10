@@ -1,12 +1,12 @@
 <template>
     <div class="pt-4">
         <Form>
-            <div class="flex space-x-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <CalendarTours
                     v-model="value"
                     class="rounded-md shadow-lg"
                 />
-                <div class="w-3/6 bg-gray-100 rounded-lg h-full">
+                <div class="w-full bg-gray-100 rounded-lg h-full">
                     <div class="bg-primary rounded-t-lg flex items-center ps-4 h-12">
                         <h2 class="font-bold text-white">
                             Liste Patients
@@ -73,8 +73,8 @@
                 </div>
                 <div v-if="patient && patient.data">
                     <div class="mt-6">
-                        <div class="flex justify-between space-x-4 w-full">
-                            <div class="w-2/6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+                            <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
                                     <div class="flex-shrink-0">
                                         <NuxtImg
@@ -145,7 +145,7 @@
                                 </div>
                             </div>
 
-                            <div class="w-2/6">
+                            <div class="w-full">
                                 <div class="bg-gray-100 rounded-lg flex flex-col items-center pb-6">
                                     <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold w-full text-lg flex">
                                         <HomeIcon class="h-6 w-6 text-white mr-2" /> Ville
@@ -196,7 +196,7 @@
                                 </div>
                             </div>
 
-                            <div class="w-2/6">
+                            <div class="w-full">
                                 <div class="bg-gray-100 rounded-lg">
                                     <div class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg">
                                         Liste des types de soins
@@ -296,7 +296,7 @@ const formatDate = (calendarDate) => {
 const translatedVisitPeriod = (visitPeriod: string) => {
     switch (visitPeriod.toLowerCase()) {
         case 'morning':
-            return 'Matin'
+            return 'Matin' 
         case 'afternoon':
             return 'Après-midi'
         case 'evening':
