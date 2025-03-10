@@ -293,11 +293,9 @@
                                     <div class="flex items-center space-x-8 mt-4">
                                         <label>Heure:</label>
 
-                                        <div class="flex justify-center items-center h-9 border border-primary w-32 rounded-full">
-                                            <Input
+                                        <div class="flex justify-center items-center h-9 w-36">
+                                            <InputTime
                                                 v-model="selectedTime"
-                                                type="time"
-                                                class="bg-transparent"
                                             />
                                         </div>
                                     </div>
@@ -370,6 +368,7 @@ import { CalendarDate, getLocalTimeZone, today as todayFn } from '@international
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import { useReplacements } from '~/composables/useReplacements';
+import { InputTime } from '@/components/ui/input-time';
 
 const formData = reactive({
     startDate: '',
@@ -505,7 +504,7 @@ const decrementDate = () => {
 const determineTimePeriod = (time: string): string => {
     const hour = parseInt(time.split(':')[0]);
 
-    if (hour >= 5 && hour < 12) {
+    if (hour >= 0 && hour < 12) {
         return 'morning';
     }
     else if (hour >= 12 && hour < 18) {
