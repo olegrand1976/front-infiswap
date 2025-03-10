@@ -55,6 +55,7 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Nom"
+                            :errors="validationErrors.lastname"
                             @blur="validateField('lastname')"
                             @input="validateField('lastname')"
                         />
@@ -73,6 +74,7 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Prénoms"
+                            :errors="validationErrors.firstname"
                             @blur="validateField('lastname')"
                             @input="validateField('lastname')"
                         />
@@ -91,6 +93,7 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Email"
+                            :errors="validationErrors.email"
                             @blur="validateField('email')"
                             @input="validateField('email')"
                         />
@@ -109,6 +112,7 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="N° de téléphone"
+                            :errors="validationErrors.phoneNumber"
                             @blur="validateField('phoneNumber')"
                             @input="validateField('phoneNumber')"
                         />
@@ -271,6 +275,7 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Code postal"
+                            :errors="validationErrors.zipCode"
                             @blur="validateField('address.zipCode')"
                             @input="validateField('address.zipCode')"
                         />
@@ -454,7 +459,7 @@ const languages = [
 
 const accountOptions = [
     {
-        label: 'Infirmière',
+        label: 'Infirmier(ère)',
         value: 'nurse',
     },
     {
@@ -563,7 +568,7 @@ const validateField = async (field) => {
     }
 };
 
-const { submit, inProgress } = useSubmit(
+const { submit, inProgress, validationErrors } = useSubmit(
     () => {
         status.value = '';
         return register(formData).then(() => {
@@ -580,11 +585,6 @@ const { submit, inProgress } = useSubmit(
                 router.push('auth/verify-email');
             }, 2000);
         });
-    },
-    {
-        onError: () => {
-            useNuxtApp().$toast.error('L\'inscription a échouée');
-        },
     },
 );
 
