@@ -4,19 +4,24 @@ import { useState, useNuxtApp } from '#app';
 export const useTours = () => {
     const { $apifetch } = useNuxtApp();
 
+    const user = useUser();
     const tours = useState('tours', () => []);
     const error = useState('toursError', () => null);
     const loading = useState('toursLoading', () => false);
 
-    const nurseId = 1;
+    // const nurseId = 1;
 
     async function fetchTours(startDate: string, endDate: string) {
         loading.value = true;
         error.value = null;
 
         try {
+            if (!user.value) {
+                throw new Error('Utilisateur non connecté');
+            }
+
             const params = new URLSearchParams({
-                nurseId: nurseId,
+                nurseId: user.value.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
