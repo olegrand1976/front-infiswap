@@ -267,10 +267,9 @@
 
                             <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                 <h5>Heure</h5>
-                                <Input
+                                <InputTime
                                     v-model="timeSlot.time"
-                                    type="time"
-                                    class="w-24 bg-white shadow rounded-full"
+                                    input-class="shadow rounded-full"
                                 />
                             </div>
 
@@ -385,9 +384,10 @@ import {
     PencilSquareIcon,
     XMarkIcon,
     CalendarDaysIcon,
-} from '@heroicons/vue/20/solid';
+} from '@heroicons/vue/24/solid';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient } from '~/composables/usePatients';
+import { InputTime } from '@/components/ui/input-time';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 
@@ -615,7 +615,7 @@ const {
             });
 
             setTimeout(() => {
-                router.push('/dashboard/patient');
+                router.push('/dashboard/patients');
             }, 3000);
         });
     },
