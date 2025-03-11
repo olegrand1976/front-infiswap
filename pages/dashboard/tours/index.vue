@@ -309,6 +309,17 @@ onMounted(() => {
     fetchTours(formattedInitialStart.value, formattedInitialStart.value);
 });
 
+const handleFetchCareType = (patientId) => {
+    if (selectedPatientId.value === patientId) {
+        selectedPatientId.value = null;
+    }
+    else {
+        selectedPatientId.value = patientId;
+        fetchCareType(patientId);
+        fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
+    }
+};
+
 watch(tours, (newTours) => {
     if (newTours.length > 0) {
         if (!selectedPatientId.value) {
@@ -320,17 +331,6 @@ watch(tours, (newTours) => {
         }
     }
 }, { immediate: true, deep: true });
-
-const handleFetchCareType = (patientId) => {
-    if (selectedPatientId.value === patientId) {
-        selectedPatientId.value = null;
-    }
-    else {
-        selectedPatientId.value = patientId;
-        fetchCareType(patientId);
-        fetchPatient(patientId, formattedStart.value, formattedStart.value);
-    }
-};
 
 useHead({
     title: 'Gestion Tournées',
