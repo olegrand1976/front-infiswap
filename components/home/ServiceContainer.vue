@@ -1,38 +1,49 @@
 <template>
-    <div class="pt-16 sm:pt-24 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
-        <div class="flex flex-col space-y-8 sm:space-y-24">
-            <div class="flex relative flex-col sm:container sm:flex-row items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
-                <div class="z-10 mx-6 sm:mx-0">
-                    <NuxtImg
-                        src="/home/Group_2217.png"
-                        alt="Image d'une femme"
-                        class="w-full lg:h-auto lg:w-[38rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
-                    />
-                </div>
+  <div class="pt-16 sm:pt-24 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
+    <div class="flex flex-col space-y-8 sm:space-y-24">
+      <div
+        class="flex relative flex-col sm:container sm:flex-row items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16"
+      >
+        <div class="z-10 mx-6 sm:mx-0">
+          <NuxtImg
+            src="/home/Group_2217.png"
+            alt="Image d'une femme"
+            class="w-full lg:h-auto lg:w-[38rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
+          />
+        </div>
 
-                <div class="hidden sm:flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4">
-                    <h3 class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
-                        Je cherche
-                        <br> un remplacement
-                        <br> à effectuer
-                    </h3>
-                    <p class="lg:w-96 md:w-[22rem] sm:w-[19rem] xl:text-sm lg:text-sm sm:text-xs">
-                        <span class="font-semibold">Vous cherchez un remplacement ?</span> Avec InfiSwap,
-                        <br> accédez en un clic aux annonces disponibles près de chez vous.
-                        <br> Trouvez facilement des opportunités adaptées à votre emploi du temps
-                        <br> et développez votre réseau tout en optimisant votre activité.
-                    </p>
-                    <div>
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
-                </div>
+        <div
+          class="hidden sm:flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4"
+        >
+          <h3
+            class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold"
+          >
+            Je cherche
+            <br />
+            un remplacement <br />
+            à effectuer
+          </h3>
+          <p
+            class="lg:w-96 md:w-[22rem] sm:w-[19rem] xl:text-sm lg:text-sm sm:text-xs"
+          >
+            <span class="font-semibold">Vous cherchez un remplacement ?</span>
+            Avec InfiSwap, <br />
+            accédez en un clic aux annonces disponibles près de chez vous.
+            <br />
+            Trouvez facilement des opportunités adaptées à votre emploi du temps
+            <br />
+            et développez votre réseau tout en optimisant votre activité.
+          </p>
+          <!--                     
+          <div>
+                <Button href="/" class="mx-auto inline-flex lg:text-sm sm:text-xs px-10">
+                    En savoir plus
+                </Button>
+          </div>
+          -->
+        </div>
 
-                <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+        <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                     <div class="hidden sm:flex flex-col space-y-8">
                         <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                             Gestion de ma tournée
@@ -81,7 +92,7 @@
                     </div>
                 </div> -->
 
-                <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+        <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                     <div class="z-10 w-full">
                         <NuxtImg
                             src="/home/cc62cd9.png"
@@ -126,7 +137,7 @@
                     </div>
                 </div> -->
 
-                <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
+        <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                     <div class="hidden sm:flex flex-col space-y-8">
                         <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                             Créez facilement vos tournées
@@ -190,10 +201,9 @@
                         </Button>
                     </div>
                 </div> -->
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
