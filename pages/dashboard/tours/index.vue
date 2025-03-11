@@ -71,7 +71,7 @@
                 <div v-if="patientError">
                     Erreur : {{ patientError.message }}
                 </div>
-                <div v-if="patient && patient.data">
+                <div v-if="patient && patient.patient">
                     <div class="mt-6">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
                             <div class="w-full">
@@ -84,11 +84,8 @@
                                     </div>
                                     <div class="ml-4 flex flex-grow justify-between items-center">
                                         <div class="text-lg">
-                                            {{ patient.data.firstname }} <span class="font-semibold">{{ patient.data.lastname }}</span>
+                                            {{ patient.patient[0].firstname }} <span class="font-semibold">{{ patient.patient[0].lastname }}</span>
                                         </div>
-                                        <!-- <div class="text-xs pr-4">
-                                            <span class="font-semibold">Age: </span>XX
-                                        </div> -->
                                     </div>
                                 </div>
 
@@ -100,7 +97,7 @@
                                     <div class="mt-4 p-4 rounded-lg shadow">
                                         <div class="flex justify-between items-center border-b pb-2">
                                             <span class="font-bold">Genre</span>
-                                            <span class="w-2/3 text-center">{{ patient.data.gender ?? 'Pas de données pour l\'instant' }}</span>
+                                            <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données pour l\'instant' }}</span>
                                         </div>
                                         <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Groupe sanguin</span>
@@ -109,14 +106,14 @@
                                         <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Allergies</span>
                                             <span class="w-2/3 text-center">
-                                                <div v-if="patient?.data?.care_informations && patient.data.care_informations.length > 0">
+                                                <div v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0">
                                                     <div>
                                                         <span
-                                                            v-for="(careInfo, index) in patient.data.care_informations"
+                                                            v-for="(careInfo, index) in patient.patient[0].care_informations"
                                                             :key="careInfo.record_name"
                                                         >
                                                             {{ careInfo.record_name }}
-                                                            <span v-if="index < patient.data.care_informations.length - 1">, </span>
+                                                            <span v-if="index < patient.patient[0].care_informations.length - 1">, </span>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -151,7 +148,7 @@
                                         <HomeIcon class="h-6 w-6 text-white mr-2" /> Ville
                                     </div>
                                     <div class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary">
-                                        {{ patient.data.profile.city ?? 'Pas de données pour l\'instant' }}
+                                        {{ patient.patient[0].profile.city ?? 'Pas de données pour l\'instant' }}
                                     </div>
                                 </div>
 
@@ -160,7 +157,7 @@
                                         <InboxIcon class="h-6 w-6 text-white mr-2" /> Code postal
                                     </div>
                                     <div class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary">
-                                        {{ patient.data.profile.zip_code ?? 'Pas de données pour l\'instant' }}
+                                        {{ patient.patient[0].profile.zip_code ?? 'Pas de données pour l\'instant' }}
                                     </div>
                                 </div>
 
@@ -168,9 +165,9 @@
                                     <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-lg w-full flex">
                                         <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
-                                    <div v-if="patient?.data?.visit_times && patient.data.visit_times.length > 0">
+                                    <div v-if="patient?.patient[0]?.visit_times && patient.patient[0].visit_times.length > 0">
                                         <div
-                                            v-for="visit in patient.data.visit_times"
+                                            v-for="visit in patient.patient[0].visit_times"
                                             :key="visit.patient_id"
                                         >
                                             <div
@@ -188,7 +185,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-else-if="!patient?.data?.visit_times || patient.data.visit_times.length === 0">
+                                    <div v-else-if="!patient?.patient[0]?.visit_times || patient.patient[0].visit_times.length === 0">
                                         <p class="text-center text-gray-500">
                                             Pas de créneau trouvé
                                         </p>
@@ -250,17 +247,6 @@ const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
 const selectedPatientId = ref(null);
 
-const handleFetchCareType = (patientId) => {
-    if (selectedPatientId.value === patientId) {
-        selectedPatientId.value = null;
-    }
-    else {
-        selectedPatientId.value = patientId;
-        fetchCareType(patientId);
-        fetchPatient(patientId);
-    }
-};
-
 const today = computed(() => {
     const date = new Date();
     const day = String(date.getDate()).padStart(2, '0');
@@ -296,7 +282,7 @@ const formatDate = (calendarDate) => {
 const translatedVisitPeriod = (visitPeriod: string) => {
     switch (visitPeriod.toLowerCase()) {
         case 'morning':
-            return 'Matin' 
+            return 'Matin'
         case 'afternoon':
             return 'Après-midi'
         case 'evening':
@@ -306,28 +292,45 @@ const translatedVisitPeriod = (visitPeriod: string) => {
     }
 };
 
+const formattedStart = ref("");
+
 watch(value, (newValue) => {
     const startDate = newValue;
-    const formattedStart = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
-    fetchTours(formattedStart, formattedStart);
+    formattedStart.value = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
+    fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
+
+const formattedInitialStart = ref("");
+
+onMounted(() => {
+    const now = new Date();
+    const initialStartDate = value.value || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    formattedInitialStart.value = formatDate(initialStartDate);
+    fetchTours(formattedInitialStart.value, formattedInitialStart.value);
+});
+
+const handleFetchCareType = (patientId) => {
+    if (selectedPatientId.value === patientId) {
+        selectedPatientId.value = null;
+    }
+    else {
+        selectedPatientId.value = patientId;
+        fetchCareType(patientId);
+        fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
+    }
+};
 
 watch(tours, (newTours) => {
     if (newTours.length > 0) {
         if (!selectedPatientId.value) {
             selectedPatientId.value = newTours[0].id;
             fetchCareType(selectedPatientId.value);
-            fetchPatient(selectedPatientId.value);
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
         }
     }
 }, { immediate: true, deep: true });
-
-onMounted(() => {
-    const now = new Date();
-    const initialStartDate = value.value || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
-    const formattedInitialStart = formatDate(initialStartDate);
-    fetchTours(formattedInitialStart, formattedInitialStart);
-});
 
 useHead({
     title: 'Gestion Tournées',
