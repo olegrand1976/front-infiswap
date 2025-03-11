@@ -73,12 +73,21 @@ export const usePatient = () => {
     const patient = useState('patient', () => null);
     const patientLoading = useState('patientLoading', () => false);
     const patientError = useState('patientError', () => null);
+    const user = useUser();
 
     const fetchPatient = async (patientId) => {
         patientLoading.value = true;
         patientError.value = null;
+        const nurseId = user.value.id.toString();
         try {
-            const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
+            // const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
+            // console.log('Données reçue ', response);
+            // patient.value = response;
+            const params = new URLSearchParams({ nurseId: nurseId }).toString();
+            const response = await $apifetch(`/api/tours/tour-patient/${patientId}?${params}`, { method: 'GET' });
+
+            console.log('Données reçues :', response); // Vérifie le retour dans la console
+
             patient.value = response;
         }
         catch (err) {
