@@ -13,7 +13,7 @@
                 </div>
             </div> -->
         </header>
-        <main class="flex-1 mb-24">
+        <main class="flex-1">
             <slot />
         </main>
         <footer>
