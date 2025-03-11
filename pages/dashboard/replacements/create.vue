@@ -290,13 +290,51 @@
                                     <h5 class="font-semibold text-primary">
                                         Sélectionnez l'heure
                                     </h5>
-                                    <div class="flex items-center space-x-8 mt-4">
-                                        <label>Heure:</label>
 
-                                        <div class="flex justify-center items-center h-9 w-36">
-                                            <InputTime
-                                                v-model="selectedTime"
-                                            />
+                                    <div
+                                        v-if="visitTimes.length != 0"
+                                        class="flex items-center space-x-8 mt-4"
+                                    >
+                                        <label>Horaires disponibles: </label>
+
+                                        <div
+                                            v-for="(time, index) in visitTimes"
+                                            :key="index"
+                                            class="flex items-center space-x-4"
+                                        >
+                                            <div
+                                                class="h-8 px-8 py-1 text-sm rounded-full cursor-pointer transition-all duration-300"
+                                                :class="{
+                                                    'bg-primary text-white': time === selectedTime,
+                                                    'border border-primary': time !== selectedTime,
+                                                }"
+                                                @click="handleSelectTime(time)"
+                                            >
+                                                {{ time }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        v-if="visitTimes.length != 0"
+                                        class="relative my-8"
+                                    >
+                                        <hr class="border border-gray-200">
+                                        <p class="absolute px-4 py-1 bg-white -top-3 text-gray-400 left-1/2">
+                                            OU
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="flex items-center space-x-8 mt-4"
+                                    >
+                                        <label>Entrer l'heure: </label>
+
+                                        <div
+                                            input-class="rounded-full w-36"
+                                            class="rounded-full"
+                                        >
+                                            <InputTime v-model="selectedTime" />
                                         </div>
                                     </div>
                                 </div>
@@ -369,6 +407,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import { useReplacements } from '~/composables/useReplacements';
 import { InputTime } from '@/components/ui/input-time';
+import { detailPatient } from '~/composables/usePatients';
+
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+};
 
 const formData = reactive({
     startDate: '',
@@ -528,19 +572,35 @@ const selectedPatient = ref(null);
 const selectedPeriod = ref('morning');
 const selectedCareTypes = ref([]);
 const patientCareTypes = ref([]);
+const idPatient = ref(null);
+const visitTimes = ref([]);
 
-const handlePatientSelection = (patient) => {
-    if (patient && patient.care_types) {
-        // Extraire les IDs des care types du patient
+const extractTimes = (patientVis) => {
+    if (!Array.isArray(patientVis)) return [];
+    return patientVis.flatMap(visit =>
+        Array.isArray(visit.visits) ? visit.visits.map(v => formatTime(v.time)) : [],
+    );
+};
+
+const handlePatientSelection = async (patient) => {
+    if (!patient || !patient.id) return;
+
+    idPatient.value = patient.id;
+
+    if (patient?.care_types) {
         patientCareTypes.value = patient.care_types.map(care => care.id);
-
-        // Initialiser les care types sélectionnés avec ceux du patient
         selectedCareTypes.value = [...patientCareTypes.value];
     }
     else {
         patientCareTypes.value = [];
         selectedCareTypes.value = [];
     }
+
+    // Récupérer les données après avoir défini l'ID
+    const { patientVis, fetchPatientVisit } = detailPatient(idPatient.value);
+
+    await fetchPatientVisit(); // Attendre la récupération
+    visitTimes.value = extractTimes(patientVis.value);
 };
 
 // Ajouter ou retirer un care type de la sélection
@@ -561,6 +621,10 @@ const openDialog = (period = 'morning') => {
     selectedCareTypes.value = [];
     patientCareTypes.value = [];
     isDialogOpen.value = true;
+};
+
+const handleSelectTime = (time) => {
+    selectedTime.value = time;
 };
 
 const addPatientToTable = () => {

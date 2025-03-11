@@ -51,7 +51,7 @@ export const detailPatient = (patientId) => {
     const { $apifetch } = useNuxtApp();
 
     const patient = useState('patient', () => []);
-    const patientVisit = useState('patientVisit', () => []);
+    const patientVis = useState('patientVis', () => []);
 
     async function fetchDetailPatient() {
         const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
@@ -59,13 +59,13 @@ export const detailPatient = (patientId) => {
     }
 
     async function fetchPatientVisit() {
-        const response = await $apifetch(`/api/patients/${patientId}/visit_times`, { method: 'GET' });
-        patientVisit.value = response.patient_visit_times;
+        const response = await $apifetch(`/api/patients/${patientId}/visit-times`, { method: 'GET' });
+        patientVis.value = response.patient_visit_times;
     }
 
     return {
         patient,
-        patientVisit,
+        patientVis,
         fetchDetailPatient,
         fetchPatientVisit,
     };
