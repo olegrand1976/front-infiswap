@@ -68,5 +68,6 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 definePageMeta({
     ssr: false,
 });
+
 const search = ref('');
 </script>
