@@ -38,12 +38,12 @@
                     <hr class="mx-8">
                     <p class="md:text-sm sm:text-xs xl:mt-8 sm:mt-6 text-center">
                         Si vous n'avez pas encore reçu de mail,
-                        <NuxtLink
-                            to="/"
-                            class="text-primary"
+                        <Button
+                            variant="link"
+                            @click="resendEmailVerification"
                         >
-                            Renvoyer le mail de confirmation
-                        </NuxtLink>
+                            renvoyer le mail de confirmation
+                        </Button>.
                     </p>
                 </div>
             </div>
@@ -63,7 +63,7 @@ definePageMeta({
 });
 
 const user = useUser();
-
+const { resendEmailVerification } = useAuth();
 useHead({
     title: 'Vérification d\'adresse email ',
 });

@@ -8,7 +8,7 @@ export const useUser = () => {
 
 export const useAuth = () => {
     const router = useRouter();
-    const { $apifetch, $fetchCurrentUser } = useNuxtApp();
+    const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
     const isLoggedIn = computed(() => !!user.value);
 
@@ -45,6 +45,10 @@ export const useAuth = () => {
     async function resendEmailVerification() {
         return await $apifetch('/api/email/verification-notification', {
             method: 'post',
+        }).then(() => {
+            $toast({
+                description: 'E-mail envoyé avec succès.',
+            });
         });
     }
 
