@@ -43,9 +43,11 @@
                             </label>
                         </div>
                         <Input
+                            id="lastname"
                             v-model="formData.lastname"
                             type="text"
                             class="w-full bg-transparent"
+                            placeholder="Doe"
                         />
                     </div>
 
@@ -56,22 +58,25 @@
                             </label>
                         </div>
                         <Input
+                            id="firstname"
                             v-model="formData.firstname"
                             type="text"
                             class="w-full bg-transparent"
+                            placeholder="John"
                         />
                     </div>
 
                     <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="soci&a">
+                            <label for="socialSecurityNumber">
                                 Sécurité sociale
                             </label>
                         </div>
                         <Input
+                            id="socialSecurityNumber"
                             v-model="formData.socialSecurityNumber"
                             type="text"
-                            placeholder="000000.000.00"
+                            placeholder="880603-123-56"
                             class="w-full bg-transparent"
                         />
                     </div>
@@ -83,9 +88,11 @@
                             </label>
                         </div>
                         <Input
+                            id="email"
                             v-model="formData.email"
                             type="email"
                             class="w-full bg-transparent"
+                            placeholder="johndoe@gmail.com"
                         />
                     </div>
 
@@ -96,9 +103,11 @@
                             </label>
                         </div>
                         <Input
+                            id="phoneNumber"
                             v-model="formData.phoneNumber"
                             type="text"
                             class="w-full bg-transparent"
+                            placeholder="08 67 56 54 32"
                         />
                     </div>
 
@@ -109,22 +118,26 @@
                             </label>
                         </div>
                         <Input
+                            id="zipCode"
                             v-model="formData.zipCode"
                             type="text"
                             class="w-full bg-transparent"
+                            placeholder="09866"
                         />
                     </div>
 
                     <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="ville">
+                            <label for="city">
                                 Ville
                             </label>
                         </div>
                         <Input
+                            id="city"
                             v-model="formData.city"
                             type="text"
                             class="w-full bg-transparent"
+                            placeholder="Wallon"
                         />
                     </div>
 
@@ -184,7 +197,7 @@
                                         class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                         position="right"
                                     >
-                                        <SelectValue />
+                                        <SelectValue placeholder="Séléctionner un jour" />
                                     </SelectTrigger>
 
                                     <SelectContent class="border border-none">
@@ -233,8 +246,17 @@
                                             class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                             position="right"
                                         >
-                                            <SelectValue class="truncate w-[35rem]">
-                                                {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
+                                            <SelectValue
+                                                class="truncate w-[38rem]"
+                                            >
+                                                <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
+                                                    {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
+                                                </template>
+                                                <template v-else>
+                                                    <span class="text-black/60">
+                                                        Sélectionner un type de soin
+                                                    </span>
+                                                </template>
                                             </SelectValue>
                                         </SelectTrigger>
 
@@ -280,7 +302,7 @@
             </div>
 
             <Button
-                class="my-12 flex justify-center items-center mx-auto"
+                class="my-12 w-80 flex justify-center items-center mx-auto"
                 type="submit"
                 :in-progress="inProgress"
             >
@@ -312,7 +334,7 @@ const formData = reactive({
     city: '',
     careStartDate: '',
     careEndDate: '',
-    availability: '',
+    availability: 'available',
     care_informations: [],
     visits: [
         {
@@ -442,6 +464,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: 'auth',
+    middleware: 'verified',
 });
 </script>
