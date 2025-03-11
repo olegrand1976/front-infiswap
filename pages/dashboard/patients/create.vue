@@ -281,11 +281,15 @@
                                 </div>
                             </div>
 
-                            <PlusIcon
-                                class="w-6 text-primary mt-8 ml-auto cursor-pointer"
-                                title="Ajouter un autre heure"
+                            <p
+                                class="w-48 ml-auto flex justify-end text-primary mt-8 cursor-pointer items-center space-x-3"
                                 @click="addTimeSlot(visitIndex)"
-                            />
+                            >
+                                <PlusIcon class="w-6" />
+                                <span>
+                                    Nouvelle visite
+                                </span>
+                            </p>
                         </div>
                     </div>
 
@@ -313,6 +317,8 @@
 
 <script lang="ts" setup>
 import { CalendarDaysIcon, PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { InputTime } from '@/components/ui/input-time';
+
 import { useCareTypes } from '~/composables/useCareTypes';
 import { createPatient } from '~/composables/usePatients';
 
@@ -321,6 +327,14 @@ const router = useRouter();
 
 const user = useState('user');
 const { $toast } = useNuxtApp();
+
+const availabilities = {
+    available: 'Disponible',
+    unavailable: 'Indisponible',
+    absent: 'Absent',
+    hospitalized: 'Hospitalisé',
+    on_vacation: 'En vacances',
+};
 
 const formData = reactive({
     nurseId: user.value.nurse.id,
@@ -349,14 +363,6 @@ const formData = reactive({
     patient_care_type: [],
     patient_documents: [],
 });
-
-const availabilities = {
-    available: 'Disponible',
-    unavailable: 'Indisponible',
-    absent: 'Absent',
-    hospitalized: 'Hospitalisé',
-    on_vacation: 'En vacances',
-};
 
 const days = {
     monday: 'Lundi',

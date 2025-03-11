@@ -282,17 +282,17 @@ const formatDate = (calendarDate) => {
 const translatedVisitPeriod = (visitPeriod: string) => {
     switch (visitPeriod.toLowerCase()) {
         case 'morning':
-            return 'Matin'
+            return 'Matin';
         case 'afternoon':
-            return 'Après-midi'
+            return 'Après-midi';
         case 'evening':
-            return 'Soirée'
+            return 'Soirée';
         default:
-            return visitPeriod
+            return visitPeriod;
     }
 };
 
-const formattedStart = ref("");
+const formattedStart = ref('');
 
 watch(value, (newValue) => {
     const startDate = newValue;
@@ -300,7 +300,7 @@ watch(value, (newValue) => {
     fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
 
-const formattedInitialStart = ref("");
+const formattedInitialStart = ref('');
 
 onMounted(() => {
     const now = new Date();

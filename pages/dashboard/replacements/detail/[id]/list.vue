@@ -128,7 +128,7 @@ const handlesubmit = async (id) => {
             title: 'Succès',
             description: 'Infirmier accepté',
         });
-        router.push('/dashboard/replacement');
+        router.push('/dashboard/replacements');
     }
     catch (e) {
         $toast({
