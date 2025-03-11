@@ -678,6 +678,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth'],
+    middleware: 'verified',
 });
 </script>

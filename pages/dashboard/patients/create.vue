@@ -229,10 +229,9 @@
 
                                 <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                     <h5>Heure</h5>
-                                    <Input
+                                    <InputTime
                                         v-model="timeSlot.time"
-                                        type="time"
-                                        class="w-24 bg-white shadow rounded-full"
+                                        input-class="rounded-full"
                                     />
                                 </div>
 
@@ -448,7 +447,7 @@ const {
             });
 
             setTimeout(() => {
-                router.push('/dashboard/patient');
+                router.push('/dashboard/patients');
             }, 3000);
         });
     },
