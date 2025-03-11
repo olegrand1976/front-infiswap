@@ -369,9 +369,9 @@
                         </DialogContent>
                     </Dialog>
 
-                    <div class="mt-8 mb-16 flex justify-between items-center">
-                        <div class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
-                            <div class="bg-primary flex rounded-s-full justify-center items-center px-auto">
+                    <div class="mt-8 mb-16 flex justify-end items-center">
+                        <div class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
+                            <div class="bg-primary rounded-s-full justify-center items-center px-auto">
                                 <span class="text-center text-white">Revenu</span>
                             </div>
                             <div class="flex justify-center items-center mx-auto">
