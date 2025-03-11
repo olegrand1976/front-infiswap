@@ -1,0 +1,159 @@
+<template>
+    <div>
+        <div class="sm:hidden relative flex flex-col items-center">
+            <div class="absolute inset-0 z-0">
+                <NuxtImg
+                    src="/Mask_group.png"
+                    class="w-full h-48"
+                />
+            </div>
+            <div class="mt-10 z-20 relative flex justify-center">
+                <LayoutsLogo class="w-[15rem] hidden md:inline-block" />
+                <h1 class="text-primary text-3xl lg:text-4xl text-center mt-0 sm:mt-8 md:hidden">
+                    <p>Conditions</p>
+                    <p class="mt-2 font-bold">
+                        Générales d'Utilisation
+                    </p>
+                </h1>
+            </div>
+        </div>
+        <div class="mt-32 sm:mt-0 sm:bg-tertiary/30 sm:h-80 flex justify-center items-center relative">
+            <h1 class="hidden md:inline-block text-primary text-3xl lg:text-4xl text-center mt-0 sm:mt-8">
+                <p>Conditions</p>
+                <p class="mt-2 font-bold">
+                    Générales d'Utilisation
+                </p>
+            </h1>
+        </div>
+        <div class="max-w-4xl mx-auto p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
+                <ol class="space-y-4 list-decimal pl-6 mt-2">
+                    <li
+                        v-for="(term, index) in terms"
+                        :key="index"
+                        class="cursor-pointer"
+                        @click="scrollToSection(index)"
+                    >
+                        {{ term.title }}
+                    </li>
+                </ol>
+
+                <ul class="md:col-span-2 flex flex-col space-y-4">
+                    <li
+                        v-for="(term, index) in terms"
+                        :id="index"
+                        :key="index"
+                    >
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            {{ term.title }}
+                        </h3>
+                        <p
+                            class="text-gray-600"
+                            v-html="term.text"
+                        />
+                    </li>
+                    <a
+                        href="http://"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    />
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts" setup>
+useHead({
+    title: 'Conditions Générales d\'Utilisation',
+    meta: [{ name: 'description', content: 'Découvrez les Conditions Générales d\'Utilisation d\'InfiSwap : accès, droits, responsabilités et protection des données.' }],
+});
+
+definePageMeta({
+    middleware: ['guest'],
+    layout: 'guest',
+});
+
+function scrollToSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    const offset = 100;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.scrollY - offset;
+
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+    });
+}
+
+const terms = {
+    introduction: {
+        title: 'Introduction',
+        text: `Les présentes Conditions Générales d’Utilisation (ci-après « CGU ») ont pour objet de définir les modalités d’accès et d’utilisation du site <a class='text-primary font-semibold' href="https://www.infiswap.be" target="_blank" rel="noopener noreferrer">www.infiswap.com</a> (ci-après « le Site »), édité par la société :
+                <ul class='mt-1'>
+                    <li>LL-IT Software & Computer</li>
+                    <li>Rue de la Résistance, 92 / A</li>
+                    <li>7131 Waudrez</li>
+                    <li>TVA : BE1007132489</li>
+                </ul>`,
+    },
+    acceptance: {
+        title: 'Acceptation des CGU',
+        text: `L’accès et l’utilisation du Site impliquent l’acceptation sans réserve des présentes CGU par l’utilisateur. Si l’utilisateur n’accepte pas ces conditions, il lui est demandé de ne pas utiliser le Site.`,
+    },
+    siteObjetAndAccess: {
+        title: 'Objet du Site et Accès',
+        text: `Le Site propose [préciser brièvement les services ou fonctionnalités offertes par InfiSwap].
+    L’accès au Site est gratuit, sauf indication contraire indiquée sur les pages de services spécifiques. L’utilisateur s’engage à utiliser le Site conformément aux présentes CGU et aux lois en vigueur.`,
+    },
+    registration: {
+        title: 'Inscription et Comptes Utilisateurs',
+        text: `Pour accéder à certains services ou contenus, l’utilisateur peut être amené à créer un compte. Dans ce cas, il s’engage à fournir des informations exactes et à jour. Il est de la responsabilité de l’utilisateur de maintenir la confidentialité de ses identifiants et de son mot de passe. Toute utilisation frauduleuse de ces identifiants pourra entraîner la suspension ou la suppression du compte.`,
+    },
+    intellectualProperty: {
+        title: 'Propriété Intellectuelle',
+        text: `Tous les contenus présents sur le Site (textes, images, logos, graphismes, vidéos, etc.) sont la propriété exclusive de LL-IT Software & Computer ou de ses partenaires et sont protégés par le droit d’auteur. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans l’autorisation écrite préalable de l’éditeur est strictement interdite.`,
+    },
+    userResponsibilities: {
+        title: 'Responsabilités de l’Utilisateur',
+        text: `L’utilisateur s’engage à utiliser le Site de manière loyale et conforme aux lois et règlements en vigueur. Il s’engage à ne pas porter atteinte aux droits de tiers, à ne pas diffuser de contenus illicites, diffamatoires ou contraires aux bonnes mœurs, et à ne pas perturber le fonctionnement du Site (par exemple, via l’introduction de virus ou autres logiciels malveillants).`,
+    },
+    publisherResponsibilities: {
+        title: 'Responsabilités de l’Éditeur',
+        text: `LL-IT Software & Computer s’efforce d’assurer l’exactitude et la disponibilité des informations diffusées sur le Site. Toutefois, l’éditeur ne saurait être tenu responsable :
+                <ul class='list-disc md:ml-6'>
+                <li>Des interruptions ou dysfonctionnements du Site.</li>
+                <li>Des informations erronées ou obsolètes.</li>
+                <li>Des dommages directs ou indirects résultant de l’utilisation du Site.</li>
+                </ul>
+                En outre, le Site peut contenir des liens hypertextes vers des sites tiers. LL-IT Software & Computer n’exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu.`,
+    },
+    cookies: {
+        title: 'Cookies',
+        text: `Le Site utilise des cookies pour améliorer l’expérience utilisateur et réaliser des statistiques de fréquentation. L’utilisateur peut, via les paramètres de son navigateur, refuser l’installation de cookies, en étant informé que cela pourrait altérer l’accès à certaines fonctionnalités du Site.`,
+    },
+    personalData: {
+        title: 'Données Personnelles',
+        text: `L’utilisation du Site peut impliquer la collecte et le traitement de données personnelles. Pour plus d’informations sur la gestion de ces données, veuillez consulter notre « Politique de Protection des Données Personnelles & Sécurité ». En vous inscrivant sur le Site, vous acceptez les modalités de collecte et d’utilisation de vos données telles qu’y décrites.`,
+    },
+    modifications: {
+        title: 'Modifications des CGU',
+        text: `LL-IT Software & Computer se réserve le droit de modifier à tout moment les présentes CGU. Les modifications seront publiées sur le Site et entreront en vigueur dès leur mise en ligne. Il est conseillé à l’utilisateur de consulter régulièrement cette page afin de prendre connaissance des éventuelles mises à jour.`,
+    },
+    applicableLawAndJurisdiction: {
+        title: 'Loi Applicable et Juridiction Compétente',
+        text: `Les présentes CGU sont régies par le droit belge. En cas de litige relatif à l’interprétation ou à l’exécution des présentes, les tribunaux compétents seront ceux du ressort de [préciser la localité].`,
+    },
+    miscellaneous: {
+        title: 'Dispositions Diverses',
+        text: `Si une ou plusieurs dispositions des présentes CGU devaient être déclarées nulles ou inapplicables, les autres dispositions demeureront en vigueur.
+    L’éditeur se réserve le droit de suspendre ou de limiter l’accès à certaines parties du Site, sans préavis, pour des raisons de maintenance ou de sécurité.`,
+    },
+};
+</script>
+
+<style>
+    html{
+        scroll-behavior: smooth;
+    }
+</style>
