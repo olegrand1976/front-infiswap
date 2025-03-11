@@ -10,4 +10,3 @@ export { default as RangeCalendarHeader } from './RangeCalendarHeader.vue';
 export { default as RangeCalendarHeading } from './RangeCalendarHeading.vue';
 export { default as RangeCalendarNextButton } from './RangeCalendarNextButton.vue';
 export { default as RangeCalendarPrevButton } from './RangeCalendarPrevButton.vue';
-export { default as RangeCalendarTours } from './RangeCallendarTours.vue';
