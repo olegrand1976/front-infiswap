@@ -121,45 +121,52 @@
                     </h3>
 
                     <div class="px-4 py-6">
-                        <div
-                            v-for="(careInformation, careIndex) in patient.care_informations"
-                            :key="careIndex"
-                            class="space-y-5"
-                        >
-                            <div class="grid grid-cols-[40%_60%] gap-4">
-                                <h6 class="font-semibold">
-                                    Type de maladie
-                                </h6>
-                                <p>
-                                    {{ careInformation.record_type }}
-                                </p>
+                        <template v-if="patient.care_informations.length === 0">
+                            <p class="text-center text-sm text-black/40 p-6">
+                                Aucune information à afficher pour le moment
+                            </p>
+                        </template>
+                        <template v-else>
+                            <div
+                                v-for="(careInformation, careIndex) in patient.care_informations"
+                                :key="careIndex"
+                                class="space-y-5"
+                            >
+                                <div class="grid grid-cols-[40%_60%] gap-4">
+                                    <h6 class="font-semibold">
+                                        Type de maladie
+                                    </h6>
+                                    <p>
+                                        {{ careInformation.record_type }}
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-[40%_60%] gap-4">
+                                    <h6 class="font-semibold">
+                                        Facteur
+                                    </h6>
+                                    <p>
+                                        {{ careInformation.record_name }}
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-[40%_60%] gap-4">
+                                    <h6 class="font-semibold">
+                                        Gravité
+                                    </h6>
+                                    <p>
+                                        {{ severities[careInformation.record_severity] }}
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-[40%_60%] gap-4">
+                                    <h6 class="font-semibold">
+                                        Détail
+                                    </h6>
+                                    <p>
+                                        {{ careInformation.record_details }}
+                                    </p>
+                                </div>
+                                <hr class="border border-gray-200">
                             </div>
-                            <div class="grid grid-cols-[40%_60%] gap-4">
-                                <h6 class="font-semibold">
-                                    Facteur
-                                </h6>
-                                <p>
-                                    {{ careInformation.record_name }}
-                                </p>
-                            </div>
-                            <div class="grid grid-cols-[40%_60%] gap-4">
-                                <h6 class="font-semibold">
-                                    Gravité
-                                </h6>
-                                <p>
-                                    {{ severities[careInformation.record_severity] }}
-                                </p>
-                            </div>
-                            <div class="grid grid-cols-[40%_60%] gap-4">
-                                <h6 class="font-semibold">
-                                    Détail
-                                </h6>
-                                <p>
-                                    {{ careInformation.record_details }}
-                                </p>
-                            </div>
-                            <hr class="border border-gray-200">
-                        </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -637,6 +644,6 @@ watch(() => patient.value, () => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: 'auth',
+    middleware: 'verified',
 });
 </script>

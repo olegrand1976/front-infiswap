@@ -47,7 +47,7 @@
 
                     <div>
                         <h4 class="text-primary font-semibold">
-                            Taux de satisfaction
+                            Réponse en attente
                         </h4>
                         <div class="border-2 border-gray-200 rounded p-4 my-3">
                             <h6 class="flex items-center space-x-4 text-sm">

@@ -122,7 +122,7 @@ onUnmounted(() => {
                 :value="displayValue"
                 placeholder="HH:mm"
                 pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
-                class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                class="w-full px-3 py-2 pr-10 text-sm border border-gray-300  focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 :class="inputClass"
                 @input="handleManualInput"
                 @focus="showPicker = true"
@@ -157,7 +157,7 @@ onUnmounted(() => {
         <Transition name="fade">
             <div
                 v-if="showPicker"
-                class="absolute top-full left-0 mt-1 flex bg-white border border-gray-200 shadow-lg z-50"
+                class="absolute top-full left-0 mt-1 flex bg-white border border-gray-200  shadow-lg z-50"
                 :class="dropdownClass"
             >
                 <div
