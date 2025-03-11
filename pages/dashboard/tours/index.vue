@@ -300,16 +300,6 @@ watch(value, (newValue) => {
     fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
 
-watch(tours, (newTours) => {
-    if (newTours.length > 0) {
-        if (!selectedPatientId.value) {
-            selectedPatientId.value = newTours[0].id;
-            fetchCareType(selectedPatientId.value);
-            fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
-        }
-    }
-}, { immediate: true, deep: true });
-
 const handleFetchCareType = (patientId) => {
     if (selectedPatientId.value === patientId) {
         selectedPatientId.value = null;
@@ -321,12 +311,27 @@ const handleFetchCareType = (patientId) => {
     }
 };
 
+const formattedInitialStart = ref("");
+
 onMounted(() => {
     const now = new Date();
     const initialStartDate = value.value || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
-    const formattedInitialStart = formatDate(initialStartDate);
-    fetchTours(formattedInitialStart, formattedInitialStart);
+    formattedInitialStart.value = formatDate(initialStartDate);
+    fetchTours(formattedInitialStart.value, formattedInitialStart.value);
 });
+
+watch(tours, (newTours) => {
+    if (newTours.length > 0) {
+        if (!selectedPatientId.value) {
+            selectedPatientId.value = newTours[0].id;
+            fetchCareType(selectedPatientId.value);
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            console.log(formattedDate);
+            fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
+        }
+    }
+}, { immediate: true, deep: true });
 
 useHead({
     title: 'Gestion Tournées',
