@@ -131,7 +131,7 @@ const navigationItems = [
     { label: 'A PROPOS', route: '/about' },
     { label: 'NOS SERVICES', route: '/services' },
     { label: 'ACTUALITES', route: '/news' },
-    { label: 'CONTACTS', route: '/contact' },
+    { label: 'NOUS CONTACTER', route: '/contact' },
 ];
 
 const route = useRoute();
