@@ -119,6 +119,7 @@
                     <div>
                         <Button
                             class="flex text-xs items-center space-x-2"
+                            @click="copyAllDates"
                         >
                             Copier tous les jours de la tournée
                             <Square2StackIcon class="w-6 h-6" />
@@ -711,7 +712,93 @@ const updateReplacementData = () => {
 const { tours, fetchTours } = useTours();
 
 const copyCurrentDate = async () => {
+    await fetchTours(formData.startDate, formData.startDate);
+
+    if (tours.value && tours.value.length > 0) {
+        tours.value.forEach((tour) => {
+            if (tour.visit_times && tour.visit_times.length > 0) {
+                tour.visit_times.forEach((visitTime) => {
+                    if (visitTime.visits && visitTime.visits.length > 0) {
+                        visitTime.visits.forEach((visit) => {
+                            const actualPeriod = determineTimePeriod(formatTime(visit.time));
+                            const date = tour.date;
+
+                            // Initialiser la structure si elle n'existe pas
+                            if (!datePatients.value[date]) {
+                                datePatients.value[date] = {};
+                            }
+                            if (!datePatients.value[date][actualPeriod]) {
+                                datePatients.value[date][actualPeriod] = [];
+                            }
+
+                            datePatients.value[date][actualPeriod].push({
+                                id: tour.id,
+                                firstname: tour.firstname,
+                                lastname: tour.lastname,
+                                social_security_number: tour.social_security_number,
+                                phone_number: tour.phone_number,
+                                city: tour.profile.city,
+                                zipCode: tour.profile.zip_code,
+                                careTypes: visit.care_types,
+                                time: formatTime(visit.time),
+                            });
+
+                            // Trier les visites par heure
+                            datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Mettre à jour formData.replacement pour la soumission
+    updateReplacementData();
+};
+
+const copyAllDates = async () => {
     await fetchTours(formData.startDate, formData.endDate);
+
+    if (tours.value && tours.value.length > 0) {
+        tours.value.forEach((tour) => {
+            if (tour.visit_times && tour.visit_times.length > 0) {
+                tour.visit_times.forEach((visitTime) => {
+                    if (visitTime.visits && visitTime.visits.length > 0) {
+                        visitTime.visits.forEach((visit) => {
+                            const actualPeriod = determineTimePeriod(formatTime(visit.time));
+                            const date = tour.date;
+
+                            // Initialiser la structure si elle n'existe pas
+                            if (!datePatients.value[date]) {
+                                datePatients.value[date] = {};
+                            }
+                            if (!datePatients.value[date][actualPeriod]) {
+                                datePatients.value[date][actualPeriod] = [];
+                            }
+
+                            datePatients.value[date][actualPeriod].push({
+                                id: tour.id,
+                                firstname: tour.firstname,
+                                lastname: tour.lastname,
+                                social_security_number: tour.social_security_number,
+                                phone_number: tour.phone_number,
+                                city: tour.profile.city,
+                                zipCode: tour.profile.zip_code,
+                                careTypes: visit.care_types,
+                                time: formatTime(visit.time),
+                            });
+
+                            // Trier les visites par heure
+                            datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Mettre à jour formData.replacement pour la soumission
+    updateReplacementData();
 };
 
 const { submitReplacement } = useReplacements();
