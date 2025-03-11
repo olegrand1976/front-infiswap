@@ -195,16 +195,15 @@ const cards = [
         title: '📅 Gestion flexible et optimisée',
         content: [
             'Planifiez vos remplacements en fonction de vos disponibilités.',
-            'Ajoutez directement les missions acceptées à votre agenda.',
-            'Suivez l\'historique de vos remplacements et optimisez votre planning.',
+            'Suivez l\'historique de vos remplacements et optimisez votre emploi du temps.',
         ],
     },
     {
         title: '🚀 Développez votre activité et votre réseau',
         content: [
-            'Multipliez les opportunités de travail sans effort.',
-            'Renforcez votre réseau professionnel avec de nouvelles collaborations.',
-            'Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
+            'Multipliez vos opportunités professionnelles en toute simplicité.',
+            'Renforcez votre réseau en établissant de nouvelles collaborations.',
+            'Augmentez votre visibilité auprès des infirmiers et établissements en quête de remplaçants.',
         ],
     },
 ];
