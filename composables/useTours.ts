@@ -80,14 +80,8 @@ export const usePatient = () => {
         patientError.value = null;
         const nurseId = user.value.id.toString();
         try {
-            // const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
-            // console.log('Données reçue ', response);
-            // patient.value = response;
             const params = new URLSearchParams({ nurseId: nurseId }).toString();
             const response = await $apifetch(`/api/tours/tour-patient/${patientId}?${params}`, { method: 'GET' });
-
-            console.log('Données reçues :', response); // Vérifie le retour dans la console
-
             patient.value = response;
         }
         catch (err) {
