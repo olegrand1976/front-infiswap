@@ -75,12 +75,16 @@ export const usePatient = () => {
     const patientError = useState('patientError', () => null);
     const user = useUser();
 
-    const fetchPatient = async (patientId) => {
+    const fetchPatient = async (patientId, startDate: string, endDate: string) => {
         patientLoading.value = true;
         patientError.value = null;
-        const nurseId = user.value.id.toString();
         try {
-            const params = new URLSearchParams({ nurseId: nurseId }).toString();
+            const params = new URLSearchParams({
+                nurseId: user.value.id.toString(),
+                startDate: startDate,
+                endDate: endDate,
+            }).toString();
+
             const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
             patient.value = response;
         }

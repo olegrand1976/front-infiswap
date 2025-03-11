@@ -247,17 +247,6 @@ const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
 const selectedPatientId = ref(null);
 
-const handleFetchCareType = (patientId) => {
-    if (selectedPatientId.value === patientId) {
-        selectedPatientId.value = null;
-    }
-    else {
-        selectedPatientId.value = patientId;
-        fetchCareType(patientId);
-        fetchPatient(patientId);
-    }
-};
-
 const today = computed(() => {
     const date = new Date();
     const day = String(date.getDate()).padStart(2, '0');
@@ -303,10 +292,12 @@ const translatedVisitPeriod = (visitPeriod: string) => {
     }
 };
 
+const formattedStart = ref("");
+
 watch(value, (newValue) => {
     const startDate = newValue;
-    const formattedStart = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
-    fetchTours(formattedStart, formattedStart);
+    formattedStart.value = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
+    fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
 
 watch(tours, (newTours) => {
@@ -314,10 +305,21 @@ watch(tours, (newTours) => {
         if (!selectedPatientId.value) {
             selectedPatientId.value = newTours[0].id;
             fetchCareType(selectedPatientId.value);
-            fetchPatient(selectedPatientId.value);
+            fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
         }
     }
 }, { immediate: true, deep: true });
+
+const handleFetchCareType = (patientId) => {
+    if (selectedPatientId.value === patientId) {
+        selectedPatientId.value = null;
+    }
+    else {
+        selectedPatientId.value = patientId;
+        fetchCareType(patientId);
+        fetchPatient(patientId, formattedStart.value, formattedStart.value);
+    }
+};
 
 onMounted(() => {
     const now = new Date();
