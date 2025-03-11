@@ -4,19 +4,24 @@ import { useState, useNuxtApp } from '#app';
 export const useTours = () => {
     const { $apifetch } = useNuxtApp();
 
+    const user = useUser();
     const tours = useState('tours', () => []);
     const error = useState('toursError', () => null);
     const loading = useState('toursLoading', () => false);
 
-    const nurseId = 1;
+    // const nurseId = 1;
 
     async function fetchTours(startDate: string, endDate: string) {
         loading.value = true;
         error.value = null;
 
         try {
+            if (!user.value) {
+                throw new Error('Utilisateur non connecté');
+            }
+
             const params = new URLSearchParams({
-                nurseId: nurseId,
+                nurseId: user.value.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
@@ -68,12 +73,19 @@ export const usePatient = () => {
     const patient = useState('patient', () => null);
     const patientLoading = useState('patientLoading', () => false);
     const patientError = useState('patientError', () => null);
+    const user = useUser();
 
-    const fetchPatient = async (patientId) => {
+    const fetchPatient = async (patientId, startDate: string, endDate: string) => {
         patientLoading.value = true;
         patientError.value = null;
         try {
-            const response = await $apifetch(`/api/patients/${patientId}`, { method: 'GET' });
+            const params = new URLSearchParams({
+                nurseId: user.value.id.toString(),
+                startDate: startDate,
+                endDate: endDate,
+            }).toString();
+
+            const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
             patient.value = response;
         }
         catch (err) {
