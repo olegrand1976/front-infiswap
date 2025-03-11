@@ -100,6 +100,7 @@
                         <div class="flex">
                             <Button
                                 class="flex text-xs items-center space-x-2"
+                                @click="copyCurrentDate"
                             >
                                 Copier le jour
                                 <Square2StackIcon class="w-6 h-6" />
@@ -408,6 +409,7 @@ import { RangeCalendar } from '@/components/ui/range-calendar';
 import { useReplacements } from '~/composables/useReplacements';
 import { InputTime } from '@/components/ui/input-time';
 import { detailPatient } from '~/composables/usePatients';
+import { useTours } from '~/composables/useTours';
 
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':');
@@ -704,6 +706,12 @@ const updateReplacementData = () => {
 
     // Mettre à jour formData avec tous les remplacements
     formData.replacement = replacements;
+};
+
+const { tours, fetchTours } = useTours();
+
+const copyCurrentDate = async () => {
+    await fetchTours(formData.startDate, formData.endDate);
 };
 
 const { submitReplacement } = useReplacements();
