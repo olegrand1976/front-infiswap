@@ -12,7 +12,7 @@
                 <h1 class="text-primary text-3xl lg:text-4xl text-center mt-0 sm:mt-8 md:hidden">
                     <p>Conditions</p>
                     <p class="mt-2 font-bold">
-                        Générales d'Utilisation
+                        Générales d'Utilisation (CGU)
                     </p>
                 </h1>
             </div>
@@ -47,7 +47,7 @@
                         <h3 class="text-lg font-semibold text-gray-800">
                             {{ term.title }}
                         </h3>
-                        <p
+                        <div
                             class="text-gray-600"
                             v-html="term.text"
                         />
@@ -74,17 +74,7 @@ definePageMeta({
     layout: 'guest',
 });
 
-function scrollToSection(sectionId: string) {
-    const element = document.getElementById(sectionId);
-    const offset = 100;
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.scrollY - offset;
-
-    window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-    });
-}
+const { scrollToSection } = useScroll();
 
 const terms = {
     introduction: {
@@ -103,7 +93,7 @@ const terms = {
     },
     siteObjetAndAccess: {
         title: 'Objet du Site et Accès',
-        text: `Le Site propose [préciser brièvement les services ou fonctionnalités offertes par InfiSwap].
+        text: `Le Site propose une plateforme innovante dédiée aux infirmiers libéraux, facilitant la gestion des remplacements, l’optimisation des tournées et le suivi des formations. Grâce à des outils intelligents et automatisés, InfiSwap améliore la coordination, réduit le temps administratif et optimise l’organisation quotidienne des soins.
     L’accès au Site est gratuit, sauf indication contraire indiquée sur les pages de services spécifiques. L’utilisateur s’engage à utiliser le Site conformément aux présentes CGU et aux lois en vigueur.`,
     },
     registration: {
@@ -121,7 +111,7 @@ const terms = {
     publisherResponsibilities: {
         title: 'Responsabilités de l’Éditeur',
         text: `LL-IT Software & Computer s’efforce d’assurer l’exactitude et la disponibilité des informations diffusées sur le Site. Toutefois, l’éditeur ne saurait être tenu responsable :
-                <ul class='list-disc md:ml-6'>
+                <ul class='list-disc ml-4 md:ml-6'>
                 <li>Des interruptions ou dysfonctionnements du Site.</li>
                 <li>Des informations erronées ou obsolètes.</li>
                 <li>Des dommages directs ou indirects résultant de l’utilisation du Site.</li>
@@ -151,9 +141,3 @@ const terms = {
     },
 };
 </script>
-
-<style>
-    html{
-        scroll-behavior: smooth;
-    }
-</style>
