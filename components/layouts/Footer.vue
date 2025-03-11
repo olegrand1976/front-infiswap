@@ -100,12 +100,14 @@
             </p>
         </div>
 
-        <div class="container py-4">
-            <p
+        <div class="container py-4 w-full text-center">
+            <NuxtLink
+                to="https://www.ll-it-sc.be"
+                target="_blank"
                 class="text-center text-[0.6em] md:text-xs"
             >
                 @2025 LL-IT Software & Computer - Tous droits réservés
-            </p>
+            </NuxtLink>
         </div>
     </footer>
 </template>
