@@ -81,7 +81,7 @@ export const usePatient = () => {
         const nurseId = user.value.id.toString();
         try {
             const params = new URLSearchParams({ nurseId: nurseId }).toString();
-            const response = await $apifetch(`/api/tours/tour-patient/${patientId}?${params}`, { method: 'GET' });
+            const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
             patient.value = response;
         }
         catch (err) {
