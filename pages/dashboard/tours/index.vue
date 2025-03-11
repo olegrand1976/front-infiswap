@@ -300,17 +300,6 @@ watch(value, (newValue) => {
     fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
 
-const handleFetchCareType = (patientId) => {
-    if (selectedPatientId.value === patientId) {
-        selectedPatientId.value = null;
-    }
-    else {
-        selectedPatientId.value = patientId;
-        fetchCareType(patientId);
-        fetchPatient(patientId, formattedStart.value, formattedStart.value);
-    }
-};
-
 const formattedInitialStart = ref("");
 
 onMounted(() => {
@@ -327,11 +316,21 @@ watch(tours, (newTours) => {
             fetchCareType(selectedPatientId.value);
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
-            console.log(formattedDate);
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
         }
     }
 }, { immediate: true, deep: true });
+
+const handleFetchCareType = (patientId) => {
+    if (selectedPatientId.value === patientId) {
+        selectedPatientId.value = null;
+    }
+    else {
+        selectedPatientId.value = patientId;
+        fetchCareType(patientId);
+        fetchPatient(patientId, formattedStart.value, formattedStart.value);
+    }
+};
 
 useHead({
     title: 'Gestion Tournées',
