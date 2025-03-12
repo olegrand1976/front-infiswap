@@ -20,29 +20,27 @@
                 <div class="bg-neutral-50 sm:shadow-lg shadow-xl border border-neutral-200 p-8 rounded-xl sm:mt-16 mt-8 lg:mb-0 mb-0 sm:mb-16 flex flex-col space-y-7">
                     <Button
                         variant="dark"
-                        class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out"
-                        href="/"
+                        class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out cursor-not-allowed"
                     >
                         <NuxtImg
                             src="/icons/playstore.png"
                             class="sm:w-12 sm:h-12 w-7 h-7"
                         />
                         <p class="sm:text-sm text-base font-bold text-start">
-                            GET IT ON <br>
+                            TÉLÉCHARGER<br>
                             <span class="sm:text-3xl text-xl">Google Play</span>
                         </p>
                     </Button>
                     <Button
                         variant="dark"
-                        class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out"
-                        href="/"
+                        class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out cursor-not-allowed"
                     >
                         <NuxtImg
                             src="/icons/apple.png"
                             class="sm:w-12 sm:h-12 w-7 h-7"
                         />
                         <p class="sm:text-sm text-base font-bold text-start">
-                            Download on the <br>
+                            Télécharger sur <br>
                             <span class="sm:text-3xl text-xl">Apple Store</span>
                         </p>
                     </Button>
