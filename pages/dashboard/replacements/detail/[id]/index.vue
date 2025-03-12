@@ -4,7 +4,7 @@
             <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex justify-between items-center">
                 <Button
                     class="text-sm"
-                    href="/dashboard/replacement"
+                    href="/dashboard/replacements"
                 >
                     <span class="text-xs">Retour</span>
                 </Button>

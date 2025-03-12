@@ -731,6 +731,15 @@ const copyCurrentDate = async () => {
                                 datePatients.value[date][actualPeriod] = [];
                             }
 
+                            // Créer un mappage des noms de types de soins à leurs identifiants
+                            const careTypeMap = {};
+                            tour.patient_care_type.forEach((careType) => {
+                                careTypeMap[careType.care_type_name] = careType.care_type_id;
+                            });
+
+                            // Convertir les noms des types de soins en identifiants
+                            const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
+
                             datePatients.value[date][actualPeriod].push({
                                 id: tour.id,
                                 firstname: tour.firstname,
@@ -739,7 +748,7 @@ const copyCurrentDate = async () => {
                                 phone_number: tour.phone_number,
                                 city: tour.profile.city,
                                 zipCode: tour.profile.zip_code,
-                                careTypes: visit.care_types,
+                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
                                 time: formatTime(visit.time),
                             });
 
@@ -776,6 +785,15 @@ const copyAllDates = async () => {
                                 datePatients.value[date][actualPeriod] = [];
                             }
 
+                            // Créer un mappage des noms de types de soins à leurs identifiants
+                            const careTypeMap = {};
+                            tour.patient_care_type.forEach((careType) => {
+                                careTypeMap[careType.care_type_name] = careType.care_type_id;
+                            });
+
+                            // Convertir les noms des types de soins en identifiants
+                            const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
+
                             datePatients.value[date][actualPeriod].push({
                                 id: tour.id,
                                 firstname: tour.firstname,
@@ -784,7 +802,7 @@ const copyAllDates = async () => {
                                 phone_number: tour.phone_number,
                                 city: tour.profile.city,
                                 zipCode: tour.profile.zip_code,
-                                careTypes: visit.care_types,
+                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
                                 time: formatTime(visit.time),
                             });
 
