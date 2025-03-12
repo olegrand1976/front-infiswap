@@ -128,7 +128,7 @@ const privacyPolicy = [
     },
     {
         title: 'Modifications de la Politique',
-        text: `LL-IT Software & Computer se réserve le droit de modifier la présente politique afin de tenir compte notamment des évolutions législatives ou des pratiques de l’industrie. Toute modification sera publiée sur le Site avec une mise à jour de la date de dernière révision.`,
+        text: `<a class="text-primary" href="https://www.ll-it-sc.be" target="_blank" rel="noopener noreferrer">LL-IT Software & Computer</a> se réserve le droit de modifier la présente politique afin de tenir compte notamment des évolutions législatives ou des pratiques de l’industrie. Toute modification sera publiée sur le Site avec une mise à jour de la date de dernière révision.`,
     },
 ];
 </script>
