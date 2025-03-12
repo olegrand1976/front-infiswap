@@ -13,8 +13,8 @@
                         name="title"
                     />
                 </h1>
-                <div class="hidden md:block absolute -bottom-12 inset-x-auto">
-                    <LayoutsLogo />
+                <div class="hidden md:inline-block absolute -bottom-10 inset-x-auto">
+                    <LayoutsLogo class="h-20 lg:h-24" />
                 </div>
             </div>
             <main class="flex-1 md:my-14 lg:mt-16">
