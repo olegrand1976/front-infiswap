@@ -98,7 +98,7 @@ const navigationItems = [
     { label: 'ACCUEIL', route: '/' },
     { label: 'A PROPOS', route: '/about' },
     { label: 'NOS SERVICES', route: '/services' },
-    { label: 'CONTACTS', route: '/contact' },
+    { label: 'NOUS CONTACTER', route: '/contact' },
 ];
 
 const route = useRoute();

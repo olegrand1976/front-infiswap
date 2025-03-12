@@ -14,25 +14,21 @@
                             Infiswap...
                         </h3>
                         <p>
-                            est une plateforme innovante conçue pour optimiser
-                            la gestion des infirmiers libéraux. Elle simplifie les
-                            remplacements, la planification des tournées et le suivi
-                            des formations. Grâce à des outils intelligents et automatisés,
-                            Infiswap améliore la coordination, réduit le temps administratif
-                            et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                            qualité de soins et un gain de temps précieux.
+                            est une plateforme innovante conçue pour optimiser la gestion des infirmiers libéraux. 
+                            Elle simplifie les remplacements, la planification des tournées et le suivi des formations. 
+                            Grâce à des outils intelligents et automatisés, Infiswap améliore la coordination, 
+                            réduit le temps administratif et facilite l'organisation quotidienne, 
+                            offrant ainsi une meilleure qualité de soins et un gain de temps précieux.
                         </p>
                         <p>
-                            la gestion des tournées est optimisée avec une planification automatisée,
-                            prenant en compte les contraintes horaires, les types de soins et la
-                            réduction des déplacements inutiles.
+                            La gestion des tournées est optimisée grâce à une planification automatisée, 
+                            prenant en compte les contraintes horaires, 
+                            les types de soins et la réduction des déplacements inutiles.
                         </p>
                         <p>
-                            Infiswap permet également un suivi complet des formations professionnelles,
-                            assurant la conformité aux obligations légales avec des rappels et une gestion
-                            simplifiée des inscriptions. <br>
-                            Le suivi des patients est amélioré par un historique détaillé des soins,
-                            facilitant la transmission entre soignants.
+                            Infiswap permet également un suivi complet des formations professionnelles, 
+                            assurant la conformité aux obligations légales grâce à des rappels et une gestion simplifiée des inscriptions.<br> 
+                            Le suivi des patients est amélioré par un historique détaillé des soins, facilitant la transmission entre soignants.
                         </p>
                         <Button
                             href="/register"
@@ -195,16 +191,15 @@ const cards = [
         title: '📅 Gestion flexible et optimisée',
         content: [
             'Planifiez vos remplacements en fonction de vos disponibilités.',
-            'Ajoutez directement les missions acceptées à votre agenda.',
-            'Suivez l\'historique de vos remplacements et optimisez votre planning.',
+            'Suivez l\'historique de vos remplacements et optimisez votre emploi du temps.',
         ],
     },
     {
         title: '🚀 Développez votre activité et votre réseau',
         content: [
-            'Multipliez les opportunités de travail sans effort.',
-            'Renforcez votre réseau professionnel avec de nouvelles collaborations.',
-            'Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
+            'Multipliez vos opportunités professionnelles en toute simplicité.',
+            'Renforcez votre réseau en établissant de nouvelles collaborations.',
+            'Augmentez votre visibilité auprès des infirmiers et établissements en quête de remplaçants.',
         ],
     },
 ];

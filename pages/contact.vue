@@ -113,7 +113,7 @@
             </Button>
         </form>
 
-        <section class="grid lg:grid-cols-4 grid-cols-2 container sm:w-[70%] lg:w-[55%] gap-4 mt-12">
+        <section class="grid lg:grid-cols-4 grid-cols-2 container sm:w-[70%] lg:w-[55%] gap-4 my-12">
             <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
                 <h4 class="flex space-x-2 items-center justify-center text-sm text-primary group-hover:text-white font-bold">
                     <EnvelopeIcon class="w-6 h-6" />
