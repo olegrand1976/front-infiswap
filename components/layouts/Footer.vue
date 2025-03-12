@@ -92,8 +92,8 @@
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
-                <NuxtLink to="/terms">Mentions légales</NuxtLink> -
-                <NuxtLink to="/">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
+                <NuxtLink to="/" class="cursor-not-allowed">Mentions légales</NuxtLink> -
+                <NuxtLink to="/privacy-security">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
                 <NuxtLink to="/terms">CGU</NuxtLink>
             </p>
         </div>
