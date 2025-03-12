@@ -1,30 +1,11 @@
 <template>
-    <div>
-        <div class="sm:hidden relative flex flex-col items-center">
-            <div class="absolute inset-0 z-0">
-                <NuxtImg
-                    src="/Mask_group.png"
-                    class="w-full h-48"
-                />
-            </div>
-            <div class="mt-10 z-20 relative flex justify-center">
-                <LayoutsLogo class="w-[15rem] hidden md:inline-block" />
-                <h1 class="container text-primary text-3xl lg:text-4xl text-center mt-0 sm:mt-8 md:hidden">
-                    <p>Conditions</p>
-                    <p class="mt-2 font-bold">
-                        Générales d'Utilisation (CGU)
-                    </p>
-                </h1>
-            </div>
-        </div>
-        <div class="mt-32 sm:mt-0 sm:bg-tertiary/30 sm:h-80 flex justify-center items-center relative">
-            <h1 class="hidden sm:inline-block text-primary text-3xl lg:text-4xl text-center mt-0 sm:mt-8">
-                <p>Conditions</p>
-                <p class="mt-2 font-bold">
-                    Générales d'Utilisation
-                </p>
-            </h1>
-        </div>
+    <NuxtLayout name="guest-with-title">
+        <template #title>
+            <p>Conditions</p>
+            <p class="mt-2 font-bold">
+                Générales d'Utilisation (CGU)
+            </p>
+        </template>
         <div class="max-w-7xl mx-auto p-6">
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
                 <ol class="space-y-4 list-decimal pl-6 mt-2">
@@ -60,7 +41,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
@@ -71,7 +52,7 @@ useHead({
 
 definePageMeta({
     middleware: ['guest'],
-    layout: 'guest',
+    layout: false,
 });
 
 const { scrollToSection } = useScroll();
