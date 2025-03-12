@@ -193,8 +193,7 @@
 
                 <div class="mt-12 flex justify-center items-center">
                     <span class="text-center text-xs">
-                        Vous serez contacté prochainement par une infirmière de notre réseau proche
-                        de chez vous
+                        Vous serez contacté prochainement par une infirmière de notre réseau, proche de chez vous.
                     </span>
                 </div>
             </form>
