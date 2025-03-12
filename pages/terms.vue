@@ -48,7 +48,7 @@
                             {{ term.title }}
                         </h3>
                         <div
-                            class="text-gray-600"
+                            class="mt-1 text-gray-600"
                             v-html="term.text"
                         />
                     </li>
@@ -93,7 +93,15 @@ const terms = {
     },
     siteObjetAndAccess: {
         title: 'Objet du Site et Accès',
-        text: `Le Site propose une plateforme innovante dédiée aux infirmiers libéraux, facilitant la gestion des remplacements, l’optimisation des tournées et le suivi des formations. Grâce à des outils intelligents et automatisés, InfiSwap améliore la coordination, réduit le temps administratif et optimise l’organisation quotidienne des soins.
+        text: `Le Site propose :
+        <ul class='list-disc ml-4 md:ml-6'>
+            <li>de mise en relation entre infirmiers,</li>
+            <li>encodage de remplacement,</li>
+            <li>proposition de remplacement à effectuer,</li>
+            <li>encodage de tournée,</li>
+            <li>encodage de données patient</li>
+            <li>enregistrement de patient à la recherche d'une infirmière pour affectation vers une infirmière de sa région.</li>
+        </ul>
     L’accès au Site est gratuit, sauf indication contraire indiquée sur les pages de services spécifiques. L’utilisateur s’engage à utiliser le Site conformément aux présentes CGU et aux lois en vigueur.`,
     },
     registration: {
