@@ -35,7 +35,7 @@
                                 <div class="flex space-x-4 text-white items-center ms-4 relative">
                                     <UserCircleIcon class="w-6 text-primary sm:text-white" />
                                     <PlusIcon class="w-3 text-primary sm:text-white absolute top-0 left-1" />
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Prénoms</span>
+                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Prénom</span>
                                 </div>
                             </div>
                             <Input
