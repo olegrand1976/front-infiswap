@@ -20,7 +20,7 @@
                         Nos infirmier(e)s sont aussi souvent sur les routes et se déplacent de patients en patients pendant
                         leurs tournées qui sont planifiées de semaine en semaine.
                     </p>
-                    <div>
+                    <!-- <div>
                         <Button
                             variant="outline"
                             class="rounded-full mt-4 lg:text-sm text-xs mx-auto"
@@ -28,7 +28,7 @@
                         >
                             En savoir plus
                         </Button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-span-2 md:col-span-1">
                     <NuxtImg
