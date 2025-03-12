@@ -33,7 +33,7 @@
         <div class="col-span-5 lg:col-span-2 grid place-content-center relative bg-rose-400 shadow-lg rounded-lg overflow-hidden p-4">
             <div class="text-white">
                 <p>
-                    Soyez averti dès le lancement de la plate-forme au alentour du 15/03! N’attendez plus pour vous inscrire!
+                    Soyez averti dès le lancement de la plateforme aux alentours du 15/03 ! N’attendez plus pour vous inscrire !
                 </p>
             </div>
         </div>
