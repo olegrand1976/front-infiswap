@@ -9,15 +9,15 @@
             </p>
         </template>
         <div class="max-w-7xl mx-auto p-6">
+            <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6">
+                La présente politique a pour objectif de vous informer sur la manière dont <a
+                    class="text-primary"
+                    href="https://ll-it-sc.be/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >LL-IT Software & Computer</a> collecte, utilise, protège et conserve vos données personnelles, ainsi que sur les mesures de sécurité mises en place pour garantir leur confidentialité.
+            </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
-                <div class="col-span-3 max-w-5xl mx-auto">
-                    La présente politique a pour objectif de vous informer sur la manière dont <a
-                        class="text-primary"
-                        href="https://ll-it-sc.be/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >LL-IT Software & Computer</a> collecte, utilise, protège et conserve vos données personnelles, ainsi que sur les mesures de sécurité mises en place pour garantir leur confidentialité.
-                </div>
                 <ol class="space-y-4 list-decimal pl-6 mt-2">
                     <li
                         v-for="(privacy, index) in privacyPolicy"
