@@ -48,9 +48,13 @@
                                             @click="handleFetchCareType(patient.id)"
                                         >
                                             <p class="flex justify-between w-full">
-                                                <span>{{ patient.firstname }} {{ patient.lastname }} </span>
+                                                <span>{{ patient.firstname }} {{ patient.lastname }}
+                                                    <span v-if="patient.visit_times.length > 0">
+                                                        (ID Visite: {{ patient.visit_times.map(v => v.id).join(', ') }})
+                                                    </span>
+                                                </span>
                                             </p>
-                                            <div class="flex mr-4">
+                                            <div class="flex mr-4" @click.stop="openDialog(patient.id, patient.visit_times[0].id)">
                                                 <XCircleIcon class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2" />
                                             </div>
                                         </div>
@@ -58,6 +62,20 @@
                                 </div>
                                 <div v-else-if="tours.length === 0 && !loading && !error">
                                     <p>Pas de données retournés</p>
+                                </div>
+                                <!-- POPUP DE CONFIRMATION -->
+                                <div v-if="showDialog" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                                        <p>Confirmer la suppression de la visite ?</p>
+                                        <div class="flex justify-end mt-4">
+                                            <button class="bg-gray-300 px-4 py-2 rounded mr-2" @click="closeDialog">
+                                                Annuler
+                                            </button>
+                                            <button class="bg-red-600 text-white px-4 py-2 rounded" @click="confirmDelete">
+                                                Supprimer
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +90,8 @@
                     Erreur : {{ patientError.message }}
                 </div>
                 <div v-if="patient && patient.patient">
+                    <!-- <p>{{ patient.patient }}</p> -->
+                    <!-- <div v-if="patient && Array.isArray(patient.patient) && patient.patient.length > 0"> -->
                     <div class="mt-6">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
                             <div class="w-full">
@@ -239,13 +259,45 @@ import {
 import { ref, watch } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { CalendarTours } from '@/components/ui/calendar';
-import { useTours, useCareType, usePatient } from '~/composables/useTours';
+import { useTours, useCareType, usePatient, deleteTour } from '~/composables/useTours';
 
 const { tours, error, loading, fetchTours } = useTours();
 const { careType, careTypeLoading, careTypeError, fetchCareType } = useCareType();
 const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
+const showDialog = ref(false);
 const selectedPatientId = ref(null);
+
+const patientIdToDelete = ref(null);
+const visitIdToDelete = ref(null);
+
+const openDialog = (patientId, visitId) => {
+    patientIdToDelete.value = patientId;
+    visitIdToDelete.value = visitId;
+    showDialog.value = true;
+};
+
+// Fonction pour fermer la boîte de dialogue
+const closeDialog = () => {
+    showDialog.value = false;
+};
+
+// Fonction de confirmation de la suppression
+const confirmDelete = async () => {
+    console.log('patientIdToDelete:', patientIdToDelete.value);
+    console.log('visitIdToDelete:', visitIdToDelete.value);
+
+    if (patientIdToDelete.value && visitIdToDelete.value) {
+        try {
+            await deleteTour(patientIdToDelete.value, visitIdToDelete.value);
+            console.log('Visite supprimée');
+        }
+        catch (err) {
+            console.error('Erreur lors de la suppression:', err);
+        }
+    }
+    closeDialog();
+};
 
 const today = computed(() => {
     const date = new Date();

@@ -9,8 +9,6 @@ export const useTours = () => {
     const error = useState('toursError', () => null);
     const loading = useState('toursLoading', () => false);
 
-    // const nurseId = 1;
-
     async function fetchTours(startDate: string, endDate: string) {
         loading.value = true;
         error.value = null;
@@ -86,6 +84,7 @@ export const usePatient = () => {
             }).toString();
 
             const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
+            console.log('data ', response);
             patient.value = response;
         }
         catch (err) {
@@ -97,4 +96,29 @@ export const usePatient = () => {
     };
 
     return { patient, patientError, patientLoading, fetchPatient };
+};
+
+export const deleteTour = async (patientId: number, visitId: number) => {
+    console.log('Fonction `deleteTour` exécutée avec patientId:', patientId, 'visitId:', visitId);
+    const { $apifetch } = useNuxtApp();
+    console.log('Envoi de la requête DELETE...');
+
+    try {
+        await $apifetch(`/api/tours/${patientId}/${visitId}/delete`, { method: 'DELETE' }).then(() => {
+            setTimeout(() => {
+                reloadNuxtApp({ persistState: true });
+            }, 500);
+
+            $toast({
+                description: 'Suppression effectuée',
+            });
+        });
+    }
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        $toast({
+            description: 'Erreur lors de la suppression',
+            status: 'error',
+        });
+    }
 };
