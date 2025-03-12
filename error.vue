@@ -2,8 +2,7 @@
     <div>
         <ClientOnly>
             <div v-if="error?.statusCode===404">
-                <ErrorUnderConstruction />
-                <!-- <ErrorNotFound /> -->
+                <ErrorNotFound />
             </div>
             <!-- <div v-else>
                 <ErrorBasic />

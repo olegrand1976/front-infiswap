@@ -57,9 +57,11 @@
 
 <script lang="ts" setup>
 import { XCircle } from 'lucide-vue-next';
+import { navigateTo } from '#app';
 
 definePageMeta({
     layout: 'auth',
+    middleware: 'unverified',
 });
 
 const user = useUser();
