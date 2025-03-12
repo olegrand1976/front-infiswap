@@ -14,20 +14,20 @@
                             Infiswap...
                         </h3>
                         <p>
-                            est une plateforme innovante conçue pour optimiser la gestion des infirmiers libéraux. 
-                            Elle simplifie les remplacements, la planification des tournées et le suivi des formations. 
-                            Grâce à des outils intelligents et automatisés, Infiswap améliore la coordination, 
-                            réduit le temps administratif et facilite l'organisation quotidienne, 
+                            est une plateforme innovante conçue pour optimiser la gestion des infirmiers libéraux.
+                            Elle simplifie les remplacements, la planification des tournées et le suivi des formations.
+                            Grâce à des outils intelligents et automatisés, Infiswap améliore la coordination,
+                            réduit le temps administratif et facilite l'organisation quotidienne,
                             offrant ainsi une meilleure qualité de soins et un gain de temps précieux.
                         </p>
                         <p>
-                            La gestion des tournées est optimisée grâce à une planification automatisée, 
-                            prenant en compte les contraintes horaires, 
+                            La gestion des tournées est optimisée grâce à une planification automatisée,
+                            prenant en compte les contraintes horaires,
                             les types de soins et la réduction des déplacements inutiles.
                         </p>
                         <p>
-                            Infiswap permet également un suivi complet des formations professionnelles, 
-                            assurant la conformité aux obligations légales grâce à des rappels et une gestion simplifiée des inscriptions.<br> 
+                            Infiswap permet également un suivi complet des formations professionnelles,
+                            assurant la conformité aux obligations légales grâce à des rappels et une gestion simplifiée des inscriptions.<br>
                             Le suivi des patients est amélioré par un historique détaillé des soins, facilitant la transmission entre soignants.
                         </p>
                         <Button
