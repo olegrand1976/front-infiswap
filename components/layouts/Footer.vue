@@ -93,8 +93,6 @@
                 class="text-center text-[0.6em] md:text-xs"
             >
                 <NuxtLink to="/terms">Mentions légales</NuxtLink> -
-                <NuxtLink to="/">Fonctionnement</NuxtLink> -
-                <NuxtLink to="/">Cookies</NuxtLink> -
                 <NuxtLink to="/">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
                 <NuxtLink to="/terms">CGU</NuxtLink>
             </p>
