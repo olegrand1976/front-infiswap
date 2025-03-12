@@ -121,12 +121,7 @@
                     </h3>
 
                     <div class="px-4 py-6">
-                        <template v-if="patient.care_informations.length === 0">
-                            <p class="text-center text-sm text-black/40 p-6">
-                                Aucune information à afficher pour le moment
-                            </p>
-                        </template>
-                        <template v-else>
+                        <template v-if="patient && Array.isArray(patient.care_informations) && patient.care_informations.length > 0">
                             <div
                                 v-for="(careInformation, careIndex) in patient.care_informations"
                                 :key="careIndex"
@@ -166,6 +161,11 @@
                                 </div>
                                 <hr class="border border-gray-200">
                             </div>
+                        </template>
+                        <template v-else>
+                            <p class="text-center text-sm text-black/40 p-6">
+                                Aucune information à afficher pour le moment
+                            </p>
                         </template>
                     </div>
                 </div>

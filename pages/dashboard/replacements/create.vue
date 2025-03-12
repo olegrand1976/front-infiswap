@@ -100,6 +100,7 @@
                         <div class="flex">
                             <Button
                                 class="flex text-xs items-center space-x-2"
+                                @click="copyCurrentDate"
                             >
                                 Copier le jour
                                 <Square2StackIcon class="w-6 h-6" />
@@ -118,6 +119,7 @@
                     <div>
                         <Button
                             class="flex text-xs items-center space-x-2"
+                            @click="copyAllDates"
                         >
                             Copier tous les jours de la tournée
                             <Square2StackIcon class="w-6 h-6" />
@@ -408,6 +410,7 @@ import { RangeCalendar } from '@/components/ui/range-calendar';
 import { useReplacements } from '~/composables/useReplacements';
 import { InputTime } from '@/components/ui/input-time';
 import { detailPatient } from '~/composables/usePatients';
+import { useTours } from '~/composables/useTours';
 
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':');
@@ -704,6 +707,116 @@ const updateReplacementData = () => {
 
     // Mettre à jour formData avec tous les remplacements
     formData.replacement = replacements;
+};
+
+const { tours, fetchTours } = useTours();
+
+const copyCurrentDate = async () => {
+    await fetchTours(formData.startDate, formData.startDate);
+
+    if (tours.value && tours.value.length > 0) {
+        tours.value.forEach((tour) => {
+            if (tour.visit_times && tour.visit_times.length > 0) {
+                tour.visit_times.forEach((visitTime) => {
+                    if (visitTime.visits && visitTime.visits.length > 0) {
+                        visitTime.visits.forEach((visit) => {
+                            const actualPeriod = determineTimePeriod(formatTime(visit.time));
+                            const date = tour.date;
+
+                            // Initialiser la structure si elle n'existe pas
+                            if (!datePatients.value[date]) {
+                                datePatients.value[date] = {};
+                            }
+                            if (!datePatients.value[date][actualPeriod]) {
+                                datePatients.value[date][actualPeriod] = [];
+                            }
+
+                            // Créer un mappage des noms de types de soins à leurs identifiants
+                            const careTypeMap = {};
+                            tour.patient_care_type.forEach((careType) => {
+                                careTypeMap[careType.care_type_name] = careType.care_type_id;
+                            });
+
+                            // Convertir les noms des types de soins en identifiants
+                            const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
+
+                            datePatients.value[date][actualPeriod].push({
+                                id: tour.id,
+                                firstname: tour.firstname,
+                                lastname: tour.lastname,
+                                social_security_number: tour.social_security_number,
+                                phone_number: tour.phone_number,
+                                city: tour.profile.city,
+                                zipCode: tour.profile.zip_code,
+                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
+                                time: formatTime(visit.time),
+                            });
+
+                            // Trier les visites par heure
+                            datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Mettre à jour formData.replacement pour la soumission
+    updateReplacementData();
+};
+
+const copyAllDates = async () => {
+    await fetchTours(formData.startDate, formData.endDate);
+
+    if (tours.value && tours.value.length > 0) {
+        tours.value.forEach((tour) => {
+            if (tour.visit_times && tour.visit_times.length > 0) {
+                tour.visit_times.forEach((visitTime) => {
+                    if (visitTime.visits && visitTime.visits.length > 0) {
+                        visitTime.visits.forEach((visit) => {
+                            const actualPeriod = determineTimePeriod(formatTime(visit.time));
+                            const date = tour.date;
+
+                            // Initialiser la structure si elle n'existe pas
+                            if (!datePatients.value[date]) {
+                                datePatients.value[date] = {};
+                            }
+                            if (!datePatients.value[date][actualPeriod]) {
+                                datePatients.value[date][actualPeriod] = [];
+                            }
+
+                            // Créer un mappage des noms de types de soins à leurs identifiants
+                            const careTypeMap = {};
+                            tour.patient_care_type.forEach((careType) => {
+                                careTypeMap[careType.care_type_name] = careType.care_type_id;
+                            });
+
+                            // Convertir les noms des types de soins en identifiants
+                            const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
+
+                            datePatients.value[date][actualPeriod].push({
+                                id: tour.id,
+                                firstname: tour.firstname,
+                                lastname: tour.lastname,
+                                social_security_number: tour.social_security_number,
+                                phone_number: tour.phone_number,
+                                city: tour.profile.city,
+                                zipCode: tour.profile.zip_code,
+                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
+                                time: formatTime(visit.time),
+                            });
+
+                            // Trier les visites par heure
+                            datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Mettre à jour formData.replacement pour la soumission
+    updateReplacementData();
 };
 
 const { submitReplacement } = useReplacements();

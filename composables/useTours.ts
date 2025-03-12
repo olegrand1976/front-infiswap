@@ -21,7 +21,7 @@ export const useTours = () => {
             }
 
             const params = new URLSearchParams({
-                nurseId: user.value.id.toString(),
+                nurseId: user.value.nurse.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
