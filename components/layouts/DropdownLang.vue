@@ -2,6 +2,7 @@
     <Select
         :default-value="defaultLanguage"
         class="w-64"
+        disabled
     >
         <SelectTrigger
             class="flex md:w-24 lg:w-auto space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
