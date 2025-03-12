@@ -19,7 +19,10 @@
                         <p class="group-hover:text-white">
                             {{ card.title }}
                         </p>
-                        <Button class="mt-6 group-hover:bg-white group-hover:text-primary lg:text-base md:text-sm sm:text-xs" :href="card.link">
+                        <Button
+                            class="mt-6 group-hover:bg-white group-hover:text-primary lg:text-base md:text-sm sm:text-xs"
+                            :href="card.link"
+                        >
                             En savoir plus
                         </Button>
                     </div>

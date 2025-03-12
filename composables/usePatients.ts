@@ -13,7 +13,7 @@ export const searchNurse = () => {
         success.value = false;
 
         try {
-            const response = await $apifetch('/api/patients', {
+            const response = await $apifetch('/api/patients/search', {
                 method: 'POST',
                 body: formData,
             });

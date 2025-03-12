@@ -91,17 +91,17 @@
                         Enfin, <strong>la plateforme...</strong>
                     </h3>
                     <p>
-                        intègre des outils de gestion administrative et financière, 
+                        intègre des outils de gestion administrative et financière,
                         notamment le suivi des véhicules, la facturation et la centralisation des informations essentielles.
                     </p>
                     <p>
-                        Accessible sur mobile et ordinateur, Infiswap offre un gain de temps significatif, 
-                        améliore la coordination entre professionnels et contribue à une meilleure qualité de soins. 
+                        Accessible sur mobile et ordinateur, Infiswap offre un gain de temps significatif,
+                        améliore la coordination entre professionnels et contribue à une meilleure qualité de soins.
                         C'est une solution moderne et indispensable pour un exercice serein et efficace du métier d'infirmier.
                     </p>
                     <p>
-                        Avec infiswap, trouvez et gérez vos remplacements facilement. 
-                        Plus de visibilité pour les annonces, une recherche optimisée par localisation et une mise en relation rapide entre infirmiers. 
+                        Avec infiswap, trouvez et gérez vos remplacements facilement.
+                        Plus de visibilité pour les annonces, une recherche optimisée par localisation et une mise en relation rapide entre infirmiers.
                         Gagnez du temps, développez votre réseau et exercez en toute sérénité!
                     </p>
                     <div>
@@ -112,9 +112,9 @@
                             </span>
                         </h5>
                         <p>
-                            Avec Infiswap, trouvez et gérez vos remplacements facilement. 
-                            Bénéficiez d'une meilleure visibilité pour les annonces, 
-                            d'une recherche optimisée par localisation et d'une mise en relation rapide entre infirmiers. 
+                            Avec Infiswap, trouvez et gérez vos remplacements facilement.
+                            Bénéficiez d'une meilleure visibilité pour les annonces,
+                            d'une recherche optimisée par localisation et d'une mise en relation rapide entre infirmiers.
                             Gagnez du temps, développez votre réseau et exercez en toute sérénité !
                         </p>
                     </div>
