@@ -96,7 +96,7 @@
                 <NuxtLink to="/">Fonctionnement</NuxtLink> -
                 <NuxtLink to="/">Cookies</NuxtLink> -
                 <NuxtLink to="/">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
-                <NuxtLink to="/">CGU</NuxtLink>
+                <NuxtLink to="/terms">CGU</NuxtLink>
             </p>
         </div>
 
