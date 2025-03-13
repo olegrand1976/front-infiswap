@@ -19,7 +19,7 @@ export const useTours = () => {
             }
 
             const params = new URLSearchParams({
-                nurseId: user.value.id.toString(),
+                userId: user.value.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
@@ -28,7 +28,7 @@ export const useTours = () => {
         }
         catch (err) {
             // error.value = err;
-            console.log('erreur ', err);
+            console.log(err);
         }
         finally {
             loading.value = false;
@@ -78,7 +78,7 @@ export const usePatient = () => {
         patientError.value = null;
         try {
             const params = new URLSearchParams({
-                nurseId: user.value.id.toString(),
+                userId: user.value.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
