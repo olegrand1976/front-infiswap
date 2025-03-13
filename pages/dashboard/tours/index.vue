@@ -49,9 +49,9 @@
                                         >
                                             <p class="flex justify-between w-full">
                                                 <span>{{ patient.firstname }} {{ patient.lastname }}
-                                                    <span v-if="patient.visit_times.length > 0">
+                                                    <!-- <span v-if="patient.visit_times.length > 0">
                                                         (ID Visite: {{ patient.visit_times.map(v => v.id).join(', ') }})
-                                                    </span>
+                                                    </span> -->
                                                 </span>
                                             </p>
                                             <div class="flex mr-4" @click.stop="openDialog(patient.id, patient.visit_times[0].id)">
