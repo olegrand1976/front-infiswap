@@ -75,7 +75,7 @@
                                                         Annuler
                                                     </Button>
                                                     <Button
-                                                        @click="submitDelete(patient.id, patient.visit_times?.[0]?.id)"
+                                                        @click="submitDelete"
                                                     >
                                                         Oui
                                                     </Button>
