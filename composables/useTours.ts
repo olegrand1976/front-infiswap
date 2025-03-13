@@ -27,7 +27,8 @@ export const useTours = () => {
             tours.value = response.patient;
         }
         catch (err) {
-            error.value = err;
+            // error.value = err;
+            console.log('erreur ', err);
         }
         finally {
             loading.value = false;
@@ -83,7 +84,6 @@ export const usePatient = () => {
             }).toString();
 
             const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
-            // console.log('data ', response);
             patient.value = response;
         }
         catch (err) {
