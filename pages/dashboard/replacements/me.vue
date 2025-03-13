@@ -156,7 +156,7 @@
                 </TableHeader>
 
                 <TableBody>
-                    <div v-if="loading && replacements.length < 0">
+                    <div v-if="loading && myReplacements.data.length < 0">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
                             :key="index"
@@ -189,7 +189,7 @@
                     </div>
                     <div v-else>
                         <TableRow
-                            v-for="replacement in replacements"
+                            v-for="replacement in myReplacements.data"
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
@@ -205,15 +205,15 @@
 
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'morning'"
+                                    v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'afternoon'"
+                                    v-if="hasShift(replacement.details, 'afternoon')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'evening'"
+                                    v-if="hasShift(replacement.details, 'evening')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                             </TableCell>
@@ -228,7 +228,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.zip_code)
+                                            ?.map((detail) => detail?.patient?.zip_code)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -245,7 +245,7 @@
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.profile?.city)
+                                            ?.map((detail) => detail?.patient?.city)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
                                     </span>
@@ -280,8 +280,7 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
-
-const replacements = useState('myReplacements');
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 
 useHead({
     title: 'Mes remplacements',
@@ -289,8 +288,12 @@ useHead({
 
 const { loading, getMyReplacements } = useReplacements();
 
-onMounted(() => {
-    getMyReplacements();
+const myReplacements = await getMyReplacements();
+
+const { fetchReplacements } = useSearchReplacements();
+
+onMounted(async () => {
+    await getMyReplacements();
 });
 
 const formatDate = (isoString) => {
@@ -313,6 +316,10 @@ const getShift = (startAt) => {
         return 'afternoon';
     }
     return 'evening';
+};
+
+const hasShift = (details, period) => {
+    return details.some(detail => getShift(detail.start_at) === period);
 };
 
 const formData = reactive({
@@ -356,13 +363,13 @@ const isSubmitted = ref(false);
 
 const hasMatchingZipCode = (details) => {
     if (!isSubmitted.value) return false;
-    const zipCodes = details?.map(detail => detail?.patient?.profile?.zip_code) || [];
+    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
     return zipCodes.some(zip => formData.postalCodeTags.includes(zip));
 };
 
 const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
-    const cities = details?.map(detail => detail?.patient?.profile?.city) || [];
+    const cities = details?.map(detail => detail?.patient?.city) || [];
     return cities.some(city => formData.cityTags.includes(city));
 };
 

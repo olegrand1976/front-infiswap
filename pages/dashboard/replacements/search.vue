@@ -11,9 +11,9 @@
 
         <div class="flex mt-6">
             <Form
-                class="grid grid-cols-4 w-full gap-4"
+                class="grid grid-cols-5 w-full gap-4"
             >
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -54,7 +54,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -63,34 +63,30 @@
                                         <span class="xl:hidden">CP</span>
                                         <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
-                                    <Input
-                                        v-model="postalCodeInput"
-                                        placeholder="8793"
-                                        class="w-32 text-xs my-0.5 rounded-full"
-                                        @keydown.enter.prevent="addPostalCodeTag"
-                                    />
-                                </div>
-                                <div class="mt-2 flex flex-wrap gap-2">
-                                    <div
-                                        v-for="(tag, index) in formData.postalCodeTags"
-                                        :key="index"
-                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
+                                    <TagsInput
+                                        v-model="postalCodeTags"
+                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
-                                        <span class="px-2 py-2">{{ tag }}</span>
-                                        <button
-                                            type="button"
-                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
-                                            @click="removePostalCodeTag(index)"
+                                        <TagsInputItem
+                                            v-for="item in postalCodeTags"
+                                            :key="item"
+                                            :value="item"
                                         >
-                                            &times;
-                                        </button>
-                                    </div>
+                                            <TagsInputItemText />
+                                            <TagsInputItemDelete />
+                                        </TagsInputItem>
+
+                                        <TagsInputInput
+                                            class="text-xs flex items-center"
+                                            placeholder="8793"
+                                        />
+                                    </TagsInput>
                                 </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4  md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
@@ -98,31 +94,14 @@
                                     v-model="cityInput"
                                     placeholder="Ville"
                                     class="w-full text-xs my-0.5 rounded-full bg-gray-100 shadow"
-                                    @keydown.enter.prevent="addCityTag"
                                 />
-                                <div class="mt-2 flex flex-wrap gap-2">
-                                    <div
-                                        v-for="(tag, index) in formData.cityTags"
-                                        :key="index"
-                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
-                                    >
-                                        <span class="px-2 py-2">{{ tag }}</span>
-                                        <button
-                                            type="button"
-                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
-                                            @click="removeCityTag(index)"
-                                        >
-                                            &times;
-                                        </button>
-                                    </div>
-                                </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
                 <Button
-                    class="col-span-4 md:col-span-2 lg:col-span-1 text-sm bg-primary"
+                    class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-36 lg:ms-12 text-sm bg-primary"
                     @click="submit"
                 >
                     <MagnifyingGlassIcon class="w-6" />
@@ -280,6 +259,7 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
 
@@ -321,9 +301,6 @@ const formData = reactive({
     selectedDays: [],
 });
 
-const postalCodeInput = ref('');
-const cityInput = ref('');
-
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
 const frenchDays = {
     monday: 'Lundi',
@@ -364,30 +341,6 @@ const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
     const cities = details?.map(detail => detail?.patient?.city) || [];
     return cities.some(city => formData.cityTags.includes(city));
-};
-
-const addPostalCodeTag = () => {
-    const value = postalCodeInput.value.trim();
-    if (value && !formData.postalCodeTags.includes(value)) {
-        formData.postalCodeTags.push(value);
-        postalCodeInput.value = '';
-    }
-};
-
-const removePostalCodeTag = (index) => {
-    formData.postalCodeTags.splice(index, 1);
-};
-
-const addCityTag = () => {
-    const value = cityInput.value.trim();
-    if (value && !formData.cityTags.includes(value)) {
-        formData.cityTags.push(value);
-        cityInput.value = '';
-    }
-};
-
-const removeCityTag = (index) => {
-    formData.cityTags.splice(index, 1);
 };
 
 const submit = () => {
