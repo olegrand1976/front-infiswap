@@ -280,7 +280,6 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
-import { ref, reactive, computed, onMounted, watch } from 'vue';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
 
