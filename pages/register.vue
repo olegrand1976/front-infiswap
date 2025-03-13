@@ -582,7 +582,7 @@ const { submit, inProgress, validationErrors } = useSubmit(
             inProgress.value = true;
 
             setTimeout(() => {
-                router.push('auth/verify-email');
+                router.push({ path: '/auth/verify-email' });
             }, 2000);
         });
     },
