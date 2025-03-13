@@ -94,7 +94,7 @@
             </div>
             <div>
                 <div v-if="patientLoading">
-                    Chargement des données du patient ...
+                    Chargement des données du patient en cours... Veuillez patienter ou sélectionner à nouveau le patient si nécessaire.
                 </div>
                 <div v-if="patientError">
                     Erreur : {{ patientError.message }}
