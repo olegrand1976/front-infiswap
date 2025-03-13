@@ -49,9 +49,9 @@
                                         >
                                             <p class="flex justify-between w-full">
                                                 <span>{{ patient.firstname }} {{ patient.lastname }}
-                                                    <span v-if="patient.visit_times.length > 0">
+                                                    <!-- <span v-if="patient.visit_times.length > 0">
                                                         (ID Visite: {{ patient.visit_times.map(v => v.id).join(', ') }})
-                                                    </span>
+                                                    </span> -->
                                                 </span>
                                             </p>
                                             <div
@@ -380,7 +380,7 @@ const handleFetchCareType = (patientId) => {
     else {
         selectedPatientId.value = patientId;
         fetchCareType(patientId);
-        fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
+        fetchPatient(patientId, formattedStart.value, formattedStart.value);
     }
 };
 
@@ -391,6 +391,7 @@ watch(tours, (newTours) => {
             fetchCareType(selectedPatientId.value);
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
+            console.log(formattedDate);
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
         }
     }

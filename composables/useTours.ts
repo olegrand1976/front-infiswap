@@ -19,11 +19,10 @@ export const useTours = () => {
             }
 
             const params = new URLSearchParams({
-                nurseId: user.value.nurse.id.toString(),
+                nurseId: user.value.id.toString(),
                 startDate: startDate,
                 endDate: endDate,
             }).toString();
-
             const response = await $apifetch(`/api/tours?${params}`, { method: 'GET' });
             tours.value = response.patient;
         }
