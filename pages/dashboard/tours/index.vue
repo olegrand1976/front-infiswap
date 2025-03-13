@@ -379,6 +379,7 @@ watch(tours, (newTours) => {
             fetchCareType(selectedPatientId.value);
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
+            console.log(formattedDate);
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
         }
     }
