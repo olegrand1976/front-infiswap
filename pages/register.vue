@@ -470,7 +470,7 @@ const formData = reactive({
     password: '',
     accountType: accountOptions[0].value,
     passwordConfirmation: '',
-    gender: '',
+    gender: 'F',
     language: languages[0].value,
     phoneNumber: undefined,
     dateOfBirth: null,
