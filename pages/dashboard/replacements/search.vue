@@ -64,10 +64,27 @@
                                         <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
                                     <Input
-                                        v-model="formData.postalCode"
-                                        placeholder="1000,7687,5455"
+                                        v-model="postalCodeInput"
+                                        placeholder="8793"
                                         class="w-32 text-xs my-0.5 rounded-full"
+                                        @keydown.enter.prevent="addPostalCodeTag"
                                     />
+                                </div>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <div
+                                        v-for="(tag, index) in formData.postalCodeTags"
+                                        :key="index"
+                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
+                                    >
+                                        <span class="px-2 py-2">{{ tag }}</span>
+                                        <button
+                                            type="button"
+                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
+                                            @click="removePostalCodeTag(index)"
+                                        >
+                                            &times;
+                                        </button>
+                                    </div>
                                 </div>
                             </FormControl>
                         </FormItem>
@@ -78,10 +95,27 @@
                         <FormItem>
                             <FormControl>
                                 <Input
-                                    v-model="formData.cities"
+                                    v-model="cityInput"
                                     placeholder="Ville"
                                     class="w-full text-xs my-0.5 rounded-full bg-gray-100 shadow"
+                                    @keydown.enter.prevent="addCityTag"
                                 />
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <div
+                                        v-for="(tag, index) in formData.cityTags"
+                                        :key="index"
+                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
+                                    >
+                                        <span class="px-2 py-2">{{ tag }}</span>
+                                        <button
+                                            type="button"
+                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
+                                            @click="removeCityTag(index)"
+                                        >
+                                            &times;
+                                        </button>
+                                    </div>
+                                </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -246,6 +280,7 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
 
@@ -282,10 +317,13 @@ const getShift = (startAt) => {
 };
 
 const formData = reactive({
-    postalCode: '',
-    cities: '',
+    postalCodeTags: [],
+    cityTags: [],
     selectedDays: [],
 });
+
+const postalCodeInput = ref('');
+const cityInput = ref('');
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
 const frenchDays = {
@@ -317,45 +355,55 @@ const selectedDaysPlaceholder = computed(() => {
 
 const isSubmitted = ref(false);
 
-const postalCodeArray = computed(() =>
-    formData.postalCode
-        .split(',')
-        .map(code => code.trim())
-        .filter(Boolean),
-);
-
-const citiesArray = computed(() =>
-    formData.cities
-        .split(',')
-        .map(city => city.trim())
-        .filter(Boolean),
-);
-
 const hasMatchingZipCode = (details) => {
     if (!isSubmitted.value) return false;
     const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
-    return zipCodes.some(zip => postalCodeArray.value.includes(zip));
+    return zipCodes.some(zip => formData.postalCodeTags.includes(zip));
 };
 
 const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
     const cities = details?.map(detail => detail?.patient?.city) || [];
-    return cities.some(city => citiesArray.value.includes(city));
+    return cities.some(city => formData.cityTags.includes(city));
+};
+
+const addPostalCodeTag = () => {
+    const value = postalCodeInput.value.trim();
+    if (value && !formData.postalCodeTags.includes(value)) {
+        formData.postalCodeTags.push(value);
+        postalCodeInput.value = '';
+    }
+};
+
+const removePostalCodeTag = (index) => {
+    formData.postalCodeTags.splice(index, 1);
+};
+
+const addCityTag = () => {
+    const value = cityInput.value.trim();
+    if (value && !formData.cityTags.includes(value)) {
+        formData.cityTags.push(value);
+        cityInput.value = '';
+    }
+};
+
+const removeCityTag = (index) => {
+    formData.cityTags.splice(index, 1);
 };
 
 const submit = () => {
     isSubmitted.value = true;
     fetchReplacements({
         selectedDays: Array.from(formData.selectedDays),
-        postalCode: postalCodeArray.value,
-        cities: citiesArray.value,
+        postalCode: formData.postalCodeTags,
+        cities: formData.cityTags,
     });
 };
 
-watch(() => formData.postalCode, () => {
+watch(() => formData.postalCodeTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
-watch(() => formData.cities, () => {
+watch(() => formData.cityTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
 
