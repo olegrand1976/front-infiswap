@@ -368,7 +368,7 @@ const handleFetchCareType = (patientId) => {
     else {
         selectedPatientId.value = patientId;
         fetchCareType(patientId);
-        fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
+        fetchPatient(patientId, formattedStart.value, formattedStart.value);
     }
 };
 
