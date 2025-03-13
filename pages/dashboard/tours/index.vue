@@ -372,6 +372,9 @@ watch(tours, (newTours) => {
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
+            if (formattedStart.value) {
+                fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
+            }
         }
     }
 }, { immediate: true, deep: true });
