@@ -54,7 +54,10 @@
                                                     </span>
                                                 </span>
                                             </p>
-                                            <div class="flex mr-4" @click.stop="openDialog(patient.id, patient.visit_times[0].id)">
+                                            <div
+                                                class="flex mr-4"
+                                                @click.stop="openDialog(patient.id, patient.visit_times[0].id)"
+                                            >
                                                 <XCircleIcon class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2" />
                                             </div>
                                         </div>
@@ -64,14 +67,23 @@
                                     <p>Pas de données retournés</p>
                                 </div>
                                 <!-- POPUP DE CONFIRMATION -->
-                                <div v-if="showDialog" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                <div
+                                    v-if="showDialog"
+                                    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+                                >
                                     <div class="bg-white p-6 rounded-lg shadow-lg">
                                         <p>Confirmer la suppression de la visite ?</p>
                                         <div class="flex justify-end mt-4">
-                                            <button class="bg-gray-300 px-4 py-2 rounded mr-2" @click="closeDialog">
+                                            <button
+                                                class="bg-gray-300 px-4 py-2 rounded mr-2"
+                                                @click="closeDialog"
+                                            >
                                                 Annuler
                                             </button>
-                                            <button class="bg-red-600 text-white px-4 py-2 rounded" @click="confirmDelete">
+                                            <button
+                                                class="bg-red-600 text-white px-4 py-2 rounded"
+                                                @click="confirmDelete"
+                                            >
                                                 Supprimer
                                             </button>
                                         </div>
