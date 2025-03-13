@@ -14,16 +14,19 @@
                 Pour quelle utilisation de la plateforme ?
             </h5>
 
-            <Form class="mt-12 flex flex-col">
+            <Form
+                class="mt-12 flex flex-col"
+                @submit.prevent="handleSubmit"
+            >
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 2xl:gap-x-32 items-center">
-                    <div class="h-10 flex justify-center px-auto items-center border border-primary text-primary rounded-full">
-                        <span>Je cherche des remplacements</span>
-                    </div>
-                    <div class="h-10 flex justify-center px-auto items-center border border-primary text-primary rounded-full">
-                        <span>Je souhaite me faire remplacer</span>
-                    </div>
-                    <div class="h-10 flex justify-center px-auto items-center border border-primary text-primary rounded-full">
-                        <span>Faire les deux</span>
+                    <div
+                        v-for="option in options"
+                        :key="option.value"
+                        :class="['h-10 flex justify-center px-auto items-center border rounded-full cursor-pointer',
+                                 formData === option.value ? 'bg-primary text-white' : 'border-primary text-primary']"
+                        @click="selectOption(option.value)"
+                    >
+                        <span>{{ option.label }}</span>
                     </div>
                 </div>
                 <Button
@@ -37,12 +40,8 @@
 
         <footer>
             <div class="bg-primary text-white py-4 md:px-0 px-8">
-                <p
-                    class="text-center text-[0.6em] md:text-xs"
-                >
-                    <NuxtLink
-                        to="/legal-notice"
-                    >Mentions légales</NuxtLink> -
+                <p class="text-center text-[0.6em] md:text-xs">
+                    <NuxtLink to="/legal-notice">Mentions légales</NuxtLink> -
                     <NuxtLink to="/privacy-security">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
                     <NuxtLink to="/terms">CGU</NuxtLink>
                 </p>
@@ -62,6 +61,22 @@
 </template>
 
 <script setup>
+const options = [
+    { label: 'Je cherche des remplacements', value: 'replacements' },
+    { label: 'Je souhaite me faire remplacer', value: 'beReplaced' },
+    { label: 'Faire les deux', value: 'both' },
+];
+
+const formData = ref(null);
+
+const selectOption = (value) => {
+    formData.value = formData.value === value ? null : value;
+};
+
+const handleSubmit = () => {
+    console.log('Form Data:', formData.value);
+};
+
 useHead({
     title: 'Choix d\'utilisation',
 });
