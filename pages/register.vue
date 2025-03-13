@@ -55,7 +55,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Nom"
-                            :errors="validationErrors.lastname"
                             @blur="validateField('lastname')"
                             @input="validateField('lastname')"
                         />
@@ -74,9 +73,8 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Prénoms"
-                            :errors="validationErrors.firstname"
-                            @blur="validateField('lastname')"
-                            @input="validateField('lastname')"
+                            @blur="validateField('firstname')"
+                            @input="validateField('firstname')"
                         />
                         <p
                             v-if="error.firstname"
@@ -93,7 +91,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Email"
-                            :errors="validationErrors.email"
                             @blur="validateField('email')"
                             @input="validateField('email')"
                         />
@@ -112,7 +109,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="N° de téléphone"
-                            :errors="validationErrors.phoneNumber"
                             @blur="validateField('phoneNumber')"
                             @input="validateField('phoneNumber')"
                         />
@@ -275,7 +271,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Code postal"
-                            :errors="validationErrors.zipCode"
                             @blur="validateField('address.zipCode')"
                             @input="validateField('address.zipCode')"
                         />
@@ -530,7 +525,7 @@ const schema = yup.object({
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
-    dateOfBirth: yup.date().required('La date de naissance est obligatoire').nullable(),
+    dateOfBirth: yup.date().nullable(),
     address: yup.object({
         street: yup.string().required('L\'adresse est obligatoire'),
         city: yup.string().required('La ville est obligatoire'),
@@ -568,23 +563,52 @@ const validateField = async (field) => {
     }
 };
 
-const { submit, inProgress, validationErrors } = useSubmit(
-    () => {
+const validateRequiredFields = async () => {
+    // Réinitialiser les erreurs
+    Object.keys(error).forEach((key) => {
+        error[key] = '';
+    });
+
+    let isValid = true;
+
+    // Valider uniquement les champs requis
+    try {
+        await schema.validate(toRaw(formData), { abortEarly: false });
+    }
+    catch (err) {
+        if (err instanceof yup.ValidationError) {
+            err.inner.forEach((e) => {
+                if (e.type === 'required') {
+                    error[e.path] = e.message;
+                    isValid = false;
+                }
+            });
+        }
+    }
+
+    return isValid;
+};
+
+const { submit, inProgress } = useSubmit(
+    async () => {
         status.value = '';
-        return register(formData).then(() => {
-            $toast({
-                description: 'Inscription réussie',
-            });
+        const isValid = await validateRequiredFields();
+        if (isValid) {
+            return register(formData).then(() => {
+                $toast({
+                    description: 'Inscription réussie',
+                });
 
-            Object.keys(formData).forEach((key) => {
-                formData[key as keyof typeof formData] = key === 'accept' ? false : '';
-            });
-            inProgress.value = true;
+                Object.keys(formData).forEach((key) => {
+                    formData[key as keyof typeof formData] = key === 'accept' ? false : '';
+                });
+                inProgress.value = true;
 
-            setTimeout(() => {
-                router.push('auth/verify-email');
-            }, 2000);
-        });
+                setTimeout(() => {
+                    router.push('auth/verify-email');
+                }, 2000);
+            });
+        }
     },
 );
 
