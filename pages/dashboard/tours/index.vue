@@ -49,33 +49,43 @@
                                         >
                                             <p class="flex justify-between w-full">
                                                 <span>{{ patient.firstname }} {{ patient.lastname }}
-                                                    <span v-if="patient.visit_times.length > 0">
-                                                        (ID Visite: {{ patient.visit_times.map(v => v.id).join(', ') }})
-                                                    </span>
                                                 </span>
                                             </p>
-                                            <div class="flex mr-4" @click.stop="openDialog(patient.id, patient.visit_times[0].id)">
-                                                <XCircleIcon class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2" />
+                                            <div class="flex mr-4">
+                                                <XCircleIcon
+                                                    class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2"
+                                                    @click="openDialog"
+                                                />
                                             </div>
                                         </div>
+                                        <Dialog v-model:open="isDialogOpen">
+                                            <DialogContent class="h-[28vh]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                                                    <DialogDescription>
+                                                        Etes-vous sur de vouloir supprimer ce patient ?
+                                                    </DialogDescription>
+                                                </DialogHeader>
+
+                                                <div class="flex space-x-8 justify-end items-center">
+                                                    <Button
+                                                        variant="secondary"
+                                                        @click="closeDialog"
+                                                    >
+                                                        Annuler
+                                                    </Button>
+                                                    <Button
+                                                        @click="submitDelete(patient.id, patient.visit_times?.[0]?.id)"
+                                                    >
+                                                        Oui
+                                                    </Button>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
                                     </div>
                                 </div>
                                 <div v-else-if="tours.length === 0 && !loading && !error">
                                     <p>Pas de données retournés</p>
-                                </div>
-                                <!-- POPUP DE CONFIRMATION -->
-                                <div v-if="showDialog" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                                    <div class="bg-white p-6 rounded-lg shadow-lg">
-                                        <p>Confirmer la suppression de la visite ?</p>
-                                        <div class="flex justify-end mt-4">
-                                            <button class="bg-gray-300 px-4 py-2 rounded mr-2" @click="closeDialog">
-                                                Annuler
-                                            </button>
-                                            <button class="bg-red-600 text-white px-4 py-2 rounded" @click="confirmDelete">
-                                                Supprimer
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -90,8 +100,6 @@
                     Erreur : {{ patientError.message }}
                 </div>
                 <div v-if="patient && patient.patient">
-                    <!-- <p>{{ patient.patient }}</p> -->
-                    <!-- <div v-if="patient && Array.isArray(patient.patient) && patient.patient.length > 0"> -->
                     <div class="mt-6">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
                             <div class="w-full">
@@ -265,38 +273,22 @@ const { tours, error, loading, fetchTours } = useTours();
 const { careType, careTypeLoading, careTypeError, fetchCareType } = useCareType();
 const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
-const showDialog = ref(false);
 const selectedPatientId = ref(null);
 
-const patientIdToDelete = ref(null);
-const visitIdToDelete = ref(null);
+const isDialogOpen = ref(false);
 
-const openDialog = (patientId, visitId) => {
-    patientIdToDelete.value = patientId;
-    visitIdToDelete.value = visitId;
-    showDialog.value = true;
+const openDialog = () => {
+    isDialogOpen.value = true;
 };
 
-// Fonction pour fermer la boîte de dialogue
 const closeDialog = () => {
-    showDialog.value = false;
+    isDialogOpen.value = false;
 };
 
-// Fonction de confirmation de la suppression
-const confirmDelete = async () => {
-    console.log('patientIdToDelete:', patientIdToDelete.value);
-    console.log('visitIdToDelete:', visitIdToDelete.value);
-
-    if (patientIdToDelete.value && visitIdToDelete.value) {
-        try {
-            await deleteTour(patientIdToDelete.value, visitIdToDelete.value);
-            console.log('Visite supprimée');
-        }
-        catch (err) {
-            console.error('Erreur lors de la suppression:', err);
-        }
-    }
+const submitDelete = async (patientId, visitId) => {
+    await deleteTour(patientId, visitId);
     closeDialog();
+    navigateTo(useRoute().fullPath, { replace: true });
 };
 
 const today = computed(() => {
