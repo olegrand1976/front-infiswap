@@ -307,12 +307,12 @@ const formatDate = (isoString) => {
 const getShift = (startAt) => {
     if (!startAt) return null;
 
-    const startHour = Number(startAt.split(':')[0]);
+    const [hours] = startAt.split(':').map(Number);
 
-    if (startHour >= 0 && startHour < 12) {
+    if (hours >= 0 && hours < 12) {
         return 'morning';
     }
-    if (startHour >= 12 && startHour < 18) {
+    if (hours >= 12 && hours < 18) {
         return 'afternoon';
     }
     return 'evening';
