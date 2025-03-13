@@ -54,7 +54,7 @@
                                             <div class="flex mr-4">
                                                 <XCircleIcon
                                                     class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2"
-                                                    @click="openDialog"
+                                                    @click="openDialog(patient.id, patient.visit_times?.[0]?.id)"
                                                 />
                                             </div>
                                         </div>
@@ -276,8 +276,10 @@ const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 const selectedPatientId = ref(null);
 
 const isDialogOpen = ref(false);
+const patientToDelete = ref(null);
 
-const openDialog = () => {
+const openDialog = (patientId, visitId) => {
+    patientToDelete.value = { patientId, visitId };
     isDialogOpen.value = true;
 };
 
@@ -285,10 +287,21 @@ const closeDialog = () => {
     isDialogOpen.value = false;
 };
 
-const submitDelete = async (patientId, visitId) => {
-    await deleteTour(patientId, visitId);
-    closeDialog();
-    navigateTo(useRoute().fullPath, { replace: true });
+const submitDelete = async () => {
+    if (patientToDelete.value) {
+        const { patientId, visitId } = patientToDelete.value;
+        try {
+            await deleteTour(patientId, visitId);
+            closeDialog();
+            navigateTo(useRoute().fullPath, { replace: true });
+        }
+        catch (error) {
+            console.error('Erreur lors de la suppression :', error);
+        }
+    }
+    else {
+        console.log('Aucun patient ou visite sélectionné pour suppression !');
+    }
 };
 
 const today = computed(() => {
@@ -373,6 +386,7 @@ watch(tours, (newTours) => {
             const formattedDate = today.toISOString().split('T')[0];
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
             if (formattedStart.value) {
+                console.log('aiza ooo ', formattedStart.value);
                 fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
             }
         }
