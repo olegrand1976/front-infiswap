@@ -286,14 +286,6 @@ const closeDialog = () => {
 };
 
 const submitDelete = async (patientId, visitId) => {
-    console.log('Patient ID:', patientId);
-    console.log('Visit ID:', visitId);
-
-    if (!visitId) {
-        console.error('visitId est undefined !');
-        return;
-    }
-
     await deleteTour(patientId, visitId);
     closeDialog();
     navigateTo(useRoute().fullPath, { replace: true });
