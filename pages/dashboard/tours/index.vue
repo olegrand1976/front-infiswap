@@ -398,15 +398,11 @@ watch(tours, (newTours) => {
 }, { immediate: true, deep: true });
 
 useHead({
-    title: 'Gestion Tournées',
+    title: 'Tournées',
 });
 
-// definePageMeta({
-//     layout: 'dashboard',
-//     middleware: ['auth'],
-// });
-
 definePageMeta({
+    middleware: ['verified'],
     layout: 'dashboard',
     ssr: false,
 });
