@@ -3,7 +3,7 @@ import { useNuxtApp } from '#app';
 import { useToast } from '@/components/ui/toast/use-toast';
 
 export function useNewsletter() {
-    const email = ref("");
+    const email = ref('');
     const isLoading = ref(false);
     const { $apifetch } = useNuxtApp();
     const { toast } = useToast();
@@ -37,7 +37,7 @@ export function useNewsletter() {
                 duration: 3000,
             });
 
-            email.value = ""; // Réinitialiser le champ après succès
+            email.value = ''; // Réinitialiser le champ après succès
         }
         catch (err) {
             toast({

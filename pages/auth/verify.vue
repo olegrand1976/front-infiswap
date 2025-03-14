@@ -60,16 +60,18 @@ export default {
                     headers: {
                         Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
                     },
-                }
+                },
             );
 
             if (response.status === 200) {
                 this.status = 'success';
                 this.$router.push('/auth/verified'); // Redirection après succès
-            } else {
+            }
+            else {
                 this.status = 'error';
             }
-        } catch (error) {
+        }
+        catch (error) {
             this.status = 'error';
             console.error('Erreur lors de la vérification de l\'e-mail :', error);
         }

@@ -49,9 +49,9 @@
                 </FormField>
                 <Button
                     :disabled="isLoading"
-                    @click="subscribeNewsletter"
                     variant="secondary"
                     class="mt-0.5 me-0.5"
+                    @click="subscribeNewsletter"
                 >
                     {{ isLoading ? "Envoi..." : "Enregistrer" }}
                 </Button>
