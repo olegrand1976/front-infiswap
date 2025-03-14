@@ -91,33 +91,24 @@
                         Enfin, <strong>la plateforme...</strong>
                     </h3>
                     <p>
-                        intègre des outils de gestion administrative et financière,
+                        Intègre des outils de gestion administrative et financière,
                         notamment le suivi des véhicules, la facturation et la centralisation des informations essentielles.
                     </p>
                     <p>
-                        Accessible sur mobile et ordinateur, Infiswap offre un gain de temps significatif,
-                        améliore la coordination entre professionnels et contribue à une meilleure qualité de soins.
-                        C'est une solution moderne et indispensable pour un exercice serein et efficace du métier d'infirmier.
+                        Accessible sur mobile et ordinateur, Infiswap apporte un gain de temps significatif, améliore la coordination 
+                        entre professionnels et contribue à une meilleure qualité de soins. Une solution moderne et indispensable 
+                        pour un exercice serein et efficace du métier d'infirmier.
+                        Infiswap est une plateforme dédiée aux infirmiers libéraux, facilitant les remplacements, la gestion des 
+                        tournées et le suivi des formations. Elle optimise la planification, réduit le temps administratif et améliore la 
+                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une meilleure qualité de soins.
+                        Infiswap: Plus de temps pour soigner, Moins de temps à gérer.
                     </p>
                     <p>
-                        Avec infiswap, trouvez et gérez vos remplacements facilement.
-                        Plus de visibilité pour les annonces, une recherche optimisée par localisation et une mise en relation rapide entre infirmiers.
-                        Gagnez du temps, développez votre réseau et exercez en toute sérénité!
+                        Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité pour les annonces, une 
+                        recherche optimisée par localisation et une mise en relation rapide entre infirmiers. Gagnez du temps, 
+                        développez votre réseau et exercez en toute sérénité! 
                     </p>
-                    <div>
-                        <h5 class="font-semibold">
-                            Infiswap:
-                            <span class="text-primary">
-                                Plus de temps pour soigner, moins de temps à gérer
-                            </span>
-                        </h5>
-                        <p>
-                            Avec Infiswap, trouvez et gérez vos remplacements facilement.
-                            Bénéficiez d'une meilleure visibilité pour les annonces,
-                            d'une recherche optimisée par localisation et d'une mise en relation rapide entre infirmiers.
-                            Gagnez du temps, développez votre réseau et exercez en toute sérénité !
-                        </p>
-                    </div>
+
                     <Button
                         href="/register"
                         class="w-44 mx-auto flex justify-center items-center lg:mx-0"
@@ -172,9 +163,9 @@ const cards = [
     {
         title: '🔍 Recherche rapide et ciblée',
         content: [
-            'Recherchez facilement les offres de remplacement disponibles.',
-            'Filtrez les annonces par localisation, date et type de soins.',
-            'Recevez des notifications en temps réel dès qu\'une nouvelle opportunité correspond à vos critères.',
+            'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
+            'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
+            'Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
         ],
     },
     {
@@ -182,7 +173,7 @@ const cards = [
         content: [
             'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
             'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
-            'Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
+            'Échangez via la messagerie intégrée pour finaliser votre engagement en toute simplicité',
         ],
     },
     {
@@ -211,3 +202,4 @@ definePageMeta({
     layout: 'guest',
 });
 </script>
+
