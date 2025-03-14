@@ -230,7 +230,7 @@ const schema = yup.object().shape({
     phoneNumber: yup.string()
         .required('Le numéro est requis')
         // .matches(/^\d{10}$/, 'Numéro invalide'),
-        .min(10, 'Numéro invalide'),
+        .min(10, 'Le numéro doit contenir entre 10 chiffres'),
 });
 
 const validateField = async (field: keyof typeof formData) => {
