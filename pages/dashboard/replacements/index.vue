@@ -202,5 +202,6 @@ const hasShift = (details, period) => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['verified'],
+    ssr: false,
 });
 </script>

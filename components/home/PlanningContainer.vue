@@ -4,7 +4,7 @@
             <div class="grid grid-cols-2 items-center gap-12">
                 <div class="mx-auto col-span-2 order-2 lg:order-none lg:col-span-1 z-20 mt-6 sm:mt-0">
                     <NuxtImg
-                        src="/home/planing_image.jpeg"
+                        src="/home/infirmier_smile.png"
                         alt="Image de planification sur paperasse"
                         class="rounded-3xl h-[16rem] md:h-[28rem] object-cover"
                     />

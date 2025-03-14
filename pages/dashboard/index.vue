@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-6">
-        <section class="grid grid-cols-[80%_18%] items-center gap-4 mt-4">
+        <section class="grid grid-cols-1 items-center gap-4 mt-4">
             <div class="bg-gray-100 rounded-b-lg">
                 <div class="bg-primary h-8 rounded-t-lg" />
 
@@ -16,10 +16,10 @@
                             </h6>
                             <div class="grid grid-cols-2 items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
-                                    26
+                                    {{ reports.replacement.done.count }}
                                 </p>
                                 <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
-                                    75%
+                                    {{ reports.replacement.done.percentage }} %
                                 </div>
                             </div>
                         </div>
@@ -36,10 +36,10 @@
                             </h6>
                             <div class="grid grid-cols-2 items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
-                                    26
+                                    {{ reports.replacement.ignored.count }}
                                 </p>
                                 <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
-                                    75%
+                                    {{ reports.replacement.ignored.percentage }}%
                                 </div>
                             </div>
                         </div>
@@ -56,10 +56,10 @@
                             </h6>
                             <div class="grid grid-cols-2 items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
-                                    26
+                                    {{ reports.replacement.pending.count }}
                                 </p>
                                 <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
-                                    75%
+                                    {{ reports.replacement.pending.percentage }}%
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="bg-gray-100 h-full rounded-b-lg">
+            <!-- <div class="bg-gray-100 h-full rounded-b-lg">
                 <h2 class="bg-primary text-white p-3 rounded-t-lg">
                     Bénéfices
                 </h2>
@@ -76,7 +76,7 @@
                         8000 €
                     </p>
                 </div>
-            </div>
+            </div> -->
         </section>
 
         <section class="grid grid-cols-[45%_53%] gap-4">
@@ -136,35 +136,42 @@
                             </TableHeader>
 
                             <TableBody>
-                                <div
-                                    v-for="(tournee, index) in tournees"
-                                    :key="index"
-                                >
-                                    <TableRow class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden">
-                                        <TableCell class="bg-gray-100">
-                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                <span class="truncate w-full px-2 text-center mx-auto">
-                                                    {{ tournee.patient }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell class="bg-gray-100">
-                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                <span class="truncate w-full px-2 text-center mx-auto">
-                                                    {{ tournee.zip_code }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell class="bg-gray-100">
-                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                <span class="truncate w-full px-2 text-center mx-auto">
-                                                    {{ tournee.city }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                    <hr class="border-t border-gray-300">
-                                </div>
+                                <template v-if="reports.tours != 0">
+                                    <div
+                                        v-for="(tournee, index) in reports.tours"
+                                        :key="index"
+                                    >
+                                        <TableRow class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden">
+                                            <TableCell class="bg-gray-100">
+                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                    <span class="truncate w-full px-2 text-center mx-auto">
+                                                        {{ tournee.lastname }} {{ tournee.firstname }}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell class="bg-gray-100">
+                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                    <span class="truncate w-full px-2 text-center mx-auto">
+                                                        {{ tournee.profile.zip_code }}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell class="bg-gray-100">
+                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                    <span class="truncate w-full px-2 text-center mx-auto">
+                                                        {{ tournee.profile.city }}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                        <hr class="border-t border-gray-300">
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <p class="text-center text-black/70 mt-6">
+                                        Aucune tournée à afficher pour le moment
+                                    </p>
+                                </template>
                             </TableBody>
                         </Table>
                     </div>
@@ -177,18 +184,11 @@
                 </h3>
                 <div class="p-4">
                     <LineChart
-                        :data="chartData"
+                        :data="formattedData"
                         index="month"
                         :categories="['Pourcentage']"
                         :colors="['hsl(var(--primary))']"
                         :y-formatter="(tick) => `${tick} %`"
-                        :x-axis="{
-                            tickFormat: (value, index) => {
-                                const monthPoints = chartData.filter(point => point.month === value);
-                                const firstPointOfMonth = monthPoints[0];
-                                return firstPointOfMonth === chartData[index] ? value : '';
-                            },
-                        }"
                     />
                 </div>
             </div>
@@ -199,63 +199,32 @@
 <script lang="ts" setup>
 import { LineChart } from '@/components/ui/chart-line';
 
+import { useReports } from '~/composables/useReports';
+
+const { getReports } = useReports();
+
+const reports = await getReports();
+
 const formData = ref({
     zipCode: '',
     city: '',
 });
 
-const rawData = [
-    {
-        month: 'Jan 2025',
-        weeks: [3, 4.2, 4.4, 5],
-    },
-    {
-        month: 'Fév 2025',
-        weeks: [3.4, 2.6, 6, 4],
-    },
-    {
-        month: 'Mar 2025',
-        weeks: [3.2, 4.6, 5.4, 4.8],
-    },
-    {
-        month: 'Avr 2025',
-        weeks: [3.8, 4.4, 5.2, 4.6],
-    },
-    {
-        month: 'Mai 2025',
-        weeks: [3.6, 4.8, 5.6, 4.2],
-    },
-    {
-        month: 'Juin 2025',
-        weeks: [3.4, 4.2, 5.4, 4.4],
-    },
-    {
-        month: 'Juil 2025',
-        weeks: [3.2, 4.6, 5.2, 4.8],
-    },
-];
+const formatDate = (dateString: string) => {
+    const [year, month] = dateString.split('-');
+    return `${month}/${year}`;
+};
 
-const chartData = ref(
-    rawData.flatMap(entry =>
-        entry.weeks.map(week => ({
-            month: entry.month,
-            Pourcentage: week,
-        })),
-    ),
-);
+const formattedData = computed(() => {
+    return reports.replacement.reponded_per_month.map(item => ({
+        month: formatDate(item.month),
+        Pourcentage: item.count,
+    }));
+});
 
-const tournees = [
-    {
-        patient: 'Jean Dupont',
-        zip_code: '12345',
-        city: 'Paris',
-    },
-    {
-        patient: 'Jean Dupont',
-        zip_code: '12345',
-        city: 'Paris',
-    },
-];
+onMounted(async () => {
+    await getReports();
+});
 
 useHead({
     title: 'Tableau de bord',
@@ -264,5 +233,6 @@ useHead({
 definePageMeta({
     layout: 'dashboard',
     middleware: ['verified'],
+    ssr: false,
 });
 </script>

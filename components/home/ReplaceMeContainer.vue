@@ -32,8 +32,8 @@
                 </div>
                 <div class="col-span-2 md:col-span-1">
                     <NuxtImg
-                        src="/home/Des_infirmiers.jpg"
-                        alt="Des infirmiers"
+                        src="/home/woman_infirmier.png"
+                        alt=" femme infirmier"
                         class="ml-auto rounded-3xl h-96 w-full object-cover object-center"
                     />
                 </div>
