@@ -1,12 +1,12 @@
 <template>
-    <div class="pt-16 sm:pt-24 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
+    <div class="pt-16 sm:pt-32 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
         <div class="flex flex-col space-y-8 sm:space-y-24">
             <div
-                class="flex relative flex-col sm:container sm:flex-row items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16"
+                class="mt-3 flex relative flex-col sm:container sm:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-20 sm:space-x-16"
             >
                 <div class="z-10 mx-6 sm:mx-0">
                     <NuxtImg
-                        src="/home/equipe_infirmier.jpg"
+                        src="/home/equipe_infirmier.png"
                         alt="Image d'une equipe infirmier"
                         class="w-full lg:h-auto lg:w-[38rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
                     />

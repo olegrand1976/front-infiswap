@@ -80,7 +80,7 @@
             <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20">
                 <div>
                     <NuxtImg
-                        src="/home/black_nurse.png"
+                        src="/home/black_infirmier.png"
                         alt="Jeune infirmière noire"
                         class="w-full"
                     />
