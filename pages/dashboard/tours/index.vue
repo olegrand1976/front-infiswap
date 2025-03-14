@@ -401,8 +401,13 @@ useHead({
     title: 'Gestion Tournées',
 });
 
+// definePageMeta({
+//     layout: 'dashboard',
+//     middleware: ['auth'],
+// });
+
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth'],
+    ssr: false,
 });
 </script>
