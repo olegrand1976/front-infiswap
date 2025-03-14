@@ -373,7 +373,12 @@ const handleFetchCareType = (patientId) => {
     else {
         selectedPatientId.value = patientId;
         fetchCareType(patientId);
-        fetchPatient(patientId, formattedStart.value, formattedStart.value);
+        if (formattedStart.value) {
+            fetchPatient(patientId, formattedStart.value, formattedStart.value);
+        }
+        if (formattedInitialStart.value) {
+            fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
+        }
     }
 };
 
@@ -386,7 +391,6 @@ watch(tours, (newTours) => {
             const formattedDate = today.toISOString().split('T')[0];
             fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
             if (formattedStart.value) {
-                console.log('aiza ooo ', formattedStart.value);
                 fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
             }
         }
