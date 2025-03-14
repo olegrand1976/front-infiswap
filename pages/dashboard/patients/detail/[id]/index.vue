@@ -645,5 +645,6 @@ watch(() => patient.value, () => {
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
+    ssr: false,
 });
 </script>

@@ -362,5 +362,6 @@ watch(() => formData.cities, () => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth'],
+    ssr: false,
 });
 </script>

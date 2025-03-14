@@ -16,7 +16,7 @@
                         <FormItem>
                             <FormControl>
                                 <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white s">
+                                    <h5 class="text-white">
                                         Codes postaux
                                     </h5>
                                     <Input
@@ -185,5 +185,6 @@ onMounted(() => {
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
+    ssr: false,
 });
 </script>
