@@ -39,7 +39,7 @@
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <NuxtImg
-                            src="/home/Group 3742.png"
+                            src="/home/woman_infirmier.png"
                             alt="Infirmière"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
@@ -100,10 +100,17 @@
                         pour un exercice serein et efficace du métier d'infirmier.
                         Infiswap est une plateforme dédiée aux infirmiers libéraux, facilitant les remplacements, la gestion des 
                         tournées et le suivi des formations. Elle optimise la planification, réduit le temps administratif et améliore la 
-                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une meilleure qualité de soins.
-                        Infiswap: Plus de temps pour soigner, Moins de temps à gérer.
+                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une meilleure qualité de soins. <br>
+                        
                     </p>
                     <p>
+                        
+                        <h5 class="font-semibold">
+                            Infiswap:
+                            <span class="text-primary">
+                                Plus de temps pour soigner, moins de temps à gérer
+                            </span>
+                        </h5>
                         Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité pour les annonces, une 
                         recherche optimisée par localisation et une mise en relation rapide entre infirmiers. Gagnez du temps, 
                         développez votre réseau et exercez en toute sérénité! 
