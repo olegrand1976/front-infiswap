@@ -83,7 +83,7 @@ export const usePatient = () => {
                 endDate: endDate,
             }).toString();
 
-            const response = await $apifetch(`/api/tours/tour-defini/${patientId}?${params}`, { method: 'GET' });
+            const response = await $apifetch(`/api/tours/${patientId}?${params}`, { method: 'GET' });
             patient.value = response;
         }
         catch (err) {
