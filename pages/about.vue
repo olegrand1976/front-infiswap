@@ -108,7 +108,7 @@
                         recherche optimisée par localisation et une mise en relation rapide entre infirmiers. Gagnez du temps, 
                         développez votre réseau et exercez en toute sérénité! 
                     </p>
-                    
+
                     <Button
                         href="/register"
                         class="w-44 mx-auto flex justify-center items-center lg:mx-0"
@@ -202,3 +202,4 @@ definePageMeta({
     layout: 'guest',
 });
 </script>
+
