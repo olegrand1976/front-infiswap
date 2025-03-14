@@ -14,21 +14,25 @@
                             Infiswap...
                         </h3>
                         <p>
-                            est une plateforme innovante conçue pour optimiser la gestion des infirmiers libéraux.
-                            Elle simplifie les remplacements, la planification des tournées et le suivi des formations.
-                            Grâce à des outils intelligents et automatisés, Infiswap améliore la coordination,
-                            réduit le temps administratif et facilite l'organisation quotidienne,
-                            offrant ainsi une meilleure qualité de soins et un gain de temps précieux.
+                            est une plateforme innovante conçue pour optimiser
+                            la gestion des infirmiers libéraux. Elle simplifie les
+                            remplacements, la planification des tournées et le suivi
+                            des formations. Grâce à des outils intelligents et automatisés,
+                            Infiswap améliore la coordination, réduit le temps administratif
+                            et facilite l'organisation quotidienne, offrant ainsi une meilleure
+                            qualité de soins et un gain de temps précieux.
                         </p>
                         <p>
-                            La gestion des tournées est optimisée grâce à une planification automatisée,
-                            prenant en compte les contraintes horaires,
-                            les types de soins et la réduction des déplacements inutiles.
+                            la gestion des tournées est optimisée avec une planification automatisée,
+                            prenant en compte les contraintes horaires, les types de soins et la
+                            réduction des déplacements inutiles.
                         </p>
                         <p>
                             Infiswap permet également un suivi complet des formations professionnelles,
-                            assurant la conformité aux obligations légales grâce à des rappels et une gestion simplifiée des inscriptions.<br>
-                            Le suivi des patients est amélioré par un historique détaillé des soins, facilitant la transmission entre soignants.
+                            assurant la conformité aux obligations légales avec des rappels et une gestion
+                            simplifiée des inscriptions. <br>
+                            Le suivi des patients est amélioré par un historique détaillé des soins,
+                            facilitant la transmission entre soignants.
                         </p>
                         <Button
                             href="/register"
@@ -39,8 +43,8 @@
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <NuxtImg
-                            src="/home/woman_infirmier.png"
-                            alt="Infirmière"
+                            src="/home/nurse_with_old_woman2.png"
+                            alt="Infirmière avec une vieille femme"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
                     </div>
@@ -92,31 +96,34 @@
                     </h3>
                     <p>
                         Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la centralisation des informations essentielles.
+                        notamment le suivi des véhicules, la facturation et la
+                        centralisation des informations essentielles.
                     </p>
                     <p>
-                        Accessible sur mobile et ordinateur, Infiswap apporte un gain de temps significatif, améliore la coordination 
-                        entre professionnels et contribue à une meilleure qualité de soins. Une solution moderne et indispensable 
-                        pour un exercice serein et efficace du métier d'infirmier.
+                        Accessible sur mobile et ordinateur, Infiswap apporte un gain de
+                        temps significatif, améliore la coordination entre professionnels et
+                        contribue à une meilleure qualité de soins. Une solution moderne et
+                        indispensable pour un exercice serein et efficace du métier d'infirmier. <br>
+                        Infiswap est une plateforme dédiée aux infirmiers libéraux, facilitant les
+                        remplacements, la gestion des tournées et le suivi des formations. Elle
+                        optimise la planification, réduit le temps administratif et améliore la
+                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une
+                        meilleure qualité de soins.
                     </p>
-                    <p>
-                        Infiswap est une plateforme dédiée aux infirmiers libéraux, facilitant les remplacements, la gestion des 
-                        tournées et le suivi des formations. Elle optimise la planification, réduit le temps administratif et améliore la 
-                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une meilleure qualité de soins. <br>
-                    </p>
-                    <p>
-                        
+                    <div>
                         <h5 class="font-semibold">
                             Infiswap:
                             <span class="text-primary">
-                                Plus de temps pour soigner, moins de temps à gérer
+                                Plus de temps pour soigner, Moins de temps à gérer
                             </span>
                         </h5>
-                        Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité pour les annonces, une 
-                        recherche optimisée par localisation et une mise en relation rapide entre infirmiers. Gagnez du temps, 
-                        développez votre réseau et exercez en toute sérénité! 
-                    </p>
-
+                        <p>
+                            Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité
+                            pour les annonces, une recherche optimisée par localisation et une mise en relation
+                            rapide entre infirmiers. Gagnez du temps, développez votre réseau et exercez en toute
+                            sérénité!
+                        </p>
+                    </div>
                     <Button
                         href="/register"
                         class="w-44 mx-auto flex justify-center items-center lg:mx-0"
@@ -174,8 +181,6 @@ const cards = [
             'Recherchez facilement les offres de remplacement disponibles.',
             'Filtrez les annonces par localisation, date et type de soins.',
             'Recevez des notifications en temps réel dès qu\'une nouvelle opportunité correspond à vos critères.',
-
-
         ],
     },
     {
@@ -183,22 +188,23 @@ const cards = [
         content: [
             'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
             'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
-            'Échangez via la messagerie intégrée pour finaliser votre engagement en toute simplicité',
+            'Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
         ],
     },
     {
         title: '📅 Gestion flexible et optimisée',
         content: [
             'Planifiez vos remplacements en fonction de vos disponibilités.',
-            'Suivez l\'historique de vos remplacements et optimisez votre emploi du temps.',
+            'Ajoutez directement les missions acceptées à votre agenda.',
+            'Suivez l\'historique de vos remplacements et optimisez votre planning.',
         ],
     },
     {
         title: '🚀 Développez votre activité et votre réseau',
         content: [
-            'Multipliez vos opportunités professionnelles en toute simplicité.',
-            'Renforcez votre réseau en établissant de nouvelles collaborations.',
-            'Augmentez votre visibilité auprès des infirmiers et établissements en quête de remplaçants.',
+            'Multipliez les opportunités de travail sans effort.',
+            'Renforcez votre réseau professionnel avec de nouvelles collaborations.',
+            'Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
         ],
     },
 ];
@@ -212,4 +218,3 @@ definePageMeta({
     layout: 'guest',
 });
 </script>
-
