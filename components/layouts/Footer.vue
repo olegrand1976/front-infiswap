@@ -54,9 +54,9 @@
                         </div>
                         <Button
                             :disabled="isLoading"
-                            @click="subscribeNewsletter"
                             variant="secondary"
                             class="text-primary h-8"
+                            @click="subscribeNewsletter"
                         >
                             {{ isLoading ? "Envoi..." : "Enregistrer" }}
                         </Button>

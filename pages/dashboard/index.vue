@@ -93,11 +93,27 @@
                                     Code postal
                                 </label>
                             </div>
-                            <Input
-                                v-model="formData.zipCode"
-                                type="text"
-                                class="w-full bg-transparent"
-                            />
+                            <TagsInput
+                                v-model="user.settings.replacement.zip_codes"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
+                                <div
+                                    class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                >
+                                    <TagsInputItem
+                                        v-for="item in user.settings.replacement.zip_codes"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete />
+                                    </TagsInputItem>
+                                </div>
+
+                                <TagsInputInput />
+                            </TagsInput>
                         </div>
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
                             <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
@@ -105,11 +121,27 @@
                                     Ville
                                 </label>
                             </div>
-                            <Input
-                                v-model="formData.city"
-                                type="text"
-                                class="w-full bg-transparent"
-                            />
+                            <TagsInput
+                                v-model="user.settings.replacement.cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
+                                <div
+                                    class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                >
+                                    <TagsInputItem
+                                        v-for="item in user.settings.replacement.cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete />
+                                    </TagsInputItem>
+                                </div>
+
+                                <TagsInputInput />
+                            </TagsInput>
                         </div>
                     </Form>
                 </div>
@@ -198,17 +230,15 @@
 
 <script lang="ts" setup>
 import { LineChart } from '@/components/ui/chart-line';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useReports } from '~/composables/useReports';
+
+const user = useState('user');
 
 const { getReports } = useReports();
 
 const reports = await getReports();
-
-const formData = ref({
-    zipCode: '',
-    city: '',
-});
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
