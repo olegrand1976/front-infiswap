@@ -6,8 +6,8 @@
             >
                 <div class="z-10 mx-6 sm:mx-0">
                     <NuxtImg
-                        src="/home/Group_2217.png"
-                        alt="Image d'une femme"
+                        src="/home/Group 3743.jpg"
+                        alt="Image d'une equipe infirmier"
                         class="w-full lg:h-auto lg:w-[38rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
                     />
                 </div>

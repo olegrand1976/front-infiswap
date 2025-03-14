@@ -39,8 +39,8 @@
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <NuxtImg
-                            src="/home/nurse_with_old_woman2.png"
-                            alt="Infirmière avec une vieille femme"
+                            src="/home/Group 3742.png"
+                            alt="Infirmière"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
                     </div>
