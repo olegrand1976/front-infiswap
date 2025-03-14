@@ -43,7 +43,7 @@
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <NuxtImg
-                            src="/home/nurse_with_old_woman2.png"
+                            src="/home/woman_infirmier.png"
                             alt="Infirmière avec une vieille femme"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
