@@ -13,7 +13,7 @@
             </div>
             <div class="p-4 col-span-2 lg:col-span-1 text-start lg:text-start">
                 <p class="font-bold mb-4">
-                    Chers utilisateurs,
+                    Chers utilisateur,
                 </p>
                 <p class="mb-4">
                     Nous sommes ravis de vous annoncer que notre plateforme ouvrira ses portes à partir de <strong class="text-primary font-semibold">la deuxième moitié du mois de mars</strong>. Nous travaillons d'arrache-pied pour vous offrir une expérience optimale et innovante. Restez connectés pour découvrir nos prochaines annonces et mises à jour.
