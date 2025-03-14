@@ -1,5 +1,5 @@
 <template>
-    <!-- <NuxtLayout name="guest">
+    <NuxtLayout name="guest">
         <template #title>
             Nos <strong>services</strong>
         </template>
@@ -61,23 +61,22 @@
             </section>
         </div>
 
-        <div class="container grid grid-cols-2 items-center">
-            <div>
-                <NuxtImg
-                    src="/home/nurse_with_stetho.png"
-                    alt="Infirmière avec une stéthoscope"
-                    class="h-full object-cover"
-                />
-            </div>
-
-            <div>
-                <h3 class="text-primary text-3xl font-semibold">
+        <div class="container grid grid-cols-1 lg:grid-cols-2 items-center my-10">
+            <div class="order-1 lg:order-2 text-center lg:text-right">
+                <h3 class="text-primary text-3xl font-semibold text-center lg:text-left">
                     Inscris-toi maintenant pour garantir ton activité
                 </h3>
             </div>
+            <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
+                <NuxtImg
+                    src="/home/nurse_with_stetho.png"
+                    alt="Infirmière avec un stéthoscope"
+                    class="w-full max-w-md lg:max-w-lg h-auto object-cover rounded-lg"
+                />
+            </div>
         </div>
-    </NuxtLayout> -->
-    <ErrorUnderConstruction />
+    </NuxtLayout>
+    <!-- <ErrorUnderConstruction /> -->
 </template>
 
 <script lang="ts" setup>
