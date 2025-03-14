@@ -48,12 +48,12 @@
                     </FormItem>
                 </FormField>
                 <Button
+                    :disabled="isLoading"
+                    @click="subscribeNewsletter"
                     variant="secondary"
-                    type="submit"
                     class="mt-0.5 me-0.5"
-                    :class="buttonClass"
                 >
-                    Enregistrer
+                    {{ isLoading ? "Envoi..." : "Enregistrer" }}
                 </Button>
             </Form>
         </div>
@@ -63,7 +63,9 @@
 <script lang="ts" setup>
 import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 
-const email = ref('');
+import { useNewsletter } from '@/composables/useNewsletter';
+
+const { email, isLoading, subscribeNewsletter } = useNewsletter();
 
 defineProps({
     bgClass: String,

@@ -229,7 +229,7 @@ const schema = yup.object().shape({
         .min(2, 'La ville doit avoir minimum 2 caractères'),
     phoneNumber: yup.string()
         .required('Le numéro est requis')
-        .matches(/^\d{10}$/, 'Numéro invalide'),
+        .matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
 });
 
 const validateField = async (field: keyof typeof formData) => {
@@ -242,28 +242,47 @@ const validateField = async (field: keyof typeof formData) => {
     }
 };
 
-const { submit, inProgress } = useSubmit(
-    () => {
-        console.log(formData);
-        return searchNurse().submitSearchNurse(formData).then(() => {
-            $toast({
-                title: 'Succès',
-                description: 'Envoi de formulaire effectué',
+const validateRequiredFields = async () => {
+    let isValid = true;
+    try {
+        await schema.validate(toRaw(formData), { abortEarly: false });
+    }
+    catch (err) {
+        if (err instanceof yup.ValidationError) {
+            err.inner.forEach((e) => {
+                error[e.path] = e.message;
+                isValid = false;
             });
+        }
+    }
+    return isValid;
+};
 
-            Object.keys(formData).forEach((key) => {
-                (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
+const { submit, inProgress } = useSubmit(
+    async () => { // Ajout de async
+        console.log(formData);
+        const isValid = await validateRequiredFields();
+        if (isValid) {
+            return searchNurse().submitSearchNurse(formData).then(() => {
+                $toast({
+                    title: 'Succès',
+                    description: 'Envoi de formulaire effectué',
+                });
+
+                Object.keys(formData).forEach((key) => {
+                    (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
+                });
+                setTimeout(() => {
+                    router.push('/');
+                }, 2000);
             });
-            setTimeout(() => {
-                router.push('/');
-            }, 2000);
-        });
+        }
     },
     {
         onError: () => {
             $toast({
                 title: 'Oups! Une erreur s\'est produite',
-                description: 'Echec de l\'envoi de formulaire',
+                description: 'Échec de l\'envoi du formulaire',
                 variant: 'destructive',
             });
         },

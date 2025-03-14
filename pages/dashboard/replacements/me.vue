@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Mes
+                Rechercher des
                 <strong>
                     remplacements
                 </strong>
@@ -11,9 +11,9 @@
 
         <div class="flex mt-6">
             <Form
-                class="grid grid-cols-4 w-full gap-4"
+                class="grid grid-cols-5 w-full gap-4"
             >
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -54,7 +54,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -63,32 +63,80 @@
                                         <span class="xl:hidden">CP</span>
                                         <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
-                                    <Input
-                                        v-model="formData.postalCode"
-                                        placeholder="1000,7687,5455"
-                                        class="w-32 text-xs my-0.5 rounded-full"
-                                    />
+                                    <TagsInput
+                                        v-model="formData.postalCodeTags"
+                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                    >
+                                        <div
+                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden'"
+                                            class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                        >
+                                            <TagsInputItem
+                                                v-for="item in formData.postalCodeTags"
+                                                :key="item"
+                                                :value="item"
+                                                class="flex-shrink-0 max-w-24"
+                                            >
+                                                <TagsInputItemText class="text-xs" />
+                                                <TagsInputItemDelete
+                                                    @click="removePostalCodeTag(item)"
+                                                />
+                                            </TagsInputItem>
+                                        </div>
+
+                                        <TagsInputInput
+                                            v-model="postalCodeInput"
+                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
+                                            class="text-xs flex items-center"
+                                            placeholder="8793"
+                                            @keydown.enter="addPostalCodeTag"
+                                        />
+                                    </TagsInput>
                                 </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4  md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
-                                <Input
-                                    v-model="formData.cities"
-                                    placeholder="Ville"
-                                    class="w-full text-xs my-0.5 rounded-full bg-gray-100 shadow"
-                                />
+                                <TagsInput
+                                    v-model="formData.cityTags"
+                                    class="flex items-center bg-gray-100 text-xs rounded-full border border-none"
+                                >
+                                    <div
+                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
+                                        class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                    >
+                                        <TagsInputItem
+                                            v-for="item in formData.cityTags"
+                                            :key="item"
+                                            :value="item"
+                                            class="flex-shrink-0 max-w-24"
+                                        >
+                                            <TagsInputItemText class="text-xs" />
+                                            <TagsInputItemDelete
+                                                @click="removeCityTag(item)"
+                                            />
+                                        </TagsInputItem>
+                                    </div>
+
+                                    <TagsInputInput
+                                        v-model="cityInput"
+                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
+                                        class="text-xs flex items-center bg-gray-100"
+                                        placeholder="Ville"
+                                        @keydown.enter="addCityTag"
+                                    />
+                                </TagsInput>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
                 <Button
-                    class="col-span-4 md:col-span-2 lg:col-span-1 text-sm bg-primary"
+                    class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-36 lg:ms-12 text-sm bg-primary"
                     @click="submit"
                 >
                     <MagnifyingGlassIcon class="w-6" />
@@ -122,7 +170,7 @@
                 </TableHeader>
 
                 <TableBody>
-                    <div v-if="loading && replacements.length <0">
+                    <div v-if="loading">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
                             :key="index"
@@ -155,7 +203,7 @@
                     </div>
                     <div v-else>
                         <TableRow
-                            v-for="replacement in replacements"
+                            v-for="replacement in myReplacements.data"
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
@@ -171,15 +219,15 @@
 
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'morning'"
+                                    v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'afternoon'"
+                                    v-if="hasShift(replacement.details, 'afternoon')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'evening'"
+                                    v-if="hasShift(replacement.details, 'evening')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                             </TableCell>
@@ -231,7 +279,7 @@
                             <TableCell class="text-xs pt-6 overflow-x-hidden">
                                 <Button
                                     class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
-                                    :href="`/dashboard/replacement/detail/${replacement.id}`"
+                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
                                     <span class="text-xs">Voir plus</span>
                                 </Button>
@@ -246,8 +294,9 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
-const replacements = useState('myReplacements');
+import { useReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Mes remplacements',
@@ -255,9 +304,16 @@ useHead({
 
 const { loading, getMyReplacements } = useReplacements();
 
-onMounted(() => {
-    getMyReplacements();
+const myReplacements = await getMyReplacements();
+
+const { fetchReplacements } = useSearchReplacements();
+
+onMounted(async () => {
+    await getMyReplacements();
 });
+
+const postalCodeInput = ref('');
+const cityInput = ref('');
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -270,20 +326,24 @@ const formatDate = (isoString) => {
 const getShift = (startAt) => {
     if (!startAt) return null;
 
-    const startHour = Number(startAt.split(':')[0]);
+    const [hours] = startAt.split(':').map(Number);
 
-    if (startHour >= 0 && startHour < 12) {
+    if (hours >= 0 && hours < 12) {
         return 'morning';
     }
-    if (startHour >= 12 && startHour < 18) {
+    if (hours >= 12 && hours < 18) {
         return 'afternoon';
     }
     return 'evening';
 };
 
+const hasShift = (details, period) => {
+    return details.some(detail => getShift(detail.start_at) === period);
+};
+
 const formData = reactive({
-    postalCode: '',
-    cities: '',
+    postalCodeTags: [],
+    cityTags: [],
     selectedDays: [],
 });
 
@@ -317,50 +377,70 @@ const selectedDaysPlaceholder = computed(() => {
 
 const isSubmitted = ref(false);
 
-const postalCodeArray = computed(() =>
-    formData.postalCode
-        .split(',')
-        .map(code => code.trim())
-        .filter(Boolean),
-);
-
-const citiesArray = computed(() =>
-    formData.cities
-        .split(',')
-        .map(city => city.trim())
-        .filter(Boolean),
-);
-
 const hasMatchingZipCode = (details) => {
     if (!isSubmitted.value) return false;
     const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
-    return zipCodes.some(zip => postalCodeArray.value.includes(zip));
+    return zipCodes.some(zip => formData.postalCodeTags.includes(zip));
 };
 
 const hasMatchingCity = (details) => {
     if (!isSubmitted.value) return false;
     const cities = details?.map(detail => detail?.patient?.city) || [];
-    return cities.some(city => citiesArray.value.includes(city));
+    return cities.some(city => formData.cityTags.includes(city));
+};
+
+const addPostalCodeTag = () => {
+    if (postalCodeInput.value.trim() !== '') {
+        formData.postalCodeTags.push(postalCodeInput.value.trim());
+        postalCodeInput.value = '';
+    }
+};
+
+const removePostalCodeTag = (tag) => {
+    formData.postalCodeTags = formData.postalCodeTags.filter(t => t !== tag);
+};
+
+const addCityTag = () => {
+    if (cityInput.value.trim() !== '') {
+        formData.cityTags.push(cityInput.value.trim());
+        cityInput.value = '';
+    }
+};
+
+const removeCityTag = (tag) => {
+    formData.cityTags = formData.cityTags.filter(t => t !== tag);
 };
 
 const submit = () => {
     isSubmitted.value = true;
     fetchReplacements({
         selectedDays: Array.from(formData.selectedDays),
-        postalCode: postalCodeArray.value,
-        cities: citiesArray.value,
+        postalCode: toRaw(formData.postalCodeTags),
+        cities: toRaw(formData.cityTags),
     });
 };
 
-watch(() => formData.postalCode, () => {
+watch(() => formData.postalCodeTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
-watch(() => formData.cities, () => {
+watch(() => formData.cityTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
 
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth'],
+    ssr: false,
 });
 </script>
+
+<style>
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+</style>

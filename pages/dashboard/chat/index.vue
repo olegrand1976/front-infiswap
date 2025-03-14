@@ -207,7 +207,7 @@
                         <textarea
                             v-model="newMessage"
                             placeholder="Votre message..."
-                            class="w-full px-4 pt-2 border border-gray-300 rounded-full focus:outline-none focus:border-primary"
+                            class="w-full px-4 pt-2 rounded border border-gray-300 focus:outline-none focus:border-primary"
                             @keyup.enter="sendMessage"
                         />
 

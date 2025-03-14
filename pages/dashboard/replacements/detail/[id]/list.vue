@@ -151,5 +151,6 @@ onMounted(() => {
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
+    ssr: false,
 });
 </script>

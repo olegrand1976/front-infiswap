@@ -91,26 +91,22 @@
 
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'morning'"
+                                    v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'afternoon'"
+                                    v-if="hasShift(replacement.details, 'afternoon')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                                 <CheckCircleIcon
-                                    v-if="getShift(replacement.details[0].start_at) === 'evening'"
+                                    v-if="hasShift(replacement.details, 'evening')"
                                     class="h-6 mx-auto text-green-500"
                                 />
                             </TableCell>
 
                             <TableCell class="bg-gray-100 text-xs">
                                 <div
-                                    class="flex h-10 rounded mt-3 justify-center items-center"
-                                    :class="[
-                                        'bg-gray-200',
-                                        hasMatchingZipCode(replacement.details) ? 'bg-success text-white' : '',
-                                    ]"
+                                    class="flex bg-gray-200 h-10 rounded mt-3 justify-center items-center"
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
@@ -123,11 +119,7 @@
 
                             <TableCell class="bg-gray-100 text-xs">
                                 <div
-                                    class="flex h-10 rounded mt-3 justify-center items-center overflow-hidden"
-                                    :class="[
-                                        'bg-gray-200',
-                                        hasMatchingCity(replacement.details) ? 'bg-success text-white' : '',
-                                    ]"
+                                    class="flex h-10 bg-gray-200 rounded mt-3 justify-center items-center overflow-hidden"
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
@@ -167,16 +159,18 @@
 <script lang="ts" setup>
 import { CheckCircleIcon } from '@heroicons/vue/24/outline';
 
-import { useSearchReplacements } from '~/composables/useReplacements';
+import { useReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Liste des remplacements',
 });
 
-const { loading, replacements, fetchReplacements } = useSearchReplacements();
+const { loading, getReplacements } = useReplacements();
 
-onMounted(() => {
-    fetchReplacements();
+const replacements = await getReplacements();
+
+onMounted(async () => {
+    await getReplacements();
 });
 
 const formatDate = (isoString) => {
@@ -190,69 +184,24 @@ const formatDate = (isoString) => {
 const getShift = (startAt) => {
     if (!startAt) return null;
 
-    const startHour = Number(startAt.split(':')[0]);
+    const [hours] = startAt.split(':').map(Number);
 
-    if (startHour >= 0 && startHour < 12) {
+    if (hours >= 0 && hours < 12) {
         return 'morning';
     }
-    if (startHour >= 12 && startHour < 18) {
+    if (hours >= 12 && hours < 18) {
         return 'afternoon';
     }
     return 'evening';
 };
 
-const formData = reactive({
-    postalCode: '',
-    cities: '',
-    selectedDays: [],
-});
-
-const isSubmitted = ref(false);
-
-const postalCodeArray = computed(() =>
-    formData.postalCode
-        .split(',')
-        .map(code => code.trim())
-        .filter(Boolean),
-);
-
-const citiesArray = computed(() =>
-    formData.cities
-        .split(',')
-        .map(city => city.trim())
-        .filter(Boolean),
-);
-
-const hasMatchingZipCode = (details) => {
-    if (!isSubmitted.value) return false;
-    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
-    return zipCodes.some(zip => postalCodeArray.value.includes(zip));
+const hasShift = (details, period) => {
+    return details.some(detail => getShift(detail.start_at) === period);
 };
-
-const hasMatchingCity = (details) => {
-    if (!isSubmitted.value) return false;
-    const cities = details?.map(detail => detail?.patient?.city) || [];
-    return cities.some(city => citiesArray.value.includes(city));
-};
-
-const submit = () => {
-    isSubmitted.value = true;
-    fetchReplacements({
-        selectedDays: Array.from(formData.selectedDays),
-        postalCode: postalCodeArray.value,
-        cities: citiesArray.value,
-    });
-};
-
-watch(() => formData.postalCode, () => {
-    if (isSubmitted.value) isSubmitted.value = false;
-});
-watch(() => formData.cities, () => {
-    if (isSubmitted.value) isSubmitted.value = false;
-});
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth'],
+    middleware: ['verified'],
+    ssr: false,
 });
 </script>

@@ -46,16 +46,19 @@
                         <div class="flex flex-row justify-start items-center">
                             <Mail class="text-white w-4 h-4 ms-3" />
                             <Input
+                                v-model="email"
                                 variant="transparent"
                                 placeholder="Email"
                                 class="w-44 md:w-52 lg:w-full text-white text-sm"
                             />
                         </div>
                         <Button
+                            :disabled="isLoading"
+                            @click="subscribeNewsletter"
                             variant="secondary"
                             class="text-primary h-8"
                         >
-                            Enregistrer
+                            {{ isLoading ? "Envoi..." : "Enregistrer" }}
                         </Button>
                     </div>
                     <div class="flex flex-row justify-center md:justify-start space-x-4 pt-4 md:pt-0">
@@ -119,10 +122,19 @@ import {
     Mail,
     Globe,
 } from 'lucide-vue-next';
+import { useNewsletter } from '@/composables/useNewsletter';
+
+const { email, isLoading, subscribeNewsletter } = useNewsletter();
 </script>
 
 <style scoped>
 .shadow-upper {
     box-shadow: -2px -3px -3px rgba(0, 0, 0, 0.25);
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s ease-in-out;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
 }
 </style>
