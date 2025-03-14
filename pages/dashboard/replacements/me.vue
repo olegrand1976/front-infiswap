@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Mes
+                Rechercher des
                 <strong>
                     remplacements
                 </strong>
@@ -11,9 +11,9 @@
 
         <div class="flex mt-6">
             <Form
-                class="grid grid-cols-4 w-full gap-4"
+                class="grid grid-cols-5 w-full gap-4"
             >
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -54,7 +54,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -63,66 +63,80 @@
                                         <span class="xl:hidden">CP</span>
                                         <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
-                                    <Input
-                                        v-model="postalCodeInput"
-                                        placeholder="8793"
-                                        class="w-32 text-xs my-0.5 rounded-full"
-                                        @keydown.enter.prevent="addPostalCodeTag"
-                                    />
-                                </div>
-                                <div class="mt-2 flex flex-wrap gap-2">
-                                    <div
-                                        v-for="(tag, index) in formData.postalCodeTags"
-                                        :key="index"
-                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
+                                    <TagsInput
+                                        v-model="formData.postalCodeTags"
+                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
-                                        <span class="px-2 py-2">{{ tag }}</span>
-                                        <button
-                                            type="button"
-                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
-                                            @click="removePostalCodeTag(index)"
+                                        <div
+                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden'"
+                                            class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
-                                            &times;
-                                        </button>
-                                    </div>
+                                            <TagsInputItem
+                                                v-for="item in formData.postalCodeTags"
+                                                :key="item"
+                                                :value="item"
+                                                class="flex-shrink-0 max-w-24"
+                                            >
+                                                <TagsInputItemText class="text-xs" />
+                                                <TagsInputItemDelete
+                                                    @click="removePostalCodeTag(item)"
+                                                />
+                                            </TagsInputItem>
+                                        </div>
+
+                                        <TagsInputInput
+                                            v-model="postalCodeInput"
+                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
+                                            class="text-xs flex items-center"
+                                            placeholder="8793"
+                                            @keydown.enter="addPostalCodeTag"
+                                        />
+                                    </TagsInput>
                                 </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1">
+                <div class="col-span-4  md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
-                                <Input
-                                    v-model="cityInput"
-                                    placeholder="Ville"
-                                    class="w-full text-xs my-0.5 rounded-full bg-gray-100 shadow"
-                                    @keydown.enter.prevent="addCityTag"
-                                />
-                                <div class="mt-2 flex flex-wrap gap-2">
+                                <TagsInput
+                                    v-model="formData.cityTags"
+                                    class="flex items-center bg-gray-100 text-xs rounded-full border border-none"
+                                >
                                     <div
-                                        v-for="(tag, index) in formData.cityTags"
-                                        :key="index"
-                                        class="flex items-center bg-gray-200 text-xs rounded-full m-1"
+                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
+                                        class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                     >
-                                        <span class="px-2 py-2">{{ tag }}</span>
-                                        <button
-                                            type="button"
-                                            class="flex items-center justify-center h-full px-2 hover:text-red-500"
-                                            @click="removeCityTag(index)"
+                                        <TagsInputItem
+                                            v-for="item in formData.cityTags"
+                                            :key="item"
+                                            :value="item"
+                                            class="flex-shrink-0 max-w-24"
                                         >
-                                            &times;
-                                        </button>
+                                            <TagsInputItemText class="text-xs" />
+                                            <TagsInputItemDelete
+                                                @click="removeCityTag(item)"
+                                            />
+                                        </TagsInputItem>
                                     </div>
-                                </div>
+
+                                    <TagsInputInput
+                                        v-model="cityInput"
+                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
+                                        class="text-xs flex items-center bg-gray-100"
+                                        placeholder="Ville"
+                                        @keydown.enter="addCityTag"
+                                    />
+                                </TagsInput>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
                 <Button
-                    class="col-span-4 md:col-span-2 lg:col-span-1 text-sm bg-primary"
+                    class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-36 lg:ms-12 text-sm bg-primary"
                     @click="submit"
                 >
                     <MagnifyingGlassIcon class="w-6" />
@@ -156,7 +170,7 @@
                 </TableHeader>
 
                 <TableBody>
-                    <div v-if="loading && myReplacements.data.length < 0">
+                    <div v-if="loading">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
                             :key="index"
@@ -265,7 +279,7 @@
                             <TableCell class="text-xs pt-6 overflow-x-hidden">
                                 <Button
                                     class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
-                                    :href="`/dashboard/replacement/detail/${replacement.id}`"
+                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
                                     <span class="text-xs">Voir plus</span>
                                 </Button>
@@ -280,7 +294,9 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
-import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
+
+import { useReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Mes remplacements',
@@ -295,6 +311,9 @@ const { fetchReplacements } = useSearchReplacements();
 onMounted(async () => {
     await getMyReplacements();
 });
+
+const postalCodeInput = ref('');
+const cityInput = ref('');
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -327,9 +346,6 @@ const formData = reactive({
     cityTags: [],
     selectedDays: [],
 });
-
-const postalCodeInput = ref('');
-const cityInput = ref('');
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
 const frenchDays = {
@@ -374,35 +390,33 @@ const hasMatchingCity = (details) => {
 };
 
 const addPostalCodeTag = () => {
-    const value = postalCodeInput.value.trim();
-    if (value && !formData.postalCodeTags.includes(value)) {
-        formData.postalCodeTags.push(value);
+    if (postalCodeInput.value.trim() !== '') {
+        formData.postalCodeTags.push(postalCodeInput.value.trim());
         postalCodeInput.value = '';
     }
 };
 
-const removePostalCodeTag = (index) => {
-    formData.postalCodeTags.splice(index, 1);
+const removePostalCodeTag = (tag) => {
+    formData.postalCodeTags = formData.postalCodeTags.filter(t => t !== tag);
 };
 
 const addCityTag = () => {
-    const value = cityInput.value.trim();
-    if (value && !formData.cityTags.includes(value)) {
-        formData.cityTags.push(value);
+    if (cityInput.value.trim() !== '') {
+        formData.cityTags.push(cityInput.value.trim());
         cityInput.value = '';
     }
 };
 
-const removeCityTag = (index) => {
-    formData.cityTags.splice(index, 1);
+const removeCityTag = (tag) => {
+    formData.cityTags = formData.cityTags.filter(t => t !== tag);
 };
 
 const submit = () => {
     isSubmitted.value = true;
     fetchReplacements({
         selectedDays: Array.from(formData.selectedDays),
-        postalCode: formData.postalCodeTags,
-        cities: formData.cityTags,
+        postalCode: toRaw(formData.postalCodeTags),
+        cities: toRaw(formData.cityTags),
     });
 };
 
@@ -418,3 +432,14 @@ definePageMeta({
     middleware: ['auth'],
 });
 </script>
+
+<style>
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+</style>
