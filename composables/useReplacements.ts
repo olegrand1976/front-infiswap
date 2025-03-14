@@ -7,12 +7,12 @@ export const useReplacements = () => {
     const { $toast } = useNuxtApp();
 
     const myReplacements = useState('myReplacements', () => []);
+    const replacements = useState('replacements', () => []);
     const error = useState('replacementError', () => null);
     const loading = useState('replacementLoading', () => false);
     const success = useState('replacementSuccess', () => false);
 
     const user = useState('user');
-    console.log(user.value);
 
     const submitReplacement = async (formData) => {
         loading.value = true;
@@ -55,6 +55,22 @@ export const useReplacements = () => {
         }
     };
 
+    const getReplacements = async () => {
+        try {
+            const response = await $apifetch('/api/replacements', { method: 'GET' });
+            replacements.value = response.replacements;
+
+            return replacements.value;
+        }
+        catch (err) {
+            error.value = err;
+            console.error(err);
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     const getMyReplacements = async () => {
         try {
             const response = await $apifetch('/api/replacements/me', { method: 'GET' });
@@ -78,6 +94,7 @@ export const useReplacements = () => {
         user,
         submitReplacement,
         getMyReplacements,
+        getReplacements,
     };
 };
 
