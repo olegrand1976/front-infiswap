@@ -229,8 +229,7 @@ const schema = yup.object().shape({
         .min(2, 'La ville doit avoir minimum 2 caractères'),
     phoneNumber: yup.string()
         .required('Le numéro est requis')
-        // .matches(/^\d{10}$/, 'Numéro invalide'),
-        .min(10, 'Le numéro doit contenir entre 10 chiffres'),
+        .matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
 });
 
 const validateField = async (field: keyof typeof formData) => {
