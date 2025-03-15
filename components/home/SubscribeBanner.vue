@@ -25,37 +25,34 @@
                     </NuxtLink>
                 </span>
             </p>
-            <Form
+            <form
                 class="hidden lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10"
                 :class="formClass"
+                @submit.prevent="subscribeNewsletter"
             >
-                <FormField name="email">
-                    <FormItem class="flex rounded-full border border-transparent">
-                        <FormControl>
-                            <div class="flex items-center">
-                                <EnvelopeIcon
-                                    class="text-primary w-5 ms-4"
-                                    :class="iconClass"
-                                />
-                                <Input
-                                    v-model="email"
-                                    placeholder="Email"
-                                    class="text-sm bg-transparent lg:w-80 sm:w-64"
-                                    :class="inputClass"
-                                />
-                            </div>
-                        </FormControl>
-                    </FormItem>
-                </FormField>
+                <div class="flex rounded-full border border-transparent">
+                    <div class="flex items-center">
+                        <EnvelopeIcon
+                            class="text-primary w-5 ms-4"
+                            :class="iconClass"
+                        />
+                        <Input
+                            v-model="email"
+                            placeholder="Email"
+                            class="text-sm bg-transparent lg:w-80 sm:w-64"
+                            :class="inputClass"
+                        />
+                    </div>
+                </div>
                 <Button
                     :disabled="isLoading"
                     variant="secondary"
                     class="mt-0.5 me-0.5"
-                    @click="subscribeNewsletter"
+                    type="submit"
                 >
                     {{ isLoading ? "Envoi..." : "Enregistrer" }}
                 </Button>
-            </Form>
+            </form>
         </div>
     </div>
 </template>
