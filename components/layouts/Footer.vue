@@ -42,7 +42,10 @@
                     <p class="md:hidden w-80 mx-auto text-center text-sm md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                     </p>
-                    <form @submit.prevent="subscribeNewsletter" class="mx-auto md:mx-0 bg-primary flex flex-row justify-between items-center h-9 rounded-full">
+                    <form
+                        class="mx-auto md:mx-0 bg-primary flex flex-row justify-between items-center h-9 rounded-full"
+                        @submit.prevent="subscribeNewsletter"
+                    >
                         <div class="flex flex-row justify-start items-center">
                             <Mail class="text-white w-4 h-4 ms-3" />
                             <Input
