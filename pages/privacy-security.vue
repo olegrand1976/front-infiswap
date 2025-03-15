@@ -23,7 +23,7 @@
                         v-for="(privacy, index) in privacyPolicy"
                         :key="index"
                         class="cursor-pointer"
-                        @click="scrollToSection(index)"
+                        @click="scrollToSection(String(index))"
                     >
                         {{ privacy.title }}
                     </li>
@@ -32,7 +32,7 @@
                 <ul class="md:col-span-2 flex flex-col space-y-4">
                     <li
                         v-for="(privacy, index) in privacyPolicy"
-                        :id="index"
+                        :id="String(index)"
                         :key="index"
                     >
                         <h3 class="text-lg font-semibold text-gray-800">

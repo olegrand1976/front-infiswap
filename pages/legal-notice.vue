@@ -10,7 +10,7 @@
                         v-for="(item, index) in legalNotices"
                         :key="index"
                         class="cursor-pointer"
-                        @click="scrollToSection(index)"
+                        @click="scrollToSection(String(index))"
                     >
                         {{ item.title }}
                     </li>

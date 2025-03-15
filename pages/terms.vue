@@ -13,7 +13,7 @@
                         v-for="(term, index) in terms"
                         :key="index"
                         class="cursor-pointer"
-                        @click="scrollToSection(index)"
+                        @click="scrollToSection(String(index))"
                     >
                         {{ term.title }}
                     </li>
