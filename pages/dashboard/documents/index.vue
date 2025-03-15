@@ -2,7 +2,7 @@
     <ErrorUnderConstructDashboard />
 </template>
 
-<script>
+<script setup>
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
