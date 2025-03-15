@@ -13,7 +13,7 @@
         <section>
             <HomePlanningContainer />
         </section>
-        <section class="sm:-mt-16">
+        <!-- <section class="sm:-mt-16">
             <HomeSubscribeBanner
                 bg-class="bg-white"
                 title-class="text-white sm:text-primary"
@@ -23,7 +23,7 @@
                 button-class="text-primary"
                 link-class="text-primary"
             />
-        </section>
+        </section> -->
         <section>
             <HomeAppDownloadSection />
         </section>
