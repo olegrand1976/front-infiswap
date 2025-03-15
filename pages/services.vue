@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest">
+    <!-- <NuxtLayout name="guest">
         <div class="relative font-light ">
             <div class="absolute inset-0 bg-tertiary/30 h-[300px] lg:h-full w-full" />
             <div class="container">
@@ -25,7 +25,6 @@
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <div class="flex justify-between items-center">
-                            <!-- Image à gauche en verticale -->
                             <div class="order-1 flex flex-col items-center">
                                 <NuxtImg
                                     src="/home/woman_infirmier.png"
@@ -34,7 +33,6 @@
                                 />
                             </div>
 
-                            <!-- Images à droite de bas en haut -->
                             <div class="order-2 flex flex-col justify-between items-center">
                                 <NuxtImg
                                     src="/home/woman_infirmier.png"
@@ -140,8 +138,8 @@
                 />
             </div>
         </div>
-    </NuxtLayout>
-    <!-- <ErrorUnderConstruction /> -->
+    </NuxtLayout> -->
+    <ErrorUnderConstruction />
 </template>
 
 <script lang="ts" setup>
