@@ -214,7 +214,6 @@ useHead({
 });
 
 definePageMeta({
-    middleware: ['guest'],
     layout: 'guest',
 });
 </script>

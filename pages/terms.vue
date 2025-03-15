@@ -51,7 +51,6 @@ useHead({
 });
 
 definePageMeta({
-    middleware: ['guest'],
     layout: false,
 });
 
