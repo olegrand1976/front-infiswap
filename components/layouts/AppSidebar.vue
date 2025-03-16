@@ -1,6 +1,6 @@
 <template>
     <Sidebar>
-        <SidebarContent class="p-2 flex flex-col h-full justify-between sidebar-content">
+        <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content">
             <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
                 <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
                     <LayoutsLogo class="w-36" />
