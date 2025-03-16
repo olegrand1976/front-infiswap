@@ -21,7 +21,7 @@
                                 >
                                     <CollapsibleTrigger as-child>
                                         <SidebarMenuButton
-                                            class="h-12"
+                                            class="h-12 w-full"
                                             :class="{
                                                 'bg-primary text-white font-bold': route.path.startsWith(item.route),
                                                 'bg-gray-200 text-neutral-700 hover:bg-primary/20': !route.path.startsWith(item.route),
@@ -55,10 +55,10 @@
                                                     'text-neutral-700 hover:bg-primary/20': !isActiveRoute(subItem.route),
                                                 }"
                                             >
-                                                <SidebarMenuButton class="w-full h-full">
+                                                <SidebarMenuButton class="w-full h-full p-0">
                                                     <NuxtLink
                                                         :href="subItem.route"
-                                                        class="flex"
+                                                        class="flex items-center h-full w-full p-2"
                                                     >
                                                         <component
                                                             :is="subItem.icon"
@@ -108,7 +108,7 @@
                 >
                     Version Test :
 
-                    Données supprimées avant le 15 mars 2025.
+                    Données supprimées avant le 20 mars 2025.
                 </SidebarMenuButton>
             </SidebarGroup>
             <SidebarGroup>
