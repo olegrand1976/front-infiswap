@@ -9,8 +9,8 @@
             </h1>
         </div>
 
-        <div class="flex justify-between mt-6">
-            <Form class="flex justify-between space-x-3 items-center">
+        <div class="flex justify-end mt-6">
+            <!-- <Form class="flex justify-between space-x-3 items-center">
                 <div class="flex space-x-4">
                     <FormField name="postalCode">
                         <FormItem>
@@ -35,7 +35,7 @@
                     <MagnifyingGlassIcon class="w-6" />
                     Rechercher
                 </Button>
-            </Form>
+            </Form> -->
 
             <div>
                 <Button

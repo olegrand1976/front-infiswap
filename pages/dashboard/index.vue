@@ -94,7 +94,7 @@
                                 </label>
                             </div>
                             <TagsInput
-                                v-model="user.settings.replacement.zip_codes"
+                                v-model="zipCodes"
                                 class="h-9 bg-transparent border border-none"
                                 disabled
                             >
@@ -102,7 +102,7 @@
                                     class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                 >
                                     <TagsInputItem
-                                        v-for="item in user.settings.replacement.zip_codes"
+                                        v-for="item in zipCodes"
                                         :key="item"
                                         :value="item"
                                         class="-mt-1"
@@ -122,7 +122,7 @@
                                 </label>
                             </div>
                             <TagsInput
-                                v-model="user.settings.replacement.cities"
+                                v-model="cities"
                                 class="h-9 bg-transparent border border-none"
                                 disabled
                             >
@@ -130,7 +130,7 @@
                                     class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                 >
                                     <TagsInputItem
-                                        v-for="item in user.settings.replacement.cities"
+                                        v-for="item in cities"
                                         :key="item"
                                         :value="item"
                                         class="-mt-1"
@@ -251,6 +251,9 @@ const formattedData = computed(() => {
         Pourcentage: item.count,
     }));
 });
+
+const zipCodes = computed(() => user.value.settings?.replacement?.zip_codes || []);
+const cities = computed(() => user.value.settings?.replacement?.cities || []);
 
 onMounted(async () => {
     await getReports();
