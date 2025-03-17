@@ -42,10 +42,12 @@
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Réinitialiser votre <span class="font-bold">mot de passe</span>
+                    Réinitialisez votre <span class="font-bold">mot de passe</span>
                 </h1>
                 <div class="w-full container">
-                    <Form class="flex flex-col">
+                    <form
+                        @submit.prevent="submitForm"
+                        class="flex flex-col">
                         <FormField name="email">
                             <FormItem>
                                 <FormLabel class="text-xs text-primary font-bold mb-12">
@@ -76,13 +78,13 @@
 
                         <div class="flex justify-center items-center mx-auto pt-8">
                             <Button
+                                type="submit"
                                 class="font-bold px-16 md:text-sm sm:text-xs"
-                                href="/auth/verify-2fa"
                             >
                                 Envoyer un email
                             </Button>
                         </div>
-                    </Form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -91,11 +93,13 @@
             <LayoutsHeaderMobile />
 
             <h1 class="text-lg text-center text-primary mt-32">
-                Réinitialiser votre <span class="font-bold">mot de passe</span>
+                Réinitialisez votre <span class="font-bold">mot de passe</span>
             </h1>
 
             <div class="w-full container mt-16">
-                <Form class="flex flex-col flex-grow">
+                <form
+                    @submit.prevent="submitForm"
+                    class="flex flex-col flex-grow">
                     <FormField name="email">
                         <FormItem>
                             <FormLabel class="text-xs text-primary font-bold mb-12">
@@ -126,13 +130,13 @@
 
                     <div class="flex justify-center items-center mx-auto pt-20">
                         <Button
+                            type="submit"
                             class="font-bold px-16 text-xs"
-                            href="/auth/verify-2fa"
                         >
                             Envoyer un email
                         </Button>
                     </div>
-                </Form>
+                </form>
             </div>
         </div>
     </div>
@@ -140,6 +144,9 @@
 
 <script lang="ts" setup>
 import { EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { ref } from 'vue';
+
+const { $toast } = useNuxtApp();
 
 definePageMeta({
     layout: 'auth',
@@ -150,4 +157,46 @@ useHead({
 });
 
 const email = ref('');
+
+const { $apifetch } = useNuxtApp();
+
+const submitForm = async (event: Event) => {
+    event.preventDefault();
+
+    if (!email.value) {
+        $toast.error('Veuillez entrer une adresse email valide.');
+        return;
+    }
+
+    try {
+        const response = await $apifetch('http://localhost:8094/api/forgot-password', {
+            method: 'POST',
+            body: JSON.stringify({ email: email.value }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.status === 200) {
+            $toast({
+                title: 'Succès',
+                description: 'Vérifiez votre boîte de réception.',
+            });
+        }
+        else {
+            $toast({
+                title: 'Succès',
+                description: 'Vérifiez votre boîte de réception.',
+            });
+        }
+    }
+    catch (error) {
+        console.error('Erreur API:', error);
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Échec de l\'envoi du formulaire',
+            variant: 'destructive',
+        });
+    }
+};
 </script>
