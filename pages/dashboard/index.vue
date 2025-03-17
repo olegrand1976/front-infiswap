@@ -4,7 +4,7 @@
             <div class="bg-gray-100 rounded-b-lg">
                 <div class="bg-primary h-8 rounded-t-lg" />
 
-                <div class="p-4 grid grid-cols-3 gap-4">
+                <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <div>
                         <h4 class="text-primary font-semibold">
                             Remplacements effectués
@@ -14,7 +14,7 @@
                                 <span>Le dernier mois</span>
                                 <span class="text-primary">Janvier</span>
                             </h6>
-                            <div class="grid grid-cols-2 items-center gap-3 mt-3">
+                            <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.done.count }}
                                 </p>
@@ -34,7 +34,7 @@
                                 <span>Le dernier mois</span>
                                 <span class="text-primary">Janvier</span>
                             </h6>
-                            <div class="grid grid-cols-2 items-center gap-3 mt-3">
+                            <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.ignored.count }}
                                 </p>
@@ -54,7 +54,7 @@
                                 <span>Le dernier mois</span>
                                 <span class="text-primary">Janvier</span>
                             </h6>
-                            <div class="grid grid-cols-2 items-center gap-3 mt-3">
+                            <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.pending.count }}
                                 </p>
@@ -79,7 +79,7 @@
             </div> -->
         </section>
 
-        <section class="grid grid-cols-[45%_53%] gap-4">
+        <section class="grid grid-cols-1 xl:grid-cols-[45%_53%] gap-4">
             <div class="flex flex-col space-y-4">
                 <div class="bg-gray-100 rounded p-4">
                     <h3 class="text-primary">
