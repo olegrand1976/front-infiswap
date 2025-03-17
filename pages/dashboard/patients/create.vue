@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="px-4 sm:px-16 md:px-0">
         <Form @submit="submit">
-            <div class="grid grid-cols-2 gap-12 pt-4">
-                <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
+                <div class="space-y-8 md:space-y-4">
                     <div class="space-y-4">
                         <div>
                             <h3 class="p-2 bg-primary text-white rounded-t">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="lastname">
                                 Nom
@@ -51,7 +51,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="firstname">
                                 Prénoms
@@ -66,7 +66,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="socialSecurityNumber">
                                 Sécurité sociale
@@ -81,7 +81,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="email">
                                 Email
@@ -96,7 +96,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="phoneNumber">
                                 Téléphone
@@ -111,7 +111,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="zipCode">
                                 Code postal
@@ -126,7 +126,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="city">
                                 Ville
@@ -141,7 +141,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="zipCode">
                                 Disponibilité
@@ -169,138 +169,148 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col space-y-4">
-                    <div
-                        v-for="(visit, visitIndex) in formData.visits"
-                        :key="visitIndex"
-                        class="relative"
+                <div class="flex flex-col">
+                    <Button
+                        class="flex w-36 ml-auto justify-end items-center mb-4"
+                        type="button"
                     >
-                        <div class="bg-gray-100 p-5 rounded">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-primary">
-                                    Heure de visite théorique
-                                </h3>
-                                <button
-                                    v-if="formData.visits.length > 1"
-                                    class="text-red-500 hover:text-red-700"
-                                    type="button"
-                                    @click="removeVisit(visitIndex)"
-                                >
-                                    Supprimer ce jour
-                                </button>
-                            </div>
+                        <Square2StackIcon class="w-5 h-5 mr-2" />
+                        <span>Copier jour</span>
+                    </Button>
 
-                            <div class="grid grid-cols-[30%_70%] items-center mt-4">
-                                <h5>Jour</h5>
-                                <Select v-model="visit.dayOfVisit">
-                                    <SelectTrigger
-                                        class="w-full bg-white shadow rounded-full text-nowrap border border-none"
-                                        position="right"
+                    <div class="flex flex-col space-y-4">
+                        <div
+                            v-for="(visit, visitIndex) in formData.visits"
+                            :key="visitIndex"
+                            class="relative"
+                        >
+                            <div class="bg-gray-100 p-5 rounded">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-primary">
+                                        Heure de visite théorique
+                                    </h3>
+                                    <button
+                                        v-if="formData.visits.length > 1"
+                                        class="text-red-500 hover:text-red-700"
+                                        type="button"
+                                        @click="removeVisit(visitIndex)"
                                     >
-                                        <SelectValue placeholder="Séléctionner un jour" />
-                                    </SelectTrigger>
-
-                                    <SelectContent class="border border-none">
-                                        <template
-                                            v-for="[key, value] in Object.entries(days)"
-                                            :key="key"
-                                        >
-                                            <SelectItem :value="key">
-                                                {{ value }}
-                                            </SelectItem>
-                                        </template>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div
-                                v-for="(timeSlot, timeIndex) in visit.theoreticalVisitTimes"
-                                :key="timeIndex"
-                            >
-                                <hr class="border border-gray-200 my-5">
-
-                                <div class="flex justify-end items-center">
-                                    <XMarkIcon
-                                        v-if="visit.theoreticalVisitTimes.length > 1"
-                                        class="w-5 text-primary cursor-pointer"
-                                        @click="removeTimeSlot(visitIndex, timeIndex)"
-                                    />
+                                        Supprimer ce jour
+                                    </button>
                                 </div>
 
                                 <div class="grid grid-cols-[30%_70%] items-center mt-4">
-                                    <h5>Heure</h5>
-                                    <InputTime
-                                        v-model="timeSlot.time"
-                                        input-class="rounded-full"
-                                    />
-                                </div>
-
-                                <div class="grid grid-cols-[30%_70%] items-center mt-4">
-                                    <h5>Type de soin</h5>
-                                    <Select
-                                        v-model="timeSlot.careTypeId"
-                                        multiple
-                                    >
+                                    <h5>Jour</h5>
+                                    <Select v-model="visit.dayOfVisit">
                                         <SelectTrigger
                                             class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                             position="right"
                                         >
-                                            <SelectValue
-                                                class="truncate w-[38rem]"
-                                            >
-                                                <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
-                                                    {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
-                                                </template>
-                                                <template v-else>
-                                                    <span class="text-black/60">
-                                                        Sélectionner un type de soin
-                                                    </span>
-                                                </template>
-                                            </SelectValue>
+                                            <SelectValue placeholder="Séléctionner un jour" />
                                         </SelectTrigger>
 
                                         <SelectContent class="border border-none">
-                                            <SelectGroup class="w-32">
-                                                <div
-                                                    v-for="careType in careTypes"
-                                                    :key="careType.id"
-                                                    class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                                                    @click="handleCareTypeClick(timeSlot, careType.id)"
-                                                >
-                                                    <Checkbox
-                                                        :checked="timeSlot.careTypeId.includes(careType.id)"
-                                                        class="mr-2"
-                                                    />
-                                                    <label class="text-xs text-nowrap cursor-pointer">
-                                                        {{ careType.name }}
-                                                    </label>
-                                                </div>
-                                            </SelectGroup>
+                                            <template
+                                                v-for="[key, value] in Object.entries(days)"
+                                                :key="key"
+                                            >
+                                                <SelectItem :value="key">
+                                                    {{ value }}
+                                                </SelectItem>
+                                            </template>
                                         </SelectContent>
                                     </Select>
                                 </div>
+
+                                <div
+                                    v-for="(timeSlot, timeIndex) in visit.theoreticalVisitTimes"
+                                    :key="timeIndex"
+                                >
+                                    <hr class="border border-gray-200 my-5">
+
+                                    <div class="flex justify-end items-center">
+                                        <XMarkIcon
+                                            v-if="visit.theoreticalVisitTimes.length > 1"
+                                            class="w-5 text-primary cursor-pointer"
+                                            @click="removeTimeSlot(visitIndex, timeIndex)"
+                                        />
+                                    </div>
+
+                                    <div class="grid grid-cols-[30%_70%] items-center mt-4">
+                                        <h5>Heure</h5>
+                                        <InputTime
+                                            v-model="timeSlot.time"
+                                            input-class="rounded-full"
+                                        />
+                                    </div>
+
+                                    <div class="grid grid-cols-[30%_70%] items-center mt-4">
+                                        <h5>Type de soin</h5>
+                                        <Select
+                                            v-model="timeSlot.careTypeId"
+                                            multiple
+                                        >
+                                            <SelectTrigger
+                                                class="w-full bg-white shadow rounded-full text-nowrap border border-none"
+                                                position="right"
+                                            >
+                                                <SelectValue
+                                                    class="truncate w-[38rem]"
+                                                >
+                                                    <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
+                                                        {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
+                                                    </template>
+                                                    <template v-else>
+                                                        <span class="text-black/60">
+                                                            Sélectionner un type de soin
+                                                        </span>
+                                                    </template>
+                                                </SelectValue>
+                                            </SelectTrigger>
+
+                                            <SelectContent class="border border-none">
+                                                <SelectGroup class="w-32">
+                                                    <div
+                                                        v-for="careType in careTypes"
+                                                        :key="careType.id"
+                                                        class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                        @click="handleCareTypeClick(timeSlot, careType.id)"
+                                                    >
+                                                        <Checkbox
+                                                            :checked="timeSlot.careTypeId.includes(careType.id)"
+                                                            class="mr-2"
+                                                        />
+                                                        <label class="text-xs text-nowrap cursor-pointer">
+                                                            {{ careType.name }}
+                                                        </label>
+                                                    </div>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                <p
+                                    class="w-48 ml-auto flex justify-end text-primary mt-8 cursor-pointer items-center space-x-3"
+                                    @click="addTimeSlot(visitIndex)"
+                                >
+                                    <PlusIcon class="w-6" />
+                                    <span>
+                                        Nouvelle visite
+                                    </span>
+                                </p>
                             </div>
-
-                            <p
-                                class="w-48 ml-auto flex justify-end text-primary mt-8 cursor-pointer items-center space-x-3"
-                                @click="addTimeSlot(visitIndex)"
-                            >
-                                <PlusIcon class="w-6" />
-                                <span>
-                                    Nouvelle visite
-                                </span>
-                            </p>
                         </div>
-                    </div>
 
-                    <Button
-                        class="flex justify-center items-center mx-auto mt-4"
-                        type="button"
-                        @click="addVisit"
-                    >
-                        <PlusIcon class="w-5 h-5 mr-2" />
-                        <span>Ajouter un autre jour</span>
-                    </Button>
+                        <Button
+                            class="flex justify-center items-center mx-auto mt-4"
+                            type="button"
+                            @click="addVisit"
+                        >
+                            <PlusIcon class="w-5 h-5 mr-2" />
+                            <span>Ajouter un autre jour</span>
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -316,7 +326,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CalendarDaysIcon, PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { CalendarDaysIcon, PlusIcon, XMarkIcon, Square2StackIcon } from '@heroicons/vue/24/solid';
 import { InputTime } from '@/components/ui/input-time';
 
 import { useCareTypes } from '~/composables/useCareTypes';
