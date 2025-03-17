@@ -14,7 +14,7 @@ build:
       alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
-    #DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
+    DDOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
     # Vous pouvez aussi définir NODE_ENV=production ici si nécessaire
