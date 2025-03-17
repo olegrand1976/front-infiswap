@@ -25,7 +25,9 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apt-get update && apt-get install -y npm
+    #- apt-get update && apt-get install -y npm
+    - apk update
+    - apk add --no-cache nodejs npm
     #- echo "Attente de la résolution DNS pour 'docker'..."
     #- until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
