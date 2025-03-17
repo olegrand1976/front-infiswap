@@ -1,5 +1,5 @@
 <template>
-    <!-- <NuxtLayout name="guest">
+    <NuxtLayout name="guest">
         <div class="relative font-light ">
             <div class="absolute inset-0 bg-tertiary/30 h-[300px] lg:h-full w-full" />
             <div class="container">
@@ -138,8 +138,8 @@
                 />
             </div>
         </div>
-    </NuxtLayout> -->
-    <ErrorUnderConstruction />
+    </NuxtLayout>
+    <!-- <ErrorUnderConstruction /> -->
 </template>
 
 <script lang="ts" setup>
