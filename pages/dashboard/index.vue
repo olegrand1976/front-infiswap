@@ -7,19 +7,19 @@
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <div>
                         <h4 class="text-primary font-semibold">
-                            Remplacements effectués
+                            Remplacement(s) effectué(s)
                         </h4>
                         <div class="border-2 border-gray-200 rounded p-4 my-3">
                             <h6 class="flex items-center space-x-4 text-sm">
                                 <span>Le dernier mois</span>
-                                <span class="text-primary">Janvier</span>
+                                <span class="text-primary">{{ previousMonth }}</span>
                             </h6>
                             <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.done.count }}
                                 </p>
-                                <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
-                                    {{ reports.replacement.done.percentage }} %
+                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
+                                    {{ reports.replacement.done.percentage }}%
                                 </div>
                             </div>
                         </div>
@@ -27,18 +27,18 @@
 
                     <div>
                         <h4 class="text-primary font-semibold">
-                            Nombre d'annonces passées
+                            Nombre d'annonce(s) passée(s)
                         </h4>
                         <div class="border-2 border-gray-200 rounded p-4 my-3">
                             <h6 class="flex items-center space-x-4 text-sm">
                                 <span>Le dernier mois</span>
-                                <span class="text-primary">Janvier</span>
+                                <span class="text-primary">{{ previousMonth }}</span>
                             </h6>
                             <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.ignored.count }}
                                 </p>
-                                <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
+                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.ignored.percentage }}%
                                 </div>
                             </div>
@@ -47,18 +47,18 @@
 
                     <div>
                         <h4 class="text-primary font-semibold">
-                            Réponse en attente
+                            Réponse(s) en attente(s)
                         </h4>
                         <div class="border-2 border-gray-200 rounded p-4 my-3">
                             <h6 class="flex items-center space-x-4 text-sm">
                                 <span>Le dernier mois</span>
-                                <span class="text-primary">Janvier</span>
+                                <span class="text-primary">{{ previousMonth }}</span>
                             </h6>
                             <div class="flex justify-between items-center gap-3 mt-3">
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.pending.count }}
                                 </p>
-                                <div class="w-20 h-20 rounded-full text-xl flex items-center justify-center border-8 border-primary">
+                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.pending.percentage }}%
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
                             <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                                 <label for="zipCode">
-                                    Code postal
+                                    Codes postaux
                                 </label>
                             </div>
                             <TagsInput
@@ -118,7 +118,7 @@
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
                             <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                                 <label for="city">
-                                    Ville
+                                    Villes
                                 </label>
                             </div>
                             <TagsInput
@@ -146,82 +146,86 @@
                     </Form>
                 </div>
 
-                <div class="bg-gray-100 rounded p-4">
-                    <h3 class="text-primary">
-                        Tournée du jour
+                <div class="bg-gray-100 rounded-b-lg">
+                    <h3 class="text-white bg-primary p-3 rounded-t-lg">
+                        Nombres d'annonces auxquelles j'ai répondu sur Infiswap par mois
                     </h3>
-
-                    <div class="my-3">
-                        <Table>
-                            <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-3 overflow-x-hidden gap-2 border border-none">
-                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
-                                        Patient
-                                    </TableHead>
-                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
-                                        Code postal
-                                    </TableHead>
-                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
-                                        Ville
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                                <template v-if="reports.tours != 0">
-                                    <div
-                                        v-for="(tournee, index) in reports.tours"
-                                        :key="index"
-                                    >
-                                        <TableRow class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden">
-                                            <TableCell class="bg-gray-100">
-                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                    <span class="truncate w-full px-2 text-center mx-auto">
-                                                        {{ tournee.lastname }} {{ tournee.firstname }}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell class="bg-gray-100">
-                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                    <span class="truncate w-full px-2 text-center mx-auto">
-                                                        {{ tournee.profile.zip_code }}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell class="bg-gray-100">
-                                                <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
-                                                    <span class="truncate w-full px-2 text-center mx-auto">
-                                                        {{ tournee.profile.city }}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                        <hr class="border-t border-gray-300">
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <p class="text-center text-black/70 mt-6">
-                                        Aucune tournée à afficher pour le moment
-                                    </p>
-                                </template>
-                            </TableBody>
-                        </Table>
+                    <div class="p-4">
+                        <LineChart
+                            :data="formattedData"
+                            index="month"
+                            :categories="['Pourcentage']"
+                            :colors="['hsl(var(--primary))']"
+                            :y-formatter="(tick) => `${tick} %`"
+                        />
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-100 rounded-b-lg">
-                <h3 class="text-white bg-primary p-3 rounded-t-lg">
-                    Nombres d'annonces auxquelles j'ai répondu sur Infiswap par mois
+            <div class="bg-gray-100 rounded p-4">
+                <h3 class="text-primary">
+                    Tournée du jour
                 </h3>
-                <div class="p-4">
-                    <LineChart
-                        :data="formattedData"
-                        index="month"
-                        :categories="['Pourcentage']"
-                        :colors="['hsl(var(--primary))']"
-                        :y-formatter="(tick) => `${tick} %`"
-                    />
+
+                <div class="my-3">
+                    <Table>
+                        <TableHeader class="w-full">
+                            <TableRow class="grid grid-cols-3 overflow-x-hidden gap-2 border border-none">
+                                <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
+                                    Patient
+                                </TableHead>
+                                <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
+                                    Code postal
+                                </TableHead>
+                                <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white s">
+                                    Ville
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            <template v-if="reports.tours != 0">
+                                <div
+                                    v-for="(tournee, index) in reports.tours"
+                                    :key="index"
+                                >
+                                    <TableRow class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden">
+                                        <TableCell class="bg-gray-100">
+                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                <span class="truncate w-full px-2 text-center mx-auto">
+                                                    {{ tournee.lastname }} {{ tournee.firstname }}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-gray-100">
+                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                <span class="truncate w-full px-2 text-center mx-auto">
+                                                    {{ tournee.profile.zip_code }}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-gray-100">
+                                            <div class="flex h-10 rounded mt-3 bg-gray-200 justify-center items-center">
+                                                <span class="truncate w-full px-2 text-center mx-auto">
+                                                    {{ tournee.profile.city }}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                    <hr class="border-t border-gray-300">
+                                </div>
+                            </template>
+                            <template v-else>
+                                <p class="text-center text-black/70 mt-6">
+                                    Aucune tournée à afficher pour le moment
+                                </p>
+
+                                <Button>
+                                    Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
+                                </Button>
+                            </template>
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
         </section>
@@ -255,8 +259,20 @@ const formattedData = computed(() => {
 const zipCodes = computed(() => user.value.settings?.replacement?.zip_codes || []);
 const cities = computed(() => user.value.settings?.replacement?.cities || []);
 
+const previousMonth = ref('');
+
 onMounted(async () => {
     await getReports();
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const months = [
+        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
+    ];
+
+    const previousMonthIndex = (currentMonth - 1 + 12) % 12;
+    previousMonth.value = months[previousMonthIndex];
 });
 
 useHead({
