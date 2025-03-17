@@ -360,7 +360,7 @@
                                 v-else
                                 :key="prescription.id"
                             >
-                                <TableRow class="grid grid-cols-[80%_20%] gap-2 border border-none overflow-x-hidden">
+                                <TableRow class="grid grid-cols-[75%_12%_12%] gap-2 border border-none overflow-x-hidden">
                                     <TableCell class="bg-gray-100">
                                         <div class="flex h-10 rounded bg-gray-200 justify-between items-center">
                                             <span class="truncate w-full px-2 text-center mx-auto">
@@ -371,6 +371,11 @@
                                     <TableCell class="bg-gray-100">
                                         <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
                                             <CloudArrowDownIcon class="w-5 cursor-pointer" />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="bg-gray-100">
+                                        <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
+                                            <TrashIcon class="w-5 cursor-pointer" />
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -391,6 +396,7 @@ import {
     PencilSquareIcon,
     XMarkIcon,
     CalendarDaysIcon,
+    TrashIcon,
 } from '@heroicons/vue/24/solid';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient } from '~/composables/usePatients';
@@ -401,8 +407,35 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
 const patientId = route.params.id as string;
 
-const { patient, fetchDetailPatient } = detailPatient(patientId);
-const user = useState('user');
+interface Patient {
+    id: string;
+    lastname: string;
+    firstname: string;
+    email: string;
+    social_security_number: string;
+    phone_number: string;
+    profile?: {
+        zip_code: string;
+        city: string;
+    };
+    care_start_date: string;
+    care_end_date: string;
+    availability: string[];
+    care_informations: string[];
+    visit_times: string[];
+    patient_care_type: string[];
+    patient_documents: string[];
+}
+
+const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
+
+interface User {
+    nurse?: {
+        id: string;
+    };
+}
+
+const user = useState<User>('user');
 
 // Fonction pour trouver l'ID du type de soin par son nom
 const findCareTypeIdByName = (name) => {
