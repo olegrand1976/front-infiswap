@@ -7,13 +7,14 @@ stages:
 #####################################
 build:
   stage: build
-  image: node:20                   # Utilise Node.js pour disposer de npm
+  #image: node:20                   # Utilise Node.js pour disposer de npm
+  image: docker:latest
   services:
     - name: docker:dind
       alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
+    #DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
     # Vous pouvez aussi définir NODE_ENV=production ici si nécessaire
@@ -24,9 +25,9 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apt-get update && apt-get install -y docker.io
-    - echo "Attente de la résolution DNS pour 'docker'..."
-    - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
+    - apt-get update && apt-get install -y npm
+    #- echo "Attente de la résolution DNS pour 'docker'..."
+    #- until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
   script:
   - rm -rf node_modules
   - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
@@ -56,7 +57,7 @@ deploy_front1:
       alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
-    #DOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   before_script:
