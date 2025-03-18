@@ -27,6 +27,7 @@ build:
     - apk add --no-cache nodejs npm
     - 'if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi'
     - rm -rf node_modules
+  script:
     - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
     - npm install
     - export NODE_OPTIONS=--max_old_space_size=8192
