@@ -558,7 +558,6 @@ const validateField = async (field) => {
             // Validation pour un champ simple
             await schema.validateAt(field, toRaw(formData));
         }
-        console.log(`${field} est valide`);
         // Si la validation réussit, on efface l'erreur
         error[field] = '';
     }
