@@ -645,16 +645,17 @@ const { submit, inProgress } = useSubmit(
                                 variant: 'destructive',
                             });
                         }
-                    } else {
+                    } 
+                    else {
                         $toast({
-                            description: "Une erreur est survenue. Veuillez réessayer.",
+                            description: 'Une erreur est survenue. Veuillez réessayer.',
                             status: 'error',
                             variant: 'destructive',
                         });
                     }
                 });
         }
-    }
+    },
 );
 
 definePageMeta({
