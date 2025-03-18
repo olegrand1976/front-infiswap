@@ -170,14 +170,6 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <Button
-                        class="flex w-36 ml-auto justify-end items-center mb-4"
-                        type="button"
-                    >
-                        <Square2StackIcon class="w-5 h-5 mr-2" />
-                        <span>Copier jour</span>
-                    </Button>
-
                     <div class="flex flex-col space-y-4">
                         <div
                             v-for="(visit, visitIndex) in formData.visits"
@@ -201,23 +193,40 @@
 
                                 <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                     <h5>Jour</h5>
-                                    <Select v-model="visit.dayOfVisit">
+                                    <Select
+                                        v-model="visit.dayOfVisit"
+                                        multiple
+                                    >
                                         <SelectTrigger
                                             class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                             position="right"
                                         >
-                                            <SelectValue placeholder="Séléctionner un jour" />
+                                            <SelectValue>
+                                                <template v-if="getSelectedDaysText(visit.dayOfVisit)">
+                                                    {{ getSelectedDaysText(visit.dayOfVisit) }}
+                                                </template>
+                                                <template v-else>
+                                                    <span class="text-black/60">
+                                                        Sélectionner un jour
+                                                    </span>
+                                                </template>
+                                            </SelectValue>
                                         </SelectTrigger>
-
                                         <SelectContent class="border border-none">
-                                            <template
-                                                v-for="[key, value] in Object.entries(days)"
-                                                :key="key"
-                                            >
-                                                <SelectItem :value="key">
-                                                    {{ value }}
-                                                </SelectItem>
-                                            </template>
+                                            <SelectGroup class="w-32">
+                                                <div
+                                                    v-for="[key, value] in Object.entries(days)"
+                                                    :key="key"
+                                                    class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                    @click="toggleDaySelection(visit, key)"
+                                                >
+                                                    <Checkbox
+                                                        :checked="visit.dayOfVisit.includes(key)"
+                                                        class="mr-2"
+                                                    />
+                                                    <label class="text-xs text-nowrap cursor-pointer">{{ value }}</label>
+                                                </div>
+                                            </SelectGroup>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -321,22 +330,81 @@
             >
                 Enregistrer
             </Button>
+
+            <Dialog
+                v-model:open="isOpen"
+            >
+                <DialogContent class="h-[28vh]">
+                    <DialogHeader>
+                        <DialogTitle>Confirmation</DialogTitle>
+                        <DialogDescription>
+                            Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div class="flex space-x-8 justify-end items-center">
+                        <Button
+                            variant="secondary"
+                            @click="closeDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button @click="confirmNavigation">
+                            Oui
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </Form>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { CalendarDaysIcon, PlusIcon, XMarkIcon, Square2StackIcon } from '@heroicons/vue/24/solid';
+import { useRouter, onBeforeRouteLeave } from 'vue-router';
+import { CalendarDaysIcon, PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { InputTime } from '@/components/ui/input-time';
-
 import { useCareTypes } from '~/composables/useCareTypes';
 import { createPatient } from '~/composables/usePatients';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const router = useRouter();
-
 const user = useState('user');
 const { $toast } = useNuxtApp();
+
+const isOpen = ref(false);
+const pendingRoute = ref(null);
+const allowNavigation = ref(false);
+
+const openDialog = (to) => {
+    pendingRoute.value = to;
+    isOpen.value = true;
+};
+
+const closeDialog = () => {
+    isOpen.value = false;
+    pendingRoute.value = null;
+    allowNavigation.value = false;
+};
+
+const confirmNavigation = async () => {
+    allowNavigation.value = true;
+    isOpen.value = false;
+
+    if (pendingRoute.value) {
+        await navigateToRoute();
+    }
+};
+
+const navigateToRoute = async () => {
+    try {
+        await router.push(pendingRoute.value);
+        pendingRoute.value = null;
+        allowNavigation.value = false;
+    }
+    catch (error) {
+        console.error('Navigation error:', error);
+    }
+};
 
 const availabilities = {
     available: 'Disponible',
@@ -346,7 +414,7 @@ const availabilities = {
     on_vacation: 'En vacances',
 };
 
-const formData = reactive({
+const initialFormData = {
     nurseId: user.value.nurse.id,
     lastname: '',
     firstname: '',
@@ -361,7 +429,7 @@ const formData = reactive({
     care_informations: [],
     visits: [
         {
-            dayOfVisit: '',
+            dayOfVisit: [],
             theoreticalVisitTimes: [
                 {
                     time: '',
@@ -372,7 +440,9 @@ const formData = reactive({
     ],
     patient_care_type: [],
     patient_documents: [],
-});
+};
+
+const formData = ref({ ...initialFormData });
 
 const days = {
     monday: 'Lundi',
@@ -382,12 +452,27 @@ const days = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
+    all: 'Tous',
 };
 
-// Add a new visit day
+const toggleDaySelection = (visit, day) => {
+    const index = visit.dayOfVisit.indexOf(day);
+    if (index === -1) {
+        visit.dayOfVisit.push(day);
+    }
+    else {
+        visit.dayOfVisit.splice(index, 1);
+    }
+    visit.dayOfVisit = [...visit.dayOfVisit];
+};
+
+const getSelectedDaysText = (selectedDays) => {
+    return selectedDays.map(day => days[day]).join(', ');
+};
+
 const addVisit = () => {
-    formData.visits.push({
-        dayOfVisit: '',
+    formData.value.visits.push({
+        dayOfVisit: [],
         theoreticalVisitTimes: [
             {
                 time: '',
@@ -397,26 +482,22 @@ const addVisit = () => {
     });
 };
 
-// Remove a visit day
-const removeVisit = (visitIndex: number) => {
-    formData.visits.splice(visitIndex, 1);
+const removeVisit = (visitIndex) => {
+    formData.value.visits.splice(visitIndex, 1);
 };
 
-// Add a new time slot to a visit
-const addTimeSlot = (visitIndex: number) => {
-    formData.visits[visitIndex].theoreticalVisitTimes.push({
+const addTimeSlot = (visitIndex) => {
+    formData.value.visits[visitIndex].theoreticalVisitTimes.push({
         time: '',
         careTypeId: [],
     });
 };
 
-// Remove a time slot from a visit
-const removeTimeSlot = (visitIndex: number, timeIndex: number) => {
-    formData.visits[visitIndex].theoreticalVisitTimes.splice(timeIndex, 1);
+const removeTimeSlot = (visitIndex, timeIndex) => {
+    formData.value.visits[visitIndex].theoreticalVisitTimes.splice(timeIndex, 1);
 };
 
-// Handle care type click
-const handleCareTypeClick = (timeSlot: any, careTypeId: number) => {
+const handleCareTypeClick = (timeSlot, careTypeId) => {
     const index = timeSlot.careTypeId.indexOf(careTypeId);
     if (index === -1) {
         timeSlot.careTypeId.push(careTypeId);
@@ -424,54 +505,56 @@ const handleCareTypeClick = (timeSlot: any, careTypeId: number) => {
     else {
         timeSlot.careTypeId.splice(index, 1);
     }
-    // Force update to ensure checkbox state is reflected
     timeSlot.careTypeId = [...timeSlot.careTypeId];
 };
 
-// Get display text for selected care types
-const getSelectedCareTypesText = (selectedIds: number[]) => {
+const getSelectedCareTypesText = (selectedIds) => {
     return careTypes.value
         .filter(ct => selectedIds.includes(ct.id))
         .map(ct => ct.name)
         .join(', ');
 };
 
-// Update patient_care_type with all care types from visits
 const updatePatientCareTypes = () => {
-    const careTypeSet = new Set<number>();
-
-    formData.visits.forEach((visit) => {
+    const careTypeSet = new Set();
+    formData.value.visits.forEach((visit) => {
         visit.theoreticalVisitTimes.forEach((timeSlot) => {
             timeSlot.careTypeId.forEach((careTypeId) => {
                 careTypeSet.add(careTypeId);
             });
         });
     });
-
-    formData.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
+    formData.value.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
 };
 
-const {
-    submit,
-    inProgress,
-} = useSubmit(
-    () => {
-        updatePatientCareTypes();
-        return createPatient(formData).then(() => {
-            $toast({
-                description: 'Création effectuée',
-            });
-
-            setTimeout(() => {
-                router.push('/dashboard/patients');
-            }, 3000);
+const { submit, inProgress } = useSubmit(() => {
+    updatePatientCareTypes();
+    return createPatient(formData.value).then(() => {
+        $toast({
+            description: 'Création effectuée',
         });
-    },
-);
+        setTimeout(() => {
+            router.push('/dashboard/patients');
+        }, 3000);
+    });
+});
 
 onMounted(() => {
     fetchCareTypes();
 });
+
+onBeforeRouteLeave((to, from, next) => {
+    if (hasUnsavedChanges() && !allowNavigation.value) {
+        openDialog(to.fullPath);
+        next(false);
+        return;
+    }
+    next();
+});
+
+const hasUnsavedChanges = () => {
+    return JSON.stringify(formData.value) !== JSON.stringify(initialFormData);
+};
 
 useHead({
     title: 'Créer un patient',
