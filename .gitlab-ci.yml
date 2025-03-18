@@ -13,7 +13,7 @@ build:
       alias: docker
       command: ["--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2375
+    DDOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
     NODE_ENV: production
@@ -25,9 +25,9 @@ build:
   before_script:
     - apk update
     - apk add --no-cache nodejs npm
-    - 'if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi'
-    - rm -rf node_modules
   script:
+    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - rm -rf node_modules
     - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
     - npm install
     - export NODE_OPTIONS=--max_old_space_size=8192
@@ -44,10 +44,10 @@ build:
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16
+  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
   services:
     - name: docker:dind
-      alias: docker
+      alias: docker                # Pour que le nom "docker" soit résolu
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -58,10 +58,13 @@ deploy_front1:
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
+    # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
     - if [ -n "$IP_FRONT_1" ]; then ssh-keyscan -t ed25519 $IP_FRONT_1 >> known_hosts; else echo "IP_FRONT_1 is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1 "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
