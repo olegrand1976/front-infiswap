@@ -111,12 +111,12 @@ import {
     StepperItem,
 } from '@/components/ui/stepper';
 
-const plans = useState('plans');
-
 const {
+    plans,
     getPlans,
     selectPlan,
     loading,
+    plan
 } = useSubscription();
 
 definePageMeta({
@@ -132,6 +132,7 @@ const stepIndex = ref(1);
 
 const handleSelectPlan = (product: Plan) => {
     selectPlan(product);
+    console.log(plan);
     stepIndex.value = stepIndex.value + 1;
 };
 
