@@ -393,7 +393,7 @@
                 <NuxtImg
                     src="/home/nurse_with_stetho.png"
                     alt="Infirmière avec un stéthoscope"
-                    class="w-full max-w-md lg:max-w-lg h-auto object-cover rounded-lg"
+                    class="w-full max-w-2xs "
                 />
             </div>
         </div>
