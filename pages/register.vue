@@ -645,7 +645,7 @@ const { submit, inProgress } = useSubmit(
                                 variant: 'destructive',
                             });
                         }
-                    } 
+                    }
                     else {
                         $toast({
                             description: 'Une erreur est survenue. Veuillez réessayer.',
