@@ -39,8 +39,14 @@
                 />
             </div>
 
-            <h1 class="mb-4 lg:mb-8 xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl font-bold text-primary">
+            <!-- <h1 class="mb-4 lg:mb-8 xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl font-bold text-primary">
                 Inscription
+            </h1> -->
+
+            <h1 class="mb-4 lg:mb-6 xl:text-lg lg:text-base md:text-sm sm:text-xs text-center">
+                <span>Bienvenue sur <span class="font-bold text-primary">Infiswap</span>, la plateforme pour vos remplacements!</span><br>
+                <!-- <span>la plateforme pour vos remplacements!</span><br> -->
+                <span>Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
             </h1>
 
             <div class="w-full max-w-lg overflow-x-hidden">
@@ -54,7 +60,7 @@
                             :icon="UserCircleIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Nom"
+                            placeholder="Nom *"
                             @blur="validateField('lastname')"
                             @input="validateField('lastname')"
                         />
@@ -72,7 +78,7 @@
                             :icon="UserCircleIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Prénoms"
+                            placeholder="Prénoms *"
                             @blur="validateField('firstname')"
                             @input="validateField('firstname')"
                         />
@@ -90,7 +96,7 @@
                             :icon="EnvelopeIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Email"
+                            placeholder="Email *"
                             @blur="validateField('email')"
                             @input="validateField('email')"
                         />
@@ -127,7 +133,7 @@
                             size="md"
                             type="password"
                             class="border border-gray-300"
-                            placeholder="Mot de passe"
+                            placeholder="Mot de passe *"
                             @blur="validateField('password')"
                             @input="validateField('password')"
                         />
@@ -145,7 +151,7 @@
                             :icon="LockClosedIcon"
                             size="md"
                             type="password"
-                            placeholder="Mot de passe"
+                            placeholder="Mot de passe *"
                             class="border border-gray-300"
                             @blur="validateField('passwordConfirmation')"
                             @input="validateField('passwordConfirmation')"
@@ -211,7 +217,7 @@
                             :icon="MapPinIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Rue"
+                            placeholder="Rue *"
                         />
                     </div>
 
@@ -221,7 +227,7 @@
                             :icon="BuildingOffice2Icon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Ville"
+                            placeholder="Ville *"
                         />
                     </div>
 
@@ -270,7 +276,7 @@
                             :icon="InboxArrowDownIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Code postal"
+                            placeholder="Code postal *"
                             @blur="validateField('address.zipCode')"
                             @input="validateField('address.zipCode')"
                         />
@@ -355,7 +361,7 @@
                             :icon="IdentificationIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Numéro INAMI"
+                            placeholder="Numéro INAMI *"
                             @blur="validateField('identifierNumber')"
                             @input="validateField('identifierNumber')"
                         />
