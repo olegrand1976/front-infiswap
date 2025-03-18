@@ -28,11 +28,8 @@
                         Confirmation <span class="font-bold">par email</span>
                     </h1>
                     <p class="md:text-sm sm:text-xs text-center xl:mx-44 lg:mx-32 md:mx-16 sm:mx-12 mt-6">
-                        Nous vous avons envoyé un e-mail à <span class="text-primary font-semibold"> {{ user.email }}</span>
-                        pour confirmer la validité de votre adresse e-mail.
-                    </p>
-                    <p>
-                        Après avoir reçu l'email, suivez le
+                        Nous avons envoyé un email à <span class="text-primary font-semibold"> {{ user.email }}</span>
+                        pour confirmer la validité de votre adresse email. Après avoir reçu l'email, suivez le
                         lien fourni pour finaliser votre inscription
                     </p>
                 </div>
