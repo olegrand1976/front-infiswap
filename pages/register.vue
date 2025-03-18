@@ -45,7 +45,6 @@
 
             <h1 class="mb-4 lg:mb-6 xl:text-lg lg:text-base md:text-sm sm:text-xs text-center">
                 <span>Bienvenue sur <span class="font-bold text-primary">Infiswap</span>, la plateforme pour vos remplacements!</span><br>
-                <!-- <span>la plateforme pour vos remplacements!</span><br> -->
                 <span>Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
             </h1>
 
@@ -576,8 +575,8 @@ const validateRequiredFields = async () => {
     });
 
     let isValid = true;
+    const missingFields: string[] = [];
 
-    // Valider uniquement les champs requis
     try {
         await schema.validate(toRaw(formData), { abortEarly: false });
     }
@@ -586,36 +585,99 @@ const validateRequiredFields = async () => {
             err.inner.forEach((e) => {
                 if (e.type === 'required') {
                     error[e.path] = e.message;
+                    missingFields.push(e.message);
                     isValid = false;
                 }
             });
+
+            // Afficher un toast listant les champs manquants
+            if (missingFields.length > 0) {
+                $toast({
+                    description: `Veuillez remplir les champs obligatoires : ${missingFields.join(', ')}`,
+                    status: 'error',
+                    variant: 'destructive',
+                });
+            }
         }
     }
 
     return isValid;
 };
 
+// const { submit, inProgress } = useSubmit(
+//     async () => {
+//         status.value = '';
+//         const isValid = await validateRequiredFields();
+//         if (isValid) {
+//             return register(formData).then(() => {
+//                 $toast({
+//                     description: 'Inscription réussie',
+//                 });
+
+//                 Object.keys(formData).forEach((key) => {
+//                     formData[key as keyof typeof formData] = key === 'accept' ? false : '';
+//                 });
+//                 inProgress.value = true;
+
+//                 setTimeout(() => {
+//                     router.push('auth/verify-email');
+//                 }, 2000);
+//             });
+//         }
+//     },
+// );
+
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
         const isValid = await validateRequiredFields();
+
         if (isValid) {
-            return register(formData).then(() => {
-                $toast({
-                    description: 'Inscription réussie',
-                });
+            return register(formData)
+                .then(() => {
+                    $toast({
+                        description: 'Inscription réussie',
+                    });
 
-                Object.keys(formData).forEach((key) => {
-                    formData[key as keyof typeof formData] = key === 'accept' ? false : '';
-                });
-                inProgress.value = true;
+                    Object.keys(formData).forEach((key) => {
+                        formData[key as keyof typeof formData] = key === 'accept' ? false : '';
+                    });
+                    inProgress.value = true;
 
-                setTimeout(() => {
-                    router.push('auth/verify-email');
-                }, 2000);
-            });
+                    setTimeout(() => {
+                        router.push('auth/verify-email');
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Erreur API :', error);
+
+                    if (error.data && error.data.errors) {
+                        const backendErrors = error.data.errors;
+                        const errorMessages: string[] = [];
+
+                        Object.keys(backendErrors).forEach((field) => {
+                            backendErrors[field].forEach((message: string) => {
+                                errorMessages.push(message);
+                            });
+                        });
+
+                        if (errorMessages.length > 0) {
+                            $toast({
+                                description: errorMessages.join('<br>'),
+                                status: 'error',
+                                variant: 'destructive',
+                            });
+                        }
+                    } else {
+                        $toast({
+                            description: "Une erreur est survenue. Veuillez réessayer.",
+                            status: 'error',
+                            variant: 'destructive',
+                        });
+                    }
+                });
         }
-    },
+    }
 );
 
 definePageMeta({

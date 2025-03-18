@@ -30,10 +30,21 @@ export const useAuth = () => {
         await refresh();
     }
 
+    // async function register(credentials) {
+    //     await $apifetch('/api/register', { method: 'post', body: credentials })
+    //         .then(response => useCookie(AUTH_TOKEN).value = response.token);
+    //     await refresh();
+    // }
+
     async function register(credentials) {
-        await $apifetch('/api/register', { method: 'post', body: credentials })
-            .then(response => useCookie(AUTH_TOKEN).value = response.token);
-        await refresh();
+        return $apifetch('/api/register', { method: 'post', body: credentials })
+            .then(response => {
+                useCookie(AUTH_TOKEN).value = response.token;
+                return refresh();
+            })
+            .catch(error => {
+                throw error; // Propager l'erreur pour la capturer dans useSubmit()
+            });
     }
 
     async function registerBeta(credentials) {
