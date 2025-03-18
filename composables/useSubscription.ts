@@ -1,5 +1,14 @@
 export const useSubscription = () => {
     const { $apifetch } = useNuxtApp();
+    const plan = useState('plan', () => null);
+
+    const plans = async () => {
+        return await $apifetch('api/subscription/plans');
+    };
+
+    const selectPlan = (product: string) => {
+        plan.value = product;
+    };
 
     const create = async (payment: {
         paymentMethodId: string;
@@ -9,6 +18,8 @@ export const useSubscription = () => {
     };
 
     return {
+        plans,
         create,
+        selectPlan,
     };
 };
