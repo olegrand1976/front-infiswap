@@ -7,13 +7,13 @@ stages:
 #####################################
 #build:
 #  stage: build
-#  image: docker:20.10.16        # Utilisation d'une version stable
+#  image: docker:20.10.16
 #  services:
 #    - name: docker:dind
 #      alias: docker
 #      command: ["--tls=false"]
 #  variables:
-#    DOCKER_HOST: tcp://docker:2375  # Notez bien "DOCKER_HOST" (et non "DDOCKER_HOST")
+#    DOCKER_HOST: tcp://docker:2375 
 #    DOCKER_TLS_CERTDIR: ""
 #    DOCKER_DRIVER: overlay2
 #    NODE_ENV: production
@@ -81,10 +81,10 @@ build:
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
+  image: docker:20.10.16
   services:
     - name: docker:dind
-      alias: docker                # Pour que le nom "docker" soit résolu
+      alias: docker
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -96,14 +96,14 @@ deploy_front1:
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
     # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
-    - if [ -n "$IP_FRONT_1" ]; then ssh-keyscan -t ed25519 $IP_FRONT_1 >> known_hosts; else echo "IP_FRONT_1 is not set"; fi
+    - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
     # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1 "
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
         docker compose -f /srv/front/docker-compose.prod.yml down &&
