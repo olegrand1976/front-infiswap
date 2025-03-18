@@ -1,4 +1,35 @@
 <template>
+    <Stepper
+        v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }"
+        v-model="stepIndex"
+    >
+        <StepperItem
+            v-slot="{ state }"
+            :step="1"
+
+            class="relative flex w-full flex-col items-center justify-center"
+        >
+            <StepperDescription
+                :class="[state === 'active' && 'text-primary']"
+                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
+            >
+                Lorem ipsum dolor sit amet.
+            </StepperDescription>
+        </StepperItem>
+        <StepperItem
+            v-slot="{ state }"
+            :step="2"
+        >
+            <StepperDescription
+                :class="[state === 'active' && 'text-primary']"
+                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
+            >
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque neque id voluptates natus ipsum adipisci.
+            </StepperDescription>
+        </StepperItem>
+    </Stepper>
+
+    
     <div class="container px-6 py-8 mx-auto">
         <div class="flex flex-col justify-center items-center">
             <div class="flex flex-col items-center xl:items-start xl:mx-8 mb-8">
@@ -64,6 +95,17 @@
 </template>
 
 <script setup>
+import {
+    Stepper,
+    StepperDescription,
+    StepperIndicator,
+    StepperItem,
+    StepperSeparator,
+    StepperTitle,
+    StepperTrigger,
+} from '@/components/ui/stepper';
+
+const stepIndex = ref(1);
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
