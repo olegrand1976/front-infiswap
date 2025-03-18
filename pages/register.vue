@@ -604,29 +604,6 @@ const validateRequiredFields = async () => {
     return isValid;
 };
 
-// const { submit, inProgress } = useSubmit(
-//     async () => {
-//         status.value = '';
-//         const isValid = await validateRequiredFields();
-//         if (isValid) {
-//             return register(formData).then(() => {
-//                 $toast({
-//                     description: 'Inscription réussie',
-//                 });
-
-//                 Object.keys(formData).forEach((key) => {
-//                     formData[key as keyof typeof formData] = key === 'accept' ? false : '';
-//                 });
-//                 inProgress.value = true;
-
-//                 setTimeout(() => {
-//                     router.push('auth/verify-email');
-//                 }, 2000);
-//             });
-//         }
-//     },
-// );
-
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
