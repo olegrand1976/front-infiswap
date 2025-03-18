@@ -194,7 +194,7 @@
                                 <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                     <h5>Jour</h5>
                                     <Select
-                                        v-model="visit.dayOfVisit"
+                                        v-model="visit.daysOfVisit"
                                         multiple
                                     >
                                         <SelectTrigger
@@ -202,8 +202,8 @@
                                             position="right"
                                         >
                                             <SelectValue>
-                                                <template v-if="getSelectedDaysText(visit.dayOfVisit)">
-                                                    {{ getSelectedDaysText(visit.dayOfVisit) }}
+                                                <template v-if="getSelectedDaysText(visit.daysOfVisit)">
+                                                    {{ getSelectedDaysText(visit.daysOfVisit) }}
                                                 </template>
                                                 <template v-else>
                                                     <span class="text-black/60">
@@ -221,7 +221,7 @@
                                                     @click="toggleDaySelection(visit, key)"
                                                 >
                                                     <Checkbox
-                                                        :checked="visit.dayOfVisit.includes(key)"
+                                                        :checked="visit.daysOfVisit.includes(key)"
                                                         class="mr-2"
                                                     />
                                                     <label class="text-xs text-nowrap cursor-pointer">{{ value }}</label>
@@ -374,6 +374,7 @@ const { $toast } = useNuxtApp();
 const isOpen = ref(false);
 const pendingRoute = ref(null);
 const allowNavigation = ref(false);
+const formSubmitted = ref(false);
 
 const openDialog = (to) => {
     pendingRoute.value = to;
@@ -429,7 +430,7 @@ const initialFormData = {
     care_informations: [],
     visits: [
         {
-            dayOfVisit: [],
+            daysOfVisit: [],
             theoreticalVisitTimes: [
                 {
                     time: '',
@@ -456,14 +457,14 @@ const days = {
 };
 
 const toggleDaySelection = (visit, day) => {
-    const index = visit.dayOfVisit.indexOf(day);
+    const index = visit.daysOfVisit.indexOf(day);
     if (index === -1) {
-        visit.dayOfVisit.push(day);
+        visit.daysOfVisit.push(day);
     }
     else {
-        visit.dayOfVisit.splice(index, 1);
+        visit.daysOfVisit.splice(index, 1);
     }
-    visit.dayOfVisit = [...visit.dayOfVisit];
+    visit.daysOfVisit = [...visit.daysOfVisit];
 };
 
 const getSelectedDaysText = (selectedDays) => {
@@ -472,7 +473,7 @@ const getSelectedDaysText = (selectedDays) => {
 
 const addVisit = () => {
     formData.value.visits.push({
-        dayOfVisit: [],
+        daysOfVisit: [],
         theoreticalVisitTimes: [
             {
                 time: '',
@@ -530,6 +531,7 @@ const updatePatientCareTypes = () => {
 const { submit, inProgress } = useSubmit(() => {
     updatePatientCareTypes();
     return createPatient(formData.value).then(() => {
+        formSubmitted.value = true; // Marquer le formulaire comme soumis avec succès
         $toast({
             description: 'Création effectuée',
         });
@@ -544,6 +546,13 @@ onMounted(() => {
 });
 
 onBeforeRouteLeave((to, from, next) => {
+    // Si le formulaire a été soumis avec succès, permettre la navigation sans dialogue
+    if (formSubmitted.value) {
+        next();
+        return;
+    }
+
+    // Sinon, vérifier s'il y a des changements non sauvegardés
     if (hasUnsavedChanges() && !allowNavigation.value) {
         openDialog(to.fullPath);
         next(false);
