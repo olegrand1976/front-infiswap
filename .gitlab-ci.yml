@@ -7,16 +7,17 @@ stages:
 #####################################
 build:
   stage: build
-  image: docker:latest
+  image: docker:20.10.16        # Utilisation d'une version stable
   services:
     - name: docker:dind
       alias: docker
       command: ["--tls=false"]
   variables:
-    DDOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: tcp://docker:2375  # Notez bien "DOCKER_HOST" (et non "DDOCKER_HOST")
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
     NODE_ENV: production
+    DOCKER_CLI_NON_INTERACTIVE: "1"
   cache:
     key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
     paths:
@@ -27,13 +28,15 @@ build:
     - apk add --no-cache nodejs npm
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
     - rm -rf node_modules
     - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
     - npm install
     - export NODE_OPTIONS=--max_old_space_size=8192
     - npm run build
     - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
-    - printf '%s' "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    # Utilisation d'echo -n pour éviter d'ajouter un retour à la ligne
+    - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
     - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
     - docker images
   only:
