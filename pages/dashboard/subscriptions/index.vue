@@ -1,5 +1,6 @@
 <template>
-    <Stepper
+    <div>
+        <!-- <Stepper
         v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }"
         v-model="stepIndex"
     >
@@ -29,7 +30,6 @@
         </StepperItem>
     </Stepper>
 
-    
     <div class="container px-6 py-8 mx-auto">
         <div class="flex flex-col justify-center items-center">
             <div class="flex flex-col items-center xl:items-start xl:mx-8 mb-8">
@@ -91,21 +91,67 @@
                 </div>
             </div>
         </div>
+    </div> -->
+
+        <div>
+            <Stepper>
+                <StepperContent>
+                    <StepperItem v-if="currentStep === 0">
+                        <div class="flex flex-col">
+                            <h2 class="text-primary font-secondary">
+                                Bonjour
+                            </h2>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae!
+                            </p>
+                        </div>
+                    </StepperItem>
+                    <StepperItem v-if="currentStep === 1">
+                        <div class="flex flex-col">
+                            <h2 class="text-primary font-secondary">
+                                Bienvenue
+                            </h2>
+                            <p>
+                                amet consectetur adipisicing elit. Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae Lorem ipsum dolor sit !
+                            </p>
+                        </div>
+                    </StepperItem>
+                    <StepperItem v-if="currentStep === 2">
+                        <div class="flex flex-col">
+                            <h2 class="text-primary font-secondary">
+                                Au revoir
+                            </h2>
+                            <p>
+                                Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel, dolor!
+                            </p>
+                        </div>
+                    </StepperItem>
+                </StepperContent>
+            </Stepper>
+            <Button @click="nextStep">
+                <template v-if="currentStep === 2">
+                    Terminer
+                </template>
+                <template v-else>
+                    Suivant
+                </template>
+            </Button>
+        </div>
     </div>
 </template>
 
 <script setup>
 import {
     Stepper,
-    StepperDescription,
-    StepperIndicator,
     StepperItem,
-    StepperSeparator,
-    StepperTitle,
-    StepperTrigger,
 } from '@/components/ui/stepper';
 
-const stepIndex = ref(1);
+const currentStep = ref(0);
+
+const nextStep = () => {
+    currentStep.value = (currentStep.value + 1) % 3;
+};
+
 definePageMeta({
     layout: 'dashboard',
     middleware: 'verified',
