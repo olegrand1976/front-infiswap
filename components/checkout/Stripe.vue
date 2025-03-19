@@ -1,10 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { loadStripe } from '@stripe/stripe-js';
+import type { PaymentDetails } from '~/composables/useSubscription';
 
-definePageMeta({
-    layout: 'dashboard',
-});
 const stripePromise = loadStripe('pk_test_51QzllsGhmRlizdmdd6yvpInKXkwAjOg8Wabal5k14V89bRSyZmiU1nXLZDSLWtK8QM5LQdbFcvMagvmLdOQ1gw3k00uj5OZTOe');
 
 const elements = ref(null);
@@ -13,7 +11,7 @@ const loading = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
-const { create } = useSubscription();
+const { create, plan } = useSubscription();
 
 onMounted(async () => {
     const stripe = await stripePromise;
@@ -26,7 +24,6 @@ const handleSubmit = async () => {
     loading.value = true;
     errorMessage.value = '';
     successMessage.value = '';
-
     try {
         const stripe = await stripePromise;
         const { paymentMethod, error } = await stripe.createPaymentMethod({
@@ -40,8 +37,15 @@ const handleSubmit = async () => {
             return;
         }
 
-        const response = await create(paymentMethod.id).then((response) => {
-            console.log(response);
+        const paymentData: PaymentDetails = {
+            paymentMethodId: paymentMethod.id,
+            priceId: plan.value.stripe_price_id,
+        };
+
+        await create(paymentData).then(() => {
+            useNuxtApp().$toast({
+                description: 'Abonnement reussie'
+            });
         });
     }
     catch (err) {
@@ -66,13 +70,14 @@ const handleSubmit = async () => {
                 class="p-3 border border-gray-300 rounded-md"
             />
 
-            <button
+            <Button
                 type="submit"
                 :disabled="loading"
-                class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md"
+                class="mt-4 w-full"
+                :in-progress="loading"
             >
                 {{ loading ? 'Traitement...' : 'Payer' }}
-            </button>
+            </Button>
         </form>
 
         <p

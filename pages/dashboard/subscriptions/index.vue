@@ -1,156 +1,123 @@
 <template>
-    <div>
-        <!-- <Stepper
-        v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }"
-        v-model="stepIndex"
+    <div
+        class="relative grid place-content-center min-h-96"
     >
-        <StepperItem
-            v-slot="{ state }"
-            :step="1"
+        <div v-if="loading">
+            Chargement des plans...
+        </div>
 
-            class="relative flex w-full flex-col items-center justify-center"
+        <Stepper
+            v-else
+            v-model="stepIndex"
         >
-            <StepperDescription
-                :class="[state === 'active' && 'text-primary']"
-                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
-            >
-                Lorem ipsum dolor sit amet.
-            </StepperDescription>
-        </StepperItem>
-        <StepperItem
-            v-slot="{ state }"
-            :step="2"
-        >
-            <StepperDescription
-                :class="[state === 'active' && 'text-primary']"
-                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
-            >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque neque id voluptates natus ipsum adipisci.
-            </StepperDescription>
-        </StepperItem>
-    </Stepper>
+            <StepperContent>
+                <StepperItem
+                    v-if="stepIndex === 1"
+                    :step="1"
+                >
+                    <div>
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="flex flex-col items-center xl:items-start xl:mx-8 mb-8">
+                                <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
+                                    Abonnement
+                                </h1>
+                                <div class="mt-4">
+                                    <span class="inline-block w-40 h-1 bg-success rounded-full" />
+                                    <span class="inline-block w-3 h-1 mx-1 bg-success rounded-full" />
+                                    <span class="inline-block w-1 h-1 bg-success rounded-full" />
+                                </div>
 
-    <div class="container px-6 py-8 mx-auto">
-        <div class="flex flex-col justify-center items-center">
-            <div class="flex flex-col items-center xl:items-start xl:mx-8 mb-8">
-                <h1 class="text-2xl font-medium text-gray-800 capitalize lg:text-3xl dark:text-white">
-                    Abonnement
-                </h1>
-                <div class="mt-4">
-                    <span class="inline-block w-40 h-1 bg-blue-500 rounded-full" />
-                    <span class="inline-block w-3 h-1 mx-1 bg-blue-500 rounded-full" />
-                    <span class="inline-block w-1 h-1 bg-blue-500 rounded-full" />
-                </div>
+                                <p class="mt-4 font-medium text-gray-500 dark:text-gray-300">
+                                    Obtenez un accès complet en choisissant votre formule !
+                                </p>
+                            </div>
 
-                <p class="mt-4 font-medium text-gray-500 dark:text-gray-300">
-                    Obtenez un accès complet en choisissant votre formule !
-                </p>
-            </div>
+                            <div class="flex-1 xl:mx-8">
+                                <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
+                                    <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
+                                        <div class="p-6">
+                                            <h1 class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white">
+                                                Mensuel
+                                            </h1>
 
-            <div class="flex-1 xl:mx-8">
-                <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
-                    <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
-                        <div class="p-6">
-                            <h1 class="text-xl font-medium text-gray-700 capitalize lg:text-2xl dark:text-white">
-                                Mensuel
-                            </h1>
+                                            <p class="mt-4 text-gray-500 dark:text-gray-300">
+                                                Un abonnement flexible pour gérer vos remplacements et tournées sans engagement. Payez au mois et profitez de toutes les fonctionnalités essentielles.
+                                            </p>
 
-                            <p class="mt-4 text-gray-500 dark:text-gray-300">
-                                Un abonnement flexible pour gérer vos remplacements et tournées sans engagement. Payez au mois et profitez de toutes les fonctionnalités essentielles.
-                            </p>
+                                            <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                                {{ plans?.monthly.amount }} <span class="text-base font-medium">/mois</span>
+                                            </h2>
 
-                            <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
-                                10eur <span class="text-base font-medium">/mois</span>
-                            </h2>
+                                            <Button
+                                                class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                                @click="handleSelectPlan(plans.monthly)"
+                                            >
+                                                Commencez maintenant
+                                            </Button>
+                                        </div>
+                                    </div>
 
-                            <button class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                                Commencez maintenant
-                            </button>
+                                    <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                                        <div class="p-6">
+                                            <h1 class="text-xl text-success font-bold capitalize lg:text-2xl dark:text-white">
+                                                Annuel
+                                            </h1>
+
+                                            <p class="mt-4 text-gray-500 dark:text-gray-300">
+                                                Économisez en choisissant un abonnement annuel ! Profitez de toutes les fonctionnalités tout en réduisant vos coûts sur l’année.
+                                            </p>
+
+                                            <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                                {{ plans?.yearly.amount }} <span class="text-base font-medium">/an</span>
+                                            </h2>
+                                            <Button
+                                                class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                                @click="handleSelectPlan(plans.yearly)"
+                                            >
+                                                Commencez maintenant
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
-                        <div class="p-6">
-                            <h1 class="text-xl font-medium text-gray-700 capitalize lg:text-2xl dark:text-white">
-                                Annuel
-                            </h1>
-
-                            <p class="mt-4 text-gray-500 dark:text-gray-300">
-                                Économisez en choisissant un abonnement annuel ! Profitez de toutes les fonctionnalités tout en réduisant vos coûts sur l’année.
-                            </p>
-
-                            <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
-                                10eur <span class="text-base font-medium">/an</span>
-                            </h2>
-
-                            <button class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                                Commencez maintenant
-                            </button>
-                        </div>
+                </StepperItem>
+                <StepperItem
+                    v-if="stepIndex === 2"
+                    :step="2"
+                >
+                    <div>
+                        <button
+                            class="text-primary absolute top-0 left-0"
+                            type="button"
+                            @click="back()"
+                        >
+                            <ArrowLeftCircleIcon class="size-7" />
+                        </button>
+                        <CheckoutStripe />
                     </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-        <div>
-            <Stepper>
-                <StepperContent>
-                    <StepperItem v-if="currentStep === 0">
-                        <div class="flex flex-col">
-                            <h2 class="text-primary font-secondary">
-                                Bonjour
-                            </h2>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae!
-                            </p>
-                        </div>
-                    </StepperItem>
-                    <StepperItem v-if="currentStep === 1">
-                        <div class="flex flex-col">
-                            <h2 class="text-primary font-secondary">
-                                Bienvenue
-                            </h2>
-                            <p>
-                                amet consectetur adipisicing elit. Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae Lorem ipsum dolor sit !
-                            </p>
-                        </div>
-                    </StepperItem>
-                    <StepperItem v-if="currentStep === 2">
-                        <div class="flex flex-col">
-                            <h2 class="text-primary font-secondary">
-                                Au revoir
-                            </h2>
-                            <p>
-                                Animi reprehenderit dolor dicta vitae repellat. Voluptatum dolorem cumque cupiditate pariatur recusandae! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel, dolor!
-                            </p>
-                        </div>
-                    </StepperItem>
-                </StepperContent>
-            </Stepper>
-            <Button @click="nextStep">
-                <template v-if="currentStep === 2">
-                    Terminer
-                </template>
-                <template v-else>
-                    Suivant
-                </template>
-            </Button>
-        </div>
+                </StepperItem>
+            </StepperContent>
+        </Stepper>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline';
+
 import {
     Stepper,
     StepperItem,
 } from '@/components/ui/stepper';
 
-const currentStep = ref(0);
-
-const nextStep = () => {
-    currentStep.value = (currentStep.value + 1) % 3;
-};
+const {
+    plans,
+    getPlans,
+    selectPlan,
+    loading,
+    plan
+} = useSubscription();
 
 definePageMeta({
     layout: 'dashboard',
@@ -159,5 +126,21 @@ definePageMeta({
 
 useHead({
     title: 'Abonnements',
+});
+
+const stepIndex = ref(1);
+
+const handleSelectPlan = (product: Plan) => {
+    selectPlan(product);
+    console.log(plan);
+    stepIndex.value = stepIndex.value + 1;
+};
+
+function back() {
+    stepIndex.value = stepIndex.value - 1;
+}
+
+onMounted(async () => {
+    await getPlans();
 });
 </script>
