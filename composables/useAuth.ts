@@ -28,6 +28,7 @@ export const useAuth = () => {
         await $apifetch('api/login', { method: 'post', body: credentials })
             .then(response => useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token);
 
+        navigateTo('/dashboard');
         await refresh();
     }
 
