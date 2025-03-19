@@ -46,37 +46,28 @@
 
             <form
                 class="mt-10 space-y-8"
-                <<<<<<<
-                HEAD
-                class="mt-10 space-y-8"
-                @submit.prevent="handleSubmit"
-            >
+                @submit.prevent="handleSubmit">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
-                    =======
+                    <div
+                        v-for="option in options"
+                        :key="option.value"
+                        :class="[
+                            'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
+                            formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
+                        ]"
+                        @click="selectOption(option.value)"
                     >
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        >>>>>>> develop
-                        <div
-                            v-for="option in options"
-                            :key="option.value"
-                            :class="[
-                                'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
-                                formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
-                            ]"
-                            @click="selectOption(option.value)"
-                        >
-                            <span class="text-lg font-medium text-center">{{ option.label }}</span>
-                        </div>
+                        <span class="text-lg font-medium text-center">{{ option.label }}</span>
                     </div>
+                </div>
 
-                    <div class="mt-8 w-full lg:w-80 mx-auto">
-                        <Button
-                            type="submit"
-                            class="w-full py-6 px-6 bg-primary text-white rounded-full shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-105"
-                        >
-                            Envoyer
-                        </Button>
-                    </div>
+                <div class="mt-8 w-full lg:w-80 mx-auto">
+                    <Button
+                        type="submit"
+                        class="w-full py-6 px-6 bg-primary text-white rounded-full shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-105"
+                    >
+                        Envoyer
+                    </Button>
                 </div>
             </form>
         </section>
@@ -139,7 +130,7 @@ const handleSubmit = async (event) => {
         });
 
         console.log('Réponse API :', response);
-        router.push('/legal-chart');
+        router.push('/privacy-security');
     }
     catch (error) {
         console.error('Erreur API :', error);
