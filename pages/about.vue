@@ -64,21 +64,9 @@
             </div>
         </div>
 
-        <div>
-            <HomeServiceContainer />
-        </div>
-
-        <div>
-            <HomeSubscribeBanner
-                bg-class="sm:bg-primary"
-                title-class="text-white"
-                form-class="bg-white"
-                icon-class="text-primary"
-                input-class="text-primary placeholder:text-primary"
-                button-class="bg-primary text-white"
-                link-class="sm:text-white text-primary"
-            />
-        </div>
+        <!-- <div> -->
+        <!-- <HomeServiceContainer /> -->
+        <!-- </div> -->
 
         <div class="container">
             <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20">
