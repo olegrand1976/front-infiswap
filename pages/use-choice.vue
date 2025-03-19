@@ -47,24 +47,24 @@
             <form
                 @submit.prevent="handleSubmit"
                 class="mt-10 space-y-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
                     <div
                         v-for="option in options"
                         :key="option.value"
                         :class="[
-                            'h-16 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
+                            'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
                             formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
                         ]"
                         @click="selectOption(option.value)"
                     >
-                        <span class="text-lg font-medium">{{ option.label }}</span>
+                        <span class="text-lg font-medium text-center">{{ option.label }}</span>
                     </div>
                 </div>
 
                 <div class="mt-8 w-full lg:w-80 mx-auto">
                     <Button
                         type="submit"
-                        class="w-full py-6 px-6 bg-primary text-white rounded-lg shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-105"
+                        class="w-full py-6 px-6 bg-primary text-white rounded-full shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-105"
                     >
                         Envoyer
                     </Button>

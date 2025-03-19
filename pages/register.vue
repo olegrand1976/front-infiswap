@@ -177,6 +177,9 @@
                         >
                             {{ error.dateOfBirth }}
                         </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                            Veuillez entrer votre date de naissance.
+                        </p>
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
@@ -293,7 +296,7 @@
                             :icon="EllipsisHorizontalCircleIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Complément"
+                            placeholder="Complément d'adresse"
                         />
                     </div>
 
