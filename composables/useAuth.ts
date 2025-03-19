@@ -42,7 +42,7 @@ export const useAuth = () => {
                 useCookie(AUTH_TOKEN).value = response.token;
                 return refresh();
             })
-            .catch(error => { throw error; });
+            .catch((error) => { throw error; });
     }
 
     async function registerBeta(credentials) {

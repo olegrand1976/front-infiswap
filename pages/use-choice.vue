@@ -45,8 +45,9 @@
             </h5>
 
             <form
+                class="mt-10 space-y-8"
                 @submit.prevent="handleSubmit"
-                class="mt-10 space-y-8">
+            >
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     <div
                         v-for="option in options"
