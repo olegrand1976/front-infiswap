@@ -402,7 +402,7 @@ useHead({
 });
 
 definePageMeta({
-    middleware: ['verified', 'subscribed'],
+    middleware: ['verified'],
     layout: 'dashboard',
     ssr: false,
 });

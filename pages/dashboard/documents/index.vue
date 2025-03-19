@@ -5,7 +5,7 @@
 <script setup>
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['verified', 'subscribed'],
+    middleware: ['verified'],
 });
 
 useHead({

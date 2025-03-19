@@ -1,5 +1,5 @@
 export const useSubscription = () => {
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
 
     const plans = useState<Plans>('plans', () => null);
     const loading = useState<boolean>('loading', () => false);
@@ -34,6 +34,12 @@ export const useSubscription = () => {
             return response;
         }
         catch (error) {
+            $toast({
+                variant: 'destructive',
+                description: 'Erreur lors de la création de votre abonnement',
+                duration: 3000,
+            });
+
             console.error('Error creating subscription:', error);
         }
         finally {
