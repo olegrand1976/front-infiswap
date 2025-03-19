@@ -230,6 +230,24 @@
                         />
                     </div>
 
+                    <div class="col-span-2">
+                        <InputIcon
+                            v-model="formData.address.zipCode"
+                            :icon="InboxArrowDownIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Code postal *"
+                            @blur="validateField('address.zipCode')"
+                            @input="validateField('address.zipCode')"
+                        />
+                        <p
+                            v-if="error.address.zipCode"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                        >
+                            {{ error.address.zipCode }}
+                        </p>
+                    </div>
+
                     <div class="col-span-1 lg:col-span-2">
                         <Select v-model="formData.address.country">
                             <SelectTrigger
@@ -267,24 +285,6 @@
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                    </div>
-
-                    <div class="col-span-2">
-                        <InputIcon
-                            v-model="formData.address.zipCode"
-                            :icon="InboxArrowDownIcon"
-                            size="md"
-                            class="border border-gray-300"
-                            placeholder="Code postal *"
-                            @blur="validateField('address.zipCode')"
-                            @input="validateField('address.zipCode')"
-                        />
-                        <p
-                            v-if="error.address.zipCode"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.address.zipCode }}
-                        </p>
                     </div>
 
                     <div class="col-span-2">
@@ -611,6 +611,9 @@ const { submit, inProgress } = useSubmit(
         if (isValid) {
             return register(formData)
                 .then(() => {
+                    const userEmail = formData.email;
+                    console.log(userEmail);
+
                     $toast({
                         description: 'Inscription réussie',
                     });
@@ -621,7 +624,7 @@ const { submit, inProgress } = useSubmit(
                     inProgress.value = true;
 
                     setTimeout(() => {
-                        router.push('auth/verify-email');
+                        router.push('use-choice');
                     }, 2000);
                 })
                 .catch(error => {
