@@ -130,7 +130,7 @@ const handleSubmit = async (event) => {
         });
 
         console.log('Réponse API :', response);
-        router.push('/privacy-security');
+        router.push('/legal-chart');
     }
     catch (error) {
         console.error('Erreur API :', error);
