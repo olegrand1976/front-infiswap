@@ -5,18 +5,54 @@ stages:
 #####################################
 # Job de Build
 #####################################
+#build:
+#  stage: build
+#  image: docker:20.10.16
+#  services:
+#    - name: docker:dind
+#      alias: docker
+#      command: ["--tls=false"]
+#  variables:
+#    DOCKER_HOST: tcp://docker:2375 
+#    DOCKER_TLS_CERTDIR: ""
+#    DOCKER_DRIVER: overlay2
+#    NODE_ENV: production
+#    DOCKER_CLI_NON_INTERACTIVE: "1"
+#  cache:
+#    key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
+#    paths:
+#      - node_modules/
+#      - .npm/
+#  before_script:
+#    - apk update
+#    - apk add --no-cache nodejs npm
+#  script:
+#    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+#    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
+#    - rm -rf node_modules
+#    - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
+#    - npm install
+#    - export NODE_OPTIONS=--max_old_space_size=8192
+#    - npm run build
+#    - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
+#    # Utilisation d'echo -n pour éviter d'ajouter un retour à la ligne
+#    - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+#    - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
+#    - docker images
+#  only:
+#    - main
+
 build:
   stage: build
-  image: node:20                   # Utilise Node.js pour disposer de npm
+  image: node:20    # Utilise Node 20 pour disposer d'une version récente
   services:
     - name: docker:dind
-      alias: docker                # Pour que le nom "docker" soit résolu
+      alias: docker
       command: ["--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2375  # Redirige le client Docker vers le service dind
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
-    # Vous pouvez aussi définir NODE_ENV=production ici si nécessaire
     NODE_ENV: production
   cache:
     key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
@@ -24,36 +60,31 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apt-get update && apt-get install -y docker.io
-    - echo "Attente de la résolution DNS pour 'docker'..."
-    - until getent hosts docker; do echo "En attente de 'docker'..."; sleep 1; done
+    - apt-get update && apt-get install -y docker.io  # Installer le client Docker sur Debian
   script:
-  - rm -rf node_modules
-  - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
-  - npm install
-  # Augmenter la mémoire allouée à Node pour le build (8 Go ici – adaptez selon vos ressources)
-  - export NODE_OPTIONS=--max_old_space_size=8192
-  # Lancer le build de l'application (assurez-vous que votre configuration Nuxt/Vite est optimisée pour la production)
-  - npm run build
-  # Construction de l'image Docker avec le tag complet (précisez "docker.io" pour être explicite)
-  - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
-  # Connexion à Docker Hub et push de l'image
-  - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-  - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
-  - docker images
+    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
+    - rm -rf node_modules
+    - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
+    - npm install
+    - export NODE_OPTIONS=--max_old_space_size=8192
+    - npm run build
+    - docker build -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
+    - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    - docker images
   only:
     - main
-
 
 #####################################
 # Déploiement sur FRONT1
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16           # Image contenant la CLI Docker (basée sur Alpine)
+  image: docker:20.10.16
   services:
     - name: docker:dind
-      alias: docker                # Pour que le nom "docker" soit résolu
+      alias: docker
       command: ["--tls=false"]
   variables:
     DOCKER_HOST: tcp://docker:2375
@@ -65,14 +96,14 @@ deploy_front1:
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
     # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
-    - if [ -n "$IP_FRONT_1" ]; then ssh-keyscan -t ed25519 $IP_FRONT_1 >> known_hosts; else echo "IP_FRONT_1 is not set"; fi
+    - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
   script:
     - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
     # Récupération de l'image depuis Docker Hub
     - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
     # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
-      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1 "
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
         docker compose -f /srv/front/docker-compose.prod.yml down &&
@@ -80,51 +111,3 @@ deploy_front1:
       "
   only:
     - main
-
-#####################################
-# Déploiement sur FRONT2
-#####################################
-#deploy_front2:
-#  stage: deploy
-#  image: docker:20.10.16
-#  services:
-#    - name: docker:dind
-#      alias: docker                # Pour que le nom "docker" soit résolu
-#      command: ["--tls=false"]
-#  variables:
-#    DOCKER_HOST: tcp://docker:2375
-#    DOCKER_TLS_CERTDIR: ""
-#    DOCKER_DRIVER: overlay2
-#  before_script:
-#    - apk add --no-cache openssh-client sshpass
-#    - echo "$SSH_PRIVATE_KEY" > id_rsa
-#    - chmod 600 id_rsa
-#    - echo "$SSH_KNOWN_HOSTS" > known_hosts
-#    # Vérifie et ajoute la clé SSH de FRONT2 (IP_FRONT_2 doit être défini)
-#    - if [ -n "$IP_FRONT_2" ]; then ssh-keyscan -t ed25519 $IP_FRONT_2 >> known_hosts; else echo "IP_FRONT_2 is not set"; fi
-#    # Vérifie et ajoute également la clé SSH de FRONT1 (pour récupérer .env.production)
-#    - if [ -n "$IP_FRONT_1" ]; then ssh-keyscan -t ed25519 $IP_FRONT_1 >> known_hosts; else echo "IP_FRONT_1 is not set"; fi
-#  script:
-#    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-#    # Récupération de l'image depuis Docker Hub sur le runner
-#    - docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
-#    # Connexion SSH sur FRONT2 pour exécuter les commandes Docker avec sudo
-#    - >
-#      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_2 "
-#        sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-#        sudo docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
-#      "
-#    # Récupérer le fichier .env.production depuis FRONT1 et le copier sur FRONT2
-#    - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_1:/srv/front/.env.production .env.production
-#    - scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes .env.production $SSH_USER@$IP_FRONT_2:/srv/front/.env.production
-#    # Déploiement via docker-compose sur FRONT2 (avec sudo)
-#    - >
-#      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$IP_FRONT_2 "
-#        sudo docker-compose -f /srv/front/docker-compose.prod.yml down &&
-#        sudo docker-compose -f /srv/front/docker-compose.prod.yml up -d
-#      "
-#  only:
-#    - main
-#  needs:
-#    - deploy_front1
-
