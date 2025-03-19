@@ -13,7 +13,7 @@
                 </div>
 
                 <div
-                    class="hidden sm:flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4"
+                    class="flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4"
                 >
                     <h3
                         class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold"
