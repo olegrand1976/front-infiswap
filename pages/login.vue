@@ -78,7 +78,7 @@
                             </div>
 
                             <NuxtLink
-                                to="/password/reset/reset-password"
+                                to="/password/reset-password"
                                 class="text-primary"
                             >
                                 *Mot de passe oublié

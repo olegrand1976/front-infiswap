@@ -127,10 +127,10 @@
                                             <span class="font-bold">Genre</span>
                                             <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données pour l\'instant' }}</span>
                                         </div>
-                                        <div class="flex justify-between items-center border-b py-2">
+                                        <!-- <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Groupe sanguin</span>
                                             <span class="w-2/3 text-center">- - - - -</span>
-                                        </div>
+                                        </div> -->
                                         <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Allergies</span>
                                             <span class="w-2/3 text-center">
@@ -150,7 +150,7 @@
                                                 </div>
                                             </span>
                                         </div>
-                                        <div class="flex justify-between items-center border-b py-2">
+                                        <!-- <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Maladies</span>
                                             <span class="w-2/3 text-center">- - - - -</span>
                                         </div>
@@ -165,7 +165,7 @@
                                         <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Visite perdue</span>
                                             <span class="w-2/3 text-center">- - - - -</span>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
