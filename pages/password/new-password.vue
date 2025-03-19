@@ -1,5 +1,5 @@
 <template>
-    <!-- <div> -->
+    <div>
         <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
             <div class="bg-tertiary/30 hidden lg:flex flex-col items-center lg:w-[115vw] sm:w-[85vw] relative container">
                 <div class="flex justify-center items-center mb-auto mt-[30%]">
@@ -169,69 +169,69 @@
                 </form>
             </div>
         </div>
-    <!-- </div> -->
+    </div>
 </template>
 
-<!-- <script lang="ts" setup> -->
-// import { LockClosedIcon } from '@heroicons/vue/24/solid';
-// import { ref } from 'vue';
-// import { useRoute } from 'vue-router';
+<script lang="ts" setup>
+import { LockClosedIcon } from '@heroicons/vue/24/solid';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 // import axios from 'axios';
 
-// const { $toast } = useNuxtApp();
+const { $toast } = useNuxtApp();
 
-// definePageMeta({
-    // layout: 'auth',
-// });
+definePageMeta({
+    layout: 'auth',
+});
 
-// useHead({
-    // title: 'Réinitialisation de mot de passe',
-// });
+useHead({
+    title: 'Réinitialisation de mot de passe',
+});
 
-// const formData = ref({
-    // email: '',
-    // password: '',
-    // passwordConfirm: '',
-    // token: '',
-// });
+const formData = ref({
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    token: '',
+});
 
-// // Méthode pour récupérer les paramètres de l'URL
-// const getUrlParams = () => {
-    // const urlParams = new URLSearchParams(window.location.search);
-    // formData.value.email = urlParams.get('email');
-    // formData.value.token = urlParams.get('token');
-// };
+// Méthode pour récupérer les paramètres de l'URL
+const getUrlParams = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    formData.value.email = urlParams.get('email');
+    formData.value.token = urlParams.get('token');
+};
 
-// const route = useRoute();
-// const token = ref(route.query.token as string || '');
+const route = useRoute();
+const token = ref(route.query.token as string || '');
 
-// const resetPassword = async () => {
-    // getUrlParams();
-    // if (formData.value.password !== formData.value.passwordConfirm) {
-        // alert('Les mots de passe ne correspondent pas.');
-        // return;
-    // }
+const resetPassword = async () => {
+    getUrlParams();
+    if (formData.value.password !== formData.value.passwordConfirm) {
+        alert('Les mots de passe ne correspondent pas.');
+        return;
+    }
 
-    // const data = {
-        // email: formData.value.email,
-        // password: formData.value.password,
-        // password_confirmation: formData.value.passwordConfirm,
-        // token: formData.value.token,
-    // };
+    const data = {
+        email: formData.value.email,
+        password: formData.value.password,
+        password_confirmation: formData.value.passwordConfirm,
+        token: formData.value.token,
+    };
 
-    // try {
-        // // Envoi de la requête POST à l'API
+    try {
+        // Envoi de la requête POST à l'API
         // const response = await axios.post('http://localhost:8094/api/forgot-password', data);
 
-        // // Traitement de la réponse
+        // Traitement de la réponse
         // if (response.data.success) {
             // $toast({
                 // title: 'Succès',
                 // description: 'Vérifiez votre boîte de réception.',
             // });
-            // // setTimeout(() => {
-            // //     window.location.href = '/login';
-            // // }, 3000);
+            // setTimeout(() => {
+            //     window.location.href = '/login';
+            // }, 3000);
         // }
         // else {
             // $toast({
@@ -239,14 +239,14 @@
                 // description: 'Vérifiez votre boîte de réception.',
             // });
         // }
-    // }
-    // catch (error) {
-        // console.error('Erreur lors de l\'envoi des données :', error);
-        // $toast({
-            // title: 'Oups! Une erreur s\'est produite',
-            // description: 'Échec de l\'envoi du formulaire',
-            // variant: 'destructive',
-        // });
-    // }
-// };
+    }
+    catch (error) {
+        console.error('Erreur lors de l\'envoi des données :', error);
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Échec de l\'envoi du formulaire',
+            variant: 'destructive',
+        });
+    }
+};
 </script>
