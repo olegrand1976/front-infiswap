@@ -16,7 +16,7 @@
                     href="https://ll-it-sc.be/"
                     target="_blank"
                     rel="noopener noreferrer"
-                >LL-IT Software & Computer</a> 
+                >LL-IT Software & Computer</a>
                 En intégrant notre communauté, chaque infirmier s’engage à respecter des principes éthiques essentiels afin de garantir une relation de travail harmonieuse et professionnelle.
             </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
