@@ -68,7 +68,7 @@ export const useAuth = () => {
         user.value = null;
         useCookie(AUTH_TOKEN).value = '';
 
-        await router.push('/');
+        router.push('/');
     }
 
     async function forgotPassword(email: string) {
