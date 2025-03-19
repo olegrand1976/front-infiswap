@@ -743,7 +743,7 @@ watch(() => patient.value, () => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: 'verified',
+    middleware: ['verified', 'subscribed'],
     ssr: false,
 });
 </script>

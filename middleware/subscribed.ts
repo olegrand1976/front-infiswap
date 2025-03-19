@@ -9,6 +9,6 @@ export default defineNuxtRouteMiddleware(async () => {
     const response = await check(user.value.id);
 
     if (response?.status === 'expired') {
-        return navigateTo('/dashboard/subscription/create');
+        return navigateTo('/dashboard/subscriptions/create');
     }
 });
