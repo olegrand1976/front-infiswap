@@ -99,6 +99,8 @@
 </template>
 
 <script setup lang="ts">
+import { useSubscription, type Plan } from '~/composables/useSubscription';
+
 const {
     plans,
     getPlans,
