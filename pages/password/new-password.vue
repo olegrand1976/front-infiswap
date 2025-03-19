@@ -202,6 +202,8 @@ const getUrlParams = () => {
     formData.value.token = urlParams.get('token');
 };
 
+const { $apifetch } = useNuxtApp();
+
 const route = useRoute();
 const token = ref(route.query.token as string || '');
 
@@ -220,25 +222,28 @@ const resetPassword = async () => {
     };
 
     try {
-        // Envoi de la requête POST à l'API
-        // const response = await axios.post('http://localhost:8094/api/forgot-password', data);
+        const response = await $apifetch('/api/reset-password', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-        // Traitement de la réponse
-        // if (response.data.success) {
-        // $toast({
-        // title: 'Succès',
-        // description: 'Vérifiez votre boîte de réception.',
-        // });
-        // setTimeout(() => {
-        //     window.location.href = '/login';
-        // }, 3000);
-        // }
-        // else {
-        // $toast({
-        // title: 'Succès',
-        // description: 'Vérifiez votre boîte de réception.',
-        // });
-        // }
+        if (response.data.success) {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 3000);
+        }
+        else {
+            $toast({
+                title: 'Succès',
+                description: 'Vérifiez votre boîte de réception.',
+            });
+        }
     }
     catch (error) {
         console.error('Erreur lors de l\'envoi des données :', error);

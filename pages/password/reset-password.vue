@@ -171,7 +171,7 @@ const submitForm = async (event: Event) => {
     }
 
     try {
-        const response = await $apifetch('http://localhost:8094/api/forgot-password', {
+        const response = await $apifetch('/api/forgot-password', {
             method: 'POST',
             body: JSON.stringify({ email: email.value }),
             headers: {

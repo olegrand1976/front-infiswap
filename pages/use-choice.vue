@@ -6,19 +6,16 @@
             </div>
         </header>
 
-        <!-- <h1 class="text-3xl font-semibold text-primary underline mb-6">
-            Confirmation - règlement d'utilisation de la plateforme
-        </h1> -->
         <section class="container mx-auto px-6 py-16">
             <h2 class="text-3xl font-semibold text-primary text-center mb-8">
                 Bienvenue sur notre plateforme !
             </h2>
+            <p class="text-base text-green-600 leading-relaxed text-center mb-10">
+                Veuillez vérifier votre boîte de réception, un email vous a été envoyé.
+            </p>
             <p class="text-base text-gray-700 leading-relaxed text-center mb-8">
                 Veuillez sélectionner l'option qui correspond à vos besoins afin d'accéder à votre espace personnalisé.
             </p>
-            <!-- <p class="text-base text-gray-600 leading-relaxed text-center mb-10">
-                Choisissez l'option qui correspond à vos besoins :
-            </p> -->
             <ul class="list-disc pl-6 space-y-8 text-gray-700 mx-auto max-w-3xl">
                 <li>
                     <span class="font-semibold text-xl text-primary">1 - Je cherche un remplacement</span>
