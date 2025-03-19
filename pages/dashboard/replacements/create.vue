@@ -412,6 +412,8 @@ import { InputTime } from '@/components/ui/input-time';
 import { detailPatient } from '~/composables/usePatients';
 import { useTours } from '~/composables/useTours';
 
+const { $toast } = useNuxtApp();
+
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
@@ -713,8 +715,9 @@ const { tours, fetchTours } = useTours();
 
 const copyCurrentDate = async () => {
     await fetchTours(formData.startDate, formData.startDate);
+    await nextTick();
 
-    if (tours.value && tours.value.length > 0) {
+    if (tours.value.length > 0) {
         tours.value.forEach((tour) => {
             if (tour.visit_times && tour.visit_times.length > 0) {
                 tour.visit_times.forEach((visitTime) => {
@@ -759,7 +762,16 @@ const copyCurrentDate = async () => {
                 });
             }
         });
+
+        $toast({
+            description: 'Tournées du jour copiées avec succès',
+        });
     }
+    else {
+        $toast({
+            description: 'Aucune tournée à copier',
+        });
+    };
 
     // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();
@@ -813,7 +825,16 @@ const copyAllDates = async () => {
                 });
             }
         });
+
+        $toast({
+            description: 'Tournées copiées avec succès',
+        });
     }
+    else {
+        $toast({
+            description: 'Aucune tournée à copier',
+        });
+    };
 
     // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();

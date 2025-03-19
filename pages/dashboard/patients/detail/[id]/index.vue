@@ -1,7 +1,7 @@
 <template>
     <Form
         v-if="patient"
-        class="grid grid-cols-[40%_57.5%] gap-6"
+        class="grid grid-cols-1 lg:grid-cols-[40%_57.5%] gap-6"
         @submit="submit"
     >
         <section class="flex flex-col justify-between mb-8">
@@ -23,7 +23,7 @@
                     </Button>
 
                     <Dialog v-model:open="isOpenDialog">
-                        <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
+                        <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Mise à jour</DialogTitle>
                                 <DialogDescription>
@@ -172,7 +172,7 @@
             </div>
 
             <Button
-                class="mt-8"
+                class="mt-8 hidden lg:block"
                 type="submit"
                 :in-progress="inProgress"
             >
@@ -181,7 +181,7 @@
         </section>
 
         <section class="mb-8">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <h3 class="p-2 bg-primary text-white rounded-t">
                         Date de début d'intervention
@@ -237,23 +237,40 @@
 
                         <div class="grid grid-cols-[30%_70%] items-center mt-4">
                             <h5>Jour</h5>
-                            <Select v-model="visit.dayOfVisit">
+                            <Select
+                                v-model="visit.daysOfVisit"
+                                multiple
+                            >
                                 <SelectTrigger
                                     class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                     position="right"
                                 >
-                                    <SelectValue />
+                                    <SelectValue>
+                                        <template v-if="getSelectedDaysText(visit.daysOfVisit)">
+                                            {{ getSelectedDaysText(visit.daysOfVisit) }}
+                                        </template>
+                                        <template v-else>
+                                            <span class="text-black/60">
+                                                Sélectionner un jour
+                                            </span>
+                                        </template>
+                                    </SelectValue>
                                 </SelectTrigger>
-
                                 <SelectContent class="border border-none">
-                                    <template
-                                        v-for="[key, value] in Object.entries(days)"
-                                        :key="key"
-                                    >
-                                        <SelectItem :value="key">
-                                            {{ value }}
-                                        </SelectItem>
-                                    </template>
+                                    <SelectGroup class="w-32">
+                                        <div
+                                            v-for="[key, value] in Object.entries(days)"
+                                            :key="key"
+                                            class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                            @click="toggleDaySelection(visit, key)"
+                                        >
+                                            <Checkbox
+                                                :checked="visit.daysOfVisit.includes(key)"
+                                                class="mr-2"
+                                            />
+                                            <label class="text-xs text-nowrap cursor-pointer">{{ value }}</label>
+                                        </div>
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -360,7 +377,7 @@
                                 v-else
                                 :key="prescription.id"
                             >
-                                <TableRow class="grid grid-cols-[80%_20%] gap-2 border border-none overflow-x-hidden">
+                                <TableRow class="grid grid-cols-[75%_12%_12%] gap-2 border border-none overflow-x-hidden">
                                     <TableCell class="bg-gray-100">
                                         <div class="flex h-10 rounded bg-gray-200 justify-between items-center">
                                             <span class="truncate w-full px-2 text-center mx-auto">
@@ -373,12 +390,25 @@
                                             <CloudArrowDownIcon class="w-5 cursor-pointer" />
                                         </div>
                                     </TableCell>
+                                    <TableCell class="bg-gray-100">
+                                        <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
+                                            <TrashIcon class="w-5 cursor-pointer" />
+                                        </div>
+                                    </TableCell>
                                 </TableRow>
                             </template>
                         </TableBody>
                     </Table>
                 </div>
             </div>
+
+            <Button
+                class="mt-12 flex w-64 justify-center mx-auto lg:hidden"
+                type="submit"
+                :in-progress="inProgress"
+            >
+                Enregistrer
+            </Button>
         </section>
     </Form>
 </template>
@@ -391,6 +421,7 @@ import {
     PencilSquareIcon,
     XMarkIcon,
     CalendarDaysIcon,
+    TrashIcon,
 } from '@heroicons/vue/24/solid';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient } from '~/composables/usePatients';
@@ -401,8 +432,35 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
 const patientId = route.params.id as string;
 
-const { patient, fetchDetailPatient } = detailPatient(patientId);
-const user = useState('user');
+interface Patient {
+    id: string;
+    lastname: string;
+    firstname: string;
+    email: string;
+    social_security_number: string;
+    phone_number: string;
+    profile?: {
+        zip_code: string;
+        city: string;
+    };
+    care_start_date: string;
+    care_end_date: string;
+    availability: string[];
+    care_informations: string[];
+    visit_times: string[];
+    patient_care_type: string[];
+    patient_documents: string[];
+}
+
+const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
+
+interface User {
+    nurse?: {
+        id: string;
+    };
+}
+
+const user = useState<User>('user');
 
 // Fonction pour trouver l'ID du type de soin par son nom
 const findCareTypeIdByName = (name) => {
@@ -411,60 +469,80 @@ const findCareTypeIdByName = (name) => {
 
 const { $toast } = useNuxtApp();
 
-// Fonction de migration des horaires de visite
-const migrateVisitTimes = (oldVisitTimes) => {
+const groupVisitsByTimeAndCareTypes = (oldVisitTimes) => {
     if (!oldVisitTimes) return [];
 
-    // Créer une Map pour stocker les visites par jour
-    const visitsByDay = new Map();
+    const uniqueVisits = new Map();
 
-    // Parcourir les anciennes visites et les organiser par jour
     oldVisitTimes.forEach((oldVisit) => {
-        const dayVisits = visitsByDay.get(oldVisit.day_of_visit) || {
-            dayOfVisit: oldVisit.day_of_visit,
-            theoreticalVisitTimes: [],
-        };
-
-        // Ajouter les nouvelles heures de visite
         oldVisit.visits.forEach((visit) => {
             const careTypeIds = visit.care_types
                 .map(name => findCareTypeIdByName(name))
-                .filter(id => id !== undefined);
+                .filter(id => id !== undefined)
+                .sort();
 
-            // Vérifier si cette heure existe déjà
-            const existingTimeSlot = dayVisits.theoreticalVisitTimes.find(
-                slot => slot.time === visit.time.substring(0, 5),
-            );
+            const timeSignature = `${visit.time}-${careTypeIds.join(',')}`;
 
-            if (existingTimeSlot) {
-                // Fusionner les types de soins sans doublons
-                existingTimeSlot.careTypeId = Array.from(new Set([
-                    ...existingTimeSlot.careTypeId,
-                    ...careTypeIds,
-                ]));
-            }
-            else {
-                // Ajouter un nouveau créneau horaire
-                dayVisits.theoreticalVisitTimes.push({
-                    time: formatTime(visit.time),
-                    careTypeId: careTypeIds,
+            if (!uniqueVisits.has(timeSignature)) {
+                uniqueVisits.set(timeSignature, {
+                    daysOfVisit: [oldVisit.day_of_visit],
+                    theoreticalVisitTimes: [{
+                        time: formatTime(visit.time),
+                        careTypeId: careTypeIds,
+                    }],
                 });
             }
+            else {
+                const existingVisit = uniqueVisits.get(timeSignature);
+                if (!existingVisit.daysOfVisit.includes(oldVisit.day_of_visit)) {
+                    existingVisit.daysOfVisit.push(oldVisit.day_of_visit);
+                }
+            }
         });
-
-        // Trier les heures de visite
-        dayVisits.theoreticalVisitTimes.sort((a, b) => a.time.localeCompare(b.time));
-
-        visitsByDay.set(oldVisit.day_of_visit, dayVisits);
     });
 
-    return Array.from(visitsByDay.values()).sort((a, b) => {
-        const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        return dayOrder.indexOf(a.dayOfVisit) - dayOrder.indexOf(b.dayOfVisit);
-    });
+    return Array.from(uniqueVisits.values());
 };
 
-// Attendre que les données du patient soient chargées avant d'initialiser formData
+const transformVisitsForApi = (visits) => {
+    const transformedVisits = [];
+
+    visits.forEach((visit) => {
+        visit.daysOfVisit.forEach((day) => {
+            visit.theoreticalVisitTimes.forEach((timeSlot) => {
+                const existingVisit = transformedVisits.find(v => v.day_of_visit === day);
+
+                if (existingVisit) {
+                    existingVisit.visits.push({
+                        time: timeSlot.time,
+                        care_types: timeSlot.careTypeId.map(id =>
+                            careTypes.value.find(ct => ct.id === id)?.name,
+                        ).filter(Boolean),
+                    });
+                }
+                else {
+                    transformedVisits.push({
+                        daysOfVisit: [day],
+                        theoreticalVisitTimes: [{
+                            time: timeSlot.time,
+                            careTypeId: timeSlot.careTypeId.map(id =>
+                                careTypes.value.find(ct => ct.id === id)?.id,
+                            ).filter(Boolean),
+                        }],
+                    });
+                }
+            });
+        });
+    });
+
+    return transformedVisits;
+};
+
+const migrateVisitTimes = (oldVisitTimes) => {
+    if (!oldVisitTimes) return [];
+    return groupVisitsByTimeAndCareTypes(oldVisitTimes);
+};
+
 const formData = ref({
     nurseId: '',
     lastname: '',
@@ -483,7 +561,6 @@ const formData = ref({
     patient_documents: [],
 });
 
-// Le reste de votre code reste exactement le même
 const initializeFormData = () => {
     if (patient.value && user.value?.nurse) {
         formData.value = {
@@ -514,6 +591,7 @@ const days = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
+    all: 'Tous',
 };
 
 const severities = {
@@ -538,9 +616,24 @@ const formatTime = (time) => {
     return `${hours}:${minutes}`;
 };
 
+const toggleDaySelection = (visit, day) => {
+    const index = visit.daysOfVisit.indexOf(day);
+    if (index === -1) {
+        visit.daysOfVisit.push(day);
+    }
+    else {
+        visit.daysOfVisit.splice(index, 1);
+    }
+    visit.daysOfVisit = [...visit.daysOfVisit];
+};
+
+const getSelectedDaysText = (selectedDays) => {
+    return selectedDays.map(day => days[day]).join(', ');
+};
+
 const addVisit = () => {
     formData.value.visits.push({
-        dayOfVisit: '',
+        daysOfVisit: [],
         theoreticalVisitTimes: [
             {
                 time: '',
@@ -616,7 +709,13 @@ const {
 } = useSubmit(
     () => {
         updatePatientCareTypes();
-        return updatePatient(patient.value.id, formData.value).then(() => {
+
+        const dataToSubmit = {
+            ...formData.value,
+            visits: transformVisitsForApi(formData.value.visits),
+        };
+
+        return updatePatient(patient.value.id, dataToSubmit).then(() => {
             $toast({
                 description: 'Mise à jour du patient avec succès',
             });

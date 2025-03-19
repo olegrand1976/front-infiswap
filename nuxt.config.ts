@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     },
 
     // Active les devtools uniquement en développement
-    devtools: { enabled: false },
+    devtools: { enabled: true },
 
     app: {
         baseURL: '/',
