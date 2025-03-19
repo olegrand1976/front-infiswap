@@ -28,12 +28,6 @@
                             afin que vous puissiez vous concentrer sur l’essentiel :
                             soigner vos patients. Découvrez nos services clés :
                         </p>
-                        <Button
-                            href="/register"
-                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
-                        >
-                            S'inscrire
-                        </Button>
                     </div>
                     <div class="hidden order-1 lg:order-2 lg:flex justify-center lg:justify-end">
                         <div class="flex justify-between items-center gap-4">
@@ -88,12 +82,6 @@
                         <h3 class="text-primary text-lg font-bold">
                             Recherche et Gestion de Remplacement
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
 
@@ -111,14 +99,6 @@
                         Filtrez les annonces par localisation, date, type de soins
                         et autres critères spécifiques à vos besoins.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -134,14 +114,6 @@
                         correspond à vos critères. Ne manquez jamais une mission qui pourrait
                         optimiser votre planning et valoriser votre expertise.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
                 <div class=" relative z-10 order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
@@ -153,12 +125,6 @@
                         <h3 class="text-primary text-lg font-bold">
                             Notification en temps réel
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -176,12 +142,6 @@
                             Planification et <br>
                             Organisation
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
 
@@ -200,14 +160,6 @@
                         Ajoutez directement les missions acceptées à votre agenda
                         pour une organisation sans faille.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -222,14 +174,6 @@
                         Bénéficiez d’un retour détaillé sur vos interventions, pour toujours améliorer
                         votre gestion du temps et vos compétences.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
@@ -241,12 +185,6 @@
                         <h3 class="text-primary text-lg font-bold">
                             Historique et suivi personnalisé
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -264,12 +202,6 @@
                             Communication et <br>
                             Réseau
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
 
@@ -288,14 +220,6 @@
                         Échangez via la messagerie intégrée pour une communication
                         sécurisée et fluide.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -312,14 +236,6 @@
                         Augmentez votre visibilité auprès des établissements
                         et des infirmiers à la recherche de remplaçants.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
@@ -332,12 +248,6 @@
                             Développement
                             de votre réseau professionnelles
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -358,12 +268,6 @@
                             <br>
                             (Bientôt disponible)
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
 
@@ -384,14 +288,6 @@
                         Accédez à des outils de suivi administratif et financier pour une vision
                         claire de votre activité.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -408,14 +304,6 @@
                         <br>
                         Recevez des rappels et gérez vos inscriptions pour maintenir vos compétences à jour et valoriser votre expertise.
                     </p>
-                    <div class="hidden lg:block">
-                        <Button
-                            href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
-                        >
-                            En savoir plus
-                        </Button>
-                    </div>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
@@ -429,12 +317,6 @@
                             <br>
                             professionnelles
                         </h3>
-                        <Button
-                            href="/"
-                            class="mt-2 text-sm px-6"
-                        >
-                            En savoir plus
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -463,12 +345,6 @@
                             Découvrez dès aujourd'hui comment nous pouvons transformer
                             votre quotidien professionnel !
                         </p>
-                        <Button
-                            href="/register"
-                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
-                        >
-                            S'inscrire
-                        </Button>
                     </div>
                     <div class="order-2 flex justify-center lg:justify-end flex-1">
                         <NuxtImg
