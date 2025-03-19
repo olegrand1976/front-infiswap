@@ -1,14 +1,15 @@
-// lib/utils/index.ts
+import type { Updater } from '@tanstack/vue-table';
+import type { Ref } from 'vue';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-/**
- * Combine plusieurs chaînes de caractères en une seule chaîne de classes
- * en filtrant les valeurs falsy.
- *
- * @param classes - Une liste de classes (string, undefined, null ou boolean)
- * @returns La chaîne de classes combinées.
- */
-export function cn(...classes: (string | undefined | null | boolean)[]): string {
-    return classes.filter(Boolean).join(' ');
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
 }
 
-// Exportez également d'autres fonctions ou modules si nécessaire
+export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref) {
+    ref.value
+    = typeof updaterOrValue === 'function'
+            ? updaterOrValue(ref.value)
+            : updaterOrValue;
+}

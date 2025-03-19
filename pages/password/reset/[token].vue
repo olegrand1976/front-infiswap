@@ -45,7 +45,7 @@
                     />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Réinitialiser votre <span class="font-bold">mot de passe</span>
+                    Réinitialisez votre <span class="font-bold">mot de passe</span>
                 </h1>
                 <div class="w-full container">
                     <Form class="flex flex-col">

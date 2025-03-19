@@ -1,8 +1,8 @@
 <template>
-    <div class="pt-16 sm:pt-32 sm:pb-0 pb-40 bg-tertiary/25 sm:bg-white">
+    <div class="py-16 md:pt-32 md:pb-0 bg-tertiary/25 md:bg-white">
         <div class="flex flex-col space-y-8 sm:space-y-24">
             <div
-                class="mt-3 flex relative flex-col sm:container sm:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-20 sm:space-x-16"
+                class="mt-3 flex relative flex-col sm:container md:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-8"
             >
                 <div class="z-10 mx-6 sm:mx-0">
                     <NuxtImg
@@ -13,25 +13,19 @@
                 </div>
 
                 <div
-                    class="hidden sm:flex flex-col xl:space-y-8 md:space-y-6 sm:space-y-4"
+                    class="px-8 md:px-0 mt-8 sm:mt-0 flex flex-col space-y-8"
                 >
                     <h3
-                        class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold"
+                        class="text-center md:text-start xl:text-4xl lg:text-3xl text-xl 2xl:w-full md:w-96 text-primary font-bold"
                     >
-                        Je cherche
-                        <br>
-                        un remplacement <br>
-                        à effectuer
+                        Je cherche un remplacement à effectuer
                     </h3>
                     <p
-                        class="lg:w-96 md:w-[22rem] sm:w-[19rem] xl:text-sm lg:text-sm sm:text-xs"
+                        class="text-center md:text-start 2xl:w-[38rem] lg:w-[32rem] md:w-96"
                     >
                         <span class="font-semibold">Vous cherchez un remplacement ?</span>
-                        Avec InfiSwap, <br>
-                        accédez en un clic aux annonces disponibles près de chez vous.
-                        <br>
+                        Avec InfiSwap, accédez en un clic aux annonces disponibles près de chez vous.
                         Trouvez facilement des opportunités adaptées à votre emploi du temps
-                        <br>
                         et développez votre réseau tout en optimisant votre activité.
                     </p>
                     <!--

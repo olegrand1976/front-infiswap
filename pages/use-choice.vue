@@ -6,36 +6,71 @@
             </div>
         </header>
 
-        <section class="container">
-            <h1 class="text-lg underline text-primary">
-                Confirmation - règlement d'utilisation de la plateforme
-            </h1>
-            <h5 class="text-primary font-semibold mt-6">
+        <!-- <h1 class="text-3xl font-semibold text-primary underline mb-6">
+            Confirmation - règlement d'utilisation de la plateforme
+        </h1> -->
+        <section class="container mx-auto px-6 py-16">
+            <h2 class="text-3xl font-semibold text-primary text-center mb-8">
+                Bienvenue sur notre plateforme !
+            </h2>
+            <p class="text-base text-gray-700 leading-relaxed text-center mb-8">
+                Veuillez sélectionner l'option qui correspond à vos besoins afin d'accéder à votre espace personnalisé.
+            </p>
+            <!-- <p class="text-base text-gray-600 leading-relaxed text-center mb-10">
+                Choisissez l'option qui correspond à vos besoins :
+            </p> -->
+            <ul class="list-disc pl-6 space-y-8 text-gray-700 mx-auto max-w-3xl">
+                <li>
+                    <span class="font-semibold text-xl text-primary">1 - Je cherche un remplacement</span>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Vous êtes à la recherche d'un infirmier pour remplacer une mission temporaire ? Sélectionnez cette option pour consulter les remplaçants disponibles et gérer vos besoins en remplacement.
+                    </p>
+                </li>
+                <li>
+                    <span class="font-semibold text-xl text-primary">2 - Me faire remplacer</span>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Vous êtes un infirmier et vous souhaitez vous faire remplacer temporairement ? Sélectionnez cette option pour consulter les missions disponibles et vous inscrire en tant que remplaçant.
+                    </p>
+                </li>
+                <li>
+                    <span class="font-semibold text-xl text-primary">3 - Les 2</span>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Vous avez besoin d'accéder à la fois aux remplacements et à la possibilité de vous faire remplacer ? Sélectionnez cette option pour avoir accès aux deux fonctionnalités et gérer vos missions en toute flexibilité.
+                    </p>
+                </li>
+            </ul>
+
+            <h5 class="text-primary text-2xl font-semibold text-center mt-12 mb-6">
                 Pour quelle utilisation de la plateforme ?
             </h5>
 
-            <Form
-                class="mt-12 flex flex-col"
+            <form
+                class="mt-10 space-y-8"
                 @submit.prevent="handleSubmit"
             >
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 2xl:gap-x-32 items-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     <div
                         v-for="option in options"
                         :key="option.value"
-                        :class="['h-10 flex justify-center px-auto items-center border rounded-full cursor-pointer',
-                                 formData === option.value ? 'bg-primary text-white' : 'border-primary text-primary']"
+                        :class="[
+                            'h-16 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
+                            formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
+                        ]"
                         @click="selectOption(option.value)"
                     >
-                        <span>{{ option.label }}</span>
+                        <span class="text-lg font-medium">{{ option.label }}</span>
                     </div>
                 </div>
-                <Button
-                    type="submit"
-                    class="mt-16 w-full sm:w-96 mx-auto"
-                >
-                    Envoyer
-                </Button>
-            </Form>
+
+                <div class="mt-8 w-full lg:w-80 mx-auto">
+                    <Button
+                        type="submit"
+                        class="w-full py-6 px-6 bg-primary text-white rounded-lg shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-105"
+                    >
+                        Envoyer
+                    </Button>
+                </div>
+            </form>
         </section>
 
         <footer>
@@ -61,10 +96,16 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const { $apifetch } = useNuxtApp();
+const router = useRouter();
+
 const options = [
-    { label: 'Je cherche des remplacements', value: 'replacements' },
-    { label: 'Je souhaite me faire remplacer', value: 'beReplaced' },
-    { label: 'Faire les deux', value: 'both' },
+    { label: 'Je cherche des remplacements', value: 'replace_me' },
+    { label: 'Je souhaite me faire remplacer', value: 'search_remplacement' },
+    { label: 'Faire les deux', value: 'all' },
 ];
 
 const formData = ref(null);
@@ -73,8 +114,28 @@ const selectOption = (value) => {
     formData.value = formData.value === value ? null : value;
 };
 
-const handleSubmit = () => {
-    console.log('Form Data:', formData.value);
+const handleSubmit = async (event) => {
+    if (event?.preventDefault) {
+        event.preventDefault();
+    }
+
+    if (!formData.value) {
+        console.warn('Aucune option sélectionnée !');
+        return;
+    }
+
+    try {
+        const response = await $apifetch('/api/user-choice', {
+            method: 'POST',
+            body: { choice: formData.value },
+        });
+
+        console.log('Réponse API :', response);
+        router.push('/privacy-security');
+    }
+    catch (error) {
+        console.error('Erreur API :', error);
+    }
 };
 
 useHead({

@@ -126,7 +126,7 @@
                             <Input
                                 v-model="formData.phoneNumber"
                                 variant="transparent"
-                                placeholder="97 12 25 - 123 - 45"
+                                placeholder="0499010203"
                                 class="w-full text-black placeholder:text-black/80"
                                 @blur="validateField('phoneNumber')"
                                 @input="validateField('phoneNumber')"
