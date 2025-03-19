@@ -44,7 +44,7 @@ const handleSubmit = async () => {
 
         await create(paymentData).then(() => {
             useNuxtApp().$toast({
-                description: 'Abonnement reussie'
+                description: 'Abonnement reussie',
             });
         });
     }

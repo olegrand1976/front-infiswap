@@ -1,7 +1,6 @@
 export const useSubscription = () => {
     const { $apifetch } = useNuxtApp();
 
-
     const plans = useState<Plans>('plans', () => null);
     const loading = useState<boolean>('loading', () => false);
     const plan = useState<Plan>('plan', () => null);
@@ -24,10 +23,14 @@ export const useSubscription = () => {
         plan.value = selected;
     };
 
-    const create = async (payment: PaymentDetails): Promise<void> => {
+    const create = async (priceId: string): Promise<SubscriptionResponse | null> => {
         loading.value = true;
         try {
-            await $apifetch('api/subscription/create', { method: 'POST', body: payment });
+            const response = await $apifetch<SubscriptionResponse>('api/subscription/create', { method: 'POST', body: {
+                priceId: priceId,
+            } });
+
+            return response;
         }
         catch (error) {
             console.error('Error creating subscription:', error);
@@ -70,3 +73,6 @@ export interface PaymentDetails {
     priceId: string;
 }
 
+interface SubscriptionResponse {
+    url: string;
+}
