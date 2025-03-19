@@ -3,23 +3,23 @@
         <Sidebar class="bg-white">
             <LayoutsAppSidebar />
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset class="w-full lg:w-96">
             <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20">
                 <div class="flex items-center gap-2">
-                    <SidebarTrigger class="-ml-1" />
+                    <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
                     <Separator
                         orientation="vertical"
                         class="mr-2 h-4"
                     />
-                    <Form>
+                    <!-- <Form>
                         <FormField name="search">
                             <FormItem>
                                 <FormControl>
-                                    <div class="flex w-32 lg:w-96 bg-gray-200 rounded-full items-center justify-between ps-3 pe-1">
+                                    <div class="flex lg:w-96 bg-gray-200 rounded-full items-center justify-between ps-3 pe-1">
                                         <Input
                                             :v-model="search"
                                             placeholder="Rechercher"
-                                            class="w-80 text-xs bg-transparent"
+                                            class="w-44 sm:w-80 text-xs bg-transparent"
                                         />
                                         <Button
                                             type="submit"
@@ -31,7 +31,7 @@
                                 </FormControl>
                             </FormItem>
                         </FormField>
-                    </Form>
+                    </Form> -->
                 </div>
                 <div class="ml-auto mr-2">
                     <DropdownMenu>
@@ -55,7 +55,7 @@
                     </DropdownMenu>
                 </div>
             </header>
-            <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div class="flex flex-1 flex-col gap-4 p-4 pt-0 lg:ml-6 xl:ml-0 xl:w-full">
                 <NuxtPage />
             </div>
         </SidebarInset>

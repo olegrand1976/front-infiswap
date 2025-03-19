@@ -25,7 +25,7 @@ export const useAuth = () => {
         if (isLoggedIn.value) return;
 
         await $apifetch('api/login', { method: 'post', body: credentials })
-            .then(response => useCookie(AUTH_TOKEN, { maxAge: 704800 }).value = response.token);
+            .then(response => useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token);
 
         await refresh();
     }
@@ -38,11 +38,11 @@ export const useAuth = () => {
 
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
-            .then(response => {
+            .then((response) => {
                 useCookie(AUTH_TOKEN).value = response.token;
                 return refresh();
             })
-            .catch(error => { throw error; });
+            .catch((error) => { throw error; });
     }
 
     async function registerBeta(credentials) {

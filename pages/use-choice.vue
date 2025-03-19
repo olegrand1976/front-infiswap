@@ -45,9 +45,15 @@
             </h5>
 
             <form
+                class="mt-10 space-y-8"
                 @submit.prevent="handleSubmit"
+<<<<<<< HEAD
                 class="mt-10 space-y-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
+=======
+            >
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+>>>>>>> develop
                     <div
                         v-for="option in options"
                         :key="option.value"

@@ -8,7 +8,7 @@
 
                 <SidebarGroupContent
                     class="mt-2 mx-auto"
-                    :class="collapsed ? 'w-10' : 'xl:w-52 lg:w-44'"
+                    :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
                         <section
