@@ -113,7 +113,7 @@
             </SidebarGroup>
             <SidebarGroup>
                 <SidebarMenuButton
-                    class="bg-red-500 text-white"
+                    class="bg-primary text-white"
                     @click="logout"
                 >
                     <div class="flex space-x-2 items-center">
