@@ -40,6 +40,15 @@ export const useSubscription = () => {
         }
     };
 
+    const check = async (user: number) => {
+        try {
+            return await $apifetch<CheckResponse>(`/api/subscription/${user}/check`, { method: 'GET' });
+        }
+        catch (error) {
+            console.error('Error checking subscription:', error);
+        }
+    };
+
     return {
         loading,
         getPlans,
@@ -47,6 +56,7 @@ export const useSubscription = () => {
         plan,
         create,
         selectPlan,
+        check,
     };
 };
 
@@ -75,4 +85,8 @@ export interface PaymentDetails {
 
 interface SubscriptionResponse {
     url: string;
+}
+
+interface CheckResponse {
+    status: 'active' | 'expired';
 }
