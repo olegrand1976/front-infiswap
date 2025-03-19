@@ -1,3 +1,5 @@
+import { useSubscription } from '~/composables/useSubscription';
+
 export default defineNuxtRouteMiddleware(async () => {
     const { check } = useSubscription();
     const user = useUser();
