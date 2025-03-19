@@ -4,6 +4,7 @@ export const useSubscription = () => {
     const plans = useState<Plans>('plans', () => null);
     const loading = useState<boolean>('loading', () => false);
     const plan = useState<Plan>('plan', () => null);
+    const current = useState<ActiveSubscription>('current', () => null);
 
     const getPlans = async (): Promise<void> => {
         loading.value = true;
@@ -41,13 +42,17 @@ export const useSubscription = () => {
     };
 
     const getCurrentSubscription = async () => {
+        loading.value = true;
         try {
-            const response = await $apifetch<ActiveSubscriptionResponse>('api/subscription/active');
-
+            const response = await $apifetch<ActiveSubscription>('/api/subscription/current');
+            current.value = response;
             return response;
         }
         catch (error) {
             console.error('Error checking active subscription:', error);
+        }
+        finally {
+            loading.value = false;
         }
     };
 
@@ -69,6 +74,7 @@ export const useSubscription = () => {
         selectPlan,
         check,
         getCurrentSubscription,
+        current,
     };
 };
 
@@ -103,7 +109,7 @@ interface CheckResponse {
     status: 'active' | 'expired';
 }
 
-interface ActiveSubscriptionResponse {
+interface ActiveSubscription {
     status: 'active' | 'expired';
     plan: Plan;
     subscription: Subscription;
