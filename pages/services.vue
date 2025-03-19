@@ -322,9 +322,9 @@
             </div>
         </div>
 
-        <div class="my-8 py-8 pb-8">
+        <div class="container lg:my-8 py-8">
             <LayoutsLogo class="w-72 flex justify-center items-center mx-auto" />
-            <h2 class="text-3xl text-center text-primary font-bold my-10">
+            <h2 class="text-3xl text-center text-primary font-bold lg:my-10">
                 Plus de Temps pour Soigner, Moins de Temps à Gérer !
             </h2>
         </div>
