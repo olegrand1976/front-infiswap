@@ -11,6 +11,7 @@ export const useAuth = () => {
     const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
     const isLoggedIn = computed(() => !!user.value);
+    const loading = useState<boolean>('loading', () => false);
 
     async function refresh() {
         try {
@@ -62,13 +63,24 @@ export const useAuth = () => {
     }
 
     async function logout() {
-        if (!isLoggedIn.value) return;
+        loading.value = false;
+        try {
+            if (!isLoggedIn.value) return;
+            await $apifetch('api/logout', { method: 'post' });
+            user.value = null;
+            useCookie(AUTH_TOKEN).value = '';
 
-        await $apifetch('api/logout', { method: 'post' });
-        user.value = null;
-        useCookie(AUTH_TOKEN).value = '';
-
-        router.push('/');
+            router.push('/');
+        }
+        catch {
+            $toast({
+                variant: 'destructive',
+                description: 'Erreur lors de la déconnexion.',
+            });
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function forgotPassword(email: string) {

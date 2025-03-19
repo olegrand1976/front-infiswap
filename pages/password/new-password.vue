@@ -225,19 +225,19 @@ const resetPassword = async () => {
 
         // Traitement de la réponse
         // if (response.data.success) {
-            // $toast({
-                // title: 'Succès',
-                // description: 'Vérifiez votre boîte de réception.',
-            // });
-            // setTimeout(() => {
-            //     window.location.href = '/login';
-            // }, 3000);
+        // $toast({
+        // title: 'Succès',
+        // description: 'Vérifiez votre boîte de réception.',
+        // });
+        // setTimeout(() => {
+        //     window.location.href = '/login';
+        // }, 3000);
         // }
         // else {
-            // $toast({
-                // title: 'Succès',
-                // description: 'Vérifiez votre boîte de réception.',
-            // });
+        // $toast({
+        // title: 'Succès',
+        // description: 'Vérifiez votre boîte de réception.',
+        // });
         // }
     }
     catch (error) {
