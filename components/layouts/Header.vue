@@ -1,6 +1,6 @@
 <template>
-    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-20 sm:block lg:flex lg:justify-center items-center md:py-5">
-        <div class="hidden md:flex justify-between items-center container">
+    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-20 sm:block lg:flex lg:justify-center items-center lg:py-5">
+        <div class="hidden lg:flex justify-between items-center container">
             <div>
                 <LayoutsLogo class="h-10 lg:h-14" />
             </div>
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="md:hidden">
+        <div class="lg:hidden">
             <div class="h-20 flex justify-between items-center my-auto px-8">
                 <div>
                     <LayoutsLogo class="w-36 h-11" />
