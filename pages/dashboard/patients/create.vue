@@ -139,7 +139,7 @@
                             v-model="formData.phoneNumber"
                             type="text"
                             class="w-full bg-transparent"
-                            placeholder="08 67 56 54 32"
+                            placeholder="0867565432"
                             @blur="validateField('phoneNumber')"
                             @input="validateField('phoneNumber')"
                         />

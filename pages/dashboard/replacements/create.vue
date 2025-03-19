@@ -5,7 +5,7 @@
                 <div class="bg-primary border border-primary rounded-2xl h-full">
                     <div class="bg-white rounded-2xl flex items-center ps-4 h-10">
                         <h2 class="font-bold text-primary">
-                            Période
+                            Période de remplacement
                         </h2>
                     </div>
 
@@ -61,6 +61,7 @@
                         v-model="value"
                         :min-value="todayCalendar"
                         class="rounded-md shadow-lg"
+                        locale="fr"
                     />
                 </div>
             </div>
@@ -84,7 +85,7 @@
                                             title="Date suivante"
                                             type="date"
                                             placeholder="jj/mm/aaaa"
-                                            class="w-24 text-xs bg-transparent placeholder:text-white"
+                                            class="w-28 text-xs bg-transparent placeholder:text-white"
                                             disabled
                                         />
                                         <ChevronRightIcon
