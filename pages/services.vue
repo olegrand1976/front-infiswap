@@ -1,15 +1,32 @@
 <template>
     <NuxtLayout name="guest">
-        <div class="relative font-light ">
-            <div class="absolute inset-0 bg-tertiary/30 h-[300px] lg:h-full w-full" />
-            <div class="container">
-                <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20 mt-20">
+        <div class="relative font-light">
+            <div class="hidden lg:block absolute inset-x-0 bg-tertiary/30 md:h-[300px] lg:h-full w-full z-10" />
+            <div class="lg:container">
+                <div class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center py-8 lg:py-20 md:mt-20">
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                        <h3 class="text-primary md:text-3xl text-2xl text-center md:text-left">
+                        <h3 class="-mt-8 lg:mt-auto rounded-b-[60%] h-32 lg:h-auto bg-tertiary/30 pt-10 lg:pt-24 lg:relative text-primary xl:text-7xl lg:text-5xl text-3xl text-center lg:text-left lg:bg-transparent">
                             Nos <span class="font-bold">Services</span>
                         </h3>
-                        <p>
-                            Chez INFISWAP, nous mettons à votre disposition une plateforme complète et intuitive conçue pour faciliter la vie des infirmiers libéraux. Notre objectif est de simplifier la gestion des remplacements, la planification des tournées et l’organisation quotidienne, afin que vous puissiez vous concentrer sur l’essentiel : soigner vos patients. Découvrez nos services clés :
+                        <p class="hidden lg:block text-start">
+                            Chez INFISWAP, nous mettons à votre disposition une plateforme complète
+                            et intuitive conçue pour faciliter la vie des infirmiers libéraux.
+                            <br>
+                            Notre objectif est de simplifier la gestion des remplacements,
+                            <br>
+                            la planification des tournées et l’organisation quotidienne,
+                            <br>
+                            afin que vous puissiez vous concentrer sur l’essentiel :
+                            <br>
+                            soigner vos patients. Découvrez nos services clés :
+                        </p>
+                        <p class="text-center lg:hidden container">
+                            Chez INFISWAP, nous mettons à votre disposition une plateforme complète
+                            et intuitive conçue pour faciliter la vie des infirmiers libéraux.
+                            Notre objectif est de simplifier la gestion des remplacements,
+                            la planification des tournées et l’organisation quotidienne,
+                            afin que vous puissiez vous concentrer sur l’essentiel :
+                            soigner vos patients. Découvrez nos services clés :
                         </p>
                         <Button
                             href="/register"
@@ -18,7 +35,7 @@
                             S'inscrire
                         </Button>
                     </div>
-                    <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                    <div class="hidden order-1 lg:order-2 lg:flex justify-center lg:justify-end">
                         <div class="flex justify-between items-center gap-4">
                             <div class="order-1 flex flex-col items-center">
                                 <NuxtImg
@@ -44,6 +61,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="absolute bottom-0 right-0 hidden lg:block z-0">
                 <NuxtImg
                     src="/Vector_2.png"
@@ -58,34 +76,45 @@
             </div>
         </div>
 
-        <template #title>
-            Nos <strong>services</strong>
-        </template>
         <div class="container">
             <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
-                <div>
+                <div class="relative">
                     <NuxtImg
                         src="/home/equipe_infirmier.png"
                         alt="equipe infirmier"
-                        class="w-full"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Recherche et Gestion de Remplacement
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="space-y-6">
-                    <h3 class="xl:text-4xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
-                        Recherche et Gestion <br>
-                        de Remplacement
+                    <h3 class="hidden lg:block xl:text-4xl md:text-3xl lg:text-xl text-primary font-bold">
+                        Recherche et Gestion <br> de Remplacement
                     </h3>
-                    <h4 class="text-lg lg:text-xl text-primary">Accès rapide aux offres</h4>
-                    <p>
-                        Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la
-                        centralisation des informations essentielles.
+                    <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
+                        Accès rapide aux offres
+                    </h4>
+                    <p class="hidden lg:flex">
+                        Recherchez facilement les offres de remplacement disponibles
+                        grâce à notre moteur de recherche intelligent.
+                        <br>
+                        Filtrez les annonces par localisation, date, type de soins
+                        et autres critères spécifiques à vos besoins.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
-                            class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
+                            class="mx-auto lg:text-sm sm:text-xs px-10"
                         >
                             En savoir plus
                         </Button>
@@ -93,22 +122,19 @@
                 </div>
             </div>
         </div>
+
         <div class="container">
-            <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
+            <div class="relative my-8  lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
                 <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
+                    <h3 class="lg:flex hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold">
                         Notification en temps réel
                     </h3>
-                    <p>
-                        est une plateforme innovante conçue pour optimiser
-                        la gestion des infirmiers libéraux. Elle simplifie les
-                        remplacements, la planification des tournées et le suivi
-                        des formations. Grâce à des outils intelligents et automatisés,
-                        Infiswap améliore la coordination, réduit le temps administratif
-                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                        qualité de soins et un gain de temps précieux.
+                    <p class="hidden lg:flex">
+                        Recevez des alertes instantanées dès qu’une nouvelle opportunité
+                        correspond à vos critères. Ne manquez jamais une mission qui pourrait
+                        optimiser votre planning et valoriser votre expertise.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -117,37 +143,64 @@
                         </Button>
                     </div>
                 </div>
-                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class=" relative z-10 order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
                         src="/home/cart.png"
                         alt="cart"
-                        class="w-full max-w-2xs lg:max-w-none z-20"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Notification en temps réel
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="-mt-10 relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
-                <div>
+            <div class="-mt-10 relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
+                <div class="relative">
                     <NuxtImg
                         src="/home/nurse_with_elderly_man.png"
                         alt="un infirmier with vielle homme"
-                        class="w-full"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Planification et <br>
+                            Organisation
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="space-y-6">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
+                    <h3 class="hidden lg:block xl:text-4xl lg:text-3xl md:text-xl  text-primary font-bold">
                         Planification et <br>
                         Organisation
                     </h3>
-                    <h4 class="text-lg lg:text-xl text-primary">Gestion automatisé de tourné</h4>
-                    <p>
-                        Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la
-                        centralisation des informations essentielles.
+                    <h4 class=" hidden lg:flex text-lg lg:text-xl text-primary">
+                        Gestion automatisé de tourné
+                    </h4>
+                    <p class="hidden lg:flex">
+                        Planifiez vos remplacements en fonction de vos disponibilités
+                        grâce à une interface claire et intuitive.
+                        <br>
+                        Ajoutez directement les missions acceptées à votre agenda
+                        pour une organisation sans faille.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -159,21 +212,17 @@
             </div>
         </div>
         <div class="container">
-            <div class="-mt-10 relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-20">
+            <div class=" relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
                 <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
+                    <h3 class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl  text-primary font-bold">
                         Historique et suivi personnalisé
                     </h3>
-                    <p>
-                        est une plateforme innovante conçue pour optimiser
-                        la gestion des infirmiers libéraux. Elle simplifie les
-                        remplacements, la planification des tournées et le suivi
-                        des formations. Grâce à des outils intelligents et automatisés,
-                        Infiswap améliore la coordination, réduit le temps administratif
-                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                        qualité de soins et un gain de temps précieux.
+                    <p class="hidden lg:block">
+                        Suivez l’historique de vos missions et analysez vos performances pour optimiser votre activité.
+                        Bénéficiez d’un retour détaillé sur vos interventions, pour toujours améliorer
+                        votre gestion du temps et vos compétences.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -182,37 +231,64 @@
                         </Button>
                     </div>
                 </div>
-                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
                         src="/home/A group of young people.png"
                         alt="ensemble des jeunes"
-                        class="w-full max-w-2xs lg:max-w-none z-20"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Historique et suivi personnalisé
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="-mt-10 relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
-                <div>
+            <div class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
+                <div class="relative">
                     <NuxtImg
                         src="/home/male nurse.png"
                         alt="un infirmier"
-                        class="w-full"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Communication et <br>
+                            Réseau
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="space-y-6">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
+                    <h3 class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl  text-primary font-bold">
                         Communication et <br>
                         Réseau
                     </h3>
-                    <h4 class="text-lg lg:text-xl text-primary">Mise en relation faciliter</h4>
-                    <p>
-                        Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la
-                        centralisation des informations essentielles.
+                    <h4 class=" hidden lg:flex text-lg lg:text-xl text-primary">
+                        Mise en relation facilitée
+                    </h4>
+                    <p class="hidden lg:flex">
+                        Contactez directement l’infirmier ou l’établissement en quelques clics
+                        pour finaliser rapidement vos engagements.
+                        <br>
+                        Échangez via la messagerie intégrée pour une communication
+                        sécurisée et fluide.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -224,22 +300,19 @@
             </div>
         </div>
         <div class="container">
-            <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
+            <div class="relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
                 <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
-                        Developpement <br>
+                    <h3 class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold">
+                        Développement
                         de votre réseau professionnelles
                     </h3>
-                    <p>
-                        est une plateforme innovante conçue pour optimiser
-                        la gestion des infirmiers libéraux. Elle simplifie les
-                        remplacements, la planification des tournées et le suivi
-                        des formations. Grâce à des outils intelligents et automatisés,
-                        Infiswap améliore la coordination, réduit le temps administratif
-                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                        qualité de soins et un gain de temps précieux.
+                    <p class="hidden lg:flex">
+                        Renforcez vos liens avec d’autres professionnels de la santé et élargissez votre réseau
+                        grâce à de nouvelles collaborations.
+                        Augmentez votre visibilité auprès des établissements
+                        et des infirmiers à la recherche de remplaçants.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -248,38 +321,70 @@
                         </Button>
                     </div>
                 </div>
-                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
                         src="/home/computer.png"
                         alt="un ordinateur"
-                        class="w-full max-w-2xs lg:max-w-none z-20"
+                        class="w-full z-10 "
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Développement
+                            de votre réseau professionnelles
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
-                <div>
+            <div class="relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
+                <div class="relative">
                     <NuxtImg
                         src="/home/nurse_woman.png"
                         alt="une infirmier"
-                        class="w-full"
+                        class="w-full z-10"
                     />
+                    <div class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Gestion administrative
+                            <br>
+                            et Suivi des formartion
+                            <br>
+                            (Bientôt disponible)
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="space-y-6">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
-                        Gestion administrative <br>
-                        et Suivi des formartion <br>
+                    <h3 class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl  text-primary font-bold">
+                        Gestion administrative
+                        <br>
+                        et Suivi des formartion
+                        <br>
                         (Bientôt disponible)
                     </h3>
-                    <h4 class="text-lg lg:text-xl text-primary">Outil de gestion complete</h4>
-                    <p>
-                        Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la
-                        centralisation des informations essentielles.
+                    <h4 class=" hidden lg:flex text-lg lg:text-xl text-primary">
+                        Outil de gestion complète
+                    </h4>
+                    <p class="hidden lg:flex">
+                        Gérez vos remplacements et votre planning de manière centralisée,
+                        tout en réduisant le temps administratif.
+                        Accédez à des outils de suivi administratif et financier pour une vision
+                        claire de votre activité.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -291,22 +396,19 @@
             </div>
         </div>
         <div class="container">
-            <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
+            <div class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
                 <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3 class="xl:text-3xl lg:text-3xl md:text-xl lg:w-96 md:w-80 text-primary font-bold">
-                        Suivi des formation <br>
+                    <h3 class="lg:block hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold">
+                        Suivi des formation
+                        <br>
                         professionnelles
                     </h3>
-                    <p>
-                        est une plateforme innovante conçue pour optimiser
-                        la gestion des infirmiers libéraux. Elle simplifie les
-                        remplacements, la planification des tournées et le suivi
-                        des formations. Grâce à des outils intelligents et automatisés,
-                        Infiswap améliore la coordination, réduit le temps administratif
-                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                        qualité de soins et un gain de temps précieux.
+                    <p class="hidden lg:flex">
+                        Assurez-vous de rester en conformité avec les obligations légales grâce à un suivi détaillé de vos formations.
+                        <br>
+                        Recevez des rappels et gérez vos inscriptions pour maintenir vos compétences à jour et valoriser votre expertise.
                     </p>
-                    <div>
+                    <div class="hidden lg:block">
                         <Button
                             href="/"
                             class="mx-auto inline-flex lg:text-sm sm:text-xs px-10"
@@ -315,85 +417,99 @@
                         </Button>
                     </div>
                 </div>
-                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
                     <NuxtImg
                         src="/home/A nurse looking for medicine.png"
                         alt="une infirmier cherche medicament"
-                        class="w-full max-w-2xs lg:max-w-none z-20"
+                        class="w-full "
                     />
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden">
+                        <h3 class="text-primary text-lg font-bold">
+                            Suivi des formation
+                            <br>
+                            professionnelles
+                        </h3>
+                        <Button
+                            href="/"
+                            class="mt-2 text-sm px-6"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="my-8">
+        <div class="my-8 py-8 pb-8">
             <LayoutsLogo class="w-72 flex justify-center items-center mx-auto" />
             <h2 class="text-3xl text-center text-primary font-bold my-10">
-                Plus de temps pour soigner, Moins de temps à gérer !
+                Plus de Temps pour Soigner, Moins de Temps à Gérer !
             </h2>
+        </div>
+        <div class="relative font-light">
+            <div class="absolute inset-0 bg-tertiary/30 h-full w-full" />
 
-            <section class="grid grid-cols-2 gap-44 items-center bg-tertiary/30 p-20">
-                <div class="space-y-8">
-                    <h3
-                        class="text-primary text-3xl"
-                    >
-                        Infiswap...
-                    </h3>
+            <div class="container relative z-10 px-4 lg:px-8">
+                <div class="relative my-8 lg:my-16 z-20 flex flex-col lg:flex-row gap-8 lg:gap-44 items-center py-8 lg:py-20 mt-20">
+                    <div class="lg:space-y-6 space-y-8 order-1 relative z-30 flex-1">
+                        <h3 class="lg:text-4xl text-3xl text-primary font-bold text-center lg:text-left">
+                            Avec INFISWAP,
+                        </h3>
+                        <p class="text-center lg:text-start">
+                            Multipliez vos opportunités professionnelles en toute simplicité.
+                            Notre solution moderne et sécurisée vous offre plus de temps pour soigner,
+                            moins de temps à gérer, et une expérience utilisateur pensée pour répondre
+                            aux exigences d'un secteur en constante évolution.
+                            Découvrez dès aujourd'hui comment nous pouvons transformer
+                            votre quotidien professionnel !
+                        </p>
+                        <Button
+                            href="/register"
+                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
+                        >
+                            S'inscrire
+                        </Button>
+                    </div>
+                    <div class="order-2 flex justify-center lg:justify-end flex-1">
+                        <NuxtImg
+                            src="/home/A nurse with a woman.png"
+                            alt="A nurse with a woman"
+                            class="w-full h-auto lg:h-full lg:w-full object-cover z-20"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    <p>
-                        est une plateforme innovante conçue pour optimiser
-                        la gestion des infirmiers libéraux. Elle simplifie les
-                        remplacements, la planification des tournées et le suivi
-                        des formations. Grâce à des outils intelligents et automatisés,
-                        Infiswap améliore la coordination, réduit le temps administratif
-                        et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                        qualité de soins et un gain de temps précieux.
-                    </p>
-                    <p>
-                        la gestion des tournées est optimisée avec une planification automatisée,
-                        prenant en compte les contraintes horaires, les types de soins et la
-                        réduction des déplacements inutiles.
-                    </p>
-                    <p>
-                        Infiswap permet également un suivi complet des formations professionnelles,
-                        assurant la conformité aux obligations légales avec des rappels et une gestion
-                        simplifiée des inscriptions. <br>
-                        Le suivi des patients est amélioré par un historique détaillé des soins,
-                        facilitant la transmission entre soignants.
-                    </p>
+        <div class="container grid grid-cols-1 lg:grid-cols-[60%_40%] gap-16 md:gap-8 items-center py-8 lg:py-24">
+            <div class="order-1 lg:order-2 text-center lg:text-right space-y-8 lg:space-y-32">
+                <h3 class="text-primary text-3xl font-semibold text-center lg:text-left max-w-xs sm:max-w-lg mx-auto lg:mx-0">
+                    Inscrit-toi dès maintenant
+                    <br>
+                    pour garantir ton activité
+                </h3>
+
+                <div class="flex flex-col space-y-4 lg:flex-row lg:justify-between lg:items-center lg:space-y-0">
                     <Button
                         href="/register"
+                        class="w-44 mx-auto lg:mx-0 flex justify-center items-center"
                     >
                         S'inscrire
                     </Button>
+                    <Button
+                        variant="outline"
+                        class="w-44 mx-auto inline-flex rounded-3xl"
+                        href="/login"
+                    >
+                        Se connecter
+                    </Button>
                 </div>
-
-                <div>
-                    <NuxtImg
-                        src="/home/A nurse with a woman.png"
-                        alt="A nurse with a woman"
-                        class="w-full max-w-2xs lg:max-w-none z-20"
-                    />
-                </div>
-            </section>
-        </div>
-
-        <div class="container grid grid-cols-1 lg:grid-cols-2 items-center my-10">
-            <div class="order-1 lg:order-2 text-center lg:text-right">
-                <h3 class="text-primary text-3xl font-semibold text-center lg:text-left">
-                    Inscris-toi maintenant pour garantir ton activité
-                </h3>
-                <Button
-                    href="/register"
-                    class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
-                >
-                    S'inscrire
-                </Button>
             </div>
             <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
                 <NuxtImg
                     src="/home/nurse_with_stetho.png"
                     alt="Infirmière avec un stéthoscope"
-                    class="w-full max-w-2xs "
+                    class="h-full max-h-80 w-full object-cover rounded-3xl"
                 />
             </div>
         </div>
