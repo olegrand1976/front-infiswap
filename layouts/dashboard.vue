@@ -52,7 +52,10 @@
                             </DropdownMenuItem>
                             <!-- <DropdownMenuItem>Parametres</DropdownMenuItem> -->
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem @click="logout" class="hover:bg-primary">
+                            <DropdownMenuItem
+                                class="hover:bg-primary"
+                                @click="logout"
+                            >
                                 Déconnexion
                             </DropdownMenuItem>
                         </DropdownMenuContent>

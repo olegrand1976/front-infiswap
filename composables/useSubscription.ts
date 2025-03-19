@@ -40,6 +40,17 @@ export const useSubscription = () => {
         }
     };
 
+    const getCurrentSubscription = async () => {
+        try {
+            const response = await $apifetch<ActiveSubscriptionResponse>('api/subscription/active');
+
+            return response;
+        }
+        catch (error) {
+            console.error('Error checking active subscription:', error);
+        }
+    };
+
     const check = async (user: number) => {
         try {
             return await $apifetch<CheckResponse>(`/api/subscription/${user}/check`, { method: 'GET' });
@@ -57,6 +68,7 @@ export const useSubscription = () => {
         create,
         selectPlan,
         check,
+        getCurrentSubscription,
     };
 };
 
@@ -89,4 +101,19 @@ interface SubscriptionResponse {
 
 interface CheckResponse {
     status: 'active' | 'expired';
+}
+
+interface ActiveSubscriptionResponse {
+    status: 'active' | 'expired';
+    plan: Plan;
+    subscription: Subscription;
+}
+
+interface Subscription {
+    name: string;
+    stripe_status: string;
+    ends_at: string | null;
+    price_id: string;
+    stripe_subscription_id: string;
+    created_at: string;
 }
