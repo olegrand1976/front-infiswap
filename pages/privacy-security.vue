@@ -2,20 +2,22 @@
     <NuxtLayout name="guest-with-title">
         <template #title>
             <p class="font-light">
-                Politique de Protection des Données Personnelles
+                Charte de Bonne Conduite
             </p>
             <p class="mt-2 font-bold">
-                & sécurité
+                InfiSwap
             </p>
         </template>
         <div class="max-w-7xl mx-auto p-6">
             <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6">
-                La présente politique a pour objectif de vous informer sur la manière dont <a
+                InfiSwap est une plateforme fondée sur la confiance, la collaboration et le respect mutuel entre professionnels de santé.
+                <a
                     class="text-primary"
                     href="https://ll-it-sc.be/"
                     target="_blank"
                     rel="noopener noreferrer"
-                >LL-IT Software & Computer</a> collecte, utilise, protège et conserve vos données personnelles, ainsi que sur les mesures de sécurité mises en place pour garantir leur confidentialité.
+                >LL-IT Software & Computer</a> 
+                En intégrant notre communauté, chaque infirmier s’engage à respecter des principes éthiques essentiels afin de garantir une relation de travail harmonieuse et professionnelle.
             </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
                 <ol class="space-y-4 list-decimal pl-6 mt-2">
@@ -63,7 +65,7 @@ const { scrollToSection } = useScroll();
 
 const privacyPolicy = [
     {
-        title: 'Collecte des Données Personnelles',
+        title: 'Respect et courtoisie entre confrères',
         text: `<h4 class="font-semibold mt-2">Types de données collectées</h4>
             <ul class="list-disc pl-5 mt-1">
                 <li><strong>Informations fournies directement par l’utilisateur :</strong> lors de l’inscription, de la prise de contact via notre formulaire ou de l’utilisation de services spécifiques, des informations telles que votre nom, prénom, adresse e-mail et tout autre renseignement que vous choisissez de communiquer.</li>
