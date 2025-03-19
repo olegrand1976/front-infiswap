@@ -116,7 +116,7 @@ const {
     getPlans,
     selectPlan,
     loading,
-    plan
+    plan,
 } = useSubscription();
 
 definePageMeta({

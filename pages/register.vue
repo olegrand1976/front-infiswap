@@ -65,7 +65,7 @@
                         />
                         <p
                             v-if="error.lastname"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
+                            class="text-red-500 text-xs my-2 ms-[25%]"
                         >
                             {{ error.lastname }}
                         </p>
@@ -624,7 +624,7 @@ const { submit, inProgress } = useSubmit(
                         router.push('auth/verify-email');
                     }, 2000);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Erreur API :', error);
 
                     if (error.data && error.data.errors) {

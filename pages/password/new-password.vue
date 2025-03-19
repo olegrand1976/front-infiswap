@@ -46,8 +46,9 @@
                 </h1>
                 <div class="w-full container">
                     <form
+                        class="flex flex-col space-y-4"
                         @submit.prevent="resetPassword"
-                        class="flex flex-col space-y-4">
+                    >
                         <FormField name="email">
                             <FormItem>
                                 <FormLabel class="text-xs text-primary font-bold mb-12">
@@ -112,8 +113,9 @@
 
             <div class="w-full container mt-12">
                 <form
+                    class="flex flex-col space-y-8"
                     @submit.prevent="resetPassword"
-                    class="flex flex-col space-y-8">
+                >
                     <FormField name="email">
                         <FormItem>
                             <FormLabel class="text-xs text-primary font-bold mb-12">

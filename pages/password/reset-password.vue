@@ -46,8 +46,9 @@
                 </h1>
                 <div class="w-full container">
                     <form
+                        class="flex flex-col"
                         @submit.prevent="submitForm"
-                        class="flex flex-col">
+                    >
                         <FormField name="email">
                             <FormItem>
                                 <FormLabel class="text-xs text-primary font-bold mb-12">
@@ -98,8 +99,9 @@
 
             <div class="w-full container mt-16">
                 <form
+                    class="flex flex-col flex-grow"
                     @submit.prevent="submitForm"
-                    class="flex flex-col flex-grow">
+                >
                     <FormField name="email">
                         <FormItem>
                             <FormLabel class="text-xs text-primary font-bold mb-12">

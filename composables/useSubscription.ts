@@ -1,7 +1,6 @@
 export const useSubscription = () => {
     const { $apifetch } = useNuxtApp();
 
-
     const plans = useState<Plans>('plans', () => null);
     const loading = useState<boolean>('loading', () => false);
     const plan = useState<Plan>('plan', () => null);
@@ -69,4 +68,3 @@ export interface PaymentDetails {
     paymentMethodId: string;
     priceId: string;
 }
-

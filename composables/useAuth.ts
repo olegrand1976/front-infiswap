@@ -38,11 +38,11 @@ export const useAuth = () => {
 
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
-            .then(response => {
+            .then((response) => {
                 useCookie(AUTH_TOKEN).value = response.token;
                 return refresh();
             })
-            .catch(error => {
+            .catch((error) => {
                 throw error; // Propager l'erreur pour la capturer dans useSubmit()
             });
     }
