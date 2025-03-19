@@ -23,16 +23,29 @@ export const useSubscription = () => {
         plan.value = selected;
     };
 
-    const create = async (payment: PaymentDetails): Promise<void> => {
+    const create = async (priceId: string): Promise<SubscriptionResponse | null> => {
         loading.value = true;
         try {
-            await $apifetch('api/subscription/create', { method: 'POST', body: payment });
+            const response = await $apifetch<SubscriptionResponse>('api/subscription/create', { method: 'POST', body: {
+                priceId: priceId,
+            } });
+
+            return response;
         }
         catch (error) {
             console.error('Error creating subscription:', error);
         }
         finally {
             loading.value = false;
+        }
+    };
+
+    const check = async (user: number) => {
+        try {
+            return await $apifetch<CheckResponse>(`/api/subscription/${user}/check`, { method: 'GET' });
+        }
+        catch (error) {
+            console.error('Error checking subscription:', error);
         }
     };
 
@@ -43,6 +56,7 @@ export const useSubscription = () => {
         plan,
         create,
         selectPlan,
+        check,
     };
 };
 
@@ -67,4 +81,12 @@ export interface Plans {
 export interface PaymentDetails {
     paymentMethodId: string;
     priceId: string;
+}
+
+interface SubscriptionResponse {
+    url: string;
+}
+
+interface CheckResponse {
+    status: 'active' | 'expired';
 }
