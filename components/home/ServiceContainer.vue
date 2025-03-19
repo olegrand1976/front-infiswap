@@ -4,24 +4,24 @@
             <div
                 class="mt-3 flex relative flex-col sm:container md:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-8"
             >
-                <div class="z-10 mx-6 sm:mx-0">
+                <div class="container w-full max-w-2xl ">
                     <NuxtImg
                         src="/home/equipe_infirmier.png"
                         alt="Image d'une equipe infirmier"
-                        class="w-full lg:h-auto lg:w-[38rem] lg:object-contain lg:rounded-none md:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
+                        class="w-full lg:object-contain lg:rounded-none lg:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
                     />
                 </div>
 
                 <div
-                    class="px-8 md:px-0 mt-8 sm:mt-0 flex flex-col space-y-8"
+                    class="px-8 md:px-0 mt-18 sm:mt-0 flex flex-col space-y-8"
                 >
                     <h3
-                        class="text-center md:text-start xl:text-4xl lg:text-3xl text-xl 2xl:w-full md:w-96 text-primary font-bold"
+                        class="mt-4 text-center lg:text-start xl:text-4xl lg:text-3xl text-xl 2xl:w-full lg:w-96 w-72 text-primary font-bold"
                     >
                         Je cherche un remplacement à effectuer
                     </h3>
                     <p
-                        class="text-center md:text-start 2xl:w-[38rem] lg:w-[32rem] md:w-96"
+                        class=" text-center lg:text-start "
                     >
                         <span class="font-semibold">Vous cherchez un remplacement ?</span>
                         Avec InfiSwap, accédez en un clic aux annonces disponibles près de chez vous.

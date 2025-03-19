@@ -145,7 +145,7 @@
                             {{ card.title }}
                         </CardTitle>
                     </CardHeader>
-                    <CardContent class="p-4 text-sm text-black space-y-0">
+                    <CardContent class="p-4 text-xl text-black space-y-0">
                         <div class="hidden sm:block sm:space-y-6">
                             <p
                                 v-for="(item, key) in card.content"

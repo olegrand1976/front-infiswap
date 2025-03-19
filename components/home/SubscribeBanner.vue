@@ -4,24 +4,6 @@
         :class="bgClass"
     >
         <div class="flex flex-col sm:h-[275px] justify-center items-center space-y-8 w-96 sm:w-full shadow sm:shadow-none">
-            <div class="bg-primary sm:py-0 py-4 sm:bg-transparent rounded-t-2xl w-full sm:w-auto">
-                <h3
-                    class="text-center xl:text-3xl md:text-2xl sm:text-xl font-bold"
-                    :class="titleClass"
-                >
-                    S'inscrire à la newsletter
-                </h3>
-            </div>
-            <p class="lg:w-[34rem] sm:w-[24rem] w-full text-center xl:text-base lg:text-sm text-xs pb-16 px-9 sm:py-0 sm:px-0">
-                Inscrivez-vous à notre newsletter pour recevoir nos futures communications. Vous pouvez vous désabonner à tout moment.
-                Pour en savoir plus sur notre politique de protection des données,
-                <NuxtLink
-                    to="/"
-                    :class="linkClass"
-                >
-                    cliquez ici.
-                </NuxtLink>
-            </p>
             <form
                 class="hidden lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10"
                 :class="formClass"
