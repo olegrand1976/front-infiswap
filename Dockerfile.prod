@@ -43,6 +43,22 @@ COPY --from=build /app/public ./public
 RUN rm -rf node_modules/.cache && \
     npm cache clean --force
 
+# Vérifier si USER ET GROUP www-data (33) et le créer si non existant 
+RUN if [ $(getent group www-data) ]; then \
+    echo "Group www-data exists"; \
+else \
+    groupadd -g 33 www-data; \
+fi
+
+RUN if [ $(getent passwd www-data) ]; then \
+    echo "User www-data exists"; \
+else \
+    useradd -r -u 33 -g www-data www-data; \
+fi
+
+# Changer le propriétaire du dossier de l'application
+RUN chown -R www-data:www-data /app
+
 # Exposer le port 3000
 EXPOSE 3000
 
