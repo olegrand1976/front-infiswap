@@ -115,11 +115,18 @@ export default defineNuxtConfig({
       devtools: process.env.NODE_ENV !== 'production'
     },
   
-    image: {
+    /*     image: {
       dir: 'assets/images'
       //dir: 'public'
-    },
-  
+    }, */
+
+    image: {
+      provider: 'static',
+      // Assurez-vous que ce chemin correspond à l'endroit où vous copiez vos images dans le dossier public
+      dir: 'assets/images'
+    },    
+    
+    
     shadcn: {
       prefix: '',
       componentDir: './components/ui'

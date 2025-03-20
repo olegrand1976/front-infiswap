@@ -1,40 +1,36 @@
-# Version de Node
-ARG NODE_VERSION=20.17.0
+ARG NODE_VERSION=20.18.0
 
-# Image de base
 FROM node:${NODE_VERSION}-slim as base
-
-# Définir le port par défaut
 ARG PORT=3000
-ENV PORT=${PORT}
-
 WORKDIR /src
 
-# Étape de build
+# Phase de build
 FROM base as build
-
-# Copier les fichiers de dépendances
 COPY --link package.json package-lock.json ./
-
-# Installer les dépendances
 RUN npm install
-
-# Copier l’ensemble du projet
 COPY --link . .
-
-# Construire l’application Nuxt (SSG ou SSR)
 RUN npm run build
 
-# Étape d'exécution
+# Phase d'exécution
 FROM base
-
-# Définir l'environnement de production
+ENV PORT=${PORT}
 ENV NODE_ENV=production
+# Ajout de node_modules/.bin dans le PATH
+ENV PATH=/src/node_modules/.bin:$PATH
 
-# Copier le dossier .output généré depuis l'étape de build
+# Copier le dossier .output
 COPY --from=build /src/.output /src/.output
-# (Optionnel) Si vous utilisez des dépendances non bundlées, vous pouvez aussi copier node_modules
-# COPY --from=build /src/node_modules /src/node_modules
+# Copier le dossier public généré
+COPY --from=build /src/public /src/public
+# Copier les assets (si besoin)
+COPY --from=build /src/assets /src/assets
+# (Optionnel) Copier les images depuis assets dans public/images
+RUN mkdir -p /src/public/images && cp -a /src/assets/images/. /src/public/images/
 
-# Démarrer l’application en mode production
+# USER ET GROUP WWW-DATA
+RUN groupadd -r www-data && useradd -r -g www-data www-data
+RUN chown -R www-data:www-data /src
+USER www-data
+
+WORKDIR /src
 CMD [ "node", ".output/server/index.mjs" ]
