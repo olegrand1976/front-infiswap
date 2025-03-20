@@ -1,5 +1,9 @@
 
-./server
+.server
 .nuxt
 .vscode
 node_modules
+.output
+
+.gitignore
+README.md
