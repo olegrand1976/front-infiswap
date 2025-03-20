@@ -149,6 +149,7 @@ import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 const { $toast } = useNuxtApp();
+const router = useRouter();
 
 definePageMeta({
     layout: 'auth',
@@ -171,7 +172,7 @@ const submitForm = async (event: Event) => {
     }
 
     try {
-        const response = await $apifetch('http://localhost:8094/api/forgot-password', {
+        const response = await $apifetch('/api/forgot-password', {
             method: 'POST',
             body: JSON.stringify({ email: email.value }),
             headers: {
@@ -184,12 +185,18 @@ const submitForm = async (event: Event) => {
                 title: 'Succès',
                 description: 'Vérifiez votre boîte de réception.',
             });
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
         }
         else {
             $toast({
                 title: 'Succès',
                 description: 'Vérifiez votre boîte de réception.',
             });
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
         }
     }
     catch (error) {

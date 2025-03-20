@@ -1,24 +1,20 @@
 <template>
-    <div class="flex flex-col justify-between h-screen">
-        <header class="bg-tertiary/30 h-20 flex justify-start items-center">
-            <div class="container">
-                <LayoutsLogo class="w-36" />
-            </div>
-        </header>
-
-        <!-- <h1 class="text-3xl font-semibold text-primary underline mb-6">
-            Confirmation - règlement d'utilisation de la plateforme
-        </h1> -->
+    <NuxtLayout name="guest-with-title">
+        <template #title>
+            <p class="font-light">
+                Pourquoi choisir notre site
+            </p>
+        </template>
         <section class="container mx-auto px-6 py-16">
             <h2 class="text-3xl font-semibold text-primary text-center mb-8">
                 Bienvenue sur notre plateforme !
             </h2>
+            <p class="text-base text-green-600 leading-relaxed text-center mb-10">
+                Veuillez vérifier votre boîte de réception, un email vous a été envoyé.
+            </p>
             <p class="text-base text-gray-700 leading-relaxed text-center mb-8">
                 Veuillez sélectionner l'option qui correspond à vos besoins afin d'accéder à votre espace personnalisé.
             </p>
-            <!-- <p class="text-base text-gray-600 leading-relaxed text-center mb-10">
-                Choisissez l'option qui correspond à vos besoins :
-            </p> -->
             <ul class="list-disc pl-6 space-y-8 text-gray-700 mx-auto max-w-3xl">
                 <li>
                     <span class="font-semibold text-xl text-primary">1 - Je cherche un remplacement</span>
@@ -45,22 +41,19 @@
             </h5>
 
             <form
-                class="mt-10 space-y-8"
                 @submit.prevent="handleSubmit"
-            >
+                class="mt-10 space-y-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        <div
-                            v-for="option in options"
-                            :key="option.value"
-                            :class="[
-                                'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
-                                formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
-                            ]"
-                            @click="selectOption(option.value)"
-                        >
-                            <span class="text-lg font-medium text-center">{{ option.label }}</span>
-                        </div>
+                    <div
+                        v-for="option in options"
+                        :key="option.value"
+                        :class="[
+                            'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
+                            formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
+                        ]"
+                        @click="selectOption(option.value)"
+                    >
+                        <span class="text-lg font-medium text-center">{{ option.label }}</span>
                     </div>
                 </div>
 
@@ -74,27 +67,7 @@
                 </div>
             </form>
         </section>
-
-        <footer>
-            <div class="bg-primary text-white py-4 md:px-0 px-8">
-                <p class="text-center text-[0.6em] md:text-xs">
-                    <NuxtLink to="/legal-notice">Mentions légales</NuxtLink> -
-                    <NuxtLink to="/privacy-security">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
-                    <NuxtLink to="/terms">CGU</NuxtLink>
-                </p>
-            </div>
-
-            <div class="container py-4 w-full text-center bg-muted">
-                <NuxtLink
-                    to="https://www.ll-it-sc.be"
-                    target="_blank"
-                    class="text-center text-[0.6em] md:text-xs"
-                >
-                    @2025 LL-IT Software & Computer - Tous droits réservés
-                </NuxtLink>
-            </div>
-        </footer>
-    </div>
+    </NuxtLayout>
 </template>
 
 <script setup>
@@ -102,6 +75,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const { $apifetch } = useNuxtApp();
+const { $toast } = useNuxtApp();
 const router = useRouter();
 
 const options = [
@@ -132,8 +106,22 @@ const handleSubmit = async (event) => {
             body: { choice: formData.value },
         });
 
-        console.log('Réponse API :', response);
-        router.push('/privacy-security');
+        if (response === 200) {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                navigateTo('/legal-chart');
+            }, 2000);
+        }
+        else {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                navigateTo('/dashboard');
+            }, 2000);
+        }
     }
     catch (error) {
         console.error('Erreur API :', error);

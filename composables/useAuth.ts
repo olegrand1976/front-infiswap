@@ -32,12 +32,6 @@ export const useAuth = () => {
         await refresh();
     }
 
-    // async function register(credentials) {
-    //     await $apifetch('/api/register', { method: 'post', body: credentials })
-    //         .then(response => useCookie(AUTH_TOKEN).value = response.token);
-    //     await refresh();
-    // }
-
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {

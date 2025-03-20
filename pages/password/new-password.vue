@@ -176,7 +176,6 @@
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-// import axios from 'axios';
 
 const { $toast } = useNuxtApp();
 
@@ -202,14 +201,19 @@ const getUrlParams = () => {
     formData.value.token = urlParams.get('token');
 };
 
+const { $apifetch } = useNuxtApp();
+
 const route = useRoute();
 const token = ref(route.query.token as string || '');
 
 const resetPassword = async () => {
     getUrlParams();
     if (formData.value.password !== formData.value.passwordConfirm) {
-        alert('Les mots de passe ne correspondent pas.');
-        return;
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Les mots de passe ne correspondent pas.',
+            variant: 'destructive',
+        });
     }
 
     const data = {
@@ -220,25 +224,31 @@ const resetPassword = async () => {
     };
 
     try {
-        // Envoi de la requête POST à l'API
-        // const response = await axios.post('http://localhost:8094/api/forgot-password', data);
+        const response = await $apifetch('/api/reset-password', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-        // Traitement de la réponse
-        // if (response.data.success) {
-        // $toast({
-        // title: 'Succès',
-        // description: 'Vérifiez votre boîte de réception.',
-        // });
-        // setTimeout(() => {
-        //     window.location.href = '/login';
-        // }, 3000);
-        // }
-        // else {
-        // $toast({
-        // title: 'Succès',
-        // description: 'Vérifiez votre boîte de réception.',
-        // });
-        // }
+        if (response && response.data && response.data.success) {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        }
+        else {
+            $toast({
+                title: 'Succès',
+                description: 'Votre nouveau mot de passe a été enregistré',
+            });
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        }
     }
     catch (error) {
         console.error('Erreur lors de l\'envoi des données :', error);
