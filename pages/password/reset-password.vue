@@ -149,6 +149,7 @@ import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 const { $toast } = useNuxtApp();
+const router = useRouter();
 
 definePageMeta({
     layout: 'auth',
@@ -184,6 +185,9 @@ const submitForm = async (event: Event) => {
                 title: 'Succès',
                 description: 'Vérifiez votre boîte de réception.',
             });
+            setTimeout(() => {
+                router.push('auth/verify-email');
+            }, 2000);
         }
         else {
             $toast({

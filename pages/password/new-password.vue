@@ -229,7 +229,7 @@ const resetPassword = async () => {
             },
         });
 
-        if (response.data.success) {
+        if (response && response.data && response.data.success) {
             $toast({
                 title: 'Succès',
             });

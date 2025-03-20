@@ -75,6 +75,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const { $apifetch } = useNuxtApp();
+const { $toast } = useNuxtApp();
 const router = useRouter();
 
 const options = [
@@ -105,8 +106,14 @@ const handleSubmit = async (event) => {
             body: { choice: formData.value },
         });
 
-        console.log('Réponse API :', response);
-        router.push('/legal-chart');
+        if (response.status === 200) {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                router.push('legal-chart');
+            }, 2000);
+        }
     }
     catch (error) {
         console.error('Erreur API :', error);
