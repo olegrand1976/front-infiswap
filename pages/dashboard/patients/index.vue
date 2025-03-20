@@ -70,7 +70,7 @@
                         v-if="nursePatients.length == 0"
                     >
                         <p class="mt-16 text-center text-black/60">
-                            Vous n'avez aucun patient pour le moment
+                            Vous n'avez aucun patient pour le moment ou Veuillez patienter
                         </p>
                     </template>
                     <template

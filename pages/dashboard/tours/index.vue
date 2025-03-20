@@ -86,7 +86,7 @@
                 </div>
                 <div v-if="patient && patient.patient">
                     <div class="mt-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
                                     <div class="flex-shrink-0">
@@ -101,8 +101,8 @@
                                 </div>
 
                                 <div class="bg-gray-100">
-                                    <div class="mt-4 bg-primary text-white p-2.5 rounded-t-lg font-bold text-lg">
-                                        Information :
+                                    <div class="mt-4 bg-primary h-11 text-white p-2.5 rounded-t-lg font-bold text-lg">
+                                        <!-- Information : -->
                                     </div>
 
                                     <div class="mt-4 p-4 rounded-lg shadow">
@@ -153,6 +153,33 @@
                                         </div> -->
                                     </div>
                                 </div>
+
+                                <div class="w-full">
+                                <div class="bg-gray-100 mt-4 rounded-lg">
+                                    <div class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg">
+                                        Liste des types de soins
+                                    </div>
+                                    <div class="flex justify-center w-full" v-if="careTypeLoading">
+                                        Loading care type list ...
+                                    </div>
+                                    <div v-if="careTypeError">
+                                        Error: {{ careTypeError.message }}
+                                    </div>
+                                    <div class="p-4 space-y-2">
+                                        <div
+                                            v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0">
+                                            <div v-for="(care, index) in careTypeFilter" :key="index"
+                                                class="bg-gray-200 p-3 rounded-lg mt-2">
+                                                {{ care.care_type_name }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-else-if="careType && (!careType.patient_care_types || careType.patient_care_types.length === 0)">
+                                            Pas de données pour l'instant
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
 
                             <div class="w-full">
@@ -207,32 +234,7 @@
                                 </div>
                             </div>
 
-                            <div class="w-full">
-                                <div class="bg-gray-100 rounded-lg">
-                                    <div class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg">
-                                        Liste des types de soins
-                                    </div>
-                                    <div v-if="careTypeLoading">
-                                        Loading care type list ...
-                                    </div>
-                                    <div v-if="careTypeError">
-                                        Error: {{ careTypeError.message }}
-                                    </div>
-                                    <div class="p-4 space-y-2">
-                                        <div
-                                            v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0">
-                                            <div v-for="(care, index) in careType.patient_care_types" :key="index"
-                                                class="bg-gray-200 p-3 rounded-lg mt-2">
-                                                {{ care.care_type_name }}
-                                            </div>
-                                        </div>
-                                        <div
-                                            v-else-if="careType && (!careType.patient_care_types || careType.patient_care_types.length === 0)">
-                                            Pas de données pour l'instant
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -258,6 +260,7 @@ const { tours, error, loading, fetchTours } = useTours();
 const { careType, careTypeLoading, careTypeError, fetchCareType } = useCareType();
 const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
+const careTypeFilter = ref();
 const selectedPatientId = ref(null);
 
 const isDialogOpen = ref(false);
@@ -357,7 +360,11 @@ const handleFetchCareType = (patientId) => {
     }
     else {
         selectedPatientId.value = patientId;
+
         fetchCareType(patientId);
+         careTypeFilter.value = getUniqueCareTypes(careType.value);
+        console.log('careType.value.patient_care_types :', careType.value.patient_care_types);
+        
         if (formattedStart.value) {
             fetchPatient(patientId, formattedStart.value, formattedStart.value);
         }
@@ -366,6 +373,22 @@ const handleFetchCareType = (patientId) => {
         }
     }
 };
+
+const getUniqueCareTypes = (data: any) => {
+    console.log('data :', data);    
+  if (!data?.patient_care_types || !Array.isArray(data.patient_care_types)) {
+    return [];
+  }
+
+  const uniqueMap = new Map();
+
+  data.patient_care_types.forEach((item) => {
+    uniqueMap.set(item.care_type_id, item); // Utilise l'ID comme clé pour éviter les doublons
+  });
+
+  return Array.from(uniqueMap.values());
+}
+
 
 watch(tours, (newTours) => {
     if (newTours.length > 0) {
