@@ -28,8 +28,13 @@ COPY --from=build /src/assets /src/assets
 RUN mkdir -p /src/public/images && cp -a /src/assets/images/. /src/public/images/
 
 # USER ET GROUP WWW-DATA
-RUN groupadd -r www-data && useradd -r -g www-data www-data
-RUN chown -R www-data:www-data /src
+RUN if ! getent group www-data >/dev/null 2>&1; then \
+      groupadd -r www-data; \
+    fi && \
+    if ! id -u www-data >/dev/null 2>&1; then \
+      useradd -r -g www-data www-data; \
+    fi
+    
 USER www-data
 
 WORKDIR /src
