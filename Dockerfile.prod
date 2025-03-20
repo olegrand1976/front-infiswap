@@ -4,6 +4,9 @@ FROM node:${NODE_VERSION}-slim AS build
 
 WORKDIR /app
 
+# Définir l'environnement en production dès le début pour la build
+ENV NODE_ENV=production
+
 # Copier uniquement les fichiers nécessaires pour éviter de reconstruire inutilement
 COPY package*.json ./
 
