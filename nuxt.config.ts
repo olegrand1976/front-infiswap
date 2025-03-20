@@ -116,7 +116,9 @@ export default defineNuxtConfig({
     },
 
     image: {
-        provider: 'static',
+    //   provider: 'static',
+        // Assurez-vous que ce chemin correspond à l'endroit où vous copiez vos images dans le dossier public
+        dir: 'assets/images',
     },
 
     shadcn: {
