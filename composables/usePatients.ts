@@ -47,6 +47,14 @@ export const createPatient = async (formData) => {
     );
 };
 
+export const createPatientDocument = async (formData) => {
+    const { $apifetch } = useNuxtApp();
+
+    await $apifetch('/api/patients/documents',
+        { method: 'post', body: formData },
+    );
+};
+
 export const detailPatient = (patientId) => {
     const { $apifetch } = useNuxtApp();
 

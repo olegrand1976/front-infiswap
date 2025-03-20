@@ -117,30 +117,34 @@
                 <div class="bg-gray-100 rounded-b">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span>Information</span>
-                        <PencilSquareIcon class="w-5 text-white" />
+                        <PencilSquareIcon
+                            class="w-5 text-white cursor-pointer"
+                            @click="openCareInfoDialog"
+                        />
                     </h3>
 
                     <div class="px-4 py-6">
-                        <template v-if="patient && Array.isArray(patient.care_informations) && patient.care_informations.length > 0">
+                        <template v-if="formData.care_informations && formData.care_informations.length > 0">
                             <div
-                                v-for="(careInformation, careIndex) in patient.care_informations"
+                                v-for="(careInformation, careIndex) in formData.care_informations"
                                 :key="careIndex"
-                                class="space-y-5"
+                                class="space-y-5 mb-4"
                             >
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
-                                        Type de maladie
+                                        Action
                                     </h6>
                                     <p>
-                                        {{ careInformation.record_type }}
+                                        {{ careInformation.recordType }}
                                     </p>
                                 </div>
+
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
                                         Facteur
                                     </h6>
                                     <p>
-                                        {{ careInformation.record_name }}
+                                        {{ careInformation.recordName }}
                                     </p>
                                 </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
@@ -148,7 +152,7 @@
                                         Gravité
                                     </h6>
                                     <p>
-                                        {{ severities[careInformation.record_severity] }}
+                                        {{ severities[careInformation.recordSeverity] }}
                                     </p>
                                 </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
@@ -156,7 +160,7 @@
                                         Détail
                                     </h6>
                                     <p>
-                                        {{ careInformation.record_details }}
+                                        {{ careInformation.recordDetails }}
                                     </p>
                                 </div>
                                 <hr class="border border-gray-200">
@@ -169,6 +173,103 @@
                         </template>
                     </div>
                 </div>
+
+                <Dialog v-model:open="isCareInfoDialogOpen">
+                    <DialogContent class="sm:max-w-[600px]">
+                        <DialogHeader>
+                            <DialogTitle>Gestion des informations de soins</DialogTitle>
+                            <DialogDescription>
+                                Ajoutez, modifiez ou supprimez les informations de soins du patient.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div class="space-y-6 max-h-[400px] overflow-y-auto">
+                            <div
+                                v-for="(info, index) in formData.care_informations"
+                                :key="index"
+                                class="p-4 bg-gray-50 rounded-lg relative"
+                            >
+                                <XMarkIcon
+                                    class="w-5 h-5 absolute top-2 right-2 text-primary cursor-pointer"
+                                    @click="removeCareInfo(index)"
+                                />
+
+                                <div class="space-y-4">
+                                    <div class="space-y-2">
+                                        <Label>Action</Label>
+                                        <Input
+                                            v-model="info.recordType"
+                                            placeholder="Entrez l'action à faire"
+                                            class="w-full outline outline-gray-200"
+                                        />
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <Label>Facteur</Label>
+                                        <Input
+                                            v-model="info.recordName"
+                                            placeholder="Entrez le facteur"
+                                            class="w-full outline outline-gray-200"
+                                        />
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <Label>Gravité</Label>
+                                        <Select v-model="info.recordSeverity">
+                                            <SelectTrigger class="text-nowrap">
+                                                <SelectValue placeholder="Sélectionnez la gravité" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="low">
+                                                    Faible
+                                                </SelectItem>
+                                                <SelectItem value="medium">
+                                                    Moyen
+                                                </SelectItem>
+                                                <SelectItem value="hight">
+                                                    Élevé
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <Label>Détails</Label>
+                                        <Textarea
+                                            v-model="info.recordDetails"
+                                            placeholder="Entrez les détails"
+                                            class="w-full border border-gray-200"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <Button
+                                variant="outline"
+                                @click="addNewCareInfo"
+                            >
+                                <PlusIcon class="w-4 h-4 mr-2" />
+                                Ajouter une information
+                            </Button>
+
+                            <div class="space-x-2">
+                                <Button
+                                    variant="outline"
+                                    @click="cancelCareInfoEdit"
+                                >
+                                    Annuler
+                                </Button>
+                                <Button
+                                    @click="saveCareInformations"
+                                >
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Button
@@ -357,31 +458,43 @@
                     Liste des documents
                 </h2>
 
-                <Button class="w-full flex items-center justify-center mt-4">
-                    <PlusIcon class="w-5" />
-                    Ajouter un document
-                </Button>
+                <div class="relative">
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
+                        class="hidden"
+                        @change="handleFileSelect"
+                    >
+                    <Button
+                        class="w-full flex items-center justify-center mt-4"
+                        @click="triggerFileUpload"
+                    >
+                        <PlusIcon class="w-5" />
+                        Ajouter un document
+                    </Button>
+                </div>
 
                 <div class="grid my-4">
                     <Table>
                         <TableBody>
                             <template
-                                v-if="prescriptions.length == 0"
+                                v-if="!formData.patient_documents.length"
                             >
-                                <p class="mt-16 text-center text-black/60">
+                                <p class="mt-8 text-center text-black/60">
                                     Aucun document disponible pour le moment
                                 </p>
                             </template>
                             <template
-                                v-for="prescription in prescriptions"
+                                v-for="(document, index) in formData.patient_documents"
                                 v-else
-                                :key="prescription.id"
+                                :key="index"
                             >
                                 <TableRow class="grid grid-cols-[75%_12%_12%] gap-2 border border-none overflow-x-hidden">
                                     <TableCell class="bg-gray-100">
                                         <div class="flex h-10 rounded bg-gray-200 justify-between items-center">
                                             <span class="truncate w-full px-2 text-center mx-auto">
-                                                {{ prescription.name }}
+                                                {{ document.note }}
                                             </span>
                                         </div>
                                     </TableCell>
@@ -391,7 +504,10 @@
                                         </div>
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
-                                        <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
+                                        <div
+                                            class="flex h-10 rounded bg-gray-200 justify-center items-center"
+                                            @click="removeDocument(index)"
+                                        >
                                             <TrashIcon class="w-5 cursor-pointer" />
                                         </div>
                                     </TableCell>
@@ -400,6 +516,35 @@
                         </TableBody>
                     </Table>
                 </div>
+
+                <Dialog
+                    v-model:open="isDocumentDialogOpen"
+                >
+                    <DialogContent class="sm:max-w-[28rem]">
+                        <DialogHeader>
+                            <DialogTitle>Ajouter une note</DialogTitle>
+                            <DialogDescription>
+                                Veuillez ajouter une note descriptive pour le document sélectionné.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div class="grid gap-4 py-4">
+                            <div class="grid gap-2">
+                                <Label for="note">Note</Label>
+                                <Input
+                                    id="note"
+                                    v-model="documentNote"
+                                    placeholder="Ex: Rapport de test sanguin"
+                                    class="outline outline-gray-300 w-full"
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button @click="handleDocumentSubmit">
+                                Confirmer
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Button
@@ -424,7 +569,7 @@ import {
     TrashIcon,
 } from '@heroicons/vue/24/solid';
 import { useCareTypes } from '~/composables/useCareTypes';
-import { detailPatient } from '~/composables/usePatients';
+import { detailPatient, createPatientDocument } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
@@ -450,6 +595,7 @@ interface Patient {
     visit_times: string[];
     patient_care_type: string[];
     patient_documents: string[];
+    patientId: null;
 }
 
 const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
@@ -559,7 +705,17 @@ const formData = ref({
     visits: [],
     patient_care_type: [],
     patient_documents: [],
+    patientId: '',
 });
+
+const transformCareInformations = (careInfo: any[]) => {
+    return careInfo.map(info => ({
+        recordType: info.record_type,
+        recordName: info.record_name,
+        recordSeverity: info.record_severity,
+        recordDetails: info.record_details,
+    }));
+};
 
 const initializeFormData = () => {
     if (patient.value && user.value?.nurse) {
@@ -575,10 +731,11 @@ const initializeFormData = () => {
             careStartDate: patient.value.care_start_date || '',
             careEndDate: patient.value.care_end_date || '',
             availability: patient.value.availability || [],
-            care_informations: patient.value.care_informations || [],
+            care_informations: transformCareInformations(patient.value.care_informations || []),
             visits: migrateVisitTimes(patient.value.visit_times || []),
             patient_care_type: patient.value.patient_care_type || [],
             patient_documents: patient.value.patient_documents || [],
+            patientId: patient.value.id,
         };
     }
 };
@@ -597,7 +754,7 @@ const days = {
 const severities = {
     low: 'Faible',
     medium: 'Moyen',
-    high: 'Elevé',
+    hight: 'Elevé',
 };
 
 const isOpenDialog = ref(false);
@@ -690,16 +847,95 @@ const updatePatientCareTypes = () => {
     formData.value.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
 };
 
-const prescriptions = ref([
-    {
-        id: 1,
-        name: 'Maladie cardiaque',
-    },
-    {
-        id: 2,
-        name: 'Soins de la peau',
-    },
-]);
+const isCareInfoDialogOpen = ref(false);
+const editableCareInformations = ref([]);
+
+const openCareInfoDialog = () => {
+    editableCareInformations.value = formData.value.care_informations.map(info => ({ ...info })) || [];
+    isCareInfoDialogOpen.value = true;
+};
+
+const addNewCareInfo = () => {
+    formData.value.care_informations.push({
+        recordType: '',
+        recordName: '',
+        recordSeverity: '',
+        recordDetails: '',
+    });
+};
+
+const removeCareInfo = (index: number) => {
+    formData.value.care_informations.splice(index, 1);
+};
+
+const cancelCareInfoEdit = () => {
+    isCareInfoDialogOpen.value = false;
+    editableCareInformations.value = [];
+};
+
+const saveCareInformations = () => {
+    isCareInfoDialogOpen.value = false;
+    $toast({
+        description: 'Informations de soins mises à jour avec succès',
+    });
+};
+
+// New document upload related code
+const fileInput = ref<HTMLInputElement | null>(null);
+const selectedFile = ref<File | null>(null);
+const documentNote = ref('');
+const isDocumentDialogOpen = ref(false);
+
+const triggerFileUpload = () => {
+    fileInput.value?.click();
+};
+
+const handleFileSelect = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+        selectedFile.value = input.files[0];
+        isDocumentDialogOpen.value = true;
+    }
+};
+
+const handleDocumentSubmit = async () => {
+    if (selectedFile.value && documentNote.value) {
+        formData.value.patient_documents.push({
+            path: selectedFile.value.name,
+            note: documentNote.value,
+        });
+
+        documentNote.value = '';
+        selectedFile.value = null;
+        isDocumentDialogOpen.value = false;
+
+        if (fileInput.value) {
+            fileInput.value.value = '';
+        }
+
+        await handleDocumentUpdate();
+
+        $toast({
+            description: 'Document ajouté avec succès',
+        });
+    }
+};
+
+const handleDocumentUpdate = async () => {
+    const documentData = {
+        patient_documents: formData.value.patient_documents,
+        patientId: formData.value.patientId,
+    };
+
+    await createPatientDocument(documentData);
+};
+
+const removeDocument = (index: number) => {
+    formData.value.patient_documents.splice(index, 1);
+    $toast({
+        description: 'Document supprimé',
+    });
+};
 
 const router = useRouter();
 
@@ -707,7 +943,7 @@ const {
     submit,
     inProgress,
 } = useSubmit(
-    () => {
+    async () => {
         updatePatientCareTypes();
 
         const dataToSubmit = {
@@ -715,7 +951,9 @@ const {
             visits: transformVisitsForApi(formData.value.visits),
         };
 
-        return updatePatient(patient.value.id, dataToSubmit).then(() => {
+        try {
+            await updatePatient(patient.value.id, dataToSubmit);
+
             $toast({
                 description: 'Mise à jour du patient avec succès',
             });
@@ -723,7 +961,14 @@ const {
             setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
-        });
+        }
+        catch (e) {
+            console.error(e);
+            $toast({
+                description: 'Une erreur est survenue lors de la mise à jour',
+                variant: 'destructive',
+            });
+        }
     },
 );
 
