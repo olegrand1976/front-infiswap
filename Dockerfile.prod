@@ -40,11 +40,18 @@ COPY --from=build /app/.output ./.output
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/nuxt.config.* ./
+
+# Copier tous les fichiers publics
 COPY --from=build /app/public ./public
+
+# Copier les fichiers assets
 COPY --from=build /app/assets ./assets
 
-# Copier les images du dossier assets/images dans public/assets/images
-RUN mkdir -p ./public/assets/images && cp -r ./assets/images/* ./public/assets/images/
+# CORRECTION: Copier directement les images dans /public pour l'accès direct
+RUN mkdir -p ./public && cp -r ./assets/images/* ./public/
+
+# Vérifier les images copiées
+RUN ls -la ./public
 
 # Supprimer les caches inutiles
 RUN rm -rf node_modules/.cache && npm cache clean --force
