@@ -34,7 +34,11 @@ RUN if ! getent group www-data >/dev/null 2>&1; then \
     if ! id -u www-data >/dev/null 2>&1; then \
       useradd -r -g www-data www-data; \
     fi
-    
+
+# Changer le propriétaire du dossier /src
+RUN chown -R www-data:www-data /src
+
+# Changer l'utilisateur
 USER www-data
 
 WORKDIR /src
