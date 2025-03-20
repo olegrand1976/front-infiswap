@@ -176,7 +176,6 @@
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-// import axios from 'axios';
 
 const { $toast } = useNuxtApp();
 
