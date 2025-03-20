@@ -58,7 +58,10 @@
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
-                                <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
+                                <div
+                                    class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
+                                    title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
+                                >
                                     <h5 class="text-white text-xs">
                                         <span class="xl:hidden">CP</span>
                                         <span class="hidden xl:inline-block">Codes postaux</span>
@@ -425,7 +428,7 @@ watch(() => formData.cityTags, () => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth'],
+    middleware: ['verified'],
     ssr: false,
 });
 </script>
