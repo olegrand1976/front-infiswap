@@ -243,7 +243,7 @@ const resetPassword = async () => {
         else {
             $toast({
                 title: 'Succès',
-                description: 'Vérifiez votre boîte de réception.',
+                description: 'Votre nouveau mot de passe a été enregistré',
             });
             setTimeout(() => {
                 window.location.href = '/login';
