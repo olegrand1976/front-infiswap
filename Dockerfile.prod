@@ -1,11 +1,13 @@
 # Étape 1 : Construction de l'application
 ARG NODE_VERSION=20.17.0
+ARG NODE_ENV=production
+
 FROM node:${NODE_VERSION}-slim AS build
 
 WORKDIR /app
 
 # Définir l'environnement en production dès le début pour la build
-ENV NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 # Copier uniquement les fichiers nécessaires pour éviter de reconstruire inutilement
 COPY package*.json ./
