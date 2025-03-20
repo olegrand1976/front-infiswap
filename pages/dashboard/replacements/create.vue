@@ -1,8 +1,8 @@
 <template>
     <div class="pt-4">
         <Form>
-            <div class="flex justify-between">
-                <div class="bg-primary border border-primary rounded-2xl h-full">
+            <div class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0">
+                <div class="sm:mx-20 md:mx-0 px-auto md:px-0 bg-primary border border-primary rounded-2xl h-full">
                     <div class="bg-white rounded-2xl flex items-center ps-4 h-10">
                         <h2 class="font-bold text-primary">
                             Période de remplacement
@@ -56,19 +56,19 @@
                     </div>
                 </div>
 
-                <div class="hidden md:block">
+                <div class="sm:mx-20 md:mx-0">
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"
-                        class="rounded-md shadow-lg"
+                        class="flex flex-col justify-center px-auto md:block md:px-0 rounded-md shadow-lg"
                         locale="fr"
                     />
                 </div>
             </div>
 
             <div>
-                <div class="mt-10 h-12 flex items-center justify-between rounded-xl px-2 bg-gray-100">
-                    <div class="flex space-x-3 items-center">
+                <div class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl px-2 bg-gray-100">
+                    <div class="flex flex-wrap md:flex-nowrap md:space-x-3 gap-4 md:gap-0 items-center">
                         <FormField name="startDate">
                             <FormItem>
                                 <FormControl>
@@ -128,65 +128,58 @@
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <div class="grid overflow-x-auto">
+                <div class="mt-32 md:mt-6">
+                    <div class="overflow-x-auto">
                         <Table>
-                            <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-3 gap-2 border-none">
-                                    <TableHead
-                                        v-for="(label, key) in periodLabels"
-                                        :key="key"
-                                        class="bg-primary flex justify-center items-center rounded-lg text-white text-xs"
-                                    >
+                            <TableHeader class="w-full md:grid md:grid-cols-3 gap-2 border-none block">
+                                <div
+                                    v-for="(label, key) in periodLabels"
+                                    :key="key"
+                                    class="mb-4 md:mb-0"
+                                >
+                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
                                         {{ label }}
                                     </TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody class="grid grid-cols-3 gap-2">
-                                <TableCell
-                                    v-for="period in ['morning', 'afternoon', 'evening']"
-                                    :key="period"
-                                    class="bg-gray-50 rounded-lg border border-gray-200"
-                                >
-                                    <div v-if="datePatients[currentDate] && datePatients[currentDate][period] && datePatients[currentDate][period].length > 0">
+                                    <TableBody class="bg-gray-50 block w-full p-3 rounded-lg border border-gray-200 mt-2 md:mt-0">
                                         <div
-                                            v-for="(patient, index) in datePatients[currentDate][period]"
-                                            :key="index"
-                                            class="mb-2"
+                                            v-if="datePatients[currentDate] && datePatients[currentDate][key] && datePatients[currentDate][key].length > 0"
                                         >
-                                            <div class="grid grid-cols-[20%_80%]">
-                                                <TableCell class="flex h-9 items-center border border-gray-200">
-                                                    {{ patient.time }}
-                                                </TableCell>
-                                                <TableCell class="flex h-9 items-center border border-gray-200">
-                                                    {{ patient.firstname }} {{ patient.lastname }}
-                                                </TableCell>
+                                            <div
+                                                v-for="(patient, index) in datePatients[currentDate][key]"
+                                                :key="index"
+                                                class="mb-2 w-full"
+                                            >
+                                                <div class="grid grid-cols-[20%_80%] w-full">
+                                                    <TableCell class="flex h-9 items-center border border-gray-200">
+                                                        {{ patient.time }}
+                                                    </TableCell>
+                                                    <TableCell class="flex h-9 items-center border border-gray-200">
+                                                        {{ patient.firstname }} {{ patient.lastname }}
+                                                    </TableCell>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div
-                                        v-else
-                                        class="text-gray-400 italic"
-                                    >
-                                        Aucun patient
-                                    </div>
-
-                                    <div class="mt-4 flex items-center justify-center mx-auto">
-                                        <Button
-                                            class="p-0 shadow-none bg-transparent hover:bg-transparent"
-                                            :disabled="!formData.startDate || !formData.endDate"
-                                            @click="openDialog(period)"
+                                        <div
+                                            v-else
+                                            class="text-gray-400 italic"
                                         >
-                                            <PlusCircleIcon
-                                                class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary"
-                                            />
-                                        </Button>
-                                    </div>
-                                </TableCell>
-                            </TableBody>
+                                            Aucun patient
+                                        </div>
+                                        <div class="mt-4 flex items-center justify-center mx-auto">
+                                            <Button
+                                                class="p-0 shadow-none bg-transparent hover:bg-transparent"
+                                                :disabled="!formData.startDate || !formData.endDate"
+                                                @click="openDialog(key)"
+                                            >
+                                                <PlusCircleIcon class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary" />
+                                            </Button>
+                                        </div>
+                                    </TableBody>
+                                </div>
+                            </TableHeader>
                         </Table>
                     </div>
+
 
                     <Dialog v-model:open="isDialogOpen">
                         <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
@@ -877,7 +870,7 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['verified'],
+    // middleware: ['verified'],
     ssr: false,
 });
 </script>
