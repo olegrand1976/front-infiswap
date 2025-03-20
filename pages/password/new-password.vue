@@ -176,7 +176,7 @@
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
+// import axios from 'axios';
 
 const { $toast } = useNuxtApp();
 
@@ -221,24 +221,24 @@ const resetPassword = async () => {
 
     try {
         // Envoi de la requête POST à l'API
-        const response = await axios.post('http://localhost:8094/api/forgot-password', data);
+        // const response = await axios.post('http://localhost:8094/api/forgot-password', data);
 
         // Traitement de la réponse
-        if (response.data.success) {
-            $toast({
-                title: 'Succès',
-                description: 'Vérifiez votre boîte de réception.',
-            });
-            // setTimeout(() => {
-            //     window.location.href = '/login';
-            // }, 3000);
-        }
-        else {
-            $toast({
-                title: 'Succès',
-                description: 'Vérifiez votre boîte de réception.',
-            });
-        }
+        // if (response.data.success) {
+        // $toast({
+        // title: 'Succès',
+        // description: 'Vérifiez votre boîte de réception.',
+        // });
+        // setTimeout(() => {
+        //     window.location.href = '/login';
+        // }, 3000);
+        // }
+        // else {
+        // $toast({
+        // title: 'Succès',
+        // description: 'Vérifiez votre boîte de réception.',
+        // });
+        // }
     }
     catch (error) {
         console.error('Erreur lors de l\'envoi des données :', error);

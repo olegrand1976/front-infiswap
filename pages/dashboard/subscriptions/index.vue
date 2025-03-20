@@ -21,8 +21,11 @@
                     <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
                             <div class="p-6 text-center">
-                                <h1 class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white">
-                                    Mensuel
+                                <h1
+                                    v-if="current"
+                                    class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white"
+                                >
+                                    {{ current.plan.description }}
                                 </h1>
 
                                 <p class="mt-4 max-w-sm text-gray-500 dark:text-gray-300">
@@ -45,10 +48,16 @@
 <script setup lang="ts">
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['verified', 'subscribed'],
+    middleware: ['verified'],
 });
 
 useHead({
     title: 'Abonnements',
+});
+
+const { current, getCurrentSubscription } = useSubscription();
+
+onMounted(async () => {
+    await getCurrentSubscription();
 });
 </script>

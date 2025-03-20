@@ -429,7 +429,7 @@ watch(() => formData.cityTags, () => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth'],
+    middleware: ['verified'],
     ssr: false,
 });
 </script>

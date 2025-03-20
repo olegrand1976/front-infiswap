@@ -47,10 +47,17 @@
                         <DropdownMenuContent class="mr-6">
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Abonnement</DropdownMenuItem>
-                            <DropdownMenuItem>Parametres</DropdownMenuItem>
-                            <DropdownMenuItem>Deconnexion</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
+                            </DropdownMenuItem>
+                            <!-- <DropdownMenuItem>Parametres</DropdownMenuItem> -->
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                class="hover:bg-primary"
+                                @click="logout"
+                            >
+                                Déconnexion
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -63,7 +70,5 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
-
-const search = ref('');
+const { logout } = useAuth();
 </script>

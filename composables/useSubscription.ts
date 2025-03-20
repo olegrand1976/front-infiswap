@@ -1,9 +1,10 @@
 export const useSubscription = () => {
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
 
     const plans = useState<Plans>('plans', () => null);
     const loading = useState<boolean>('loading', () => false);
     const plan = useState<Plan>('plan', () => null);
+    const current = useState<ActiveSubscription>('current', () => null);
 
     const getPlans = async (): Promise<void> => {
         loading.value = true;
@@ -33,7 +34,28 @@ export const useSubscription = () => {
             return response;
         }
         catch (error) {
+            $toast({
+                variant: 'destructive',
+                description: 'Erreur lors de la création de votre abonnement',
+                duration: 3000,
+            });
+
             console.error('Error creating subscription:', error);
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
+    const getCurrentSubscription = async () => {
+        loading.value = true;
+        try {
+            const response = await $apifetch<ActiveSubscription>('/api/subscription/current');
+            current.value = response;
+            return response;
+        }
+        catch (error) {
+            console.error('Error checking active subscription:', error);
         }
         finally {
             loading.value = false;
@@ -57,6 +79,8 @@ export const useSubscription = () => {
         create,
         selectPlan,
         check,
+        getCurrentSubscription,
+        current,
     };
 };
 
@@ -89,4 +113,19 @@ interface SubscriptionResponse {
 
 interface CheckResponse {
     status: 'active' | 'expired';
+}
+
+interface ActiveSubscription {
+    status: 'active' | 'expired';
+    plan: Plan;
+    subscription: Subscription;
+}
+
+interface Subscription {
+    name: string;
+    stripe_status: string;
+    ends_at: string | null;
+    price_id: string;
+    stripe_subscription_id: string;
+    created_at: string;
 }
