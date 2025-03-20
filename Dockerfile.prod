@@ -77,7 +77,7 @@ USER www-data
 EXPOSE 3000
 
 # Démarrage de l'application en mode preview via nuxi
-CMD ["nuxi", "preview"]
+#CMD ["nuxi", "preview"]
 
 # Démarrage de l'application en mode production
-#CMD ["node", ".output/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]
