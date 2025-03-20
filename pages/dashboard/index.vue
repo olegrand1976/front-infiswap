@@ -88,7 +88,7 @@
 
                     <Form class="mt-6 space-y-4">
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="zipCode">
                                     Codes postaux
                                 </label>
@@ -116,9 +116,67 @@
                             </TagsInput>
                         </div>
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="city">
                                     Villes
+                                </label>
+                            </div>
+                            <TagsInput
+                                v-model="cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
+                                <div
+                                    class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                >
+                                    <TagsInputItem
+                                        v-for="item in cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete />
+                                    </TagsInputItem>
+                                </div>
+
+                                <TagsInputInput />
+                            </TagsInput>
+                        </div>
+
+                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
+                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
+                                <label for="city">
+                                    Remplacement ponctuel
+                                </label>
+                            </div>
+                            <TagsInput
+                                v-model="cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
+                                <div
+                                    class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                >
+                                    <TagsInputItem
+                                        v-for="item in cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete />
+                                    </TagsInputItem>
+                                </div>
+
+                                <TagsInputInput />
+                            </TagsInput>
+                        </div>
+
+                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
+                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
+                                <label for="city">
+                                    Remplacement long terme
                                 </label>
                             </div>
                             <TagsInput

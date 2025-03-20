@@ -139,7 +139,7 @@
                             v-model="formData.phoneNumber"
                             type="text"
                             class="w-full bg-transparent"
-                            placeholder="0867565432"
+                            placeholder="0499123456"
                             @blur="validateField('phoneNumber')"
                             @input="validateField('phoneNumber')"
                         />
@@ -162,7 +162,7 @@
                             v-model="formData.zipCode"
                             type="text"
                             class="w-full bg-transparent"
-                            placeholder="09866"
+                            placeholder="1000"
                             @blur="validateField('zipCode')"
                             @input="validateField('zipCode')"
                         />
@@ -185,7 +185,9 @@
                             v-model="formData.city"
                             type="text"
                             class="w-full bg-transparent"
-                            placeholder="Wallon"
+                            placeholder="Bruxelles"
+                            @blur="validateField('city')"
+                            @input="validateField('city')"
                         />
                         <p
                             v-if="error.city"
@@ -212,6 +214,33 @@
                             <SelectContent class="border border-none">
                                 <template
                                     v-for="[key, value] in Object.entries(availabilities)"
+                                    :key="key"
+                                >
+                                    <SelectItem :value="key">
+                                        {{ value }}
+                                    </SelectItem>
+                                </template>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <label for="Genres">
+                                Genres
+                            </label>
+                        </div>
+                        <Select v-model="formData.genre">
+                            <SelectTrigger
+                                class="w-full bg-transparent text-nowrap border border-none"
+                                position="right"
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+
+                            <SelectContent class="border border-none">
+                                <template
+                                    v-for="[key, value] in Object.entries(gender)"
                                     :key="key"
                                 >
                                     <SelectItem :value="key">
@@ -472,6 +501,12 @@ const availabilities = {
     on_vacation: 'En vacances',
 };
 
+const gender = {
+    homme: 'Homme',
+    femme: 'Femme',
+    x: 'X'
+};
+
 const initialFormData = {
     nurseId: user.value.nurse.id,
     lastname: '',
@@ -484,6 +519,7 @@ const initialFormData = {
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
+    genre:'',
     care_informations: [],
     visits: [
         {
