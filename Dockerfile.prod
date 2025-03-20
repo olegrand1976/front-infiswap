@@ -31,6 +31,9 @@ ENV NODE_ENV=production
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
 
+# Ajouter node_modules/.bin dans le PATH pour que nuxi soit accessible
+ENV PATH=/app/node_modules/.bin:$PATH
+
 # Copier uniquement les fichiers nécessaires pour exécuter l'application
 COPY --from=build /app/.nuxt ./.nuxt
 COPY --from=build /app/.output ./.output
@@ -40,23 +43,22 @@ COPY --from=build /app/nuxt.config.* ./
 COPY --from=build /app/public ./public
 COPY --from=build /app/assets ./assets
 
-
 # Supprimer les caches inutiles
 RUN rm -rf node_modules/.cache && \
     npm cache clean --force
 
-# Vérifier si USER ET GROUP www-data (33) et le créer si non existant 
-RUN if [ $(getent group www-data) ]; then \
-    echo "Group www-data exists"; \
-else \
-    groupadd -g 33 www-data; \
-fi
+# Vérifier si USER ET GROUP www-data (33) existent et les créer sinon
+RUN if getent group www-data >/dev/null; then \
+      echo "Group www-data exists"; \
+    else \
+      groupadd -g 33 www-data; \
+    fi
 
-RUN if [ $(getent passwd www-data) ]; then \
-    echo "User www-data exists"; \
-else \
-    useradd -r -u 33 -g www-data www-data; \
-fi
+RUN if getent passwd www-data >/dev/null; then \
+      echo "User www-data exists"; \
+    else \
+      useradd -r -u 33 -g www-data www-data; \
+    fi
 
 # Changer le propriétaire du dossier de l'application
 RUN chown -R www-data:www-data /app
@@ -67,5 +69,8 @@ USER www-data
 # Exposer le port 3000
 EXPOSE 3000
 
+# Démarrage de l'application en mode prévisualisation (nuxi preview)
+CMD ["nuxi", "preview"]
+
 # Démarrage de l'application en mode production
-CMD ["node", ".output/server/index.mjs"]
+#CMD ["node", ".output/server/index.mjs"]
