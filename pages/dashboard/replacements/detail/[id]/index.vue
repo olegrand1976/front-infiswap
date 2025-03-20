@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="bg-gray-100 z-10 -ml-10 flex space-x-6 p-8 w-[48.25rem] relative rounded-2xl">
-                    <div class="ml-8 w-64">
+                    <div class=" w-64">
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />

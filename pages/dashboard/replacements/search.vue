@@ -137,14 +137,21 @@
                         </FormItem>
                     </FormField>
                 </div>
-
-                <Button
-                    class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-36 lg:ms-12 text-sm bg-primary"
-                    @click="submit"
-                >
-                    <MagnifyingGlassIcon class="w-6" />
-                    Rechercher
-                </Button>
+                <div class="flex gap-3">
+                    <Button
+                        class="bg-primary"
+                        @click="submit"
+                    >
+                        <ArrowPathIcon class="w-6" />
+                    </Button>
+                    <Button
+                        class=" text-sm bg-primary"
+                        @click="submit"
+                    >
+                        <MagnifyingGlassIcon class="w-6" />
+                        Rechercher
+                    </Button>
+                </div>
             </Form>
         </div>
 
@@ -152,22 +159,25 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center text-white text-xs">
                             <span>Matin</span>
                             <span>Midi</span>
                             <span>Soir</span>
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Codes postaux
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Type de soin
+                        </TableHead>
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                            Action
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -279,12 +289,13 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="text-xs pt-6 overflow-x-hidden">
+                            <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
                                 <Button
-                                    class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
+                                    class="inline-block items-center h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                     :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
-                                    <span class="text-xs">Voir plus</span>
+                                    <!-- <span class="text-xs">Voir plus</span> -->
+                                    <EyeIcon class="h-6 mt-1" />
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -296,7 +307,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useSearchReplacements } from '~/composables/useReplacements';
@@ -417,6 +428,7 @@ const submit = () => {
         postalCode: toRaw(formData.postalCodeTags),
         cities: toRaw(formData.cityTags),
     });
+
 };
 
 watch(() => formData.postalCodeTags, () => {
