@@ -1,80 +1,40 @@
-# Étape 1 : Construction de l'application
+# Version de Node
 ARG NODE_VERSION=20.17.0
-ARG NODE_ENV=production
 
-FROM node:${NODE_VERSION}-slim AS build
+# Image de base
+FROM node:${NODE_VERSION}-slim as base
 
-WORKDIR /app
+# Définir le port par défaut
+ARG PORT=3000
+ENV PORT=${PORT}
 
-# Définir l'environnement en production dès le début pour la build
-ENV NODE_ENV=${NODE_ENV}
+WORKDIR /src
 
-# Copier uniquement les fichiers nécessaires pour éviter de reconstruire inutilement
-COPY package*.json ./
+# Étape de build
+FROM base as build
 
-# Installation des dépendances sans celles de développement
-RUN npm install --omit=dev && npm cache clean --force
+# Copier les fichiers de dépendances
+COPY --link package.json package-lock.json ./
 
-# Copier le reste du code source
-COPY . ./
+# Installer les dépendances
+RUN npm install
 
-# Build Nuxt (SSG ou SSR)
+# Copier l’ensemble du projet
+COPY --link . .
+
+# Construire l’application Nuxt (SSG ou SSR)
 RUN npm run build
 
-# Étape 2 : Image de production minimale
-FROM node:${NODE_VERSION}-slim AS production
+# Étape d'exécution
+FROM base
 
-WORKDIR /app
-
-# Définir l'environnement en production
+# Définir l'environnement de production
 ENV NODE_ENV=production
-ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=3000
 
-# Ajouter node_modules/.bin dans le PATH pour que nuxi soit accessible
-ENV PATH=/app/node_modules/.bin:$PATH
+# Copier le dossier .output généré depuis l'étape de build
+COPY --from=build /src/.output /src/.output
+# (Optionnel) Si vous utilisez des dépendances non bundlées, vous pouvez aussi copier node_modules
+# COPY --from=build /src/node_modules /src/node_modules
 
-# Copier uniquement les fichiers nécessaires pour exécuter l'application
-COPY --from=build /app/.nuxt ./.nuxt
-COPY --from=build /app/.output ./.output
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/nuxt.config.* ./
-# Copier le dossier public tel que généré
-COPY --from=build /app/public ./public
-# Copier le dossier assets
-COPY --from=build /app/assets ./assets
-
-# Copier directement les images depuis assets/images dans public/_ (à la racine)
-RUN mkdir -p /app/public/_ && cp -a /app/assets/images/. /app/public/_
-
-# Vérifier le contenu du dossier public pour débogage
-RUN ls -la /app/public
-
-# Supprimer les caches inutiles
-RUN rm -rf node_modules/.cache && npm cache clean --force
-
-# Vérifier si l'utilisateur et le groupe www-data (ID 33) existent, et les créer si nécessaire 
-RUN if getent group www-data >/dev/null; then \
-      echo "Group www-data exists"; \
-    else \
-      groupadd -g 33 www-data; \
-    fi
-
-RUN if getent passwd www-data >/dev/null; then \
-      echo "User www-data exists"; \
-    else \
-      useradd -r -u 33 -g www-data www-data; \
-    fi
-
-# Changer le propriétaire du dossier de l'application
-RUN chown -R www-data:www-data /app
-
-# Changer l'utilisateur pour www-data
-USER www-data
-
-# Exposer le port 3000
-EXPOSE 3000
-
-# Démarrage de l'application en mode production SSR
-CMD ["node", ".output/server/index.mjs"]
+# Démarrer l’application en mode production
+CMD [ "node", ".output/server/index.mjs" ]
