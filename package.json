@@ -14,7 +14,6 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@nuxt/image": "^1.9.0",
-    "@nuxt/types": "^2.18.1",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@stripe/stripe-js": "^6.1.0",
