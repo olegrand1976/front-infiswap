@@ -180,7 +180,6 @@
                         </Table>
                     </div>
 
-
                     <Dialog v-model:open="isDialogOpen">
                         <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
                             <DialogHeader>
