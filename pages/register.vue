@@ -482,7 +482,7 @@ const formData = reactive({
     language: languages[0].value,
     phoneNumber: undefined,
     dateOfBirth: null,
-    identifierNumber: null,
+    identifierNumber: '',
     address: {
         street: '',
         city: '',
@@ -503,7 +503,7 @@ const error = reactive({
     language: '',
     phoneNumber: undefined,
     dateOfBirth: null,
-    identifierNumber: null,
+    identifierNumber: '',
     address: {
         street: '',
         city: '',
@@ -534,6 +534,10 @@ const schema = yup.object({
     gender: yup.string().required('Le genre est obligatoire'),
     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
     dateOfBirth: yup.date().nullable(),
+    identifierNumber: yup.string()
+        .required('Le numéro INAMI est obligatoire')
+        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
+        .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
     address: yup.object({
         street: yup.string().required('L\'adresse est obligatoire'),
         city: yup.string().required('La ville est obligatoire'),
@@ -541,10 +545,6 @@ const schema = yup.object({
         country: yup.string().required('Le pays est obligatoire'),
         additionnalInformation: yup.string(),
     }).required('L\'adresse est obligatoire'),
-    identifierNumber: yup.string()
-        .required('Le numéro INAMI est obligatoire')
-        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
-        .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
 });
 
 const validateField = async (field) => {
@@ -645,7 +645,7 @@ const { submit, inProgress } = useSubmit(
 
                         if (errorMessages.length > 0) {
                             $toast({
-                                description: errorMessages.join('<br>'),
+                                description: errorMessages.join('/'),
                                 status: 'error',
                                 variant: 'destructive',
                             });

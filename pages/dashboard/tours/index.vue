@@ -193,7 +193,9 @@
                                     <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-lg w-full flex">
                                         <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
-                                    <div v-if="patient?.patient[0]?.visit_times && patient.patient[0].visit_times.length > 0">
+                                    <div
+                                        v-if="patient?.patient[0]?.visit_times && patient.patient[0].visit_times.length > 0"
+                                    >
                                         <div
                                             v-for="visit in patient.patient[0].visit_times"
                                             :key="visit.patient_id"
@@ -201,9 +203,10 @@
                                             <div
                                                 v-for="visitItem in visit.visits"
                                                 :key="visitItem.time"
+                                                class="w-full flex flex-col items-center"
                                             >
-                                                <div class="w-full flex flex-col items-center">
-                                                    <div class="w-full rounded-lg mt-4 py-4 px-20 bg-primary text-white text-center">
+                                                <div>
+                                                    <div class="w-full rounded-lg mt-4 py-4 px-32 bg-primary text-white text-center">
                                                         {{ translatedVisitPeriod(visitItem.visit_period) }}
                                                     </div>
                                                     <div class="bg-white w-full text-center rounded-lg mt-4 py-3 border-2 border-gray-300 text-gray-400">

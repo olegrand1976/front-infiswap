@@ -209,8 +209,11 @@ const token = ref(route.query.token as string || '');
 const resetPassword = async () => {
     getUrlParams();
     if (formData.value.password !== formData.value.passwordConfirm) {
-        alert('Les mots de passe ne correspondent pas.');
-        return;
+        $toast({
+            title: 'Oups! Une erreur s\'est produite',
+            description: 'Les mots de passe ne correspondent pas.',
+            variant: 'destructive',
+        });
     }
 
     const data = {
@@ -235,13 +238,16 @@ const resetPassword = async () => {
             });
             setTimeout(() => {
                 window.location.href = '/login';
-            }, 3000);
+            }, 2000);
         }
         else {
             $toast({
                 title: 'Succès',
                 description: 'Vérifiez votre boîte de réception.',
             });
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         }
     }
     catch (error) {

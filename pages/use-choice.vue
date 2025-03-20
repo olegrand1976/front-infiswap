@@ -106,12 +106,20 @@ const handleSubmit = async (event) => {
             body: { choice: formData.value },
         });
 
-        if (response.status === 200) {
+        if (response === 200) {
             $toast({
                 title: 'Succès',
             });
             setTimeout(() => {
-                router.push('legal-chart');
+                window.location.href = '/legal-chart';
+            }, 2000);
+        }
+        else {
+            $toast({
+                title: 'Succès',
+            });
+            setTimeout(() => {
+                window.location.href = '/legal-chart';
             }, 2000);
         }
     }

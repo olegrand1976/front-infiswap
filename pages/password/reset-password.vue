@@ -186,7 +186,7 @@ const submitForm = async (event: Event) => {
                 description: 'Vérifiez votre boîte de réception.',
             });
             setTimeout(() => {
-                router.push('auth/verify-email');
+                window.location.href = '/';
             }, 2000);
         }
         else {
@@ -194,6 +194,9 @@ const submitForm = async (event: Event) => {
                 title: 'Succès',
                 description: 'Vérifiez votre boîte de réception.',
             });
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
         }
     }
     catch (error) {

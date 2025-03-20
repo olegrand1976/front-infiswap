@@ -24,7 +24,7 @@
                 <Button
                     variant="secondary"
                     href="/search-nurse"
-                    class="mt-6 font-bold text-primary w-full max-w-32 mx-auto lg:mx-0"
+                    class="mt-6 font-bold text-primary lg:text-lg w-full max-w-40 mx-auto lg:mx-0 py-4"
                 >
                     Consulter
                 </Button>
