@@ -111,7 +111,7 @@ const handleSubmit = async (event) => {
                 title: 'Succès',
             });
             setTimeout(() => {
-                window.location.href = '/legal-chart';
+                navigateTo('/legal-chart');
             }, 2000);
         }
         else {
@@ -119,7 +119,7 @@ const handleSubmit = async (event) => {
                 title: 'Succès',
             });
             setTimeout(() => {
-                window.location.href = '/legal-chart';
+                navigateTo('/dashboard');
             }, 2000);
         }
     }
