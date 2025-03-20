@@ -116,8 +116,8 @@ export default defineNuxtConfig({
     },
   
     image: {
-      //dir: 'assets/images'
-      dir: 'public'
+      dir: 'assets/images'
+      //dir: 'public'
     },
   
     shadcn: {
