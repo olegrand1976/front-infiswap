@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="bg-gray-100 flex px-4 rounded-lg items-center h-12">
+        <div class="bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
             <h1 class="text-primary">
                 Liste des
                 <strong>
                     remplacements
                 </strong>
             </h1>
-            <div class="ml-auto">
+            <div class="sm:ml-auto">
                 <Button
                     class="text-sm"
                     href="/dashboard/replacements/create"
@@ -18,7 +18,7 @@
         </div>
 
         <div class="grid my-8">
-            <Table>
+            <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
                         <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center rounded-lg text-white text-xs">
@@ -92,15 +92,15 @@
                             <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 mx-auto text-green-500"
+                                    class="h-6 mx-auto text-success"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'afternoon')"
-                                    class="h-6 mx-auto text-green-500"
+                                    class="h-6 mx-auto text-success"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 mx-auto text-green-500"
+                                    class="h-6 mx-auto text-success"
                                 />
                             </TableCell>
 
@@ -152,6 +152,99 @@
                     </div>
                 </TableBody>
             </Table>
+
+            <div class="lg:hidden">
+                <div
+                    v-for="replacement in replacements.data"
+                    :key="replacement.id"
+                    class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
+                >
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Jour
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>
+                                <span>   au   </span>
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.end_date) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="flex justify-around bg-primary text-white py-2 text-center rounded">
+                                <span>Matin</span>
+                                <span>Après-midi</span>
+                                <span>Soir</span>
+                            </h4>
+                            <p class="py-2 rounded">
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'morning')"
+                                    class="h-6 text-success text-start ml-4"
+                                />
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'afternoon')"
+                                    class="h-6 text-success text-center"
+                                />
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'evening')"
+                                    class="h-6 text-success text-end mr-4"
+                                />
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Codes postaux
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    {{ replacement.details
+                                        ?.map((detail) => detail?.patient?.zip_code)
+                                        .filter(Boolean)
+                                        .join(', ') || '' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Villes
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    {{ replacement.details
+                                        ?.map((detail) => detail?.patient?.city)
+                                        .filter(Boolean)
+                                        .join(', ') || '' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <h4 class="bg-primary text-white py-2 text-center rounded">
+                            Type de soin à effectuer
+                        </h4>
+                        <div class="mt-3 py-3 bg-gray-200 text-center rounded">
+                            <p class="truncate w-full px-6">
+                                {{ replacement.details
+                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
+                                    .join(', ') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <Button
+                        class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
+                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                    >
+                        Voir plus
+                    </Button>
+                </div>
+            </div>
         </div>
     </div>
 </template>

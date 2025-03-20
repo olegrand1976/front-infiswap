@@ -120,7 +120,7 @@ export const useSearchReplacements = () => {
 
             const response = await $apifetch(`/api/replacements/search`, {
                 method: 'GET',
-                params: { params: JSON.stringify(params) },
+                params: params,
             });
 
             console.log('Données récupérées :', response.replacements);

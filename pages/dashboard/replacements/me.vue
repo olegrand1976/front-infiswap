@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Rechercher des
+                Mes
                 <strong>
                     remplacements
                 </strong>
@@ -11,9 +11,9 @@
 
         <div class="flex mt-6">
             <Form
-                class="grid grid-cols-5 w-full gap-4"
+                class="grid lg:grid-cols-4 xl:grid-cols-5 w-full gap-4"
             >
-                <div class="col-span-4 md:col-span-2 lg:col-span-1">
+                <div class="lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -23,7 +23,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 xl:w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -54,14 +54,13 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
+                <div class="col-span-4 md:col-span-2 lg:w-72 xl:w-[22rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
                                 <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
                                     <h5 class="text-white text-xs">
-                                        <span class="xl:hidden">CP</span>
-                                        <span class="hidden xl:inline-block">Codes postaux</span>
+                                        <span>Codes postaux</span>
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
@@ -146,7 +145,7 @@
         </div>
 
         <div class="grid my-8">
-            <Table>
+            <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
                         <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center rounded-lg text-white text-xs">
@@ -288,6 +287,99 @@
                     </div>
                 </TableBody>
             </Table>
+
+            <div class="lg:hidden">
+                <div
+                    v-for="replacement in myReplacements.data"
+                    :key="replacement.id"
+                    class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
+                >
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Jour
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>
+                                <span>   au   </span>
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.end_date) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="flex justify-around bg-primary text-white py-2 text-center rounded">
+                                <span>Matin</span>
+                                <span>Après-midi</span>
+                                <span>Soir</span>
+                            </h4>
+                            <p class="py-2 rounded">
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'morning')"
+                                    class="h-6 text-success text-start ml-4"
+                                />
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'afternoon')"
+                                    class="h-6 text-success text-center"
+                                />
+                                <CheckCircleIcon
+                                    v-if="hasShift(replacement.details, 'evening')"
+                                    class="h-6 text-success text-end mr-4"
+                                />
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Codes postaux
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    {{ replacement.details
+                                        ?.map((detail) => detail?.patient?.zip_code)
+                                        .filter(Boolean)
+                                        .join(', ') || '' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Villes
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    {{ replacement.details
+                                        ?.map((detail) => detail?.patient?.city)
+                                        .filter(Boolean)
+                                        .join(', ') || '' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <h4 class="bg-primary text-white py-2 text-center rounded">
+                            Type de soin à effectuer
+                        </h4>
+                        <div class="mt-3 py-3 bg-gray-200 text-center rounded">
+                            <p class="truncate w-full px-6">
+                                {{ replacement.details
+                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
+                                    .join(', ') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <Button
+                        class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
+                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                    >
+                        Voir plus
+                    </Button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
