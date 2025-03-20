@@ -81,7 +81,7 @@
             class="mt-6 mb-8 h-auto overflow-hidden"
         >
             <div
-                class="flex items-center"
+                class="flex justify-around items-center"
             >
                 <div class="z-20">
                     <Calendar

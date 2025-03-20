@@ -21,22 +21,25 @@
             <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center text-white text-xs">
                             <span>Matin</span>
                             <span>Midi</span>
                             <span>Soir</span>
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Codes postaux
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Type de soin
+                        </TableHead>
+                         <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                            Action
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -79,17 +82,17 @@
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
-                            <TableCell class="flex justify-center items-center bg-gray-100 xl:text-[0.75em] lg:text-[0.5em]">
-                                <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
+                            <TableCell class="flex  justify-around items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
+                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                     <span>{{ formatDate(replacement.start_date) }}</span>
                                 </div>
                                 <span class="flex items-center">au</span>
-                                <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
+                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                     <span>{{ formatDate(replacement.end_date) }}</span>
                                 </div>
                             </TableCell>
 
-                            <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
+                            <TableCell class="grid grid-cols-3 justify-center items-center bg-[#F1F2F7] text-xs">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 mx-auto text-success"
@@ -104,9 +107,9 @@
                                 />
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex bg-gray-200 h-10 rounded mt-3 justify-center items-center"
+                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-center items-center"
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
@@ -117,9 +120,9 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex h-10 bg-gray-200 rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
                                 >
                                     <span class="truncate w-full px-2">
                                         {{ replacement.details
@@ -130,9 +133,9 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs pt-6">
+                            <TableCell class="bg-[#F1F2F7] text-xs pt-6">
                                 <div
-                                    class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                    class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
                                     {{ replacement.details
                                         ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
@@ -140,12 +143,13 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="text-xs pt-6 overflow-x-hidden">
+                            <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
                                 <Button
-                                    class="flex h-10 rounded bg-gray-200 text-black hover:text-white mx-auto justify-center items-center"
+                                    class="inline-block items-center h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                     :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
-                                    <span class="text-xs">Voir plus</span>
+                                    <!-- <span class="text-xs">Voir plus</span> -->
+                                    <EyeIcon class="h-6 mt-1" />
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -250,7 +254,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 
 import { useReplacements } from '~/composables/useReplacements';
 
