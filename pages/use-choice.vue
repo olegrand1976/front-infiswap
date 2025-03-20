@@ -1,5 +1,10 @@
 <template>
     <NuxtLayout name="guest-with-title">
+        <template #title>
+            <p class="font-light">
+                Pourquoi choisir notre site
+            </p>
+        </template>
         <section class="container mx-auto px-6 py-16">
             <h2 class="text-3xl font-semibold text-primary text-center mb-8">
                 Bienvenue sur notre plateforme !
