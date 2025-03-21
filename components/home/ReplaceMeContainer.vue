@@ -1,7 +1,7 @@
 <template>
     <div class="relative py-16 flex flex-col">
         <NuxtImg
-            src="/triangle_image.png"
+            src="triangle_image.png"
             alt="Des infirmiers"
             class="absolute h-1/2 md:h-full right-0 bottom-0"
         />
@@ -40,7 +40,7 @@
             </div>
 
             <NuxtImg
-                src="/stetho.png"
+                src="stetho.png"
                 class="hidden md:inline-block z-0 w-16 lg:w-24 md:absolute -top-5 lg:-top-12 -left-7 lg:left-20"
             />
             <NuxtImg

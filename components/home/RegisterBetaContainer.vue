@@ -1,7 +1,7 @@
 <template>
     <div class="w-full relative md:w-8/12 md:flex md:justify-center md:items-center md:mx-auto md:mt-10">
         <NuxtImg
-            src="/container_register.png"
+            src="container_register.png"
             class="w-full h-96"
         />
         <div class="absolute bottom-[4%] text-xs text-white mx-8">

@@ -3,7 +3,7 @@
         <div class="flex lg:flex-row flex-col-reverse justify-center items-center relative z-20 mx-auto lg:space-x-24 xl:space-x-40">
             <div>
                 <NuxtImg
-                    src="/Group_1048.png"
+                    src="Group_1048.png"
                     alt="App Download"
                     class="sm:w-80 w-72 mt-24 sm:mt-0 mb-8 sm:mb-16"
                 />
@@ -55,7 +55,7 @@
 
         <div class="hidden lg:block absolute z-5 top-0 right-0">
             <NuxtImg
-                src="/Vector_2.png"
+                src="Vector_2.png"
                 alt="Vecteur"
                 class="w-[41.5rem] relative"
             />
@@ -63,7 +63,7 @@
 
         <div class="lg:hidden absolute z-5 bottom-0 left-0">
             <NuxtImg
-                src="/triangle_left.png"
+                src="triangle_left.png"
                 alt="Vecteur"
                 class="w-80 h-96 sm:w-96 sm:h-[26rem] md:w-[28rem] md:h-[32rem] relative"
             />

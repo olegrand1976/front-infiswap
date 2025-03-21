@@ -1,41 +1,55 @@
+# Utilise une image de base Node.js en version slim
 ARG NODE_VERSION=20.18.0
-
 FROM node:${NODE_VERSION}-slim as base
-ARG PORT=3000
-WORKDIR /src
 
-# Phase de build
+# Définir le port d'écoute
+ARG PORT=3000
+
+# Positionner le répertoire de travail dans /app
+WORKDIR /app
+
+# --- Phase de build ---
 FROM base as build
-COPY --link package.json package-lock.json ./
+# Copier uniquement package.json et package-lock.json pour installer les dépendances
+COPY package*.json ./
 RUN npm install
-COPY --link . .
+# Copier tout le reste
+COPY . .
+# Créer les répertoires d'images AVANT le build
+RUN mkdir -p /app/public/images
+RUN cp -a /app/assets/images/. /app/public/images/
+# Ajout d'un debug pour vérifier les fichiers
+RUN ls -la /app/public/images
+# Construire l'application Nuxt
 RUN npm run build
 
-# Phase d'exécution
+# --- Phase d'exécution ---
 FROM base
-ENV PORT=${PORT}
 ENV NODE_ENV=production
+ENV PORT=${PORT}
 # Ajout de node_modules/.bin dans le PATH
-ENV PATH=/src/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
 
-# Copier le dossier .output
-COPY --from=build /src/.output /src/.output
-# Copier le dossier public généré
-COPY --from=build /src/public /src/public
-# Copier les assets (si besoin)
-COPY --from=build /src/assets /src/assets
-# (Optionnel) Copier les images depuis assets dans public/images
-RUN mkdir -p /src/public/images && cp -a /src/assets/images/. /src/public/images/
+# Copier le dossier de build (.output) et le dossier public
+COPY --from=build /app/.output /app/.output
+COPY --from=build /app/public /app/public
+# Copier les assets directement (sans manipulation)
+COPY --from=build /app/assets /app/assets
 
-# USER ET GROUP WWW-DATA
+# Créer un utilisateur et groupe "www-data" s'ils n'existent pas, puis attribuer la propriété du dossier /app
 RUN if ! getent group www-data >/dev/null 2>&1; then \
       groupadd -r www-data; \
     fi && \
     if ! id -u www-data >/dev/null 2>&1; then \
       useradd -r -g www-data www-data; \
-    fi
-    
+    fi && \
+    chown -R www-data:www-data /app
+
+# Utiliser l'utilisateur www-data pour l'exécution
 USER www-data
 
-WORKDIR /src
+# Exposer le port défini
+EXPOSE ${PORT}
+
+# Démarrer l'application Nuxt (mode SSR)
 CMD [ "node", ".output/server/index.mjs" ]

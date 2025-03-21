@@ -76,11 +76,9 @@ export default defineNuxtConfig({
 
     nitro: {
         prerender: {
-            routes: [
-                '/',
-                '/about',
-                '/contact',
-            ],
+            routes: ['/', '/about', '/contact'],
+            ignore: ['/_ipx/**'],
+            failOnError: false,
         },
     },
 
@@ -115,10 +113,15 @@ export default defineNuxtConfig({
         devtools: process.env.NODE_ENV !== 'production',
     },
 
+    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
     image: {
-    //   provider: 'static',
-        // Assurez-vous que ce chemin correspond à l'endroit où vous copiez vos images dans le dossier public
+        provider: 'ipx',
         dir: 'assets/images',
+        domains: ['localhost', 'www.infiswap.be'],
+        format: ['webp', 'jpg', 'png', 'svg'],
+        ipx: {
+            baseURL: '/_ipx',
+        },
     },
 
     shadcn: {
