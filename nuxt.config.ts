@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     ].filter(Boolean),
     plugins: [
     ],
+    components: [
+        '~/components/ui',
+    ],
     imports: {
         dirs: [
             './utils',
@@ -50,9 +53,6 @@ export default defineNuxtConfig({
     css: [
         '~/assets/css/tailwind.css',
     ],
-    components: [
-        '~/components/ui'
-      ],
     runtimeConfig: {
         public: {
             API_URL: process.env.API_URL,
