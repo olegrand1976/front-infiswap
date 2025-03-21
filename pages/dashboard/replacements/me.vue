@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Mes
+                Rechercher des
                 <strong>
                     remplacements
                 </strong>
@@ -11,9 +11,9 @@
 
         <div class="flex mt-6">
             <Form
-                class="grid lg:grid-cols-4 xl:grid-cols-5 w-full gap-4"
+                class="grid grid-cols-5 w-full gap-4"
             >
-                <div class="lg:col-span-1">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -23,7 +23,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 xl:w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -54,13 +54,17 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:w-72 xl:w-[22rem]">
+                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
-                                <div class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1">
+                                <div
+                                    class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
+                                    title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
+                                >
                                     <h5 class="text-white text-xs">
-                                        <span>Codes postaux</span>
+                                        <span class="xl:hidden">CP</span>
+                                        <span class="hidden xl:inline-block">Codes postaux</span>
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
@@ -133,19 +137,26 @@
                         </FormItem>
                     </FormField>
                 </div>
-
-                <Button
-                    class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-36 lg:ms-12 text-sm bg-primary"
-                    @click="submit"
-                >
-                    <MagnifyingGlassIcon class="w-6" />
-                    Rechercher
-                </Button>
+                <div class="flex gap-3">
+                    <Button
+                        class="bg-primary"
+                        @click="reinitializeFilter"
+                    >
+                        <ArrowPathIcon class="w-6" />
+                    </Button>
+                    <Button
+                        class=" text-sm bg-primary"
+                        @click="submit"
+                    >
+                        <MagnifyingGlassIcon class="w-6" />
+                        Rechercher
+                    </Button>
+                </div>
             </Form>
         </div>
 
         <div class="grid my-8">
-            <Table class="hidden lg:block">
+            <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
                         <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
@@ -172,7 +183,7 @@
                 </TableHeader>
 
                 <TableBody>
-                    <div v-if="loading">
+                    <div v-if="loading && loadingSearch">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
                             :key="index"
@@ -203,9 +214,14 @@
                             </TableCell>
                         </TableRow>
                     </div>
+                    <div v-else-if="currentReplacements.length === 0">
+                        <p class="text-center text-gray-500 py-8">
+                            Aucun résultat n'est trouvé
+                        </p>
+                    </div>
                     <div v-else>
                         <TableRow
-                            v-for="replacement in myReplacements.data"
+                            v-for="replacement in currentReplacements"
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
@@ -280,10 +296,9 @@
 
                             <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
                                 <Button
-                                    class="inline-block items-center h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                    class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                     :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
-                                    <!-- <span class="text-xs">Voir plus</span> -->
                                     <EyeIcon class="h-6 mt-1" />
                                 </Button>
                             </TableCell>
@@ -291,121 +306,28 @@
                     </div>
                 </TableBody>
             </Table>
-
-            <div class="lg:hidden">
-                <div
-                    v-for="replacement in myReplacements.data"
-                    :key="replacement.id"
-                    class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
-                >
-                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Jour
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>
-                                <span>   au   </span>
-                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.end_date) }}</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="flex justify-around bg-primary text-white py-2 text-center rounded">
-                                <span>Matin</span>
-                                <span>Après-midi</span>
-                                <span>Soir</span>
-                            </h4>
-                            <p class="py-2 rounded">
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 text-success text-start ml-4"
-                                />
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'afternoon')"
-                                    class="h-6 text-success text-center"
-                                />
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 text-success text-end mr-4"
-                                />
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Codes postaux
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.zip_code)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Villes
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.city)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2">
-                        <h4 class="bg-primary text-white py-2 text-center rounded">
-                            Type de soin à effectuer
-                        </h4>
-                        <div class="mt-3 py-3 bg-gray-200 text-center rounded">
-                            <p class="truncate w-full px-6">
-                                {{ replacement.details
-                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                    .join(', ') }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <Button
-                        class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
-                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                    >
-                        Voir plus
-                    </Button>
-                </div>
-            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
-import { useReplacements } from '~/composables/useReplacements';
+import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Mes remplacements',
 });
 
 const { loading, getMyReplacements } = useReplacements();
+const { loadingSearch, fetchReplacements } = useSearchReplacements();
 
-const myReplacements = await getMyReplacements();
+const initialReplacements = ref(await getMyReplacements());
+const currentReplacements = ref(initialReplacements.value.data);
 
-const { fetchReplacements } = useSearchReplacements();
-
-onMounted(async () => {
-    await getMyReplacements();
+onMounted(() => {
+    getMyReplacements();
 });
 
 const postalCodeInput = ref('');
@@ -443,7 +365,7 @@ const formData = reactive({
     selectedDays: [],
 });
 
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday', 'all'];
 const frenchDays = {
     monday: 'Lundi',
     tuesday: 'Mardi',
@@ -452,6 +374,7 @@ const frenchDays = {
     friday: 'Vendredi',
     Saturday: 'Samedi',
     Sunday: 'Dimanche',
+    all: 'Tous',
 };
 
 const toggleDay = (day) => {
@@ -507,13 +430,33 @@ const removeCityTag = (tag) => {
     formData.cityTags = formData.cityTags.filter(t => t !== tag);
 };
 
-const submit = () => {
+const submit = async () => {
     isSubmitted.value = true;
-    fetchReplacements({
-        selectedDays: Array.from(formData.selectedDays),
-        postalCode: toRaw(formData.postalCodeTags),
-        cities: toRaw(formData.cityTags),
-    });
+
+    const hasSearchCriteria = formData.selectedDays.length > 0 || formData.postalCodeTags.length > 0 || formData.cityTags.length > 0;
+
+    try {
+        if (hasSearchCriteria) {
+            const response = await fetchReplacements({
+                selectedDays: Array.from(formData.selectedDays),
+                postalCode: toRaw(formData.postalCodeTags),
+                cities: toRaw(formData.cityTags),
+            });
+            currentReplacements.value = response.replacements.data;
+        }
+        else {
+            currentReplacements.value = initialReplacements.value;
+        }
+    }
+    catch (error) {
+        console.error('Error during search:', error);
+    }
+};
+
+const reinitializeFilter = () => {
+    formData.postalCodeTags = [];
+    formData.cityTags = [];
+    formData.selectedDays = [];
 };
 
 watch(() => formData.postalCodeTags, () => {
@@ -522,6 +465,31 @@ watch(() => formData.postalCodeTags, () => {
 watch(() => formData.cityTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
+watch(() => formData.selectedDays, () => {
+    if (isSubmitted.value) isSubmitted.value = false;
+});
+
+watch(
+    [
+        () => formData.postalCodeTags,
+        () => formData.cityTags,
+        () => formData.selectedDays,
+    ],
+    ([newPostalCodes, newCities, newDays]) => {
+        if (
+            newPostalCodes.length === 0
+            && newCities.length === 0
+            && newDays.length === 0
+        ) {
+            currentReplacements.value = initialReplacements.value.data;
+            isSubmitted.value = false;
+        }
+        else if (isSubmitted.value) {
+            submit();
+        }
+    },
+    { deep: true },
+);
 
 definePageMeta({
     layout: 'dashboard',

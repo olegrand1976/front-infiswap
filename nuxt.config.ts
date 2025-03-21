@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     ],
     components: [
         '~/components/ui',
+        '~/components',
     ],
     imports: {
         dirs: [
