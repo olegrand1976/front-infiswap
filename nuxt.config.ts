@@ -130,13 +130,10 @@ export default defineNuxtConfig({
   
     nitro: {
       prerender: {
-        routes: [
-          '/',
-          '/about',
-          '/contact'
-        ],
-      }
-    }, 
+        routes: ['/', '/about', '/contact'],
+        ignore: ['/ _ipx/**']
+      },
+    },
     
     shadcn: {
       prefix: '',
