@@ -21,24 +21,24 @@
             <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
                             <span>Matin</span>
                             <span>Midi</span>
                             <span>Soir</span>
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Codes postaux
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Type de soin
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Action
                         </TableHead>
                     </TableRow>
@@ -145,10 +145,9 @@
 
                             <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
                                 <Button
-                                    class="inline-block items-center h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                    class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                     :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
-                                    <!-- <span class="text-xs">Voir plus</span> -->
                                     <EyeIcon class="h-6 mt-1" />
                                 </Button>
                             </TableCell>
