@@ -88,7 +88,6 @@ export default defineNuxtConfig({
                 '/about',
                 '/contact',
             ],
-            ignore: ['/_ipx/**'],
             failOnError: false,
         },
     },

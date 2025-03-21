@@ -8,7 +8,7 @@
 
                 <div class="mx-auto flex justify-center space-x-5 items-center">
                     <div>
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="auth/Group_1108.png"
                             alt="Boite email"
                             class="xl:w-36 xl:h-48 lg:w-28 lg:h-40 md:w-24 md:h-36 sm:w-20 sm:h-32"
