@@ -81,13 +81,15 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-01-10',
 
     nitro: {
-        prerender: {
-            routes: [
-                '/',
-                '/about',
-                '/contact',
-            ],
-        },
+      prerender: {
+        routes: [
+          '/',
+          '/about',
+          '/contact',
+        ],
+        ignore: ['/_ipx/**'],
+        failOnError: false
+      }
     },
 
     vite: {
@@ -101,31 +103,43 @@ export default defineNuxtConfig({
         },
     },
     gtm: {
-        id: 'GTM-KFBFVVR3',
-        queryParams: {
-            gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
-            gtm_preview: 'env-4',
-            gtm_cookies_win: 'x',
-        },
-        defer: false,
-        compatibility: false,
-        nonce: '2726c7f26c',
-        enabled: true,
-        debug: process.env.NODE_ENV !== 'production',
-        loadScript: true,
-        enableRouterSync: true,
-        ignoredViews: ['dashboard'],
-        trackOnNextTick: true,
-        devtools: process.env.NODE_ENV !== 'production',
+      id: 'GTM-KFBFVVR3',
+      queryParams: {
+        gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
+        gtm_preview: 'env-4',
+        gtm_cookies_win: 'x'
+      },
+      defer: false,
+      compatibility: false,
+      nonce: '2726c7f26c',
+      enabled: true,
+      debug: process.env.NODE_ENV !== 'production',
+      loadScript: true,
+      enableRouterSync: true,
+      ignoredViews: ['dashboard'],
+      trackOnNextTick: true,
+      // Conditionner les devtools à l'environnement de développement
+      devtools: process.env.NODE_ENV !== 'production'
     },
-
-    server: {
-        host: '0.0.0.0',
-        port: 3000,
+  
+    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
+    image: {
+      provider: 'ipx',
+      dir: process.env.NODE_ENV === 'production' ? 'public/images' : 'assets/images',
+      domains: ['localhost', 'www.infiswap.be'],
+      format: ['webp', 'jpg', 'png', 'svg'],
+      ipx: {
+        baseURL: '/_ipx'
+      }
     },
-
+  
     shadcn: {
         prefix: '',
         componentDir: './components/ui',
+    },
+
+    server: {
+      host: '0.0.0.0',
+      port: 3000,
     },
 });
