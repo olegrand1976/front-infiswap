@@ -140,7 +140,7 @@
                 <div class="flex gap-3">
                     <Button
                         class="bg-primary"
-                        @click="submit"
+                        @click="reinitializeFilter"
                     >
                         <ArrowPathIcon class="w-6" />
                     </Button>
@@ -183,7 +183,7 @@
                 </TableHeader>
 
                 <TableBody>
-                    <div v-if="loading">
+                    <div v-if="loading && loadingSearch">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
                             :key="index"
@@ -214,9 +214,14 @@
                             </TableCell>
                         </TableRow>
                     </div>
+                    <div v-else-if="currentReplacements.length === 0">
+                        <p class="text-center text-gray-500 py-8">
+                            Aucun résultat n'est trouvé
+                        </p>
+                    </div>
                     <div v-else>
                         <TableRow
-                            v-for="replacement in replacements.data"
+                            v-for="replacement in currentReplacements"
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
@@ -291,10 +296,9 @@
 
                             <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
                                 <Button
-                                    class="inline-block items-center h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                    class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                     :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 >
-                                    <!-- <span class="text-xs">Voir plus</span> -->
                                     <EyeIcon class="h-6 mt-1" />
                                 </Button>
                             </TableCell>
@@ -310,16 +314,20 @@
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
-import { useSearchReplacements } from '~/composables/useReplacements';
+import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 
 useHead({
     title: 'Liste des remplacements',
 });
 
-const { loading, replacements, fetchReplacements } = useSearchReplacements();
+const { loading, getReplacements } = useReplacements();
+const { loadingSearch, fetchReplacements } = useSearchReplacements();
+
+const initialReplacements = ref(await getReplacements());
+const currentReplacements = ref(initialReplacements.value.data);
 
 onMounted(() => {
-    fetchReplacements();
+    getReplacements();
 });
 
 const postalCodeInput = ref('');
@@ -357,7 +365,7 @@ const formData = reactive({
     selectedDays: [],
 });
 
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday'];
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday', 'all'];
 const frenchDays = {
     monday: 'Lundi',
     tuesday: 'Mardi',
@@ -366,6 +374,7 @@ const frenchDays = {
     friday: 'Vendredi',
     Saturday: 'Samedi',
     Sunday: 'Dimanche',
+    all: 'Tous',
 };
 
 const toggleDay = (day) => {
@@ -421,13 +430,33 @@ const removeCityTag = (tag) => {
     formData.cityTags = formData.cityTags.filter(t => t !== tag);
 };
 
-const submit = () => {
+const submit = async () => {
     isSubmitted.value = true;
-    fetchReplacements({
-        selectedDays: Array.from(formData.selectedDays),
-        postalCode: toRaw(formData.postalCodeTags),
-        cities: toRaw(formData.cityTags),
-    });
+
+    const hasSearchCriteria = formData.selectedDays.length > 0 || formData.postalCodeTags.length > 0 || formData.cityTags.length > 0;
+
+    try {
+        if (hasSearchCriteria) {
+            const response = await fetchReplacements({
+                selectedDays: Array.from(formData.selectedDays),
+                postalCode: toRaw(formData.postalCodeTags),
+                cities: toRaw(formData.cityTags),
+            });
+            currentReplacements.value = response.replacements.data;
+        }
+        else {
+            currentReplacements.value = initialReplacements.value;
+        }
+    }
+    catch (error) {
+        console.error('Error during search:', error);
+    }
+};
+
+const reinitializeFilter = () => {
+    formData.postalCodeTags = [];
+    formData.cityTags = [];
+    formData.selectedDays = [];
 };
 
 watch(() => formData.postalCodeTags, () => {
@@ -436,6 +465,31 @@ watch(() => formData.postalCodeTags, () => {
 watch(() => formData.cityTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
+watch(() => formData.selectedDays, () => {
+    if (isSubmitted.value) isSubmitted.value = false;
+});
+
+watch(
+    [
+        () => formData.postalCodeTags,
+        () => formData.cityTags,
+        () => formData.selectedDays,
+    ],
+    ([newPostalCodes, newCities, newDays]) => {
+        if (
+            newPostalCodes.length === 0
+            && newCities.length === 0
+            && newDays.length === 0
+        ) {
+            currentReplacements.value = initialReplacements.value.data;
+            isSubmitted.value = false;
+        }
+        else if (isSubmitted.value) {
+            submit();
+        }
+    },
+    { deep: true },
+);
 
 definePageMeta({
     layout: 'dashboard',

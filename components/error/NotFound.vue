@@ -23,8 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import LayoutError from '~/layouts/error.vue';
-
 const isAuthenticated = computed(() => {
     return false;
 });

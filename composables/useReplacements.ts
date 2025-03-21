@@ -103,17 +103,16 @@ export const useSearchReplacements = () => {
 
     const replacements = useState('replacements', () => []);
     const error = useState('replacementError', () => null);
-    const loading = useState('replacementLoading', () => false);
+    const loadingSearch = useState('replacementLoading', () => false);
 
     async function fetchReplacements({
         postalCode = [],
         cities = [],
         selectedDays = [],
     } = {}) {
-        loading.value = true;
+        loadingSearch.value = true;
         error.value = null;
 
-        // Création de l'objet à envoyer
         const data = {
             zipCodes: postalCode,
             cities: cities,
@@ -121,36 +120,23 @@ export const useSearchReplacements = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8094/api/replacements', {
+            const response = await $apifetch('api/replacements/search', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(data),
             });
 
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Réponse du serveur :', result);
-
-            // Stocker la réponse dans une variable réactive (si nécessaire)
-            replacements.value = result.replacements;
-            return result;
+            return response;
         }
         catch (err) {
             console.error('Erreur lors de la requête :', err);
             error.value = err.message || 'Une erreur est survenue';
         }
         finally {
-            loading.value = false;
+            loadingSearch.value = false;
         }
     }
 
-    // Retourne les valeurs réactives et la fonction
-    return { replacements, error, loading, fetchReplacements };
+    return { replacements, error, loadingSearch, fetchReplacements };
 };
 
 export const useDetailReplacement = (replacementId) => {
