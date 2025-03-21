@@ -127,9 +127,10 @@ export default defineNuxtConfig({
     },  */   
     image: {
       provider: 'static',
+      dir: 'public/images',
+      // Les options du provider static n'incluent pas la propriété 'dir'
       static: {
-        // Le chemin relatif à la racine du projet où se trouvent vos images
-        dir: 'public/images'
+        // Autres options du provider static si nécessaire
       }
     },
     
