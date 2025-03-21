@@ -50,16 +50,16 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-4 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary w-80 flex justify-center items-center text-white s">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary w-80 flex justify-center items-center text-white s">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white">
                             Code postal
                         </TableHead>
-                        <TableHead class="bg-primary w-80 flex justify-center items-center text-white s">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary w-80 flex justify-center items-center text-white s">
+                        <TableHead class="bg-primary text-nowrap w-full flex justify-center items-center text-white">
                             Type de soin à pratiquer
                         </TableHead>
                     </TableRow>
