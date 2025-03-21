@@ -1,5 +1,5 @@
 <template>
-    <NuxtImg
+    <LayoutsAppImage
         :src="'logo.png'"
         alt="InfiSwap"
         class="hover:cursor-pointer"

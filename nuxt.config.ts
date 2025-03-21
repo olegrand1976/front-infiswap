@@ -3,20 +3,24 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
-        process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
+        'shadcn-nuxt',
         '@nuxt/image',
     ].filter(Boolean),
-
-    plugins: [],
-
+    plugins: [
+    ],
+    components: [
+        '~/components/ui',
+        '~/components',
+    ],
     imports: {
         dirs: [
             './utils',
             'composables',
+            'components/ui',
+            'components',
         ],
+        autoImport: true,
     },
-
-    // Active les devtools uniquement en développement
     devtools: { enabled: process.env.NODE_ENV === 'development' },
 
     app: {
@@ -47,7 +51,9 @@ export default defineNuxtConfig({
             ],
         },
     },
-
+    css: [
+        '~/assets/css/tailwind.css',
+    ],
     runtimeConfig: {
         public: {
             API_URL: process.env.API_URL,
@@ -55,6 +61,7 @@ export default defineNuxtConfig({
         },
     },
 
+    // Autres optimisations de build (minification, etc.)
     build: {
         optimization: {
             minimize: true,
@@ -76,8 +83,11 @@ export default defineNuxtConfig({
 
     nitro: {
         prerender: {
-            routes: ['/', '/about', '/contact'],
-            ignore: ['/_ipx/**'],
+            routes: [
+                '/',
+                '/about',
+                '/contact',
+            ],
             failOnError: false,
         },
     },
@@ -92,7 +102,6 @@ export default defineNuxtConfig({
             minify: 'esbuild',
         },
     },
-
     gtm: {
         id: 'GTM-KFBFVVR3',
         queryParams: {
@@ -113,16 +122,12 @@ export default defineNuxtConfig({
         devtools: process.env.NODE_ENV !== 'production',
     },
 
-    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
-    image: {
-        provider: 'ipx',
-        dir: 'assets/images',
-        domains: ['localhost', 'www.infiswap.be'],
-        format: ['webp', 'jpg', 'png', 'svg'],
-        ipx: {
-            baseURL: '/_ipx',
-        },
+    server: {
+        host: '0.0.0.0',
+        port: 3000,
     },
+
+    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
 
     shadcn: {
         prefix: '',

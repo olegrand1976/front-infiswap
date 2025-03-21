@@ -3,19 +3,19 @@
         <div class="hidden sm:flex flex-row justify-center md:h-auto xl:pt-0 sm:pt-48">
             <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
                 <div class="xl:absolute z-20 bottom-0 left-1/3">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/auth/Group_1164.png"
                         class="xl:w-[20rem] z-20 lg:w-64 mt-24 relative flex justify-center mx-auto"
                     />
                 </div>
                 <div class="absolute top-36 left-20">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/plus.png"
                         class="xl:w-24 lg:w-20"
                     />
                 </div>
                 <div class="absolute bottom-32 right-20">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/Unin.png"
                         class="xl:w-16 lg:w-12"
                     />
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="absolute bottom-24 left-24">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/cog.png"
                         class="w-52"
                     />
@@ -90,7 +90,7 @@
                                 variant="secondary"
                                 class="md:w-80 sm:w-64 shadow flex justify-center space-x-2 items-center md:text-base sm:text-xs"
                             >
-                                <NuxtImg
+                                <LayoutsAppImage
                                     src="/icons/google.png"
                                     alt="Google"
                                     class="w-4"
@@ -174,7 +174,7 @@
                             variant="secondary"
                             class="w-80"
                         >
-                            <NuxtImg
+                            <LayoutsAppImage
                                 src="/icons/google.png"
                                 alt="Google"
                                 class="w-4"
@@ -210,6 +210,8 @@
 <script lang="ts" setup>
 import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import Button from '~/components/ui/button/Button.vue';
 
 const router = useRouter();
 const { login } = useAuth();

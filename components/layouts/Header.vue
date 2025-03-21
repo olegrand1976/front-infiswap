@@ -69,7 +69,7 @@
                 }"
             >
                 <div class="absolute top-0">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="round_cont.png"
                         class="w-screen h-40"
                     />

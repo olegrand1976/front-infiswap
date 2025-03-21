@@ -5,7 +5,7 @@
                 class="mt-3 flex relative flex-col sm:container md:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-8"
             >
                 <div class="container w-full max-w-2xl ">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/equipe_infirmier.png"
                         alt="Image d'une equipe infirmier"
                         class="w-full lg:object-contain lg:rounded-none lg:w-[30rem] md:h-64 sm:h-44 sm:object-cover sm:rounded-3xl"
@@ -72,7 +72,7 @@
 
                     <div class="sm:hidden bg-white flex flex-col space-y-4 py-4 px-10 rounded-3xl absolute -bottom-16 z-20">
                         <div class="absolute right-28 -top-5">
-                            <NuxtImg
+                            <LayoutsAppImage
                                 src="/icons/croix.png"
                                 class="z-30 w-10 h-10"
                             />
@@ -88,7 +88,7 @@
 
                 <!-- <div class="flex relative flex-col sm:container sm:flex-row justify-center items-center xl:space-x-40 lg:space-x-24 md:space-x-20 sm:space-x-16">
                     <div class="z-10 w-full">
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/home/cc62cd9.png"
                             alt="Image d'un homme âgé avec une infirmière"
                             class="h-80 w-full xl:w-[33rem] xl:h-[22rem] lg:w-[26rem] lg:h-80 md:w-[22rem] md:h-[14.5rem] rounded-3xl object-cover object-top"
@@ -117,7 +117,7 @@
 
                     <div class="sm:hidden bg-white flex flex-col space-y-4 py-4 px-10 rounded-3xl absolute -bottom-16 z-20">
                         <div class="absolute right-32 -top-5">
-                            <NuxtImg
+                            <LayoutsAppImage
                                 src="/icons/croix.png"
                                 class="z-30 w-10 h-10"
                             />
@@ -182,7 +182,7 @@
 
                     <div class="sm:hidden bg-white flex flex-col space-y-4 py-4 px-10 rounded-3xl absolute -bottom-16 z-20">
                         <div class="absolute right-36 -top-5">
-                            <NuxtImg
+                            <LayoutsAppImage
                                 src="/icons/croix.png"
                                 class="z-30 w-10 h-10"
                             />

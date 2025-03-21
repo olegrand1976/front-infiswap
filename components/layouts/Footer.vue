@@ -66,24 +66,24 @@
                     </form>
                     <div class="flex flex-row justify-center md:justify-start space-x-4 pt-4 md:pt-0">
                         <NuxtLink to="https://web.facebook.com/profile.php?viewas=100000686899395&id=61572833867576">
-                            <NuxtImg
-                                src="/icons/facebook.png"
+                            <LayoutsAppImage
+                                src="icons/facebook.png"
                                 alt="Facebook"
                                 title="Facebook"
                                 class="w-5"
                             />
                         </NuxtLink>
                         <NuxtLink to="https://www.instagram.com/infiswapsoins/">
-                            <NuxtImg
-                                src="/icons/instagram.png"
+                            <LayoutsAppImage
+                                src="icons/instagram.png"
                                 alt="Instagram"
                                 title="Instagram"
                                 class="w-5"
                             />
                         </NuxtLink>
                         <NuxtLink to="https://www.linkedin.com/company/infiswap-vos-soins-sans-interruption/?viewAsMember=true">
-                            <NuxtImg
-                                src="/icons/linkedin.png"
+                            <LayoutsAppImage
+                                src="icons/linkedin.png"
                                 alt="Linkedin"
                                 title="Linkedin"
                                 class="w-5"

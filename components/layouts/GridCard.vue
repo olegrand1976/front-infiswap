@@ -7,7 +7,7 @@
                 class="w-full flex flex-col rounded-lg xl:-mt-28 lg:-mt-16 md:-mt-12 sm:-mt-10"
             >
                 <CardHeader>
-                    <NuxtImg
+                    <LayoutsAppImage
                         :src="card.image"
                         :alt="card.alt"
                         class="rounded-lg object-cover object-right md:h-36 sm:h-28 sm:w-full"
@@ -65,7 +65,7 @@
                         >
                             <Card class="relative -mt-36 w-48 mx-auto rounded-xl">
                                 <CardHeader>
-                                    <NuxtImg
+                                    <LayoutsAppImage
                                         :src="card.image"
                                         :alt="card.alt"
                                         class="w-full h-32 rounded-xl"

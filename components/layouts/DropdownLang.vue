@@ -20,7 +20,7 @@
                 >
                     <SelectItem :value="language.value">
                         <div class="flex space-x-1">
-                            <NuxtImg
+                            <LayoutsAppImage
                                 :src="language.icon"
                                 :alt="language.name"
                                 class="w-4 h-3 my-auto mr-2"

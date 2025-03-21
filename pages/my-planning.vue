@@ -9,7 +9,7 @@
 
         <section class="grid grid-cols-2 gap-24 items-center pt-40 pb-24 container">
             <div>
-                <NuxtImg
+                <LayoutsAppImage
                     src="/home/Rectangle_24.png"
                     alt="Planning"
                     class="rounded-lg"
@@ -78,7 +78,7 @@
 
             <div class="grid grid-cols-1 gap-y-4 container">
                 <div>
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/nurse_with_pink_bg.png"
                         alt="Infirmière faisant un planning"
                     />
@@ -129,7 +129,7 @@
                 </div>
 
                 <div>
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/cc62cd9.png"
                         alt="Infirmière avec un homme agé"
                         class="rounded-xl w-full xl:h-80 xl:object-cover"

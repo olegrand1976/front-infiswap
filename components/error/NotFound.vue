@@ -2,7 +2,7 @@
     <div>
         <LayoutError>
             <template #image>
-                <NuxtImg
+                <LayoutsAppImage
                     src="/svg/not_found.svg"
                     class="h-72"
                 />
@@ -23,8 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import LayoutError from '~/layouts/error.vue';
-
 const isAuthenticated = computed(() => {
     return false;
 });

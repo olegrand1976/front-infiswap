@@ -1,0 +1,56 @@
+# Utilise une image de base Node.js en version slim
+ARG NODE_VERSION=20.18.0
+FROM node:${NODE_VERSION}-slim as base
+
+# Définir le port d'écoute
+ARG PORT=3000
+
+# Positionner le répertoire de travail dans /app
+WORKDIR /app
+
+# --- Phase de build ---
+FROM base as build
+# Copier uniquement package.json et package-lock.json pour installer les dépendances
+COPY package*.json ./
+RUN npm install
+# Copier tout le reste
+COPY . .
+
+# Créer les répertoires d'images AVANT le build - cette ligne est cruciale
+RUN mkdir -p /app/public/images
+RUN cp -a /app/assets/images/. /app/public/images/
+
+# Debug pour vérifier les images
+RUN ls -la /app/public/images
+
+# Construire l'application Nuxt
+RUN NODE_ENV=production npm run build
+
+# --- Phase d'exécution ---
+FROM base
+ENV NODE_ENV=production
+ENV PORT=${PORT}
+# Ajout de node_modules/.bin dans le PATH
+ENV PATH=/app/node_modules/.bin:$PATH
+
+# Copier seulement les fichiers nécessaires
+COPY --from=build /app/.output /app/.output
+COPY --from=build /app/public /app/public
+
+# PAS besoin de copier les assets car nous utilisons public/images en production
+# COPY --from=build /app/assets /app/assets
+
+# Sécurité
+RUN if ! getent group www-data >/dev/null 2>&1; then \
+      groupadd -r www-data; \
+    fi && \
+    if ! id -u www-data >/dev/null 2>&1; then \
+      useradd -r -g www-data www-data; \
+    fi && \
+    chown -R www-data:www-data /app
+
+USER www-data
+EXPOSE ${PORT}
+
+# Démarrer l'application 
+CMD [ "node", ".output/server/index.mjs" ]

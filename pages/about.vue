@@ -42,7 +42,7 @@
                         </Button>
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/home/woman_infirmier.png"
                             alt="Infirmière avec une vieille femme"
                             class="w-full max-w-2xs lg:max-w-none z-20"
@@ -51,13 +51,13 @@
                 </div>
             </div>
             <div class="absolute bottom-0 right-0 hidden lg:block z-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="Vector_2.png"
                     class="w-64 lg:w-[32rem] relative"
                 />
             </div>
             <div class="absolute bottom-[20%] left-2 hidden lg:block z-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="/icons/Unin.png"
                     class="w-8 lg:w-12 relative"
                 />
@@ -71,7 +71,7 @@
         <div class="container">
             <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20">
                 <div>
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/black_infirmier.png"
                         alt="Jeune infirmière noire"
                         class="w-full"
@@ -162,6 +162,11 @@
 </template>
 
 <script lang="ts" setup>
+import Card from '~/components/ui/card/Card.vue';
+import CardContent from '~/components/ui/card/CardContent.vue';
+import CardHeader from '~/components/ui/card/CardHeader.vue';
+import CardTitle from '~/components/ui/card/CardTitle.vue';
+
 const cards = [
     {
         title: '🔍 Recherche rapide et ciblée',

@@ -1,6 +1,6 @@
 <template>
     <div class="relative py-16 flex flex-col">
-        <NuxtImg
+        <LayoutsAppImage
             src="triangle_image.png"
             alt="Des infirmiers"
             class="absolute h-1/2 md:h-full right-0 bottom-0"
@@ -31,7 +31,7 @@
                     </div> -->
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/woman_infirmier.png"
                         alt=" femme infirmier"
                         class="ml-auto rounded-3xl h-96 w-full object-cover object-center"
@@ -39,12 +39,12 @@
                 </div>
             </div>
 
-            <NuxtImg
+            <LayoutsAppImage
                 src="stetho.png"
                 class="hidden md:inline-block z-0 w-16 lg:w-24 md:absolute -top-5 lg:-top-12 -left-7 lg:left-20"
             />
-            <NuxtImg
-                src="/icons/Unin.png"
+            <LayoutsAppImage
+                src="icons/Unin.png"
                 class="hidden md:inline-block z-0 w-14 md:absolute transform -left-5 lg:left-20 bottom-10"
             />
         </div>

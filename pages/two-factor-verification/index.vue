@@ -3,7 +3,7 @@
         <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
             <div class="bg-tertiary/30 hidden lg:flex flex-col items-center lg:w-[115vw] relative container">
                 <div class="flex justify-center items-center my-auto">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/auth/Group_1170.png"
                         class="w-80"
                     />
