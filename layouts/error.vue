@@ -2,7 +2,7 @@
     <div class="h-screen flex flex-col text-center bg-white">
         <div class="container relative flex-1 z-10">
             <NuxtImg
-                src="/logo.png"
+                src="logo.png"
                 class="h-12 absolute top-10 z-20 left-1/2 transform -translate-x-1/2 lg:left-10 lg:translate-x-0"
             />
             <div class="flex justify-center items-end text-center h-full">

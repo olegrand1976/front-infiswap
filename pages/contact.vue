@@ -3,7 +3,7 @@
         <div class="sm:hidden relative flex flex-col items-center">
             <div class="absolute inset-0 z-0">
                 <NuxtImg
-                    src="/Mask_group.png"
+                    src="Mask_group.png"
                     class="w-full h-48"
                 />
             </div>

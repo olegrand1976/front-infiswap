@@ -35,14 +35,14 @@
 
             <div class="hidden sm:block absolute z-20 top-12 right-28  lg:right-40 transform -translate-x-1/2">
                 <NuxtImg
-                    src="/stethoscope_2.png"
+                    src="stethoscope_2.png"
                     class="relative xl:w-52 w-40 lg-block hidden"
                 />
             </div>
         </div>
 
         <NuxtImg
-            src="/triangle_left.png"
+            src="triangle_left.png"
             class="hidden lg:inline-block lg:absolute top-0 w-1/2 h-full"
         />
     <!--

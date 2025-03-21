@@ -5,7 +5,7 @@
                 <div class="-mb-28 md:-mb-14">
                     <div class="relative">
                         <NuxtImg
-                            src="/under_construction.png"
+                            src="under_construction.png"
                             class="h-72"
                         />
                         <NuxtImg

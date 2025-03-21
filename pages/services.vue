@@ -58,7 +58,7 @@
 
             <div class="absolute bottom-0 right-0 hidden lg:block z-0">
                 <NuxtImg
-                    src="/Vector_2.png"
+                    src="Vector_2.png"
                     class="w-64 lg:w-[32rem] relative"
                 />
             </div>

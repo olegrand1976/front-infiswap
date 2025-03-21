@@ -34,7 +34,7 @@
         <div class="container my-14 overflow-y-hidden lg:w-full md:h-auto flex flex-col justify-center items-center">
             <div>
                 <NuxtImg
-                    src="/logo.png"
+                    src="logo.png"
                     class="h-14 lg:h-28 mb-4"
                 />
             </div>

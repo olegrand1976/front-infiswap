@@ -70,7 +70,7 @@
             >
                 <div class="absolute top-0">
                     <NuxtImg
-                        src="/round_cont.png"
+                        src="round_cont.png"
                         class="w-screen h-40"
                     />
                 </div>

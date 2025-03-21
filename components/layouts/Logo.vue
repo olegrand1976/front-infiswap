@@ -1,6 +1,6 @@
 <template>
     <NuxtImg
-        :src="'/logo.png'"
+        :src="'logo.png'"
         alt="InfiSwap"
         class="hover:cursor-pointer"
         :class="classe"
