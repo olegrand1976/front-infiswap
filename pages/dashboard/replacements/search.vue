@@ -270,17 +270,22 @@
                             <TableCell class="bg-gray-100 text-xs">
                                 <div
                                     class="flex h-10 rounded mt-3 justify-center items-center overflow-hidden"
-                                    :class="[
-                                        'bg-gray-200',
-                                        hasMatchingCity(replacement.details) ? 'bg-success text-white' : '',
-                                    ]"
                                 >
-                                    <span class="truncate w-full px-2">
+                                    <span
+                                        v-for="(detail, index) in replacement.details"
+                                        :key="index"
+                                        :class="cn('mr-1', {
+                                            'text-success font-bold': formData.cityTags.indexOf(detail?.patient?.city) !== -1,
+                                        })"
+                                    >
+                                        {{ detail?.patient?.city }}
+                                    </span>
+                                    <!-- <span class="truncate w-full px-2">
                                         {{ replacement.details
                                             ?.map((detail) => detail?.patient?.city)
                                             .filter(Boolean)
                                             .join(', ') || '' }}
-                                    </span>
+                                    </span> -->
                                 </div>
                             </TableCell>
 
@@ -315,6 +320,7 @@ import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@h
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
+import { cn } from '@/lib/utils';
 
 useHead({
     title: 'Liste des remplacements',

@@ -73,11 +73,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
-const router = useRouter();
 
 const options = [
     { label: 'Je cherche des remplacements', value: 'replace_me' },
@@ -121,6 +119,9 @@ const handleSubmit = async (event) => {
             });
             setTimeout(() => {
                 navigateTo('/dashboard');
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
             }, 2000);
         }
     }

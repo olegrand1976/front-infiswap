@@ -45,24 +45,24 @@
                                 </div>
                                 <div v-if="tours.length > 0 && !loading && !error">
                                     <div
-                                        v-for="(patient, index) in tours"
-                                        :key="patient.id"
+                                        v-for="(item, index) in tours"
+                                        :key="item.id"
                                     >
                                         <div
                                             class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer"
                                             :class="{
-                                                'bg-primary text-white': selectedPatientId === patient.id || (index === 0 && !selectedPatientId),
+                                                'bg-primary text-white': selectedPatientId === item.id || (index === 0 && !selectedPatientId),
                                             }"
                                             @click="handleFetchCareType(patient.id)"
                                         >
                                             <p class="flex justify-between w-full">
-                                                <span>{{ patient.firstname }} {{ patient.lastname }}
+                                                <span>{{ item.firstname }} {{ item.lastname }}
                                                 </span>
                                             </p>
                                             <div class="flex mr-4">
                                                 <XCircleIcon
                                                     class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2"
-                                                    @click="openDialog(patient.id, patient.visit_times?.[0]?.id)"
+                                                    @click="openDialog(item.id, item.visit_times?.[0]?.id)"
                                                 />
                                             </div>
                                         </div>
@@ -410,7 +410,6 @@ const handleFetchCareType = (patientId) => {
         fetchCareType(patientId);
         careTypeFilter.value = getUniqueCareTypes(careType.value);
         console.log('careType.value.patient_care_types :', careType.value.patient_care_types);
-
         if (formattedStart.value) {
             fetchPatient(patientId, formattedStart.value, formattedStart.value);
         }
