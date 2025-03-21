@@ -77,6 +77,7 @@ import { useRouter } from 'vue-router';
 
 const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
+
 const router = useRouter();
 
 const options = [
@@ -121,6 +122,9 @@ const handleSubmit = async (event) => {
             });
             setTimeout(() => {
                 navigateTo('/dashboard');
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
             }, 2000);
         }
     }
