@@ -39,7 +39,32 @@ build:
     - export NODE_OPTIONS=--max_old_space_size=8192
     - NODE_ENV=production npm run build
     # Copier le .env.production dans l'image Docker
-    - docker build -f Dockerfile.prod --pull -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
+    - |
+      # Créer un Dockerfile temporaire qui inclut .env.production
+      cat > Dockerfile.temp << 'EOF'
+      FROM node:20.18.0-slim
+      WORKDIR /app
+      COPY . .
+      # Ajouter le fichier .env.production créé pendant le CI/CD
+      COPY .env.production .env.production
+      # Le reste du Dockerfile
+      RUN npm install && \
+        NODE_ENV=production npm run build && \
+        npm prune --production && \
+        if ! getent group www-data >/dev/null 2>&1; then \
+        groupadd -r www-data; \
+        fi && \
+        if ! id -u www-data >/dev/null 2>&1; then \
+        useradd -r -g www-data www-data; \
+        fi && \
+        chown -R www-data:www-data /app
+      USER www-data
+      ENV NODE_ENV=production
+      ENV PORT=3000
+      EXPOSE 3000
+      CMD ["node", ".output/server/index.mjs"]
+      EOF
+    - docker build -f Dockerfile.temp --pull -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
     - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
     - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
     - docker images
