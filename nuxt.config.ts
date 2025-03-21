@@ -130,7 +130,9 @@ export default defineNuxtConfig({
       static: {
         // Le chemin relatif à la racine du projet où se trouvent vos images
         dir: 'public/images'
-      },
+      }
+    },
+    
     
     shadcn: {
       prefix: '',
