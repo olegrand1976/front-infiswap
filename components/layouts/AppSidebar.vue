@@ -115,7 +115,10 @@
                 <SidebarMenuButton
                     class="bg-primary text-white"
                 >
-                    <Button @click="logout" class="flex space-x-2 items-center">
+                    <Button
+                        class="flex space-x-2 items-center"
+                        @click="logout"
+                    >
                         <PowerIcon class="w-6 opacity-80" />
                         <span>Deconnexion</span>
                     </Button>
