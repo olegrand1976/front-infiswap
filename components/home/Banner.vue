@@ -23,9 +23,9 @@
 
                 <Button
                     class="font-semibold text-sm my-4"
-                    href="/register-beta"
+                    href="/login"
                 >
-                    Pré-inscription
+                    Connexion
                 </Button>
             </div>
         </div>
