@@ -406,6 +406,9 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import * as yup from 'yup';
+
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+
 import {
     Select,
     SelectContent,
