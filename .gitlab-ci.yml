@@ -21,6 +21,15 @@ build:
       - .npm/
   before_script:
     - apt-get update && apt-get install -y docker.io  # Installer le client Docker sur Debian
+    # Créer le fichier .env.production à partir des variables CI/CD
+    - |
+      cat > .env.production << EOF
+      NODE_ENV=${NODE_ENV}
+      API_URL=${API_URL}
+      FRONT_END_URL=${FRONT_END_URL}
+      PORT=${PORT}
+      EOF
+    - cat .env.production # Afficher pour vérification (attention aux secrets)
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
     - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
@@ -29,6 +38,7 @@ build:
     - npm install
     - export NODE_OPTIONS=--max_old_space_size=8192
     - NODE_ENV=production npm run build
+    # Copier le .env.production dans l'image Docker
     - docker build -f Dockerfile.prod --pull -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
     - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
     - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
