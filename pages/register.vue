@@ -529,15 +529,9 @@ const schema = yup.object({
     password: yup.string()
         .required('Le mot de passe est obligatoire')
         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
-    // passwordConfirmation: yup
-    //     .string()
-    //     .required('La confirmation du mot de passe est obligatoire')
-    //     .min(8, 'La confirmation du mot de passe doit contenir au moins 8 caractères')
-    //     .test('length-match', 'Les mots de passe doivent avoir la même longueur', function (value) {
-    //         const { password } = this.parent;
-    //         return value && password && value.length === password.length;
-    //     })
-    //     .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre'),
+    passwordConfirmation: yup.string()
+        .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
+        .required('La confirmation du mot de passe est obligatoire'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
