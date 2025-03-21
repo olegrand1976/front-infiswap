@@ -224,7 +224,7 @@
                         </Select>
                     </div>
 
-                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="Genres">
                                 Genres
@@ -504,7 +504,7 @@ const availabilities = {
 const gender = {
     homme: 'Homme',
     femme: 'Femme',
-    x: 'X'
+    x: 'X',
 };
 
 const initialFormData = {
@@ -519,7 +519,7 @@ const initialFormData = {
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
-    genre:'',
+    genre: '',
     care_informations: [],
     visits: [
         {

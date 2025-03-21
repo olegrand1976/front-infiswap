@@ -38,7 +38,7 @@
                         <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Type de soin
                         </TableHead>
-                         <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
                             Action
                         </TableHead>
                     </TableRow>
