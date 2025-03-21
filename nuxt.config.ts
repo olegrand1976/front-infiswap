@@ -122,7 +122,7 @@ export default defineNuxtConfig({
         ignore: ['/_ipx/**'],
         failOnError: false
       }
-    }
+    },
     
     shadcn: {
       prefix: '',
