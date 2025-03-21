@@ -21,15 +21,15 @@ build:
       - .npm/
   before_script:
     - apt-get update && apt-get install -y docker.io  # Installer le client Docker sur Debian
-    # Créer le fichier .env.production à partir des variables CI/CD
+    # Créer le fichier .env à partir des variables CI/CD
     - |
-      cat > .env.production << EOF
+      cat > .env << EOF
       NODE_ENV=${NODE_ENV}
       API_URL=${API_URL}
       FRONT_END_URL=${FRONT_END_URL}
       PORT=${PORT}
       EOF
-    - cat .env.production # Afficher pour vérification (attention aux secrets)
+    - cat .env # Afficher pour vérification (attention aux secrets)
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
     - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
@@ -38,15 +38,15 @@ build:
     - npm install
     - export NODE_OPTIONS=--max_old_space_size=8192
     - NODE_ENV=production npm run build
-    # Copier le .env.production dans l'image Docker
+    # Copier le .env dans l'image Docker
     - |
-      # Créer un Dockerfile temporaire qui inclut .env.production
+      # Créer un Dockerfile temporaire qui inclut .env
       cat > Dockerfile.temp << 'EOF'
       FROM node:20.18.0-slim
       WORKDIR /app
       COPY . .
-      # Ajouter le fichier .env.production créé pendant le CI/CD
-      COPY .env.production .env.production
+      # Ajouter le fichier .env créé pendant le CI/CD
+      COPY .env .env
       # Le reste du Dockerfile
       RUN npm install && \
         NODE_ENV=production npm run build && \
