@@ -28,10 +28,15 @@ COPY --from=build /src/assets /src/assets
 COPY --from=build /src/node_modules /src/node_modules
 
 # Copier les images à deux emplacements pour assurer la compatibilité
+#RUN mkdir -p /src/.output/public/_ipx/_ && \
+#    cp -a /src/assets/images/. /src/.output/public/_ipx/_/ && \
+#    mkdir -p /src/.output/public/assets/images && \
+#    cp -a /src/assets/images/. /src/.output/public/assets/images/
+
+# Copier les images pour le prérendu
 RUN mkdir -p /src/.output/public/_ipx/_ && \
-    cp -a /src/assets/images/. /src/.output/public/_ipx/_/ && \
-    mkdir -p /src/.output/public/assets/images && \
-    cp -a /src/assets/images/. /src/.output/public/assets/images/
+    cp -a /src/public/. /src/.output/public/_ipx/_/ && \
+    echo "Images copiées pour IPX"
 
 # USER ET GROUP WWW-DATA
 RUN if ! getent group www-data >/dev/null 2>&1; then \
