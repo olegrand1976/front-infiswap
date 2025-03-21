@@ -36,7 +36,8 @@
                                         <div class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer"
                                             :class="{
                                                 'bg-primary text-white': selectedPatientId === patient.id || (index === 0 && !selectedPatientId),
-                                            }" @click="handleFetchCareType(patient.id)">
+                                            }" @click="handleFetchCareType(patient.id)"
+                                        >
                                             <p class="flex justify-between w-full">
                                                 <span>{{ patient.firstname }} {{ patient.lastname }}
                                                 </span>
@@ -155,31 +156,31 @@
                                 </div>
 
                                 <div class="w-full">
-                                <div class="bg-gray-100 mt-4 rounded-lg">
-                                    <div class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg">
-                                        Liste des types de soins
-                                    </div>
-                                    <div class="flex justify-center w-full" v-if="careTypeLoading">
-                                        Loading care type list ...
-                                    </div>
-                                    <div v-if="careTypeError">
-                                        Error: {{ careTypeError.message }}
-                                    </div>
-                                    <div class="p-4 space-y-2">
-                                        <div
-                                            v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0">
-                                            <div v-for="(care, index) in careTypeFilter" :key="index"
-                                                class="bg-gray-200 p-3 rounded-lg mt-2">
-                                                {{ care.care_type_name }}
-                                            </div>
+                                    <div class="bg-gray-100 mt-4 rounded-lg">
+                                        <div class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg">
+                                            Liste des types de soins
                                         </div>
-                                        <div
-                                            v-else-if="careType && (!careType.patient_care_types || careType.patient_care_types.length === 0)">
-                                            Pas de données pour l'instant
+                                        <div class="flex justify-center w-full" v-if="careTypeLoading">
+                                            Loading care type list ...
+                                        </div>
+                                        <div v-if="careTypeError">
+                                            Error: {{ careTypeError.message }}
+                                        </div>
+                                        <div class="p-4 space-y-2">
+                                            <div
+                                                v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0">
+                                                <div v-for="(care, index) in careTypeFilter" :key="index"
+                                                    class="bg-gray-200 p-3 rounded-lg mt-2">
+                                                    {{ care.care_type_name }}
+                                                </div>
+                                            </div>
+                                            <div
+                                                v-else-if="careType && (!careType.patient_care_types || careType.patient_care_types.length === 0)">
+                                                Pas de données pour l'instant
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
 
                             <div class="w-full">
@@ -233,8 +234,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            
                         </div>
                     </div>
                 </div>
@@ -362,9 +361,8 @@ const handleFetchCareType = (patientId) => {
         selectedPatientId.value = patientId;
 
         fetchCareType(patientId);
-         careTypeFilter.value = getUniqueCareTypes(careType.value);
+        careTypeFilter.value = getUniqueCareTypes(careType.value);
         console.log('careType.value.patient_care_types :', careType.value.patient_care_types);
-        
         if (formattedStart.value) {
             fetchPatient(patientId, formattedStart.value, formattedStart.value);
         }
@@ -375,20 +373,19 @@ const handleFetchCareType = (patientId) => {
 };
 
 const getUniqueCareTypes = (data: any) => {
-    console.log('data :', data);    
-  if (!data?.patient_care_types || !Array.isArray(data.patient_care_types)) {
-    return [];
-  }
+    console.log('data :', data);
+    if (!data?.patient_care_types || !Array.isArray(data.patient_care_types)) {
+        return [];
+    }
 
-  const uniqueMap = new Map();
+    const uniqueMap = new Map();
 
-  data.patient_care_types.forEach((item) => {
-    uniqueMap.set(item.care_type_id, item); // Utilise l'ID comme clé pour éviter les doublons
-  });
+    data.patient_care_types.forEach((item) => {
+        uniqueMap.set(item.care_type_id, item);
+    });
 
-  return Array.from(uniqueMap.values());
-}
-
+    return Array.from(uniqueMap.values());
+};
 
 watch(tours, (newTours) => {
     if (newTours.length > 0) {

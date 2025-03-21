@@ -149,8 +149,6 @@ import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 const { $toast } = useNuxtApp();
-const router = useRouter();
-
 definePageMeta({
     layout: 'auth',
 });
@@ -186,7 +184,7 @@ const submitForm = async (event: Event) => {
                 description: 'Vérifiez votre boîte de réception.',
             });
             setTimeout(() => {
-                window.location.href = '/';
+                navigateTo('/');
             }, 2000);
         }
         else {
@@ -195,7 +193,7 @@ const submitForm = async (event: Event) => {
                 description: 'Vérifiez votre boîte de réception.',
             });
             setTimeout(() => {
-                window.location.href = '/';
+                navigateTo('/');
             }, 2000);
         }
     }

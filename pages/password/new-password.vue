@@ -175,7 +175,6 @@
 <script lang="ts" setup>
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
 
 const { $toast } = useNuxtApp();
 
@@ -202,9 +201,6 @@ const getUrlParams = () => {
 };
 
 const { $apifetch } = useNuxtApp();
-
-const route = useRoute();
-const token = ref(route.query.token as string || '');
 
 const resetPassword = async () => {
     getUrlParams();
@@ -237,7 +233,7 @@ const resetPassword = async () => {
                 title: 'Succès',
             });
             setTimeout(() => {
-                window.location.href = '/login';
+                navigateTo('/login');
             }, 2000);
         }
         else {
@@ -246,7 +242,7 @@ const resetPassword = async () => {
                 description: 'Votre nouveau mot de passe a été enregistré',
             });
             setTimeout(() => {
-                window.location.href = '/login';
+                navigateTo('/login');
             }, 2000);
         }
     }
