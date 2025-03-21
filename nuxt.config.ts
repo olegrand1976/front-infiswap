@@ -107,9 +107,17 @@ export default defineNuxtConfig({
   
     image: {
       provider: 'ipx',
-      dir: 'public/images',
+      dir: 'assets/images',
       domains: ['localhost'],
-      format: ['webp', 'jpg', 'png']
+      format: ['webp', 'jpg', 'png', 'svg'],
+      screens: {
+        xs: 320,
+        sm: 640,
+        md: 768,
+        lg: 1024,
+        xl: 1280,
+        xxl: 1536,
+      }
     },
   
     nitro: {
