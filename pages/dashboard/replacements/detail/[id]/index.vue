@@ -1,16 +1,16 @@
 <template>
     <div class="pt-2">
         <div class="flex space-x-3 justify-between">
-            <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex justify-between items-center">
+            <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:flex-row justify-between items-center">
                 <Button
-                    class="text-sm"
+                    class="text-sm -ml-24 sm:ml-0"
                     href="/dashboard/replacements"
                 >
                     <span class="text-xs">Retour</span>
                 </Button>
 
                 <div class="flex items-center space-x-8">
-                    <h4 class="font-bold text-sm text-primary">
+                    <h4 class="font-bold text-sm text-primary ml-16 sm:ml-4 xl:ml-0">
                         Période
                     </h4>
                     <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
@@ -78,21 +78,22 @@
         <div
             v-for="(detail, index) in replacement.details"
             :key="index"
-            class="mt-6 mb-8 h-auto overflow-hidden"
+            class="mt-24 sm:mt-6 mb-8 h-auto overflow-hidden"
         >
             <div
-                class="flex justify-around items-center"
+                class="flex flex-col lg:flex-row lg:justify-around items-center"
             >
                 <div class="z-20">
                     <Calendar
                         :default-value="parseDateValue(detail.date)"
                         :weekday-format="'short'"
                         class="rounded-xl bg-white shadow"
+                        locale="Fr"
                     />
                 </div>
 
-                <div class="bg-gray-100 z-10 -ml-10 flex space-x-6 p-8 w-[48.25rem] relative rounded-2xl">
-                    <div class=" w-64">
+                <div class="bg-gray-100 z-10 -ml-10 flex flex-col space-y-8 sm:space-y-0 sm:flex-row space-x-6 p-8 w-full xl:w-[48.25rem] relative rounded-2xl">
+                    <div class="w-full lg:w-52 xl:w-64 2xl:ml-0 ml-8">
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
@@ -124,7 +125,7 @@
                         </div>
                     </div>
 
-                    <div class="w-72">
+                    <div class="w-full lg:w-[14.5rem] xl:w-72">
                         <div class="h-10 flex bg-primary rounded justify-center items-center">
                             <h4 class="text-white text-sm text-center">
                                 Type de soin à effectuer
@@ -141,7 +142,7 @@
                         </div>
                     </div>
 
-                    <div class="absolute top-4 right-8">
+                    <div class="hidden xl:block absolute top-4 right-8">
                         <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">
                             .
                         </div>

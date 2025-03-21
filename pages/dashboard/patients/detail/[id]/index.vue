@@ -248,10 +248,19 @@
                         <div class="flex justify-between mt-6">
                             <Button
                                 variant="outline"
+                                class="hidden sm:block"
                                 @click="addNewCareInfo"
                             >
                                 <PlusIcon class="w-4 h-4 mr-2" />
                                 Ajouter une information
+                            </Button>
+                            <Button
+                                variant="outline"
+                                class="sm:hidden"
+                                @click="addNewCareInfo"
+                            >
+                                <PlusIcon class="w-4 h-4 mr-2" />
+                                Ajouter
                             </Button>
 
                             <div class="space-x-2">
