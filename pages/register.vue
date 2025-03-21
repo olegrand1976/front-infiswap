@@ -176,7 +176,7 @@
                         >
                             {{ error.dateOfBirth }}
                         </p>
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-red-500 text-xs mt-1 ms-[5%]">
                             Veuillez entrer votre date de naissance.
                         </p>
                     </div>
@@ -529,9 +529,15 @@ const schema = yup.object({
     password: yup.string()
         .required('Le mot de passe est obligatoire')
         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
-    passwordConfirmation: yup.string()
-        .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
-        .required('La confirmation du mot de passe est obligatoire'),
+    // passwordConfirmation: yup
+    //     .string()
+    //     .required('La confirmation du mot de passe est obligatoire')
+    //     .min(8, 'La confirmation du mot de passe doit contenir au moins 8 caractères')
+    //     .test('length-match', 'Les mots de passe doivent avoir la même longueur', function (value) {
+    //         const { password } = this.parent;
+    //         return value && password && value.length === password.length;
+    //     })
+    //     .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
@@ -551,7 +557,11 @@ const schema = yup.object({
 
 const validateField = async (field) => {
     try {
-        if (field.includes('.')) {
+        if (field === 'password' || field === 'passwordConfirmation') {
+            // Validation de password et passwordConfirmation lorsque l'un des deux change
+            await schema.validateAt(field, toRaw(formData));
+        }
+        else if (field.includes('.')) {
             // Sépare le champ imbriqué
             const [parentField, childField] = field.split('.');
             const childValue = formData[parentField] ? formData[parentField][childField] : undefined;
