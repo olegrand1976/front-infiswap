@@ -108,7 +108,7 @@ export default defineNuxtConfig({
     image: {
       provider: 'ipx',
       dir: 'assets/images',
-      domains: ['localhost'],
+      domains: ['localhost', 'www.infiswap.be'], // Ajoutez votre domaine de production
       format: ['webp', 'jpg', 'png', 'svg'],
       screens: {
         xs: 320,
@@ -136,4 +136,3 @@ export default defineNuxtConfig({
       componentDir: './components/ui'
     }
   });
-  
