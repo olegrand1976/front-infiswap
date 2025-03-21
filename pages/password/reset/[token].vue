@@ -40,7 +40,7 @@
             <div class="bg-white container w-full xl:h-[100vh] flex flex-col md:space-y-12 sm:space-y-8 justify-center items-center">
                 <div>
                     <NuxtImg
-                        src="/logo.png"
+                        src="logo.png"
                         class="lg:w-[28rem] lg:h-36 md:w-[20rem] md:h-[6.5rem] sm:w-[17rem] sm:h-[5rem]"
                     />
                 </div>

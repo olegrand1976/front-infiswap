@@ -6,8 +6,8 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
         '@nuxt/image',
     ].filter(Boolean),
-    plugins: [
-    ],
+
+    plugins: [],
 
     imports: {
         dirs: [
@@ -55,7 +55,6 @@ export default defineNuxtConfig({
         },
     },
 
-    // Autres optimisations de build (minification, etc.)
     build: {
         optimization: {
             minimize: true,
@@ -77,11 +76,9 @@ export default defineNuxtConfig({
 
     nitro: {
         prerender: {
-            routes: [
-                '/',
-                '/about',
-                '/contact',
-            ],
+            routes: ['/', '/about', '/contact'],
+            ignore: ['/_ipx/**'],
+            failOnError: false,
         },
     },
 
@@ -95,6 +92,7 @@ export default defineNuxtConfig({
             minify: 'esbuild',
         },
     },
+
     gtm: {
         id: 'GTM-KFBFVVR3',
         queryParams: {
@@ -111,10 +109,19 @@ export default defineNuxtConfig({
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
-        devtools: true,
+        // Conditionner les devtools à l'environnement de développement
+        devtools: process.env.NODE_ENV !== 'production',
     },
+
+    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
     image: {
+        provider: 'ipx',
         dir: 'assets/images',
+        domains: ['localhost', 'www.infiswap.be'],
+        format: ['webp', 'jpg', 'png', 'svg'],
+        ipx: {
+            baseURL: '/_ipx',
+        },
     },
 
     shadcn: {

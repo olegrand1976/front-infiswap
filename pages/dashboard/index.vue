@@ -277,10 +277,12 @@
                                 <p class="text-center text-black/70 mt-6">
                                     Aucune tournée à afficher pour le moment
                                 </p>
-
-                                <Button>
-                                    Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
-                                </Button>
+                                <p>
+                                    <!-- Sur le bouton, le rendre disable -->
+                                    <Button disabled>
+                                        Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
+                                    </Button>
+                                </p>
                             </template>
                         </TableBody>
                     </Table>

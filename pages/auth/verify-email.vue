@@ -16,7 +16,7 @@
                     </div>
                     <div>
                         <NuxtImg
-                            src="/stetho.png"
+                            src="stetho.png"
                             alt="Boite email"
                             class="xl:w-36 lg:w-28 md:w-24 sm:w-20"
                         />
