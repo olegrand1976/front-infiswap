@@ -110,6 +110,10 @@ export default defineNuxtConfig({
       dir: 'assets/images',
       domains: ['localhost', 'www.infiswap.be'], // Ajoutez votre domaine de production
       format: ['webp', 'jpg', 'png', 'svg'],
+      ipx: {
+        // Si besoin, ajuster le chemin public pour IPX
+        publicPath: '/_ipx'
+      },
       screens: {
         xs: 320,
         sm: 640,

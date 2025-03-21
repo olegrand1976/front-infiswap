@@ -27,6 +27,10 @@ COPY --from=build /src/assets /src/assets
 # Copier node_modules pour avoir toutes les dépendances
 COPY --from=build /src/node_modules /src/node_modules
 
+# Créer un lien symbolique pour que IPX puisse trouver les images
+RUN mkdir -p /src/.output/public/_ipx && \
+    ln -s /src/assets/images /src/.output/public/_ipx/_
+
 # USER ET GROUP WWW-DATA
 RUN if ! getent group www-data >/dev/null 2>&1; then \
       groupadd -r www-data; \
