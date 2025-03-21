@@ -3,7 +3,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
-        process.env.NODE_ENV !== 'production' ? 'shadcn-nuxt' : null,
+        'shadcn-nuxt',
         '@nuxt/image',
     ].filter(Boolean),
     plugins: [
