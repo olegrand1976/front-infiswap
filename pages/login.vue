@@ -210,6 +210,8 @@
 <script lang="ts" setup>
 import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
 import { Checkbox } from '@/components/ui/checkbox';
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import Button from '~/components/ui/button/Button.vue';
 
 const router = useRouter();
 const { login } = useAuth();

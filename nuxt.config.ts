@@ -8,15 +8,15 @@ export default defineNuxtConfig({
     ].filter(Boolean),
     plugins: [
     ],
-
     imports: {
         dirs: [
             './utils',
             'composables',
+            'components/ui',
+            'components',
         ],
         autoImport: true,
     },
-
     devtools: { enabled: process.env.NODE_ENV === 'development' },
 
     app: {
@@ -47,7 +47,12 @@ export default defineNuxtConfig({
             ],
         },
     },
-
+    css: [
+        '~/assets/css/tailwind.css',
+    ],
+    components: [
+        '~/components/ui'
+      ],
     runtimeConfig: {
         public: {
             API_URL: process.env.API_URL,

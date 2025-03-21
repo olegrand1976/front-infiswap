@@ -1,12 +1,18 @@
 <template>
     <NuxtImg
-        :src="`/images/${src}`"
+        :src="computedSrc"
         v-bind="$attrs"
     />
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
     src: String,
+});
+
+const computedSrc = computed(() => {
+    return props.src.startsWith('images/') ? `/${props.src}` : `/images/${props.src}`;
 });
 </script>
