@@ -15,6 +15,11 @@ COPY package*.json ./
 RUN npm install
 # Copier tout le reste
 COPY . .
+# Créer les répertoires d'images AVANT le build
+RUN mkdir -p /app/public/images
+RUN cp -a /app/assets/images/. /app/public/images/
+# Ajout d'un debug pour vérifier les fichiers
+RUN ls -la /app/public/images
 # Construire l'application Nuxt
 RUN npm run build
 

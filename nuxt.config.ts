@@ -108,9 +108,23 @@ export default defineNuxtConfig({
     // Configuration de Nuxt Image pour servir vos images depuis le dossier public
     image: {
       provider: 'static',
-      // Le chemin ici est relatif à la racine du projet (public/images)
       static: {
         dir: 'public/images'
+      },
+      presets: {
+        // Ajouter des préréglages par défaut pour éviter les erreurs pendant le prérendu
+        default: {
+          modifiers: {
+            format: 'webp',
+            quality: '80'
+          }
+        }
+      },
+      // Important pour le prérendu
+      domains: [],
+      alias: {
+        // Créer des alias pour faciliter l'accès aux images
+        "/images": "public/images"
       }
     },
   
