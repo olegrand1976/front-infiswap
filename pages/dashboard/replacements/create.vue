@@ -137,7 +137,7 @@
                                     :key="key"
                                     class="mb-4 md:mb-0"
                                 >
-                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                                    <TableHead class="bg-primary w-full flex justify-center items-center rounded-lg text-white text-xs">
                                         {{ label }}
                                     </TableHead>
                                     <TableBody class="bg-gray-50 block w-full p-3 rounded-lg border border-gray-200 mt-2 md:mt-0">
