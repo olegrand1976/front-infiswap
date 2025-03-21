@@ -31,7 +31,7 @@
 
             <div class="absolute bottom-96 right-0">
                 <NuxtImg
-                    src="/assets/images/stetho3.png"
+                    src="stetho3.png"
                     alt="Stethoscope"
                     class="w-[14rem] h-72"
                 />

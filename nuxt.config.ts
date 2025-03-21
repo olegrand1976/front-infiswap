@@ -105,22 +105,12 @@ export default defineNuxtConfig({
       devtools: process.env.NODE_ENV !== 'production'
     },
   
+    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
     image: {
-      provider: 'ipx',
-      dir: 'public/assets/images',
-      domains: ['localhost', 'www.infiswap.be'], // Ajoutez votre domaine de production
-      format: ['webp', 'jpg', 'png', 'svg'],
-      ipx: {
-        // Si besoin, ajuster le chemin public pour IPX
-        publicPath: '/_ipx'
-      },
-      screens: {
-        xs: 320,
-        sm: 640,
-        md: 768,
-        lg: 1024,
-        xl: 1280,
-        xxl: 1536,
+      provider: 'static',
+      // Le chemin ici est relatif à la racine du projet (public/images)
+      static: {
+        dir: 'public/images'
       }
     },
   
@@ -131,7 +121,6 @@ export default defineNuxtConfig({
           '/about',
           '/contact'
         ],
-        failOnError: false
       }
     }, 
     
