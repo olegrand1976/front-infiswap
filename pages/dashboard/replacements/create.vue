@@ -343,12 +343,12 @@
                                             v-for="care in careTypes"
                                             :key="care.id"
                                             :class="[
-                                                'text-xs h-8 cursor-pointer flex rounded-full justify-center items-center border',
+                                                'text-xs h-9 cursor-pointer flex rounded-full p-2 justify-center items-center border',
                                                 selectedCareTypes.includes(care.id) ? 'bg-primary text-white border-primary' : 'bg-white text-black border-gray-300',
                                             ]"
                                             @click="toggleCareType(care.id)"
                                         >
-                                            <span>{{ care.name }}</span>
+                                            <span class="text-center">{{ care.name }}</span>
                                         </li>
                                     </ul>
                                 </div>

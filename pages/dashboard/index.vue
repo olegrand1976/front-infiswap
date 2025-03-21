@@ -279,7 +279,10 @@
                                 </p>
                                 <p>
                                     <!-- Sur le bouton, le rendre disable -->
-                                    <Button disabled>
+                                    <Button
+                                        class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
+                                        disabled
+                                    >
                                         Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
                                     </Button>
                                 </p>
