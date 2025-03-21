@@ -159,24 +159,24 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
-                        <TableHead class="bg-primary xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
-                        <TableHead class="bg-primary grid grid-cols-3 justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
                             <span>Matin</span>
                             <span>Midi</span>
                             <span>Soir</span>
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Codes postaux
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Ville
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Type de soin
                         </TableHead>
-                        <TableHead class="bg-primary flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Action
                         </TableHead>
                     </TableRow>
@@ -252,35 +252,37 @@
 
                             <TableCell class="bg-gray-100 text-xs">
                                 <div
-                                    class="flex h-10 rounded mt-3 justify-center items-center"
-                                    :class="[
-                                        'bg-gray-200',
-                                        hasMatchingZipCode(replacement.details) ? 'bg-success text-white' : '',
-                                    ]"
+                                    class="flex truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.zip_code)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
-                                    </span>
+                                    <p class="truncate w-full px-2 pt-3 h-10 bg-gray-200 rounded">
+                                        <span
+                                            v-for="(detail, index) in replacement.details"
+                                            :key="index"
+                                            :class="cn('mr-1', {
+                                                'text-success font-bold': hasMatchingZipCode(detail),
+                                            })"
+                                        >
+                                            {{ detail?.patient?.zip_code }},
+                                        </span>
+                                    </p>
                                 </div>
                             </TableCell>
 
                             <TableCell class="bg-gray-100 text-xs">
                                 <div
-                                    class="flex h-10 rounded mt-3 justify-center items-center overflow-hidden"
-                                    :class="[
-                                        'bg-gray-200',
-                                        hasMatchingCity(replacement.details) ? 'bg-success text-white' : '',
-                                    ]"
+                                    class="flex truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.city)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
-                                    </span>
+                                    <p class="truncate w-full px-2 pt-3 h-10 bg-gray-200 rounded">
+                                        <span
+                                            v-for="(detail, index) in replacement.details"
+                                            :key="index"
+                                            :class="cn('mr-1', {
+                                                'text-success font-bold': hasMatchingCity(detail),
+                                            })"
+                                        >
+                                            {{ detail?.patient?.city }},
+                                        </span>
+                                    </p>
                                 </div>
                             </TableCell>
 
@@ -315,6 +317,7 @@ import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@h
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
+import { cn } from '@/lib/utils';
 
 useHead({
     title: 'Liste des remplacements',
@@ -396,16 +399,14 @@ const selectedDaysPlaceholder = computed(() => {
 
 const isSubmitted = ref(false);
 
-const hasMatchingZipCode = (details) => {
+const hasMatchingZipCode = (detail) => {
     if (!isSubmitted.value) return false;
-    const zipCodes = details?.map(detail => detail?.patient?.zip_code) || [];
-    return zipCodes.some(zip => formData.postalCodeTags.includes(zip));
+    return formData.postalCodeTags.indexOf(detail?.patient?.zip_code) !== -1;
 };
 
-const hasMatchingCity = (details) => {
+const hasMatchingCity = (detail) => {
     if (!isSubmitted.value) return false;
-    const cities = details?.map(detail => detail?.patient?.city) || [];
-    return cities.some(city => formData.cityTags.includes(city));
+    return formData.cityTags.indexOf(detail?.patient?.city) !== -1;
 };
 
 const addPostalCodeTag = () => {

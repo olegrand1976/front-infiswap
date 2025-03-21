@@ -176,7 +176,7 @@
                         >
                             {{ error.dateOfBirth }}
                         </p>
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-red-500 text-xs mt-1 ms-[5%]">
                             Veuillez entrer votre date de naissance.
                         </p>
                     </div>
@@ -551,7 +551,11 @@ const schema = yup.object({
 
 const validateField = async (field) => {
     try {
-        if (field.includes('.')) {
+        if (field === 'password' || field === 'passwordConfirmation') {
+            // Validation de password et passwordConfirmation lorsque l'un des deux change
+            await schema.validateAt(field, toRaw(formData));
+        }
+        else if (field.includes('.')) {
             // Sépare le champ imbriqué
             const [parentField, childField] = field.split('.');
             const childValue = formData[parentField] ? formData[parentField][childField] : undefined;

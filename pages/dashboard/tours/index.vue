@@ -45,24 +45,24 @@
                                 </div>
                                 <div v-if="tours.length > 0 && !loading && !error">
                                     <div
-                                        v-for="(patient, index) in tours"
-                                        :key="patient.id"
+                                        v-for="(item, index) in tours"
+                                        :key="item.id"
                                     >
                                         <div
                                             class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer"
                                             :class="{
-                                                'bg-primary text-white': selectedPatientId === patient.id || (index === 0 && !selectedPatientId),
+                                                'bg-primary text-white': selectedPatientId === item.id || (index === 0 && !selectedPatientId),
                                             }"
-                                            @click="handleFetchCareType(patient.id)"
+                                            @click="handleFetchCareType(item.id)"
                                         >
                                             <p class="flex justify-between w-full">
-                                                <span>{{ patient.firstname }} {{ patient.lastname }}
+                                                <span>{{ item.firstname }} {{ item.lastname }}
                                                 </span>
                                             </p>
                                             <div class="flex mr-4">
                                                 <XCircleIcon
                                                     class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2"
-                                                    @click="openDialog(patient.id, patient.visit_times?.[0]?.id)"
+                                                    @click="openDialog(item.id, item.visit_times?.[0]?.id)"
                                                 />
                                             </div>
                                         </div>
@@ -201,7 +201,7 @@
                                                 v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0"
                                             >
                                                 <div
-                                                    v-for="(care, index) in careTypeFilter"
+                                                    v-for="(care, index) in careType.patient_care_types"
                                                     :key="index"
                                                     class="bg-gray-200 p-3 rounded-lg mt-2"
                                                 >
@@ -220,7 +220,7 @@
 
                             <div class="w-full">
                                 <div class="bg-gray-100 rounded-lg flex flex-col items-center pb-6">
-                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold w-full text-lg flex">
+                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold w-full text-base flex">
                                         <HomeIcon class="h-6 w-6 text-white mr-2" /> Ville
                                     </div>
                                     <div
@@ -231,7 +231,7 @@
                                 </div>
 
                                 <div class="bg-gray-100 rounded-lg flex flex-col items-center pb-6 mt-6">
-                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-lg w-full flex">
+                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-base w-full flex">
                                         <InboxIcon class="h-6 w-6 text-white mr-2" /> Code postal
                                     </div>
                                     <div
@@ -242,7 +242,7 @@
                                 </div>
 
                                 <div class="bg-gray-100 rounded-lg flex flex-col items-center pb-6 mt-6">
-                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-lg w-full flex">
+                                    <div class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-base w-full flex">
                                         <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
                                     <div
@@ -251,13 +251,14 @@
                                         <div
                                             v-for="visit in patient.patient[0].visit_times"
                                             :key="visit.patient_id"
+                                            class="w-full"
                                         >
                                             <div
                                                 v-for="visitItem in visit.visits"
                                                 :key="visitItem.time"
                                                 class="w-full flex flex-col items-center"
                                             >
-                                                <div>
+                                                <div class="w-full max-w-lg mx-auto">
                                                     <div
                                                         class="w-full rounded-lg mt-4 py-4 px-32 bg-primary text-white text-center"
                                                     >
@@ -410,7 +411,6 @@ const handleFetchCareType = (patientId) => {
         fetchCareType(patientId);
         careTypeFilter.value = getUniqueCareTypes(careType.value);
         console.log('careType.value.patient_care_types :', careType.value.patient_care_types);
-
         if (formattedStart.value) {
             fetchPatient(patientId, formattedStart.value, formattedStart.value);
         }

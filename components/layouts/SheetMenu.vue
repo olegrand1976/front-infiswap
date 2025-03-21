@@ -45,34 +45,21 @@
                 />
             </div>
 
-            <SheetFooter class="mt-20 mb-8 ps-5">
-                <div class="mt-16">
-                    <NuxtLink
-                        to="/dashboard/home"
-                        class="text-primary font-bold flex space-x-3"
-                    >
-                        <ArrowRightIcon class="w-4" />
-                        <NuxtLink
-                            to="/register-beta"
-                            class="text-sm sm:hidden"
-                        >
-                            Préinscription
-                        </NuxtLink>
-                    </NuxtLink>
-                </div>
+            <div class="bg-primary w-full h-12 mt-20 ml-5 shadow-xl text-primary" />
 
-                <nav class="text-black">
-                    <h4 class="font-bold mt-8 ms-6">
+            <SheetFooter class="mb-8 md:mr-10 md:ml-0 ml-10 flex flex-col">
+                <div class="text-black">
+                    <h4 class="font-bold mt-8">
                         CONTACT
                     </h4>
-                    <ul class=" mt-8 flex flex-col space-y-5">
+                    <ul class="mt-8 flex flex-col space-y-5">
                         <li>
                             <NuxtLink
                                 to="/"
                                 class="flex flex-row space-x-3"
                             >
                                 <PhoneIcon class="h-4 w-4 text-primary" />
-                                <p class="text-sm">045789101112</p>
+                                <p class="text-sm">0478.02.33.77</p>
                             </NuxtLink>
                         </li>
                         <li>
@@ -81,7 +68,7 @@
                                 class="flex flex-row space-x-3"
                             >
                                 <MapPinIcon class="h-4 w-4 text-primary" />
-                                <p class="text-sm">92 7131 BELGIQUE</p>
+                                <p class="text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</p>
                             </NuxtLink>
                         </li>
                         <li>
@@ -90,7 +77,7 @@
                                 class="flex flex-row justify-start space-x-3"
                             >
                                 <EnvelopeIcon class="h-4 w-4 text-primary" />
-                                <p class="text-sm">INFO@infiswap.com</p>
+                                <p class="text-sm">info@infiswap.be</p>
                             </NuxtLink>
                         </li>
                         <li>
@@ -99,14 +86,25 @@
                                 class="flex flex-row justify-start space-x-3"
                             >
                                 <GlobeAltIcon class="h-4 w-4 text-primary" />
-                                <p class="text-sm">WWW.infiswap.com</p>
+                                <p class="text-sm">www.infiswap.be</p>
                             </NuxtLink>
                         </li>
                     </ul>
-                </nav>
+                </div>
 
-                <div class="bg-primary h-12 shadow-xl text-primary">
-                    .
+                <div class="mt-16 sm:hidden">
+                    <NuxtLink
+                        to="/dashboard/home"
+                        class="text-primary font-bold flex space-x-3"
+                    >
+                        <ArrowRightIcon class="w-4" />
+                        <NuxtLink
+                            to="/login"
+                            class="text-sm"
+                        >
+                            Connexion
+                        </NuxtLink>
+                    </NuxtLink>
                 </div>
             </SheetFooter>
         </SheetContent>
@@ -122,7 +120,7 @@ import {
     EnvelopeIcon,
     GlobeAltIcon,
     ArrowRightIcon,
-} from '@heroicons/vue/24/solid';
+} from '@heroicons/vue/24/outline';
 
 import { AlignRightIcon } from 'lucide-vue-next';
 

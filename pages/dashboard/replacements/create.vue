@@ -137,7 +137,7 @@
                                     :key="key"
                                     class="mb-4 md:mb-0"
                                 >
-                                    <TableHead class="bg-primary flex justify-center items-center rounded-lg text-white text-xs">
+                                    <TableHead class="bg-primary w-full flex justify-center items-center rounded-lg text-white text-xs">
                                         {{ label }}
                                     </TableHead>
                                     <TableBody class="bg-gray-50 block w-full p-3 rounded-lg border border-gray-200 mt-2 md:mt-0">
@@ -343,12 +343,12 @@
                                             v-for="care in careTypes"
                                             :key="care.id"
                                             :class="[
-                                                'text-xs h-8 cursor-pointer flex rounded-full justify-center items-center border',
+                                                'text-xs h-9 cursor-pointer flex rounded-full p-2 justify-center items-center border',
                                                 selectedCareTypes.includes(care.id) ? 'bg-primary text-white border-primary' : 'bg-white text-black border-gray-300',
                                             ]"
                                             @click="toggleCareType(care.id)"
                                         >
-                                            <span>{{ care.name }}</span>
+                                            <span class="text-center">{{ care.name }}</span>
                                         </li>
                                     </ul>
                                 </div>
