@@ -389,7 +389,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon,EyeIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useReplacements } from '~/composables/useReplacements';

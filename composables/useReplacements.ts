@@ -99,56 +99,58 @@ export const useReplacements = () => {
 };
 
 export const useSearchReplacements = () => {
-  const { $apifetch } = useNuxtApp();
+    const { $apifetch } = useNuxtApp();
 
-  const replacements = useState("replacements", () => []);
-  const error = useState("replacementError", () => null);
-  const loading = useState("replacementLoading", () => false);
+    const replacements = useState('replacements', () => []);
+    const error = useState('replacementError', () => null);
+    const loading = useState('replacementLoading', () => false);
 
-  async function fetchReplacements({
-    postalCode = [],
-    cities = [],
-    selectedDays = [],
-  } = {}) {
-    loading.value = true;
-    error.value = null;
+    async function fetchReplacements({
+        postalCode = [],
+        cities = [],
+        selectedDays = [],
+    } = {}) {
+        loading.value = true;
+        error.value = null;
 
-    // Création de l'objet à envoyer
-    const data = {
-      zipCodes: postalCode,
-      cities: cities,
-      days: selectedDays,
-    };
+        // Création de l'objet à envoyer
+        const data = {
+            zipCodes: postalCode,
+            cities: cities,
+            days: selectedDays,
+        };
 
-    try {
-      const response = await fetch("http://localhost:8094/api/replacements", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+        try {
+            const response = await fetch('http://localhost:8094/api/replacements', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
 
-      const result = await response.json();
-      console.log("Réponse du serveur :", result);
+            const result = await response.json();
+            console.log('Réponse du serveur :', result);
 
-      // Stocker la réponse dans une variable réactive (si nécessaire)
-      replacements.value = result.replacements;
-      return result;
-    } catch (err) {
-      console.error("Erreur lors de la requête :", err);
-      error.value = err.message || "Une erreur est survenue";
-    } finally {
-      loading.value = false;
+            // Stocker la réponse dans une variable réactive (si nécessaire)
+            replacements.value = result.replacements;
+            return result;
+        }
+        catch (err) {
+            console.error('Erreur lors de la requête :', err);
+            error.value = err.message || 'Une erreur est survenue';
+        }
+        finally {
+            loading.value = false;
+        }
     }
-  }
 
-  // Retourne les valeurs réactives et la fonction
-  return { replacements, error, loading, fetchReplacements };
+    // Retourne les valeurs réactives et la fonction
+    return { replacements, error, loading, fetchReplacements };
 };
 
 export const useDetailReplacement = (replacementId) => {

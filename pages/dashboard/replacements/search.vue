@@ -428,7 +428,6 @@ const submit = () => {
         postalCode: toRaw(formData.postalCodeTags),
         cities: toRaw(formData.cityTags),
     });
-
 };
 
 watch(() => formData.postalCodeTags, () => {

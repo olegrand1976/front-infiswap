@@ -9,11 +9,6 @@ export default defineNuxtConfig({
     plugins: [
     ],
 
-    server: {
-        host: '0.0.0.0',
-        port: 3000
-    },
-
     imports: {
         dirs: [
             './utils',
@@ -21,8 +16,7 @@ export default defineNuxtConfig({
         ],
     },
 
-    // Active les devtools uniquement en développement
-    devtools: { enabled: true },
+    devtools: { enabled: process.env.NODE_ENV === 'development' },
 
     app: {
         baseURL: '/',
@@ -116,10 +110,15 @@ export default defineNuxtConfig({
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
-        devtools: true,
+        devtools: process.env.NODE_ENV !== 'production',
     },
     image: {
         dir: 'assets/images',
+    },
+
+    server: {
+        host: '0.0.0.0',
+        port: 3000,
     },
 
     shadcn: {
