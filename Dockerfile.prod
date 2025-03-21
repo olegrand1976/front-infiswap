@@ -30,14 +30,11 @@ ENV PORT=${PORT}
 # Ajout de node_modules/.bin dans le PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 
-# Copier le dossier de build (.output) et le dossier public (pour les images, etc.)
+# Copier le dossier de build (.output) et le dossier public
 COPY --from=build /app/.output /app/.output
 COPY --from=build /app/public /app/public
-# Copier les assets supplémentaires si nécessaire
+# Copier les assets directement (sans manipulation)
 COPY --from=build /app/assets /app/assets
-
-# (Optionnel) Si vous souhaitez copier manuellement les images depuis assets vers public :
-RUN mkdir -p /app/public/images && cp -a /app/assets/images/. /app/public/images/
 
 # Créer un utilisateur et groupe "www-data" s'ils n'existent pas, puis attribuer la propriété du dossier /app
 RUN if ! getent group www-data >/dev/null 2>&1; then \

@@ -107,33 +107,22 @@ export default defineNuxtConfig({
   
     // Configuration de Nuxt Image pour servir vos images depuis le dossier public
     image: {
-      provider: 'static',
-      static: {
-        dir: 'public/images'
-      },
-      presets: {
-        // Ajouter des préréglages par défaut pour éviter les erreurs pendant le prérendu
-        default: {
-          modifiers: {
-            format: 'webp',
-            quality: '80'
-          }
-        }
-      },
-      // Important pour le prérendu
-      domains: [],
-      alias: {
-        // Créer des alias pour faciliter l'accès aux images
-        "/images": "public/images"
+      provider: 'ipx',
+      dir: 'assets/images',
+      domains: ['localhost', 'www.infiswap.be'],
+      format: ['webp', 'jpg', 'png', 'svg'],
+      ipx: {
+        baseURL: '/_ipx'
       }
     },
   
     nitro: {
       prerender: {
         routes: ['/', '/about', '/contact'],
-        ignore: ['/ _ipx/**']
-      },
-    },
+        ignore: ['/_ipx/**'],
+        failOnError: false
+      }
+    }
     
     shadcn: {
       prefix: '',
