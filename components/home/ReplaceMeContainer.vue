@@ -43,8 +43,8 @@
                 src="stetho.png"
                 class="hidden md:inline-block z-0 w-16 lg:w-24 md:absolute -top-5 lg:-top-12 -left-7 lg:left-20"
             />
-            <LayoutsAppImage
-                src="/icons/Unin.png"
+            <NuxtImg
+                src="icons/Unin.png"
                 class="hidden md:inline-block z-0 w-14 md:absolute transform -left-5 lg:left-20 bottom-10"
             />
         </div>
