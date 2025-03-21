@@ -26,8 +26,6 @@ COPY --from=build /src/public /src/public
 COPY --from=build /src/assets /src/assets
 # Copier node_modules pour avoir toutes les dépendances
 COPY --from=build /src/node_modules /src/node_modules
-# (Optionnel) Copier les images depuis assets dans public/images
-RUN mkdir -p /src/public/images && cp -a /src/assets/images/. /src/public/images/
 
 # USER ET GROUP WWW-DATA
 RUN if ! getent group www-data >/dev/null 2>&1; then \
