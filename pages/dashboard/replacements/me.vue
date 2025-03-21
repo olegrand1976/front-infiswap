@@ -317,6 +317,7 @@ import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@h
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
+import { cn } from '@/lib/utils';
 
 useHead({
     title: 'Mes remplacements',
