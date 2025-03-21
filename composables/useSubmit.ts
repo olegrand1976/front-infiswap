@@ -12,6 +12,7 @@ export function useSubmit<T>(
     const error = ref(null);
     const inProgress = ref(false);
     const succeeded = ref(null);
+    const { $toast } = useNuxtApp();
 
     async function submit() {
         validationErrors.value = {};
@@ -31,7 +32,13 @@ export function useSubmit<T>(
             options?.onError?.(e);
             validationErrors.value = e.data?.errors ?? {};
 
-            if (e.response?.status !== 422) throw e;
+            if (e.response?.status === 422 && e.data?.errors) {
+                const firstError = Object.values(e.data.errors)[0]?.[0] ?? 'Une erreur est survenue';
+                $toast({
+                    title: firstError,
+                    variant: 'destructive',
+                });
+            }
         }
         finally {
             inProgress.value = false;
