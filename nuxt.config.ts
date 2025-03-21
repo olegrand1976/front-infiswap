@@ -73,17 +73,7 @@ export default defineNuxtConfig({
     },
   
     compatibilityDate: '2025-01-10',
-  
-    nitro: {
-      prerender: {
-        routes: [
-          '/',
-          '/about',
-          '/contact'
-        ]
-      }
-    },
-  
+    
     vite: {
       css: {
         // Désactiver les sourcemaps CSS en production
@@ -121,6 +111,17 @@ export default defineNuxtConfig({
       domains: ['localhost'],
       format: ['webp', 'jpg', 'png']
     },
+  
+    nitro: {
+      prerender: {
+        routes: [
+          '/',
+          '/about',
+          '/contact'
+        ],
+        failOnError: false
+      }
+    }, 
     
     shadcn: {
       prefix: '',
