@@ -16,7 +16,6 @@ export default defineNuxtConfig({
         ],
     },
 
-    // Active les devtools uniquement en développement
     devtools: { enabled: process.env.NODE_ENV === 'development' },
 
     app: {
@@ -109,7 +108,6 @@ export default defineNuxtConfig({
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
-        // Conditionner les devtools à l'environnement de développement
         devtools: process.env.NODE_ENV !== 'production',
     },
 
