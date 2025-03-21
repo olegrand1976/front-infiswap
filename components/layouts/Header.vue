@@ -26,9 +26,9 @@
                 <Button
                     v-if="!isLoggedIn"
                     class="font-semibold text-base"
-                    href="/register-beta"
+                    href="/login"
                 >
-                    Pré-inscription
+                    Connexion
                 </Button>
                 <Button
                     v-if="isLoggedIn"
@@ -50,9 +50,9 @@
                     <Button
                         v-if="!isLoggedIn"
                         class="hidden sm:block font-semibold md:text-[0.7em] lg:text-xs"
-                        href="/register-beta"
+                        href="/login"
                     >
-                        Préinscription
+                        Connexion
                     </Button>
                     <div>
                         <LayoutsDropdownLang />
@@ -79,9 +79,9 @@
                         v-if="isLoggedIn"
                         variant="light"
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
-                        href="/register-beta"
+                        href="/login"
                     >
-                        Pré-inscription
+                        Connexion
                     </Button>
                 </div>
             </div>
