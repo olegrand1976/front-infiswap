@@ -2,7 +2,7 @@
     <div class="relative pt-16 sm:pt-52 lg:pt-16 pb-2">
         <div class="flex lg:flex-row flex-col-reverse justify-center items-center relative z-20 mx-auto lg:space-x-24 xl:space-x-40">
             <div>
-                <NuxtImg
+                <LayoutsAppImage
                     src="Group_1048.png"
                     alt="App Download"
                     class="sm:w-80 w-72 mt-24 sm:mt-0 mb-8 sm:mb-16"
@@ -27,7 +27,7 @@
                         variant="dark"
                         class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out cursor-not-allowed"
                     >
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/icons/playstore.png"
                             class="sm:w-12 sm:h-12 w-7 h-7"
                         />
@@ -40,7 +40,7 @@
                         variant="dark"
                         class="w-full flex flex-row h-20 shadow hover:shadow-lg items-center space-x-1 transition transform duration-300 ease-in-out cursor-not-allowed"
                     >
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/icons/apple.png"
                             class="sm:w-12 sm:h-12 w-7 h-7"
                         />
@@ -54,7 +54,7 @@
         </div>
 
         <div class="hidden lg:block absolute z-5 top-0 right-0">
-            <NuxtImg
+            <LayoutsAppImage
                 src="Vector_2.png"
                 alt="Vecteur"
                 class="w-[41.5rem] relative"
@@ -62,7 +62,7 @@
         </div>
 
         <div class="lg:hidden absolute z-5 bottom-0 left-0">
-            <NuxtImg
+            <LayoutsAppImage
                 src="triangle_left.png"
                 alt="Vecteur"
                 class="w-80 h-96 sm:w-96 sm:h-[26rem] md:w-[28rem] md:h-[32rem] relative"
@@ -70,7 +70,7 @@
         </div>
 
         <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-[40rem] lg:left-[33rem]">
-            <NuxtImg
+            <LayoutsAppImage
                 src="/icons/Unin.png"
                 class="xl:w-32 xl:h-32 lg:w-24 lg:h-24 sm:w-16 sm:h-16 w-10 h-10"
             />

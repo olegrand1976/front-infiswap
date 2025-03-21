@@ -30,7 +30,7 @@
             </div>
 
             <div class="absolute bottom-96 right-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="stetho3.png"
                     alt="Stethoscope"
                     class="w-[14rem] h-72"
@@ -38,7 +38,7 @@
             </div>
 
             <div class="absolute bottom-96 right-1">
-                <NuxtImg
+                <LayoutsAppImage
                     src="/icons/Unin.png"
                     alt="Stethoscope"
                     class="w-16 h-16"

@@ -14,6 +14,7 @@ export default defineNuxtConfig({
             './utils',
             'composables',
         ],
+        autoImport: true,
     },
 
     devtools: { enabled: process.env.NODE_ENV === 'development' },
@@ -111,9 +112,6 @@ export default defineNuxtConfig({
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
-    },
-    image: {
-        dir: 'assets/images',
     },
 
     server: {

@@ -112,7 +112,7 @@
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
                                     <div class="flex-shrink-0">
-                                        <NuxtImg
+                                        <LayoutsAppImage
                                             src="/home/infirmier_homme.png"
                                             class="rounded-full h-16 w-16"
                                         />

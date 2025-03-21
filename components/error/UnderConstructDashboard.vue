@@ -4,15 +4,15 @@
             <div class="flex justify-center items-end text-center h-full">
                 <div class="-mb-28 md:-mb-14">
                     <div class="relative">
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="under_construction.png"
                             class="h-72"
                         />
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/icons/cog.png"
                             class="w-52 absolute bottom-[5%] left-[115%]"
                         />
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/icons/cog.png"
                             class="w-20 absolute bottom-[55%] -left-[35%]"
                         />
@@ -44,6 +44,6 @@
 
 <style scoped>
 .button-bg {
-    background-image: url('~/assets/images/Rectangle_53.png');
+    background-image: url('/images/Rectangle_53.png');
 }
 </style>

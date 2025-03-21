@@ -2,7 +2,7 @@
     <div>
         <LayoutError>
             <template #image>
-                <NuxtImg
+                <LayoutsAppImage
                     src="/svg/not_found.svg"
                     class="h-72"
                 />

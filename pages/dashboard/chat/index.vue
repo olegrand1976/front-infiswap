@@ -80,13 +80,13 @@
                                 <CommandItem :value="suggestedUser.name">
                                     <div class="relative">
                                         <template v-if="suggestedUser.avatar">
-                                            <NuxtImg
+                                            <LayoutsAppImage
                                                 :src="suggestedUser.avatar"
                                                 class="w-12 h-12 rounded-full"
                                             />
                                         </template>
                                         <template v-else>
-                                            <NuxtImg
+                                            <LayoutsAppImage
                                                 src="/icons/user-circle.png"
                                                 class="w-12 h-12 rounded-full opacity-60"
                                             />

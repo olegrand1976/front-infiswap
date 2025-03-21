@@ -7,7 +7,7 @@
             Retour
         </Button>
         <div class="hidden lg:block h-screen">
-            <NuxtImg
+            <LayoutsAppImage
                 src="/auth/register-image.jpg"
                 alt="Image d'authentification"
                 class="object-fill w-full h-screen"
@@ -15,7 +15,7 @@
         </div>
         <div class="col-span-2 lg:col-span-1 lg:mb-10 items-center md:flex flex-col justify-center text-primary text-center">
             <div class="h-48 col-span-1 w-full">
-                <NuxtImg
+                <LayoutsAppImage
                     src="/auth/bg-top-auth.jpg"
                     alt="Image d'authentification"
                     class="h-full md:hidden w-full"
