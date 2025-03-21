@@ -4,20 +4,20 @@ WORKDIR /app
 
 COPY . .
 
-RUN mkdir -p /app/public/images && \
-    cp -a /app/assets/images/. /app/public/images/ && \
-    npm install && \
-    NODE_ENV=production npm run build && \
-    # Nettoyage pour réduire la taille de l'image
-    npm prune --production && \
-    # Sécurité
-    if ! getent group www-data >/dev/null 2>&1; then \
-      groupadd -r www-data; \
-    fi && \
-    if ! id -u www-data >/dev/null 2>&1; then \
-      useradd -r -g www-data www-data; \
-    fi && \
-    chown -R www-data:www-data /app
+# RUN mkdir -p /app/public/images && \
+# cp -a /app/assets/images/. /app/public/images/ && \
+RUN npm install && \
+  NODE_ENV=production npm run build && \
+  # Nettoyage pour réduire la taille de l'image
+  npm prune --production && \
+  # Sécurité
+  if ! getent group www-data >/dev/null 2>&1; then \
+  groupadd -r www-data; \
+  fi && \
+  if ! id -u www-data >/dev/null 2>&1; then \
+  useradd -r -g www-data www-data; \
+  fi && \
+  chown -R www-data:www-data /app
 
 USER www-data
 ENV NODE_ENV=production
