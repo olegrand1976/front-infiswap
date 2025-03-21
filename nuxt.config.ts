@@ -115,25 +115,12 @@ export default defineNuxtConfig({
       devtools: process.env.NODE_ENV !== 'production'
     },
   
-    /*     image: {
-      dir: 'assets/images'
-      //dir: 'public'
-    }, */
-
-/*     image: {
-      // Assurez-vous que ce chemin correspond à l'endroit où vous copiez vos images dans le dossier public
-      //dir: 'assets/images'
-      dir: 'public/images'
-    },  */   
     image: {
-      provider: 'static',
+      provider: 'ipx',
       dir: 'public/images',
-      // Les options du provider static n'incluent pas la propriété 'dir'
-      static: {
-        // Autres options du provider static si nécessaire
-      }
+      domains: ['localhost'],
+      format: ['webp', 'jpg', 'png']
     },
-    
     
     shadcn: {
       prefix: '',
