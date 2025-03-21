@@ -1,7 +1,7 @@
 <template>
     <div class="relative flex flex-col">
         <div class="absolute inset-0 z-0">
-            <NuxtImg
+            <LayoutsAppImage
                 src="Mask_group.png"
                 class="w-full h-48"
             />

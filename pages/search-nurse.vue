@@ -60,7 +60,7 @@
                             <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                 <div class="flex space-x-4 text-white items-center ms-4 relative">
                                     <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                        <NuxtImg
+                                        <LayoutsAppImage
                                             src="/icons/zip_code.png"
                                             class="w-4"
                                         />
@@ -90,7 +90,7 @@
                             <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                 <div class="flex space-x-4 text-white items-center ms-4 relative">
                                     <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                        <NuxtImg
+                                        <LayoutsAppImage
                                             src="/icons/city_white.png"
                                             class="w-8"
                                         />

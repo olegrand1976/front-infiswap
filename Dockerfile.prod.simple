@@ -1,0 +1,17 @@
+FROM node:20.18.0-slim
+
+WORKDIR /app
+
+COPY . .
+
+RUN mkdir -p /app/public/images && \
+    cp -a assets/images/. /app/public/images/ && \
+    npm install && \
+    NODE_ENV=production npm run build
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+EXPOSE 3000
+
+CMD ["node", ".output/server/index.mjs"]

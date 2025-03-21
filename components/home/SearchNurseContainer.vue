@@ -1,12 +1,12 @@
 <template>
     <div class="relative mt-12 lg:max-h-full">
-        <NuxtImg
+        <LayoutsAppImage
             src="/home/search_nurse_mobile.png"
             alt="Bannière rechercher une infirmière"
             class="w-full object-cover md:h-96 lg:hidden"
         />
 
-        <NuxtImg
+        <LayoutsAppImage
             src="/home/search_nurse_image.png"
             alt="Bannière rechercher une infirmière"
             class="hidden lg:inline-block -ml-20 w-full object-cover"

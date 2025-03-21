@@ -1,6 +1,6 @@
 <template>
     <div class="w-full relative md:w-8/12 md:flex md:justify-center md:items-center md:mx-auto md:mt-10">
-        <NuxtImg
+        <LayoutsAppImage
             src="container_register.png"
             class="w-full h-96"
         />

@@ -3,19 +3,19 @@
         <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
             <div class="bg-tertiary/30 hidden lg:flex flex-col items-center lg:w-[115vw] sm:w-[85vw] relative container">
                 <div class="flex justify-center items-center mb-auto mt-[30%]">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/unlock.png"
                         class="lg:w-52"
                     />
                 </div>
                 <div class="absolute top-[10%] left-[4%]">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/plus.png"
                         class="lg:w-24"
                     />
                 </div>
                 <div class="absolute bottom-[18%] right-[6%]">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/Unin.png"
                         class="lg:w-16"
                     />
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="absolute bottom-[20%] left-[15%]">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/icons/cog_2.png"
                         class="lg:w-52"
                     />

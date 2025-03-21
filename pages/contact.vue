@@ -2,7 +2,7 @@
     <div>
         <div class="sm:hidden relative flex flex-col items-center">
             <div class="absolute inset-0 z-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="Mask_group.png"
                     class="w-full h-48"
                 />
@@ -167,6 +167,7 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import * as yup from 'yup';
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import { submitContact } from '~/composables/useContact';
 
 const { $toast } = useNuxtApp();

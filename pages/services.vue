@@ -32,20 +32,20 @@
                     <div class="hidden order-1 lg:order-2 lg:flex justify-center lg:justify-end">
                         <div class="flex justify-between items-center gap-4">
                             <div class="order-1 flex flex-col items-center">
-                                <NuxtImg
-                                    src="/home/Serum.png"
+                                <LayoutsAppImage
+                                    src="/home/serum.png"
                                     alt="serum"
                                     class="w-auto h-49 mb-6 z-20 -mt-36"
                                 />
                             </div>
 
                             <div class="order-2 flex flex-col justify-between items-center">
-                                <NuxtImg
+                                <LayoutsAppImage
                                     src="/home/sphygmomanometer.png"
                                     alt="appareil tensionnel"
                                     class="w-auto h-49 mb-4 z-20"
                                 />
-                                <NuxtImg
+                                <LayoutsAppImage
                                     src="/home/Dressing.png"
                                     alt="pansement"
                                     class="w-auto h-49  mb-4 z-20"
@@ -57,13 +57,13 @@
             </div>
 
             <div class="absolute bottom-0 right-0 hidden lg:block z-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="Vector_2.png"
                     class="w-64 lg:w-[32rem] relative"
                 />
             </div>
             <div class="absolute bottom-[20%] left-2 hidden lg:block z-0">
-                <NuxtImg
+                <LayoutsAppImage
                     src="/icons/Unin.png"
                     class="w-8 lg:w-12 relative"
                 />
@@ -73,7 +73,7 @@
         <div class="container">
             <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
                 <div class="relative">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/equipe_infirmier.png"
                         alt="equipe infirmier"
                         class="w-full z-10"
@@ -116,7 +116,7 @@
                     </p>
                 </div>
                 <div class=" relative z-10 order-1 lg:order-2 flex justify-center lg:justify-end">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/cart.png"
                         alt="cart"
                         class="w-full z-10"
@@ -132,7 +132,7 @@
         <div class="container">
             <div class="-mt-10 relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
                 <div class="relative">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/nurse_with_elderly_man.png"
                         alt="un infirmier with vielle homme"
                         class="w-full z-10"
@@ -176,7 +176,7 @@
                     </p>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/A group of young people.png"
                         alt="ensemble des jeunes"
                         class="w-full z-10"
@@ -192,7 +192,7 @@
         <div class="container">
             <div class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6">
                 <div class="relative">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/male nurse.png"
                         alt="un infirmier"
                         class="w-full z-10"
@@ -238,7 +238,7 @@
                     </p>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/computer.png"
                         alt="un ordinateur"
                         class="w-full z-10 "
@@ -255,7 +255,7 @@
         <div class="container">
             <div class="relative my-8 lg:my-16  grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10">
                 <div class="relative">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/nurse_woman.png"
                         alt="une infirmier"
                         class="w-full z-10"
@@ -306,7 +306,7 @@
                     </p>
                 </div>
                 <div class=" relative order-1 lg:order-2 flex justify-center lg:justify-end">
-                    <NuxtImg
+                    <LayoutsAppImage
                         src="/home/A nurse looking for medicine.png"
                         alt="une infirmier cherche medicament"
                         class="w-full "
@@ -347,7 +347,7 @@
                         </p>
                     </div>
                     <div class="order-2 flex justify-center lg:justify-end flex-1">
-                        <NuxtImg
+                        <LayoutsAppImage
                             src="/home/A nurse with a woman.png"
                             alt="A nurse with a woman"
                             class="w-full h-auto lg:h-full lg:w-full object-cover z-20"
@@ -382,7 +382,7 @@
                 </div>
             </div>
             <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
-                <NuxtImg
+                <LayoutsAppImage
                     src="/home/nurse_with_stetho.png"
                     alt="Infirmière avec un stéthoscope"
                     class="h-full max-h-80 w-full object-cover rounded-3xl"

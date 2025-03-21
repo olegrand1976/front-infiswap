@@ -86,7 +86,7 @@
                         Mes préférences
                     </h3>
 
-                    <Form class="mt-6 space-y-4">
+                    <form class="mt-6 space-y-4">
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
                             <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="zipCode">
@@ -201,7 +201,7 @@
                                 <TagsInputInput />
                             </TagsInput>
                         </div>
-                    </Form>
+                    </form>
                 </div>
 
                 <div class="bg-gray-100 rounded-b-lg">
