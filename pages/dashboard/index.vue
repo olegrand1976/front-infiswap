@@ -154,7 +154,7 @@
                         Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                     </h3>
                     <div class="p-4">
-                        <LineChart :data="formattedData" index="month" :categories="['Pourcentage']"
+                        <LineChart :data="formattedData" index="month" :categories="['y_number']"
                             :colors="['hsl(var(--primary))']" :y-formatter="(tick) => `${tick}`" />
                     </div>
                 </div>
@@ -258,7 +258,7 @@ const formatDate = (dateString: string) => {
 const formattedData = computed(() => {
     return reports.replacement.reponded_per_month.map((item) => ({
         month: formatDate(item.month),
-        Pourcentage: item.count,
+        y_number: item.count,
     }));
 });
 

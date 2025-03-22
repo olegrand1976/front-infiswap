@@ -207,7 +207,7 @@ const navigationItems = [
             },
         ],
     },
-    {
+/*     {
         label: 'Documents',
         route: '/dashboard/documents',
         icon: FolderIcon,
@@ -216,7 +216,7 @@ const navigationItems = [
         label: 'Paramètres',
         route: '/dashboard/settings',
         icon: Cog8ToothIcon,
-    },
+    }, */
 ];
 
 const route = useRoute();
