@@ -52,17 +52,23 @@
                             :key="index"
                         >
                             <TableRow
-                                class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border border-none group"
+                                class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border-2 border-gray-500"
                             >
-                                <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-100 group-hover:bg-primary">
-                                    <span class="group-hover:text-white">{{ list.repondedBy.firstname }} {{ list.repondedBy.lastname }}</span>
+                                <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-10">
+                                    <span class="">{{ list.repondedBy.firstname }} {{ list.repondedBy.lastname }}</span>
                                 </TableCell>
 
-                                <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
-                                    <Form @submit="handlesubmit(list.id)">
+                                <TableCell class="flex h-12 col-span-1 justify-center my-1 items-center">
+                                    <div
+                                        v-if="list.status==='confirmed'"
+                                        class="flex gap-2 text-success items-center font-bold"
+                                    >
+                                        <CheckCircleIcon class="size-7" /> <span>Accepté</span>
+                                    </div>
+                                    <Form v-else @submit="handlesubmit(list.id)">
                                         <Button
                                             type="submit"
-                                            class="bg-gray-200 group-hover:bg-white text-black rounded-full w-24"
+                                            class="bg-gray-200 hover:text-white text-black rounded-full w-24"
                                         >
                                             <span class="text-xs">
                                                 Accepter
@@ -71,9 +77,9 @@
                                     </Form>
                                 </TableCell>
 
-                                <TableCell class="flex h-12 col-span-1 group-hover:bg-primary justify-center my-1 items-center bg-gray-100">
+                                <TableCell class="flex h-12 col-span-1 justify-center my-1 items-center">
                                     <Button
-                                        class="bg-gray-200 group-hover:bg-white text-black rounded-full"
+                                        class="bg-gray-200 hover:text-white text-black rounded-full"
                                     >
                                         <span class="text-xs">Voir le profil</span>
                                     </Button>
@@ -95,6 +101,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import { CheckCircleIcon } from '@heroicons/vue/24/outline';
 
 const { changeStatus } = changeStatusReplacement();
 
