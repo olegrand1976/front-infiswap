@@ -6,21 +6,14 @@
     >
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
-                <div class="bg-primary p-6 rounded-xl flex flex-col space-y-3 justify-center items-center px-auto">
-                    <UserCircleIcon class="text-white w-28" />
-                    <p class="text-white">
-                        <span class="font-semibold">
-                            {{ patient.lastname }}
-                        </span>
+                <div class="bg-primary text-white p-4 rounded">
+                    <UserCircleIcon class="w-28 mx-auto" />
+                    <p class="text-center mt-4">
                         {{ patient.firstname }}
+                        <span class="font-semibold">
+                            {{ patient.lastname.toUpperCase() }}
+                        </span>
                     </p>
-                    <Button
-                        variant="secondary"
-                        class="text-primary"
-                        @click="openDialog"
-                    >
-                        Mettre à jour
-                    </Button>
 
                     <Dialog v-model:open="isOpenDialog">
                         <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
@@ -108,7 +101,7 @@
                                 class="text-end mt-6 mx-36"
                                 @click="closeDialog"
                             >
-                                Valider
+                                Enregistrer
                             </Button>
                         </DialogContent>
                     </Dialog>
@@ -116,7 +109,58 @@
 
                 <div class="bg-gray-100 rounded-b">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
-                        <span>Information</span>
+                        <span class="font-semibold">Informations personnelles</span>
+                        <PencilSquareIcon
+                            class="w-5 text-white cursor-pointer"
+                            @click="openDialog"
+                        />
+                    </h3>
+                    <div class="flex flex-col gap-2 px-4 py-6 lg:gap-4">
+                        <div class="grid grid-cols-[40%_60%] gap-4">
+                            <div class="font-semibold">
+                                Email
+                            </div>
+                            <div>{{ patient.email }}</div>
+                        </div>
+                        <div class="grid grid-cols-[40%_60%] gap-4">
+                            <div class="font-semibold">
+                                Numéro de registre national
+                            </div>
+                            <div>{{ patient.social_security_number }}</div>
+                        </div>
+                        <div
+                            v-if="patient.phone_number"
+                            class="grid grid-cols-[40%_60%] gap-4"
+                        >
+                            <div class="font-semibold">
+                                Téléphone
+                            </div>
+                            <div>{{ phoneNumber(patient.phone_number as string) }}</div>
+                        </div>
+                        <div
+                            v-if="patient.profile?.zip_code"
+                            class="grid grid-cols-[40%_60%] gap-4"
+                        >
+                            <div class="font-semibold">
+                                Code Postale
+                            </div>
+                            <div>{{ patient.profile.zip_code }}</div>
+                        </div>
+                        <div
+                            v-if="patient.profile?.city"
+                            class="grid grid-cols-[40%_60%] gap-4"
+                        >
+                            <div class="font-semibold">
+                                Ville
+                            </div>
+                            <div>{{ patient.profile.city }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 rounded-b">
+                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
+                        <span class="font-semibold">Notes de santé</span>
                         <PencilSquareIcon
                             class="w-5 text-white cursor-pointer"
                             @click="openCareInfoDialog"
@@ -584,6 +628,7 @@ import { InputTime } from '@/components/ui/input-time';
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 const route = useRoute();
+const { phoneNumber } = useFormmater();
 const patientId = route.params.id as string;
 
 interface Patient {
@@ -982,7 +1027,7 @@ const {
 );
 
 useHead({
-    title: 'Editer le profil',
+    title: 'Profil patient',
 });
 
 onMounted(async () => {
