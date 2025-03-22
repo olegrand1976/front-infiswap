@@ -41,7 +41,7 @@
                 <Button
                     href="/dashboard/patients/create"
                 >
-                    Créer patient
+                    Nouveau patient
                 </Button>
             </div>
         </div>
