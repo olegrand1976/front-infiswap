@@ -15,9 +15,10 @@
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
               <div class="flex justify-between items-center gap-3 mt-3">
-                <p class="text-5xl font-semibold text-primary">
+                <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.done.count }}
                 </p>
+
                 <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.done.percentage }}%
                                 </div> -->
@@ -35,7 +36,7 @@
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
               <div class="flex justify-between items-center gap-3 mt-3">
-                <p class="text-5xl font-semibold text-primary">
+                <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.ignored.count }}
                 </p>
                 <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
@@ -53,7 +54,7 @@
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
               <div class="flex justify-between items-center gap-3 mt-3">
-                <p class="text-5xl font-semibold text-primary">
+                <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.pending.count }}
                 </p>
                 <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
@@ -230,11 +231,11 @@
         <div class="my-3">
           <Table>
             <TableHeader>
-            <!-- <TableHeader class="w-full"> -->
+              <!-- <TableHeader class="w-full"> -->
               <TableRow
                 class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden"
               >
-              <!-- <TableRow
+                <!-- <TableRow
                 class="grid grid-cols-3 overflow-x-hidden gap-2 border border-none"
               > -->
                 <!-- <TableHead
