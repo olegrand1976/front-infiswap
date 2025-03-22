@@ -423,9 +423,9 @@
                 <h3
                     class="text-primary text-3xl font-semibold text-center lg:text-left max-w-xs sm:max-w-lg mx-auto lg:mx-0"
                 >
-                    Inscrit-toi dès maintenant
+                    Inscris-toi dès maintenant
                     <br>
-                    pour garantir ton activité
+                    pour développer ton activité!
                 </h3>
 
                 <div
