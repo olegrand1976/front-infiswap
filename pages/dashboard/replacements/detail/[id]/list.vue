@@ -1,14 +1,13 @@
 <template>
     <div class="pt-3">
-        <div class="bg-gray-100 h-12 rounded p-2">
-            <h1 class="text-primary">
-                Liste des personnes <strong>interessées par mon remplacement</strong>
-            </h1>
-        </div>
+        <h1 class="rounded bg-gray-100 text-primary text-center lg:text-start font-bold p-2 lg:p-4">
+            <span class="hidden lg:inline-block">Personnes intéressées par mon remplacement</span>
+            <span class="lg:hidden">Intéressées</span>
+        </h1>
 
         <template v-if="listResponse.length != 0">
-            <div class="flex items-center space-x-8 mt-6 p-2">
-                <h4 class="font-bold text-sm text-primary">
+            <div class="flex items-center lg:space-x-8 gap-2 mt-6 p-2">
+                <h4 class="font-bold hidden lg:inline-block text-sm text-primary">
                     Période
                 </h4>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
@@ -20,6 +19,7 @@
                         </div>
                     </div>
                 </div>
+                <span class="text-primary">au</span>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
                     <span class="text-xs text-white ms-3">Fin</span>
                     <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
