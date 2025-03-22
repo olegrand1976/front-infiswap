@@ -112,7 +112,7 @@ const {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'unsubscribed'],
 });
 
 useHead({
