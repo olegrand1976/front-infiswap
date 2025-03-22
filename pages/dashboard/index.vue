@@ -219,7 +219,7 @@
               index="month"
               :categories="['Pourcentage']"
               :colors="['hsl(var(--primary))']"
-              :y-formatter="(tick) => `${tick} %`"
+              :y-formatter="(tick) => `${tick}`"
             />
           </div>
         </div>
