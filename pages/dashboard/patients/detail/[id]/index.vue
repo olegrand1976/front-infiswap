@@ -1,17 +1,39 @@
 <template>
     <Form
         v-if="patient"
-        class="grid grid-cols-1 lg:grid-cols-[40%_57.5%] gap-6"
+        class="grid grid-cols-1 lg:grid-cols-[40%_57.5%] gap-6 relative"
         @submit="submit"
     >
+        <transition name="fade">
+            <div
+                v-show="isScrolled"
+                :class="clsx('w-full fixed top-10 z-50 text-center bg-red-300/50 py-5 transition-opacity ease-in-out duration-500', {
+                    'opacity-0': !isScrolled,
+                    'opacity-100': isScrolled,
+                })"
+            >
+                >
+                <Button
+                    variant="success"
+                    class="w-64 rounded-full"
+                    :in-progress="inProgress"
+                    type="submit"
+                >
+                    Enregistrer
+                </Button>
+            </div>
+        </transition>
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
                 <div class="bg-primary text-white p-4 rounded">
                     <UserCircleIcon class="w-28 mx-auto" />
                     <p class="text-center mt-4">
                         {{ patient.firstname }}
-                        <span class="font-semibold">
-                            {{ patient.lastname.toUpperCase() }}
+                        <span
+                            v-if="patient.lastname"
+                            class="font-semibold"
+                        >
+                            {{ patient.lastname?.toUpperCase() }}
                         </span>
                     </p>
 
@@ -240,19 +262,19 @@
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <Label>Action</Label>
+                                        <Label>Titre</Label>
                                         <Input
                                             v-model="info.recordType"
-                                            placeholder="Entrez l'action à faire"
+                                            placeholder="Sourd"
                                             class="w-full outline outline-gray-200"
                                         />
                                     </div>
 
                                     <div class="space-y-2">
-                                        <Label>Facteur</Label>
+                                        <Label>Complément</Label>
                                         <Input
                                             v-model="info.recordName"
-                                            placeholder="Entrez le facteur"
+                                            placeholder="Oreille droite"
                                             class="w-full outline outline-gray-200"
                                         />
                                     </div>
@@ -612,13 +634,20 @@ import {
     CalendarDaysIcon,
     TrashIcon,
 } from '@heroicons/vue/24/solid';
+
+import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient, createPatientDocument } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
-
 const route = useRoute();
+
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+    isScrolled.value = window.scrollY > 30 && document.documentElement.scrollHeight > 80;
+};
 const { phoneNumber } = useFormmater();
 const patientId = route.params.id as string;
 
@@ -1025,6 +1054,11 @@ onMounted(async () => {
     await fetchDetailPatient();
     await fetchCareTypes();
     initializeFormData();
+    window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
 });
 
 watch(() => patient.value, () => {
