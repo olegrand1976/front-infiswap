@@ -12,8 +12,12 @@
             class="hidden lg:inline-block -ml-20 w-full object-cover"
         />
 
-        <div class="absolute top-1/2 w-full transform -translate-y-1/6 md:-translate-y-1/4 lg:-translate-y-1/2 text-white font-secondary italic">
-            <div class="container mx-auto grid place-content-center text-center lg:text-left">
+        <div
+            class="absolute top-1/2 w-full transform -translate-y-1/6 md:-translate-y-1/4 lg:-translate-y-1/2 text-white font-secondary italic"
+        >
+            <div
+                class="container mx-auto grid place-content-center text-center lg:text-left"
+            >
                 <p class="text-3xl sm:text-5xl xl:text-6xl font-extralight">
                     Je cherche
                 </p>
@@ -24,7 +28,7 @@
                 <Button
                     variant="secondary"
                     href="/search-nurse"
-                    class="mt-6 font-bold text-primary lg:text-lg w-full max-w-40 mx-auto lg:mx-0 py-4"
+                    class="mt-6 font-extrabold text-primary text-3xl lg:text-4xl w-full max-w-72 mx-auto lg:mx-0 py-6 px-8"
                 >
                     Consulter
                 </Button>
@@ -33,5 +37,4 @@
     </div>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>

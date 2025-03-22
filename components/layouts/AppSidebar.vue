@@ -114,12 +114,14 @@
             <SidebarGroup>
                 <SidebarMenuButton
                     class="bg-primary text-white"
-                    @click="logout"
                 >
-                    <div class="flex space-x-2 items-center">
+                    <Button
+                        class="flex space-x-2 items-center"
+                        @click="logout"
+                    >
                         <PowerIcon class="w-6 opacity-80" />
                         <span>Deconnexion</span>
-                    </div>
+                    </Button>
                 </SidebarMenuButton>
             </SidebarGroup>
         </SidebarContent>

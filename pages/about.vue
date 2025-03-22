@@ -1,42 +1,47 @@
 <template>
     <div class="sm:mt-0 -mt-20">
-        <div class="relative font-light ">
+        <div class="relative font-light">
             <div class="absolute inset-0 bg-tertiary/30 h-[300px] lg:h-full w-full" />
             <div class="container">
-                <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20 mt-20">
+                <div
+                    class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20 mt-20"
+                >
                     <div class="lg:hidden text-center mb-8">
                         <h2 class="text-primary text-4xl font-semibold">
                             À propos
                         </h2>
                     </div>
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                        <h3 class="text-primary md:text-3xl text-2xl text-center md:text-left">
+                        <h3
+                            class="text-primary md:text-3xl text-2xl text-center md:text-left"
+                        >
                             Infiswap...
                         </h3>
                         <p>
-                            est une plateforme innovante conçue pour optimiser
-                            la gestion des infirmiers libéraux. Elle simplifie les
-                            remplacements, la planification des tournées et le suivi
-                            des formations. Grâce à des outils intelligents et automatisés,
-                            Infiswap améliore la coordination, réduit le temps administratif
-                            et facilite l'organisation quotidienne, offrant ainsi une meilleure
-                            qualité de soins et un gain de temps précieux.
+                            est une plateforme innovante conçue pour optimiser la gestion des
+                            infirmiers libéraux. Elle simplifie les remplacements, la
+                            planification des tournées et le suivi des formations. Grâce à des
+                            outils intelligents et automatisés, Infiswap améliore la
+                            coordination, réduit le temps administratif et facilite
+                            l'organisation quotidienne, offrant ainsi une meilleure qualité de
+                            soins et un gain de temps précieux.
                         </p>
                         <p>
-                            la gestion des tournées est optimisée avec une planification automatisée,
-                            prenant en compte les contraintes horaires, les types de soins et la
-                            réduction des déplacements inutiles.
+                            la gestion des tournées est optimisée avec une planification
+                            automatisée, prenant en compte les contraintes horaires, les types
+                            de soins et la réduction des déplacements inutiles.
                         </p>
                         <p>
-                            Infiswap permet également un suivi complet des formations professionnelles,
-                            assurant la conformité aux obligations légales avec des rappels et une gestion
-                            simplifiée des inscriptions. <br>
-                            Le suivi des patients est amélioré par un historique détaillé des soins,
-                            facilitant la transmission entre soignants.
+                            Infiswap permet également un suivi complet des formations
+                            professionnelles, assurant la conformité aux obligations légales
+                            avec des rappels et une gestion simplifiée des inscriptions.
+                            <br>
+                            Le suivi des patients est amélioré par un historique détaillé des
+                            soins, facilitant la transmission entre soignants.
                         </p>
                         <Button
                             href="/register"
-                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center"
+                            class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center font-bold"
                         >
                             S'inscrire
                         </Button>
@@ -69,7 +74,9 @@
         <!-- </div> -->
 
         <div class="container">
-            <div class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20">
+            <div
+                class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20"
+            >
                 <div>
                     <LayoutsAppImage
                         src="/home/black_infirmier.png"
@@ -91,12 +98,13 @@
                         Accessible sur mobile et ordinateur, Infiswap apporte un gain de
                         temps significatif, améliore la coordination entre professionnels et
                         contribue à une meilleure qualité de soins. Une solution moderne et
-                        indispensable pour un exercice serein et efficace du métier d'infirmier. <br>
-                        Infiswap est une plateforme dédiée aux infirmiers libéraux, facilitant les
-                        remplacements, la gestion des tournées et le suivi des formations. Elle
-                        optimise la planification, réduit le temps administratif et améliore la
-                        coordination, offrant ainsi plus d'efficacité, de flexibilité et une
-                        meilleure qualité de soins.
+                        indispensable pour un exercice serein et efficace du métier
+                        d'infirmier. <br>
+                        Infiswap est une plateforme dédiée aux infirmiers libéraux,
+                        facilitant les remplacements, la gestion des tournées et le suivi
+                        des formations. Elle optimise la planification, réduit le temps
+                        administratif et améliore la coordination, offrant ainsi plus
+                        d'efficacité, de flexibilité et une meilleure qualité de soins.
                     </p>
                     <div>
                         <h5 class="font-semibold">
@@ -106,15 +114,16 @@
                             </span>
                         </h5>
                         <p>
-                            Avec infiswap, trouvez et gérez vos remplacements facilement. Plus de visibilité
-                            pour les annonces, une recherche optimisée par localisation et une mise en relation
-                            rapide entre infirmiers. Gagnez du temps, développez votre réseau et exercez en toute
+                            Avec infiswap, trouvez et gérez vos remplacements facilement. Plus
+                            de visibilité pour les annonces, une recherche optimisée par
+                            localisation et une mise en relation rapide entre infirmiers.
+                            Gagnez du temps, développez votre réseau et exercez en toute
                             sérénité!
                         </p>
                     </div>
                     <Button
                         href="/register"
-                        class="w-44 mx-auto flex justify-center items-center lg:mx-0"
+                        class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center font-bold"
                     >
                         S'inscrire
                     </Button>
@@ -127,7 +136,9 @@
                 v-for="(card, index) in cards"
                 :key="index"
             >
-                <Card class="border border-gray-300 hover:bg-transparent hover:scale-100 cursor-default mb-6 -ml-4 -mr-4">
+                <Card
+                    class="border border-gray-300 hover:bg-transparent hover:scale-100 cursor-default mb-6 -ml-4 -mr-4"
+                >
                     <CardHeader class="p-4 rounded-lg bg-primary text-white">
                         <CardTitle class="text-xs sm:text-lg">
                             {{ card.title }}

@@ -344,7 +344,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['verified'],
-    ssr: false,
+    middleware: ['auth', 'verified'],
 });
 </script>
