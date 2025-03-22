@@ -99,9 +99,15 @@ const triggerFileInput = () => {
                 v-else-if="fileType !==null"
                 class="text-gray-500 text-center px-2 flex gap-2 lg:gap-4 items-center"
             >
-                <DocumentIcon class="size-10 lg:size-16"/>
+                <DocumentIcon
+                    v-show="file"
+                    class="size-10 lg:size-16"
+                />
                 <span v-if="file">{{ file.name }}</span>
-                <span v-show="errorMessage" class="text-red-500"> {{ errorMessage }} </span>
+                <span
+                    v-show="errorMessage"
+                    class="text-red-500"
+                > {{ errorMessage }} </span>
             </p>
             <p
                 v-else
