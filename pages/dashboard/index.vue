@@ -166,15 +166,17 @@
                 <div class="my-3">
                     <Table>
                         <TableHeader>
-                            <!-- Le header se présente comme un seul bloc avec une bordure globale -->
                             <TableRow class="grid grid-cols-3 gap-0 border border-gray-300">
-                                <TableHead class="flex h-10 justify-center items-center bg-primary text-white">
+                                <TableHead
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Patient
                                 </TableHead>
-                                <TableHead class="flex h-10 justify-center items-center bg-primary text-white">
+                                <TableHead
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="flex h-10 justify-center items-center bg-primary text-white">
+                                <TableHead
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Ville
                                 </TableHead>
                             </TableRow>
@@ -183,23 +185,22 @@
                         <TableBody>
                             <template v-if="reports.tours != 0">
                                 <div v-for="(tournee, index) in reports.tours" :key="index">
-                                    <!-- Chaque ligne du body a la même structure de grille et bordure que le header -->
                                     <TableRow class="cursor-pointer grid grid-cols-3 gap-0 border border-gray-300">
-                                        <TableCell class="bg-gray-100">
+                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tournee.lastname }} {{ tournee.firstname }}
                                                 </span>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="bg-gray-100">
+                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tournee.profile.zip_code }}
                                                 </span>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="bg-gray-100">
+                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tournee.profile.city }}
@@ -223,6 +224,7 @@
                             </template>
                         </TableBody>
                     </Table>
+
 
                 </div>
             </div>
