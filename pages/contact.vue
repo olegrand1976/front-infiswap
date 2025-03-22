@@ -30,7 +30,7 @@
                         v-model="formData.name"
                         :icon="UserCircleIcon"
                         size="md"
-                        placeholder="Nom, Prénom"
+                        placeholder="Nom, prénom"
                         :errors="validationErrors.name"
                         @blur="validateField('name')"
                         @input="validateField('name')"

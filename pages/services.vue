@@ -19,7 +19,7 @@
                         <p
                             class="text-center lg:text-left text-base lg:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0"
                         >
-                            Chez INFISWAP, nous mettons à votre disposition une plateforme
+                            Chez InfiSwap, nous mettons à votre disposition une plateforme
                             complète et intuitive conçue pour faciliter la vie des infirmiers
                             libéraux.<br class="hidden lg:block">
                             Notre objectif est de simplifier la gestion des remplacements,<br
