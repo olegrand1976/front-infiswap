@@ -28,7 +28,7 @@
                     performante et à la hauteur de vos attentes.
                 </p>
                 <p class="mb-4">
-                    Nous savons que vous êtes impatients (et nous aussi !), mais chaque
+                    Nous savons que vous êtes impatients (et nous aussi!), mais chaque
                     ligne de code que nous écrivons rapproche le lancement de quelque
                     chose de
                     <strong class="text-primary font-semibold">vraiment exceptionnel</strong>.
