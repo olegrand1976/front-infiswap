@@ -232,9 +232,7 @@
           <Table>
             <TableHeader>
               <!-- <TableHeader class="w-full"> -->
-              <TableRow
-                class="cursor-pointer grid grid-cols-3 gap-2 border border-none overflow-x-hidden"
-              >
+              <TableRow class="grid grid-cols-3 gap-0">
                 <!-- <TableRow
                 class="grid grid-cols-3 overflow-x-hidden gap-2 border border-none"
               > -->
@@ -242,17 +240,17 @@
                   class="bg-primary flex justify-center items-center rounded-lg text-white s"
                 > -->
                 <TableHead
-                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
+                  class="flex h-10 justify-center items-center bg-primary text-white">
                 >
                   Patient
                 </TableHead>
                 <TableHead
-                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
+                  class="flex h-10 justify-center items-center bg-primary text-white">
                 >
                   Code postal
                 </TableHead>
                 <TableHead
-                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
+                  class="flex h-10 justify-center items-center bg-primary text-white">
                 >
                   Ville
                 </TableHead>
