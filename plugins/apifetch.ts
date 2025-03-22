@@ -41,12 +41,15 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
 
             let headers = {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${useCookie(AUTH_TOKEN).value ?? ''}`,
                 'Accept-Language': language,
                 ...options?.headers,
                 ...(token && { [CSRF_HEADER]: token }),
             };
+
+            if (!(options.body instanceof FormData)) {
+                headers['Content-Type'] = 'application/json';
+            }
 
             if (import.meta.server) {
                 const cookieString = event
