@@ -14,7 +14,7 @@
                 <span>Le dernier mois</span>
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
-              <div class="flex justify-between items-center gap-3 mt-3">
+              <div class="flex justify-center items-center gap-3 mt-3">
                 <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.done.count }}
                 </p>
@@ -35,7 +35,7 @@
                 <span>Le dernier mois</span>
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
-              <div class="flex justify-between items-center gap-3 mt-3">
+              <div class="flex justify-center items-center gap-3 mt-3">
                 <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.ignored.count }}
                 </p>
@@ -53,7 +53,7 @@
                 <span>Le dernier mois</span>
                 <span class="text-primary">{{ previousMonth }}</span>
               </h6>
-              <div class="flex justify-between items-center gap-3 mt-3">
+              <div class="flex justify-center items-center gap-3 mt-3">
                 <p class="text-5xl font-semibold text-primary text-center">
                   {{ reports.replacement.pending.count }}
                 </p>
