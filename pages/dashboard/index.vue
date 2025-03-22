@@ -237,18 +237,21 @@
               <!-- <TableRow
                 class="grid grid-cols-3 overflow-x-hidden gap-2 border border-none"
               > -->
-                <TableHead
+                <!-- <TableHead
                   class="bg-primary flex justify-center items-center rounded-lg text-white s"
+                > -->
+                <TableHead
+                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
                 >
                   Patient
                 </TableHead>
                 <TableHead
-                  class="bg-primary flex justify-center items-center rounded-lg text-white s"
+                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
                 >
                   Code postal
                 </TableHead>
                 <TableHead
-                  class="bg-primary flex justify-center items-center rounded-lg text-white s"
+                  class="flex h-10 rounded mt-3 bg-primary justify-center items-center text-white s"
                 >
                   Ville
                 </TableHead>
