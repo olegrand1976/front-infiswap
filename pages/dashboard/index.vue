@@ -166,7 +166,7 @@
                 <div class="my-3">
                     <Table>
                         <TableHeader>
-                            <TableRow class="grid grid-cols-3 gap-0 border border-gray-300">
+                            <TableRow class="grid grid-cols-3 gap-0 border-gray-300">
                                 <TableHead
                                     class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Patient
