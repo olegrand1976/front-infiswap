@@ -5,16 +5,6 @@
         @submit="submit"
     >
         <section class="flex flex-col justify-between mb-8">
-            
-            <div>
-            <Button
-                class="mt-12 flex w-64 justify-center mx-auto lg:hidden"
-                type="submit"
-                :in-progress="inProgress"
-            >
-                Enregistrer
-            </Button>
-            </div>
             <div class="space-y-6">
                 <div class="bg-primary p-6 rounded-xl flex flex-col space-y-3 justify-center items-center px-auto">
                     <UserCircleIcon class="text-white w-28" />
@@ -566,7 +556,6 @@
                 </Dialog>
             </div>
 
-            <div>
             <Button
                 class="mt-12 flex w-64 justify-center mx-auto lg:hidden"
                 type="submit"
@@ -574,7 +563,6 @@
             >
                 Enregistrer
             </Button>
-            </div>
         </section>
     </Form>
 </template>
