@@ -166,7 +166,8 @@
                 <div class="my-3">
                     <Table>
                         <TableHeader>
-                            <TableRow class="grid grid-cols-3 gap-0">
+                            <!-- Le header se présente comme un seul bloc avec une bordure globale -->
+                            <TableRow class="grid grid-cols-3 gap-0 border border-gray-300">
                                 <TableHead class="flex h-10 justify-center items-center bg-primary text-white">
                                     Patient
                                 </TableHead>
@@ -182,7 +183,8 @@
                         <TableBody>
                             <template v-if="reports.tours != 0">
                                 <div v-for="(tournee, index) in reports.tours" :key="index">
-                                    <TableRow class="cursor-pointer grid grid-cols-3 gap-2 border border-none">
+                                    <!-- Chaque ligne du body a la même structure de grille et bordure que le header -->
+                                    <TableRow class="cursor-pointer grid grid-cols-3 gap-0 border border-gray-300">
                                         <TableCell class="bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
@@ -205,7 +207,6 @@
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                    <hr class="border-t border-gray-300" />
                                 </div>
                             </template>
                             <template v-else>
