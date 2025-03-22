@@ -126,8 +126,9 @@
                     </div>
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
-                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="zipCode">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full"
+                            title="Un patient hospitalisé? Passez-le en indisponible.">
+                            <label for="Availabilitie">
                                 Disponibilité
                             </label>
                         </div>
@@ -149,8 +150,8 @@
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="Genres">
-                                Genres
+                            <label for="Genre">
+                                Genre
                             </label>
                         </div>
                         <Select v-model="formData.genre">
@@ -208,7 +209,7 @@
                                                     @click="toggleDaySelection(visit, key)">
                                                     <Checkbox :checked="visit.daysOfVisit.includes(key)" class="mr-2" />
                                                     <label class="text-xs text-nowrap cursor-pointer">{{ value
-                                                        }}</label>
+                                                    }}</label>
                                                 </div>
                                             </SelectGroup>
                                         </SelectContent>
@@ -264,7 +265,7 @@
                                     </div>
                                 </div>
 
-                                <p class="w-48 ml-auto flex justify-end text-primary mt-8 cursor-pointer items-center space-x-3"
+                                <p class="w-48 ml-auto flex justify-start text-primary mt-8 cursor-pointer items-center space-x-3"
                                     @click="addTimeSlot(visitIndex)">
                                     <PlusIcon class="w-6" />
                                     <span>
@@ -274,7 +275,7 @@
                             </div>
                         </div>
 
-                        <Button class="flex justify-center items-center mx-auto mt-4" type="button" @click="addVisit">
+                        <Button class="flex justify-end items-center mx-auto mt-4" type="button" @click="addVisit">
                             <PlusIcon class="w-5 h-5 mr-2" />
                             <span>Ajouter un autre jour</span>
                         </Button>
