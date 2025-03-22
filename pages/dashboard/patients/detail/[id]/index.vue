@@ -291,20 +291,11 @@
 
                         <div class="flex justify-between mt-6">
                             <Button
-                                variant="outline"
-                                class="hidden sm:block"
+                                variant="success"
                                 @click="addNewCareInfo"
                             >
-                                <PlusIcon class="w-4 h-4 mr-2" />
-                                Ajouter une information
-                            </Button>
-                            <Button
-                                variant="outline"
-                                class="sm:hidden"
-                                @click="addNewCareInfo"
-                            >
-                                <PlusIcon class="w-4 h-4 mr-2" />
-                                Ajouter
+                                <PlusCircleIcon class="mr-2" />
+                                <span>Ajouter</span>
                             </Button>
 
                             <div class="space-x-2">
@@ -488,7 +479,7 @@
                             </div>
                         </div>
 
-                        <PlusIcon
+                        <PlusCircleIcon
                             class="w-6 text-primary mt-8 ml-auto cursor-pointer"
                             title="Ajouter un autre heure"
                             @click="addTimeSlot(visitIndex)"
@@ -501,7 +492,7 @@
                     type="button"
                     @click="addVisit"
                 >
-                    <PlusIcon class="w-5 h-5 mr-2" />
+                    <PlusCircleIcon class="w-5 h-5 mr-2" />
                     <span>Ajouter un autre jour</span>
                 </Button>
             </div>
@@ -523,7 +514,7 @@
                         class="w-full flex items-center justify-center mt-4"
                         @click="triggerFileUpload"
                     >
-                        <PlusIcon class="w-5" />
+                        <PlusCircleIcon class="w-5" />
                         Ajouter un document
                     </Button>
                 </div>
@@ -613,7 +604,7 @@
 
 <script lang="ts" setup>
 import {
-    PlusIcon,
+    PlusCircleIcon,
     UserCircleIcon,
     CloudArrowDownIcon,
     PencilSquareIcon,
