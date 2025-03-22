@@ -18,9 +18,9 @@
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.done.count }}
                                 </p>
-                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
+                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.done.percentage }}%
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -38,9 +38,9 @@
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.ignored.count }}
                                 </p>
-                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
+                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.ignored.percentage }}%
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -58,9 +58,9 @@
                                 <p class="text-5xl font-semibold text-primary">
                                     {{ reports.replacement.pending.count }}
                                 </p>
-                                <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
+                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
                                     {{ reports.replacement.pending.percentage }}%
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
