@@ -111,8 +111,7 @@
                                     <div class="mt-4 p-4 rounded-lg shadow">
                                         <div class="flex justify-between items-center border-b pb-2">
                                             <span class="font-bold">Genre</span>
-                                            <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de
-                                                données pour l\'instant' }}</span>
+                                            <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données' }}</span>
                                         </div>
                                         <!-- <div class="flex justify-between items-center border-b py-2">
                                             <span class="font-bold">Groupe sanguin</span>
