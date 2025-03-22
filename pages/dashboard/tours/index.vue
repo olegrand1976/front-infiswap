@@ -9,7 +9,7 @@
                             Liste des patients
                         </h2>
                         <div>
-                            <Button class="border border-white rounded-lg px-2 py-1" href="/dashboard/patients/create">
+                            <Button variant="secondary" class="text-primary" href="/dashboard/patients/create">
                                 Créer nouveau patient
                             </Button>
                         </div>
