@@ -2,8 +2,8 @@
     <div class="pt-4">
         <Form>
             <div class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0">
-                <div class="sm:mx-20 md:mx-0 px-auto md:px-0 bg-primary border border-primary rounded-2xl h-full">
-                    <div class="bg-white rounded-2xl flex items-center ps-4 h-10 m-2">
+                <div class="sm:mx-20 md:mx-0 ps-4 md:px-0 bg-primary border border-primary rounded-2xl h-full">
+                    <div class="bg-white rounded-2xl flex items-center ps-4 h-10">
                         <h2 class="font-bold text-primary">
                             Période de remplacement
                         </h2>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div class="sm:mx-20 md:mx-0">
+                <div class="sm:mx-20 md:mx-0 ps-4">
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"
@@ -374,8 +374,8 @@
                             </div>
                         </div>
 
-                        <div>
-                            <Button @click="onSavePatient" class="flex items-center">
+                        <div class="flex items-center">
+                            <Button @click="onSavePatient">
                                 Enregistrer
                             </Button>
                         </div>
