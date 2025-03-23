@@ -12,7 +12,7 @@ export function usePatientManagement() {
 
             const link = document.createElement('a');
             link.href = URL.createObjectURL(response);
-            link.setAttribute('download', `infiswap_${Date.now()}`);
+            //link.setAttribute('download', `infiswap_${Date.now()}`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
