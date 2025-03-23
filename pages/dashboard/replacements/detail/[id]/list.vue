@@ -65,7 +65,10 @@
                                     >
                                         <CheckCircleIcon class="size-7" /> <span>Accepté</span>
                                     </div>
-                                    <Form v-else @submit="handlesubmit(list.id)">
+                                    <Form
+                                        v-else
+                                        @submit="handlesubmit(list.id)"
+                                    >
                                         <Button
                                             type="submit"
                                             class="bg-gray-200 hover:text-white text-black rounded-full w-24"
@@ -100,8 +103,8 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 
 const { changeStatus } = changeStatusReplacement();
 
