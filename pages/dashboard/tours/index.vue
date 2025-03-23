@@ -60,7 +60,8 @@
                                                 <span>{{ item.firstname }} {{ item.lastname }}
                                                 </span>
                                             </p>
-                                            <div class="flex justify-end mr-4 gap-2 text-white"
+                                            <div
+                                                class="flex justify-end mr-4 gap-2 text-white"
                                                 @click="openDialog(item.id, item.visit_times?.[0]?.id)"
                                             >
                                                 <span class="truncate">Exclure de la tournée du jour</span>
@@ -310,7 +311,7 @@ import {
     InboxIcon,
     ClockIcon,
     HomeIcon,
-    UserCircleIcon
+    UserCircleIcon,
 } from '@heroicons/vue/24/solid';
 
 import { ref, watch } from 'vue';

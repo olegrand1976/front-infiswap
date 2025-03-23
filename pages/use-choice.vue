@@ -100,9 +100,14 @@ const handleSubmit = async (event) => {
     }
 
     try {
-        const response = await $apifetch('/api/user-choice', {
+        const data = {
+            value: formData.value,
+            key: 'choice',
+        };
+
+        const response = await $apifetch('/api/users/settings', {
             method: 'POST',
-            body: { choice: formData.value },
+            body: data,
         });
 
         if (response === 200) {
