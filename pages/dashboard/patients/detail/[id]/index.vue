@@ -569,7 +569,7 @@
                                     <TableCell class="bg-gray-100">
                                         <div
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center"
-                                            @click="removeDocument(index)"
+                                            @click="removeDocument(index, document.id)"
                                         >
                                             <TrashIcon class="w-5 cursor-pointer" />
                                         </div>
@@ -640,7 +640,7 @@ import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
-import type { Patient, PatientDocument } from '~/lib/types';
+import type { Patient } from '~/lib/types';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
@@ -655,7 +655,7 @@ const patientId = route.params.id as string;
 
 const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
 
-const { loading: downloading, downloadDocument } = usePatientManagement();
+const { loading: downloading, downloadDocument, deleteDocument } = usePatientManagement();
 interface User {
     nurse?: {
         id: string;
@@ -974,11 +974,9 @@ const handleUploadDocument = async () => {
     // patient.value.patient_documents.push(responseBody.document);
 };
 
-const removeDocument = (index: number) => {
+const removeDocument = (index: number, id: number) => {
     formData.value.patient_documents.splice(index, 1);
-    $toast({
-        description: 'Document supprimé',
-    });
+    deleteDocument(id);
 };
 
 const router = useRouter();

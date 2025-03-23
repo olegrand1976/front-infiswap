@@ -28,10 +28,29 @@ export function usePatientManagement() {
         }
     };
 
+    const deleteDocument = async (id: number) => {
+        try {
+            loading.value = true;
+            await $apifetch(`/api/patients/documents/${id}/delete`, { method: 'DELETE' });
+            $toast({
+                description: 'Document supprimé avec succès',
+            });
+        }
+        catch {
+            $toast({
+                variant: 'destructive',
+                description: 'Erreur lors de la suppression du document',
+            });
+        }
+        finally {
+            loading.value = false;
+        }
+    };
     return {
         error,
         loading,
         success,
         downloadDocument,
+        deleteDocument,
     };
 }
