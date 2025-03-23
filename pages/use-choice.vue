@@ -19,13 +19,13 @@
                 <li>
                     <span class="font-semibold text-xl text-primary">1 - Je cherche un remplacement</span>
                     <p class="text-sm text-gray-600 mt-2">
-                        Vous êtes à la recherche d'un infirmier pour remplacer une mission temporaire ? Sélectionnez cette option pour consulter les remplaçants disponibles et gérer vos besoins en remplacement.
+                        Vous êtes à la recherche d'un infirmier pour remplacer une mission temporaire? Sélectionnez cette option pour consulter les remplaçants disponibles et gérer vos besoins en remplacement.
                     </p>
                 </li>
                 <li>
                     <span class="font-semibold text-xl text-primary">2 - Me faire remplacer</span>
                     <p class="text-sm text-gray-600 mt-2">
-                        Vous êtes un infirmier et vous souhaitez vous faire remplacer temporairement ? Sélectionnez cette option pour consulter les missions disponibles et vous inscrire en tant que remplaçant.
+                        Vous êtes un infirmier et vous souhaitez vous faire remplacer temporairement? Sélectionnez cette option pour consulter les missions disponibles et vous inscrire en tant que remplaçant.
                     </p>
                 </li>
                 <li>

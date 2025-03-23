@@ -10,6 +10,6 @@
 import Toaster from '@/components/ui/toast/Toaster.vue';
 
 useHead({
-    title: 'Infiswap',
+    title: 'InfiSwap',
 });
 </script>

@@ -45,7 +45,7 @@
 
             <div class="w-full max-w-lg overflow-x-hidden font-light">
                 <h1 class="mb-4 lg:mb-6 xl:text-lg lg:text-base md:text-sm sm:text-xs text-center">
-                    <span>Bienvenue sur <span class="font-bold text-primary">Infiswap</span>, la plateforme pour vos remplacements!</span>
+                    <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
                 <form

@@ -3,19 +3,16 @@
         <Form @submit="submit">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
                 <div class="space-y-8 md:space-y-6">
-                    <div class="space-y-4">
+                    <div class="flex gap-4">
                         <div>
                             <h3 class="p-2 bg-primary text-white rounded-t">
                                 Date de début d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
-                                <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
+                                <div
+                                    class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
                                     <CalendarDaysIcon class="w-5" />
-                                    <Input
-                                        v-model="formData.careStartDate"
-                                        type="date"
-                                        class="bg-transparent"
-                                    />
+                                    <Input v-model="formData.careStartDate" type="date" class="bg-transparent" />
                                 </div>
                             </div>
                         </div>
@@ -24,13 +21,10 @@
                                 Date de fin d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
-                                <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
+                                <div
+                                    class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
                                     <CalendarDaysIcon class="w-5" />
-                                    <Input
-                                        v-model="formData.careEndDate"
-                                        type="date"
-                                        class="bg-transparent"
-                                    />
+                                    <Input v-model="formData.careEndDate" type="date" class="bg-transparent" />
                                 </div>
                             </div>
                         </div>
@@ -42,19 +36,9 @@
                                 Nom
                             </label>
                         </div>
-                        <Input
-                            id="lastname"
-                            v-model="formData.lastname"
-                            type="text"
-                            class="w-full bg-transparent"
-                            placeholder="Doe"
-                            @blur="validateField('lastname')"
-                            @input="validateField('lastname')"
-                        />
-                        <p
-                            v-if="error.lastname"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="lastname" v-model="formData.lastname" type="text" class="w-full bg-transparent"
+                            placeholder="Doe" @blur="validateField('lastname')" @input="validateField('lastname')" />
+                        <p v-if="error.lastname" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.lastname }}
                         </p>
                     </div>
@@ -65,19 +49,9 @@
                                 Prénoms
                             </label>
                         </div>
-                        <Input
-                            id="firstname"
-                            v-model="formData.firstname"
-                            type="text"
-                            class="w-full bg-transparent"
-                            placeholder="John"
-                            @blur="validateField('firstname')"
-                            @input="validateField('firstname')"
-                        />
-                        <p
-                            v-if="error.firstname"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="firstname" v-model="formData.firstname" type="text" class="w-full bg-transparent"
+                            placeholder="John" @blur="validateField('firstname')" @input="validateField('firstname')" />
+                        <p v-if="error.firstname" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.firstname }}
                         </p>
                     </div>
@@ -85,22 +59,14 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="socialSecurityNumber">
-                                Sécurité sociale
+                                Numéro de sécurité sociale
                             </label>
                         </div>
-                        <Input
-                            id="socialSecurityNumber"
-                            v-model="formData.socialSecurityNumber"
-                            type="text"
-                            placeholder="880603-123-56"
-                            class="w-full bg-transparent"
+                        <Input id="socialSecurityNumber" v-model="formData.socialSecurityNumber" type="text"
+                            placeholder="880603-123-56" class="w-full bg-transparent"
                             @blur="validateField('socialSecurityNumber')"
-                            @input="validateField('socialSecurityNumber')"
-                        />
-                        <p
-                            v-if="error.socialSecurityNumber"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                            @input="validateField('socialSecurityNumber')" />
+                        <p v-if="error.socialSecurityNumber" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.socialSecurityNumber }}
                         </p>
                     </div>
@@ -111,19 +77,10 @@
                                 Email
                             </label>
                         </div>
-                        <Input
-                            id="email"
-                            v-model="formData.email"
-                            type="email"
-                            class="w-full bg-transparent"
-                            placeholder="johndoe@gmail.com"
-                            @blur="validateField('email')"
-                            @input="validateField('email')"
-                        />
-                        <p
-                            v-if="error.email"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="email" v-model="formData.email" type="email" class="w-full bg-transparent"
+                            placeholder="johndoe@gmail.com" @blur="validateField('email')"
+                            @input="validateField('email')" />
+                        <p v-if="error.email" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.email }}
                         </p>
                     </div>
@@ -134,19 +91,10 @@
                                 Téléphone
                             </label>
                         </div>
-                        <Input
-                            id="phoneNumber"
-                            v-model="formData.phoneNumber"
-                            type="text"
-                            class="w-full bg-transparent"
-                            placeholder="0499123456"
-                            @blur="validateField('phoneNumber')"
-                            @input="validateField('phoneNumber')"
-                        />
-                        <p
-                            v-if="error.phoneNumber"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="phoneNumber" v-model="formData.phoneNumber" type="text" class="w-full bg-transparent"
+                            placeholder="0499123456" @blur="validateField('phoneNumber')"
+                            @input="validateField('phoneNumber')" />
+                        <p v-if="error.phoneNumber" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.phoneNumber }}
                         </p>
                     </div>
@@ -157,19 +105,9 @@
                                 Code postal
                             </label>
                         </div>
-                        <Input
-                            id="zipCode"
-                            v-model="formData.zipCode"
-                            type="text"
-                            class="w-full bg-transparent"
-                            placeholder="1000"
-                            @blur="validateField('zipCode')"
-                            @input="validateField('zipCode')"
-                        />
-                        <p
-                            v-if="error.zipCode"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="zipCode" v-model="formData.zipCode" type="text" class="w-full bg-transparent"
+                            placeholder="1000" @blur="validateField('zipCode')" @input="validateField('zipCode')" />
+                        <p v-if="error.zipCode" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.zipCode }}
                         </p>
                     </div>
@@ -180,42 +118,28 @@
                                 Ville
                             </label>
                         </div>
-                        <Input
-                            id="city"
-                            v-model="formData.city"
-                            type="text"
-                            class="w-full bg-transparent"
-                            placeholder="Bruxelles"
-                            @blur="validateField('city')"
-                            @input="validateField('city')"
-                        />
-                        <p
-                            v-if="error.city"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
+                        <Input id="city" v-model="formData.city" type="text" class="w-full bg-transparent"
+                            placeholder="Bruxelles" @blur="validateField('city')" @input="validateField('city')" />
+                        <p v-if="error.city" class="text-red-500 text-nowrap text-xs my-1 ms-[105%]">
                             {{ error.city }}
                         </p>
                     </div>
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
-                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="zipCode">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full"
+                            title="Un patient hospitalisé? Passez-le en indisponible.">
+                            <label for="Availabilitie">
                                 Disponibilité
                             </label>
                         </div>
                         <Select v-model="formData.availability">
-                            <SelectTrigger
-                                class="w-full bg-transparent text-nowrap border border-none"
-                                position="right"
-                            >
+                            <SelectTrigger class="w-full bg-transparent text-nowrap border border-none"
+                                position="right">
                                 <SelectValue />
                             </SelectTrigger>
 
                             <SelectContent class="border border-none">
-                                <template
-                                    v-for="[key, value] in Object.entries(availabilities)"
-                                    :key="key"
-                                >
+                                <template v-for="[key, value] in Object.entries(availabilities)" :key="key">
                                     <SelectItem :value="key">
                                         {{ value }}
                                     </SelectItem>
@@ -226,23 +150,18 @@
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="Genres">
-                                Genres
+                            <label for="Genre">
+                                Genre
                             </label>
                         </div>
                         <Select v-model="formData.genre">
-                            <SelectTrigger
-                                class="w-full bg-transparent text-nowrap border border-none"
-                                position="right"
-                            >
+                            <SelectTrigger class="w-full bg-transparent text-nowrap border border-none"
+                                position="right">
                                 <SelectValue />
                             </SelectTrigger>
 
                             <SelectContent class="border border-none">
-                                <template
-                                    v-for="[key, value] in Object.entries(gender)"
-                                    :key="key"
-                                >
+                                <template v-for="[key, value] in Object.entries(gender)" :key="key">
                                     <SelectItem :value="key">
                                         {{ value }}
                                     </SelectItem>
@@ -254,36 +173,24 @@
 
                 <div class="flex flex-col">
                     <div class="flex flex-col space-y-4">
-                        <div
-                            v-for="(visit, visitIndex) in formData.visits"
-                            :key="visitIndex"
-                            class="relative"
-                        >
+                        <div v-for="(visit, visitIndex) in formData.visits" :key="visitIndex" class="relative">
                             <div class="bg-gray-100 p-5 rounded">
                                 <div class="flex justify-between items-center">
                                     <h3 class="text-primary">
                                         Heure de visite théorique
                                     </h3>
-                                    <button
-                                        v-if="formData.visits.length > 1"
-                                        class="text-red-500 hover:text-red-700"
-                                        type="button"
-                                        @click="removeVisit(visitIndex)"
-                                    >
+                                    <button v-if="formData.visits.length > 1" class="text-red-500 hover:text-red-700"
+                                        type="button" @click="removeVisit(visitIndex)">
                                         Supprimer ce jour
                                     </button>
                                 </div>
 
                                 <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                     <h5>Jour</h5>
-                                    <Select
-                                        v-model="visit.daysOfVisit"
-                                        multiple
-                                    >
+                                    <Select v-model="visit.daysOfVisit" multiple>
                                         <SelectTrigger
                                             class="w-full bg-white shadow rounded-full text-nowrap border border-none"
-                                            position="right"
-                                        >
+                                            position="right">
                                             <SelectValue>
                                                 <template v-if="getSelectedDaysText(visit.daysOfVisit)">
                                                     {{ getSelectedDaysText(visit.daysOfVisit) }}
@@ -297,58 +204,39 @@
                                         </SelectTrigger>
                                         <SelectContent class="border border-none">
                                             <SelectGroup class="w-32">
-                                                <div
-                                                    v-for="[key, value] in Object.entries(days)"
-                                                    :key="key"
+                                                <div v-for="[key, value] in Object.entries(days)" :key="key"
                                                     class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                                                    @click="toggleDaySelection(visit, key)"
-                                                >
-                                                    <Checkbox
-                                                        :checked="visit.daysOfVisit.includes(key)"
-                                                        class="mr-2"
-                                                    />
-                                                    <label class="text-xs text-nowrap cursor-pointer">{{ value }}</label>
+                                                    @click="toggleDaySelection(visit, key)">
+                                                    <Checkbox :checked="visit.daysOfVisit.includes(key)" class="mr-2" />
+                                                    <label class="text-xs text-nowrap cursor-pointer">{{ value
+                                                    }}</label>
                                                 </div>
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
-                                <div
-                                    v-for="(timeSlot, timeIndex) in visit.theoreticalVisitTimes"
-                                    :key="timeIndex"
-                                >
+                                <div v-for="(timeSlot, timeIndex) in visit.theoreticalVisitTimes" :key="timeIndex">
                                     <hr class="border border-gray-200 my-5">
 
                                     <div class="flex justify-end items-center">
-                                        <XMarkIcon
-                                            v-if="visit.theoreticalVisitTimes.length > 1"
+                                        <XMarkIcon v-if="visit.theoreticalVisitTimes.length > 1"
                                             class="w-5 text-primary cursor-pointer"
-                                            @click="removeTimeSlot(visitIndex, timeIndex)"
-                                        />
+                                            @click="removeTimeSlot(visitIndex, timeIndex)" />
                                     </div>
 
                                     <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                         <h5>Heure</h5>
-                                        <InputTime
-                                            v-model="timeSlot.time"
-                                            input-class="rounded-full"
-                                        />
+                                        <InputTime v-model="timeSlot.time" input-class="rounded-full" />
                                     </div>
 
                                     <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                         <h5>Type de soin</h5>
-                                        <Select
-                                            v-model="timeSlot.careTypeId"
-                                            multiple
-                                        >
+                                        <Select v-model="timeSlot.careTypeId" multiple>
                                             <SelectTrigger
                                                 class="w-full bg-white shadow rounded-full text-nowrap border border-none"
-                                                position="right"
-                                            >
-                                                <SelectValue
-                                                    class="truncate w-[38rem]"
-                                                >
+                                                position="right">
+                                                <SelectValue class="truncate w-[38rem]">
                                                     <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
                                                         {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
                                                     </template>
@@ -362,16 +250,11 @@
 
                                             <SelectContent class="border border-none">
                                                 <SelectGroup class="w-32">
-                                                    <div
-                                                        v-for="careType in careTypes"
-                                                        :key="careType.id"
+                                                    <div v-for="careType in careTypes" :key="careType.id"
                                                         class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                                                        @click="handleCareTypeClick(timeSlot, careType.id)"
-                                                    >
-                                                        <Checkbox
-                                                            :checked="timeSlot.careTypeId.includes(careType.id)"
-                                                            class="mr-2"
-                                                        />
+                                                        @click="handleCareTypeClick(timeSlot, careType.id)">
+                                                        <Checkbox :checked="timeSlot.careTypeId.includes(careType.id)"
+                                                            class="mr-2" />
                                                         <label class="text-xs text-nowrap cursor-pointer">
                                                             {{ careType.name }}
                                                         </label>
@@ -382,10 +265,8 @@
                                     </div>
                                 </div>
 
-                                <p
-                                    class="w-48 ml-auto flex justify-end text-primary mt-8 cursor-pointer items-center space-x-3"
-                                    @click="addTimeSlot(visitIndex)"
-                                >
+                                <p class="w-48 ml-auto flex justify-start text-primary mt-8 cursor-pointer items-center space-x-3"
+                                    @click="addTimeSlot(visitIndex)">
                                     <PlusIcon class="w-6" />
                                     <span>
                                         Nouvelle visite
@@ -394,11 +275,7 @@
                             </div>
                         </div>
 
-                        <Button
-                            class="flex justify-center items-center mx-auto mt-4"
-                            type="button"
-                            @click="addVisit"
-                        >
+                        <Button class="flex justify-end items-center mx-auto mt-4" type="button" @click="addVisit">
                             <PlusIcon class="w-5 h-5 mr-2" />
                             <span>Ajouter un autre jour</span>
                         </Button>
@@ -406,17 +283,11 @@
                 </div>
             </div>
 
-            <Button
-                class="my-12 w-80 flex justify-center items-center mx-auto"
-                type="submit"
-                :in-progress="inProgress"
-            >
+            <Button class="my-12 w-80 flex justify-center items-center mx-auto" type="submit" :in-progress="inProgress">
                 Enregistrer
             </Button>
 
-            <Dialog
-                v-model:open="isOpen"
-            >
+            <Dialog v-model:open="isOpen">
                 <DialogContent class="h-[28vh]">
                     <DialogHeader>
                         <DialogTitle>Confirmation</DialogTitle>
@@ -426,10 +297,7 @@
                     </DialogHeader>
 
                     <div class="flex space-x-8 justify-end items-center">
-                        <Button
-                            variant="secondary"
-                            @click="closeDialog"
-                        >
+                        <Button variant="secondary" @click="closeDialog">
                             Annuler
                         </Button>
                         <Button @click="confirmNavigation">

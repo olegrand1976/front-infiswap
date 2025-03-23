@@ -28,14 +28,14 @@
                     performante et à la hauteur de vos attentes.
                 </p>
                 <p class="mb-4">
-                    Nous savons que vous êtes impatients (et nous aussi !), mais chaque
+                    Nous savons que vous êtes impatients (et nous aussi!), mais chaque
                     ligne de code que nous écrivons rapproche le lancement de quelque
                     chose de
                     <strong class="text-primary font-semibold">vraiment exceptionnel</strong>.
                 </p>
                 <p class="mb-4">
-                    🙏 Merci pour votre confiance et votre patience. On vous promet :
-                    <em>ça vaudra le coup d’attendre !</em>
+                    🙏 Merci pour votre confiance et votre patience. On vous le promet:
+                    <em>ça vaut le coup d’attendre!</em>
                 </p>
             </div>
         </div>

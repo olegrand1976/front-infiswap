@@ -15,13 +15,13 @@
                         <h3
                             class="text-primary md:text-3xl text-2xl text-center md:text-left"
                         >
-                            Infiswap...
+                            InfiSwap...
                         </h3>
                         <p>
                             est une plateforme innovante conçue pour optimiser la gestion des
                             infirmiers libéraux. Elle simplifie les remplacements, la
                             planification des tournées et le suivi des formations. Grâce à des
-                            outils intelligents et automatisés, Infiswap améliore la
+                            outils intelligents et automatisés, InfiSwap améliore la
                             coordination, réduit le temps administratif et facilite
                             l'organisation quotidienne, offrant ainsi une meilleure qualité de
                             soins et un gain de temps précieux.
@@ -29,12 +29,12 @@
                         <p>
                             la gestion des tournées est optimisée avec une planification
                             automatisée, prenant en compte les contraintes horaires, les types
-                            de soins et la réduction des déplacements inutiles.
+                            de soins et la réduction des déplacements inutiles (bientôt disponible).
                         </p>
                         <p>
-                            Infiswap permet également un suivi complet des formations
+                            InfiSwap permet également un suivi complet des formations
                             professionnelles, assurant la conformité aux obligations légales
-                            avec des rappels et une gestion simplifiée des inscriptions.
+                            avec des rappels et une gestion simplifiée des inscriptions (bientôt disponible).
                             <br>
                             Le suivi des patients est amélioré par un historique détaillé des
                             soins, facilitant la transmission entre soignants.
@@ -90,31 +90,21 @@
                         Enfin, <strong>la plateforme...</strong>
                     </h3>
                     <p>
-                        Intègre des outils de gestion administrative et financière,
-                        notamment le suivi des véhicules, la facturation et la
-                        centralisation des informations essentielles.
-                    </p>
-                    <p>
-                        Accessible sur mobile et ordinateur, Infiswap apporte un gain de
+                        Accessible sur mobile(bientôt disponible) et ordinateur, InfiSwap apporte un gain de
                         temps significatif, améliore la coordination entre professionnels et
                         contribue à une meilleure qualité de soins. Une solution moderne et
                         indispensable pour un exercice serein et efficace du métier
                         d'infirmier. <br>
-                        Infiswap est une plateforme dédiée aux infirmiers libéraux,
-                        facilitant les remplacements, la gestion des tournées et le suivi
-                        des formations. Elle optimise la planification, réduit le temps
-                        administratif et améliore la coordination, offrant ainsi plus
-                        d'efficacité, de flexibilité et une meilleure qualité de soins.
                     </p>
                     <div>
                         <h5 class="font-semibold">
-                            Infiswap:
+                            InfiSwap:
                             <span class="text-primary">
-                                Plus de temps pour soigner, Moins de temps à gérer
+                                Plus de temps pour soigner, moins de temps à gérer
                             </span>
                         </h5>
                         <p>
-                            Avec infiswap, trouvez et gérez vos remplacements facilement. Plus
+                            Avec InfiSwap, trouvez et gérez vos remplacements facilement. Plus
                             de visibilité pour les annonces, une recherche optimisée par
                             localisation et une mise en relation rapide entre infirmiers.
                             Gagnez du temps, développez votre réseau et exercez en toute

@@ -13,13 +13,13 @@
                         <h3
                             class="text-primary text-4xl lg:text-5xl xl:text-7xl font-semibold text-center lg:text-left"
                         >
-                            Nos <span class="font-bold">Services</span>
+                            Nos <span class="font-bold">services</span>
                         </h3>
 
                         <p
                             class="text-center lg:text-left text-base lg:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0"
                         >
-                            Chez INFISWAP, nous mettons à votre disposition une plateforme
+                            Chez InfiSwap, nous mettons à votre disposition une plateforme
                             complète et intuitive conçue pour faciliter la vie des infirmiers
                             libéraux.<br class="hidden lg:block">
                             Notre objectif est de simplifier la gestion des remplacements,<br
@@ -28,10 +28,10 @@
                             la planification des tournées et l’organisation quotidienne,<br
                                 class="hidden lg:block"
                             >
-                            afin que vous puissiez vous concentrer sur l’essentiel :<br
+                            afin que vous puissiez vous concentrer sur l’essentiel:<br
                                 class="hidden lg:block"
                             >
-                            soigner vos patients. Découvrez nos services clés :
+                            soignez vos patients. Découvrez nos services clés :
                         </p>
                     </div>
 
@@ -79,7 +79,7 @@
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
                         <h3 class="text-primary text-lg font-bold">
-                            Recherche et Gestion de Remplacement
+                            Recherche et gestion de remplacement
                         </h3>
                     </div>
                 </div>
@@ -88,13 +88,13 @@
                     <h3
                         class="hidden lg:block xl:text-4xl md:text-3xl lg:text-xl text-primary font-bold"
                     >
-                        Recherche et Gestion <br>
-                        de Remplacement
+                        Recherche et gestion <br>
+                        de remplacement
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
                         Accès rapide aux offres
                     </h4>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Recherchez facilement les offres de remplacement disponibles grâce à
                         notre moteur de recherche intelligent.
                         <br>
@@ -115,7 +115,7 @@
                     >
                         Notification en temps réel
                     </h3>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Recevez des alertes instantanées dès qu’une nouvelle opportunité
                         correspond à vos critères. Ne manquez jamais une mission qui
                         pourrait optimiser votre planning et valoriser votre expertise.
@@ -154,7 +154,7 @@
                     >
                         <h3 class="text-primary text-lg font-bold">
                             Planification et <br>
-                            Organisation
+                            organisation
                         </h3>
                     </div>
                 </div>
@@ -164,12 +164,12 @@
                         class="hidden lg:block xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
                         Planification et <br>
-                        Organisation
+                        organisation
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
                         Gestion automatisé de tourné
                     </h4>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Planifiez vos remplacements en fonction de vos disponibilités grâce
                         à une interface claire et intuitive.
                         <br>
@@ -189,10 +189,10 @@
                     >
                         Historique et suivi personnalisé
                     </h3>
-                    <p class="hidden lg:block">
+                    <p class="hidden lg:block text-base">
                         Suivez l’historique de vos missions et analysez vos performances
                         pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
-                        vos interventions, pour toujours améliorer votre gestion du temps et
+                        vos interventions, pour toujours améliorer votre gestion de temps et
                         vos compétences.
                     </p>
                 </div>
@@ -229,7 +229,7 @@
                     >
                         <h3 class="text-primary text-lg font-bold">
                             Communication et <br>
-                            Réseau
+                            réseau
                         </h3>
                     </div>
                 </div>
@@ -239,12 +239,12 @@
                         class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
                         Communication et <br>
-                        Réseau
+                        réseau
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
                         Mise en relation facilitée
                     </h4>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Contactez directement l’infirmier ou l’établissement en quelques
                         clics pour finaliser rapidement vos engagements.
                         <br>
@@ -262,9 +262,9 @@
                     <h3
                         class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Développement de votre réseau professionnelles
+                        Développement de votre réseau professionnel
                     </h3>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Renforcez vos liens avec d’autres professionnels de la santé et
                         élargissez votre réseau grâce à de nouvelles collaborations.
                         Augmentez votre visibilité auprès des établissements et des
@@ -283,7 +283,7 @@
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
                         <h3 class="text-primary text-lg font-bold">
-                            Développement de votre réseau professionnelles
+                            Développement de votre réseau professionnel
                         </h3>
                     </div>
                 </div>
@@ -305,9 +305,9 @@
                         <h3 class="text-primary text-lg font-bold">
                             Gestion administrative
                             <br>
-                            et Suivi des formartion
+                            et suivi des formations
                             <br>
-                            (Bientôt disponible)
+                            (bientôt disponible)
                         </h3>
                     </div>
                 </div>
@@ -318,14 +318,14 @@
                     >
                         Gestion administrative
                         <br>
-                        et Suivi des formartion
+                        et suivi des formations
                         <br>
-                        (Bientôt disponible)
+                        (bientôt disponible)
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
-                        Outil de gestion complète
+                        Outil de gestion complet
                     </h4>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Gérez vos remplacements et votre planning de manière centralisée,
                         tout en réduisant le temps administratif. Accédez à des outils de
                         suivi administratif et financier pour une vision claire de votre
@@ -342,11 +342,9 @@
                     <h3
                         class="lg:block hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Suivi des formation
-                        <br>
-                        professionnelles
+                        Suivi des formations
                     </h3>
-                    <p class="hidden lg:flex">
+                    <p class="hidden lg:flex text-base">
                         Assurez-vous de rester en conformité avec les obligations légales
                         grâce à un suivi détaillé de vos formations.
                         <br>
@@ -378,7 +376,7 @@
         <div class="container lg:my-8 py-8">
             <LayoutsLogo class="w-72 flex justify-center items-center mx-auto" />
             <h2 class="text-3xl text-center text-primary font-bold lg:my-10">
-                Plus de Temps pour Soigner, Moins de Temps à Gérer !
+                Plus de temps pour soigner, moins de temps à gérer !
             </h2>
         </div>
         <div class="relative font-light">
@@ -392,15 +390,15 @@
                         <h3
                             class="lg:text-4xl text-3xl text-primary font-bold text-center lg:text-left"
                         >
-                            Avec INFISWAP,
+                            Avec InfiSwap,
                         </h3>
-                        <p class="text-center lg:text-start">
+                        <p class="text-center lg:text-start text-base">
                             Multipliez vos opportunités professionnelles en toute simplicité.
                             Notre solution moderne et sécurisée vous offre plus de temps pour
-                            soigner, moins de temps à gérer, et une expérience utilisateur
+                            soigner, moins de temps à gérer et une expérience utilisateur
                             pensée pour répondre aux exigences d'un secteur en constante
                             évolution. Découvrez dès aujourd'hui comment nous pouvons
-                            transformer votre quotidien professionnel !
+                            transformer votre quotidien professionnel!
                         </p>
                     </div>
                     <div class="order-2 flex justify-center lg:justify-end flex-1">
@@ -423,9 +421,9 @@
                 <h3
                     class="text-primary text-3xl font-semibold text-center lg:text-left max-w-xs sm:max-w-lg mx-auto lg:mx-0"
                 >
-                    Inscrit-toi dès maintenant
+                    Inscris-toi dès maintenant
                     <br>
-                    pour garantir ton activité
+                    pour développer ton activité!
                 </h3>
 
                 <div

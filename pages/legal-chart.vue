@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 useHead({
-    title: 'Infiswap',
+    title: 'InfiSwap',
     meta: [{ name: 'description', content: '' }],
 });
 
