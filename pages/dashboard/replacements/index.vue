@@ -36,7 +36,7 @@
                             Ville
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Type de soin
+                            Type(s) de soin(s)
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Action
@@ -229,7 +229,7 @@
 
                     <div class="col-span-2">
                         <h4 class="bg-primary text-white py-2 text-center rounded">
-                            Type de soin à effectuer
+                            Type(s) de soin(s)
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
                             <p class="truncate w-full px-6">
@@ -244,7 +244,7 @@
                         class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
                         :href="`/dashboard/replacements/detail/${replacement.id}`"
                     >
-                        Voir plus
+                        <EyeIcon class="h-6 mt-1" />
                     </Button>
                 </div>
             </div>
