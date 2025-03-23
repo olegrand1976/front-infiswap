@@ -83,13 +83,13 @@
             <div
                 class="flex flex-col lg:flex-row lg:justify-around items-center"
             >
-                <div class="z-20">
+                <!-- <div class="z-20">
                     <Calendar
                         :default-value="parseDateValue(detail.date)"
                         :weekday-format="'short'"
                         class="rounded-xl bg-white shadow"
                     />
-                </div>
+                </div> -->
 
                 <div class="bg-gray-100 z-10 -ml-10 flex flex-col space-y-8 sm:space-y-0 sm:flex-row space-x-6 p-8 w-full xl:w-[48.25rem] relative rounded-2xl">
                     <div class="w-full lg:w-52 xl:w-64 2xl:ml-0 ml-8">
