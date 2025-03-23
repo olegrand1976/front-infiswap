@@ -197,7 +197,8 @@
                         <LineChart
                             :data="formattedData"
                             index="month"
-                            :categories="['y_number']"
+                            :categories="['Nombre d\'annonces répondues']"
+                            "
                             :colors="['hsl(var(--primary))']"
                             :y-formatter="(tick) => `${tick}`"
                         />

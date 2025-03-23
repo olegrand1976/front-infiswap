@@ -1,8 +1,10 @@
 <template>
     <div class="pt-4">
         <Form>
-            <div class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0">
-                <div class="sm:mx-20 md:mx-0 px-auto md:px-0 bg-primary border border-primary rounded-2xl h-full">
+            <div
+                class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
+            >
+                <div class="sm:mx-20 md:mx-0 ps-4 md:px-0 bg-primary border border-primary rounded-2xl h-full">
                     <div class="bg-white rounded-2xl flex items-center ps-4 h-10">
                         <h2 class="font-bold text-primary">
                             Période de remplacement
@@ -56,7 +58,7 @@
                     </div>
                 </div>
 
-                <div class="sm:mx-20 md:mx-0">
+                <div class="sm:mx-20 md:mx-0 ps-4">
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"
@@ -66,7 +68,9 @@
             </div>
 
             <div>
-                <div class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl px-2 bg-gray-100">
+                <div
+                    class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl ps-2 bg-gray-100"
+                >
                     <div class="flex flex-wrap md:flex-nowrap md:space-x-3 gap-4 md:gap-0 items-center">
                         <FormField name="startDate">
                             <FormItem>
@@ -136,10 +140,14 @@
                                     :key="key"
                                     class="mb-4 md:mb-0"
                                 >
-                                    <TableHead class="bg-primary w-full flex justify-center items-center rounded-lg text-white text-xs">
+                                    <TableHead
+                                        class="bg-primary w-full flex justify-center items-center rounded-t-lg text-white text-xs"
+                                    >
                                         {{ label }}
                                     </TableHead>
-                                    <TableBody class="bg-gray-50 block w-full p-3 rounded-lg border border-gray-200 mt-2 md:mt-0">
+                                    <TableBody
+                                        class="bg-gray-50 block w-full p-3 rounded-b-lg border border-gray-200 mt-2 md:mt-0"
+                                    >
                                         <div
                                             v-if="datePatients[currentDate] && datePatients[currentDate][key] && datePatients[currentDate][key].length > 0"
                                         >
@@ -170,7 +178,9 @@
                                                 :disabled="!formData.startDate || !formData.endDate"
                                                 @click="openDialog(key)"
                                             >
-                                                <PlusCircleIcon class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary" />
+                                                <PlusCircleIcon
+                                                    class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary"
+                                                />
                                             </Button>
                                         </div>
                                     </TableBody>
@@ -204,9 +214,7 @@
                                             <SelectValue placeholder="Choisir un patient" />
                                         </SelectTrigger>
 
-                                        <SelectContent
-                                            class="border border-none"
-                                        >
+                                        <SelectContent class="border border-none">
                                             <SelectGroup class="w-20">
                                                 <div
                                                     v-for="patient in nursePatients"
@@ -217,7 +225,8 @@
                                                         :value="patient"
                                                         class="text-nowrap"
                                                     >
-                                                        <span class="md:text-xs lg:text-sm text-nowrap w-full">{{ patient.firstname }} {{ patient.lastname }}</span>
+                                                        <span class="md:text-xs lg:text-sm text-nowrap w-full">{{
+                                                            patient.firstname }} {{ patient.lastname }}</span>
                                                     </SelectItem>
                                                 </div>
                                             </SelectGroup>
@@ -229,49 +238,73 @@
                                         v-if="selectedPatient"
                                         class="mt-4 p-2 space-y-3 rounded-md text-sm"
                                     >
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
                                                 Nom
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.lastname }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
                                                 Prénoms
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.firstname }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
                                                 Sécurité sociale
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.social_security_number }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
                                                 Téléphone
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.phone_number }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
                                                 Ville
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.profile.city }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Ville
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full"
+                                        >
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full"
+                                            >
+                                                Code postal
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.profile.zip_code }}
@@ -285,7 +318,7 @@
                                         Sélectionnez l'heure
                                     </h5>
 
-                                    <div
+                                    <!-- <div
                                         v-if="visitTimes.length != 0"
                                         class="flex items-center space-x-8 mt-4"
                                     >
@@ -317,11 +350,9 @@
                                         <p class="absolute px-4 py-1 bg-white -top-3 text-gray-400 left-1/2">
                                             OU
                                         </p>
-                                    </div>
+                                    </div> -->
 
-                                    <div
-                                        class="flex items-center space-x-8 mt-4"
-                                    >
+                                    <div class="flex items-center space-x-8 mt-4">
                                         <label>Entrer l'heure: </label>
 
                                         <div
@@ -364,7 +395,9 @@
                     </Dialog>
 
                     <div class="mt-8 mb-16 flex justify-end items-center">
-                        <div class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
+                        <div
+                            class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2"
+                        >
                             <div class="bg-primary rounded-s-full justify-center items-center px-auto">
                                 <span class="text-center text-white">Revenu</span>
                             </div>
@@ -373,7 +406,7 @@
                             </div>
                         </div>
 
-                        <div>
+                        <div class="flex items-center">
                             <Button @click="onSavePatient">
                                 Enregistrer
                             </Button>
