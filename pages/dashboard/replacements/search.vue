@@ -158,7 +158,7 @@
         <div class="grid my-8">
             <Table>
                 <TableHeader class="w-full">
-                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
+                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
@@ -182,7 +182,7 @@
                     </TableRow>
                 </TableHeader>
 
-                <TableBody>
+                <TableBody class="rounded-b-lg">
                     <div v-if="loading && loadingSearch">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"
