@@ -375,7 +375,7 @@
                         </div>
 
                         <div>
-                            <Button @click="onSavePatient">
+                            <Button @click="onSavePatient" class="flex items-center">
                                 Enregistrer
                             </Button>
                         </div>
