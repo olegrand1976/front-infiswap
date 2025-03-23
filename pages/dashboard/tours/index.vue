@@ -50,20 +50,22 @@
                                         :key="item.id"
                                     >
                                         <div
-                                            class="bg-gray-200 rounded-lg flex items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer"
+                                            class="bg-gray-200 grid grid-cols-[50%_50%] rounded-lg items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer w-full"
                                             :class="{
                                                 'bg-primary text-white': selectedPatientId === item.id || (index === 0 && !selectedPatientId),
                                             }"
                                             @click="handleFetchCareType(item.id)"
                                         >
-                                            <p class="flex justify-between w-full">
+                                            <p class="flex justify-between items-center w-full">
                                                 <span>{{ item.firstname }} {{ item.lastname }}
                                                 </span>
                                             </p>
-                                            <div class="flex mr-4">
+                                            <div class="flex justify-end mr-4 gap-2 text-white"
+                                                @click="openDialog(item.id, item.visit_times?.[0]?.id)"
+                                            >
+                                                <span class="truncate">Exclure de la tournée du jour</span>
                                                 <XCircleIcon
-                                                    class="h-6 w-6 mr-2 text-transparent stroke-gray-500 stroke-2"
-                                                    @click="openDialog(item.id, item.visit_times?.[0]?.id)"
+                                                    class="h-6 w-6 mr-2 text-white stroke-2"
                                                 />
                                             </div>
                                         </div>
