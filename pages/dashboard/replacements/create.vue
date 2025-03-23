@@ -53,191 +53,198 @@
                 <RangeCalendar v-model="value" :min-value="todayCalendar"
                     class="flex flex-col justify-center px-auto md:block md:px-0 rounded-md shadow-lg" />
             </div>
-    </div>
 
-    <div>
-        <div
-            class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl ps-2 bg-gray-100">
-            <div class="flex flex-wrap md:flex-nowrap md:space-x-3 gap-4 md:gap-0 items-center">
-                <FormField name="startDate">
-                    <FormItem>
-                        <FormControl>
-                            <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
-                                <ChevronLeftIcon class="w-5 cursor-pointer" title="Date précédente"
-                                    :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) <= new Date(formData.startDate) }"
-                                    :disabled="new Date(currentDate) <= new Date(formData.startDate)"
-                                    @click="decrementDate" />
-                                <Input v-model="currentDate" title="Date suivante" type="date" placeholder="jj/mm/aaaa"
-                                    class="w-28 text-xs bg-transparent placeholder:text-white" disabled />
-                                <ChevronRightIcon class="w-5 cursor-pointer"
-                                    :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) >= new Date(formData.endDate) }"
-                                    :disabled="new Date(currentDate) >= new Date(formData.endDate)"
-                                    @click="incrementDate" />
-                            </div>
-                        </FormControl>
-                    </FormItem>
-                </FormField>
-                <div class="flex">
-                    <Button class="flex text-xs items-center space-x-2" @click="copyCurrentDate">
-                        Copier le jour
-                        <Square2StackIcon class="w-6 h-6" />
-                    </Button>
-                </div>
-                <div class="flex pr-2">
-                    <Button class="flex text-xs items-center space-x-2" @click="reinitializeData">
-                        Réinitialiser
-                        <ArrowPathRoundedSquareIcon class="w-6 h-6" />
-                    </Button>
-                </div>
-            </div>
             <div>
-                <Button class="flex text-xs items-center space-x-2" @click="copyAllDates">
-                    Copier tous les jours de la tournée
-                    <Square2StackIcon class="w-6 h-6" />
-                </Button>
-            </div>
-        </div>
+                <div
+                    class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl ps-2 bg-gray-100">
+                    <div class="flex flex-wrap md:flex-nowrap md:space-x-3 gap-4 md:gap-0 items-center">
+                        <FormField name="startDate">
+                            <FormItem>
+                                <FormControl>
+                                    <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
+                                        <ChevronLeftIcon class="w-5 cursor-pointer" title="Date précédente"
+                                            :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) <= new Date(formData.startDate) }"
+                                            :disabled="new Date(currentDate) <= new Date(formData.startDate)"
+                                            @click="decrementDate" />
+                                        <Input v-model="currentDate" title="Date suivante" type="date"
+                                            placeholder="jj/mm/aaaa"
+                                            class="w-28 text-xs bg-transparent placeholder:text-white" disabled />
+                                        <ChevronRightIcon class="w-5 cursor-pointer"
+                                            :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) >= new Date(formData.endDate) }"
+                                            :disabled="new Date(currentDate) >= new Date(formData.endDate)"
+                                            @click="incrementDate" />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+                        <div class="flex">
+                            <Button class="flex text-xs items-center space-x-2" @click="copyCurrentDate">
+                                Copier le jour
+                                <Square2StackIcon class="w-6 h-6" />
+                            </Button>
+                        </div>
+                        <div class="flex pr-2">
+                            <Button class="flex text-xs items-center space-x-2" @click="reinitializeData">
+                                Réinitialiser
+                                <ArrowPathRoundedSquareIcon class="w-6 h-6" />
+                            </Button>
+                        </div>
+                    </div>
+                    <div>
+                        <Button class="flex text-xs items-center space-x-2 mr-2" @click="copyAllDates">
+                            Copier tous les jours de la tournée
+                            <Square2StackIcon class="w-6 h-6" />
+                        </Button>
+                    </div>
+                </div>
 
-        <div class="mt-32 md:mt-6">
-            <div class="overflow-x-auto">
-                <Table>
-                    <TableHeader class="w-full md:grid md:grid-cols-3 gap-2 border-none block">
-                        <div v-for="(label, key) in periodLabels" :key="key" class="mb-4 md:mb-0">
-                            <TableHead
-                                class="bg-primary w-full flex justify-center items-center rounded-t-lg text-white text-xs">
-                                {{ label }}
-                            </TableHead>
-                            <TableBody
-                                class="bg-gray-50 block w-full p-3 rounded-b-lg border border-gray-200 mt-2 md:mt-0">
-                                <div
-                                    v-if="datePatients[currentDate] && datePatients[currentDate][key] && datePatients[currentDate][key].length > 0">
-                                    <div v-for="(patient, index) in datePatients[currentDate][key]" :key="index"
-                                        class="mb-2 w-full">
-                                        <div class="grid grid-cols-[20%_80%] w-full">
-                                            <TableCell class="flex h-9 items-center border border-gray-200">
-                                                {{ patient.time }}
-                                            </TableCell>
-                                            <TableCell class="flex h-9 items-center border border-gray-200">
-                                                {{ patient.firstname }} {{ patient.lastname }}
-                                            </TableCell>
+                <div class="mt-32 md:mt-6">
+                    <div class="overflow-x-auto">
+                        <Table>
+                            <TableHeader class="w-full md:grid md:grid-cols-3 gap-2 border-none block">
+                                <div v-for="(label, key) in periodLabels" :key="key" class="mb-4 md:mb-0">
+                                    <TableHead
+                                        class="bg-primary w-full flex justify-center items-center rounded-t-lg text-white text-xs">
+                                        {{ label }}
+                                    </TableHead>
+                                    <TableBody
+                                        class="bg-gray-50 block w-full p-3 rounded-b-lg border border-gray-200 mt-2 md:mt-0">
+                                        <div
+                                            v-if="datePatients[currentDate] && datePatients[currentDate][key] && datePatients[currentDate][key].length > 0">
+                                            <div v-for="(patient, index) in datePatients[currentDate][key]" :key="index"
+                                                class="mb-2 w-full">
+                                                <div class="grid grid-cols-[20%_80%] w-full">
+                                                    <TableCell class="flex h-9 items-center border border-gray-200">
+                                                        {{ patient.time }}
+                                                    </TableCell>
+                                                    <TableCell class="flex h-9 items-center border border-gray-200">
+                                                        {{ patient.firstname }} {{ patient.lastname }}
+                                                    </TableCell>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="text-gray-400 italic">
+                                            Aucun patient
+                                        </div>
+                                        <div class="mt-4 flex items-center justify-center mx-auto">
+                                            <Button class="p-0 shadow-none bg-transparent hover:bg-transparent"
+                                                :disabled="!formData.startDate || !formData.endDate"
+                                                @click="openDialog(key)">
+                                                <PlusCircleIcon
+                                                    class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary" />
+                                            </Button>
+                                        </div>
+                                    </TableBody>
+                                </div>
+                            </TableHeader>
+                        </Table>
+                    </div>
+
+                    <Dialog v-model:open="isDialogOpen">
+                        <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
+                            <DialogHeader>
+                                <DialogTitle>Ajouter un patient</DialogTitle>
+                                <DialogDescription>
+                                    Veuillez remplir les informations concernant le soin du patient
+                                </DialogDescription>
+                            </DialogHeader>
+                            <Form class="flex flex-col mt-8">
+                                <div class="flex flex-col">
+                                    <h5 class="font-semibold text-primary">
+                                        Séléctionner le patient
+                                    </h5>
+                                    <Select v-model="selectedPatient" class="w-full"
+                                        @update:model-value="handlePatientSelection">
+                                        <SelectTrigger
+                                            class="flex text-nowrap mt-4 lg:w-auto space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
+                                            position="right">
+                                            <SelectValue placeholder="Choisir un patient" />
+                                        </SelectTrigger>
+
+                                        <SelectContent class="border border-none">
+                                            <SelectGroup class="w-20">
+                                                <div v-for="patient in nursePatients" :key="patient.id"
+                                                    class="flex justify-center items-center">
+                                                    <SelectItem :value="patient" class="text-nowrap">
+                                                        <span class="md:text-xs lg:text-sm text-nowrap w-full">{{
+                                                            patient.firstname }} {{ patient.lastname }}</span>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+
+                                    <!-- Affichage des informations de ville et code postal -->
+                                    <div v-if="selectedPatient" class="mt-4 p-2 space-y-3 rounded-md text-sm">
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Nom
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.lastname }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Prénoms
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.firstname }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Sécurité sociale
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.social_security_number }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Téléphone
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.phone_number }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Ville
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.profile.city }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                            <p
+                                                class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Code postal
+                                            </p>
+                                            <p class="ms-3">
+                                                {{ selectedPatient.profile.zip_code }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="text-gray-400 italic">
-                                    Aucun patient
-                                </div>
-                                <div class="mt-4 flex items-center justify-center mx-auto">
-                                    <Button class="p-0 shadow-none bg-transparent hover:bg-transparent"
-                                        :disabled="!formData.startDate || !formData.endDate" @click="openDialog(key)">
-                                        <PlusCircleIcon
-                                            class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary" />
-                                    </Button>
-                                </div>
-                            </TableBody>
-                        </div>
-                    </TableHeader>
-                </Table>
-            </div>
 
-            <Dialog v-model:open="isDialogOpen">
-                <DialogContent class="sm:max-w-xl h-[70vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Ajouter un patient</DialogTitle>
-                        <DialogDescription>
-                            Veuillez remplir les informations concernant le soin du patient
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form class="flex flex-col mt-8">
-                        <div class="flex flex-col">
-                            <h5 class="font-semibold text-primary">
-                                Séléctionner le patient
-                            </h5>
-                            <Select v-model="selectedPatient" class="w-full"
-                                @update:model-value="handlePatientSelection">
-                                <SelectTrigger
-                                    class="flex text-nowrap mt-4 lg:w-auto space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
-                                    position="right">
-                                    <SelectValue placeholder="Choisir un patient" />
-                                </SelectTrigger>
+                                <div class="mt-8 mb-4">
+                                    <h5 class="font-semibold text-primary">
+                                        Sélectionnez l'heure
+                                    </h5>
 
-                                <SelectContent class="border border-none">
-                                    <SelectGroup class="w-20">
-                                        <div v-for="patient in nursePatients" :key="patient.id"
-                                            class="flex justify-center items-center">
-                                            <SelectItem :value="patient" class="text-nowrap">
-                                                <span class="md:text-xs lg:text-sm text-nowrap w-full">{{
-                                                    patient.firstname }} {{ patient.lastname }}</span>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-
-                            <!-- Affichage des informations de ville et code postal -->
-                            <div v-if="selectedPatient" class="mt-4 p-2 space-y-3 rounded-md text-sm">
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Nom
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.lastname }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Prénoms
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.firstname }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Sécurité sociale
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.social_security_number }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Téléphone
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.phone_number }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Ville
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.profile.city }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Code postal
-                                    </p>
-                                    <p class="ms-3">
-                                        {{ selectedPatient.profile.zip_code }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 mb-4">
-                            <h5 class="font-semibold text-primary">
-                                Sélectionnez l'heure
-                            </h5>
-
-                            <!-- <div
+                                    <!-- <div
                                         v-if="visitTimes.length != 0"
                                         class="flex items-center space-x-8 mt-4"
                                     >
@@ -271,55 +278,57 @@
                                         </p>
                                     </div> -->
 
-                            <div class="flex items-center space-x-8 mt-4">
-                                <label>Entrer l'heure: </label>
+                                    <div class="flex items-center space-x-8 mt-4">
+                                        <label>Entrer l'heure: </label>
 
-                                <div input-class="rounded-full w-36" class="rounded-full">
-                                    <InputTime v-model="selectedTime" />
+                                        <div input-class="rounded-full w-36" class="rounded-full">
+                                            <InputTime v-model="selectedTime" />
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="mt-4 mb-8">
+                                    <h5 class="font-semibold text-primary">
+                                        Personnaliser le type de soin
+                                    </h5>
+                                    <ul class="grid grid-cols-2 gap-4 mt-4">
+                                        <li v-for="care in careTypes" :key="care.id" :class="[
+                                            'text-xs h-9 cursor-pointer flex rounded-full p-2 justify-center items-center border',
+                                            selectedCareTypes.includes(care.id) ? 'bg-primary text-white border-primary' : 'bg-white text-black border-gray-300',
+                                        ]" @click="toggleCareType(care.id)">
+                                            <span class="text-center">{{ care.name }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <Button class="mb-6" :disabled="!selectedPatient || !selectedTime"
+                                    @click="addPatientToTable">
+                                    Ajouter
+                                </Button>
+                            </Form>
+                        </DialogContent>
+                    </Dialog>
+
+                    <div class="mt-8 mb-16 flex justify-end items-center">
+                        <div
+                            class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
+                            <div class="bg-primary rounded-s-full justify-center items-center px-auto">
+                                <span class="text-center text-white">Revenu</span>
+                            </div>
+                            <div class="flex justify-center items-center mx-auto">
+                                <span class="text-center">8 000 £</span>
                             </div>
                         </div>
 
-                        <div class="mt-4 mb-8">
-                            <h5 class="font-semibold text-primary">
-                                Personnaliser le type de soin
-                            </h5>
-                            <ul class="grid grid-cols-2 gap-4 mt-4">
-                                <li v-for="care in careTypes" :key="care.id" :class="[
-                                    'text-xs h-9 cursor-pointer flex rounded-full p-2 justify-center items-center border',
-                                    selectedCareTypes.includes(care.id) ? 'bg-primary text-white border-primary' : 'bg-white text-black border-gray-300',
-                                ]" @click="toggleCareType(care.id)">
-                                    <span class="text-center">{{ care.name }}</span>
-                                </li>
-                            </ul>
+                        <div class="flex items-center">
+                            <Button @click="onSavePatient">
+                                Enregistrer
+                            </Button>
                         </div>
-
-                        <Button class="mb-6" :disabled="!selectedPatient || !selectedTime" @click="addPatientToTable">
-                            Ajouter
-                        </Button>
-                    </Form>
-                </DialogContent>
-            </Dialog>
-
-            <div class="mt-8 mb-16 flex justify-end items-center">
-                <div class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2">
-                    <div class="bg-primary rounded-s-full justify-center items-center px-auto">
-                        <span class="text-center text-white">Revenu</span>
                     </div>
-                    <div class="flex justify-center items-center mx-auto">
-                        <span class="text-center">8 000 £</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center">
-                    <Button @click="onSavePatient">
-                        Enregistrer
-                    </Button>
                 </div>
             </div>
-        </div>
-    </div>
-    </Form>
+        </Form>
     </div>
 </template>
 
