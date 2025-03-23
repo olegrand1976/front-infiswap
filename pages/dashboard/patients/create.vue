@@ -89,7 +89,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="socialSecurityNumber">
-                                Numéro de sécurité sociale
+                                NISS
                             </label>
                         </div>
                         <Input
