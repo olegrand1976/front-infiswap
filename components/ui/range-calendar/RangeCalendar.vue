@@ -21,7 +21,6 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         v-slot="{ grid, weekDays }"
         :class="cn('p-3 flex-1 w-full', props.class)"
         v-bind="forwarded"
-        locale="fr"
     >
         <RangeCalendarHeader class="flex justify-between items-center">
             <RangeCalendarHeading class="text-primary font-bold" />

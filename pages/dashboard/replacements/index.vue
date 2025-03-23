@@ -20,7 +20,7 @@
         <div class="grid my-8">
             <Table class="hidden lg:block">
                 <TableHeader class="w-full">
-                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 border border-none">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
@@ -44,7 +44,7 @@
                     </TableRow>
                 </TableHeader>
 
-                <TableBody class="rounded-b-lg">
+                <TableBody>
                     <div v-if="loading">
                         <TableRow
                             v-for="(_, index) in Array.from({ length: 10 })"

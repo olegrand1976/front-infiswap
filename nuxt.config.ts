@@ -1,6 +1,4 @@
 export default defineNuxtConfig({
-    // Activer le mode debug
-    debug: true,    
     modules: [
         '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
@@ -23,8 +21,7 @@ export default defineNuxtConfig({
         ],
         autoImport: true,
     },
-    //devtools: { enabled: process.env.NODE_ENV === 'development' },
-    devtools: { enabled: true },
+    devtools: { enabled: process.env.NODE_ENV === 'development' },
 
     app: {
         baseURL: '/',

@@ -13,7 +13,3 @@ export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref
             ? updaterOrValue(ref.value)
             : updaterOrValue;
 }
-
-export function firstUpperCase(string: string): string {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}

@@ -2,7 +2,6 @@
 import { RangeCalendarHeading, type RangeCalendarHeadingProps, useForwardProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
-import { firstUpperCase } from '~/lib/utils';
 
 const props = defineProps<RangeCalendarHeadingProps & { class?: HTMLAttributes['class'] }>();
 
@@ -22,7 +21,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         v-bind="forwardedProps"
     >
         <slot :heading-value>
-            {{ firstUpperCase(headingValue) }}
+            {{ headingValue.charAt(0).toUpperCase() + headingValue.slice(1).toLocaleLowerCase() }}
         </slot>
     </RangeCalendarHeading>
 </template>

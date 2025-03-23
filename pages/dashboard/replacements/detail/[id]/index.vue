@@ -88,6 +88,7 @@
                         :default-value="parseDateValue(detail.date)"
                         :weekday-format="'short'"
                         class="rounded-xl bg-white shadow"
+                        locale="Fr"
                     />
                 </div>
 

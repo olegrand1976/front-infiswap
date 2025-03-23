@@ -559,7 +559,7 @@
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
                                         <Button
-                                            class="flex h-10 rounded bg-gray-200 justify-center items-center text-black hover:text-white"
+                                            class="flex h-10 rounded bg-gray-200 justify-center items-center"
                                             :in-progress="downloading"
                                             @click="downloadDocument(document.id)"
                                         >
@@ -567,12 +567,12 @@
                                         </Button>
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
-                                        <Button
-                                            class="flex h-10 rounded bg-gray-200 justify-center items-center text-black hover:text-white"
+                                        <div
+                                            class="flex h-10 rounded bg-gray-200 justify-center items-center"
                                             @click="removeDocument(index, document.id)"
                                         >
                                             <TrashIcon class="w-5 cursor-pointer" />
-                                        </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             </template>
