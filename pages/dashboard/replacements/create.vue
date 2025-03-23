@@ -4,8 +4,8 @@
             <div
                 class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
             >
-                <div class="sm:mx-20 md:mx-0 ps-4 md:px-0 bg-primary border border-primary rounded-2xl h-full">
-                    <div class="bg-white rounded-2xl flex items-center ps-4 h-10">
+                <div class="sm:mx-20 md:mx-0  p-2 md:px-0 bg-primary border border-primary rounded-2xl h-full">
+                    <div class="bg-white rounded-2xl flex items-center p-2 h-10">
                         <h2 class="font-bold text-primary">
                             Période de remplacement
                         </h2>
@@ -110,7 +110,7 @@
                                 <Square2StackIcon class="w-6 h-6" />
                             </Button>
                         </div>
-                        <div class="flex">
+                        <div class="flex pr-2">
                             <Button
                                 class="flex text-xs items-center space-x-2"
                                 @click="reinitializeData"
