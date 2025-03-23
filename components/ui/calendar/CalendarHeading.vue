@@ -2,6 +2,7 @@
 import { CalendarHeading, type CalendarHeadingProps, useForwardProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
+import { firstUpperCase } from '~/lib/utils';
 
 const props = defineProps<CalendarHeadingProps & { class?: HTMLAttributes['class'] }>();
 
@@ -21,7 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         v-bind="forwardedProps"
     >
         <slot :heading-value>
-            {{ headingValue }}
+            {{ firstUpperCase(headingValue) }}
         </slot>
     </CalendarHeading>
 </template>

@@ -5,6 +5,7 @@
                 <CalendarTours
                     v-model="value"
                     class="rounded-md shadow-lg"
+                    locale="fr"
                 />
                 <div class="w-full bg-gray-100 rounded-lg h-full">
                     <div class="bg-primary rounded-t-lg flex justify-between items-center px-2 ps-4 h-12">
