@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+    // Activer le mode debug
+    debug: true,    
     modules: [
         '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
@@ -21,7 +23,8 @@ export default defineNuxtConfig({
         ],
         autoImport: true,
     },
-    devtools: { enabled: process.env.NODE_ENV === 'development' },
+    //devtools: { enabled: process.env.NODE_ENV === 'development' },
+    devtools: { enabled: true },
 
     app: {
         baseURL: '/',
@@ -113,8 +116,7 @@ export default defineNuxtConfig({
         compatibility: false,
         nonce: '2726c7f26c',
         enabled: true,
-        debug: true,
-        // process.env.NODE_ENV !== 'production',
+        debug: process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
