@@ -117,10 +117,11 @@
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
                                     <div class="flex-shrink-0">
-                                        <LayoutsAppImage
+                                        <!-- <LayoutsAppImage
                                             src="/home/infirmier_homme.png"
                                             class="rounded-full h-16 w-16"
-                                        />
+                                        /> -->
+                                        <UserCircleIcon class="size-16" />
                                     </div>
                                     <div class="ml-4 flex flex-grow justify-between items-center">
                                         <div class="text-lg">
@@ -309,6 +310,7 @@ import {
     InboxIcon,
     ClockIcon,
     HomeIcon,
+    UserCircleIcon
 } from '@heroicons/vue/24/solid';
 
 import { ref, watch } from 'vue';
