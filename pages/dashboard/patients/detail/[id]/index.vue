@@ -1,41 +1,26 @@
 <template>
     <Form
         v-if="patient"
-        class="grid grid-cols-1 lg:grid-cols-[40%_57.5%] gap-6 relative"
+        class="grid grid-cols-1 lg:grid-cols-[40%_57.5%] gap-6"
         @submit="submit"
     >
-        <transition name="fade">
-            <div
-                v-show="isScrolled"
-                :class="clsx('w-full fixed top-10 z-50 text-center bg-red-300/50 py-5 transition-opacity ease-in-out duration-500', {
-                    'opacity-0': !isScrolled,
-                    'opacity-100': isScrolled,
-                })"
-            >
-                >
-                <Button
-                    variant="success"
-                    class="w-64 rounded-full"
-                    :in-progress="inProgress"
-                    type="submit"
-                >
-                    Enregistrer
-                </Button>
-            </div>
-        </transition>
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
-                <div class="bg-primary text-white p-4 rounded">
-                    <UserCircleIcon class="w-28 mx-auto" />
-                    <p class="text-center mt-4">
-                        {{ patient.firstname }}
-                        <span
-                            v-if="patient.lastname"
-                            class="font-semibold"
-                        >
-                            {{ patient.lastname?.toUpperCase() }}
+                <div class="bg-primary p-6 rounded-xl flex flex-col space-y-3 justify-center items-center px-auto">
+                    <UserCircleIcon class="text-white w-28" />
+                    <p class="text-white">
+                        <span class="font-semibold">
+                            {{ patient.lastname }}
                         </span>
+                        {{ patient.firstname }}
                     </p>
+                    <Button
+                        variant="secondary"
+                        class="text-primary"
+                        @click="openDialog"
+                    >
+                        Mettre à jour
+                    </Button>
 
                     <Dialog v-model:open="isOpenDialog">
                         <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
@@ -123,7 +108,7 @@
                                 class="text-end mt-6 mx-36"
                                 @click="closeDialog"
                             >
-                                Enregistrer
+                                Valider
                             </Button>
                         </DialogContent>
                     </Dialog>
@@ -131,58 +116,7 @@
 
                 <div class="bg-gray-100 rounded-b">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
-                        <span class="font-semibold">Informations personnelles</span>
-                        <PencilSquareIcon
-                            class="w-5 text-white cursor-pointer"
-                            @click="openDialog"
-                        />
-                    </h3>
-                    <div class="flex flex-col gap-2 px-4 py-6 lg:gap-4">
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <div class="font-semibold">
-                                Email
-                            </div>
-                            <div>{{ patient.email }}</div>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <div class="font-semibold">
-                                Numéro de registre national
-                            </div>
-                            <div>{{ patient.social_security_number }}</div>
-                        </div>
-                        <div
-                            v-if="patient.phone_number"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Téléphone
-                            </div>
-                            <div>{{ phoneNumber(patient.phone_number as string) }}</div>
-                        </div>
-                        <div
-                            v-if="patient.profile?.zip_code"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Code Postale
-                            </div>
-                            <div>{{ patient.profile.zip_code }}</div>
-                        </div>
-                        <div
-                            v-if="patient.profile?.city"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Ville
-                            </div>
-                            <div>{{ patient.profile.city }}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-100 rounded-b">
-                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
-                        <span class="font-semibold">Notes de santé</span>
+                        <span>Information</span>
                         <PencilSquareIcon
                             class="w-5 text-white cursor-pointer"
                             @click="openCareInfoDialog"
@@ -262,19 +196,19 @@
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <Label>Titre</Label>
+                                        <Label>Action</Label>
                                         <Input
                                             v-model="info.recordType"
-                                            placeholder="Sourd"
+                                            placeholder="Entrez l'action à faire"
                                             class="w-full outline outline-gray-200"
                                         />
                                     </div>
 
                                     <div class="space-y-2">
-                                        <Label>Complément</Label>
+                                        <Label>Facteur</Label>
                                         <Input
                                             v-model="info.recordName"
-                                            placeholder="Oreille droite"
+                                            placeholder="Entrez le facteur"
                                             class="w-full outline outline-gray-200"
                                         />
                                     </div>
@@ -313,11 +247,20 @@
 
                         <div class="flex justify-between mt-6">
                             <Button
-                                variant="success"
+                                variant="outline"
+                                class="hidden sm:block"
                                 @click="addNewCareInfo"
                             >
-                                <PlusCircleIcon class="mr-2" />
-                                <span>Ajouter</span>
+                                <PlusIcon class="w-4 h-4 mr-2" />
+                                Ajouter une information
+                            </Button>
+                            <Button
+                                variant="outline"
+                                class="sm:hidden"
+                                @click="addNewCareInfo"
+                            >
+                                <PlusIcon class="w-4 h-4 mr-2" />
+                                Ajouter
                             </Button>
 
                             <div class="space-x-2">
@@ -501,7 +444,7 @@
                             </div>
                         </div>
 
-                        <PlusCircleIcon
+                        <PlusIcon
                             class="w-6 text-primary mt-8 ml-auto cursor-pointer"
                             title="Ajouter un autre heure"
                             @click="addTimeSlot(visitIndex)"
@@ -514,7 +457,7 @@
                     type="button"
                     @click="addVisit"
                 >
-                    <PlusCircleIcon class="w-5 h-5 mr-2" />
+                    <PlusIcon class="w-5 h-5 mr-2" />
                     <span>Ajouter un autre jour</span>
                 </Button>
             </div>
@@ -525,11 +468,18 @@
                 </h2>
 
                 <div class="relative">
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
+                        class="hidden"
+                        @change="handleFileSelect"
+                    >
                     <Button
                         class="w-full flex items-center justify-center mt-4"
-                        @click="openFileUploadDialog"
+                        @click="triggerFileUpload"
                     >
-                        <PlusCircleIcon class="w-5" />
+                        <PlusIcon class="w-5" />
                         Ajouter un document
                     </Button>
                 </div>
@@ -545,7 +495,7 @@
                                 </p>
                             </template>
                             <template
-                                v-for="(document, index) in patient.patient_documents"
+                                v-for="(document, index) in formData.patient_documents"
                                 v-else
                                 :key="index"
                             >
@@ -558,18 +508,14 @@
                                         </div>
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
-                                        <Button
-                                            class="flex h-10 rounded bg-gray-200 justify-center items-center"
-                                            :in-progress="downloading"
-                                            @click="downloadDocument(document.id)"
-                                        >
+                                        <div class="flex h-10 rounded bg-gray-200 justify-center items-center">
                                             <CloudArrowDownIcon class="w-5 cursor-pointer" />
-                                        </Button>
+                                        </div>
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
                                         <div
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center"
-                                            @click="removeDocument(index, document.id)"
+                                            @click="removeDocument(index)"
                                         >
                                             <TrashIcon class="w-5 cursor-pointer" />
                                         </div>
@@ -583,14 +529,14 @@
                 <Dialog
                     v-model:open="isDocumentDialogOpen"
                 >
-                    <DialogContent class="sm:max-w-[40rem]">
+                    <DialogContent class="sm:max-w-[28rem]">
                         <DialogHeader>
-                            <DialogTitle>Ajouter un document</DialogTitle>
+                            <DialogTitle>Ajouter une note</DialogTitle>
+                            <DialogDescription>
+                                Veuillez ajouter une note descriptive pour le document sélectionné.
+                            </DialogDescription>
                         </DialogHeader>
                         <div class="grid gap-4 py-4">
-                            <div class="grid gap-2">
-                                <FileUpload @file-selected="file = $event" />
-                            </div>
                             <div class="grid gap-2">
                                 <Label for="note">Note</Label>
                                 <Input
@@ -602,11 +548,8 @@
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button
-                                :in-progress="uploading"
-                                @click="handleUploadDocument"
-                            >
-                                Sauvegarder
+                            <Button @click="handleDocumentSubmit">
+                                Confirmer
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -626,7 +569,7 @@
 
 <script lang="ts" setup>
 import {
-    PlusCircleIcon,
+    PlusIcon,
     UserCircleIcon,
     CloudArrowDownIcon,
     PencilSquareIcon,
@@ -634,28 +577,38 @@ import {
     CalendarDaysIcon,
     TrashIcon,
 } from '@heroicons/vue/24/solid';
-
-import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';
-import { detailPatient } from '~/composables/usePatients';
+import { detailPatient, createPatientDocument } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
-import FileUpload from '~/components/ui/form/FileUpload.vue';
-import type { Patient } from '~/lib/types';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
+
 const route = useRoute();
-
-const isScrolled = ref(false);
-
-const handleScroll = () => {
-    isScrolled.value = window.scrollY > 30 && document.documentElement.scrollHeight > 80;
-};
-const { phoneNumber } = useFormmater();
 const patientId = route.params.id as string;
+
+interface Patient {
+    id: string;
+    lastname: string;
+    firstname: string;
+    email: string;
+    social_security_number: string;
+    phone_number: string;
+    profile?: {
+        zip_code: string;
+        city: string;
+    };
+    care_start_date: string;
+    care_end_date: string;
+    availability: string[];
+    care_informations: string[];
+    visit_times: string[];
+    patient_care_type: string[];
+    patient_documents: string[];
+    patientId: null;
+}
 
 const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
 
-const { loading: downloading, downloadDocument, deleteDocument } = usePatientManagement();
 interface User {
     nurse?: {
         id: string;
@@ -936,47 +889,61 @@ const saveCareInformations = () => {
     });
 };
 
+// New document upload related code
+const fileInput = ref<HTMLInputElement | null>(null);
+const selectedFile = ref<File | null>(null);
 const documentNote = ref('');
 const isDocumentDialogOpen = ref(false);
 
-const openFileUploadDialog = () => {
-    isDocumentDialogOpen.value = !isDocumentDialogOpen.value;
+const triggerFileUpload = () => {
+    fileInput.value?.click();
 };
 
-const { loading: uploading, file, uploadFile } = useFile();
-
-const handleUploadDocument = async () => {
-    if (!file.value) {
-        $toast({
-            variant: 'destructive',
-            description: 'Aucun fichier sélectionné.',
-        });
-        return;
+const handleFileSelect = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+        selectedFile.value = input.files[0];
+        isDocumentDialogOpen.value = true;
     }
-
-    const url = `/api/patients/${patient.value.id}/documents/upload`;
-
-    await uploadFile({
-        records: {
-            note: documentNote.value,
-        },
-        url: url,
-    }).then((response) => {
-        patient.value.patient_documents.push(response.document);
-
-        $toast({
-            description: 'Fichier téléchargé avec succès',
-        });
-
-        isDocumentDialogOpen.value = false;
-    });
-
-    // patient.value.patient_documents.push(responseBody.document);
 };
 
-const removeDocument = (index: number, id: number) => {
+const handleDocumentSubmit = async () => {
+    if (selectedFile.value && documentNote.value) {
+        formData.value.patient_documents.push({
+            path: selectedFile.value.name,
+            note: documentNote.value,
+        });
+
+        documentNote.value = '';
+        selectedFile.value = null;
+        isDocumentDialogOpen.value = false;
+
+        if (fileInput.value) {
+            fileInput.value.value = '';
+        }
+
+        await handleDocumentUpdate();
+
+        $toast({
+            description: 'Document ajouté avec succès',
+        });
+    }
+};
+
+const handleDocumentUpdate = async () => {
+    const documentData = {
+        patient_documents: formData.value.patient_documents,
+        patientId: formData.value.patientId,
+    };
+
+    await createPatientDocument(documentData);
+};
+
+const removeDocument = (index: number) => {
     formData.value.patient_documents.splice(index, 1);
-    deleteDocument(id);
+    $toast({
+        description: 'Document supprimé',
+    });
 };
 
 const router = useRouter();
@@ -1015,18 +982,13 @@ const {
 );
 
 useHead({
-    title: 'Profil patient',
+    title: 'Editer le profil',
 });
 
 onMounted(async () => {
     await fetchDetailPatient();
     await fetchCareTypes();
     initializeFormData();
-    window.addEventListener('scroll', handleScroll);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll);
 });
 
 watch(() => patient.value, () => {

@@ -6,64 +6,40 @@
                     <LayoutsLogo class="w-36" />
                 </SidebarHeader>
 
-                <SidebarGroupContent
-                    class="mt-2 mx-auto"
-                    :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
-                >
+                <SidebarGroupContent class="mt-2 mx-auto" :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'">
                     <SidebarMenu>
-                        <section
-                            v-for="(item, index) in navigationItems"
-                            :key="index"
-                        >
+                        <section v-for="(item, index) in navigationItems" :key="index">
                             <SidebarMenuItem v-if="item?.children?.length > 0">
                                 <Collapsible class="group/collapsible transition-all duration-500">
                                     <CollapsibleTrigger as-child>
-                                        <SidebarMenuButton
-                                            class="h-12 w-full"
-                                            :class="{
-                                                'bg-primary text-white font-bold': route.path.startsWith(item.route),
-                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !route.path.startsWith(item.route),
-                                            }"
-                                        >
-                                            <NuxtLink
-                                                :href="item.route"
-                                                class="w-full flex items-center justify-between"
-                                            >
+                                        <SidebarMenuButton class="h-12 w-full" :class="{
+                                            'bg-primary text-white font-bold': route.path.startsWith(item.route),
+                                            'bg-gray-200 text-neutral-700 hover:bg-primary/20': !route.path.startsWith(item.route),
+                                        }">
+                                            <NuxtLink :href="item.route"
+                                                class="w-full flex items-center justify-between">
                                                 <div class="flex space-x-2 items-center">
-                                                    <component
-                                                        :is="item.icon"
-                                                        class="w-6 opacity-80"
-                                                    />
+                                                    <component :is="item.icon" class="w-6 opacity-80" />
                                                     <span>{{ item.label }}</span>
                                                 </div>
                                                 <div>
                                                     <ChevronRightIcon
-                                                        class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90"
-                                                    />
+                                                        class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
                                                 </div>
                                             </NuxtLink>
                                         </SidebarMenuButton>
                                     </CollapsibleTrigger>
                                     <CollapsibleContent>
                                         <SidebarMenuSub class="w-full">
-                                            <SidebarMenuSubItem
-                                                v-for="(subItem, subIndex) in item.children"
-                                                :key="subIndex"
-                                                class="h-10 rounded w-full"
-                                                :class="{
+                                            <SidebarMenuSubItem v-for="(subItem, subIndex) in item.children"
+                                                :key="subIndex" class="h-10 rounded w-full" :class="{
                                                     'bg-primary/90 text-white': isActiveRoute(subItem.route),
                                                     'text-neutral-700 hover:bg-primary/20': !isActiveRoute(subItem.route),
-                                                }"
-                                            >
+                                                }">
                                                 <SidebarMenuButton class="w-full h-full p-0">
-                                                    <NuxtLink
-                                                        :href="subItem.route"
-                                                        class="flex items-center h-full w-full p-2"
-                                                    >
-                                                        <component
-                                                            :is="subItem.icon"
-                                                            class="w-4 mr-2 opacity-80"
-                                                        />
+                                                    <NuxtLink :href="subItem.route"
+                                                        class="flex items-center h-full w-full p-2">
+                                                        <component :is="subItem.icon" class="w-4 mr-2 opacity-80" />
 
                                                         <span>
                                                             {{ subItem.label }}
@@ -76,23 +52,15 @@
                                 </Collapsible>
                             </SidebarMenuItem>
                             <SidebarMenuItem v-else>
-                                <SidebarMenuButton
-                                    as-child
-                                    class="h-12"
-                                >
-                                    <NuxtLink
-                                        :href="item.route"
+                                <SidebarMenuButton as-child class="h-12">
+                                    <NuxtLink :href="item.route"
                                         class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
                                         :class="{
                                             'bg-primary text-white font-bold': isActiveRoute(item.route),
                                             'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
-                                        }"
-                                    >
+                                        }">
                                         <div class="flex space-x-2 items-center">
-                                            <component
-                                                :is="item.icon"
-                                                class="w-6 opacity-80"
-                                            />
+                                            <component :is="item.icon" class="w-6 opacity-80" />
                                             <span>{{ item.label }}</span>
                                         </div>
                                     </NuxtLink>
@@ -111,10 +79,7 @@
             </SidebarGroup>
             <SidebarGroup>
                 <SidebarMenuButton class="bg-primary text-white">
-                    <Button
-                        class="flex space-x-2 items-center justify-center"
-                        @click="logout"
-                    >
+                    <Button class="flex space-x-2 items-center justify-center" @click="logout">
                         <PowerIcon class="w-6 opacity-80" />
                         <span>Déconnexion</span>
                     </Button>
