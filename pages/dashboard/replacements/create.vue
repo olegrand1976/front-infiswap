@@ -3,7 +3,7 @@
         <Form>
             <div class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0">
                 <div class="sm:mx-20 md:mx-0 px-auto md:px-0 bg-primary border border-primary rounded-2xl h-full">
-                    <div class="bg-white rounded-2xl flex items-center ps-4 h-10 p-2">
+                    <div class="bg-white rounded-2xl flex items-center ps-4 h-10 m-2">
                         <h2 class="font-bold text-primary">
                             Période de remplacement
                         </h2>
@@ -67,7 +67,7 @@
             </div>
 
             <div>
-                <div class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl px-2 bg-gray-100">
+                <div class="w-full mt-10 h-12 flex flex-wrap gap-4 md:gap-0 md:flex-nowrap items-center justify-between rounded-xl ps-2 bg-gray-100">
                     <div class="flex flex-wrap md:flex-nowrap md:space-x-3 gap-4 md:gap-0 items-center">
                         <FormField name="startDate">
                             <FormItem>
@@ -272,7 +272,7 @@
                                         </div>
                                         <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
                                             <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Ville
+                                                Code postal
                                             </p>
                                             <p class="ms-3">
                                                 {{ selectedPatient.profile.zip_code }}
@@ -286,7 +286,7 @@
                                         Sélectionnez l'heure
                                     </h5>
 
-                                    <div
+                                    <!-- <div
                                         v-if="visitTimes.length != 0"
                                         class="flex items-center space-x-8 mt-4"
                                     >
@@ -318,7 +318,7 @@
                                         <p class="absolute px-4 py-1 bg-white -top-3 text-gray-400 left-1/2">
                                             OU
                                         </p>
-                                    </div>
+                                    </div> -->
 
                                     <div
                                         class="flex items-center space-x-8 mt-4"
