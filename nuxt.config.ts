@@ -113,7 +113,8 @@ export default defineNuxtConfig({
         compatibility: false,
         nonce: '2726c7f26c',
         enabled: true,
-        debug: process.env.NODE_ENV !== 'production',
+        debug: true
+        // process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
