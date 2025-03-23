@@ -102,33 +102,3 @@ export const deletePatient = async (patientId) => {
         });
     });
 };
-
-export function usePatient() {
-    const { $apifetch, $toast } = useNuxtApp();
-
-    const error = useState('patientError', () => null);
-    const loading = useState('patientLoading', () => false);
-    const success = useState('patientSuccess', () => false);
-
-    const downloadDocument = async (id: number) => {
-        try {
-            loading.value = true;
-            await $apifetch(`/api/patients/documents/${id}/download`);
-        }
-        catch {
-            $toast({
-                description: 'Erreur lors de la tentative de téléchargement du document',
-            });
-        }
-        finally {
-            loading.value = false;
-        }
-    };
-
-    return {
-        error,
-        loading,
-        success,
-        downloadDocument,
-    };
-}

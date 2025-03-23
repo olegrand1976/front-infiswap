@@ -560,9 +560,9 @@
                                     <TableCell class="bg-gray-100">
                                         <Button
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center"
+                                            :in-progress="downloading"
+                                            @click="downloadDocument(document.id)"
                                         >
-                                            <!-- :in-progress="downloading"
-                                            @click="downloadDocument(document.id)" -->
                                             <CloudArrowDownIcon class="w-5 cursor-pointer" />
                                         </Button>
                                     </TableCell>
@@ -637,7 +637,7 @@ import {
 
 import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';
-import { detailPatient, usePatients } from '~/composables/usePatients';
+import { detailPatient } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { Patient, PatientDocument } from '~/lib/types';
@@ -655,7 +655,7 @@ const patientId = route.params.id as string;
 
 const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
 
-const { loading: downloading, downloadDocument } = usePatients();
+const { loading: downloading, downloadDocument } = usePatientManagement();
 interface User {
     nurse?: {
         id: string;
