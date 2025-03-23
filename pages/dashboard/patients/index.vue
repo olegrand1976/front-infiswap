@@ -239,8 +239,9 @@
                     </div>
 
                     <div class="mt-3 text-center rounded bg-gray-200 p-2 truncate">
-                        {{ patient.care_types?.map((careType) => careType.name || [])
-                            .join(', ') }}
+                        {{ getUniqueCareTypes(patient.care_types) }}
+                        <!-- {{ patient.care_types?.map((careType) => careType.name || [])
+                            .join(', ') }} -->
                     </div>
                 </div>
             </template>
@@ -249,9 +250,10 @@
 </template>
 
 <script setup lang="ts">
-import { MagnifyingGlassIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { useNursePatients } from '~/composables/useNursePatients';
 import { deletePatient } from '~/composables/usePatients';
+import type { CareType } from '~/lib/types';
 
 useHead({
     title: 'Liste des patients',
@@ -268,6 +270,11 @@ const openDialog = () => {
 const closeDialog = () => {
     isDialogOpen.value = false;
 };
+
+function getUniqueCareTypes(careTypes: CareType[]) {
+    const uniqueCareTypes = [...new Set(careTypes?.map(careType => careType.name || [])).values()];
+    return uniqueCareTypes.join(', ');
+}
 
 const submitDelete = async (patientId) => {
     await deletePatient(patientId);

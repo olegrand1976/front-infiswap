@@ -47,7 +47,9 @@
                     </div>
 
                     <div>
-                        <h4 class="text-primary font-semibold">Réponse(s) en attente(s)</h4>
+                        <h4 class="text-primary font-semibold">
+                            Réponse(s) en attente(s)
+                        </h4>
                         <div class="border-2 border-gray-200 rounded p-4 my-3">
                             <h6 class="flex items-center space-x-4 text-sm">
                                 <span>Le dernier mois</span>
@@ -81,16 +83,27 @@
         <section class="grid grid-cols-1 xl:grid-cols-[45%_53%] gap-4">
             <div class="flex flex-col space-y-4">
                 <div class="bg-gray-100 rounded p-4">
-                    <h3 class="text-primary">Mes préférences</h3>
+                    <h3 class="text-primary">
+                        Mes préférences
+                    </h3>
 
                     <form class="mt-6 space-y-4">
                         <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
                             <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="zipCode"> Codes postaux </label>
                             </div>
-                            <TagsInput v-model="zipCodes" class="h-9 bg-transparent border border-none" disabled>
+                            <TagsInput
+                                v-model="zipCodes"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem v-for="item in zipCodes" :key="item" :value="item" class="-mt-1">
+                                    <TagsInputItem
+                                        v-for="item in zipCodes"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
                                         <TagsInputItemText class="text-xs" />
                                         <TagsInputItemDelete />
                                     </TagsInputItem>
@@ -103,9 +116,18 @@
                             <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="city"> Villes </label>
                             </div>
-                            <TagsInput v-model="cities" class="h-9 bg-transparent border border-none" disabled>
+                            <TagsInput
+                                v-model="cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem v-for="item in cities" :key="item" :value="item" class="-mt-1">
+                                    <TagsInputItem
+                                        v-for="item in cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
                                         <TagsInputItemText class="text-xs" />
                                         <TagsInputItemDelete />
                                     </TagsInputItem>
@@ -119,9 +141,18 @@
                             <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="city"> Remplacement ponctuel </label>
                             </div>
-                            <TagsInput v-model="cities" class="h-9 bg-transparent border border-none" disabled>
+                            <TagsInput
+                                v-model="cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem v-for="item in cities" :key="item" :value="item" class="-mt-1">
+                                    <TagsInputItem
+                                        v-for="item in cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
                                         <TagsInputItemText class="text-xs" />
                                         <TagsInputItemDelete />
                                     </TagsInputItem>
@@ -135,9 +166,18 @@
                             <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
                                 <label for="city"> Remplacement long terme </label>
                             </div>
-                            <TagsInput v-model="cities" class="h-9 bg-transparent border border-none" disabled>
+                            <TagsInput
+                                v-model="cities"
+                                class="h-9 bg-transparent border border-none"
+                                disabled
+                            >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem v-for="item in cities" :key="item" :value="item" class="-mt-1">
+                                    <TagsInputItem
+                                        v-for="item in cities"
+                                        :key="item"
+                                        :value="item"
+                                        class="-mt-1"
+                                    >
                                         <TagsInputItemText class="text-xs" />
                                         <TagsInputItemDelete />
                                     </TagsInputItem>
@@ -154,29 +194,39 @@
                         Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                     </h3>
                     <div class="p-4">
-                        <LineChart :data="formattedData" index="month" :categories="['y_number']"
-                            :colors="['hsl(var(--primary))']" :y-formatter="(tick) => `${tick}`" />
+                        <LineChart
+                            :data="formattedData"
+                            index="month"
+                            :categories="['y_number']"
+                            :colors="['hsl(var(--primary))']"
+                            :y-formatter="(tick) => `${tick}`"
+                        />
                     </div>
                 </div>
             </div>
 
             <div class="bg-gray-100 rounded p-4">
-                <h3 class="text-primary">Tournée du jour</h3>
+                <h3 class="text-primary">
+                    Tournée du jour
+                </h3>
 
                 <div class="my-3">
                     <Table>
                         <TableHeader>
                             <TableRow class="grid grid-cols-3 gap-0 border-gray-300">
                                 <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
+                                >
                                     Patient
                                 </TableHead>
                                 <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
+                                >
                                     Code postal
                                 </TableHead>
                                 <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
+                                >
                                     Ville
                                 </TableHead>
                             </TableRow>
@@ -184,7 +234,10 @@
 
                         <TableBody>
                             <template v-if="reports.tours != 0">
-                                <div v-for="(tournee, index) in reports.tours" :key="index">
+                                <div
+                                    v-for="(tournee, index) in reports.tours"
+                                    :key="index"
+                                >
                                     <TableRow class="cursor-pointer grid grid-cols-3 gap-0 border border-gray-300">
                                         <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
@@ -215,8 +268,10 @@
                                     Aucune tournée à afficher pour le moment
                                 </p>
                                 <p>
-                                    <Button class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
-                                        disabled>
+                                    <Button
+                                        class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
+                                        disabled
+                                    >
                                         Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les
                                         fonctionnalités
                                     </Button>
@@ -224,8 +279,6 @@
                             </template>
                         </TableBody>
                     </Table>
-
-
                 </div>
             </div>
         </section>
@@ -233,30 +286,30 @@
 </template>
 
 <script lang="ts" setup>
-import { LineChart } from "@/components/ui/chart-line";
+import { LineChart } from '@/components/ui/chart-line';
 import {
     TagsInput,
     TagsInputInput,
     TagsInputItem,
     TagsInputItemDelete,
     TagsInputItemText,
-} from "@/components/ui/tags-input";
+} from '@/components/ui/tags-input';
 
-import { useReports } from "~/composables/useReports";
+import { useReports } from '~/composables/useReports';
 
-const user = useState("user");
+const user = useState('user');
 
 const { getReports } = useReports();
 
 const reports = await getReports();
 
 const formatDate = (dateString: string) => {
-    const [year, month] = dateString.split("-");
+    const [year, month] = dateString.split('-');
     return `${month}/${year}`;
 };
 
 const formattedData = computed(() => {
-    return reports.replacement.reponded_per_month.map((item) => ({
+    return reports.replacement.reponded_per_month.map(item => ({
         month: formatDate(item.month),
         y_number: item.count,
     }));
@@ -267,7 +320,7 @@ const zipCodes = computed(
 );
 const cities = computed(() => user.value.settings?.replacement?.cities || []);
 
-const previousMonth = ref("");
+const previousMonth = ref('');
 
 onMounted(async () => {
     await getReports();
@@ -275,18 +328,18 @@ onMounted(async () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const months = [
-        "Janvier",
-        "Février",
-        "Mars",
-        "Avril",
-        "Mai",
-        "Juin",
-        "Juillet",
-        "Août",
-        "Septembre",
-        "Octobre",
-        "Novembre",
-        "Décembre",
+        'Janvier',
+        'Février',
+        'Mars',
+        'Avril',
+        'Mai',
+        'Juin',
+        'Juillet',
+        'Août',
+        'Septembre',
+        'Octobre',
+        'Novembre',
+        'Décembre',
     ];
 
     const previousMonthIndex = (currentMonth - 1 + 12) % 12;
@@ -294,11 +347,11 @@ onMounted(async () => {
 });
 
 useHead({
-    title: "Tableau de bord",
+    title: 'Tableau de bord',
 });
 
 definePageMeta({
-    layout: "dashboard",
-    middleware: ["auth", "verified"],
+    layout: 'dashboard',
+    middleware: ['auth', 'verified'],
 });
 </script>

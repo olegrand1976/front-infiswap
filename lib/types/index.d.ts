@@ -87,5 +87,6 @@ export type PatientDocument = {
 export type CareType = {
     id: number;
     name: string;
-    price: number;
+    price?: number;
+    duration?: number;
 };
