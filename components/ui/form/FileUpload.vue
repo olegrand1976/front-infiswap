@@ -95,7 +95,7 @@ const triggerFileInput = () => {
                 alt="Aperçu"
                 class="object-cover w-full h-full"
             >
-            <p
+            <div
                 v-else-if="fileType !==null"
                 class="text-gray-500 text-center px-2 flex gap-2 lg:gap-4 items-center"
             >
@@ -108,7 +108,7 @@ const triggerFileInput = () => {
                     v-show="errorMessage"
                     class="text-red-500"
                 > {{ errorMessage }} </span>
-            </p>
+            </div>
             <p
                 v-else
                 class="text-gray-500 text-sm text-center px-2"

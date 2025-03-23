@@ -525,16 +525,9 @@
                 </h2>
 
                 <div class="relative">
-                    <input
-                        ref="fileInput"
-                        type="file"
-                        accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
-                        class="hidden"
-                        @change="handleFileSelect"
-                    >
                     <Button
                         class="w-full flex items-center justify-center mt-4"
-                        @click="triggerFileUpload"
+                        @click="openFileUploadDialog"
                     >
                         <PlusCircleIcon class="w-5" />
                         Ajouter un document
@@ -586,14 +579,14 @@
                 <Dialog
                     v-model:open="isDocumentDialogOpen"
                 >
-                    <DialogContent class="sm:max-w-[28rem]">
+                    <DialogContent class="sm:max-w-[40rem]">
                         <DialogHeader>
-                            <DialogTitle>Ajouter une note</DialogTitle>
-                            <DialogDescription>
-                                Veuillez ajouter une note descriptive pour le document sélectionné.
-                            </DialogDescription>
+                            <DialogTitle>Ajouter un document</DialogTitle>
                         </DialogHeader>
                         <div class="grid gap-4 py-4">
+                            <div class="grid gap-2">
+                                <FileUpload @file-selected="file = $event" />
+                            </div>
                             <div class="grid gap-2">
                                 <Label for="note">Note</Label>
                                 <Input
@@ -605,8 +598,11 @@
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button @click="handleDocumentSubmit">
-                                Confirmer
+                            <Button
+                                :in-progress="uploading"
+                                @click="handleUploadDocument"
+                            >
+                                Sauvegarder
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -639,6 +635,7 @@ import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { detailPatient, createPatientDocument } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
+import FileUpload from '~/components/ui/form/FileUpload.vue';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
@@ -956,20 +953,32 @@ const saveCareInformations = () => {
 
 // New document upload related code
 const fileInput = ref<HTMLInputElement | null>(null);
-const selectedFile = ref<File | null>(null);
 const documentNote = ref('');
 const isDocumentDialogOpen = ref(false);
 
-const triggerFileUpload = () => {
-    fileInput.value?.click();
+const openFileUploadDialog = () => {
+    isDocumentDialogOpen.value = !isDocumentDialogOpen.value;
 };
 
-const handleFileSelect = (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-        selectedFile.value = input.files[0];
-        isDocumentDialogOpen.value = true;
+const { loading: uploading, file, uploadFile } = useFile();
+
+const handleUploadDocument = async () => {
+    if (!file.value) {
+        $toast({
+            variant: 'destructive',
+            description: 'Aucun fichier sélectionné.',
+        });
+        return;
     }
+
+    const url = `/api/patients/${patient.value.id}/documents/upload`;
+
+    await uploadFile({
+        records: {
+            note: documentNote.value,
+        },
+        url: url,
+    });
 };
 
 const handleDocumentSubmit = async () => {
