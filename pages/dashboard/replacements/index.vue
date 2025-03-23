@@ -22,7 +22,7 @@
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Jour
+                            Jour(s)
                         </TableHead>
                         <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
                             <span>Matin</span>
@@ -165,7 +165,7 @@
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Jour
+                                Jour(s)
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>

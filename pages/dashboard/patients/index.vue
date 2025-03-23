@@ -51,7 +51,7 @@
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-4 overflow-x-hidden gap-2 rounded-t-lg border border-none">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white">
-                            Jour
+                            Patient
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white">
                             Code postal
