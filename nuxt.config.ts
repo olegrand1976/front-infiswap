@@ -113,7 +113,7 @@ export default defineNuxtConfig({
         compatibility: false,
         nonce: '2726c7f26c',
         enabled: true,
-        debug: true
+        debug: true,
         // process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
