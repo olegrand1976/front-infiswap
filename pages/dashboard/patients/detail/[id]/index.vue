@@ -545,7 +545,7 @@
                                 </p>
                             </template>
                             <template
-                                v-for="(document, index) in formData.patient_documents"
+                                v-for="(document, index) in patient.patient_documents"
                                 v-else
                                 :key="index"
                             >
@@ -633,9 +633,10 @@ import {
 
 import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';
-import { detailPatient, createPatientDocument } from '~/composables/usePatients';
+import { detailPatient } from '~/composables/usePatients';
 import { InputTime } from '@/components/ui/input-time';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
+import type { Patient, PatientDocument } from '~/lib/types';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
@@ -648,26 +649,6 @@ const handleScroll = () => {
 const { phoneNumber } = useFormmater();
 const patientId = route.params.id as string;
 
-interface Patient {
-    id: string;
-    lastname: string;
-    firstname: string;
-    email: string;
-    social_security_number: string;
-    phone_number: string;
-    profile?: {
-        zip_code: string;
-        city: string;
-    };
-    care_start_date: string;
-    care_end_date: string;
-    availability: string[];
-    care_informations: string[];
-    visit_times: string[];
-    patient_care_type: string[];
-    patient_documents: string[];
-    patientId: null;
-}
 
 const { patient, fetchDetailPatient } = detailPatient(patientId) as unknown as { patient: Ref<Patient | null>; fetchDetailPatient: () => Promise<void> };
 
@@ -951,8 +932,6 @@ const saveCareInformations = () => {
     });
 };
 
-// New document upload related code
-const fileInput = ref<HTMLInputElement | null>(null);
 const documentNote = ref('');
 const isDocumentDialogOpen = ref(false);
 
@@ -978,39 +957,18 @@ const handleUploadDocument = async () => {
             note: documentNote.value,
         },
         url: url,
-    });
-};
-
-const handleDocumentSubmit = async () => {
-    if (selectedFile.value && documentNote.value) {
-        formData.value.patient_documents.push({
-            path: selectedFile.value.name,
-            note: documentNote.value,
-        });
-
-        documentNote.value = '';
-        selectedFile.value = null;
-        isDocumentDialogOpen.value = false;
-
-        if (fileInput.value) {
-            fileInput.value.value = '';
-        }
-
-        await handleDocumentUpdate();
+    }).then((response) => {
+        patient.value.patient_documents.push(response.document);
 
         $toast({
-            description: 'Document ajouté avec succès',
+            description: 'Fichier téléchargé avec succès',
         });
-    }
-};
 
-const handleDocumentUpdate = async () => {
-    const documentData = {
-        patient_documents: formData.value.patient_documents,
-        patientId: formData.value.patientId,
-    };
+        isDocumentDialogOpen.value = false;
+    });
 
-    await createPatientDocument(documentData);
+    // patient.value.patient_documents.push(responseBody.document);
+
 };
 
 const removeDocument = (index: number) => {

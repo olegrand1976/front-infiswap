@@ -2,7 +2,7 @@ export function useFile() {
     const { $toast, $apifetch } = useNuxtApp();
     const file = ref<File | null>(null);
     const loading = ref(false);
-    async function uploadFile({ records = {}, url }: { records: Record<string, string | number | Blob> ; url: string }): Promise<void> {
+    async function uploadFile({ records = {}, url }: { records: Record<string, string | number | Blob> ; url: string }): Promise<any> {
         try {
             loading.value = true;
             const formData = new FormData();
@@ -17,7 +17,7 @@ export function useFile() {
                     formData.append(key, value);
                 }
             });
-            await $apifetch(url, {
+            const response: Response = await $apifetch(url, {
                 method: 'POST',
                 body: formData,
             });
@@ -26,13 +26,17 @@ export function useFile() {
                 variant: 'success',
                 description: 'Fichier uploadé avec succès',
             });
+
+            return response;
         }
         catch (e) {
-            $toast({
-                variant: 'destructive',
-                description: 'Erreur lors de l\'upload du fichier',
-            });
-            console.error(e);
+            if (e.response?.status === 422 && e.data?.errors) {
+                const firstError = Object.values(e.data.errors)[0]?.[0] ?? 'Erreur lors de l\'upload du fichier';
+                $toast({
+                    title: firstError,
+                    variant: 'destructive',
+                });
+            }
         }
         finally {
             loading.value = false;

@@ -68,6 +68,19 @@ export type Patient = {
     availability: 'available' | 'unavailable' | 'absent' | 'hospitalized';
     created_at: string;
     updated_at: string;
+    profile?: Profile;
+    care_start_date: string;
+    care_end_date: string;
+    availability: string[];
+    care_informations: string[];
+    visit_times: string[];
+    patient_care_type: string[];
+    patient_documents?: PatientDocument[];
+};
+
+export type PatientDocument = {
+    path: string;
+    note?: string;
 };
 
 export type CareType = {
