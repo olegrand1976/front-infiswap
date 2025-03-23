@@ -79,6 +79,7 @@ export type Patient = {
 };
 
 export type PatientDocument = {
+    id: number;
     path: string;
     note?: string;
 };
