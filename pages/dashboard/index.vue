@@ -197,8 +197,7 @@
                         <LineChart
                             :data="formattedData"
                             index="month"
-                            :categories="['Nombre d annonces répondues']"
-                            "
+                            :categories="['y_number']"
                             :colors="['hsl(var(--primary))']"
                             :y-formatter="(tick) => `${tick}`"
                         />
@@ -312,7 +311,7 @@ const formatDate = (dateString: string) => {
 const formattedData = computed(() => {
     return reports.replacement.reponded_per_month.map(item => ({
         month: formatDate(item.month),
-        categories: item.count,
+        y_number: item.count,
     }));
 });
 
