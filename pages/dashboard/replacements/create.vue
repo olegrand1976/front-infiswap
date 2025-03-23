@@ -49,9 +49,9 @@
                 </div>
             </div>
 
-            <div class="sm:mx-20 md:mx-0 ps-4">
+            <div class="sm:mx-20 md:mx-0 p-2">
                 <RangeCalendar v-model="value" :min-value="todayCalendar"
-                    class="flex flex-col justify-center px-auto md:block md:px-0 rounded-md shadow-lg" />
+                    class="flex flex-col justify-center rounded-md shadow-lg" />
             </div>
 
             <div>
