@@ -289,7 +289,7 @@
                                                 <SelectItem value="low">
                                                     Faible
                                                 </SelectItem>
-                                                <SelectItem value="medium">
+                                                <SelectItem value="moderate">
                                                     Moyen
                                                 </SelectItem>
                                                 <SelectItem value="hight">
@@ -809,7 +809,7 @@ const days = {
 
 const severities = {
     low: 'Faible',
-    medium: 'Moyen',
+    moderate: 'Moyen',
     hight: 'Elevé',
 };
 
@@ -954,7 +954,7 @@ const handleUploadDocument = async () => {
         return;
     }
 
-    const url = `/api/patients/${patient.value.id}/documents/upload`;
+    const url = `/api/patients/documents/${patient.value.id}/upload`;
 
     await uploadFile({
         records: {
