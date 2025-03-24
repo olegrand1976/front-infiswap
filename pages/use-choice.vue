@@ -90,12 +90,13 @@ const selectOption = (value) => {
 };
 
 const handleSubmit = async (event) => {
-    if (event?.preventDefault) {
-        event.preventDefault();
-    }
+    event?.preventDefault();
 
     if (!formData.value) {
-        console.warn('Aucune option sélectionnée !');
+        $toast({
+            variant: 'destructive',
+            description: 'Veuillez sélectionner une option.',
+        });
         return;
     }
 
@@ -131,7 +132,18 @@ const handleSubmit = async (event) => {
         }
     }
     catch (error) {
-        console.error('Erreur API :', error);
+        if (error.data.message) {
+            $toast({
+                variant: 'destructive',
+                description: error.data.message,
+            });
+        }
+        else {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur s\'est produite. Veuillez réessayer',
+            });
+        }
     }
 };
 
