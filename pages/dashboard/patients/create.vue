@@ -710,7 +710,7 @@ const { submit, inProgress } = useSubmit(async () => {
 
                 if (errorMessages.length > 0) {
                     $toast({
-                        description: errorMessages.join('/'),
+                        description: errorMessages.join(''),
                         status: 'error',
                         variant: 'destructive',
                     });

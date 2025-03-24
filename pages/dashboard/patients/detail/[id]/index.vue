@@ -289,7 +289,7 @@
                                                 <SelectItem value="low">
                                                     Faible
                                                 </SelectItem>
-                                                <SelectItem value="medium">
+                                                <SelectItem value="moderate">
                                                     Moyen
                                                 </SelectItem>
                                                 <SelectItem value="hight">
@@ -809,7 +809,7 @@ const days = {
 
 const severities = {
     low: 'Faible',
-    medium: 'Moyen',
+    moderate: 'Moyen',
     hight: 'Elevé',
 };
 

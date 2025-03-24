@@ -470,13 +470,8 @@ useHead({
     title: 'Tournées',
 });
 
-// definePageMeta({
-//     middleware: ['auth', 'verified', 'subscribed'],
-//     layout: 'dashboard',
-//     ssr: false,
-// });
 definePageMeta({
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'subscribed'],
     layout: 'dashboard',
     ssr: false,
 });
