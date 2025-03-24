@@ -264,7 +264,7 @@
                                                 >
                                                     <SelectItem
                                                         :value="patient"
-                                                        class="text-nowrap"
+                                                        class="text-nowrap hover:cursor-pointer"
                                                     >
                                                         <span class="md:text-xs lg:text-sm text-nowrap w-full">{{
                                                             patient.firstname }} {{ patient.lastname }}</span>
