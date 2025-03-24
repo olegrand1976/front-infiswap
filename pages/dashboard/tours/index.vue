@@ -143,11 +143,12 @@
                                             <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données' }}</span>
                                         </div>
                                         <template
-                                        v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0"
+                                            v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0"
                                         >
-                                            <div class="flex justify-between items-center border-b py-2"
+                                            <div
                                                 v-for="(careInfo, index) in patient.patient[0].care_informations"
                                                 :key="index"
+                                                class="flex justify-between items-center border-b py-2"
                                             >
                                                 <span class="font-bold">{{ careInfo.record_type }}</span>
                                                 <span class="w-2/3 text-center">{{ careInfo.record_name }}</span>
