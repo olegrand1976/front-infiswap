@@ -96,7 +96,7 @@
                             id="socialSecurityNumber"
                             v-model="formData.socialSecurityNumber"
                             type="text"
-                            placeholder="880603-123-56"
+                            placeholder="199603-123-56"
                             class="w-full bg-transparent"
                             @blur="validateField('socialSecurityNumber')"
                             @input="validateField('socialSecurityNumber')"
@@ -237,7 +237,7 @@
                                 Genre
                             </label>
                         </div>
-                        <Select v-model="formData.genre">
+                        <Select v-model="formData.gender">
                             <SelectTrigger
                                 class="w-full bg-transparent text-nowrap border border-none"
                                 position="right"
@@ -506,8 +506,8 @@ const availabilities = {
 };
 
 const gender = {
-    homme: 'Homme',
-    femme: 'Femme',
+    M: 'Homme',
+    F: 'Femme',
     x: 'X',
 };
 
@@ -523,7 +523,7 @@ const initialFormData = {
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
-    genre: '',
+    gender: '',
     care_informations: [],
     visits: [
         {
@@ -565,9 +565,11 @@ const schema = yup.object({
         .required('L\'email est requis')
         .email('L\'email doit être valide'),
 
+    // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
     socialSecurityNumber: yup.string()
         .required('Le numéro de sécurité social est requis')
-        .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 880603-123-56'),
+        .transform((value) => (value ? value.replace(/-/g, '') : ''))
+        .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
 
     phoneNumber: yup.string()
         .required('Le téléphone est requis')
@@ -693,34 +695,6 @@ const { submit, inProgress } = useSubmit(async () => {
             setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
-        }).catch((error) => {
-            console.error('Erreur API :', error);
-
-            if (error.data && error.data.errors) {
-                const backendErrors = error.data.errors;
-                const errorMessages: string[] = [];
-
-                Object.keys(backendErrors).forEach((field) => {
-                    backendErrors[field].forEach((message: string) => {
-                        errorMessages.push(message);
-                    });
-                });
-
-                if (errorMessages.length > 0) {
-                    $toast({
-                        description: errorMessages.join('<br>'),
-                        status: 'error',
-                        variant: 'destructive',
-                    });
-                }
-            }
-            else {
-                $toast({
-                    description: 'Une erreur est survenue. Veuillez réessayer.',
-                    status: 'error',
-                    variant: 'destructive',
-                });
-            }
         });
     }
     catch (err) {
@@ -738,6 +712,14 @@ const { submit, inProgress } = useSubmit(async () => {
                     variant: 'destructive',
                 });
             }
+        }
+        else {
+            console.error('Error:', err);
+            $toast({
+                description: 'Une erreur s\'est produite',
+                status: 'error',
+                variant: 'destructive',
+            });
         }
     }
 });
