@@ -1,6 +1,6 @@
 <template>
     <div class="pt-4">
-        <Form>
+        <Form @submit="submit">
             <div
                 class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
             >
@@ -131,7 +131,15 @@
                     </div>
                 </div>
 
-                <div class="mt-32 md:mt-6">
+                <Button
+                    type="submit"
+                    class="mt-32 md:mt-4 w-64 md:w-auto flex text-xs md:text-base justify-center mx-auto md:mx-0 md:justify-end md:ml-auto"
+                    :in-progress="inProgress"
+                >
+                    Enregistrer
+                </Button>
+
+                <div class="mt-12 md:mt-6">
                     <div class="overflow-x-auto">
                         <Table>
                             <TableHeader class="w-full md:grid md:grid-cols-3 gap-2 border-none block">
@@ -199,8 +207,41 @@
                             </DialogHeader>
                             <Form class="flex flex-col mt-8">
                                 <div class="flex flex-col">
-                                    <h5 class="font-semibold text-primary">
-                                        Séléctionner le patient
+                                    <h5 class="flex items-center justify-between">
+                                        <span class="font-semibold text-primary">Séléctionner le patient</span>
+                                        <Button
+                                            class="flex items-center space-x-2"
+                                            @click="dialogConfirm = true"
+                                        >
+                                            <PlusIcon class="w-5 h-5" />
+                                            <span>Nouveau patient</span>
+                                        </Button>
+
+                                        <Dialog v-model:open="dialogConfirm">
+                                            <DialogContent class="sm:max-w-xl overflow-y-auto">
+                                                <DialogHeader>
+                                                    <DialogTitle>Confirmation</DialogTitle>
+                                                    <DialogDescription>
+                                                        Vous avez des modifications non enregistrées concernant les informations de votre tournée. Voulez-vous vraiment quitter la page ?
+                                                    </DialogDescription>
+                                                </DialogHeader>
+
+                                                <div class="my-4 flex justify-end space-x-3 items-center">
+                                                    <Button
+                                                        variant="secondary"
+                                                        class="bg-gray-200"
+                                                        @click="dialogConfirm = false"
+                                                    >
+                                                        Non
+                                                    </Button>
+                                                    <Button
+                                                        @click="handleRedirection"
+                                                    >
+                                                        Oui
+                                                    </Button>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
                                     </h5>
                                     <Select
                                         v-model="selectedPatient"
@@ -394,7 +435,7 @@
                         </DialogContent>
                     </Dialog>
 
-                    <div class="mt-8 mb-16 flex justify-end items-center">
+                    <div class="my-16 flex justify-center items-center">
                         <div
                             class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2"
                         >
@@ -407,7 +448,11 @@
                         </div>
 
                         <div class="flex items-center">
-                            <Button @click="onSavePatient">
+                            <Button
+                                type="submit"
+                                class="w-64"
+                                :in-progress="inProgress"
+                            >
                                 Enregistrer
                             </Button>
                         </div>
@@ -424,6 +469,7 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     Square2StackIcon,
+    PlusIcon,
     PlusCircleIcon,
     ArrowPathRoundedSquareIcon,
 } from '@heroicons/vue/24/solid';
@@ -443,6 +489,8 @@ const formatTime = (time) => {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
 };
+
+const router = useRouter();
 
 const formData = reactive({
     startDate: '',
@@ -465,6 +513,8 @@ const datePatients = ref<{
         }>;
     };
 }>({});
+
+const copiedTours = ref<Set<string>>(new Set());
 
 const today = computed(() => {
     const date = new Date();
@@ -653,10 +703,6 @@ const openDialog = (period = 'morning') => {
     isDialogOpen.value = true;
 };
 
-const handleSelectTime = (time) => {
-    selectedTime.value = time;
-};
-
 const addPatientToTable = () => {
     if (!selectedPatient.value || !selectedTime.value || !currentDate.value) {
         return;
@@ -744,6 +790,8 @@ const copyCurrentDate = async () => {
 
     if (tours.value.length > 0) {
         tours.value.forEach((tour) => {
+            if (copiedTours.value.has(tour.id)) return; // Vérifier si la tournée a déjà été copiée
+
             if (tour.visit_times && tour.visit_times.length > 0) {
                 tour.visit_times.forEach((visitTime) => {
                     if (visitTime.visits && visitTime.visits.length > 0) {
@@ -786,6 +834,8 @@ const copyCurrentDate = async () => {
                     }
                 });
             }
+
+            copiedTours.value.add(tour.id); // Marquer la tournée comme copiée
         });
 
         $toast({
@@ -807,6 +857,8 @@ const copyAllDates = async () => {
 
     if (tours.value && tours.value.length > 0) {
         tours.value.forEach((tour) => {
+            if (copiedTours.value.has(tour.id)) return; // Vérifier si la tournée a déjà été copiée
+
             if (tour.visit_times && tour.visit_times.length > 0) {
                 tour.visit_times.forEach((visitTime) => {
                     if (visitTime.visits && visitTime.visits.length > 0) {
@@ -849,6 +901,8 @@ const copyAllDates = async () => {
                     }
                 });
             }
+
+            copiedTours.value.add(tour.id); // Marquer la tournée comme copiée
         });
 
         $toast({
@@ -865,17 +919,31 @@ const copyAllDates = async () => {
     updateReplacementData();
 };
 
+const dialogConfirm = ref(false);
+
+const handleRedirection = () => {
+    router.push('/dashboard/patients/create');
+};
+
 const { submitReplacement } = useReplacements();
 
-const onSavePatient = () => {
-    updateReplacementData();
-    submitReplacement(formData);
-};
+const {
+    submit,
+    inProgress,
+} = useSubmit(
+    async () => {
+        inProgress.value = true;
+
+        updateReplacementData();
+        await submitReplacement(formData);
+    },
+);
 
 const reinitializeData = () => {
     // Réinitialiser toutes les données de patients
     datePatients.value = {};
     formData.replacement = [];
+    copiedTours.value.clear(); // Réinitialiser l'indicateur de copie
 };
 
 onMounted(() => {

@@ -20,14 +20,11 @@ export const useReplacements = () => {
         success.value = false;
 
         try {
-            const cleanFormData = JSON.parse(JSON.stringify(formData));
-            console.log('Données envoyées :', JSON.stringify(cleanFormData, null, 2));
-
             let response;
 
             await $apifetch('/api/replacements', {
                 method: 'POST',
-                body: JSON.stringify(cleanFormData, null, 2),
+                body: JSON.stringify(formData),
             }).then((res) => {
                 response = res;
                 $toast({
@@ -37,9 +34,32 @@ export const useReplacements = () => {
                 setTimeout(() => {
                     router.replace('detail/' + response.replacement.id);
                 }, 3000);
-            }).catch((err) => {
-                console.error('Erreur API :', err);
-                throw err;
+            }).catch((error) => {
+                if (error.data && error.data.errors) {
+                    const backendErrors = error.data.errors;
+                    const errorMessages: string[] = [];
+
+                    Object.keys(backendErrors).forEach((field) => {
+                        backendErrors[field].forEach((message: string) => {
+                            errorMessages.push(message);
+                        });
+                    });
+
+                    if (errorMessages.length > 0) {
+                        $toast({
+                            description: errorMessages.join('/'),
+                            status: 'error',
+                            variant: 'destructive',
+                        });
+                    }
+                }
+                else {
+                    $toast({
+                        description: 'Une erreur est survenue. Veuillez réessayer.',
+                        status: 'error',
+                        variant: 'destructive',
+                    });
+                }
             });
 
             if (response?.success) {
@@ -48,7 +68,6 @@ export const useReplacements = () => {
         }
         catch (err) {
             error.value = err;
-            console.error('Erreur lors de la soumission :', err);
         }
         finally {
             loading.value = false;
