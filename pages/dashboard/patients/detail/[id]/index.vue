@@ -954,7 +954,7 @@ const handleUploadDocument = async () => {
         return;
     }
 
-    const url = `/api/patients/${patient.value.id}/documents/upload`;
+    const url = `/api/patients/documents/${patient.value.id}/upload`;
 
     await uploadFile({
         records: {
