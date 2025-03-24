@@ -684,7 +684,7 @@ const updatePatientCareTypes = () => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        // await schema.validate(formData.value, { abortEarly: false });
+        await schema.validate(formData.value, { abortEarly: false });
         updatePatientCareTypes();
         return createPatient(formData.value).then(() => {
             formSubmitted.value = true;
