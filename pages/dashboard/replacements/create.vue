@@ -222,7 +222,7 @@
                                                 <DialogHeader>
                                                     <DialogTitle>Confirmation</DialogTitle>
                                                     <DialogDescription>
-                                                        Vous avez des modifications non enregistrées concernant les informations de votre tournée. Voulez-vous vraiment quitter la page ?
+                                                        Vous allez être redirigé vers la création du patient. Voulez-vous poursuivre en perdant vos données non enregistrées ?
                                                     </DialogDescription>
                                                 </DialogHeader>
 
