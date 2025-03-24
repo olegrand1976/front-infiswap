@@ -40,7 +40,6 @@ export const searchNurse = () => {
 };
 
 export const createPatient = async (formData) => {
-    console.log('données azo ', formData);
     const { $apifetch } = useNuxtApp();
 
     await $apifetch('/api/patients',
