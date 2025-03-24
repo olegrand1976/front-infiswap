@@ -96,7 +96,7 @@
                             id="socialSecurityNumber"
                             v-model="formData.socialSecurityNumber"
                             type="text"
-                            placeholder="880603-123-56"
+                            placeholder="199603-123-56"
                             class="w-full bg-transparent"
                             @blur="validateField('socialSecurityNumber')"
                             @input="validateField('socialSecurityNumber')"
@@ -237,7 +237,7 @@
                                 Genre
                             </label>
                         </div>
-                        <Select v-model="formData.genre">
+                        <Select v-model="formData.gender">
                             <SelectTrigger
                                 class="w-full bg-transparent text-nowrap border border-none"
                                 position="right"
@@ -506,8 +506,8 @@ const availabilities = {
 };
 
 const gender = {
-    homme: 'Homme',
-    femme: 'Femme',
+    M: 'Homme',
+    F: 'Femme',
     x: 'X',
 };
 
@@ -523,7 +523,7 @@ const initialFormData = {
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
-    genre: '',
+    gender: '',
     care_informations: [],
     visits: [
         {
@@ -567,7 +567,7 @@ const schema = yup.object({
 
     socialSecurityNumber: yup.string()
         .required('Le numéro de sécurité social est requis')
-        .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 880603-123-56'),
+        .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
 
     phoneNumber: yup.string()
         .required('Le téléphone est requis')
