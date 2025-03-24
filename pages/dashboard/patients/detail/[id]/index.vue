@@ -198,7 +198,7 @@
                             >
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
-                                        Action
+                                        Titre
                                     </h6>
                                     <p>
                                         {{ careInformation.recordType }}
@@ -207,7 +207,7 @@
 
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
-                                        Facteur
+                                        Complément
                                     </h6>
                                     <p>
                                         {{ careInformation.recordName }}
