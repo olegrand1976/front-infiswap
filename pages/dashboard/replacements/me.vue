@@ -104,35 +104,43 @@
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
-                                <TagsInput
-                                    v-model="formData.cityTags"
-                                    class="flex items-center bg-gray-100 text-xs rounded-full border border-none"
+                                <div
+                                    class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
+                                    title="Saisissez la vile puis appuyer sur Entrée pour l'ajouter"
                                 >
-                                    <div
-                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
-                                        class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                    <h5 class="text-white text-xs">
+                                        <span class="hidden xl:inline-block">Ville</span>
+                                    </h5>
+                                    <TagsInput
+                                        v-model="formData.cityTags"
+                                        class="flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
-                                        <TagsInputItem
-                                            v-for="item in formData.cityTags"
-                                            :key="item"
-                                            :value="item"
-                                            class="flex-shrink-0 max-w-24"
+                                        <div
+                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
+                                            class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
-                                            <TagsInputItemText class="text-xs" />
-                                            <TagsInputItemDelete
-                                                @click="removeCityTag(item)"
-                                            />
-                                        </TagsInputItem>
-                                    </div>
+                                            <TagsInputItem
+                                                v-for="item in formData.cityTags"
+                                                :key="item"
+                                                :value="item"
+                                                class="flex-shrink-0 max-w-24"
+                                            >
+                                                <TagsInputItemText class="text-xs" />
+                                                <TagsInputItemDelete
+                                                    @click="removeCityTag(item)"
+                                                />
+                                            </TagsInputItem>
+                                        </div>
 
-                                    <TagsInputInput
-                                        v-model="cityInput"
-                                        :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
-                                        class="text-xs flex items-center bg-gray-100"
-                                        placeholder="Ville"
-                                        @keydown.enter="addCityTag"
-                                    />
-                                </TagsInput>
+                                        <TagsInputInput
+                                            v-model="cityInput"
+                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
+                                            class="text-xs flex items-center"
+                                            placeholder="City38"
+                                            @keydown.enter="addCityTag"
+                                        />
+                                    </TagsInput>
+                                </div>
                             </FormControl>
                         </FormItem>
                     </FormField>
@@ -225,17 +233,17 @@
                             :key="replacement.id"
                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
                         >
-                            <TableCell class="flex justify-center items-center bg-gray-100 xl:text-[0.75em] lg:text-[0.5em]">
-                                <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
+                            <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
+                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                     <span>{{ formatDate(replacement.start_date) }}</span>
                                 </div>
                                 <span class="flex items-center">au</span>
-                                <div class="flex h-8 py-1 px-2 rounded bg-gray-200 justify-center items-center">
+                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                     <span>{{ formatDate(replacement.end_date) }}</span>
                                 </div>
                             </TableCell>
 
-                            <TableCell class="grid grid-cols-3 justify-center items-center bg-gray-100 text-xs">
+                            <TableCell class="grid grid-cols-3 justify-center items-center bg-[#F1F2F7] text-xs">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 mx-auto text-green-500"
@@ -250,11 +258,11 @@
                                 />
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <p class="truncate w-full px-2 pt-3 h-10 bg-gray-200 rounded">
+                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
                                             v-for="(detail, index) in replacement.details"
                                             :key="index"
@@ -268,11 +276,11 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs">
+                            <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <p class="truncate w-full px-2 pt-3 h-10 bg-gray-200 rounded">
+                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
                                             v-for="(detail, index) in replacement.details"
                                             :key="index"
@@ -286,9 +294,9 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="bg-gray-100 text-xs pt-6">
+                            <TableCell class="bg-[#F1F2F7] text-xs pt-6">
                                 <div
-                                    class="pt-3 h-10 rounded bg-gray-200 mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                    class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
                                     {{ replacement.details
                                         ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
