@@ -4,17 +4,17 @@
     >
         <div>
             <div class="flex flex-col justify-center items-center">
-                <div class="flex flex-col items-center xl:items-start xl:mx-8 mb-8">
+                <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
                     <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
                         Abonnement
                     </h1>
                     <div class="mt-4">
-                        <span class="inline-block w-40 h-1 bg-success rounded-full" />
-                        <span class="inline-block w-3 h-1 mx-1 bg-success rounded-full" />
+                        <span class="inline-block w-28 h-1 bg-success rounded-full" />
+                        <span class="inline-block w-6 h-1 mx-1 bg-success rounded-full" />
                         <span class="inline-block w-1 h-1 bg-success rounded-full" />
                     </div>
 
-                    <p class="mt-4 font-medium text-gray-500 dark:text-gray-300">
+                    <p class="mt-4 font-medium text-center text-gray-500 dark:text-gray-300">
                         Obtenez un accès complet en choisissant votre formule !
                     </p>
                 </div>
