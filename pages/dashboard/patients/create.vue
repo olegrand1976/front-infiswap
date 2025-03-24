@@ -565,9 +565,11 @@ const schema = yup.object({
         .required('L\'email est requis')
         .email('L\'email doit être valide'),
 
+    // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
     socialSecurityNumber: yup.string()
         .required('Le numéro de sécurité social est requis')
-        .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
+        .transform((value) => (value ? value.replace(/-/g, '') : ''))
+        .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
 
     phoneNumber: yup.string()
         .required('Le téléphone est requis')
@@ -708,7 +710,7 @@ const { submit, inProgress } = useSubmit(async () => {
 
                 if (errorMessages.length > 0) {
                     $toast({
-                        description: errorMessages.join('<br>'),
+                        description: errorMessages.join('/'),
                         status: 'error',
                         variant: 'destructive',
                     });
