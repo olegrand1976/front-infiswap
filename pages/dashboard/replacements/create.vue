@@ -950,6 +950,8 @@ onMounted(() => {
     const now = new Date();
     const currentDateStr = now.toISOString().split('T')[0];
     formData.startDate = currentDateStr;
+    formData.endDate = currentDateStr;
+
     currentDate.value = currentDateStr;
 
     // Initialiser la structure pour la date courante
