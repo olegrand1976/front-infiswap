@@ -142,50 +142,17 @@
                                             <span class="font-bold">Genre</span>
                                             <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données' }}</span>
                                         </div>
-                                        <!-- <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Groupe sanguin</span>
-                                            <span class="w-2/3 text-center">- - - - -</span>
-                                        </div> -->
-                                        <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Allergies</span>
-                                            <span class="w-2/3 text-center">
-                                                <div
-                                                    v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0"
-                                                >
-                                                    <div>
-                                                        <span
-                                                            v-for="(careInfo, index) in patient.patient[0].care_informations"
-                                                            :key="careInfo.record_name"
-                                                        >
-                                                            {{ careInfo.record_name }}
-                                                            <span
-                                                                v-if="index < patient.patient[0].care_informations.length - 1"
-                                                            >,
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div v-else>
-                                                    Pas de données pour l'instant
-                                                </div>
-                                            </span>
-                                        </div>
-                                        <!-- <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Maladies</span>
-                                            <span class="w-2/3 text-center">- - - - -</span>
-                                        </div>
-                                        <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Hauteur</span>
-                                            <span class="w-2/3 text-center">- - - - -</span>
-                                        </div>
-                                        <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Poids</span>
-                                            <span class="w-2/3 text-center">- - - - -</span>
-                                        </div>
-                                        <div class="flex justify-between items-center border-b py-2">
-                                            <span class="font-bold">Visite perdue</span>
-                                            <span class="w-2/3 text-center">- - - - -</span>
-                                        </div> -->
+                                        <template
+                                        v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0"
+                                        >
+                                            <div class="flex justify-between items-center border-b py-2"
+                                                v-for="(careInfo, index) in patient.patient[0].care_informations"
+                                                :key="index"
+                                            >
+                                                <span class="font-bold">{{ careInfo.record_type }}</span>
+                                                <span class="w-2/3 text-center">{{ careInfo.record_name }}</span>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
 
