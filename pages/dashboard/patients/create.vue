@@ -684,7 +684,7 @@ const updatePatientCareTypes = () => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        await schema.validate(formData.value, { abortEarly: false });
+        // await schema.validate(formData.value, { abortEarly: false });
         updatePatientCareTypes();
         return createPatient(formData.value).then(() => {
             formSubmitted.value = true;
@@ -695,34 +695,6 @@ const { submit, inProgress } = useSubmit(async () => {
             setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
-        }).catch((error) => {
-            console.error('Erreur API :', error);
-
-            if (error.data && error.data.errors) {
-                const backendErrors = error.data.errors;
-                const errorMessages: string[] = [];
-
-                Object.keys(backendErrors).forEach((field) => {
-                    backendErrors[field].forEach((message: string) => {
-                        errorMessages.push(message);
-                    });
-                });
-
-                if (errorMessages.length > 0) {
-                    $toast({
-                        description: errorMessages.join(''),
-                        status: 'error',
-                        variant: 'destructive',
-                    });
-                }
-            }
-            else {
-                $toast({
-                    description: 'Une erreur est survenue. Veuillez réessayer.',
-                    status: 'error',
-                    variant: 'destructive',
-                });
-            }
         });
     }
     catch (err) {
@@ -740,6 +712,14 @@ const { submit, inProgress } = useSubmit(async () => {
                     variant: 'destructive',
                 });
             }
+        }
+        else {
+            console.error('Error:', err);
+            $toast({
+                description: 'Une erreur s\'est produite',
+                status: 'error',
+                variant: 'destructive',
+            });
         }
     }
 });
