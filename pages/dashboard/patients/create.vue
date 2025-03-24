@@ -568,7 +568,7 @@ const schema = yup.object({
     // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
     socialSecurityNumber: yup.string()
         .required('Le numéro de sécurité social est requis')
-        .transform((value) => (value ? value.replace(/-/g, '') : ''))
+        .transform(value => (value ? value.replace(/-/g, '') : ''))
         .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
 
     phoneNumber: yup.string()
