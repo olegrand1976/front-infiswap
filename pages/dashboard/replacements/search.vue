@@ -264,13 +264,13 @@
                                 >
                                     <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
-                                            v-for="(zip, index) in [...new Set(replacement.details.map(detail => detail?.patient?.zip_code))]"
+                                            v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
                                             :key="index"
                                             :class="cn('mr-1', {
-                                                'text-success font-bold': hasMatchingZipCode(zip),
+                                                'text-success font-bold': isZipCodeHighlighted(detail),
                                             })"
                                         >
-                                            {{ zip }},
+                                            {{ detail }},
                                         </span>
                                     </p>
                                 </div>
@@ -282,13 +282,13 @@
                                 >
                                     <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
-                                            v-for="(city, index) in [...new Set(replacement.details.map(detail => detail?.patient?.city))]"
+                                            v-for="(detail, index) in getUniqueCities(replacement.details)"
                                             :key="index"
                                             :class="cn('mr-1', {
-                                                'text-success font-bold': hasMatchingCity(city),
+                                                'text-success font-bold': hasMatchingCityFromUnique(detail),
                                             })"
                                         >
-                                            {{ city }},
+                                            {{ detail }},
                                         </span>
                                     </p>
                                 </div>
@@ -407,19 +407,35 @@ const selectedDaysPlaceholder = computed(() => {
 
 const isSubmitted = ref(false);
 
-const hasMatchingZipCode = (detail) => {
-    if (!isSubmitted.value) return false;
-    return formData.postalCodeTags.indexOf(detail?.patient?.zip_code) !== -1;
+const getUniqueZipCodes = (details) => {
+    const zipCodes = details
+        .map(detail => detail?.patient?.zip_code?.toString()?.trim())
+        .filter(zipCode => zipCode);
+
+    return [...new Set(zipCodes)];
 };
 
-const hasMatchingCity = (detail) => {
+const isZipCodeHighlighted = (zipCode) => {
     if (!isSubmitted.value) return false;
-    return formData.cityTags.indexOf(detail?.patient?.city) !== -1;
+    return formData.postalCodeTags.includes(zipCode.toString().trim());
+};
+
+const getUniqueCities = (details) => {
+    const cities = details
+        .map(detail => detail?.patient?.city?.toLowerCase()?.trim())
+        .filter(city => city);
+    return [...new Set(cities)];
+};
+
+const hasMatchingCityFromUnique = (city) => {
+    if (!isSubmitted.value) return false;
+    return formData.cityTags.some(tag => tag.toLowerCase() === city.toLowerCase());
 };
 
 const addPostalCodeTag = () => {
-    if (postalCodeInput.value.trim() !== '') {
-        formData.postalCodeTags.push(postalCodeInput.value.trim());
+    const zipCode = postalCodeInput.value.trim();
+    if (zipCode && !formData.postalCodeTags.includes(zipCode)) {
+        formData.postalCodeTags.push(zipCode);
         postalCodeInput.value = '';
     }
 };
@@ -429,8 +445,9 @@ const removePostalCodeTag = (tag) => {
 };
 
 const addCityTag = () => {
-    if (cityInput.value.trim() !== '') {
-        formData.cityTags.push(cityInput.value.trim());
+    const city = cityInput.value.trim().toLowerCase();
+    if (city && !formData.cityTags.includes(city)) {
+        formData.cityTags.push(city);
         cityInput.value = '';
     }
 };
