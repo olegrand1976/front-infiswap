@@ -165,158 +165,160 @@
         </div>
 
         <div class="grid my-8">
-            <Table class="hidden lg:block">
-                <TableHeader class="w-full">
-                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                        <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
-                            Jour
-                        </TableHead>
-                        <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
-                            <span>Matin</span>
-                            <span>Midi</span>
-                            <span>Soir</span>
-                        </TableHead>
-                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Codes postaux
-                        </TableHead>
-                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Ville
-                        </TableHead>
-                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Type de soin
-                        </TableHead>
-                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Action
-                        </TableHead>
-                    </TableRow>
-                </TableHeader>
-
-                <TableBody class="rounded-b-lg">
-                    <div v-if="loading && loadingSearch">
-                        <TableRow
-                            v-for="(_, index) in Array.from({ length: 10 })"
-                            :key="index"
-                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
-                        >
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
-
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
-
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
-
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
-
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
-
-                            <TableCell>
-                                <Skeleton class="h-10 w-full bg-gray-100" />
-                            </TableCell>
+            <div class="hidden lg:block">
+                <Table>
+                    <TableHeader class="w-full">
+                        <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                            <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                Jour
+                            </TableHead>
+                            <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
+                                <span>Matin</span>
+                                <span>Midi</span>
+                                <span>Soir</span>
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Codes postaux
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Ville
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Type de soin
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Action
+                            </TableHead>
                         </TableRow>
-                    </div>
-                    <div v-else-if="currentReplacements.length === 0">
-                        <p class="text-center text-gray-500 py-8">
-                            Aucun résultat n'est trouvé
-                        </p>
-                    </div>
-                    <div v-else>
-                        <TableRow
-                            v-for="replacement in currentReplacements"
-                            :key="replacement.id"
-                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
-                        >
-                            <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
-                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                    <span>{{ formatDate(replacement.start_date) }}</span>
-                                </div>
-                                <span class="flex items-center">au</span>
-                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                    <span>{{ formatDate(replacement.end_date) }}</span>
-                                </div>
-                            </TableCell>
+                    </TableHeader>
 
-                            <TableCell class="grid grid-cols-3 justify-center items-center bg-[#F1F2F7] text-xs">
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 mx-auto text-green-500"
-                                />
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'afternoon')"
-                                    class="h-6 mx-auto text-green-500"
-                                />
-                                <CheckCircleIcon
-                                    v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 mx-auto text-green-500"
-                                />
-                            </TableCell>
+                    <TableBody class="rounded-b-lg">
+                        <div v-if="loading && loadingSearch">
+                            <TableRow
+                                v-for="(_, index) in Array.from({ length: 10 })"
+                                :key="index"
+                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                            >
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
 
-                            <TableCell class="bg-[#F1F2F7] text-xs">
-                                <div
-                                    class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
-                                >
-                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                        <span
-                                            v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                            :key="index"
-                                            :class="cn('mr-1', {
-                                                'text-success font-bold': isZipCodeHighlighted(detail),
-                                            })"
-                                        >
-                                            {{ detail }},
-                                        </span>
-                                    </p>
-                                </div>
-                            </TableCell>
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
 
-                            <TableCell class="bg-[#F1F2F7] text-xs">
-                                <div
-                                    class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
-                                >
-                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                        <span
-                                            v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                            :key="index"
-                                            :class="cn('mr-1', {
-                                                'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                            })"
-                                        >
-                                            {{ detail }},
-                                        </span>
-                                    </p>
-                                </div>
-                            </TableCell>
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
 
-                            <TableCell class="bg-[#F1F2F7] text-xs pt-6">
-                                <div
-                                    class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
-                                >
-                                    {{ replacement.details
-                                        ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                        .join(', ') }}
-                                </div>
-                            </TableCell>
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
 
-                            <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
-                                <Button
-                                    class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                >
-                                    <EyeIcon class="h-6 mt-1" />
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    </div>
-                </TableBody>
-            </Table>
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
+
+                                <TableCell>
+                                    <Skeleton class="h-10 w-full bg-gray-100" />
+                                </TableCell>
+                            </TableRow>
+                        </div>
+                        <div v-else-if="currentReplacements.length === 0">
+                            <p class="text-center text-gray-500 py-8">
+                                Aucun résultat n'est trouvé
+                            </p>
+                        </div>
+                        <div v-else>
+                            <TableRow
+                                v-for="replacement in currentReplacements"
+                                :key="replacement.id"
+                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
+                            >
+                                <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
+                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                    </div>
+                                    <span class="flex items-center">au</span>
+                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                        <span>{{ formatDate(replacement.end_date) }}</span>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell class="grid grid-cols-3 justify-center items-center bg-[#F1F2F7] text-xs">
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'morning')"
+                                        class="h-6 mx-auto text-green-500"
+                                    />
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'afternoon')"
+                                        class="h-6 mx-auto text-green-500"
+                                    />
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'evening')"
+                                        class="h-6 mx-auto text-green-500"
+                                    />
+                                </TableCell>
+
+                                <TableCell class="bg-[#F1F2F7] text-xs">
+                                    <div
+                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                    >
+                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
+                                            <span
+                                                v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                :key="index"
+                                                :class="cn('mr-1', {
+                                                    'text-success font-bold': isZipCodeHighlighted(detail),
+                                                })"
+                                            >
+                                                {{ detail }},
+                                            </span>
+                                        </p>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell class="bg-[#F1F2F7] text-xs">
+                                    <div
+                                        class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                    >
+                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
+                                            <span
+                                                v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                :key="index"
+                                                :class="cn('mr-1', {
+                                                    'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                })"
+                                            >
+                                                {{ detail }},
+                                            </span>
+                                        </p>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell class="bg-[#F1F2F7] text-xs pt-6">
+                                    <div
+                                        class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                    >
+                                        {{ replacement.details
+                                            ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
+                                            .join(', ') }}
+                                    </div>
+                                </TableCell>
+
+                                <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
+                                    <Button
+                                        class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                    >
+                                        <EyeIcon class="h-6 mt-1" />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        </div>
+                    </TableBody>
+                </Table>
+            </div>
 
             <div class="lg:hidden">
                 <div
