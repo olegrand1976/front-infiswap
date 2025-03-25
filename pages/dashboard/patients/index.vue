@@ -288,7 +288,7 @@ onMounted(() => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified', 'subscribed'],
+    middleware: ['auth', 'verified'],
     ssr: false,
 });
 </script>

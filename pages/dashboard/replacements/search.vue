@@ -350,21 +350,30 @@
                                         v-if="hasShift(replacement.details, 'morning')"
                                         class="h-5 w-5 text-success"
                                     />
-                                    <span v-else class="h-5 w-5"></span>
+                                    <span
+                                        v-else
+                                        class="h-5 w-5"
+                                    />
                                 </div>
                                 <div class="flex justify-center">
                                     <CheckCircleIcon
                                         v-if="hasShift(replacement.details, 'afternoon')"
                                         class="h-5 w-5 text-success"
                                     />
-                                    <span v-else class="h-5 w-5"></span>
+                                    <span
+                                        v-else
+                                        class="h-5 w-5"
+                                    />
                                 </div>
                                 <div class="flex justify-center">
                                     <CheckCircleIcon
                                         v-if="hasShift(replacement.details, 'evening')"
                                         class="h-5 w-5 text-success"
                                     />
-                                    <span v-else class="h-5 w-5"></span>
+                                    <span
+                                        v-else
+                                        class="h-5 w-5"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -634,7 +643,7 @@ watch(
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'subscribed'],
     ssr: false,
 });
 </script>

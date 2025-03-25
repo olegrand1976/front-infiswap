@@ -426,7 +426,7 @@ useHead({
 });
 
 definePageMeta({
-    middleware: ['auth', 'verified', 'subscribed'],
+    middleware: ['auth', 'verified'],
     layout: 'dashboard',
     ssr: false,
 });

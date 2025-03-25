@@ -125,10 +125,16 @@
                                         v-model="formData.gender"
                                         class="bg-transparent px-2 h-full rounded-e-full focus:outline-none"
                                     >
-                                        <option value="M" :selected="formData.gender === 'M'">
+                                        <option
+                                            value="M"
+                                            :selected="formData.gender === 'M'"
+                                        >
                                             Homme
                                         </option>
-                                        <option value="F" :selected="formData.gender === 'F'">
+                                        <option
+                                            value="F"
+                                            :selected="formData.gender === 'F'"
+                                        >
                                             Femme
                                         </option>
                                     </select>
@@ -1077,7 +1083,7 @@ const {
             $toast({
                 description: 'Mise à jour du patient avec succès',
             });
-    
+
             setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
@@ -1106,7 +1112,7 @@ watch(() => patient.value, () => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified', 'subscribed'],
+    middleware: ['auth', 'verified'],
     ssr: false,
 });
 </script>
