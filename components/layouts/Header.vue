@@ -47,13 +47,13 @@
                     <LayoutsLogo class="w-36 h-11" />
                 </div>
                 <div class="flex flex-row items-center space-x-4">
-                    <Button
+                    <!-- <Button
                         v-if="!isLoggedIn"
                         class="hidden sm:block font-semibold md:text-[0.7em] lg:text-xs"
                         href="/login"
                     >
                         Connexion
-                    </Button>
+                    </Button> -->
                     <div>
                         <LayoutsDropdownLang />
                     </div>
