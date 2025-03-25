@@ -88,14 +88,19 @@
                     </h3>
 
                     <form class="mt-6 space-y-4">
-                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
-                                <label for="zipCode"> Codes postaux </label>
+                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                                <label
+                                    class="font-semibold sm:font-normal mb-3 sm:mb-0"
+                                    for="zipCode"
+                                >
+                                    Codes postaux
+                                </label>
                             </div>
                             <TagsInput
                                 v-model="zipCodes"
-                                class="h-9 bg-transparent border border-none"
-                                disabled
+                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
+                                @keyup.enter="addZipCodePreference"
                             >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                                     <TagsInputItem
@@ -105,21 +110,30 @@
                                         class="-mt-1"
                                     >
                                         <TagsInputItemText class="text-xs" />
-                                        <TagsInputItemDelete />
+                                        <TagsInputItemDelete @click="removeZipCode(item)" />
                                     </TagsInputItem>
                                 </div>
 
-                                <TagsInputInput />
+                                <TagsInputInput
+                                    class="-mt-1 sm:w-24 2xl:w-auto"
+                                    placeholder="8973"
+                                />
                             </TagsInput>
                         </div>
-                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
-                                <label for="city"> Villes </label>
+
+                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                                <label
+                                    class="font-semibold sm:font-normal mb-3 sm:mb-0"
+                                    for="zipCode"
+                                >
+                                    Villes
+                                </label>
                             </div>
                             <TagsInput
                                 v-model="cities"
-                                class="h-9 bg-transparent border border-none"
-                                disabled
+                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
+                                @keyup.enter="addCityPreference"
                             >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                                     <TagsInputItem
@@ -129,26 +143,32 @@
                                         class="-mt-1"
                                     >
                                         <TagsInputItemText class="text-xs" />
-                                        <TagsInputItemDelete />
+                                        <TagsInputItemDelete @click="removeCity(item)" />
                                     </TagsInputItem>
                                 </div>
 
-                                <TagsInputInput />
+                                <TagsInputInput
+                                    class="-mt-1 sm:w-24 2xl:w-auto"
+                                    placeholder="Bruxelles"
+                                />
                             </TagsInput>
                         </div>
 
-                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
-                                <label for="city"> Remplacement ponctuel </label>
+                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                                <label
+                                    class="font-semibold sm:font-normal mt-10 sm:mt-0 mb-3 sm:mb-0"
+                                >
+                                    Remplacement ponctuel
+                                </label>
                             </div>
                             <TagsInput
-                                v-model="cities"
-                                class="h-9 bg-transparent border border-none"
+                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
                                 disabled
                             >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                                     <TagsInputItem
-                                        v-for="item in cities"
+                                        v-for="item in replaces"
                                         :key="item"
                                         :value="item"
                                         class="-mt-1"
@@ -158,22 +178,27 @@
                                     </TagsInputItem>
                                 </div>
 
-                                <TagsInputInput />
+                                <TagsInputInput
+                                    class="-mt-1 sm:w-24 2xl:w-auto"
+                                />
                             </TagsInput>
                         </div>
 
-                        <div class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full">
-                            <div class="bg-primary w-64 flex items-center text-white ps-4 rounded-s-full">
-                                <label for="city"> Remplacement long terme </label>
+                        <div class="grid grid-cols-1 mb-32 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                                <label
+                                    class="font-semibold sm:font-normal mt-24 sm:mt-0 mb-3 sm:mb-0"
+                                >
+                                    Remplacement long terme
+                                </label>
                             </div>
                             <TagsInput
-                                v-model="cities"
-                                class="h-9 bg-transparent border border-none"
+                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
                                 disabled
                             >
                                 <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                                     <TagsInputItem
-                                        v-for="item in cities"
+                                        v-for="item in replacems"
                                         :key="item"
                                         :value="item"
                                         class="-mt-1"
@@ -183,7 +208,9 @@
                                     </TagsInputItem>
                                 </div>
 
-                                <TagsInputInput />
+                                <TagsInputInput
+                                    class="-mt-1 sm:w-24 2xl:w-auto"
+                                />
                             </TagsInput>
                         </div>
                     </form>
@@ -299,9 +326,12 @@ import { useReports } from '~/composables/useReports';
 
 const user = useState('user');
 
-const { getReports } = useReports();
+const { getReports, createPreferences } = useReports();
 
 const reports = await getReports();
+
+const replaces = [];
+const replacems = [];
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -315,10 +345,68 @@ const formattedData = computed(() => {
     }));
 });
 
-const zipCodes = computed(
-    () => user.value.settings?.replacement?.zip_codes || [],
-);
-const cities = computed(() => user.value.settings?.replacement?.cities || []);
+const zipCodes = ref<string[]>([]);
+const cities = ref<string[]>([]);
+
+const addCityPreference = async (newCity: string) => {
+    if (!newCity || cities.value.includes(newCity)) return;
+
+    newCity = cities.value[cities.value.length - 1].trim();
+
+    const formData = reactive({
+        key: 'replacement',
+        value: {
+            zip_codes: zipCodes.value,
+            cities: cities.value,
+        },
+    });
+
+    await createPreferences(formData);
+};
+
+const addZipCodePreference = async (newZipCode: string) => {
+    if (!newZipCode || zipCodes.value.includes(newZipCode)) return;
+
+    newZipCode = zipCodes.value[zipCodes.value.length - 1].trim();
+
+    const formData = reactive({
+        key: 'replacement',
+        value: {
+            zip_codes: zipCodes.value,
+            cities: cities.value,
+        },
+    });
+
+    await createPreferences(formData);
+};
+
+const removeZipCode = async (zipCode: string) => {
+    zipCodes.value = zipCodes.value.filter(code => code !== zipCode);
+
+    const formData = reactive({
+        key: 'replacement',
+        value: {
+            zip_codes: zipCodes.value,
+            cities: cities.value,
+        },
+    });
+
+    await createPreferences(formData);
+};
+
+const removeCity = async (city: string) => {
+    cities.value = cities.value.filter(c => c !== city);
+
+    const formData = reactive({
+        key: 'replacement',
+        value: {
+            zip_codes: zipCodes.value,
+            cities: cities.value,
+        },
+    });
+
+    await createPreferences(formData);
+};
 
 const previousMonth = ref('');
 
@@ -344,6 +432,11 @@ onMounted(async () => {
 
     const previousMonthIndex = (currentMonth - 1 + 12) % 12;
     previousMonth.value = months[previousMonthIndex];
+
+    const settings = JSON.parse(user.value.settings);
+
+    zipCodes.value = settings.replacement?.zip_codes;
+    cities.value = settings.replacement?.cities;
 });
 
 useHead({
@@ -355,3 +448,24 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 </script>
+
+<style scoped>
+.no-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 1px;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.no-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.no-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+</style>

@@ -1,7 +1,7 @@
 import { useState, useNuxtApp } from '#app';
 
 export const useReports = () => {
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
 
     const reports = useState('reports', () => null);
     const error = useState('reportsError', () => null);
@@ -23,8 +23,22 @@ export const useReports = () => {
         }
     };
 
+    const createPreferences = async (formData) => {
+        await $apifetch('/api/users/settings', { method: 'POST', body: formData }).then(() => {
+            $toast({
+                description: 'Succès',
+            });
+        }).catch(() => {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur est survenue lors de l\'enregistrement',
+            });
+        });
+    };
+
     return {
         reports,
         getReports,
+        createPreferences,
     };
 };
