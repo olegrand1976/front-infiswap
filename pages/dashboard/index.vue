@@ -89,7 +89,7 @@
 
                     <form class="mt-6 space-y-4">
                         <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-64 flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mb-3 sm:mb-0"
                                     for="zipCode"
@@ -122,7 +122,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-64 flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mb-3 sm:mb-0"
                                     for="zipCode"
@@ -155,7 +155,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-64 flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mt-10 sm:mt-0 mb-3 sm:mb-0"
                                 >
@@ -185,7 +185,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 mb-32 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-64 flex items-center text-primary sm:text-white ps-4 rounded-s-full">
+                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mt-24 sm:mt-0 mb-3 sm:mb-0"
                                 >
