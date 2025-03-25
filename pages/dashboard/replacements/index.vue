@@ -109,26 +109,28 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-center items-center"
+                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.zip_code)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
                                     </span>
                                 </div>
                             </TableCell>
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.city)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
                                     </span>
                                 </div>
                             </TableCell>
@@ -137,9 +139,7 @@
                                 <div
                                     class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
-                                    {{ replacement.details
-                                        ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                        .join(', ') }}
+                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
                                 </div>
                             </TableCell>
 
@@ -180,10 +180,10 @@
                                 <span>Après-midi</span>
                                 <span>Soir</span>
                             </h4>
-                            <p class="py-2 rounded">
+                            <p class="flex justify-around">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 text-success text-start ml-4"
+                                    class="h-6 text-success text-start"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'afternoon')"
@@ -191,7 +191,7 @@
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 text-success text-end mr-4"
+                                    class="h-6 text-success text-end"
                                 />
                             </p>
                         </div>
@@ -303,7 +303,7 @@ const getUniqueCareTypes = (details) => {
     return [...new Set(careTypes)];
 };
 
-const getShift = (startAt) => {
+const getShift = async (startAt) => {
     if (!startAt) return null;
 
     const [hours] = startAt.split(':').map(Number);
@@ -317,8 +317,10 @@ const getShift = (startAt) => {
     return 'evening';
 };
 
-const hasShift = (details, period) => {
-    return details.some(detail => getShift(detail.start_at) === period);
+const hasShift = async (details, period) => {
+    const shiftPromises = details.map(detail => getShift(detail.start_at));
+    const shifts = await Promise.all(shiftPromises);
+    return shifts.includes(period);
 };
 
 definePageMeta({
