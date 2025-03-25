@@ -164,31 +164,24 @@
                                         >
                                             Liste des types de soins
                                         </div>
-                                        <div
-                                            v-if="careTypeLoading"
-                                            class="flex justify-center w-full"
-                                        >
-                                            Loading care type list ...
-                                        </div>
-                                        <div v-if="careTypeError">
-                                            Error: {{ careTypeError.message }}
-                                        </div>
                                         <div class="p-4 space-y-2">
                                             <div
-                                                v-if="careType && careType.patient_care_types && careType.patient_care_types.length > 0"
+                                                v-if="hasCareTypes"
                                             >
                                                 <div
-                                                    v-for="(care, index) in careType.patient_care_types"
+                                                    v-for="(care, index) in uniqueCareTypes"
                                                     :key="index"
                                                     class="bg-gray-200 p-3 rounded-lg mt-2"
                                                 >
-                                                    {{ care.care_type_name }}
+                                                    {{ care }}
                                                 </div>
                                             </div>
                                             <div
-                                                v-else-if="careType && (!careType.patient_care_types || careType.patient_care_types.length === 0)"
+                                                v-else-if="!patient?.patient[0]?.patient_care_type || patient.patient[0].patient_care_type.length === 0"
                                             >
-                                                Pas de données pour l'instant
+                                                <p class="text-center text-gray-500">
+                                                    Pas de données pour l'instant
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -282,20 +275,20 @@ import {
     UserCircleIcon,
 } from '@heroicons/vue/24/solid';
 
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { CalendarTours } from '@/components/ui/calendar';
-import { useTours, useCareType, usePatient, deleteTour } from '~/composables/useTours';
+import { useTours, usePatient, deleteTour } from '~/composables/useTours';
 
 const { tours, error, loading, fetchTours } = useTours();
-const { careType, careTypeLoading, careTypeError, fetchCareType } = useCareType();
 const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
-const careTypeFilter = ref();
 const selectedPatientId = ref(null);
 
 const isDialogOpen = ref(false);
 const patientToDelete = ref(null);
+const formattedStart = ref('');
+const formattedInitialStart = ref('');
 
 const openDialog = (patientId, visitId) => {
     patientToDelete.value = { patientId, visitId };
@@ -351,10 +344,6 @@ const selectedDate = computed(() => {
     return `${day}-${month}-${year}`;
 });
 
-const formatDate = (calendarDate) => {
-    return `${calendarDate.year}-${String(calendarDate.month).padStart(2, '0')}-${String(calendarDate.day).padStart(2, '0')}`;
-};
-
 const translatedVisitPeriod = (visitPeriod: string) => {
     switch (visitPeriod.toLowerCase()) {
         case 'morning':
@@ -368,22 +357,25 @@ const translatedVisitPeriod = (visitPeriod: string) => {
     }
 };
 
-const formattedStart = ref('');
+// Eliminer les doublons de care type
+const uniqueCareTypes = computed(() => {
+    if (!patient.value?.patient?.[0]?.patient_care_type) return [];
 
-watch(value, (newValue) => {
-    const startDate = newValue;
-    formattedStart.value = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
-    fetchTours(formattedStart.value, formattedStart.value);
-}, { deep: true });
-
-const formattedInitialStart = ref('');
-
-onMounted(() => {
-    const now = new Date();
-    const initialStartDate = value.value || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
-    formattedInitialStart.value = formatDate(initialStartDate);
-    fetchTours(formattedInitialStart.value, formattedInitialStart.value);
+    // Créer un Set pour éliminer les doublons, puis le convertir en tableau
+    return [...new Set(
+        patient.value.patient[0].patient_care_type
+            .map(care => care.care_type_name)
+            .filter(name => name),
+    )];
 });
+
+const hasCareTypes = computed(() => {
+    return uniqueCareTypes.value.length > 0;
+});
+
+const formatDate = (calendarDate) => {
+    return `${calendarDate.year}-${String(calendarDate.month).padStart(2, '0')}-${String(calendarDate.day).padStart(2, '0')}`;
+};
 
 const handleFetchCareType = (patientId) => {
     if (selectedPatientId.value === patientId) {
@@ -392,9 +384,6 @@ const handleFetchCareType = (patientId) => {
     else {
         selectedPatientId.value = patientId;
 
-        fetchCareType(patientId);
-        careTypeFilter.value = getUniqueCareTypes(careType.value);
-        console.log('careType.value.patient_care_types :', careType.value.patient_care_types);
         if (formattedStart.value) {
             fetchPatient(patientId, formattedStart.value, formattedStart.value);
         }
@@ -404,35 +393,33 @@ const handleFetchCareType = (patientId) => {
     }
 };
 
-const getUniqueCareTypes = (data: any) => {
-    console.log('data :', data);
-    if (!data?.patient_care_types || !Array.isArray(data.patient_care_types)) {
-        return [];
-    }
+watch(value, (newValue) => {
+    const startDate = newValue;
+    formattedStart.value = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
 
-    const uniqueMap = new Map();
-
-    data.patient_care_types.forEach((item) => {
-        uniqueMap.set(item.care_type_id, item); // Utilise l'ID comme clé pour éviter les doublons
-    });
-
-    return Array.from(uniqueMap.values());
-};
+    selectedPatientId.value = null;
+    fetchTours(formattedStart.value, formattedStart.value);
+}, { deep: true });
 
 watch(tours, (newTours) => {
-    if (newTours.length > 0) {
-        if (!selectedPatientId.value) {
-            selectedPatientId.value = newTours[0].id;
-            fetchCareType(selectedPatientId.value);
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
-            fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
-            if (formattedStart.value) {
-                fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
-            }
+    if (newTours.length > 0 && !selectedPatientId.value) {
+        selectedPatientId.value = newTours[0].id;
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
+        if (formattedStart.value) {
+            fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
         }
     }
 }, { immediate: true, deep: true });
+
+onMounted(() => {
+    const now = new Date();
+    const initialStartDate = value.value || new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    formattedInitialStart.value = formatDate(initialStartDate);
+
+    fetchTours(formattedInitialStart.value, formattedInitialStart.value);
+});
 
 useHead({
     title: 'Tournées',
