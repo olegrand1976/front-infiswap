@@ -38,32 +38,6 @@ export const useTours = () => {
     return { tours, error, loading, fetchTours };
 };
 
-export const useCareType = () => {
-    const { $apifetch } = useNuxtApp();
-
-    // Utilisation de useState au lieu de ref
-    const careType = useState('careType', () => null);
-    const careTypeLoading = useState('careTypeLoading', () => false);
-    const careTypeError = useState('careTypeError', () => null);
-
-    const fetchCareType = async (patientId) => {
-        careTypeLoading.value = true;
-        careTypeError.value = null;
-        try {
-            const response = await $apifetch(`/api/patients/${patientId}/care-type`, { method: 'GET' });
-            careType.value = response;
-        }
-        catch (err) {
-            careTypeError.value = err;
-        }
-        finally {
-            careTypeLoading.value = false;
-        }
-    };
-
-    return { careType, careTypeLoading, careTypeError, fetchCareType };
-};
-
 export const usePatient = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -84,6 +58,7 @@ export const usePatient = () => {
             }).toString();
 
             const response = await $apifetch(`/api/tours/${patientId}?${params}`, { method: 'GET' });
+            console.log('data is ', response);
             patient.value = response;
         }
         catch (err) {
