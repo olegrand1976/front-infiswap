@@ -174,24 +174,24 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 items-center gap-2">
+                        <div class="grid grid-cols-1 items-start gap-2">
                             <h4 class="flex justify-around bg-primary text-white py-2 text-center rounded">
                                 <span>Matin</span>
                                 <span>Après-midi</span>
                                 <span>Soir</span>
                             </h4>
-                            <p class="grid grid-cols-3">
+                            <p class="grid grid-cols-3 justify-center">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 text-success text-start ml-4"
+                                    class="h-6 text-success mx-auto"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'afternoon')"
-                                    class="h-6 text-success text-center"
+                                    class="h-6 text-success mx-auto"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 text-success text-end mr-4"
+                                    class="h-6 text-success mx-auto"
                                 />
                             </p>
                         </div>
@@ -245,10 +245,10 @@
                     </div>
 
                     <Button
-                        class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
+                        class="col-span-2 flex justify-center items-center mx-auto mt-4 py-2 px-6"
                         :href="`/dashboard/replacements/detail/${replacement.id}`"
                     >
-                        <EyeIcon class="h-6 mt-1" />
+                        Voir plus
                     </Button>
                 </div>
             </div>
