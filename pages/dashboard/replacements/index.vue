@@ -204,10 +204,13 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.zip_code)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -218,10 +221,13 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.city)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -233,9 +239,7 @@
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
                             <p class="truncate w-full px-6">
-                                {{ replacement.details
-                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                    .join(', ') }}
+                                {{ getUniqueCareTypes(replacement.details).join(', ') }}
                             </p>
                         </div>
                     </div>
@@ -275,6 +279,28 @@ const formatDate = (isoString) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+};
+
+const getUniqueZipCodes = (details) => {
+    const zipCodes = details
+        .map(detail => detail?.patient?.zip_code?.toString()?.trim())
+        .filter(zipCode => zipCode);
+
+    return [...new Set(zipCodes)];
+};
+
+const getUniqueCities = (details) => {
+    const cities = details
+        .map(detail => detail?.patient?.city?.toLowerCase()?.trim())
+        .filter(city => city);
+    return [...new Set(cities)];
+};
+
+const getUniqueCareTypes = (details) => {
+    const careTypes = details
+        .flatMap(detail => detail.care_types?.map(careType => careType.name) || [])
+        .filter(careType => careType);
+    return [...new Set(careTypes)];
 };
 
 const getShift = (startAt) => {
