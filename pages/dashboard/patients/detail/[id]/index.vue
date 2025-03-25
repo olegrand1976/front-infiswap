@@ -1073,24 +1073,15 @@ const {
             visits: transformVisitsForApi(formData.value.visits),
         };
 
-        try {
-            await updatePatient(patient.value.id, dataToSubmit);
-
+        await updatePatient(patient.value.id, dataToSubmit).then(() => {
             $toast({
                 description: 'Mise à jour du patient avec succès',
             });
-
+    
             setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
-        }
-        catch (e) {
-            console.error(e);
-            $toast({
-                description: 'Une erreur est survenue lors de la mise à jour',
-                variant: 'destructive',
-            });
-        }
+        });
     },
 );
 
