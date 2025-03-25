@@ -109,26 +109,28 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-center items-center"
+                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.zip_code)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
                                     </span>
                                 </div>
                             </TableCell>
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span class="truncate w-full px-2">
-                                        {{ replacement.details
-                                            ?.map((detail) => detail?.patient?.city)
-                                            .filter(Boolean)
-                                            .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
                                     </span>
                                 </div>
                             </TableCell>
@@ -137,9 +139,7 @@
                                 <div
                                     class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
-                                    {{ replacement.details
-                                        ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                        .join(', ') }}
+                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
                                 </div>
                             </TableCell>
 
@@ -180,7 +180,7 @@
                                 <span>Après-midi</span>
                                 <span>Soir</span>
                             </h4>
-                            <p class="py-2 rounded">
+                            <p class="grid grid-cols-3">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
                                     class="h-6 text-success text-start ml-4"
@@ -204,10 +204,13 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.zip_code)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -218,10 +221,13 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    {{ replacement.details
-                                        ?.map((detail) => detail?.patient?.city)
-                                        .filter(Boolean)
-                                        .join(', ') || '' }}
+                                    <span
+                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                        :key="index"
+                                        class="mr-1"
+                                    >
+                                        {{ detail }},
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -233,9 +239,7 @@
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
                             <p class="truncate w-full px-6">
-                                {{ replacement.details
-                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                    .join(', ') }}
+                                {{ getUniqueCareTypes(replacement.details).join(', ') }}
                             </p>
                         </div>
                     </div>
@@ -275,6 +279,28 @@ const formatDate = (isoString) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+};
+
+const getUniqueZipCodes = (details) => {
+    const zipCodes = details
+        .map(detail => detail?.patient?.zip_code?.toString()?.trim())
+        .filter(zipCode => zipCode);
+
+    return [...new Set(zipCodes)];
+};
+
+const getUniqueCities = (details) => {
+    const cities = details
+        .map(detail => detail?.patient?.city?.toLowerCase()?.trim())
+        .filter(city => city);
+    return [...new Set(cities)];
+};
+
+const getUniqueCareTypes = (details) => {
+    const careTypes = details
+        .flatMap(detail => detail.care_types?.map(careType => careType.name) || [])
+        .filter(careType => careType);
+    return [...new Set(careTypes)];
 };
 
 const getShift = (startAt) => {
