@@ -180,10 +180,10 @@
                                 <span>Après-midi</span>
                                 <span>Soir</span>
                             </h4>
-                            <p class="flex justify-around">
+                            <p class="grid grid-cols-3">
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'morning')"
-                                    class="h-6 text-success text-start"
+                                    class="h-6 text-success text-start ml-4"
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'afternoon')"
@@ -191,7 +191,7 @@
                                 />
                                 <CheckCircleIcon
                                     v-if="hasShift(replacement.details, 'evening')"
-                                    class="h-6 text-success text-end"
+                                    class="h-6 text-success text-end mr-4"
                                 />
                             </p>
                         </div>
@@ -303,7 +303,7 @@ const getUniqueCareTypes = (details) => {
     return [...new Set(careTypes)];
 };
 
-const getShift = async (startAt) => {
+const getShift = (startAt) => {
     if (!startAt) return null;
 
     const [hours] = startAt.split(':').map(Number);
@@ -317,10 +317,8 @@ const getShift = async (startAt) => {
     return 'evening';
 };
 
-const hasShift = async (details, period) => {
-    const shiftPromises = details.map(detail => getShift(detail.start_at));
-    const shifts = await Promise.all(shiftPromises);
-    return shifts.includes(period);
+const hasShift = (details, period) => {
+    return details.some(detail => getShift(detail.start_at) === period);
 };
 
 definePageMeta({
