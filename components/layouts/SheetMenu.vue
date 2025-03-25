@@ -13,18 +13,13 @@
             <div>
                 <div class="-mt-8 xl:hidden ml-4 mb-8">
                     <NuxtLink
-                        to="/dashboard/home"
-                        class="text-primary font-bold flex space-x-3"
+                        to="/login"
+                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
                     >
-                        <ArrowRightIcon class="w-4" />
-                        <NuxtLink
-                            to="/login"
-                            class="text-sm"
-                        >
-                            Connexion
-                        </NuxtLink>
+                        Connexion
                     </NuxtLink>
                 </div>
+
                 <nav class="flex ps-5">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
                         <li
@@ -106,18 +101,12 @@
                     </ul>
                 </div>
 
-                <div class="mt-16 md:mt-324 xl:hidden">
+                <div class="mt-12 md:mt-324 xl:hidden">
                     <NuxtLink
-                        to="/dashboard/home"
-                        class="text-primary font-bold flex space-x-3"
+                        to="/register"
+                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
                     >
-                        <ArrowRightIcon class="w-4" />
-                        <NuxtLink
-                            to="/register"
-                            class="text-sm"
-                        >
-                            S'inscrire
-                        </NuxtLink>
+                        S'inscrire
                     </NuxtLink>
                 </div>
             </div>
