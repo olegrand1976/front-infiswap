@@ -106,9 +106,10 @@
                             <FormControl>
                                 <div
                                     class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
-                                    title="Saisissez la vile puis appuyer sur Entrée pour l'ajouter"
+                                    title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
                                 >
                                     <h5 class="text-white text-xs">
+                                        <span class="xl:hidden">Ville</span>
                                         <span class="hidden xl:inline-block">Ville</span>
                                     </h5>
                                     <TagsInput
@@ -145,7 +146,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="flex gap-3">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 flex gap-3">
                     <Button
                         class="bg-primary"
                         @click="reinitializeFilter"
@@ -164,7 +165,7 @@
         </div>
 
         <div class="grid my-8">
-            <Table>
+            <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
@@ -316,6 +317,118 @@
                     </div>
                 </TableBody>
             </Table>
+
+            <div class="lg:hidden">
+                <div
+                    v-for="replacement in currentReplacements"
+                    :key="replacement.id"
+                    class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
+                >
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Jour
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>
+                                <span>   au   </span>
+                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.end_date) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="grid grid-cols-3 bg-primary text-white py-2 rounded-md">
+                                <span class="text-center text-sm">Matin</span>
+                                <span class="text-center text-sm">Après-midi</span>
+                                <span class="text-center text-sm">Soir</span>
+                            </div>
+                            <div class="grid grid-cols-3 py-2">
+                                <div class="flex justify-center">
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'morning')"
+                                        class="h-5 w-5 text-success"
+                                    />
+                                    <span v-else class="h-5 w-5"></span>
+                                </div>
+                                <div class="flex justify-center">
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'afternoon')"
+                                        class="h-5 w-5 text-success"
+                                    />
+                                    <span v-else class="h-5 w-5"></span>
+                                </div>
+                                <div class="flex justify-center">
+                                    <CheckCircleIcon
+                                        v-if="hasShift(replacement.details, 'evening')"
+                                        class="h-5 w-5 text-success"
+                                    />
+                                    <span v-else class="h-5 w-5"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Codes postaux
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    <span
+                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                        :key="index"
+                                        :class="cn('mr-1', {
+                                            'text-success font-bold': isZipCodeHighlighted(detail),
+                                        })"
+                                    >
+                                        {{ detail }},
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 items-center gap-2">
+                            <h4 class="bg-primary text-white py-2 text-center rounded">
+                                Villes
+                            </h4>
+                            <div class="py-3 bg-gray-200 text-center rounded">
+                                <p class="py-2 px-6 text-center truncate">
+                                    <span
+                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                        :key="index"
+                                        :class="cn('mr-1', {
+                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                        })"
+                                    >
+                                        {{ detail }},
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <h4 class="bg-primary text-white py-2 text-center rounded">
+                            Type(s) de soin(s)
+                        </h4>
+                        <div class="mt-3 py-3 bg-gray-200 text-center rounded">
+                            <p class="truncate w-full px-6">
+                                {{ replacement.details
+                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
+                                    .join(', ') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <Button
+                        class="col-span-2 flex justify-center text-black hover:text-white items-center text-base mx-auto mt-10 mb-4 rounded-none bg-gray-200 hover:bg-primary py-2 px-6"
+                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                    >
+                        <EyeIcon class="h-6 mt-1" />
+                    </Button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
