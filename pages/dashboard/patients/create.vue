@@ -3,15 +3,13 @@
         <Form @submit="submit">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
                 <div class="space-y-8 md:space-y-6">
-                    <div class="flex gap-4">
-                        <div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="w-full">
                             <h3 class="p-2 bg-primary text-white rounded-t">
                                 Date de début d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
-                                <div
-                                    class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52"
-                                >
+                                <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
                                     <CalendarDaysIcon class="w-5" />
                                     <Input
                                         v-model="formData.careStartDate"
@@ -21,14 +19,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="w-full">
                             <h3 class="p-2 bg-primary text-white rounded-t">
                                 Date de fin d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
-                                <div
-                                    class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52"
-                                >
+                                <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
                                     <CalendarDaysIcon class="w-5" />
                                     <Input
                                         v-model="formData.careEndDate"

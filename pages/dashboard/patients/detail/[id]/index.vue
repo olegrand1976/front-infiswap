@@ -117,11 +117,27 @@
                                         class="bg-transparent placeholder:text-black"
                                     />
                                 </div>
+                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Genre
+                                    </p>
+                                    <select
+                                        v-model="formData.gender"
+                                        class="bg-transparent px-2 h-full rounded-e-full focus:outline-none"
+                                    >
+                                        <option value="M" :selected="formData.gender === 'M'">
+                                            Homme
+                                        </option>
+                                        <option value="F" :selected="formData.gender === 'F'">
+                                            Femme
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <Button
                                 class="text-end mt-6 mx-36"
-                                @click="closeDialog"
+                                @click="updatePatientInfo"
                             >
                                 Enregistrer
                             </Button>
@@ -176,6 +192,15 @@
                                 Ville
                             </div>
                             <div>{{ patient.profile.city }}</div>
+                        </div>
+                        <div
+                            v-if="patient.profile?.city"
+                            class="grid grid-cols-[40%_60%] gap-4"
+                        >
+                            <div class="font-semibold">
+                                Genre
+                            </div>
+                            <div>{{ patient.gender }}</div>
                         </div>
                     </div>
                 </div>
@@ -255,10 +280,15 @@
                                 :key="index"
                                 class="p-4 bg-gray-50 rounded-lg relative"
                             >
-                                <XMarkIcon
-                                    class="w-5 h-5 absolute top-2 right-2 text-primary cursor-pointer"
-                                    @click="removeCareInfo(index)"
-                                />
+                                <span
+                                    title="Supprimer"
+                                    style="background-color: black; color: white; font-style: italic; padding: 2px 5px; border-radius: 4px;"
+                                >
+                                    <XMarkIcon
+                                        class="w-5 h-5 absolute top-2 right-2 text-primary cursor-pointer"
+                                        @click="removeCareInfo(index)"
+                                    />
+                                </span>
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
@@ -642,6 +672,7 @@ import { InputTime } from '@/components/ui/input-time';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { Patient } from '~/lib/types';
 
+const { $apifetch } = useNuxtApp();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
 
@@ -754,6 +785,7 @@ const formData = ref({
     phoneNumber: '',
     zipCode: '',
     city: '',
+    gender: '',
     careStartDate: '',
     careEndDate: '',
     availability: [],
@@ -780,6 +812,7 @@ const initializeFormData = () => {
             lastname: patient.value.lastname || '',
             firstname: patient.value.firstname || '',
             email: patient.value.email || '',
+            gender: patient.value.gender || '',
             socialSecurityNumber: patient.value.social_security_number || '',
             phoneNumber: patient.value.phone_number || '',
             zipCode: patient.value.profile?.zip_code || '',
@@ -819,8 +852,35 @@ const openDialog = () => {
     isOpenDialog.value = true;
 };
 
-const closeDialog = () => {
-    isOpenDialog.value = false;
+const updatePatientInfo = async () => {
+    try {
+        await $apifetch(`/api/patients/information/${formData.value.patientId}`, {
+            method: 'PUT',
+            body: {
+                lastname: formData.value.lastname,
+                firstname: formData.value.firstname,
+                email: formData.value.email,
+                gender: formData.value.gender,
+                socialSecurityNumber: formData.value.socialSecurityNumber,
+                phoneNumber: formData.value.phoneNumber,
+                zipCode: formData.value.zipCode,
+                city: formData.value.city,
+            },
+        });
+
+        isOpenDialog.value = false;
+        $toast({
+            description: 'Informations du patient mises à jour avec succès',
+        });
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+    catch (error) {
+        $toast({
+            description: `Erreur : ${error.message || 'Une erreur s\'est produite'}`,
+        });
+    }
 };
 
 const formatTime = (time) => {
@@ -929,11 +989,31 @@ const cancelCareInfoEdit = () => {
     editableCareInformations.value = [];
 };
 
-const saveCareInformations = () => {
-    isCareInfoDialogOpen.value = false;
-    $toast({
-        description: 'Informations de soins mises à jour avec succès',
-    });
+const saveCareInformations = async () => {
+    try {
+        await $apifetch(`/api/patients/care-informations/update`, {
+            method: 'PUT',
+            body: {
+                care_informations: formData.value.care_informations.map(info => ({
+                    recordType: info.recordType,
+                    recordName: info.recordName,
+                    recordSeverity: info.recordSeverity,
+                    recordDetails: info.recordDetails,
+                })),
+                patientId: formData.value.patientId,
+            },
+        });
+
+        isCareInfoDialogOpen.value = false;
+        $toast({
+            description: 'Informations de soins mises à jour avec succès',
+        });
+    }
+    catch (error) {
+        $toast({
+            description: `Erreur : ${error.message || 'Une erreur s\'est produite'}`,
+        });
+    }
 };
 
 const documentNote = ref('');
