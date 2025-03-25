@@ -23,8 +23,13 @@ export const useReports = () => {
         }
     };
 
+    const createPreferences = async (formData) => {
+        await $apifetch('/api/users/settings', { method: 'POST', body: formData });
+    };
+
     return {
         reports,
         getReports,
+        createPreferences,
     };
 };
