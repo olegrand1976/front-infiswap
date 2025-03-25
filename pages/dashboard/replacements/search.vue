@@ -168,7 +168,7 @@
             <Table class="hidden lg:block">
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
                         <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
@@ -261,9 +261,9 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-center items-center"
+                                    class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <p class="truncate w-full rounded">
+                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
                                             v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
                                             :key="index"
@@ -279,9 +279,9 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                    class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
                                 >
-                                    <p class="truncate w-full px-2">
+                                    <p class="truncate w-full px-2 pt-3 h-10 rounded">
                                         <span
                                             v-for="(detail, index) in getUniqueCities(replacement.details)"
                                             :key="index"
