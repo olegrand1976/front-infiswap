@@ -92,19 +92,20 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="container mt-12 ml-5 md:ml-12 font-medium text-gray-500 dark:text-gray-300 mb-14">
-                    <ul class="font-bold pl-5 md:pl-20 text-sm md:text-base">
-                        <li>Profitez de toute la plateforme infiswap:</li>
-                    </ul>
-                    <ul class="list-[circle] pl-8 md:pl-32 mt-2 md:mt-1 space-y-2 text-sm md:text-base">
-                        <li>Créer vos remplacements</li>
-                        <li>Recherchez des remplacements</li>
-                        <li>Consultez vos remplacements</li>
-                        <li>Recevez les notifications de remplacements disponibles par rapport à vos préférences</li>
-                        <li>Recevez les informations des tournées sélectionnées</li>
-                    </ul>
+                    <div class="container mt-12 ml-5 lg:ml-12 font-medium text-gray-500 dark:text-gray-300 mb-14">
+                        <ul class="font-bold pl-5 md:pl-20 text-sm md:text-base">
+                            <li>Profitez de toute la plateforme infiswap:</li>
+                        </ul>
+                        <br>
+                        <ul class="list-[circle] pl-8 md:pl-32 mt-2 md:mt-1 space-y-2 text-sm md:text-base">
+                            <li>Créer vos remplacements</li>
+                            <li>Recherchez des remplacements</li>
+                            <li>Consultez vos remplacements</li>
+                            <li>Recevez les notifications de remplacements disponibles par rapport à vos préférences</li>
+                            <li>Recevez les informations des tournées sélectionnées</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
