@@ -36,9 +36,24 @@
             <template v-if="listResponse.length != 0">
                 <Table>
                     <TableHeader>
-                        <TableRow class="grid grid-cols-4 overflow-x-hidden gap-4 md:gap-8 border border-none">
-                            <TableHead class="bg-primary col-span-2 flex w-full items-center rounded-lg text-white">
+                        <TableRow class="grid grid-cols-8 overflow-x-hidden gap-2 md:gap-2 border border-none">
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
                                 Nom
+                            </TableHead>
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
+                                Prénom
+                            </TableHead>
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
+                                NISS
+                            </TableHead>
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
+                                Tél
+                            </TableHead>
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
+                                Code postal
+                            </TableHead>
+                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
+                                Ville
                             </TableHead>
                             <TableHead class="bg-primary col-span-2 justify-center flex w-full items-center rounded-lg text-white">
                                 Actions
@@ -52,12 +67,44 @@
                             :key="index"
                         >
                             <TableRow
-                                class="grid grid-cols-4 overflow-x-hidden justify-between gap-4 md:gap-8 border-2 border-gray-500"
+                                class="grid grid-cols-8 overflow-x-hidden justify-between gap-2 md:gap-2 border-2 border-gray-500"
                             >
-                                <TableCell class="flex h-12 col-span-2 my-1 items-center bg-gray-10">
-                                    <span class="">{{ list.repondedBy.firstname }} {{ list.repondedBy.lastname }}</span>
+                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
+                                    <span class="">{{ list.repondedBy.lastname }}</span>
                                 </TableCell>
-
+                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
+                                    <span class="">{{ list.repondedBy.firstname }}</span>
+                                </TableCell>
+                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
+                                    <span class="">{{ list.repondedBy.identifier_number }}</span>
+                                </TableCell>
+                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
+                                    <span class="">{{ list.repondedBy.phone_number }}</span>
+                                </TableCell>
+                                <TableCell class="h-12 col-span-1 my-1 bg-gray-10">
+                                    <div class="flex items-center justify-center h-full">
+                                        <span class="text-center">
+                                            {{
+                                                list.repondedBy.settings && 
+                                                    JSON.parse(list.repondedBy.settings).replacement?.zip_codes?.length
+                                                    ? JSON.parse(list.repondedBy.settings).replacement.zip_codes.join(', ')
+                                                    : ' -- '
+                                            }}
+                                        </span>
+                                    </div>
+                                </TableCell>
+                                <TableCell class="h-12 col-span-1 my-1 bg-gray-10">
+                                    <div class="flex items-center justify-center h-full">
+                                        <span class="text-center">
+                                            {{
+                                                list.repondedBy.settings && 
+                                                    JSON.parse(list.repondedBy.settings).replacement?.cities?.length
+                                                    ? JSON.parse(list.repondedBy.settings).replacement.cities.join(', ')
+                                                    : ' -- '
+                                            }}
+                                        </span>
+                                    </div>
+                                </TableCell>
                                 <TableCell class="flex h-12 col-span-1 justify-center my-1 items-center">
                                     <div
                                         v-if="list.status==='confirmed'"
@@ -130,6 +177,22 @@ const startDate = computed(() =>
 const endDate = computed(() =>
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
 );
+
+const displayCities = (settings) => {
+  if (!settings) return 'Aucune ville';
+  const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
+  return data?.replacement?.cities?.join(', ') || 'Aucune ville';
+};
+
+// Méthode pour extraire les codes postaux
+const getZipCodes = (settings) => {
+    try {
+        const parsed = JSON.parse(settings);
+        return parsed?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
+    } catch {
+        return 'Format invalide';
+    }
+};
 
 const handlesubmit = async (id) => {
     try {
