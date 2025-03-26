@@ -103,16 +103,7 @@
                 </div>
             </div>
             <div>
-                <div class="min-h-16">
-                    <div v-if="patientLoading">
-                        Chargement des données du patient en cours... Veuillez patienter ou sélectionner à nouveau le
-                        patient si nécessaire.
-                    </div>
-                    <div v-else-if="patientError">
-                        Erreur : {{ patientError.message }}
-                    </div>
-                </div>
-                <div v-if="patient && patient.patient">
+                <div v-if="selectedPatient">
                     <div class="mt-6">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                             <div class="w-full">
@@ -126,8 +117,8 @@
                                     </div>
                                     <div class="ml-4 flex flex-grow justify-between items-center">
                                         <div class="text-lg">
-                                            {{ patient.patient[0].firstname }} <span class="font-semibold">{{
-                                                patient.patient[0].lastname }}</span>
+                                            {{ selectedPatient.firstname }}  <span class="font-semibold">
+                                                {{ selectedPatient.lastname }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -140,13 +131,13 @@
                                     <div class="mt-4 p-4 rounded-lg shadow">
                                         <div class="flex justify-between items-center border-b pb-2">
                                             <span class="font-bold">Genre</span>
-                                            <span class="w-2/3 text-center">{{ patient.patient[0].gender ?? 'Pas de données' }}</span>
+                                            <span class="w-2/3 text-center">{{ selectedPatient.gender ?? 'Pas de données' }}</span>
                                         </div>
                                         <template
-                                            v-if="patient?.patient[0]?.care_informations && patient.patient[0].care_informations.length > 0"
+                                            v-if="selectedPatient?.care_informations && selectedPatient.care_informations.length > 0"
                                         >
                                             <div
-                                                v-for="(careInfo, index) in patient.patient[0].care_informations"
+                                                v-for="(careInfo, index) in selectedPatient.care_informations"
                                                 :key="index"
                                                 class="flex justify-between items-center border-b py-2"
                                             >
@@ -177,7 +168,7 @@
                                                 </div>
                                             </div>
                                             <div
-                                                v-else-if="!patient?.patient[0]?.patient_care_type || patient.patient[0].patient_care_type.length === 0"
+                                                v-else
                                             >
                                                 <p class="text-center text-gray-500">
                                                     Pas de données pour l'instant
@@ -198,7 +189,7 @@
                                     <div
                                         class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary"
                                     >
-                                        {{ patient.patient[0].profile.city ?? 'Pas de données pour l\'instant' }}
+                                        {{ selectedPatient.profile?.city ?? 'Pas de données pour l\'instant' }}
                                     </div>
                                 </div>
 
@@ -211,7 +202,7 @@
                                     <div
                                         class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary"
                                     >
-                                        {{ patient.patient[0].profile.zip_code ?? 'Pas de données pour l\'instant' }}
+                                        {{ selectedPatient.profile?.zip_code ?? 'Pas de données pour l\'instant' }}
                                     </div>
                                 </div>
 
@@ -222,10 +213,10 @@
                                         <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
                                     <div
-                                        v-if="patient?.patient[0]?.visit_times && patient.patient[0].visit_times.length > 0"
+                                        v-if="selectedPatient?.visit_times && selectedPatient.visit_times.length > 0"
                                     >
                                         <div
-                                            v-for="visit in patient.patient[0].visit_times"
+                                            v-for="visit in selectedPatient.visit_times"
                                             :key="visit.patient_id"
                                             class="w-full"
                                         >
@@ -250,7 +241,7 @@
                                         </div>
                                     </div>
                                     <div
-                                        v-else-if="!patient?.patient[0]?.visit_times || patient.patient[0].visit_times.length === 0"
+                                        v-else
                                     >
                                         <p class="text-center text-gray-500">
                                             Pas de créneau trouvé
@@ -278,10 +269,9 @@ import {
 import { ref, watch, computed } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { CalendarTours } from '@/components/ui/calendar';
-import { useTours, usePatient, deleteTour } from '~/composables/useTours';
+import { useTours, deleteTour } from '~/composables/useTours';
 
 const { tours, error, loading, fetchTours } = useTours();
-const { patient, patientLoading, patientError, fetchPatient } = usePatient();
 
 const selectedPatientId = ref(null);
 
@@ -289,6 +279,11 @@ const isDialogOpen = ref(false);
 const patientToDelete = ref(null);
 const formattedStart = ref('');
 const formattedInitialStart = ref('');
+
+const selectedPatient = computed(() => {
+    const patient = tours.value.find(p => p.id === selectedPatientId.value);
+    return patient;
+});
 
 const openDialog = (patientId, visitId) => {
     patientToDelete.value = { patientId, visitId };
@@ -300,19 +295,32 @@ const closeDialog = () => {
 };
 
 const submitDelete = async () => {
-    if (patientToDelete.value) {
-        const { patientId, visitId } = patientToDelete.value;
-        try {
-            await deleteTour(patientId, visitId);
-            closeDialog();
-            navigateTo(useRoute().fullPath, { replace: true });
+    if (!patientToDelete.value) return;
+
+    const { patientId, visitId } = patientToDelete.value;
+    try {
+        // 1. Sauvegarde des références avant modification
+        const currentTours = tours.value;
+        const currentSelectedId = selectedPatientId.value;
+
+        // 2. Suppression locale
+        tours.value = currentTours.filter(patient => patient.id !== patientId);
+
+        if (currentSelectedId === patientId) {
+            selectedPatientId.value = tours.value[0]?.id || null;
         }
-        catch (error) {
-            console.error('Erreur lors de la suppression :', error);
-        }
+
+        // 4. Suppression API (en arrière-plan)
+        await deleteTour(patientId, visitId).catch((error) => {
+            console.error('Erreur API, rollback:', error);
+            tours.value = currentTours;
+            selectedPatientId.value = currentSelectedId;
+        });
+
+        closeDialog();
     }
-    else {
-        console.log('Aucun patient ou visite sélectionné pour suppression !');
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
     }
 };
 
@@ -357,13 +365,11 @@ const translatedVisitPeriod = (visitPeriod: string) => {
     }
 };
 
-// Eliminer les doublons de care type
 const uniqueCareTypes = computed(() => {
-    if (!patient.value?.patient?.[0]?.patient_care_type) return [];
+    if (!selectedPatient.value?.patient_care_type) return [];
 
-    // Créer un Set pour éliminer les doublons, puis le convertir en tableau
     return [...new Set(
-        patient.value.patient[0].patient_care_type
+        selectedPatient.value.patient_care_type
             .map(care => care.care_type_name)
             .filter(name => name),
     )];
@@ -377,20 +383,9 @@ const formatDate = (calendarDate) => {
     return `${calendarDate.year}-${String(calendarDate.month).padStart(2, '0')}-${String(calendarDate.day).padStart(2, '0')}`;
 };
 
-const handleFetchCareType = (patientId) => {
-    if (selectedPatientId.value === patientId) {
-        selectedPatientId.value = null;
-    }
-    else {
-        selectedPatientId.value = patientId;
-
-        if (formattedStart.value) {
-            fetchPatient(patientId, formattedStart.value, formattedStart.value);
-        }
-        if (formattedInitialStart.value) {
-            fetchPatient(patientId, formattedInitialStart.value, formattedInitialStart.value);
-        }
-    }
+const handleFetchCareType = (patientId: number) => {
+    const wasSelected = selectedPatientId.value === patientId;
+    selectedPatientId.value = wasSelected ? null : patientId;
 };
 
 watch(value, (newValue) => {
@@ -404,14 +399,8 @@ watch(value, (newValue) => {
 watch(tours, (newTours) => {
     if (newTours.length > 0 && !selectedPatientId.value) {
         selectedPatientId.value = newTours[0].id;
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-        fetchPatient(selectedPatientId.value, formattedDate, formattedDate);
-        if (formattedStart.value) {
-            fetchPatient(selectedPatientId.value, formattedStart.value, formattedStart.value);
-        }
     }
-}, { immediate: true, deep: true });
+}, { immediate: true });
 
 onMounted(() => {
     const now = new Date();

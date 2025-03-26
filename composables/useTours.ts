@@ -38,51 +38,25 @@ export const useTours = () => {
     return { tours, error, loading, fetchTours };
 };
 
-export const usePatient = () => {
-    const { $apifetch } = useNuxtApp();
-
-    // Utilisation de useState au lieu de ref
-    const patient = useState('patient', () => null);
-    const patientLoading = useState('patientLoading', () => false);
-    const patientError = useState('patientError', () => null);
-    const user = useUser();
-
-    const fetchPatient = async (patientId, startDate: string, endDate: string) => {
-        patientLoading.value = true;
-        patientError.value = null;
-        try {
-            const params = new URLSearchParams({
-                userId: user.value.id.toString(),
-                startDate: startDate,
-                endDate: endDate,
-            }).toString();
-
-            const response = await $apifetch(`/api/tours/${patientId}?${params}`, { method: 'GET' });
-            console.log('data is ', response);
-            patient.value = response;
-        }
-        catch (err) {
-            patientError.value = err;
-        }
-        finally {
-            patientLoading.value = false;
-        }
-    };
-
-    return { patient, patientError, patientLoading, fetchPatient };
-};
-
 export const deleteTour = async (patientId, visitId) => {
     const { $apifetch } = useNuxtApp();
     const { $toast } = useNuxtApp();
 
-    await $apifetch(`/api/tours/${patientId}/${visitId}/delete`, { method: 'DELETE' }).then(() => {
-        setTimeout(() => {
-            reloadNuxtApp({ persistState: true });
-        }, 500);
-
+    try {
+        await $apifetch(`/api/tours/${patientId}/${visitId}/delete`, {
+            method: 'DELETE',
+        });
         $toast({
             description: 'Suppression effectuée',
         });
-    });
+        return true;
+    }
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        $toast({
+            description: 'Échec de la suppression',
+            variant: 'destructive',
+        });
+        throw error;
+    }
 };
