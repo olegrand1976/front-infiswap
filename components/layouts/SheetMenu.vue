@@ -11,16 +11,13 @@
             class="bg-muted pt-24"
         >
             <div>
-                <div class="-mt-8 xl:hidden ml-4 mb-8">
-                    <NuxtLink
-                        to="/login"
-                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
-                    >
-                        Connexion
-                    </NuxtLink>
-                </div>
-
-                <nav class="flex ps-5">
+                <Button
+                    class="w-44 mx-auto inline-flex rounded-3xl ml-4"
+                    href="/login"
+                >
+                    Connexion
+                </Button>
+                <nav class="flex ps-5 mt-8">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
                         <li
                             v-for="(item, index) in navigationItems"
@@ -56,7 +53,7 @@
 
             <div class="bg-primary w-full h-12 mt-20 ml-5 shadow-xl text-primary" />
 
-            <div class="mb-8 lg:mr-10 lg:ml-0 ml-4 flex flex-col">
+            <div class="mb-8 ml-4 flex flex-col">
                 <div class="text-black">
                     <h4 class="font-bold mt-8">
                         CONTACT
@@ -99,15 +96,12 @@
                             </NuxtLink>
                         </li>
                     </ul>
-                </div>
-
-                <div class="mt-12 md:mt-324 xl:hidden">
-                    <NuxtLink
-                        to="/register"
-                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
+                    <Button
+                        href="/register"
+                        class="w-44 mx-auto inline-flex rounded-3xl font-bold mt-12  ml-1"
                     >
                         S'inscrire
-                    </NuxtLink>
+                    </Button>
                 </div>
             </div>
         </SheetContent>
