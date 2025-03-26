@@ -176,9 +176,6 @@
                         >
                             {{ error.dateOfBirth }}
                         </p>
-                        <p class="text-red-500 text-xs mt-1 ms-[5%]">
-                            Veuillez entrer votre date de naissance.
-                        </p>
                     </div>
 
                     <div class="col-span-1 lg:col-span-2">
