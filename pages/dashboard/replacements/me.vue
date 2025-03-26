@@ -590,9 +590,10 @@ const formData = reactive({
     postalCodeTags: [],
     cityTags: [],
     selectedDays: [],
+    type: 'me',
 });
 
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays = {
     monday: 'Lundi',
     tuesday: 'Mardi',
@@ -601,11 +602,12 @@ const frenchDays = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
+    all: 'Tous',
 };
 
 const toggleDay = (day) => {
     if (formData.selectedDays.includes('all')) {
-        formData.selectedDays = [];
+        formData.selectedDays = ['all'];
     }
     else if (formData.selectedDays.includes(day)) {
         const index = formData.selectedDays.indexOf(day);
@@ -692,6 +694,7 @@ const submit = async () => {
                 selectedDays: Array.from(formData.selectedDays),
                 postalCode: toRaw(formData.postalCodeTags),
                 cities: toRaw(formData.cityTags),
+                type: toRaw(formData.type),
             });
             currentReplacements.value = response.replacements.data;
         }

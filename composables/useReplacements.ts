@@ -128,6 +128,7 @@ export const useSearchReplacements = () => {
         postalCode = [],
         cities = [],
         selectedDays = [],
+        type = '',
     } = {}) {
         loadingSearch.value = true;
         error.value = null;
@@ -136,6 +137,7 @@ export const useSearchReplacements = () => {
             zipCodes: postalCode,
             cities: cities,
             days: selectedDays,
+            type: type,
         };
 
         try {
