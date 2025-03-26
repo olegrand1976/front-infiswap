@@ -557,10 +557,6 @@ const schema = yup.object({
         .required('Le prénom est requis')
         .min(2, 'Le prénom doit comporter au moins 2 caractères'),
 
-    email: yup.string()
-        .required('L\'email est requis')
-        .email('L\'email doit être valide'),
-
     // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
     socialSecurityNumber: yup.string()
         .required('Le numéro de sécurité social est requis')
