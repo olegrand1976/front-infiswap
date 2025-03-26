@@ -34,110 +34,147 @@
 
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
-                <Table>
-                    <TableHeader>
-                        <TableRow class="grid grid-cols-8 overflow-x-hidden gap-2 md:gap-2 border border-none">
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                Nom
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                Prénom
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                NISS
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                Tél
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                Code postal
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-1 flex w-full items-center rounded-lg text-white">
-                                Ville
-                            </TableHead>
-                            <TableHead class="bg-primary col-span-2 justify-center flex w-full items-center rounded-lg text-white">
-                                Actions
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                        <template
-                            v-for="(list, index) in listResponse"
-                            :key="index"
-                        >
-                            <TableRow
-                                class="grid grid-cols-8 overflow-x-hidden justify-between gap-2 md:gap-2 border-2 border-gray-500"
+                <div
+                    v-for="(list, index) in listResponse"
+                    :key="index"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 lg:gap-4 justify-between items-center"
+                >
+                    <div
+                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900"
+                    >
+                        <div class="rounded-t-lg h-32 overflow-hidden">
+                            <img
+                                class="object-cover object-top w-full"
+                                src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                alt="Mountain"
                             >
-                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
-                                    <span class="">{{ list.repondedBy.lastname }}</span>
-                                </TableCell>
-                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
-                                    <span class="">{{ list.repondedBy.firstname }}</span>
-                                </TableCell>
-                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
-                                    <span class="">{{ list.repondedBy.identifier_number }}</span>
-                                </TableCell>
-                                <TableCell class="flex h-12 col-span-1 my-1 items-center bg-gray-10">
-                                    <span class="">{{ list.repondedBy.phone_number }}</span>
-                                </TableCell>
-                                <TableCell class="h-12 col-span-1 my-1 bg-gray-10">
-                                    <div class="flex items-center justify-center h-full">
-                                        <span class="text-center">
-                                            {{
-                                                list.repondedBy.settings
-                                                    && JSON.parse(list.repondedBy.settings).replacement?.zip_codes?.length
-                                                    ? JSON.parse(list.repondedBy.settings).replacement.zip_codes.join(', ')
-                                                    : ' -- '
-                                            }}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell class="h-12 col-span-1 my-1 bg-gray-10">
-                                    <div class="flex items-center justify-center h-full">
-                                        <span class="text-center">
-                                            {{
-                                                list.repondedBy.settings
-                                                    && JSON.parse(list.repondedBy.settings).replacement?.cities?.length
-                                                    ? JSON.parse(list.repondedBy.settings).replacement.cities.join(', ')
-                                                    : ' -- '
-                                            }}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell class="flex h-12 col-span-1 justify-center my-1 items-center">
-                                    <div
-                                        v-if="list.status==='confirmed'"
-                                        class="flex gap-2 text-success items-center font-bold"
-                                    >
-                                        <CheckCircleIcon class="size-7" /> <span>Accepté</span>
-                                    </div>
-                                    <Form
-                                        v-else
-                                        @submit="handlesubmit(list.id)"
-                                    >
-                                        <Button
-                                            type="submit"
-                                            class="bg-gray-200 hover:text-white text-black rounded-full w-24"
-                                        >
-                                            <span class="text-xs">
-                                                Accepter
-                                            </span>
-                                        </Button>
-                                    </Form>
-                                </TableCell>
-
-                                <TableCell class="flex h-12 col-span-1 justify-center my-1 items-center">
-                                    <Button
-                                        class="bg-gray-200 hover:text-white text-black rounded-full"
-                                    >
-                                        <span class="text-xs">Voir le profil</span>
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        </template>
-                    </TableBody>
-                </Table>
+                        </div>
+                        <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                            <UserCircleIcon />
+                        </div>
+                        <div class="text-center mt-2">
+                            <h2 class="font-semibold">
+                                {{ fullName(list.repondedBy) }}
+                            </h2>
+                        </div>
+                        <!-- <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                            <li class="flex flex-col items-center justify-around">
+                                <StarIcon class="size-7"/>
+                                <div>5</div>
+                            </li>
+                            <li class="flex flex-col items-center justify-between">
+                                <ArrowPathIcon class="size-6"/>
+                                <div>0</div>
+                            </li>
+                            <li class="flex flex-col items-center justify-around">
+                                <BriefcaseIcon class="size-6"/>
+                                <div>15</div>
+                            </li>
+                        </ul> -->
+                        <ul class="py-4 mt-2 text-gray-700 text-center">
+                            <li class="flex gap-1 justify-center items-center">
+                                <IdentificationIcon class="size-5" />
+                                <span>
+                                    {{ list.repondedBy.identifier_number }}
+                                </span>
+                            </li>
+                            <li class="flex gap-1 justify-center items-center">
+                                <MapPinIcon class="size-5" />
+                                <span>
+                                    {{ list.repondedBy.profile.zip_code ?? '---' }} {{ list.repondedBy.profile.city ?? '---' }}
+                                </span>
+                            </li>
+                            <li class="flex gap-1 justify-center items-center">
+                                <PhoneIcon class="size-4" />
+                                <div>
+                                    {{ list.repondedBy.phone_number ? formattedPhoneNumber(list.repondedBy.phone_number) : '---' }}
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="p-4 border-t mx-8 mt-2">
+                            <div
+                                v-if="list.status==='confirmed'"
+                                class="flex mx-auto gap-2 w-1/2 text-success items-center font-bold"
+                            >
+                                <CheckCircleIcon class="size-7" /> <span>Accepté</span>
+                            </div>
+                            <Button
+                                v-else
+                                class="w-1/2 block mx-auto"
+                            >
+                                Accepter
+                            </Button>
+                        </div>
+                    </div>
+                    <div
+                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900"
+                    >
+                        <div class="rounded-t-lg h-32 overflow-hidden">
+                            <img
+                                class="object-cover object-top w-full"
+                                src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                alt="Mountain"
+                            >
+                        </div>
+                        <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                            <UserCircleIcon />
+                        </div>
+                        <div class="text-center mt-2">
+                            <h2 class="font-semibold">
+                                {{ getFullName(list.repondedBy) }}
+                            </h2>
+                        </div>
+                        <!-- <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                            <li class="flex flex-col items-center justify-around">
+                                <StarIcon class="size-7"/>
+                                <div>5</div>
+                            </li>
+                            <li class="flex flex-col items-center justify-between">
+                                <ArrowPathIcon class="size-6"/>
+                                <div>0</div>
+                            </li>
+                            <li class="flex flex-col items-center justify-around">
+                                <BriefcaseIcon class="size-6"/>
+                                <div>15</div>
+                            </li>
+                        </ul> -->
+                        <ul class="py-4 mt-2 text-gray-700 text-center">
+                            <li class="flex gap-1 justify-center items-center">
+                                <IdentificationIcon class="size-5" />
+                                <span>
+                                    {{ list.repondedBy.identifier_number }}
+                                </span>
+                            </li>
+                            <li class="flex gap-1 justify-center items-center">
+                                <MapPinIcon class="size-5" />
+                                <span>
+                                    {{ list.repondedBy.profile.zip_code ?? '---' }} {{ list.repondedBy.profile.city ?? '---' }}
+                                </span>
+                            </li>
+                            <li class="flex gap-1 justify-center items-center">
+                                <PhoneIcon class="size-4" />
+                                <div>
+                                    {{ list.repondedBy.phone_number ? formatPhoneNumber(list.repondedBy.phone_number) : '---' }}
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="p-4 border-t mx-8 mt-2">
+                            <div
+                                v-if="list.status==='confirmed'"
+                                class="flex mx-auto gap-2 w-1/2 text-success items-center font-bold"
+                            >
+                                <CheckCircleIcon class="size-7" /> <span>Accepté</span>
+                            </div>
+                            <Button
+                                v-else
+                                class="w-1/2 block mx-auto"
+                                @submit="handlesubmit(list.id)"
+                            >
+                                Accepter
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             </template>
             <template v-else>
                 <span class="text-black/60 mx-auto flex justify-center items-center mt-8">
@@ -150,8 +187,9 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, StarIcon, ArrowPathIcon, BriefcaseIcon, PhoneIcon, MapPinIcon, IdentificationIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import { formatPhoneNumber, getFullName } from '~/lib/utils';
 
 const { changeStatus } = changeStatusReplacement();
 
@@ -202,7 +240,6 @@ const handlesubmit = async (id) => {
             title: 'Succès',
             description: 'Infirmier accepté',
         });
-        router.push('/dashboard/replacements');
     }
     catch (e) {
         $toast({

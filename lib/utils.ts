@@ -2,6 +2,7 @@ import type { Updater } from '@tanstack/vue-table';
 import type { Ref } from 'vue';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { User } from './types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -45,4 +46,14 @@ export function selectDays(day: string, days: string[]) {
     }
 
     return days;
+}
+
+export function formatPhoneNumber (phoneNumber: string){
+    const cleanedNumber = phoneNumber.replace(/\D/g, '');
+
+    return `${cleanedNumber.slice(0, 4)} ${cleanedNumber.slice(4, 6)} ${cleanedNumber.slice(6, 8)} ${cleanedNumber.slice(8)}`;
+};
+
+export function getFullName(user: User) {
+    return [user.firstname, user.lastname?.toUpperCase()].join(' ');
 }
