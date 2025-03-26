@@ -277,7 +277,9 @@
                                                     class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
                                                     format="png"
                                                 />
-                                                <div class="sm:text-xs xl:text-sm">{{ country.label }}</div>
+                                                <div class="sm:text-xs xl:text-sm">
+                                                    {{ country.label }}
+                                                </div>
                                             </div>
                                         </SelectItem>
                                     </div>
