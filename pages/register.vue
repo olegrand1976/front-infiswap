@@ -44,7 +44,7 @@
             </h1> -->
 
             <div class="w-full max-w-lg overflow-x-hidden font-light">
-                <h1 class="mb-4 lg:mb-6 xl:text-lg lg:text-base md:text-sm sm:text-xs text-center">
+                <h1 class="mb-4 lg:mb-6 xl:text-base sm:text-xs text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -265,22 +265,22 @@
                                     class="ml-3"
                                 />
                             </SelectTrigger>
-                            <SelectContent class="border border-none">
+                            <SelectContent class="border border-none w-full">
                                 <SelectGroup>
                                     <div
                                         v-for="country in countries"
                                         :key="country.value"
-                                        class="flex justify-center items-center -ms-3"
+                                        class="flex justify-center items-center -ms-3 w-full"
                                     >
                                         <SelectItem :value="country.value">
-                                            <div class="flex space-x-1">
+                                            <div class="flex w-full">
                                                 <LayoutsAppImage
                                                     :src="country.icon"
                                                     :alt="country.name"
                                                     class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
                                                     format="png"
                                                 />
-                                                <span class="sm:text-xs xl:text-sm">{{ country.label }}</span>
+                                                <div class="sm:text-xs xl:text-sm">{{ country.label }}</div>
                                             </div>
                                         </SelectItem>
                                     </div>
