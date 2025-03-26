@@ -592,7 +592,7 @@ const formData = reactive({
     selectedDays: [],
 });
 
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays = {
     monday: 'Lundi',
     tuesday: 'Mardi',
@@ -601,6 +601,7 @@ const frenchDays = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
+    all: 'Tous les jours',
 };
 
 const toggleDay = (day) => {
