@@ -19,7 +19,7 @@
 
         <div class="grid my-8">
             <Table class="hidden lg:block">
-                <TableHeader class="w-full">
+                <TableHeader class="w-full block">
                     <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour(s)
