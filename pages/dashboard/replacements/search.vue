@@ -109,8 +109,8 @@
                                     title="Saisissez la vile puis appuyer sur Entrée pour l'ajouter"
                                 >
                                     <h5 class="text-white text-xs">
-                                        <span class="xl:hidden">Ville</span>
-                                        <span class="hidden xl:inline-block">Ville</span>
+                                        <span class="xl:hidden">Ville(s)</span>
+                                        <span class="hidden xl:inline-block">Ville(s)</span>
                                     </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
@@ -138,6 +138,7 @@
                                             :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
+                                            @blur="addCityTag"
                                             @keydown.enter="addCityTag"
                                         />
                                     </TagsInput>
@@ -181,7 +182,7 @@
                                 Codes postaux
                             </TableHead>
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Ville
+                                Ville(s)
                             </TableHead>
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                 Type de soin
@@ -224,11 +225,6 @@
                                 </TableCell>
                             </TableRow>
                         </div>
-                        <div v-else-if="currentReplacements.length === 0">
-                            <p class="text-center text-gray-500 py-8">
-                                Aucun résultat n'est trouvé
-                            </p>
-                        </div>
                         <div v-else>
                             <TableRow
                                 v-for="replacement in currentReplacements"
@@ -262,47 +258,88 @@
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
                                     <div
-                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden"
                                     >
-                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                            <span
-                                                v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                                :key="index"
-                                                :class="cn('mr-1', {
-                                                    'text-success font-bold': isZipCodeHighlighted(detail),
-                                                })"
-                                            >
-                                                {{ detail }},
-                                            </span>
-                                        </p>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                        <span
+                                                            v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                            :key="index"
+                                                            :class="cn('mr-1', {
+                                                                'text-success font-bold': isZipCodeHighlighted(detail),
+                                                            })"
+                                                        >
+                                                            {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                        </span>
+                                                    </p>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': isZipCodeHighlighted(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
                                     <div
-                                        class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                        class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden"
                                     >
-                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                            <span
-                                                v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                                :key="index"
-                                                :class="cn('mr-1', {
-                                                    'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                })"
-                                            >
-                                                {{ detail }},
-                                            </span>
-                                        </p>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                        <span
+                                                            v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                            :key="index"
+                                                            :class="cn('mr-1', {
+                                                                'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                            })"
+                                                        >
+                                                            {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                        </span>
+                                                    </p>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="bg-[#F1F2F7] text-xs pt-6">
+                                <TableCell class="bg-gray-100 text-xs pt-6">
                                     <div
-                                        class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                        class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                     >
-                                        {{ replacement.details
-                                            ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                            .join(', ') }}
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </TableCell>
 
@@ -321,9 +358,19 @@
             </div>
 
             <div class="lg:hidden">
+                <div v-if="loading">
+                    <div
+                        v-for="(_, index) in Array.from({ length: 3 })"
+                        :key="index"
+                        class="grid grid-cols-1"
+                    >
+                        <Skeleton class="h-32 w-full bg-gray-100" />
+                    </div>
+                </div>
                 <div
                     v-for="replacement in currentReplacements"
-                    :key="replacement.id"
+                    v-else
+                    :key="replacement?.id"
                     class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
                 >
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -385,35 +432,73 @@
                                 Codes postaux
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-6 text-center truncate">
-                                    <span
-                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                        :key="index"
-                                        :class="cn('mr-1', {
-                                            'text-success font-bold': isZipCodeHighlighted(detail),
-                                        })"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                <p class="py-2 px-2 text-center truncate">
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': isZipCodeHighlighted(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </p>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    :key="index"
+                                                    :class="cn('mr-1', {
+                                                        'text-success font-bold': isZipCodeHighlighted(detail),
+                                                    })"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Villes
+                                Ville(s)
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-6 text-center truncate">
-                                    <span
-                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                        :key="index"
-                                        :class="cn('mr-1', {
-                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                        })"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                <p class="py-2 px-2 text-center truncate w-full">
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </p>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    :key="index"
+                                                    :class="cn('mr-1', {
+                                                        'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                    })"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </p>
                             </div>
                         </div>
@@ -424,10 +509,17 @@
                             Type(s) de soin(s)
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
-                            <p class="truncate w-full px-6">
-                                {{ replacement.details
-                                    ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
-                                    .join(', ') }}
+                            <p class="truncate w-full px-2">
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </p>
                         </div>
                     </div>
@@ -452,7 +544,7 @@ import { useReplacements, useSearchReplacements } from '~/composables/useReplace
 import { cn } from '@/lib/utils';
 
 useHead({
-    title: 'Liste des remplacements',
+    title: 'Rechercher des remplacements',
 });
 
 const { loading, getReplacements } = useReplacements();
@@ -500,20 +592,22 @@ const formData = reactive({
     selectedDays: [],
 });
 
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'Saturday', 'Sunday', 'all'];
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 const frenchDays = {
     monday: 'Lundi',
     tuesday: 'Mardi',
     wednesday: 'Mercredi',
     thursday: 'Jeudi',
     friday: 'Vendredi',
-    Saturday: 'Samedi',
-    Sunday: 'Dimanche',
-    all: 'Tous',
+    saturday: 'Samedi',
+    sunday: 'Dimanche',
 };
 
 const toggleDay = (day) => {
-    if (formData.selectedDays.includes(day)) {
+    if (formData.selectedDays.includes('all')) {
+        formData.selectedDays = [];
+    }
+    else if (formData.selectedDays.includes(day)) {
         const index = formData.selectedDays.indexOf(day);
         formData.selectedDays.splice(index, 1);
     }
@@ -554,6 +648,13 @@ const getUniqueCities = (details) => {
 const hasMatchingCityFromUnique = (city) => {
     if (!isSubmitted.value) return false;
     return formData.cityTags.some(tag => tag.toLowerCase() === city.toLowerCase());
+};
+
+const getUniqueCareTypes = (details) => {
+    const careTypes = details
+        .flatMap(detail => detail.care_types?.map(careType => careType.name) || [])
+        .filter(careType => careType);
+    return [...new Set(careTypes)];
 };
 
 const addPostalCodeTag = () => {
