@@ -12,10 +12,10 @@
         >
             <div>
                 <Button
-                    class="w-44 mx-auto inline-flex rounded-3xl ml-4"
+                    class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
                     href="/login"
                 >
-                    Connexion
+                    Connexionss
                 </Button>
                 <nav class="flex ps-5 mt-8">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
