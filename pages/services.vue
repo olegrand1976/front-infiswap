@@ -8,7 +8,6 @@
                 <div
                     class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center py-8 lg:py-20 md:mt-20"
                 >
-                    <!-- Texte -->
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
                         <h3
                             class="text-primary text-4xl lg:text-5xl xl:text-7xl font-semibold text-center lg:text-left"
@@ -17,7 +16,7 @@
                         </h3>
 
                         <p
-                            class="text-center lg:text-left text-base lg:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0"
+                            class="text-center lg:text-left text-base px-8"
                         >
                             Chez InfiSwap, nous mettons à votre disposition une plateforme
                             complète et intuitive conçue pour faciliter la vie des infirmiers
@@ -35,7 +34,6 @@
                         </p>
                     </div>
 
-                    <!-- Image -->
                     <div
                         class="hidden order-1 lg:order-2 lg:flex justify-center lg:justify-end"
                     >
