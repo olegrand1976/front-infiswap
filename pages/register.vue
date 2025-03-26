@@ -64,7 +64,7 @@
                         />
                         <p
                             v-if="error.lastname"
-                            class="text-red-500 text-xs my-2 ms-[25%]"
+                            class="text-red-500 text-xs mt-1 ms-[5%]"
                         >
                             {{ error.lastname }}
                         </p>
@@ -531,7 +531,7 @@ const schema = yup.object({
         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
     passwordConfirmation: yup.string()
         .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
-        .required('La confirmation du mot de passe est obligatoire'),
+        .required('Confirmation du mot de passe requis'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
