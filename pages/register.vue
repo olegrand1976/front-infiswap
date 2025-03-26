@@ -44,7 +44,7 @@
             </h1> -->
 
             <div class="w-full max-w-lg overflow-x-hidden font-light">
-                <h1 class="mb-4 lg:mb-6 xl:text-base sm:text-xs text-center">
+                <h1 class="mb-4 text-sm lg:mb-6 xl:text-base text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -384,6 +384,15 @@
                         </Button>
                     </div>
                 </form>
+                <div class="text-sm text-center mt-4">
+                    <span>Vous avez déjà un compte ?</span>
+                    <NuxtLink
+                        to="/login"
+                        class="font-bold text-primary underline"
+                    >
+                        Connexion
+                    </NuxtLink>
+                </div>
             </div>
         </div>
     </div>
