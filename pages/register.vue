@@ -259,7 +259,7 @@
                                 />
                                 <SelectValue
                                     placeholder="Pays"
-                                    class="ml-3"
+                                    class="ml-3 block w-full"
                                 />
                             </SelectTrigger>
                             <SelectContent class="border border-none w-full">
