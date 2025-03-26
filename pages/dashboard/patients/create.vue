@@ -39,7 +39,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="lastname">
-                                Nom
+                                Nom *
                             </label>
                         </div>
                         <Input
@@ -62,7 +62,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="firstname">
-                                Prénoms
+                                Prénoms *
                             </label>
                         </div>
                         <Input
@@ -84,8 +84,35 @@
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <label for="Genre">
+                                Genre *
+                            </label>
+                        </div>
+                        <Select v-model="formData.gender">
+                            <SelectTrigger
+                                class="w-full bg-transparent text-nowrap border border-none"
+                                position="right"
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+
+                            <SelectContent class="border border-none">
+                                <template
+                                    v-for="[key, value] in Object.entries(gender)"
+                                    :key="key"
+                                >
+                                    <SelectItem :value="key">
+                                        {{ value }}
+                                    </SelectItem>
+                                </template>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="socialSecurityNumber">
-                                NISS
+                                NISS *
                             </label>
                         </div>
                         <Input
@@ -108,7 +135,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="email">
-                                Email
+                                Email *
                             </label>
                         </div>
                         <Input
@@ -131,7 +158,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="phoneNumber">
-                                Téléphone
+                                Téléphone *
                             </label>
                         </div>
                         <Input
@@ -154,7 +181,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="zipCode">
-                                Code postal
+                                Code postal *
                             </label>
                         </div>
                         <Input
@@ -177,7 +204,7 @@
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="city">
-                                Ville
+                                Ville *
                             </label>
                         </div>
                         <Input
@@ -217,33 +244,6 @@
                             <SelectContent class="border border-none">
                                 <template
                                     v-for="[key, value] in Object.entries(availabilities)"
-                                    :key="key"
-                                >
-                                    <SelectItem :value="key">
-                                        {{ value }}
-                                    </SelectItem>
-                                </template>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
-                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="Genre">
-                                Genre
-                            </label>
-                        </div>
-                        <Select v-model="formData.gender">
-                            <SelectTrigger
-                                class="w-full bg-transparent text-nowrap border border-none"
-                                position="right"
-                            >
-                                <SelectValue />
-                            </SelectTrigger>
-
-                            <SelectContent class="border border-none">
-                                <template
-                                    v-for="[key, value] in Object.entries(gender)"
                                     :key="key"
                                 >
                                     <SelectItem :value="key">
@@ -519,7 +519,7 @@ const initialFormData = {
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
-    gender: '',
+    gender: 'M',
     care_informations: [],
     visits: [
         {
