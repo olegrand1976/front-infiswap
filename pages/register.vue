@@ -440,6 +440,11 @@ const genders = [
         label: 'Femme',
         name: 'femme',
     },
+    {
+        value: 'X',
+        label: 'X',
+        name: 'neutre',
+    }
 ];
 
 const countries = [
@@ -538,7 +543,7 @@ const schema = yup.object({
         .required('Le mot de passe est obligatoire')
         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
     passwordConfirmation: yup.string()
-        .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre')
+        .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre')
         .required('Confirmation du mot de passe requis'),
     accountType: yup.string().required('Le type de compte est obligatoire'),
     gender: yup.string().required('Le genre est obligatoire'),
