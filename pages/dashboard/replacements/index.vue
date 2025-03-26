@@ -33,7 +33,7 @@
                             Codes postaux
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Ville
+                            Villes
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Type(s) de soin(s)
@@ -111,13 +111,28 @@
                                 <div
                                     class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span
-                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                        :key="index"
-                                        class="mr-1"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </TableCell>
 
@@ -125,13 +140,28 @@
                                 <div
                                     class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-start items-center overflow-hidden"
                                 >
-                                    <span
-                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                        :key="index"
-                                        class="mr-1"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </TableCell>
 
@@ -139,7 +169,16 @@
                                 <div
                                     class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                 >
-                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </TableCell>
 
