@@ -75,7 +75,10 @@
             </div>
         </div>
 
-        <section class="mt-24 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section
+            v-if="groupedDetails.length>0"
+            class="mt-24 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
             <div
                 v-for="(group, index) in groupedDetails"
                 :key="index"
@@ -209,24 +212,26 @@ const formData = reactive({
 const groupedDetails = computed(() => {
     const grouped = {};
 
-    replacement.value.details.forEach((detail) => {
-        if (!grouped[detail.date]) {
-            grouped[detail.date] = {
-                date: detail.date,
-                times: new Set(),
-                patients: new Set(),
-                careTypes: new Set(),
-                zipCodes: new Set(),
-                cities: new Set(),
-            };
-        }
+    if (replacement.value.details?.length > 0) {
+        replacement.value.details.forEach((detail) => {
+            if (!grouped[detail.date]) {
+                grouped[detail.date] = {
+                    date: detail.date,
+                    times: new Set(),
+                    patients: new Set(),
+                    careTypes: new Set(),
+                    zipCodes: new Set(),
+                    cities: new Set(),
+                };
+            }
 
-        grouped[detail.date].times.add(formatTime(detail.start_at));
-        detail.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
-        grouped[detail.date].zipCodes.add(detail.patient.zip_code);
-        grouped[detail.date].cities.add(detail.patient.city);
-        grouped[detail.date].patients.add(`${detail.patient.firstname} ${detail.patient.lastname}`);
-    });
+            grouped[detail.date].times.add(formatTime(detail.start_at));
+            detail.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
+            grouped[detail.date].zipCodes.add(detail.patient.zip_code);
+            grouped[detail.date].cities.add(detail.patient.city);
+            grouped[detail.date].patients.add(`${detail.patient.firstname} ${detail.patient.lastname}`);
+        });
+    }
 
     return Object.values(grouped).map(group => ({
         date: group.date,

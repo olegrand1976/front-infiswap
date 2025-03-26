@@ -85,8 +85,8 @@
                                     <div class="flex items-center justify-center h-full">
                                         <span class="text-center">
                                             {{
-                                                list.repondedBy.settings && 
-                                                    JSON.parse(list.repondedBy.settings).replacement?.zip_codes?.length
+                                                list.repondedBy.settings
+                                                    && JSON.parse(list.repondedBy.settings).replacement?.zip_codes?.length
                                                     ? JSON.parse(list.repondedBy.settings).replacement.zip_codes.join(', ')
                                                     : ' -- '
                                             }}
@@ -97,8 +97,8 @@
                                     <div class="flex items-center justify-center h-full">
                                         <span class="text-center">
                                             {{
-                                                list.repondedBy.settings && 
-                                                    JSON.parse(list.repondedBy.settings).replacement?.cities?.length
+                                                list.repondedBy.settings
+                                                    && JSON.parse(list.repondedBy.settings).replacement?.cities?.length
                                                     ? JSON.parse(list.repondedBy.settings).replacement.cities.join(', ')
                                                     : ' -- '
                                             }}
@@ -179,9 +179,9 @@ const endDate = computed(() =>
 );
 
 const displayCities = (settings) => {
-  if (!settings) return 'Aucune ville';
-  const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
-  return data?.replacement?.cities?.join(', ') || 'Aucune ville';
+    if (!settings) return 'Aucune ville';
+    const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
+    return data?.replacement?.cities?.join(', ') || 'Aucune ville';
 };
 
 // Méthode pour extraire les codes postaux
@@ -189,7 +189,8 @@ const getZipCodes = (settings) => {
     try {
         const parsed = JSON.parse(settings);
         return parsed?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
-    } catch {
+    }
+    catch {
         return 'Format invalide';
     }
 };
