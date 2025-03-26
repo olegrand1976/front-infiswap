@@ -102,7 +102,6 @@
                                                         Etes-vous sur de vouloir supprimer ce patient ?
                                                     </DialogDescription>
                                                 </DialogHeader>
-
                                                 <div class="flex space-x-8 justify-end items-center">
                                                     <Button
                                                         variant="secondary"
@@ -191,7 +190,6 @@
                                             Etes-vous sur de vouloir supprimer ce patient ?
                                         </DialogDescription>
                                     </DialogHeader>
-
                                     <div class="flex space-x-8 justify-end items-center">
                                         <Button
                                             variant="secondary"

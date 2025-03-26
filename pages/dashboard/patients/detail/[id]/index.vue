@@ -137,6 +137,12 @@
                                         >
                                             Femme
                                         </option>
+                                        <option
+                                            value="null"
+                                            :selected="formData.gender === 'null'"
+                                        >
+                                            X
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -206,7 +212,7 @@
                             <div class="font-semibold">
                                 Genre
                             </div>
-                            <div>{{ patient.gender }}</div>
+                            <div>{{ patient.gender ?? 'Non genré' }}</div>
                         </div>
                     </div>
                 </div>
@@ -818,7 +824,7 @@ const initializeFormData = () => {
             lastname: patient.value.lastname || '',
             firstname: patient.value.firstname || '',
             email: patient.value.email || '',
-            gender: patient.value.gender || '',
+            gender: patient.value.gender || null,
             socialSecurityNumber: patient.value.social_security_number || '',
             phoneNumber: patient.value.phone_number || '',
             zipCode: patient.value.profile?.zip_code || '',
@@ -860,18 +866,22 @@ const openDialog = () => {
 
 const updatePatientInfo = async () => {
     try {
+        const genderValue = formData.value.gender === 'null' ? null : formData.value.gender;
+
+        const payload = {
+            lastname: formData.value.lastname,
+            firstname: formData.value.firstname,
+            email: formData.value.email,
+            gender: genderValue,
+            socialSecurityNumber: formData.value.socialSecurityNumber,
+            phoneNumber: formData.value.phoneNumber,
+            zipCode: formData.value.zipCode,
+            city: formData.value.city,
+        };
+
         await $apifetch(`/api/patients/information/${formData.value.patientId}`, {
             method: 'PUT',
-            body: {
-                lastname: formData.value.lastname,
-                firstname: formData.value.firstname,
-                email: formData.value.email,
-                gender: formData.value.gender,
-                socialSecurityNumber: formData.value.socialSecurityNumber,
-                phoneNumber: formData.value.phoneNumber,
-                zipCode: formData.value.zipCode,
-                city: formData.value.city,
-            },
+            body: payload,
         });
 
         isOpenDialog.value = false;

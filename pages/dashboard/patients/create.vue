@@ -1,11 +1,11 @@
 <template>
     <div class="px-4 sm:px-16 md:px-0">
         <Form @submit="submit">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-12 pt-4">
                 <div class="space-y-8 md:space-y-6">
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col gap-4 md:flex-row">
                         <div class="w-full">
-                            <h3 class="p-2 bg-primary text-white rounded-t">
+                            <h3 class="p-2 bg-primary text-white rounded-t text-center">
                                 Date de début d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="w-full">
-                            <h3 class="p-2 bg-primary text-white rounded-t">
+                            <h3 class="p-2 bg-primary text-white rounded-t text-center">
                                 Date de fin d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
@@ -350,7 +350,7 @@
                                                 class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                                 position="right"
                                             >
-                                                <SelectValue class="truncate w-[38rem]">
+                                                <SelectValue class="truncate w-[200rem]">
                                                     <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
                                                         {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
                                                     </template>
@@ -504,7 +504,7 @@ const availabilities = {
 const gender = {
     M: 'Homme',
     F: 'Femme',
-    x: 'X',
+    X: 'X',
 };
 
 const initialFormData = {
@@ -607,18 +607,46 @@ const days = {
 };
 
 const toggleDaySelection = (visit, day) => {
+    const allDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    if (day === 'all') {
+        if (visit.daysOfVisit.includes('all')) {
+            visit.daysOfVisit = [];
+        }
+        else {
+            visit.daysOfVisit = [...allDays, 'all'];
+        }
+        return;
+    }
     const index = visit.daysOfVisit.indexOf(day);
+    const hasAllSelected = visit.daysOfVisit.includes('all');
+
     if (index === -1) {
         visit.daysOfVisit.push(day);
+        if (hasAllSelected) {
+            const allIndex = visit.daysOfVisit.indexOf('all');
+            visit.daysOfVisit.splice(allIndex, 1);
+        }
     }
     else {
         visit.daysOfVisit.splice(index, 1);
+        if (hasAllSelected) {
+            const allIndex = visit.daysOfVisit.indexOf('all');
+            visit.daysOfVisit.splice(allIndex, 1);
+        }
     }
     visit.daysOfVisit = [...visit.daysOfVisit];
 };
 
 const getSelectedDaysText = (selectedDays) => {
-    return selectedDays.map(day => days[day]).join(', ');
+    if (!selectedDays || selectedDays.length === 0) return null;
+    if (selectedDays.includes('all')) {
+        return 'Tous les jours';
+    }
+    // Cas normal
+    return selectedDays
+        .filter(day => day !== 'all')
+        .map(day => days[day])
+        .join(', ');
 };
 
 const addVisit = () => {
@@ -682,7 +710,11 @@ const { submit, inProgress } = useSubmit(async () => {
     try {
         await schema.validate(formData.value, { abortEarly: false });
         updatePatientCareTypes();
-        return createPatient(formData.value).then(() => {
+        const payload = {
+            ...formData.value,
+            gender: formData.value.gender === 'X' ? null : formData.value.gender,
+        };
+        return createPatient(payload).then(() => {
             formSubmitted.value = true;
             $toast({
                 description: 'Création effectuée',
