@@ -24,9 +24,8 @@
                                             v-model="formData.startDate"
                                             placeholder="jj/mm/aaaa"
                                             type="date"
-                                            :min="today"
+                                            :min="formData.startDate || today"
                                             class="text-xs w-full text-black/70 bg-transparent"
-                                            @input="handleDateInput('start')"
                                         />
                                     </div>
                                 </FormControl>
@@ -49,7 +48,6 @@
                                             type="date"
                                             :min="formData.startDate || today"
                                             class="text-xs w-full text-black/70 bg-transparent"
-                                            @input="handleDateInput('end')"
                                         />
                                     </div>
                                 </FormControl>
@@ -407,7 +405,7 @@
 
                                 <div class="mt-4 mb-8">
                                     <h5 class="font-semibold text-primary">
-                                        Personnaliser le type de soin
+                                        Sélectionner les soins
                                     </h5>
                                     <ul class="grid grid-cols-2 gap-4 mt-4">
                                         <li
@@ -427,6 +425,7 @@
                                 <Button
                                     class="mb-6"
                                     :disabled="!selectedPatient || !selectedTime"
+                                    :title="!selectedPatient ? 'Vous n\'avez pas encore sélectionné un patient' : (!selectedTime ? 'Vous n\'avez pas encore sélectionné l\'heure' : '')"
                                     @click="addPatientToTable"
                                 >
                                     Ajouter
@@ -538,54 +537,6 @@ const value = ref({
 
 // Initialiser currentDate avec la date actuelle
 const currentDate = ref(new Date().toISOString().split('T')[0]);
-
-const handleDateInput = (type: 'start' | 'end') => {
-    const date = type === 'start' ? formData.startDate : formData.endDate;
-    if (!date) {
-        if (type === 'end') {
-            value.value = {
-                start: value.value.start,
-                end: null,
-            };
-        }
-        return;
-    }
-
-    // Prevent selecting dates before today
-    if (new Date(date) < new Date(today.value)) {
-        if (type === 'start') {
-            formData.startDate = today.value;
-        }
-        else {
-            formData.endDate = today.value;
-        }
-        return;
-    }
-
-    // For end date, ensure it's not before start date
-    if (type === 'end' && formData.startDate && date < formData.startDate) {
-        formData.endDate = formData.startDate;
-        return;
-    }
-
-    // Update calendar value
-    const [year, month, day] = date.split('-').map(Number);
-    const calendarDate = new CalendarDate(year, month, day);
-
-    if (type === 'start') {
-        value.value = {
-            start: calendarDate,
-            end: value.value.end,
-        };
-        currentDate.value = date;
-    }
-    else {
-        value.value = {
-            start: value.value.start,
-            end: calendarDate,
-        };
-    }
-};
 
 // Modifier le watch pour gérer correctement les changements de dates
 watch(value, (newValue) => {
@@ -971,7 +922,7 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    // middleware: ['auth', 'verified'],
     ssr: false,
 });
 </script>
