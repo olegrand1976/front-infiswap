@@ -85,38 +85,40 @@
                                         {{ patient.firstname }} {{ patient.lastname }}
                                     </span>
 
-                                    <div class="flex space-x-4">
+                                    <div class="flex items-center">
                                         <NuxtLink :to="`/dashboard/patients/detail/${patient.id}`">
                                             <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
                                         </NuxtLink>
-                                        <TrashIcon
-                                            class="w-5 cursor-pointer hover:text-primary"
-                                            @click="openDialog"
-                                        />
-
-                                        <Dialog v-model:open="isDialogOpen">
-                                            <DialogContent class="h-[28vh]">
-                                                <DialogHeader>
-                                                    <DialogTitle>Confirmer la suppression</DialogTitle>
-                                                    <DialogDescription>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger as-child>
+                                                <Button variant="none">
+                                                    <TrashIcon
+                                                        class="w-5 cursor-pointer hover:text-primary"
+                                                        @click="openDialog"
+                                                    />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                                                    <AlertDialogDescription>
                                                         Etes-vous sur de vouloir supprimer ce patient ?
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <div class="flex space-x-8 justify-end items-center">
-                                                    <Button
-                                                        variant="secondary"
-                                                        @click="closeDialog"
-                                                    >
-                                                        Annuler
-                                                    </Button>
-                                                    <Button
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel class="border-none shadow-none">
+                                                        <Button variant="secondary">
+                                                            Annuler
+                                                        </Button>
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction
                                                         @click="submitDelete(patient.id)"
                                                     >
                                                         Oui
-                                                    </Button>
-                                                </div>
-                                            </DialogContent>
-                                        </Dialog>
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </div>
                             </TableCell>
