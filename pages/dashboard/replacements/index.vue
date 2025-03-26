@@ -109,7 +109,7 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex bg-[#E4E7F4] h-10 rounded mt-3 justify-start items-center overflow-hidden"
+                                    class="flex bg-[#E4E7F4] h-10 px-2 rounded mt-3 justify-start items-center overflow-hidden"
                                 >
                                     <TooltipProvider>
                                         <Tooltip>
@@ -138,7 +138,7 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
                                 <div
-                                    class="flex h-10 bg-[#E4E7F4] rounded mt-3 justify-start items-center overflow-hidden"
+                                    class="flex h-10 bg-[#E4E7F4] px-2 rounded mt-3 justify-start items-center overflow-hidden"
                                 >
                                     <TooltipProvider>
                                         <Tooltip>

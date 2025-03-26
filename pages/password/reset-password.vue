@@ -44,40 +44,30 @@
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
                     Réinitialisez votre <span class="font-bold">mot de passe</span>
                 </h1>
-                <div class="w-full container">
+                <div class="w-full container max-w-xl">
                     <form
                         class="flex flex-col"
                         @submit.prevent="submitForm"
                     >
-                        <FormField name="email">
-                            <FormItem>
-                                <FormLabel class="text-xs text-primary font-bold mb-12">
-                                    Votre adresse e-mail
-                                </FormLabel>
-                                <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex items-center space-x-1">
-                                            <EnvelopeIcon class="text-primary w-5" />
-                                            <Input
-                                                v-model="email"
-                                                type="email"
-                                                placeholder="Email"
-                                                class="md:text-sm sm:text-xs"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </div>
-                            </FormItem>
-                        </FormField>
+                        <div class="text-xs text-primary font-bold mb-2">
+                            Votre adresse e-mail
+                        </div>
+                        <InputIcon
+                            v-model="email"
+                            type="email"
+                            placeholder="Email"
+                            class="md:text-sm sm:text-xs"
+                            :icon="EnvelopeIcon"
+                        />
 
-                        <div class="px-8 pt-12">
-                            <h4 class="font-light lg:text-sm text-xs text-primary text-center">
+                        <div class="px-8 pt-8">
+                            <h4 class="font-light lg:text-sm text-xs text-center">
                                 Saisissez votre adresse éléctronique et nous vous enverrons un code
                                 pour réinitialiser votre mot de passe
                             </h4>
                         </div>
 
-                        <div class="flex justify-center items-center mx-auto pt-8">
+                        <div class="flex justify-center items-center mx-auto pt-4">
                             <Button
                                 type="submit"
                                 class="font-bold px-16 md:text-sm sm:text-xs"
@@ -97,7 +87,7 @@
                 Réinitialisez votre <span class="font-bold">mot de passe</span>
             </h1>
 
-            <div class="w-full container mt-16">
+            <div class="w-full container mt-8">
                 <form
                     class="flex flex-col flex-grow"
                     @submit.prevent="submitForm"
@@ -123,14 +113,14 @@
                         </FormItem>
                     </FormField>
 
-                    <div class="px-8 pt-16">
-                        <h4 class="font-light text-xs text-primary text-center">
+                    <div class="px-8 pt-8">
+                        <h4 class="font-light text-xstext-center">
                             Saisissez votre adresse éléctronique et nous vous enverrons un code
                             pour réinitialiser votre mot de passe
                         </h4>
                     </div>
 
-                    <div class="flex justify-center items-center mx-auto pt-20">
+                    <div class="flex justify-center items-center mx-auto pt-8">
                         <Button
                             type="submit"
                             class="font-bold px-16 text-xs"
