@@ -243,13 +243,28 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    <span
-                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                        :key="index"
-                                        class="mr-1"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </p>
                             </div>
                         </div>
@@ -260,13 +275,28 @@
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-6 text-center truncate">
-                                    <span
-                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                        :key="index"
-                                        class="mr-1"
-                                    >
-                                        {{ detail }},
-                                    </span>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <span
+                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    :key="index"
+                                                    class="mr-1"
+                                                >
+                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                </span>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </p>
                             </div>
                         </div>
@@ -278,7 +308,16 @@
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
                             <p class="truncate w-full px-6">
-                                {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </p>
                         </div>
                     </div>
