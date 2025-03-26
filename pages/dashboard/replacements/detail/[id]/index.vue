@@ -75,80 +75,76 @@
             </div>
         </div>
 
-        <div
-            v-for="(detail, index) in replacement.details"
-            :key="index"
-            class="mt-24 sm:mt-6 mb-8 h-auto overflow-hidden"
-        >
+        <section class="mt-24 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             <div
-                class="flex flex-col lg:flex-row lg:justify-around items-center"
+                v-for="(group, index) in groupedDetails"
+                :key="index"
             >
-                <!-- <div class="z-20">
-                    <Calendar
-                        :default-value="parseDateValue(detail.date)"
-                        :weekday-format="'short'"
-                        class="rounded-xl bg-white shadow"
-                    />
-                </div> -->
-
-                <div class="bg-gray-100 z-10 -ml-10 flex flex-col space-y-8 sm:space-y-0 sm:flex-row space-x-6 p-8 w-full xl:w-[48.25rem] relative rounded-2xl">
-                    <div class="w-full lg:w-52 xl:w-64 2xl:ml-0 ml-8">
+                <div class="bg-gray-100 space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
+                    <div>
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
-                                {{ getPeriodLabel(detail.start_at) }} - {{ formatDate(detail.date) }}
+                                {{ group.date }}
                             </h4>
                         </div>
                         <div class="rounded text-sm bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
-                            {{ formatTime(detail.start_at) }}
+                            {{ group.times }}
                         </div>
-                        <div class="bg-gray-200">
+
+                        <div class="mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
-                                    Zone géographique couverte
+                                    Patient(s)
+                                </h4>
+                            </div>
+                            <div class="mt-4 space-y-4">
+                                <div class="bg-gray-200 text-xs py-2 rounded px-3 text-center">
+                                    <span>{{ group.patients }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <div class="h-10 flex bg-primary rounded justify-center items-center">
+                                <h4 class="text-white text-sm text-center">
+                                    Type(s) de soin(s) à effectuer
+                                </h4>
+                            </div>
+                            <div class="mt-4 space-y-4">
+                                <div class="bg-gray-200 text-xs py-2 rounded px-3">
+                                    <span>{{ group.careTypes }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-200 mt-8">
+                            <div class="h-10 flex bg-primary rounded justify-center items-center">
+                                <h4 class="text-white text-sm text-center">
+                                    Zone(s) géographique(s) couverte(s)
                                 </h4>
                             </div>
                             <div class="py-16 px-3 space-y-3">
-                                <div
-                                    v-for="(value, key) in { 'Code postal': detail.patient.zip_code, 'Ville': detail.patient.city }"
-                                    :key="key"
-                                    class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full"
-                                >
+                                <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <HomeIcon class="w-5 h-5" />
-                                        <span>{{ key }}</span>
+                                        <span>Codes postaux</span>
                                     </div>
-                                    <span>{{ value }}</span>
+                                    <span>{{ group.zipCodes }}</span>
+                                </div>
+                                <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
+                                    <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
+                                        <HomeIcon class="w-5 h-5" />
+                                        <span>Villes</span>
+                                    </div>
+                                    <span>{{ group.cities }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="w-full lg:w-[14.5rem] xl:w-72">
-                        <div class="h-10 flex bg-primary rounded justify-center items-center">
-                            <h4 class="text-white text-sm text-center">
-                                Type de soin à effectuer
-                            </h4>
-                        </div>
-                        <div class="mt-2 space-y-3">
-                            <div
-                                v-for="(caretype, mark) in replacement.details[0].care_types"
-                                :key="mark"
-                                class="bg-gray-200 text-xs py-2 rounded px-3"
-                            >
-                                <span>{{ caretype.name }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hidden xl:block absolute top-4 right-8">
-                        <div class="text-white bg-white h-10 w-10 rounded-full shadow-inner">
-                            .
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <div
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
@@ -193,7 +189,6 @@ import {
     ChevronRightIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
-import { CalendarDate } from '@internationalized/date';
 import { useDetailReplacement, useListResponse, sendResponse } from '~/composables/useReplacements';
 
 const user = useState('user');
@@ -209,6 +204,38 @@ const formData = reactive({
     replacementId: replacementId,
     respondedBy: respondedBy,
     comment: '',
+});
+
+const groupedDetails = computed(() => {
+    const grouped = {};
+
+    replacement.value.details.forEach((detail) => {
+        if (!grouped[detail.date]) {
+            grouped[detail.date] = {
+                date: detail.date,
+                times: new Set(),
+                patients: new Set(),
+                careTypes: new Set(),
+                zipCodes: new Set(),
+                cities: new Set(),
+            };
+        }
+
+        grouped[detail.date].times.add(formatTime(detail.start_at));
+        detail.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
+        grouped[detail.date].zipCodes.add(detail.patient.zip_code);
+        grouped[detail.date].cities.add(detail.patient.city);
+        grouped[detail.date].patients.add(`${detail.patient.firstname} ${detail.patient.lastname}`);
+    });
+
+    return Object.values(grouped).map(group => ({
+        date: group.date,
+        times: Array.from(group.times).join(' / '),
+        careTypes: Array.from(group.careTypes).join(', '),
+        zipCodes: Array.from(group.zipCodes).join(', '),
+        cities: Array.from(group.cities).join(', '),
+        patients: Array.from(group.patients).join(', '),
+    }));
 });
 
 const {
@@ -235,24 +262,6 @@ const formatDate = (isoString) => {
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
-};
-
-const parseDateValue = (dateString) => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    return new CalendarDate(year, month, day);
-};
-
-const getPeriodLabel = (timeString) => {
-    const hours = parseInt(timeString.split(':')[0], 10);
-    if (hours >= 1 && hours < 12) {
-        return 'Matin';
-    }
-    else if (hours >= 12 && hours < 18) {
-        return 'Après-midi';
-    }
-    else {
-        return 'Soir';
-    }
 };
 
 const startDate = computed(() => {
