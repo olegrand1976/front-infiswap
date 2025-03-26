@@ -542,6 +542,7 @@ import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInpu
 
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
+import { selectDays } from '~/lib/utils';
 
 useHead({
     title: 'Rechercher des remplacements',
@@ -605,17 +606,8 @@ const frenchDays = {
     all: 'Tous',
 };
 
-const toggleDay = (day) => {
-    if (formData.selectedDays.includes('all')) {
-        formData.selectedDays = ['all'];
-    }
-    else if (formData.selectedDays.includes(day)) {
-        const index = formData.selectedDays.indexOf(day);
-        formData.selectedDays.splice(index, 1);
-    }
-    else {
-        formData.selectedDays.push(day);
-    }
+const toggleDay = (day: string) => {
+    formData.selectedDays = selectDays(day, formData.selectedDays);
 };
 
 const selectedDaysPlaceholder = computed(() => {
