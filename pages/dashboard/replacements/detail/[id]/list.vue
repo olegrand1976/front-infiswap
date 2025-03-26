@@ -4,7 +4,6 @@
             <span class="hidden lg:inline-block">Personnes intéressées par mon remplacement</span>
             <span class="lg:hidden">Intéressées</span>
         </h1>
-
         <template v-if="listResponse.length != 0">
             <div class="flex items-center lg:space-x-8 gap-2 mt-6 p-2">
                 <h4 class="font-bold hidden lg:inline-block text-sm text-primary">
@@ -34,6 +33,7 @@
 
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
+                {{  listResponse }}
                 <div
                     v-for="(list, index) in listResponse"
                     :key="index"
@@ -194,7 +194,6 @@ import { formatPhoneNumber, getFullName } from '~/lib/utils';
 const { changeStatus } = changeStatusReplacement();
 
 const route = useRoute();
-const router = useRouter();
 const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
 
