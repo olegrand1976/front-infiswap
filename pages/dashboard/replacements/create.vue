@@ -166,8 +166,14 @@
                                                     <TableCell class="flex h-9 items-center border border-gray-200">
                                                         {{ patient.time }}
                                                     </TableCell>
-                                                    <TableCell class="flex h-9 items-center border border-gray-200">
-                                                        {{ patient.firstname }} {{ patient.lastname }}
+                                                    <TableCell class="flex h-9 justify-between items-center border border-gray-200">
+                                                        <p class="w-full truncate">
+                                                            {{ patient.firstname }} {{ patient.lastname }}
+                                                        </p>
+                                                        <TrashIcon
+                                                            class="w-4 h-4 hover:text-primary cursor-pointer"
+                                                            @click="removePatient(currentDate, patient.id, patient.time)"
+                                                        />
                                                     </TableCell>
                                                 </div>
                                             </div>
@@ -469,6 +475,7 @@ import {
     ChevronRightIcon,
     Square2StackIcon,
     PlusIcon,
+    TrashIcon,
     PlusCircleIcon,
     ArrowPathRoundedSquareIcon,
 } from '@heroicons/vue/24/solid';
@@ -897,6 +904,16 @@ const reinitializeData = () => {
     copiedTours.value.clear(); // Réinitialiser l'indicateur de copie
 };
 
+const removePatient = (date, patientId, time) => {
+    const period = determineTimePeriod(time);
+    if (datePatients.value[date] && datePatients.value[date][period]) {
+        datePatients.value[date][period] = datePatients.value[date][period].filter(
+            patient => !(patient.id === patientId && patient.time === time),
+        );
+        updateReplacementData();
+    }
+};
+
 onMounted(() => {
     const now = new Date();
     const currentDateStr = now.toISOString().split('T')[0];
@@ -922,7 +939,7 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    // middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified'],
     ssr: false,
 });
 </script>
