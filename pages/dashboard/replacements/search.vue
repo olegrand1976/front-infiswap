@@ -262,43 +262,77 @@
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
                                     <div
-                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 justify-center items-center overflow-hidden"
+                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden"
                                     >
-                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                            <span
-                                                v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
-                                                :key="index"
-                                                :class="cn('mr-1', {
-                                                    'text-success font-bold': isZipCodeHighlighted(detail),
-                                                })"
-                                            >
-                                                {{ detail }},
-                                            </span>
-                                        </p>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                        <span
+                                                            v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                            :key="index"
+                                                            :class="cn('mr-1', {
+                                                                'text-success font-bold': isZipCodeHighlighted(detail),
+                                                            })"
+                                                        >
+                                                            {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                        </span>
+                                                    </p>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': isZipCodeHighlighted(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
                                     <div
-                                        class="flex truncate h-10 bg-[#E4E7F4] rounded mt-3 justify-center items-center overflow-hidden"
+                                        class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden"
                                     >
-                                        <p class="truncate w-full px-2 pt-3 h-10 rounded">
-                                            <span
-                                                v-for="(detail, index) in getUniqueCities(replacement.details)"
-                                                :key="index"
-                                                :class="cn('mr-1', {
-                                                    'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                })"
-                                            >
-                                                {{ detail }},
-                                            </span>
-                                        </p>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                        <span
+                                                            v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                            :key="index"
+                                                            :class="cn('mr-1', {
+                                                                'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                            })"
+                                                        >
+                                                            {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                        </span>
+                                                    </p>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <span
+                                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                        :key="index"
+                                                        :class="cn('mr-1', {
+                                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
+                                                        })"
+                                                    >
+                                                        {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                    </span>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs pt-6">
                                     <div
-                                        class="pt-3 h-10 rounded bg-[#E4E7F4] mx-auto px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                        class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                     >
                                         {{ replacement.details
                                             ?.flatMap((detail) => detail.care_types?.map((careType) => careType.name) || [])
@@ -452,7 +486,7 @@ import { useReplacements, useSearchReplacements } from '~/composables/useReplace
 import { cn } from '@/lib/utils';
 
 useHead({
-    title: 'Liste des remplacements',
+    title: 'Rechercher des remplacements',
 });
 
 const { loading, getReplacements } = useReplacements();
@@ -554,6 +588,13 @@ const getUniqueCities = (details) => {
 const hasMatchingCityFromUnique = (city) => {
     if (!isSubmitted.value) return false;
     return formData.cityTags.some(tag => tag.toLowerCase() === city.toLowerCase());
+};
+
+const getUniqueCareTypes = (details) => {
+    const careTypes = details
+        .flatMap(detail => detail.care_types?.map(careType => careType.name) || [])
+        .filter(careType => careType);
+    return [...new Set(careTypes)];
 };
 
 const addPostalCodeTag = () => {
