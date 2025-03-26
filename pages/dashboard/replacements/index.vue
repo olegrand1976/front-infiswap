@@ -343,9 +343,7 @@ useHead({
     title: 'Liste des remplacements',
 });
 
-const { loading, getReplacements } = useReplacements();
-
-const replacements = await getReplacements();
+const { loading, replacements, getReplacements } = useReplacements();
 
 onMounted(async () => {
     await getReplacements();
@@ -402,6 +400,5 @@ const hasShift = (details, period) => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>

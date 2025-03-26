@@ -76,6 +76,7 @@ export const useReplacements = () => {
 
     const getReplacements = async () => {
         try {
+            loading.value = true;
             const response = await $apifetch('/api/replacements', { method: 'GET' });
             replacements.value = response.replacements;
 
@@ -111,6 +112,7 @@ export const useReplacements = () => {
         loading,
         success,
         user,
+        replacements,
         submitReplacement,
         getMyReplacements,
         getReplacements,
