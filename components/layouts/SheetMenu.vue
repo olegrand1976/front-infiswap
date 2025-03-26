@@ -15,7 +15,7 @@
                     class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
                     href="/login"
                 >
-                    Connexionss
+                    Connexion
                 </Button>
                 <nav class="flex ps-5 mt-8">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
