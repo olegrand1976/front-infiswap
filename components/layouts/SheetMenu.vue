@@ -11,6 +11,15 @@
             class="bg-muted pt-24"
         >
             <div>
+                <div class="-mt-8 xl:hidden ml-4 mb-8">
+                    <NuxtLink
+                        to="/login"
+                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
+                    >
+                        Connexion
+                    </NuxtLink>
+                </div>
+
                 <nav class="flex ps-5">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
                         <li
@@ -47,7 +56,7 @@
 
             <div class="bg-primary w-full h-12 mt-20 ml-5 shadow-xl text-primary" />
 
-            <SheetFooter class="mb-8 md:mr-10 md:ml-0 ml-10 flex flex-col">
+            <div class="mb-8 lg:mr-10 lg:ml-0 ml-4 flex flex-col">
                 <div class="text-black">
                     <h4 class="font-bold mt-8">
                         CONTACT
@@ -92,21 +101,15 @@
                     </ul>
                 </div>
 
-                <div class="mt-16 sm:hidden">
+                <div class="mt-12 md:mt-324 xl:hidden">
                     <NuxtLink
-                        to="/dashboard/home"
-                        class="text-primary font-bold flex space-x-3"
+                        to="/register"
+                        class="bg-primary text-white font-bold py-2 px-4 rounded-full"
                     >
-                        <ArrowRightIcon class="w-4" />
-                        <NuxtLink
-                            to="/login"
-                            class="text-sm"
-                        >
-                            Connexion
-                        </NuxtLink>
+                        S'inscrire
                     </NuxtLink>
                 </div>
-            </SheetFooter>
+            </div>
         </SheetContent>
     </Sheet>
 </template>
