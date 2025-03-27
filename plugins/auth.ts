@@ -8,13 +8,16 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     const fetchCurrentUser = async (): Promise<User> => {
         try {
-            user.value = await $apifetch('/api/user');
-            return user.value;
+            return await $apifetch('/api/user');
         }
         catch {
             return null;
         }
     };
+
+    if (!user.value) {
+        user.value = await fetchCurrentUser();
+    }
 
     nuxtApp.provide('fetchCurrentUser', fetchCurrentUser);
     nuxtApp.provide('user', user.value);
