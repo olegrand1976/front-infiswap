@@ -95,8 +95,6 @@
                             {{ group.times }}
                         </div>
 
-                        {{ group }}
-
                         <div
                             v-if="group.patients"
                             class="mt-8"
