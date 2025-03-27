@@ -34,13 +34,19 @@ export const useSubscription = () => {
             return response;
         }
         catch (error) {
-            $toast({
-                variant: 'destructive',
-                description: 'Erreur lors de la création de votre abonnement',
-                duration: 3000,
-            });
-
-            console.error('Error creating subscription:', error);
+            if(error.data.message){
+                $toast({
+                    variant: 'destructive',
+                    description: error.data.message,
+                    duration: 3000,
+                });
+            }else{
+                $toast({
+                    variant: 'destructive',
+                    description: 'Erreur lors de la création de votre abonnement',
+                    duration: 3000,
+                });
+            }
         }
         finally {
             loading.value = false;
