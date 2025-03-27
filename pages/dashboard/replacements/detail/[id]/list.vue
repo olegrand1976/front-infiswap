@@ -101,7 +101,7 @@
                                 v-else
                                 class="w-1/2 block mx-auto"
                                 :class="{ 'opacity-50 cursor-not-allowed': loading }"
-                                @click="changeStatus(list.id, 'confirmed')"
+                                @click="updateStatus(list.id, 'confirmed')"
                             >
                                 Accepter
                             </Button>
@@ -131,7 +131,22 @@ const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
-
+const updateStatus = async (id: number, status: string) => {
+    try {
+        await changeStatus(id, status);
+        await fetchListResponse();
+        $toast({
+            description: 'Statut modifié avec succès',
+        });
+    }
+    catch (error) {
+        $toast({
+            variant: 'destructive',
+            description: 'Erreur lors du changement de statut',
+        });
+        console.error(error);
+    }
+};
 const formatDate = (isoString) => {
     const date = new Date(isoString);
     const day = String(date.getDate()).padStart(2, '0');

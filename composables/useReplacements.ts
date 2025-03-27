@@ -256,7 +256,6 @@ export const useListResponse = (replacementId) => {
 
 export const changeStatusReplacement = () => {
     const { $apifetch } = useNuxtApp();
-
     const success = useState('statusSuccess', () => false);
     const changeStatus = async (responseId: number, status: string) => {
         try {
