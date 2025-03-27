@@ -60,7 +60,10 @@
                             Ville
                         </TableHead>
                         <TableHead class="bg-primary text-nowrap w-full flex justify-center items-center text-white">
-                            Type(s) de soin(s) à pratiquer
+                            <span class="hidden lg:inline-block">
+                                Type(s) de soin(s) à pratiquer
+                            </span>
+                            <span class="lg:hidden">Soin(s)</span>
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -244,7 +247,7 @@
 
                     <div class="col-span-2 py-2 mt-6 rounded bg-primary text-white font-semibold text-center">
                         <h4>
-                            Types de soin à pratiquer
+                            Type(s) de soin(s) à pratiquer
                         </h4>
                     </div>
 

@@ -69,16 +69,6 @@
                                 </div>
                                 <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
                                     <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Email
-                                    </p>
-                                    <Input
-                                        v-model="formData.email"
-                                        type="email"
-                                        class="bg-transparent placeholder:text-black"
-                                    />
-                                </div>
-                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
                                         Sécurité sociale
                                     </p>
                                     <Input
