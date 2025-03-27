@@ -5,7 +5,7 @@
                 class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
             >
                 <div class="bg-primary border border-primary rounded-2xl h-full p-2 sm:mx-20 md:px-2 md:mx-0">
-                    <div class="bg-white rounded-2xl flex items-center h-10 p-2">
+                    <div class="bg-white rounded-2xl h-10 p-2">
                         <h2 class="font-bold text-primary text-center">
                             Période de remplacement
                         </h2>
@@ -60,7 +60,7 @@
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"
-                        class="flex flex-col justify-center px-auto md:block md:px-0 rounded-md shadow-lg"
+                        class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
                     />
                 </div>
             </div>
@@ -363,40 +363,6 @@
                                         Sélectionnez l'heure
                                     </h5>
 
-                                    <!-- <div
-                                        v-if="visitTimes.length != 0"
-                                        class="flex items-center space-x-8 mt-4"
-                                    >
-                                        <label>Horaires disponibles: </label>
-
-                                        <div
-                                            v-for="(time, index) in visitTimes"
-                                            :key="index"
-                                            class="flex items-center space-x-4"
-                                        >
-                                            <div
-                                                class="h-8 px-8 py-1 text-sm rounded-full cursor-pointer transition-all duration-300"
-                                                :class="{
-                                                    'bg-primary text-white': time === selectedTime,
-                                                    'border border-primary': time !== selectedTime,
-                                                }"
-                                                @click="handleSelectTime(time)"
-                                            >
-                                                {{ time }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        v-if="visitTimes.length != 0"
-                                        class="relative my-8"
-                                    >
-                                        <hr class="border border-gray-200">
-                                        <p class="absolute px-4 py-1 bg-white -top-3 text-gray-400 left-1/2">
-                                            OU
-                                        </p>
-                                    </div> -->
-
                                     <div class="flex items-center space-x-8 mt-4">
                                         <label>Entrer l'heure: </label>
 
@@ -441,8 +407,8 @@
                     </Dialog>
 
                     <div class="my-16 flex justify-center items-center">
-                        <div
-                            class="hidden h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2"
+                        <!-- <div
+                            class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2"
                         >
                             <div class="bg-primary rounded-s-full justify-center items-center px-auto">
                                 <span class="text-center text-white">Revenu</span>
@@ -450,7 +416,7 @@
                             <div class="flex justify-center items-center mx-auto">
                                 <span class="text-center">8 000 £</span>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="flex items-center">
                             <Button
