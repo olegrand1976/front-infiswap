@@ -67,10 +67,14 @@
 
                 <TableBody>
                     <template v-if="error">
-                        <p class="mt-16 text-center text-black/60">Impossible de les récupérer {{ error }}</p>
+                        <p class="mt-16 text-center text-black/60">
+                            Impossible de les récupérer {{ error }}
+                        </p>
                     </template>
                     <template v-if="loading">
-                        <p class="mt-16 text-center text-black/60">Chargement des patients...</p>
+                        <p class="mt-16 text-center text-black/60">
+                            Chargement des patients...
+                        </p>
                     </template>
                     <template
                         v-else-if="nursePatients.length == 0"
