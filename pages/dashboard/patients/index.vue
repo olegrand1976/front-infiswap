@@ -285,15 +285,32 @@ const submitDelete = async (patientId) => {
 onMounted(() => {
     fetchNursePatients();
 
-    // Vérifie si le reload a déjà eu lieu dans le passé
-    if (!localStorage.getItem('reloaded')) {
+    // Vérifie si l'utilisateur est connecté
+    const isLoggedIn = checkIfUserIsLoggedIn(); // Remplacez cette fonction par votre propre logique de vérification
+
+    // Si l'utilisateur est déconnecté, réinitialisez la clé 'reloadedOnce'
+    if (!isLoggedIn) {
+        localStorage.removeItem('reloadedOnce');
+    }
+
+    // Vérifie si le reload a déjà eu lieu dans cette session
+    if (!localStorage.getItem('reloadedOnce') && isLoggedIn) {
+        // Marque que le reload a eu lieu dans cette session
+        localStorage.setItem('reloadedOnce', 'true');
+        
+        // On attend un peu avant de recharger, pour s'assurer que tout est bien enregistré
         setTimeout(() => {
-            // Marque que le reload a eu lieu
-            localStorage.setItem('reloaded', 'true');
             location.reload();
         }, 1000);
     }
 });
+
+// Fonction fictive pour vérifier si l'utilisateur est connecté (à adapter à votre logique)
+function checkIfUserIsLoggedIn() {
+    // Remplacez ceci par votre propre logique pour vérifier l'état de la session
+    // Par exemple, si vous avez un token ou un indicateur de connexion dans le localStorage ou un cookie
+    return !!localStorage.getItem('userToken'); // Exemple, remplacez selon votre logique
+}
 
 definePageMeta({
     layout: 'dashboard',
