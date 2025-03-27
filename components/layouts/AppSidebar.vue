@@ -103,13 +103,6 @@
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
-                <SidebarMenuButton class="bg-yellow-600 h-16 text-white">
-                    Version Test :
-
-                    Données supprimées avant le 20 mars 2025.
-                </SidebarMenuButton>
-            </SidebarGroup>
-            <SidebarGroup>
                 <SidebarMenuButton class="bg-primary text-white">
                     <Button
                         class="w-full flex space-x-2 items-center justify-center"
