@@ -284,9 +284,15 @@ const submitDelete = async (patientId) => {
 
 onMounted(() => {
     fetchNursePatients();
-    setTimeout(() => {
-        location.reload();
-    }, 1000);
+
+    // Vérifie si le reload a déjà eu lieu dans le passé
+    if (!localStorage.getItem('reloaded')) {
+        setTimeout(() => {
+            // Marque que le reload a eu lieu
+            localStorage.setItem('reloaded', 'true');
+            location.reload();
+        }, 1000);
+    }
 });
 
 definePageMeta({
