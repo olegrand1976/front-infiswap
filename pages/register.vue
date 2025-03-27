@@ -59,8 +59,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Nom *"
-                            @blur="validateField('lastname')"
-                            @input="validateField('lastname')"
                         />
                         <p
                             v-if="error.lastname"
@@ -77,8 +75,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Prénoms *"
-                            @blur="validateField('firstname')"
-                            @input="validateField('firstname')"
                         />
                         <p
                             v-if="error.firstname"
@@ -95,8 +91,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Email *"
-                            @blur="validateField('email')"
-                            @input="validateField('email')"
                         />
                         <p
                             v-if="error.email"
@@ -113,8 +107,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="N° de téléphone"
-                            @blur="validateField('phoneNumber')"
-                            @input="validateField('phoneNumber')"
                         />
                         <p
                             v-if="error.phoneNumber"
@@ -132,8 +124,6 @@
                             type="password"
                             class="border border-gray-300"
                             placeholder="Mot de passe *"
-                            @blur="validateField('password')"
-                            @input="validateField('password')"
                         />
                         <p
                             v-if="error.password"
@@ -151,8 +141,6 @@
                             type="password"
                             placeholder="Mot de passe *"
                             class="border border-gray-300"
-                            @blur="validateField('passwordConfirmation')"
-                            @input="validateField('passwordConfirmation')"
                         />
                         <p
                             v-if="error.passwordConfirmation"
@@ -236,8 +224,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Code postal *"
-                            @blur="validateField('address.zipCode')"
-                            @input="validateField('address.zipCode')"
                         />
                         <p
                             v-if="error.address.zipCode"
@@ -362,8 +348,6 @@
                             size="md"
                             class="border border-gray-300"
                             placeholder="Numéro INAMI *"
-                            @blur="validateField('identifierNumber')"
-                            @input="validateField('identifierNumber')"
                         />
                         <p
                             v-if="error.identifierNumber"
@@ -535,32 +519,32 @@ const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
 );
 
-const schema = yup.object({
-    lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
-    firstname: yup.string().required('Le prénom est obligatoire').min(2, 'Le prénom doit comporter au moins 2 caractères'),
-    email: yup.string().email('L\'email doit être valide').required('L\'email est obligatoire'),
-    password: yup.string()
-        .required('Le mot de passe est obligatoire')
-        .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
-    passwordConfirmation: yup.string()
-        .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre')
-        .required('Confirmation du mot de passe requis'),
-    accountType: yup.string().required('Le type de compte est obligatoire'),
-    gender: yup.string().required('Le genre est obligatoire'),
-    phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
-    dateOfBirth: yup.date().nullable(),
-    identifierNumber: yup.string()
-        .required('Le numéro INAMI est obligatoire')
-        .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
-        .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
-    address: yup.object({
-        street: yup.string().required('L\'adresse est obligatoire'),
-        city: yup.string().required('La ville est obligatoire'),
-        zipCode: yup.string().required('Le code postal est obligatoire').max(7, 'Le code postal ne doit pas dépasser 7 caractères'),
-        country: yup.string().required('Le pays est obligatoire'),
-        additionnalInformation: yup.string(),
-    }).required('L\'adresse est obligatoire'),
-});
+// const schema = yup.object({
+//     lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
+//     firstname: yup.string().required('Le prénom est obligatoire').min(2, 'Le prénom doit comporter au moins 2 caractères'),
+//     email: yup.string().email('L\'email doit être valide').required('L\'email est obligatoire'),
+//     password: yup.string()
+//         .required('Le mot de passe est obligatoire')
+//         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
+//     passwordConfirmation: yup.string()
+//         .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre')
+//         .required('Confirmation du mot de passe requis'),
+//     accountType: yup.string().required('Le type de compte est obligatoire'),
+//     gender: yup.string().required('Le genre est obligatoire'),
+//     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
+//     dateOfBirth: yup.date().nullable(),
+//     identifierNumber: yup.string()
+//         .required('Le numéro INAMI est obligatoire')
+//         .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
+//         .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
+//     address: yup.object({
+//         street: yup.string().required('L\'adresse est obligatoire'),
+//         city: yup.string().required('La ville est obligatoire'),
+//         zipCode: yup.string().required('Le code postal est obligatoire').max(7, 'Le code postal ne doit pas dépasser 7 caractères'),
+//         country: yup.string().required('Le pays est obligatoire'),
+//         additionnalInformation: yup.string(),
+//     }).required('L\'adresse est obligatoire'),
+// });
 
 const validateField = async (field) => {
     try {
@@ -628,57 +612,7 @@ const validateRequiredFields = async () => {
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        const isValid = await validateRequiredFields();
-
-        if (isValid) {
-            return register(formData)
-                .then(() => {
-                    const userEmail = formData.email;
-                    console.log(userEmail);
-
-                    $toast({
-                        description: 'Inscription réussie',
-                    });
-
-                    Object.keys(formData).forEach((key) => {
-                        formData[key as keyof typeof formData] = key === 'accept' ? false : '';
-                    });
-                    inProgress.value = true;
-
-                    setTimeout(() => {
-                        router.push('use-choice');
-                    }, 2000);
-                })
-                .catch((error) => {
-                    console.error('Erreur API :', error);
-
-                    if (error.data && error.data.errors) {
-                        const backendErrors = error.data.errors;
-                        const errorMessages: string[] = [];
-
-                        Object.keys(backendErrors).forEach((field) => {
-                            backendErrors[field].forEach((message: string) => {
-                                errorMessages.push(message);
-                            });
-                        });
-
-                        if (errorMessages.length > 0) {
-                            $toast({
-                                description: errorMessages.join('/'),
-                                status: 'error',
-                                variant: 'destructive',
-                            });
-                        }
-                    }
-                    else {
-                        $toast({
-                            description: 'Une erreur est survenue. Veuillez réessayer.',
-                            status: 'error',
-                            variant: 'destructive',
-                        });
-                    }
-                });
-        }
+        return register(formData);
     },
 );
 

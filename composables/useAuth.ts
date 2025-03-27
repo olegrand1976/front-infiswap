@@ -36,6 +36,16 @@ export const useAuth = () => {
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
                 useCookie(AUTH_TOKEN).value = response.token;
+            })
+            .then(() => {
+                $toast({
+                    description: 'Inscription réussie',
+                });
+            })
+            .then(() => {
+                setTimeout(() => {
+                    router.push('use-choice');
+                }, 2000);
                 return refresh();
             })
             .catch((error) => { throw error; });
