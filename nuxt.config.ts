@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
-        // '@zadigetvoltaire/nuxt-gtm',
+        '@zadigetvoltaire/nuxt-gtm',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
         '@nuxt/image',
@@ -102,23 +102,18 @@ export default defineNuxtConfig({
             minify: 'esbuild',
         },
     },
-    // gtm: {
-    //     id: 'G-CKSFK6XYTZ',
-    //     queryParams: {
-    //         gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
-    //         gtm_preview: 'env-4',
-    //         gtm_cookies_win: 'x',
-    //     },
-    //     defer: false,
-    //     compatibility: false,
-    //     enabled: true,
-    //     debug: process.env.NODE_ENV !== 'production',
-    //     loadScript: true,
-    //     enableRouterSync: true,
-    //     ignoredViews: ['dashboard'],
-    //     trackOnNextTick: true,
-    //     devtools: process.env.NODE_ENV !== 'production',
-    // },
+    gtm: {
+        id: 'GTM-KFBFVVR3',
+        defer: false,
+        compatibility: false,
+        enabled: true,
+        debug: process.env.NODE_ENV !== 'production',
+        loadScript: true,
+        enableRouterSync: true,
+        ignoredViews: ['dashboard'],
+        trackOnNextTick: true,
+        devtools: process.env.NODE_ENV !== 'production',
+    },
 
     server: {
         host: '0.0.0.0',
