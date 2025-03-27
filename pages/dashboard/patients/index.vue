@@ -66,8 +66,14 @@
                 </TableHeader>
 
                 <TableBody>
+                    <template v-if="error">
+                        <p class="mt-16 text-center text-black/60">Impossible de les récupérer {{ error }}</p>
+                    </template>
+                    <template v-if="loading">
+                        <p class="mt-16 text-center text-black/60">Chargement des patients...</p>
+                    </template>
                     <template
-                        v-if="nursePatients.length == 0"
+                        v-else-if="nursePatients.length == 0"
                     >
                         <p class="mt-16 text-center text-black/60">
                             Vous n'avez aucun patient pour le moment ou Veuillez patienter
@@ -259,7 +265,7 @@ useHead({
     title: 'Liste des patients',
 });
 
-const { nursePatients, fetchNursePatients } = useNursePatients();
+const { nursePatients, error, loading, fetchNursePatients } = useNursePatients();
 
 const isDialogOpen = ref(false);
 
@@ -284,33 +290,7 @@ const submitDelete = async (patientId) => {
 
 onMounted(() => {
     fetchNursePatients();
-
-    // Vérifie si l'utilisateur est connecté
-    const isLoggedIn = checkIfUserIsLoggedIn(); // Remplacez cette fonction par votre propre logique de vérification
-
-    // Si l'utilisateur est déconnecté, réinitialisez la clé 'reloadedOnce'
-    if (!isLoggedIn) {
-        localStorage.removeItem('reloadedOnce');
-    }
-
-    // Vérifie si le reload a déjà eu lieu dans cette session
-    if (!localStorage.getItem('reloadedOnce') && isLoggedIn) {
-        // Marque que le reload a eu lieu dans cette session
-        localStorage.setItem('reloadedOnce', 'true');
-        
-        // On attend un peu avant de recharger, pour s'assurer que tout est bien enregistré
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-    }
 });
-
-// Fonction fictive pour vérifier si l'utilisateur est connecté (à adapter à votre logique)
-function checkIfUserIsLoggedIn() {
-    // Remplacez ceci par votre propre logique pour vérifier l'état de la session
-    // Par exemple, si vous avez un token ou un indicateur de connexion dans le localStorage ou un cookie
-    return !!localStorage.getItem('userToken'); // Exemple, remplacez selon votre logique
-}
 
 definePageMeta({
     layout: 'dashboard',
