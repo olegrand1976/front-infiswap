@@ -399,6 +399,6 @@ const hasShift = (details, period) => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'subscribed'],
 });
 </script>
