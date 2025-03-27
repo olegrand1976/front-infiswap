@@ -199,7 +199,7 @@
                 <div
                     v-for="replacement in replacements.data"
                     :key="replacement.id"
-                    class="grid grid-cols-2 p-8 rounded bg-gray-100 mb-12"
+                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12"
                 >
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div class="grid grid-cols-1 items-center gap-2">
@@ -399,6 +399,6 @@ const hasShift = (details, period) => {
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'subscribed'],
 });
 </script>

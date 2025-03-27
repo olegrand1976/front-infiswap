@@ -1,7 +1,8 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
-        // '@zadigetvoltaire/nuxt-gtm',
+        '@zadigetvoltaire/nuxt-gtm',
+        'nuxt-gtag',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
         '@nuxt/image',
@@ -94,39 +95,33 @@ export default defineNuxtConfig({
 
     vite: {
         css: {
-        // Désactiver les sourcemaps CSS en production
             devSourcemap: false,
         },
         build: {
-        // Utiliser esbuild pour minifier (rapide)
             minify: 'esbuild',
         },
     },
-    // gtm: {
-    //     id: 'G-CKSFK6XYTZ',
-    //     queryParams: {
-    //         gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
-    //         gtm_preview: 'env-4',
-    //         gtm_cookies_win: 'x',
-    //     },
-    //     defer: false,
-    //     compatibility: false,
-    //     enabled: true,
-    //     debug: process.env.NODE_ENV !== 'production',
-    //     loadScript: true,
-    //     enableRouterSync: true,
-    //     ignoredViews: ['dashboard'],
-    //     trackOnNextTick: true,
-    //     devtools: process.env.NODE_ENV !== 'production',
-    // },
+    gtag: {
+        id: 'G-CKSFK6XYTZ',
+        enabled: process.env.NODE_ENV === 'production',
+    },
+    gtm: {
+        id: 'GTM-KFBFVVR3',
+        defer: false,
+        compatibility: false,
+        enabled: true,
+        debug: process.env.NODE_ENV !== 'production',
+        loadScript: true,
+        enableRouterSync: true,
+        ignoredViews: ['dashboard'],
+        trackOnNextTick: true,
+        devtools: process.env.NODE_ENV !== 'production',
+    },
 
     server: {
         host: '0.0.0.0',
         port: 3000,
     },
-
-    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
-
     shadcn: {
         prefix: '',
         componentDir: './components/ui',
