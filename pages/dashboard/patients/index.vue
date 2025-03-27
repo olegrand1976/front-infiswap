@@ -284,6 +284,9 @@ const submitDelete = async (patientId) => {
 
 onMounted(() => {
     fetchNursePatients();
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 });
 
 definePageMeta({
