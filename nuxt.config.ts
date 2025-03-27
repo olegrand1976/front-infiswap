@@ -103,7 +103,7 @@ export default defineNuxtConfig({
         },
     },
     gtm: {
-        id: 'GTM-KFBFVVR3',
+        id: 'G-CKSFK6XYTZ',
         queryParams: {
             gtm_auth: 'AB7cDEf3GHIjkl-MnOP8qr',
             gtm_preview: 'env-4',
@@ -111,14 +111,12 @@ export default defineNuxtConfig({
         },
         defer: false,
         compatibility: false,
-        nonce: '2726c7f26c',
         enabled: true,
         debug: process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
-        // Conditionner les devtools à l'environnement de développement
         devtools: process.env.NODE_ENV !== 'production',
     },
 
