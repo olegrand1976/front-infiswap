@@ -60,7 +60,7 @@
                     <RangeCalendar
                         v-model="value"
                         :min-value="todayCalendar"
-                        class="flex flex-col justify-center px-auto md:block md:px-0 rounded-md shadow-lg"
+                        class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
                     />
                 </div>
             </div>
