@@ -254,11 +254,7 @@ const {
     inProgress,
 } = useSubmit(
     () => {
-        return sendResponse().submitResponse(formData).then(() => {
-            $toast({
-                description: 'Réponse envoyée avec succès.',
-            });
-        });
+        return sendResponse().submitResponse(formData);
     },
 );
 
