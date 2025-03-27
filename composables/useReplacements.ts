@@ -203,6 +203,10 @@ export const sendResponse = () => {
         return await $apifetch('/api/replacement-responses/send', {
             method: 'POST',
             body: formData,
+        }).then(() => {
+            $toast({
+                description: 'Réponse envoyée avec succès',
+            });
         }).catch((e) => {
             $toast({
                 variant: 'destructive',

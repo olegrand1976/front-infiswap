@@ -690,22 +690,17 @@ const submit = async () => {
 
     const hasSearchCriteria = formData.selectedDays.length > 0 || formData.postalCodeTags.length > 0 || formData.cityTags.length > 0;
 
-    try {
-        if (hasSearchCriteria) {
-            const response = await fetchReplacements({
-                selectedDays: Array.from(formData.selectedDays),
-                postalCode: toRaw(formData.postalCodeTags),
-                cities: toRaw(formData.cityTags),
-                type: toRaw(formData.type),
-            });
-            currentReplacements.value = response.replacements.data;
-        }
-        else {
-            currentReplacements.value = initialReplacements.value;
-        }
+    if (hasSearchCriteria) {
+        const response = await fetchReplacements({
+            selectedDays: Array.from(formData.selectedDays),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+        });
+        currentReplacements.value = response.replacements.data;
     }
-    catch (error) {
-        console.error('Error during search:', error);
+    else {
+        currentReplacements.value = initialReplacements.value;
     }
 };
 
