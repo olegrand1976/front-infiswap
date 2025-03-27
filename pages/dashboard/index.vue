@@ -154,7 +154,7 @@
                             </TagsInput>
                         </div>
 
-                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                        <!-- <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
                             <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mt-10 sm:mt-0 mb-3 sm:mb-0"
@@ -182,9 +182,9 @@
                                     class="-mt-1 sm:w-24 2xl:w-auto"
                                 />
                             </TagsInput>
-                        </div>
+                        </div> -->
 
-                        <div class="grid grid-cols-1 mb-32 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+                        <!-- <div class="grid grid-cols-1 mb-32 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
                             <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                                 <label
                                     class="font-semibold sm:font-normal mt-24 sm:mt-0 mb-3 sm:mb-0"
@@ -212,7 +212,7 @@
                                     class="-mt-1 sm:w-24 2xl:w-auto"
                                 />
                             </TagsInput>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
 
