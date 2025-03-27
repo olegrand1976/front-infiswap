@@ -2,6 +2,7 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
+        'nuxt-gtag',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
         '@nuxt/image',
@@ -94,13 +95,15 @@ export default defineNuxtConfig({
 
     vite: {
         css: {
-        // Désactiver les sourcemaps CSS en production
             devSourcemap: false,
         },
         build: {
-        // Utiliser esbuild pour minifier (rapide)
             minify: 'esbuild',
         },
+    },
+    gtag: {
+        id: 'G-CKSFK6XYTZ',
+        enabled: process.env.NODE_ENV === 'production',
     },
     gtm: {
         id: 'GTM-KFBFVVR3',
@@ -119,9 +122,6 @@ export default defineNuxtConfig({
         host: '0.0.0.0',
         port: 3000,
     },
-
-    // Configuration de Nuxt Image pour servir vos images depuis le dossier public
-
     shadcn: {
         prefix: '',
         componentDir: './components/ui',
