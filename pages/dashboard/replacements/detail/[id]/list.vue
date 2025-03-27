@@ -33,7 +33,6 @@
 
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
-                {{ listResponse }}
                 <div
                     v-for="(list, index) in listResponse"
                     :key="index"
@@ -197,7 +196,7 @@ const route = useRoute();
 const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
 
-const { listResponse, fetchListResponse } = useListResponse(replacementId);
+const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -246,7 +245,6 @@ const handlesubmit = async (id) => {
             description: 'Veuillez réessayer',
             variant: 'destructive',
         });
-        console.log(e);
     }
 };
 

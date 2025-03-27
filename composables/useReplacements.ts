@@ -235,9 +235,10 @@ export const useListResponse = (replacementId) => {
     const { $apifetch } = useNuxtApp();
 
     const listResponse = useState('listResponse', () => []);
-
+    const loading = useState('loading', () => false);
     async function fetchListResponse() {
         try {
+            loading.value = true;
             const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
             console.log('Données récupérées de la liste des réponses :', response.responses);
             listResponse.value = response.responses;
@@ -245,9 +246,12 @@ export const useListResponse = (replacementId) => {
         catch (err) {
             console.log(err);
         }
+        finally {
+            loading.value = false;
+        }
     }
 
-    return { listResponse, fetchListResponse };
+    return { loading, listResponse, fetchListResponse };
 };
 
 export const changeStatusReplacement = () => {
