@@ -95,7 +95,12 @@
                             {{ group.times }}
                         </div>
 
-                        <div class="mt-8">
+                        {{ group }}
+
+                        <div
+                            v-if="group.patients"
+                            class="mt-8"
+                        >
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
                                     Patient(s)
@@ -193,6 +198,7 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { useDetailReplacement, useListResponse, sendResponse } from '~/composables/useReplacements';
+import { getFullName } from '~/lib/utils';
 
 const user = useState('user');
 const route = useRoute();
@@ -229,7 +235,9 @@ const groupedDetails = computed(() => {
             detail.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
             grouped[detail.date].zipCodes.add(detail.patient.zip_code);
             grouped[detail.date].cities.add(detail.patient.city);
-            grouped[detail.date].patients.add(`${detail.patient.firstname} ${detail.patient.lastname}`);
+            if (detail.patient.firstname || detail.patient.lastname) {
+                grouped[detail.date].patients.add(getFullName(detail.patient));
+            }
         });
     }
 

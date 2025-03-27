@@ -33,7 +33,7 @@
 
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
-                {{  listResponse }}
+                {{ listResponse }}
                 <div
                     v-for="(list, index) in listResponse"
                     :key="index"

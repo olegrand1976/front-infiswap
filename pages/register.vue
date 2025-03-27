@@ -444,7 +444,7 @@ const genders = [
         value: 'X',
         label: 'X',
         name: 'neutre',
-    }
+    },
 ];
 
 const countries = [

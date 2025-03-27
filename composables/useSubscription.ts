@@ -34,13 +34,14 @@ export const useSubscription = () => {
             return response;
         }
         catch (error) {
-            if(error.data.message){
+            if (error.data.message) {
                 $toast({
                     variant: 'destructive',
                     description: error.data.message,
                     duration: 3000,
                 });
-            }else{
+            }
+            else {
                 $toast({
                     variant: 'destructive',
                     description: 'Erreur lors de la création de votre abonnement',

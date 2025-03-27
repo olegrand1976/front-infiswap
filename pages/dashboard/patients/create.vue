@@ -144,8 +144,6 @@
                             type="email"
                             class="w-full bg-transparent"
                             placeholder="johndoe@gmail.com"
-                            @blur="validateField('email')"
-                            @input="validateField('email')"
                         />
                         <p
                             v-if="error.email"

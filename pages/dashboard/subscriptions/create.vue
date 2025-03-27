@@ -135,8 +135,8 @@ useHead({
 
 const handleSelectPlan = async (product: Plan) => {
     selectPlan(product);
-    const response = await create(product.stripe_price_id).catch((error
-    ) =>{
+    const response = await create(product.stripe_price_id).catch((error,
+    ) => {
         console.log(error.message);
     });
 
