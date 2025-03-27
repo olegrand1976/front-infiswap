@@ -650,7 +650,8 @@ const getUniqueCities = (details) => {
 
 const hasMatchingCityFromUnique = (city) => {
     if (!isSubmitted.value) return false;
-    return formData.cityTags.some(tag => tag.toLowerCase() === city.toLowerCase());
+    const normalizedCity = city.toLowerCase().trim();
+    return formData.cityTags.some(tag => tag.toLowerCase() === normalizedCity) || formData.cityTags.some(tag => tag.toLowerCase().includes(normalizedCity));
 };
 
 const getUniqueCareTypes = (details) => {
