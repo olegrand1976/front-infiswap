@@ -150,22 +150,6 @@
                         </p>
                     </div>
 
-                    <div class="col-span-2">
-                        <InputIcon
-                            v-model="formData.dateOfBirth"
-                            :icon="CalendarDateRangeIcon"
-                            size="md"
-                            type="date"
-                            class="text-black/80 border border-gray-300"
-                        />
-                        <p
-                            v-if="error.dateOfBirth"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.dateOfBirth }}
-                        </p>
-                    </div>
-
                     <div class="col-span-1 lg:col-span-2">
                         <Select v-model="formData.gender">
                             <SelectTrigger
@@ -480,7 +464,6 @@ const formData = reactive({
     gender: 'F',
     language: languages[0].value,
     phoneNumber: undefined,
-    dateOfBirth: null,
     identifierNumber: '',
     address: {
         street: '',
@@ -501,7 +484,6 @@ const error = reactive({
     gender: '',
     language: '',
     phoneNumber: undefined,
-    dateOfBirth: null,
     identifierNumber: '',
     address: {
         street: '',
@@ -518,96 +500,6 @@ const { register } = useAuth();
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
 );
-
-// const schema = yup.object({
-//     lastname: yup.string().required('Le nom est obligatoire').min(2, 'Le nom doit comporter au moins 2 caractères'),
-//     firstname: yup.string().required('Le prénom est obligatoire').min(2, 'Le prénom doit comporter au moins 2 caractères'),
-//     email: yup.string().email('L\'email doit être valide').required('L\'email est obligatoire'),
-//     password: yup.string()
-//         .required('Le mot de passe est obligatoire')
-//         .min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
-//     passwordConfirmation: yup.string()
-//         .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre')
-//         .required('Confirmation du mot de passe requis'),
-//     accountType: yup.string().required('Le type de compte est obligatoire'),
-//     gender: yup.string().required('Le genre est obligatoire'),
-//     phoneNumber: yup.string().matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
-//     dateOfBirth: yup.date().nullable(),
-//     identifierNumber: yup.string()
-//         .required('Le numéro INAMI est obligatoire')
-//         .matches(/^\d+$/, 'Le numéro INAMI ne peut contenir que des chiffres')
-//         .max(11, 'Le numéro INAMI ne peut pas dépasser 11 chiffres'),
-//     address: yup.object({
-//         street: yup.string().required('L\'adresse est obligatoire'),
-//         city: yup.string().required('La ville est obligatoire'),
-//         zipCode: yup.string().required('Le code postal est obligatoire').max(7, 'Le code postal ne doit pas dépasser 7 caractères'),
-//         country: yup.string().required('Le pays est obligatoire'),
-//         additionnalInformation: yup.string(),
-//     }).required('L\'adresse est obligatoire'),
-// });
-
-const validateField = async (field) => {
-    try {
-        if (field === 'password' || field === 'passwordConfirmation') {
-            // Validation de password et passwordConfirmation lorsque l'un des deux change
-            await schema.validateAt(field, toRaw(formData));
-        }
-        else if (field.includes('.')) {
-            // Sépare le champ imbriqué
-            const [parentField, childField] = field.split('.');
-            const childValue = formData[parentField] ? formData[parentField][childField] : undefined;
-
-            // Validation du champ imbriqué
-            await schema.fields[parentField].fields[childField].validate({ [childField]: childValue });
-        }
-        else {
-            // Validation pour un champ simple
-            await schema.validateAt(field, toRaw(formData));
-        }
-        // Si la validation réussit, on efface l'erreur
-        error[field] = '';
-    }
-    catch (err) {
-        // Si la validation échoue, on stocke l'erreur
-        error[field] = (err as yup.ValidationError).message;
-    }
-};
-
-const validateRequiredFields = async () => {
-    // Réinitialiser les erreurs
-    Object.keys(error).forEach((key) => {
-        error[key] = '';
-    });
-
-    let isValid = true;
-    const missingFields: string[] = [];
-
-    try {
-        await schema.validate(toRaw(formData), { abortEarly: false });
-    }
-    catch (err) {
-        if (err instanceof yup.ValidationError) {
-            err.inner.forEach((e) => {
-                if (e.type === 'required') {
-                    error[e.path] = e.message;
-                    missingFields.push(e.message);
-                    isValid = false;
-                }
-            });
-
-            // Afficher un toast listant les champs manquants
-            if (missingFields.length > 0) {
-                $toast({
-                    description: `Veuillez remplir les champs obligatoires : ${missingFields.join(', ')}`,
-                    status: 'error',
-                    variant: 'destructive',
-                });
-            }
-        }
-    }
-
-    return isValid;
-};
 
 const { submit, inProgress } = useSubmit(
     async () => {

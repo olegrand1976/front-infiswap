@@ -191,23 +191,19 @@ export const useDetailReplacement = (replacementId) => {
 export const sendResponse = () => {
     const { $apifetch, $toast } = useNuxtApp();
 
-    const error = useState('sendResponseError', () => null);
-    const loading = useState('sendResponseLoading', () => false);
-    const success = useState('sendResponseSuccess', () => false);
+    const isDisabled = useState('isDisabled', () => false);
 
     const submitResponse = async (formData) => {
-        loading.value = true;
-        error.value = null;
-        success.value = false;
-
         return await $apifetch('/api/replacement-responses/send', {
             method: 'POST',
             body: formData,
         }).then(() => {
+            isDisabled.value = true;
             $toast({
                 description: 'Réponse envoyée avec succès',
             });
         }).catch((e) => {
+            isDisabled.value = false;
             $toast({
                 variant: 'destructive',
                 description: e.data.message,
@@ -216,9 +212,7 @@ export const sendResponse = () => {
     };
 
     return {
-        error,
-        loading,
-        success,
+        isDisabled,
         submitResponse,
     };
 };

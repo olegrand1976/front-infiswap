@@ -161,6 +161,7 @@
                     <div>
                         <Button
                             type="submit"
+                            :disabled="isDisabled || inProgress"
                             :in-progress="inProgress"
                         >
                             <span v-if="user.gender == 'M'">
@@ -202,10 +203,11 @@ const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
-const { $toast } = useNuxtApp();
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const { listResponse, fetchListResponse } = useListResponse(replacementId);
+
+const { isDisabled } = sendResponse();
 
 const formData = reactive({
     replacementId: replacementId,
@@ -253,8 +255,8 @@ const {
     submit,
     inProgress,
 } = useSubmit(
-    () => {
-        return sendResponse().submitResponse(formData);
+    async () => {
+        await sendResponse().submitResponse(formData);
     },
 );
 
