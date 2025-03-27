@@ -48,8 +48,6 @@
                             type="text"
                             class="w-full bg-transparent"
                             placeholder="Doe"
-                            @blur="validateField('lastname')"
-                            @input="validateField('lastname')"
                         />
                         <p
                             v-if="error.lastname"
@@ -71,8 +69,6 @@
                             type="text"
                             class="w-full bg-transparent"
                             placeholder="John"
-                            @blur="validateField('firstname')"
-                            @input="validateField('firstname')"
                         />
                         <p
                             v-if="error.firstname"
@@ -121,8 +117,6 @@
                             type="text"
                             placeholder="199603-123-56"
                             class="w-full bg-transparent"
-                            @blur="validateField('socialSecurityNumber')"
-                            @input="validateField('socialSecurityNumber')"
                         />
                         <p
                             v-if="error.socialSecurityNumber"
@@ -165,8 +159,6 @@
                             type="text"
                             class="w-full bg-transparent"
                             placeholder="0499123456"
-                            @blur="validateField('phoneNumber')"
-                            @input="validateField('phoneNumber')"
                         />
                         <p
                             v-if="error.phoneNumber"
@@ -188,8 +180,6 @@
                             type="text"
                             class="w-full bg-transparent"
                             placeholder="1000"
-                            @blur="validateField('zipCode')"
-                            @input="validateField('zipCode')"
                         />
                         <p
                             v-if="error.zipCode"
@@ -211,8 +201,6 @@
                             type="text"
                             class="w-full bg-transparent"
                             placeholder="Bruxelles"
-                            @blur="validateField('city')"
-                            @input="validateField('city')"
                         />
                         <p
                             v-if="error.city"
@@ -546,48 +534,48 @@ const error = reactive({
     city: '',
 });
 
-const schema = yup.object({
-    lastname: yup.string()
-        .required('Le nom est requis')
-        .min(2, 'Le nom doit comporter au moins 2 caractères'),
+// const schema = yup.object({
+//     lastname: yup.string()
+//         .required('Le nom est requis')
+//         .min(2, 'Le nom doit comporter au moins 2 caractères'),
 
-    firstname: yup.string()
-        .required('Le prénom est requis')
-        .min(2, 'Le prénom doit comporter au moins 2 caractères'),
+//     firstname: yup.string()
+//         .required('Le prénom est requis')
+//         .min(2, 'Le prénom doit comporter au moins 2 caractères'),
 
-    // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
-    socialSecurityNumber: yup.string()
-        .required('Le numéro de sécurité social est requis')
-        .transform(value => (value ? value.replace(/-/g, '') : ''))
-        .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
+//     // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
+//     socialSecurityNumber: yup.string()
+//         .required('Le numéro de sécurité social est requis')
+//         .transform(value => (value ? value.replace(/-/g, '') : ''))
+//         .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
 
-    phoneNumber: yup.string()
-        .required('Le téléphone est requis')
-        .matches(/^(?:\d\s*){8,12}$/, '8 à 12 chiffres requis'),
+//     phoneNumber: yup.string()
+//         .required('Le téléphone est requis')
+//         .matches(/^(?:\d\s*){8,12}$/, '8 à 12 chiffres requis'),
 
-    zipCode: yup.string()
-        .required('Le code postal est requis')
-        .max(7, 'Maximum 7 caractères'),
+//     zipCode: yup.string()
+//         .required('Le code postal est requis')
+//         .max(7, 'Maximum 7 caractères'),
 
-    city: yup.string()
-        .required('La ville est requise'),
-});
+//     city: yup.string()
+//         .required('La ville est requise'),
+// });
 
 // Modifier la fonction validateField
-const validateField = async (field: string) => {
-    try {
-        error[field] = '';
-        await schema.validateAt(field, formData.value);
-    }
-    catch (err) {
-        const errorMessage = (err as yup.ValidationError).message;
+// const validateField = async (field: string) => {
+//     try {
+//         error[field] = '';
+//         await schema.validateAt(field, formData.value);
+//     }
+//     catch (err) {
+//         const errorMessage = (err as yup.ValidationError).message;
 
-        // Ne pas afficher 'required' si le champ est en cours de remplissage
-        if (formData.value[field as keyof typeof formData.value] !== '' || errorMessage.includes('requis')) {
-            error[field] = errorMessage;
-        }
-    }
-};
+//         // Ne pas afficher 'required' si le champ est en cours de remplissage
+//         if (formData.value[field as keyof typeof formData.value] !== '' || errorMessage.includes('requis')) {
+//             error[field] = errorMessage;
+//         }
+//     }
+// };
 
 const days = {
     monday: 'Lundi',
@@ -702,7 +690,7 @@ const updatePatientCareTypes = () => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        await schema.validate(formData.value, { abortEarly: false });
+        // await schema.validate(formData.value, { abortEarly: false });
         updatePatientCareTypes();
         const payload = {
             ...formData.value,
