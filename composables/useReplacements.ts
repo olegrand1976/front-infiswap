@@ -258,10 +258,9 @@ export const changeStatusReplacement = () => {
     const { $apifetch } = useNuxtApp();
 
     const success = useState('statusSuccess', () => false);
-
-    const changeStatus = async (responseId) => {
+    const changeStatus = async (responseId: number, status: string) => {
         try {
-            const response = await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=confirmed`, {
+            const response = await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

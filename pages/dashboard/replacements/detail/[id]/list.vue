@@ -39,74 +39,7 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 lg:gap-4 justify-between items-center"
                 >
                     <div
-                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900"
-                    >
-                        <div class="rounded-t-lg h-32 overflow-hidden">
-                            <img
-                                class="object-cover object-top w-full"
-                                src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
-                                alt="Mountain"
-                            >
-                        </div>
-                        <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-                            <UserCircleIcon />
-                        </div>
-                        <div class="text-center mt-2">
-                            <h2 class="font-semibold">
-                                {{ fullName(list.repondedBy) }}
-                            </h2>
-                        </div>
-                        <!-- <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
-                            <li class="flex flex-col items-center justify-around">
-                                <StarIcon class="size-7"/>
-                                <div>5</div>
-                            </li>
-                            <li class="flex flex-col items-center justify-between">
-                                <ArrowPathIcon class="size-6"/>
-                                <div>0</div>
-                            </li>
-                            <li class="flex flex-col items-center justify-around">
-                                <BriefcaseIcon class="size-6"/>
-                                <div>15</div>
-                            </li>
-                        </ul> -->
-                        <ul class="py-4 mt-2 text-gray-700 text-center">
-                            <li class="flex gap-1 justify-center items-center">
-                                <IdentificationIcon class="size-5" />
-                                <span>
-                                    {{ list.repondedBy.identifier_number }}
-                                </span>
-                            </li>
-                            <li class="flex gap-1 justify-center items-center">
-                                <MapPinIcon class="size-5" />
-                                <span>
-                                    {{ list.repondedBy.profile.zip_code ?? '---' }} {{ list.repondedBy.profile.city ?? '---' }}
-                                </span>
-                            </li>
-                            <li class="flex gap-1 justify-center items-center">
-                                <PhoneIcon class="size-4" />
-                                <div>
-                                    {{ list.repondedBy.phone_number ? formattedPhoneNumber(list.repondedBy.phone_number) : '---' }}
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="p-4 border-t mx-8 mt-2">
-                            <div
-                                v-if="list.status==='confirmed'"
-                                class="flex mx-auto gap-2 w-1/2 text-success items-center font-bold"
-                            >
-                                <CheckCircleIcon class="size-7" /> <span>Accepté</span>
-                            </div>
-                            <Button
-                                v-else
-                                class="w-1/2 block mx-auto"
-                            >
-                                Accepter
-                            </Button>
-                        </div>
-                    </div>
-                    <div
-                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900"
+                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900"
                     >
                         <div class="rounded-t-lg h-32 overflow-hidden">
                             <img
@@ -167,7 +100,8 @@
                             <Button
                                 v-else
                                 class="w-1/2 block mx-auto"
-                                @submit="handlesubmit(list.id)"
+                                :class="{ 'opacity-50 cursor-not-allowed': loading }"
+                                @click="changeStatus(list.id, 'confirmed')"
                             >
                                 Accepter
                             </Button>
@@ -186,7 +120,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, StarIcon, ArrowPathIcon, BriefcaseIcon, PhoneIcon, MapPinIcon, IdentificationIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, StarIcon, ArrowPathIcon, BriefcaseIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
 
