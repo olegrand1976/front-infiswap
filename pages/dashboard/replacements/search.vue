@@ -225,6 +225,11 @@
                                 </TableCell>
                             </TableRow>
                         </div>
+                        <div v-else-if="currentReplacements.length === 0">
+                            <p class="text-center text-gray-500 py-8">
+                                Aucun résultat n'est trouvé
+                            </p>
+                        </div>
                         <div v-else>
                             <TableRow
                                 v-for="replacement in currentReplacements"
@@ -358,7 +363,7 @@
             </div>
 
             <div class="lg:hidden">
-                <div v-if="loading">
+                <div v-if="loading && loadingSearch">
                     <div
                         v-for="(_, index) in Array.from({ length: 3 })"
                         :key="index"
@@ -366,6 +371,11 @@
                     >
                         <Skeleton class="h-32 w-full bg-gray-100" />
                     </div>
+                </div>
+                <div v-else-if="currentReplacements.length === 0">
+                    <p class="text-center text-gray-500 py-8">
+                        Aucun résultat n'est trouvé
+                    </p>
                 </div>
                 <div
                     v-for="replacement in currentReplacements"
