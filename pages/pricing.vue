@@ -1,75 +1,114 @@
 <template>
     <NuxtLayout name="guest-with-title">
-        <div class="container px-4 sm:px-6 lg:px-8 -mt-32 sm:mt-6 lg:mt-0">
-            <h6 class="text-primary text-xl md:text-2xl lg:text-4xl text-center">
-                Prix abonnement infiswap
-            </h6>
-            <div class="text-center mt-6">
-                <!-- <p>Bonjour</p> -->
+        <template #title>
+            <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
+                <h1 class="text-2xl font-medium capitalize lg:text-3xl dark:text-white">
+                    Abonnement
+                </h1>
+                <div class="mt-2">
+                    <span class="inline-block w-28 h-1 bg-primary rounded-full" />
+                    <span class="inline-block w-6 h-1 mx-1 bg-primary rounded-full" />
+                    <span class="inline-block w-1 h-1 bg-primary rounded-full" />
+                </div>
             </div>
-        </div>
-
-        <div class="container mt-12 lg:mt-28 px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col items-center h-auto p-4">
-                <div
-                    v-if="plans"
-                    class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 justify-center w-full max-w-4xl"
-                >
-                    <div
-                        v-if="plans?.monthly"
-                        class="flex flex-col w-full md:w-72 border-2 border-primary rounded-lg overflow-hidden"
-                    >
-                        <div class="bg-primary  text-white text-center p-3 border-t-2 border-primary">
-                            Prix Mensuel
-                        </div>
-                        <div class="bg-gray-200 flex flex-col items-center justify-center p-6 space-y-4 w-full">
-                            <div class="text-center border-b-2 border-primary pb-4 w-full">
-                                <h1 class="text-lg leading-tight">
-                                    <!-- Bonjour -->
-                                </h1>
-                                <div class="flex items-center justify-center space-x-2 mt-6">
-                                    <h1 class="text-5xl font-bold text-primary my-6">
-                                        {{ parseInt(plans.monthly.amount) }}
-                                        <sup class="text-lg align-super">€</sup>
-                                    </h1>
-                                    <span class="text-sm">Par mois</span>
-                                </div>
-                            </div>
-                            <button
-                                class="m-6 w-32 bg-primary text-white py-2 rounded-full"
-                                @click="handleClick('monthly')"
-                            >
-                                Consulter
-                            </button>
-                        </div>
+        </template>
+        <div
+            class="relative min-h-96 container"
+        >
+            <div>
+                <div class="flex flex-col justify-center items-center">
+                    <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
+                        <p class="mt-4 font-medium text-center text-gray-500 dark:text-gray-300">
+                            Obtenez un accès complet en choisissant votre formule !
+                        </p>
                     </div>
 
                     <div
-                        v-if="plans?.yearly"
-                        class="flex flex-col w-full md:w-72 border-2 border-primary rounded-lg overflow-hidden"
+                        v-if="loading && Object.keys(plans ?? {}).length == 0"
+                        class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0"
                     >
-                        <div class="bg-primary text-white text-center p-3 border-b-2 border-primary">
-                            Prix Annuel
-                        </div>
-                        <div class="bg-gray-200 flex flex-col items-center justify-center p-6 space-y-4 w-full">
-                            <div class="text-center border-b-2 border-primary pb-4 w-full">
-                                <h1 class="text-lg leading-tight">
-                                    <!-- Bonjour -->
-                                </h1>
-                                <div class="flex items-center justify-center space-x-2 mt-6">
-                                    <h1 class="text-5xl font-bold text-primary my-6">
-                                        {{ parseInt(plans.yearly.amount) }}
-                                        <sup class="text-lg align-super">€</sup>
-                                    </h1>
-                                    <span class="text-sm">Par an</span>
+                        <div class="grid grid-cols-2 gap-2 md:gap-4">
+                            <div class="flex flex-col space-y-3">
+                                <Skeleton class="h-[180px] w-[400px] rounded-xl bg-gray-200" />
+                                <div class="space-y-2">
+                                    <Skeleton class="h-4 w-[400px]  bg-gray-200" />
+                                    <Skeleton class="h-4 w-[400px]  bg-gray-200" />
                                 </div>
                             </div>
-                            <button
-                                class="m-6 w-32 bg-primary text-white py-2 rounded-full"
-                                @click="handleClick('yearly')"
-                            >
-                                Consulter
-                            </button>
+                            <div class="flex flex-col space-y-3">
+                                <Skeleton class="h-[180px] w-[400px] rounded-xl  bg-gray-200" />
+                                <div class="space-y-2">
+                                    <Skeleton class="h-4 w-[400px]  bg-gray-200" />
+                                    <Skeleton class="h-4 w-[400px] bg-gray-200" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        v-else
+                        class="flex-1 xl:mx-8"
+                    >
+                        <div class="mt-8 space-y-8 md:-mx-4 text-center md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
+                            <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
+                                <div class="p-6">
+                                    <h1 class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white">
+                                        Mensuel
+                                    </h1>
+
+                                    <p class="mt-4 text-gray-500 dark:text-gray-300">
+                                        Un abonnement flexible pour gérer vos remplacements et tournées sans engagement. Payez au mois et profitez de toutes les fonctionnalités essentielles.
+                                    </p>
+
+                                    <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                        {{ plans?.monthly.amount }} €<span class="text-base font-medium">/mois</span>
+                                    </h2>
+
+                                    <Button
+                                        class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                        :in-progress="loading && plan.stripe_price_id == plans?.monthly.stripe_price_id"
+                                        @click="handleSelectPlan(plans.monthly)"
+                                    >
+                                        Commencez maintenant
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                                <div class="p-6">
+                                    <h1 class="text-xl text-success font-bold capitalize lg:text-2xl dark:text-white">
+                                        Annuel
+                                    </h1>
+
+                                    <p class="mt-4 text-gray-500 dark:text-gray-300">
+                                        Économisez en choisissant un abonnement annuel ! Profitez de toutes les fonctionnalités tout en réduisant vos coûts sur l’année.
+                                    </p>
+
+                                    <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                        {{ plans?.yearly.amount }} €<span class="text-base font-medium">/an</span>
+                                    </h2>
+                                    <Button
+                                        class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                        :in-progress="loading && plan.stripe_price_id == plans?.yearly.stripe_price_id"
+                                        @click="handleSelectPlan(plans.yearly)"
+                                    >
+                                        Commencez maintenant
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container mt-12 ml-5 lg:ml-12 font-medium text-gray-500 dark:text-gray-300 mb-14">
+                            <ul class="font-bold pl-5 md:pl-20 text-sm md:text-base">
+                                <li>Profitez de toute la plateforme infiswap:</li>
+                            </ul>
+                            <br>
+                            <ul class="list-[circle] pl-8 md:pl-32 mt-2 md:mt-1 space-y-2 text-sm md:text-base">
+                                <li>Créer vos remplacements</li>
+                                <li>Recherchez des remplacements</li>
+                                <li>Consultez vos remplacements</li>
+                                <li>Recevez les notifications de remplacements disponibles par rapport à vos préférences</li>
+                                <li>Recevez les informations des tournées sélectionnées</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -78,28 +117,35 @@
     </NuxtLayout>
 </template>
 
-<script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
-import { useSubscription } from '~/composables/useSubscription';
+<script setup lang="ts">
+import { useSubscription, type Plan } from '~/composables/useSubscription';
 
-const isAuthenticated = ref(false);
-const { plans, getPlans } = useSubscription();
-const router = useRouter();
-
-const handleClick = (type: string) => {
-    router.push(isAuthenticated.value ? `/register` : `/login`);
-};
-
-onMounted(async () => {
-    await getPlans();
-});
+const {
+    plans,
+    getPlans,
+    plan,
+    selectPlan,
+    loading,
+    create,
+} = useSubscription();
 
 useHead({
-    title: 'Tarification',
+    title: 'Abonnements',
 });
 
 definePageMeta({
     layout: false,
+});
+const handleSelectPlan = async (product: Plan) => {
+    selectPlan(product);
+    const response = await create(product.stripe_price_id);
+
+    if (response?.url) {
+        window.location.href = response.url;
+    }
+};
+
+onMounted(async () => {
+    await getPlans();
 });
 </script>
