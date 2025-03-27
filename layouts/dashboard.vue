@@ -62,7 +62,7 @@
                     </DropdownMenu>
                 </div>
             </header>
-            <div class="flex flex-1 flex-col gap-4 p-4 pt-0 lg:ml-6 xl:ml-0 xl:w-full">
+            <div class="flex flex-1 pl-10 pr-8 flex-col gap-4 pt-0 xl:w-full">
                 <NuxtPage />
             </div>
         </SidebarInset>

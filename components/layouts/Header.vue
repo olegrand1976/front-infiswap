@@ -98,6 +98,7 @@ const navigationItems = [
     { label: 'ACCUEIL', route: '/' },
     { label: 'A PROPOS', route: '/about' },
     { label: 'NOS SERVICES', route: '/services' },
+    { label: 'NOS TARIFS', route: '/pricing' },
     { label: 'NOUS CONTACTER', route: '/contact' },
 ];
 

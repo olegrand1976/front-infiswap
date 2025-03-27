@@ -66,8 +66,14 @@
                 </TableHeader>
 
                 <TableBody>
+                    <template v-if="error">
+                        <p class="mt-16 text-center text-black/60">Impossible de les récupérer {{ error }}</p>
+                    </template>
+                    <template v-if="loading">
+                        <p class="mt-16 text-center text-black/60">Chargement des patients...</p>
+                    </template>
                     <template
-                        v-if="nursePatients.length == 0"
+                        v-else-if="nursePatients.length == 0"
                     >
                         <p class="mt-16 text-center text-black/60">
                             Vous n'avez aucun patient pour le moment ou Veuillez patienter
@@ -259,7 +265,7 @@ useHead({
     title: 'Liste des patients',
 });
 
-const { nursePatients, fetchNursePatients } = useNursePatients();
+const { nursePatients, error, loading, fetchNursePatients } = useNursePatients();
 
 const isDialogOpen = ref(false);
 
