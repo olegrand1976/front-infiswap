@@ -128,27 +128,6 @@
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
-                            <label for="email">
-                                Email *
-                            </label>
-                        </div>
-                        <Input
-                            id="email"
-                            v-model="formData.email"
-                            type="email"
-                            class="w-full bg-transparent"
-                            placeholder="johndoe@gmail.com"
-                        />
-                        <p
-                            v-if="error.email"
-                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
-                        >
-                            {{ error.email }}
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
-                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
                             <label for="phoneNumber">
                                 Téléphone *
                             </label>
@@ -497,7 +476,6 @@ const initialFormData = {
     nurseId: user.value.nurse.id,
     lastname: '',
     firstname: '',
-    email: '',
     socialSecurityNumber: '',
     phoneNumber: '',
     zipCode: '',
@@ -533,49 +511,6 @@ const error = reactive({
     zipCode: '',
     city: '',
 });
-
-// const schema = yup.object({
-//     lastname: yup.string()
-//         .required('Le nom est requis')
-//         .min(2, 'Le nom doit comporter au moins 2 caractères'),
-
-//     firstname: yup.string()
-//         .required('Le prénom est requis')
-//         .min(2, 'Le prénom doit comporter au moins 2 caractères'),
-
-//     // .matches(/^\d{6}-\d{3}-\d{2}$/, 'Format valide: 199603-123-56'),
-//     socialSecurityNumber: yup.string()
-//         .required('Le numéro de sécurité social est requis')
-//         .transform(value => (value ? value.replace(/-/g, '') : ''))
-//         .matches(/^\d{11}$/, 'Format valide: 19960312356 ou 199603-123-56'),
-
-//     phoneNumber: yup.string()
-//         .required('Le téléphone est requis')
-//         .matches(/^(?:\d\s*){8,12}$/, '8 à 12 chiffres requis'),
-
-//     zipCode: yup.string()
-//         .required('Le code postal est requis')
-//         .max(7, 'Maximum 7 caractères'),
-
-//     city: yup.string()
-//         .required('La ville est requise'),
-// });
-
-// Modifier la fonction validateField
-// const validateField = async (field: string) => {
-//     try {
-//         error[field] = '';
-//         await schema.validateAt(field, formData.value);
-//     }
-//     catch (err) {
-//         const errorMessage = (err as yup.ValidationError).message;
-
-//         // Ne pas afficher 'required' si le champ est en cours de remplissage
-//         if (formData.value[field as keyof typeof formData.value] !== '' || errorMessage.includes('requis')) {
-//             error[field] = errorMessage;
-//         }
-//     }
-// };
 
 const days = {
     monday: 'Lundi',

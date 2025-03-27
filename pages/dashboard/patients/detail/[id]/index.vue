@@ -168,13 +168,8 @@
                     <div class="flex flex-col gap-2 px-4 py-6 lg:gap-4">
                         <div class="grid grid-cols-[40%_60%] gap-4">
                             <div class="font-semibold">
-                                Email
-                            </div>
-                            <div>{{ patient.email }}</div>
-                        </div>
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <div class="font-semibold">
-                                Numéro de registre national
+                                <!-- Numéro de registre national -->
+                                NISS
                             </div>
                             <div>{{ patient.social_security_number }}</div>
                         </div>
