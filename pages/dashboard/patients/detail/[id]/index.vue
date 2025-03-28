@@ -1077,7 +1077,7 @@ const saveCareInformations = async () => {
         }
 
         $toast({
-            description: `Erreur : ${errorMessage}`,
+            description: `${errorMessage}`,
             variant: 'destructive',
         });
     }
