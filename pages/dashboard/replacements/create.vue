@@ -761,6 +761,7 @@ const copiedDates = ref<{ [date: string]: boolean }>({});
 const copyCurrentDate = async () => {
     if (copiedDates.value[currentDate.value]) {
         $toast({
+            variant: 'destructive',
             description: 'Copie déjà effectuée',
         });
         return;
@@ -835,6 +836,7 @@ const copyAllDates = async () => {
 
     if (datesToCopy.length === 0) {
         $toast({
+            variant: 'destructive',
             description: 'Copie déjà effectuée pour toutes les dates',
         });
         return;

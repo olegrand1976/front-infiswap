@@ -246,19 +246,31 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="grid grid-cols-3 justify-center items-center bg-[#F1F2F7] text-xs">
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'morning')"
-                                        class="h-6 mx-auto text-green-500"
-                                    />
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'afternoon')"
-                                        class="h-6 mx-auto text-green-500"
-                                    />
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'evening')"
-                                        class="h-6 mx-auto text-green-500"
-                                    />
+                                <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
+                                    <div>
+                                        <span
+                                            v-if="hasShift(replacement.details, 'morning')"
+                                        >
+                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                        </span>
+                                        <span v-else />
+                                    </div>
+                                    <div>
+                                        <span
+                                            v-if="hasShift(replacement.details, 'afternoon')"
+                                        >
+                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                        </span>
+                                        <span v-else />
+                                    </div>
+                                    <div>
+                                        <span
+                                            v-if="hasShift(replacement.details, 'evening')"
+                                        >
+                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                        </span>
+                                        <span v-else />
+                                    </div>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
