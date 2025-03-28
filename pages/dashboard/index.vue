@@ -82,7 +82,7 @@
 
         <section class="grid grid-cols-1 xl:grid-cols-[45%_53%] gap-4">
             <div class="flex flex-col space-y-4">
-                <div class="bg-gray-100 rounded p-4">
+                <div class="bg-gray-100 h-72 sm:h-full rounded p-4 mb-4">
                     <h3 class="text-primary">
                         Mes préférences
                     </h3>
@@ -216,7 +216,7 @@
                     </form>
                 </div>
 
-                <div class="bg-gray-100 rounded-b-lg">
+                <div class="bg-gray-100 rounded-b-lg relative mt-24">
                     <h3 class="text-white bg-primary p-3 rounded-t-lg">
                         Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                     </h3>
@@ -232,12 +232,12 @@
                 </div>
             </div>
 
-            <div class="bg-gray-100 rounded p-4">
-                <h3 class="text-primary">
+            <div class="sm:bg-gray-100 sm:rounded sm:p-4 mt-4 sm:mt-0">
+                <h3 class="text-primary font-bold sm:font-normal">
                     Tournée du jour
                 </h3>
 
-                <div class="my-3">
+                <div class="my-3 hidden sm:block">
                     <Table>
                         <TableHeader>
                             <TableRow class="grid grid-cols-3 gap-0 border-gray-300">
@@ -307,6 +307,57 @@
                         </TableBody>
                     </Table>
                 </div>
+
+                <div class="sm:hidden my-4">
+                    <template
+                        v-if="reports.tours != 0"
+                    >
+                        <div
+                            v-for="(tournee, index) in reports.tours"
+                            :key="index"
+                            class="bg-gray-100 p-3 rounded-lg space-y-4"
+                        >
+                            <div class="space-y-2">
+                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
+                                    Patient
+                                </h3>
+                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
+                                    {{ tournee.lastname }} {{ tournee.firstname }}
+                                </p>
+                            </div>
+                            <div class="space-y-2">
+                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
+                                    Code postal
+                                </h3>
+                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
+                                    {{ tournee.profile.zip_code }}
+                                </p>
+                            </div>
+                            <div class="space-y-2">
+                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
+                                    Ville
+                                </h3>
+                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
+                                    {{ tournee.profile.city }}
+                                </p>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p class="text-center text-xs text-black/50 mt-6">
+                            Aucune tournée à afficher pour le moment
+                        </p>
+                        <p>
+                            <Button
+                                class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
+                                disabled
+                            >
+                                Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les
+                                fonctionnalités
+                            </Button>
+                        </p>
+                    </template>
+                </div>
             </div>
         </section>
     </div>
@@ -329,9 +380,6 @@ const user = useState('user');
 const { getReports, createPreferences } = useReports();
 
 const reports = await getReports();
-
-const replaces = [];
-const replacems = [];
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
