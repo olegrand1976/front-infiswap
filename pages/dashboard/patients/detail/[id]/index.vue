@@ -878,8 +878,27 @@ const updatePatientInfo = async () => {
         }, 1000);
     }
     catch (error) {
+        let errorMessage = 'Une erreur s\'est produite';
+
+        if (error.response && error.response._data) {
+            const responseData = error.response._data;
+
+            if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            else if (responseData.errors) {
+                errorMessage = Object.values(responseData.errors)
+                    .flat()
+                    .join(', ');
+            }
+        }
+        else if (error.message) {
+            errorMessage = error.message;
+        }
+
         $toast({
-            description: `Erreur : ${error.message || 'Une erreur s\'est produite'}`,
+            description: `Erreur : ${errorMessage}`,
+            variant: 'destructive',
         });
     }
 };
@@ -891,18 +910,46 @@ const formatTime = (time) => {
 };
 
 const toggleDaySelection = (visit, day) => {
+    const allDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    if (day === 'all') {
+        if (visit.daysOfVisit.includes('all')) {
+            visit.daysOfVisit = [];
+        }
+        else {
+            visit.daysOfVisit = [...allDays, 'all'];
+        }
+        return;
+    }
     const index = visit.daysOfVisit.indexOf(day);
+    const hasAllSelected = visit.daysOfVisit.includes('all');
+
     if (index === -1) {
         visit.daysOfVisit.push(day);
+        if (hasAllSelected) {
+            const allIndex = visit.daysOfVisit.indexOf('all');
+            visit.daysOfVisit.splice(allIndex, 1);
+        }
     }
     else {
         visit.daysOfVisit.splice(index, 1);
+        if (hasAllSelected) {
+            const allIndex = visit.daysOfVisit.indexOf('all');
+            visit.daysOfVisit.splice(allIndex, 1);
+        }
     }
     visit.daysOfVisit = [...visit.daysOfVisit];
 };
 
 const getSelectedDaysText = (selectedDays) => {
-    return selectedDays.map(day => days[day]).join(', ');
+    if (!selectedDays || selectedDays.length === 0) return null;
+    if (selectedDays.includes('all')) {
+        return 'Tous les jours';
+    }
+    // Cas normal
+    return selectedDays
+        .filter(day => day !== 'all')
+        .map(day => days[day])
+        .join(', ');
 };
 
 const addVisit = () => {
@@ -1012,7 +1059,8 @@ const saveCareInformations = async () => {
     }
     catch (error) {
         $toast({
-            description: `Erreur : ${error.message || 'Une erreur s\'est produite'}`,
+            description: `Erreur: ${error.response?._data?.message || error.response?._data?.error || error.message}`,
+            variant: 'destructive',
         });
     }
 };
