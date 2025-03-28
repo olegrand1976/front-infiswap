@@ -26,6 +26,7 @@
                                             type="date"
                                             :min="formData.startDate || today"
                                             class="text-xs w-full text-black/70 bg-transparent"
+                                            @input="handleDateInput('start')"
                                         />
                                     </div>
                                 </FormControl>
@@ -48,6 +49,7 @@
                                             type="date"
                                             :min="formData.startDate || today"
                                             class="text-xs w-full text-black/70 bg-transparent"
+                                            @input="handleDateInput('end')"
                                         />
                                     </div>
                                 </FormControl>
@@ -486,8 +488,6 @@ const datePatients = ref<{
     };
 }>({});
 
-const copiedTours = ref<Set<string>>(new Set());
-
 const today = computed(() => {
     const date = new Date();
     return date.toISOString().split('T')[0];
@@ -510,6 +510,54 @@ const value = ref({
 
 // Initialiser currentDate avec la date actuelle
 const currentDate = ref(new Date().toISOString().split('T')[0]);
+
+const handleDateInput = (type: 'start' | 'end') => {
+    const date = type === 'start' ? formData.startDate : formData.endDate;
+    if (!date) {
+        if (type === 'end') {
+            value.value = {
+                start: value.value.start,
+                end: null,
+            };
+        }
+        return;
+    }
+
+    // Prevent selecting dates before today
+    if (new Date(date) < new Date(today.value)) {
+        if (type === 'start') {
+            formData.startDate = today.value;
+        }
+        else {
+            formData.endDate = today.value;
+        }
+        return;
+    }
+
+    // For end date, ensure it's not before start date
+    if (type === 'end' && formData.startDate && date < formData.startDate) {
+        formData.endDate = formData.startDate;
+        return;
+    }
+
+    // Update calendar value
+    const [year, month, day] = date.split('-').map(Number);
+    const calendarDate = new CalendarDate(year, month, day);
+
+    if (type === 'start') {
+        value.value = {
+            start: calendarDate,
+            end: value.value.end,
+        };
+        currentDate.value = date;
+    }
+    else {
+        value.value = {
+            start: value.value.start,
+            end: calendarDate,
+        };
+    }
+};
 
 // Modifier le watch pour gérer correctement les changements de dates
 watch(value, (newValue) => {
@@ -708,14 +756,21 @@ const updateReplacementData = () => {
 
 const { tours, fetchTours } = useTours();
 
+const copiedDates = ref<{ [date: string]: boolean }>({});
+
 const copyCurrentDate = async () => {
-    await fetchTours(formData.startDate, formData.startDate);
+    if (copiedDates.value[currentDate.value]) {
+        $toast({
+            description: 'Copie déjà effectuée',
+        });
+        return;
+    }
+
+    await fetchTours(currentDate.value, currentDate.value);
     await nextTick();
 
     if (tours.value.length > 0) {
         tours.value.forEach((tour) => {
-            if (copiedTours.value.has(tour.id)) return; // Vérifier si la tournée a déjà été copiée
-
             if (tour.visit_times && tour.visit_times.length > 0) {
                 tour.visit_times.forEach((visitTime) => {
                     if (visitTime.visits && visitTime.visits.length > 0) {
@@ -723,7 +778,6 @@ const copyCurrentDate = async () => {
                             const actualPeriod = determineTimePeriod(formatTime(visit.time));
                             const date = tour.date;
 
-                            // Initialiser la structure si elle n'existe pas
                             if (!datePatients.value[date]) {
                                 datePatients.value[date] = {};
                             }
@@ -731,13 +785,11 @@ const copyCurrentDate = async () => {
                                 datePatients.value[date][actualPeriod] = [];
                             }
 
-                            // Créer un mappage des noms de types de soins à leurs identifiants
                             const careTypeMap = {};
                             tour.patient_care_type.forEach((careType) => {
                                 careTypeMap[careType.care_type_name] = careType.care_type_id;
                             });
 
-                            // Convertir les noms des types de soins en identifiants
                             const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
 
                             datePatients.value[date][actualPeriod].push({
@@ -748,41 +800,50 @@ const copyCurrentDate = async () => {
                                 phone_number: tour.phone_number,
                                 city: tour.profile.city,
                                 zipCode: tour.profile.zip_code,
-                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
+                                careTypes: careTypeIds,
                                 time: formatTime(visit.time),
                             });
 
-                            // Trier les visites par heure
                             datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
                         });
                     }
                 });
             }
-
-            copiedTours.value.add(tour.id); // Marquer la tournée comme copiée
         });
 
+        copiedDates.value[currentDate.value] = true;
         $toast({
-            description: 'Tournées du jour copiées avec succès',
+            description: 'Tournée du jour copiée avec succès',
         });
     }
     else {
         $toast({
             description: 'Aucune tournée à copier',
         });
-    };
+    }
 
-    // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();
 };
 
 const copyAllDates = async () => {
+    const allDates = [];
+    for (let date = new Date(formData.startDate); date <= new Date(formData.endDate); date.setDate(date.getDate() + 1)) {
+        allDates.push(date.toISOString().split('T')[0]);
+    }
+
+    const datesToCopy = allDates.filter(date => !copiedDates.value[date]);
+
+    if (datesToCopy.length === 0) {
+        $toast({
+            description: 'Copie déjà effectuée pour toutes les dates',
+        });
+        return;
+    }
+
     await fetchTours(formData.startDate, formData.endDate);
 
     if (tours.value && tours.value.length > 0) {
         tours.value.forEach((tour) => {
-            if (copiedTours.value.has(tour.id)) return; // Vérifier si la tournée a déjà été copiée
-
             if (tour.visit_times && tour.visit_times.length > 0) {
                 tour.visit_times.forEach((visitTime) => {
                     if (visitTime.visits && visitTime.visits.length > 0) {
@@ -790,7 +851,6 @@ const copyAllDates = async () => {
                             const actualPeriod = determineTimePeriod(formatTime(visit.time));
                             const date = tour.date;
 
-                            // Initialiser la structure si elle n'existe pas
                             if (!datePatients.value[date]) {
                                 datePatients.value[date] = {};
                             }
@@ -798,13 +858,11 @@ const copyAllDates = async () => {
                                 datePatients.value[date][actualPeriod] = [];
                             }
 
-                            // Créer un mappage des noms de types de soins à leurs identifiants
                             const careTypeMap = {};
                             tour.patient_care_type.forEach((careType) => {
                                 careTypeMap[careType.care_type_name] = careType.care_type_id;
                             });
 
-                            // Convertir les noms des types de soins en identifiants
                             const careTypeIds = visit.care_types.map(careTypeName => careTypeMap[careTypeName]);
 
                             datePatients.value[date][actualPeriod].push({
@@ -815,18 +873,19 @@ const copyAllDates = async () => {
                                 phone_number: tour.phone_number,
                                 city: tour.profile.city,
                                 zipCode: tour.profile.zip_code,
-                                careTypes: careTypeIds, // Utiliser les identifiants au lieu des noms
+                                careTypes: careTypeIds,
                                 time: formatTime(visit.time),
                             });
 
-                            // Trier les visites par heure
                             datePatients.value[date][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
                         });
                     }
                 });
             }
+        });
 
-            copiedTours.value.add(tour.id); // Marquer la tournée comme copiée
+        datesToCopy.forEach((date) => {
+            copiedDates.value[date] = true;
         });
 
         $toast({
@@ -837,9 +896,8 @@ const copyAllDates = async () => {
         $toast({
             description: 'Aucune tournée à copier',
         });
-    };
+    }
 
-    // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();
 };
 
@@ -867,7 +925,7 @@ const reinitializeData = () => {
     // Réinitialiser toutes les données de patients
     datePatients.value = {};
     formData.replacement = [];
-    copiedTours.value.clear(); // Réinitialiser l'indicateur de copie
+    copiedDates.value = {};
 };
 
 const removePatient = (date, patientId, time) => {
@@ -877,6 +935,7 @@ const removePatient = (date, patientId, time) => {
             patient => !(patient.id === patientId && patient.time === time),
         );
         updateReplacementData();
+        copiedDates.value = {};
     }
 };
 
