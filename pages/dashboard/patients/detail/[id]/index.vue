@@ -1058,8 +1058,26 @@ const saveCareInformations = async () => {
         });
     }
     catch (error) {
+        let errorMessage = 'Une erreur s\'est produite';
+
+        if (error.response && error.response._data) {
+            const responseData = error.response._data;
+
+            if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            else if (responseData.errors) {
+                errorMessage = Object.values(responseData.errors)
+                    .flat()
+                    .join(', ');
+            }
+        }
+        else if (error.message) {
+            errorMessage = error.message;
+        }
+
         $toast({
-            description: `Erreur: ${error.response?._data?.message || error.response?._data?.error || error.message}`,
+            description: `Erreur : ${errorMessage}`,
             variant: 'destructive',
         });
     }
