@@ -26,7 +26,38 @@
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
                 <div class="bg-primary text-white p-4 rounded">
-                    <UserCircleIcon class="w-28 mx-auto" />
+                    <div class="relative group">
+                        <img
+                            v-if="patient.profile?.profil_url" 
+                            :src="patient.profile.profil_url" 
+                            class="w-28 h-28 rounded-full mx-auto object-cover"
+                        />
+                        <UserCircleIcon v-else class="w-28 mx-auto" />
+                        <button
+                            @click="isProfileUrlDialogOpen = true"
+                            class="absolute bottom-0 right-1/4 bg-gray-200 text-gray-800 p-2 rounded-full hover:bg-gray-300 transition-all opacity-0 group-hover:opacity-100"
+                        >
+                            <PencilIcon class="w-4 h-4" />
+                        </button>
+
+                        <Dialog v-model:open="isProfileUrlDialogOpen">
+                            <DialogContent class="sm:max-w-[40rem]">
+                                <DialogHeader>
+                                    <DialogTitle>Modifier la photo de profil</DialogTitle>
+                                </DialogHeader>
+                                <div class="grid gap-4 py-4">
+                                    <div class="grid gap-2">
+                                        <FileUpload @file-selected="profileFile = $event" accept="image/*" />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button :loading="profileUpload.loading" @click="handleUploadProfile">
+                                        Sauvegarder
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                     <p class="text-center mt-4">
                         {{ patient.firstname }}
                         <span
@@ -205,8 +236,8 @@
                 <div class="bg-gray-100 rounded-b">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span class="font-semibold">Notes de santé</span>
-                        <PencilSquareIcon
-                            class="w-5 text-white cursor-pointer"
+                        <PlusCircleIcon
+                            class="w-7 text-white cursor-pointer"
                             @click="openCareInfoDialog"
                         />
                     </h3>
@@ -660,6 +691,7 @@ import {
     XMarkIcon,
     CalendarDaysIcon,
     TrashIcon,
+    PencilIcon,
 } from '@heroicons/vue/24/solid';
 
 import clsx from 'clsx';
@@ -1082,6 +1114,41 @@ const saveCareInformations = async () => {
         });
     }
 };
+
+const isProfileUrlDialogOpen = ref(false);
+const profileFile = ref(null);
+const profileUpload = useFile();
+
+const handleUploadProfile = async () => {
+    if (!profileFile.value) {
+        $toast({
+            variant: 'destructive',
+            description: 'Aucun fichier sélectionné.',
+        });
+        return;
+    }
+
+    const url = `/api/patients/profile/${patient.value.id}`;
+
+    await uploadFile({
+        records: {
+            note: 'Hapidirina any fotsiny',
+        },
+        url: url,
+    }).then((response) => {
+        patient.value.patient_documents.push(response.document);
+
+        $toast({
+            description: 'Fichier téléchargé avec succès',
+        });
+
+        isDocumentDialogOpen.value = false;
+    });
+};
+
+watch(profileFile, (newFile) => {
+    profileUpload.file.value = newFile;
+});
 
 const documentNote = ref('');
 const isDocumentDialogOpen = ref(false);
