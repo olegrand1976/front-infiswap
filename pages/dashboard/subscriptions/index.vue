@@ -22,7 +22,7 @@
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
                             <div class="p-6 text-center">
                                 <h1
-                                    v-if="current"
+                                    v-if="current?.plan?.description"
                                     class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white"
                                 >
                                     {{ current.plan.description }}
