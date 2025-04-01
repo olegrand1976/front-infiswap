@@ -5,7 +5,7 @@ export const useSubscription = () => {
     const loading = useState<boolean>('loading', () => false);
     const plan = useState<Plan>('plan', () => null);
     const current = useState<ActiveSubscription>('current', () => null);
-
+    const user = useUser();
     const getPlans = async (): Promise<void> => {
         loading.value = true;
         try {
@@ -25,6 +25,12 @@ export const useSubscription = () => {
     };
 
     const create = async (priceId: string): Promise<SubscriptionResponse | null> => {
+        if (!user.value) {
+            navigateTo('/login');
+
+            return;
+        }
+
         loading.value = true;
         try {
             const response = await $apifetch<SubscriptionResponse>('api/subscription/create', { method: 'POST', body: {
@@ -79,6 +85,12 @@ export const useSubscription = () => {
     };
 
     const startTrial = async () => {
+        if (!user.value) {
+            navigateTo('/login');
+
+            return;
+        }
+
         await $apifetch('/api/subscription/start-trial', { method: 'POST' }).then(() => {
             $toast({
                 description: 'Essai gratuit activé',
