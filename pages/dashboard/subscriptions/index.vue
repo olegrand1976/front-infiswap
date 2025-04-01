@@ -3,7 +3,7 @@
         class="relative min-h-96"
     >
         <div>
-            <div class="flex flex-col justify-center items-center">
+            <div class="flex flex-col justify-center items-center mb-8">
                 <div
                     v-if="current?.plan?.name!=='Trial'"
                     class="flex flex-col items-center xl:items-center xl:mx-8"
@@ -19,7 +19,7 @@
                 </div>
 
                 <div
-                    class="flex-1 xl:mx-8 mt-8"
+                    class="flex-1 xl:mx-8"
                 >
                     <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
