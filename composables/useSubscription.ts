@@ -78,6 +78,19 @@ export const useSubscription = () => {
         }
     };
 
+    const startTrial = async () => {
+        loading.value = true;
+        try {
+            return await $apifetch('/api/subscription/start-trial', { method: 'POST' });
+        }
+        catch (error) {
+            console.error('Error starting trial:', error);
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         getPlans,
@@ -88,6 +101,7 @@ export const useSubscription = () => {
         check,
         getCurrentSubscription,
         current,
+        startTrial,
     };
 };
 

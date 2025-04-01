@@ -4,7 +4,7 @@
     >
         <div>
             <div class="flex flex-col justify-center items-center">
-                <div class="flex flex-col items-center xl:items-center xl:mx-8 mb-8">
+                <div v-if="current?.plan?.name!=='Trial'" class="flex flex-col items-center xl:items-center xl:mx-8">
                     <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
                         Merci pour votre abonnement !
                     </h1>
@@ -16,7 +16,7 @@
                 </div>
 
                 <div
-                    class="flex-1 xl:mx-8"
+                    class="flex-1 xl:mx-8 mt-8"
                 >
                     <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">

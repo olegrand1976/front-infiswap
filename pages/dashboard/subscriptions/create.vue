@@ -23,19 +23,16 @@
                     v-if="loading && Object.keys(plans ?? {}).length == 0"
                     class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0"
                 >
-                    <div class="grid grid-cols-2 gap-2 md:gap-4">
-                        <div class="flex flex-col space-y-3">
-                            <Skeleton class="h-[180px] w-[400px] rounded-xl bg-gray-200" />
+                    <div class="container grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-4">
+                        <div
+                            v-for="(_, index) in [1, 2, 3]"
+                            :key="index"
+                            class="flex flex-col space-y-3"
+                        >
+                            <Skeleton class="h-[180px] w-full lg:w-[400px] max-w-xs rounded-xl bg-gray-200" />
                             <div class="space-y-2">
-                                <Skeleton class="h-4 w-[400px]  bg-gray-200" />
-                                <Skeleton class="h-4 w-[400px]  bg-gray-200" />
-                            </div>
-                        </div>
-                        <div class="flex flex-col space-y-3">
-                            <Skeleton class="h-[180px] w-[400px] rounded-xl  bg-gray-200" />
-                            <div class="space-y-2">
-                                <Skeleton class="h-4 w-[400px]  bg-gray-200" />
-                                <Skeleton class="h-4 w-[400px] bg-gray-200" />
+                                <Skeleton class="h-4 w-full lg:w-[400px] max-w-xs  bg-gray-200" />
+                                <Skeleton class="h-4 w-full lg:w-[400px] max-w-xs  bg-gray-200" />
                             </div>
                         </div>
                     </div>
@@ -47,7 +44,32 @@
                     <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
                             <div class="p-6">
-                                <h1 class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white">
+                                <h1 class="text-xl text-center font-medium text-success capitalize lg:text-2xl dark:text-white">
+                                    Discovery
+                                </h1>
+
+                                <p class="mt-4 text-gray-500 dark:text-gray-300">
+                                    Testez toutes nos fonctionnalités premium sans carte bancaire. Profitez de <span class="font-bold text-primary">90 jours</span> pour découvrir comment notre service peut transformer vos opérations.
+                                </p>
+
+                                <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                    0 €<span class="text-base font-medium">/mois</span>
+                                </h2>
+
+                                <Button
+                                    class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                    @click="startTrial"
+                                    :disabled="current.plan.name == 'Trial'"
+                                    :in-progress="loading"
+                                >
+                                    <span v-if="current.plan.name == 'Trial'">Active</span>
+                                    <span v-else>Commencez maintenant</span>
+                                </Button>
+                            </div>
+                        </div>
+                        <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
+                            <div class="p-6">
+                                <h1 class="text-xl text-center font-medium text-success capitalize lg:text-2xl dark:text-white">
                                     Mensuel
                                 </h1>
 
@@ -55,7 +77,7 @@
                                     Un abonnement flexible pour gérer vos remplacements et tournées sans engagement. Payez au mois et profitez de toutes les fonctionnalités essentielles.
                                 </p>
 
-                                <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
                                     {{ plans?.monthly.amount }} €<span class="text-base font-medium">/mois</span>
                                 </h2>
 
@@ -71,7 +93,7 @@
 
                         <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
                             <div class="p-6">
-                                <h1 class="text-xl text-success font-bold capitalize lg:text-2xl dark:text-white">
+                                <h1 class="text-xl text-center text-success font-bold capitalize lg:text-2xl dark:text-white">
                                     Annuel
                                 </h1>
 
@@ -79,7 +101,7 @@
                                     Économisez en choisissant un abonnement annuel ! Profitez de toutes les fonctionnalités tout en réduisant vos coûts sur l’année.
                                 </p>
 
-                                <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                                <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
                                     {{ plans?.yearly.amount }} €<span class="text-base font-medium">/an</span>
                                 </h2>
                                 <Button
@@ -122,6 +144,8 @@ const {
     selectPlan,
     loading,
     create,
+    startTrial,
+    current,
 } = useSubscription();
 
 definePageMeta({
