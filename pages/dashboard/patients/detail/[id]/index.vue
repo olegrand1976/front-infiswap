@@ -19,7 +19,7 @@
                     :in-progress="inProgress"
                     type="submit"
                 >
-                    Enregistrer tsy aiko
+                    Enregistrer
                 </Button>
             </div>
         </transition>
@@ -450,7 +450,7 @@
                 type="submit"
                 :in-progress="inProgress"
             >
-                Enregistrer sa ty vee
+                Enregistrer
             </Button>
         </section>
 
