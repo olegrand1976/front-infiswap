@@ -26,20 +26,55 @@
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
                 <div class="bg-primary text-white p-4 rounded">
-                    <div class="relative group">
-                        <img
-                            v-if="patient.profile?.profil_url" 
-                            :src="patient.profile.profil_url" 
-                            class="w-28 h-28 rounded-full mx-auto object-cover"
-                        />
-                        <UserCircleIcon v-else class="w-28 mx-auto" />
-                        <button
-                            @click="isProfileUrlDialogOpen = true"
-                            type="button"
-                            class="absolute bottom-0 right-1/4 bg-gray-200 text-gray-800 p-2 rounded-full hover:bg-gray-300 transition-all opacity-0 group-hover:opacity-100"
-                        >
-                            <PencilIcon class="w-4 h-4" />
-                        </button>
+                    <div class="relative group flex flex-col items-center">
+                        <div class="relative">
+                            <!-- Image ou icône -->
+                            <div class="w-28 h-28 rounded-full overflow-hidden mx-auto flex items-center justify-center bg-gray-100">
+                                <img
+                                    v-if="patient.profile?.profil_url"
+                                    :src="$config.public.API_URL + patient.profile.profil_url"
+                                    class="w-full h-full object-cover"
+                                />
+                                <UserCircleIcon v-else class="w-full h-full text-gray-400 p-4" />
+                            </div>
+
+                            <div class="absolute -right-1 -top-1 flex flex-col gap-1">
+                                <button
+                                    @click="isProfileUrlDialogOpen = true"
+                                    type="button"
+                                    class="bg-gray-200 text-gray-800 p-1.5 rounded-full hover:bg-gray-300 transition-all shadow-sm border border-gray-300"
+                                >
+                                    <PencilIcon class="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                    v-if="patient.profile?.profil_url"
+                                    @click="confirmDeleteAvatar"
+                                    type="button"
+                                    class="bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 transition-all shadow-sm border border-red-200"
+                                >
+                                    <TrashIcon class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <Dialog v-model:open="isDeleteDialogOpen">
+                            <DialogContent class="sm:max-w-md">
+                                <DialogHeader>
+                                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                                    <DialogDescription>
+                                        Êtes-vous sûr de vouloir supprimer cette photo de profil ?
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter class="gap-2 sm:gap-0">
+                                    <Button variant="outline" @click="isDeleteDialogOpen = false">
+                                        Annuler
+                                    </Button>
+                                    <Button variant="destructive" @click="deleteAvatar">
+                                        Supprimer
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
 
                         <Dialog v-model:open="isProfileUrlDialogOpen">
                             <DialogContent class="sm:max-w-[40rem]">
@@ -58,16 +93,17 @@
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
+
+                        <p class="text-center mt-4">
+                            {{ patient.firstname }}
+                            <span
+                                v-if="patient.lastname"
+                                class="font-semibold"
+                            >
+                                {{ patient.lastname?.toUpperCase() }}
+                            </span>
+                        </p>
                     </div>
-                    <p class="text-center mt-4">
-                        {{ patient.firstname }}
-                        <span
-                            v-if="patient.lastname"
-                            class="font-semibold"
-                        >
-                            {{ patient.lastname?.toUpperCase() }}
-                        </span>
-                    </p>
 
                     <Dialog v-model:open="isOpenDialog">
                         <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
@@ -1201,50 +1237,78 @@ const profileUpload = useFile();
 
 const handleUploadProfile = async () => {
     if (!profileFile.value) {
-        $toast({
-            variant: 'destructive',
-            description: 'Aucun fichier sélectionné.',
-        });
+        $toast.error('Veuillez sélectionner une image');
         return;
     }
 
     try {
-        // 1. D'abord uploader le fichier comme document
-        const docResponse = await uploadFile({
-            records: {
-                note: 'Photo de profil uploadée',
-            },
-            url: `/api/patients/profile/${patient.value.id}`,
+        const formData = new FormData();
+        formData.append('file', profileFile.value);
+
+        const response = await $apifetch(`/api/patients/profile/${patient.value.id}/upload`, {
+            method: 'POST',
+            body: formData,
         });
 
-        // 2. Ensuite mettre à jour le profil avec l'URL du document
-        await $apifetch(`/api/patients/profile/${patient.value.id}`, {
-            method: 'PUT',
-            body: {
-                profilUrl: docResponse.document.url,
-            },
-        });
-
-        // 3. Mettre à jour localement
+        // Mise à jour reactive
         if (!patient.value.profile) {
-            patient.value.profile = {};
+            patient.value.profile = { profil_url: response.profil_url };
         }
-        patient.value.profile.profil_url = docResponse.document.url;
+        else {
+            patient.value.profile.profil_url = response.profil_url;
+        }
 
         $toast({
-            description: 'Photo de profil mise à jour avec succès',
+            description: 'Photo mise à jour',
         });
-
-        isProfileUrlDialogOpen.value = false;
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
     catch (error) {
-        let errorMessage = 'Erreur lors de la mise à jour';
-        if (error.response?._data?.message) {
-            errorMessage = error.response._data.message;
+        $toast({
+            description: `${error}`,
+            variant: 'destructive',
+        });
+    }
+};
+
+// Dans votre setup()
+const isDeleteDialogOpen = ref(false);
+
+const confirmDeleteAvatar = () => {
+    isDeleteDialogOpen.value = true;
+};
+
+const deleteAvatar = async () => {
+    try {
+        const response = await $apifetch('/api/patients/profile/delete', {
+            method: 'DELETE',
+            body: {
+                patient: patient.value,
+                profile: patient.value.profile,
+            },
+        });
+
+        if (!response.success) {
+            throw new Error(response.message || 'Erreur lors de la suppression');
         }
+
+        // Mise à jour locale
+        if (patient.value?.profile) {
+            patient.value.profile.profil_url = null;
+        }
+
+        isDeleteDialogOpen.value = false;
+        $toast({
+            description: 'Photo supprimée avec succès',
+        });
+    }
+    catch (error) {
+        console.error('Erreur suppression:', error);
         $toast({
             variant: 'destructive',
-            description: errorMessage,
+            description: error.message || 'Échec de la suppression',
         });
     }
 };
