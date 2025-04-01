@@ -59,8 +59,8 @@
                                 <Button
                                     v-if="user.trial_ends_at == null"
                                     class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
-                                    :in-progress="loading"
-                                    @click="startTrial"
+                                    :in-progress="trialLoading"
+                                    @click="startingTrial"
                                 >
                                     <span>Commencez maintenant</span>
                                 </Button>
@@ -161,6 +161,8 @@ definePageMeta({
     middleware: ['auth', 'verified', 'unsubscribed'],
 });
 
+const trialLoading = ref(false);
+
 useHead({
     title: 'Abonnements',
 });
@@ -174,6 +176,21 @@ const handleSelectPlan = async (product: Plan) => {
 
     if (response?.url) {
         window.location.href = response.url;
+    }
+};
+
+const startingTrial = async () => {
+    try {
+        trialLoading.value = true;
+        await startTrial();
+
+        navigateTo('/dashboard/subscriptions');
+    }
+    catch (error) {
+        console.error(error);
+    }
+    finally {
+        trialLoading.value = false;
     }
 };
 

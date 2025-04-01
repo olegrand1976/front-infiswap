@@ -79,16 +79,11 @@ export const useSubscription = () => {
     };
 
     const startTrial = async () => {
-        loading.value = true;
-        try {
-            return await $apifetch('/api/subscription/start-trial', { method: 'POST' });
-        }
-        catch (error) {
-            console.error('Error starting trial:', error);
-        }
-        finally {
-            loading.value = false;
-        }
+        await $apifetch('/api/subscription/start-trial', { method: 'POST' }).then(() => {
+            $toast({
+                description: 'Essai gratuit activé',
+            });
+        });
     };
 
     return {
@@ -109,7 +104,7 @@ export interface Plan {
     id: number;
     name: string;
     interval: 'month' | 'year';
-    amount: string;
+    amount: number;
     currency: 'eur';
     description: string;
     expire_at: string | null;
