@@ -19,7 +19,7 @@
                     :in-progress="inProgress"
                     type="submit"
                 >
-                    Enregistrer
+                    Enregistrer tsy aiko
                 </Button>
             </div>
         </transition>
@@ -35,6 +35,7 @@
                         <UserCircleIcon v-else class="w-28 mx-auto" />
                         <button
                             @click="isProfileUrlDialogOpen = true"
+                            type="button"
                             class="absolute bottom-0 right-1/4 bg-gray-200 text-gray-800 p-2 rounded-full hover:bg-gray-300 transition-all opacity-0 group-hover:opacity-100"
                         >
                             <PencilIcon class="w-4 h-4" />
@@ -172,7 +173,7 @@
                                 class="text-end mt-6 mx-36"
                                 @click="updatePatientInfo"
                             >
-                                Enregistrer
+                                Enregistrer 
                             </Button>
                         </DialogContent>
                     </Dialog>
@@ -247,8 +248,26 @@
                             <div
                                 v-for="(careInformation, careIndex) in formData.care_informations"
                                 :key="careIndex"
-                                class="space-y-5 mb-4"
+                                class="space-y-5 mb-4 p-4 bg-white rounded-lg shadow-sm relative"
                             >
+                                <div class="absolute top-3 right-3 flex space-x-2">
+                                    <button
+                                        @click="editCareInfo(careIndex)"
+                                        type="button"
+                                        class="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                        title="Modifier cette note"
+                                    >
+                                        <PencilSquareIcon class="w-5 h-5 text-gray-500 hover:text-blue-500" />
+                                    </button>
+                                    <button
+                                        @click.stop="removeSavedCareInfo(careIndex)"
+                                        type="button"
+                                        class="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                        title="Supprimer cette note"
+                                    >
+                                        <XMarkIcon class="w-5 h-5 text-gray-500 hover:text-red-500" />
+                                    </button>
+                                </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
                                         Titre
@@ -282,7 +301,7 @@
                                         {{ careInformation.recordDetails }}
                                     </p>
                                 </div>
-                                <hr class="border border-gray-200">
+                                <!-- <hr class="border border-gray-200"> -->
                             </div>
                         </template>
                         <template v-else>
@@ -296,15 +315,17 @@
                 <Dialog v-model:open="isCareInfoDialogOpen">
                     <DialogContent class="sm:max-w-[600px]">
                         <DialogHeader>
-                            <DialogTitle>Gestion des informations de soins</DialogTitle>
+                            <DialogTitle>
+                                {{ editingIndex !== null ? 'Modifier' : 'Ajouter' }} une information de soin
+                            </DialogTitle>
                             <DialogDescription>
-                                Ajoutez, modifiez ou supprimez les informations de soins du patient.
+                                {{ editingIndex !== null ? 'Modifiez' : 'Ajoutez' }} les détails de l'information de soin.
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="space-y-6 max-h-[400px] overflow-y-auto">
                             <div
-                                v-for="(info, index) in formData.care_informations"
+                                v-for="(info, index) in editableCareInformations"
                                 :key="index"
                                 class="p-4 bg-gray-50 rounded-lg relative"
                             >
@@ -370,14 +391,6 @@
                         </div>
 
                         <div class="flex justify-between mt-6">
-                            <Button
-                                variant="success"
-                                @click="addNewCareInfo"
-                            >
-                                <PlusCircleIcon class="mr-2" />
-                                <span>Ajouter</span>
-                            </Button>
-
                             <div class="space-x-2">
                                 <Button
                                     variant="outline"
@@ -388,7 +401,7 @@
                                 <Button
                                     @click="saveCareInformations"
                                 >
-                                    Enregistrer
+                                    {{ editingIndex !== null ? 'Modifier' : 'Enregistrer' }}
                                 </Button>
                             </div>
                         </div>
@@ -401,7 +414,7 @@
                 type="submit"
                 :in-progress="inProgress"
             >
-                Enregistrer
+                Enregistrer sa ty vee
             </Button>
         </section>
 
@@ -827,6 +840,7 @@ const formData = ref({
 
 const transformCareInformations = (careInfo: any[]) => {
     return careInfo.map(info => ({
+        careInformationId: info.id,
         recordType: info.record_type,
         recordName: info.record_name,
         recordSeverity: info.record_severity,
@@ -1045,51 +1059,117 @@ const updatePatientCareTypes = () => {
 
 const isCareInfoDialogOpen = ref(false);
 const editableCareInformations = ref([]);
+const editingIndex = ref<number | null>(null);
 
 const openCareInfoDialog = () => {
-    editableCareInformations.value = formData.value.care_informations.map(info => ({ ...info })) || [];
-    isCareInfoDialogOpen.value = true;
-};
-
-const addNewCareInfo = () => {
-    formData.value.care_informations.push({
+    editingIndex.value = null;
+    editableCareInformations.value = [{
         recordType: '',
         recordName: '',
         recordSeverity: '',
         recordDetails: '',
-    });
+    }];
+    isCareInfoDialogOpen.value = true;
+};
+
+const editCareInfo = (index: number) => {
+    editingIndex.value = index;
+    editableCareInformations.value = JSON.parse(JSON.stringify([formData.value.care_informations[index]]));
+    isCareInfoDialogOpen.value = true;
 };
 
 const removeCareInfo = (index: number) => {
-    formData.value.care_informations.splice(index, 1);
+    editableCareInformations.value.splice(index, 1);
 };
 
 const cancelCareInfoEdit = () => {
     isCareInfoDialogOpen.value = false;
     editableCareInformations.value = [];
+    editingIndex.value = null;
 };
 
 const saveCareInformations = async () => {
     try {
+        if (editingIndex.value !== null) {
+            // Modification d'un élément existant
+            formData.value.care_informations[editingIndex.value] = editableCareInformations.value[0];
+        }
+        else {
+            // Ajout d'un nouvel élément
+            if (!formData.value.care_informations) {
+                formData.value.care_informations = [];
+            }
+            formData.value.care_informations.push(editableCareInformations.value[0]);
+        }
+
         await $apifetch(`/api/patients/care-informations/update`, {
             method: 'PUT',
             body: {
-                care_informations: formData.value.care_informations.map(info => ({
-                    recordType: info.recordType,
-                    recordName: info.recordName,
-                    recordSeverity: info.recordSeverity,
-                    recordDetails: info.recordDetails,
-                })),
+                care_informations: formData.value.care_informations,
                 patientId: formData.value.patientId,
             },
         });
 
         isCareInfoDialogOpen.value = false;
+        editingIndex.value = null;
         $toast({
             description: 'Informations de soins mises à jour avec succès',
         });
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
     catch (error) {
+        let errorMessage = 'Une erreur s\'est produite';
+
+        if (error.response && error.response._data) {
+            const responseData = error.response._data;
+
+            if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            else if (responseData.errors) {
+                errorMessage = Object.values(responseData.errors)
+                    .flat()
+                    .join(', ');
+            }
+        }
+        else if (error.message) {
+            errorMessage = error.message;
+        }
+
+        $toast({
+            description: `${errorMessage}`,
+            variant: 'destructive',
+        });
+    }
+};
+
+const removeSavedCareInfo = async (index: number) => {
+    try {
+        const deletedItem = formData.value.care_informations[index];
+
+        if (!deletedItem || !deletedItem.careInformationId) {
+            return $toast({ description: 'Impossible de supprimer cette note', variant: 'destructive' });
+        }
+
+        await $apifetch(`/api/patients/care-informations/delete`, {
+            method: 'DELETE',
+            body: {
+                careInformationId: deletedItem.careInformationId,
+                patientId: formData.value.patientId,
+            },
+        });
+
+        setTimeout(() => {
+            formData.value.care_informations.splice(index, 1);
+            $toast({
+                description: 'Note supprimée avec succès',
+            });
+        }, 2000);
+    }
+    catch (error) {
+        console.log('ilay erreur : ', error);
         let errorMessage = 'Une erreur s\'est produite';
 
         if (error.response && error.response._data) {
@@ -1128,22 +1208,45 @@ const handleUploadProfile = async () => {
         return;
     }
 
-    const url = `/api/patients/profile/${patient.value.id}`;
-
-    await uploadFile({
-        records: {
-            note: 'Hapidirina any fotsiny',
-        },
-        url: url,
-    }).then((response) => {
-        patient.value.patient_documents.push(response.document);
-
-        $toast({
-            description: 'Fichier téléchargé avec succès',
+    try {
+        // 1. D'abord uploader le fichier comme document
+        const docResponse = await uploadFile({
+            records: {
+                note: 'Photo de profil uploadée',
+            },
+            url: `/api/patients/profile/${patient.value.id}`,
         });
 
-        isDocumentDialogOpen.value = false;
-    });
+        // 2. Ensuite mettre à jour le profil avec l'URL du document
+        await $apifetch(`/api/patients/profile/${patient.value.id}`, {
+            method: 'PUT',
+            body: {
+                profilUrl: docResponse.document.url,
+            },
+        });
+
+        // 3. Mettre à jour localement
+        if (!patient.value.profile) {
+            patient.value.profile = {};
+        }
+        patient.value.profile.profil_url = docResponse.document.url;
+
+        $toast({
+            description: 'Photo de profil mise à jour avec succès',
+        });
+
+        isProfileUrlDialogOpen.value = false;
+    }
+    catch (error) {
+        let errorMessage = 'Erreur lors de la mise à jour';
+        if (error.response?._data?.message) {
+            errorMessage = error.response._data.message;
+        }
+        $toast({
+            variant: 'destructive',
+            description: errorMessage,
+        });
+    }
 };
 
 watch(profileFile, (newFile) => {
