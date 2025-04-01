@@ -118,6 +118,7 @@ useHead({
 definePageMeta({
     layout: 'auth',
     middleware: ['guest'],
+    redirect: '/register',
 });
 const router = useRouter();
 const route = useRoute();
