@@ -57,14 +57,20 @@
                                 </h2>
 
                                 <Button
+                                    v-if="user.trial_ends_at == null"
                                     class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
-                                    @click="startTrial"
-                                    :disabled="current.plan.name == 'Trial'"
                                     :in-progress="loading"
+                                    @click="startTrial"
                                 >
-                                    <span v-if="current.plan.name == 'Trial'">Active</span>
-                                    <span v-else>Commencez maintenant</span>
+                                    <span>Commencez maintenant</span>
                                 </Button>
+                                <div
+                                    v-else
+                                    class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-opacity-10"
+                                >
+                                    <span v-show="isFuture(user.trial_ends_at)">Active</span>
+                                    <span v-show="!isFuture(user.trial_ends_at)">Expiré le {{ formatToDMY(user.trial_ends_at) }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
@@ -136,6 +142,7 @@
 
 <script setup lang="ts">
 import { useSubscription, type Plan } from '~/composables/useSubscription';
+import { isFuture, formatToDMY } from '~/composables/useDate';
 
 const {
     plans,
@@ -148,6 +155,7 @@ const {
     current,
 } = useSubscription();
 
+const user = useUser();
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified', 'unsubscribed'],

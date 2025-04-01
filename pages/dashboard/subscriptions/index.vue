@@ -4,7 +4,10 @@
     >
         <div>
             <div class="flex flex-col justify-center items-center">
-                <div v-if="current?.plan?.name!=='Trial'" class="flex flex-col items-center xl:items-center xl:mx-8">
+                <div
+                    v-if="current?.plan?.name!=='Trial'"
+                    class="flex flex-col items-center xl:items-center xl:mx-8"
+                >
                     <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
                         Merci pour votre abonnement !
                     </h1>
