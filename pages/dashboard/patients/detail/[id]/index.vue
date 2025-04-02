@@ -280,7 +280,7 @@
                     </h3>
 
                     <div class="px-4 py-6">
-                        <template v-if="formData.care_informations && formData.care_informations.length > 0">
+                        <template v-if="careInfoLoaded && formData.care_informations && formData.care_informations.length > 0">
                             <div
                                 v-for="(careInformation, careIndex) in formData.care_informations"
                                 :key="careIndex"
@@ -1096,6 +1096,7 @@ const updatePatientCareTypes = () => {
 const isCareInfoDialogOpen = ref(false);
 const editableCareInformations = ref([]);
 const editingIndex = ref<number | null>(null);
+const careInfoLoaded = ref(true);
 
 const openCareInfoDialog = () => {
     editingIndex.value = null;
@@ -1148,6 +1149,7 @@ const saveCareInformations = async () => {
 
         isCareInfoDialogOpen.value = false;
         editingIndex.value = null;
+        careInfoLoaded.value = true;
         $toast({
             description: 'Informations de soins mises à jour avec succès',
         });
@@ -1156,6 +1158,7 @@ const saveCareInformations = async () => {
         }, 1000);
     }
     catch (error) {
+        careInfoLoaded.value = false;
         let errorMessage = 'Une erreur s\'est produite';
 
         if (error.response && error.response._data) {
@@ -1178,6 +1181,9 @@ const saveCareInformations = async () => {
             description: `${errorMessage}`,
             variant: 'destructive',
         });
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
 };
 
