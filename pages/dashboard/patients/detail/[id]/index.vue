@@ -1229,7 +1229,6 @@ const removeSavedCareInfo = async (index: number) => {
         }, 2000);
     }
     catch (error) {
-        console.log('ilay erreur : ', error);
         let errorMessage = 'Une erreur s\'est produite';
 
         if (error.response && error.response._data) {
