@@ -6,6 +6,7 @@
     >
         <transition name="fade">
             <div
+                v-if="isOwnPatient"
                 v-show="isScrolled"
                 :class="clsx('w-full fixed top-10 z-50 text-center bg-red-300/50 py-5 transition-opacity ease-in-out duration-500', {
                     'opacity-0': !isScrolled,
@@ -38,7 +39,7 @@
                                 <UserCircleIcon v-else class="w-full h-full text-gray-400 p-4" />
                             </div>
 
-                            <div class="absolute -right-1 -top-1 flex flex-col gap-1">
+                            <div v-if="isOwnPatient" class="absolute -right-1 -top-1 flex flex-col gap-1">
                                 <button
                                     @click="isProfileUrlDialogOpen = true"
                                     type="button"
@@ -219,6 +220,7 @@
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span class="font-semibold">Informations personnelles</span>
                         <PencilSquareIcon
+                            v-if="isOwnPatient"
                             class="w-5 text-white cursor-pointer"
                             @click="openDialog"
                         />
@@ -274,6 +276,7 @@
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span class="font-semibold">Notes de santé</span>
                         <PlusCircleIcon
+                            v-if="isOwnPatient"
                             class="w-7 text-white cursor-pointer"
                             @click="openCareInfoDialog"
                         />
@@ -288,6 +291,7 @@
                             >
                                 <div class="absolute top-3 right-3 flex space-x-2">
                                     <button
+                                        v-if="isOwnPatient"
                                         @click="editCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -296,6 +300,7 @@
                                         <PencilSquareIcon class="w-5 h-5 text-gray-500 hover:text-blue-500" />
                                     </button>
                                     <button
+                                        v-if="isOwnPatient"
                                         @click.stop="removeSavedCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -446,6 +451,7 @@
             </div>
 
             <Button
+                v-if="isOwnPatient"
                 class="mt-8 hidden lg:block"
                 type="submit"
                 :in-progress="inProgress"
@@ -609,6 +615,7 @@
                         </div>
 
                         <PlusCircleIcon
+                            v-if="isOwnPatient"
                             class="w-6 text-primary mt-8 ml-auto cursor-pointer"
                             title="Ajouter un autre heure"
                             @click="addTimeSlot(visitIndex)"
@@ -617,6 +624,7 @@
                 </div>
 
                 <Button
+                    v-if="isOwnPatient"
                     class="flex justify-center items-center mx-auto mt-4"
                     type="button"
                     @click="addVisit"
@@ -633,6 +641,7 @@
 
                 <div class="relative">
                     <Button
+                        v-if="isOwnPatient"
                         class="w-full flex items-center justify-center mt-4"
                         @click="openFileUploadDialog"
                     >
@@ -675,6 +684,7 @@
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
                                         <Button
+                                            v-if="isOwnPatient"
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center text-black hover:text-white"
                                             @click="removeDocument(index, document.id)"
                                         >
@@ -753,6 +763,14 @@ import type { Patient } from '~/lib/types';
 const { $apifetch } = useNuxtApp();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
+
+const isOwnPatient = ref(false);
+
+onMounted(() => {
+    // Lire l'information depuis localStorage
+    const ownershipData = JSON.parse(localStorage.getItem('patientOwnership') || '{}');
+    isOwnPatient.value = ownershipData[route.params.id] || false;
+});
 
 const isScrolled = ref(false);
 
@@ -1211,7 +1229,6 @@ const removeSavedCareInfo = async (index: number) => {
         }, 2000);
     }
     catch (error) {
-        console.log('ilay erreur : ', error);
         let errorMessage = 'Une erreur s\'est produite';
 
         if (error.response && error.response._data) {
@@ -1267,9 +1284,7 @@ const handleUploadProfile = async () => {
         $toast({
             description: 'Photo mise à jour',
         });
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        isProfileUrlDialogOpen.value = false;
     }
     catch (error) {
         $toast({
