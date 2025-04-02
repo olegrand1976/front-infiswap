@@ -209,7 +209,7 @@
                                 class="text-end mt-6 mx-36"
                                 @click="updatePatientInfo"
                             >
-                                Enregistrer 
+                                Enregistrer
                             </Button>
                         </DialogContent>
                     </Dialog>
