@@ -331,7 +331,7 @@
                             :icon="IdentificationIcon"
                             size="md"
                             class="border border-gray-300"
-                            placeholder="Numéro INAMI *"
+                            placeholder="Numéro INAMI"
                         />
                         <p
                             v-if="error.identifierNumber"
