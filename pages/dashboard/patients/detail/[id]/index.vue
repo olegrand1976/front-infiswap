@@ -457,7 +457,7 @@
         <section class="mb-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t">
+                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
                         Date de début d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
@@ -472,7 +472,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t">
+                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
                         Date de fin d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
