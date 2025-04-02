@@ -99,15 +99,22 @@
                                     </span>
 
                                     <div class="flex items-center">
-                                        <NuxtLink :to="`/dashboard/patients/detail/${patient.id}`">
+                                        <NuxtLink
+                                            :to="`/dashboard/patients/detail/${patient.id}`"
+                                            @click.prevent="storePatientOwnership(patient)"
+                                        >
                                             <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
                                         </NuxtLink>
                                         <AlertDialog>
                                             <AlertDialogTrigger as-child>
-                                                <Button variant="none">
+                                                <Button
+                                                    variant="none"
+                                                    :disabled="!patient.is_own_patient"
+                                                    :class="!patient.is_own_patient ? 'opacity-50 cursor-not-allowed' : ''"
+                                                >
                                                     <TrashIcon
-                                                        class="w-5 cursor-pointer hover:text-primary"
-                                                        @click="openDialog"
+                                                        class="w-5 hover:text-primary"
+                                                        :class="!patient.is_own_patient ? 'cursor-not-allowed' : 'cursor-pointer'"
                                                     />
                                                 </Button>
                                             </AlertDialogTrigger>
@@ -298,6 +305,16 @@ const submitDelete = async (patientId) => {
 onMounted(() => {
     fetchNursePatients();
 });
+
+const storePatientOwnership = (patient) => {
+    // Stockage dans localStorage
+    const patientOwnership = JSON.parse(localStorage.getItem('patientOwnership') || '{}');
+    patientOwnership[patient.id] = patient.is_own_patient;
+    localStorage.setItem('patientOwnership', JSON.stringify(patientOwnership));
+
+    // Navigation après stockage
+    navigateTo(`/dashboard/patients/detail/${patient.id}`);
+};
 
 definePageMeta({
     layout: 'dashboard',
