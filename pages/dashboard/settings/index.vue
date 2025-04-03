@@ -1,8 +1,565 @@
 <template>
-    <ErrorUnderConstructDashboard />
+    <div>
+        <div class="bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
+            <h1 class="text-primary">
+                Paramètres
+            </h1>
+        </div>
+
+        <form class="mt-6 mb-12 bg-gray-100 p-3 sm:p-8 rounded-lg shadow">
+            <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
+                <div class="relative">
+                    <PencilSquareIcon
+                        class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
+                    />
+                    <img
+                        src="/images/icons/user-circle.png"
+                        class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
+                    >
+                </div>
+
+                <div>
+                    <LayoutsLogo class="w-36 sm:w-48" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
+                <div class="space-y-12">
+                    <section>
+                        <h3 class="flex items-center space-x-4">
+                            <IdentificationIcon class="w-6 text-gray-400" />
+                            <span class="text-lg">Information générale</span>
+                        </h3>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="lastname"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:h-9 sm:space-x-3"
+                                    >
+                                        <UserCircleIcon class="w-5 hidden sm:block" />
+                                        <span>Nom</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="UserCircleIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="lastname"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="firstname"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <UserPlusIcon class="w-5 hidden sm:block" />
+                                        <span>Prénom</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="UserPlusIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="firstname"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="birthDate"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <CalendarDaysIcon class="w-5 hidden sm:block" />
+                                        <span>Date de naissance</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="CalendarDaysIcon"
+                                    type="date"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="birthDate"
+                                    type="date"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="email"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <EnvelopeIcon class="w-5 hidden sm:block" />
+                                        <span>Email</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="EnvelopeIcon"
+                                    type="email"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="inami"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <span class="font-bold hidden sm:block">N°</span>
+                                        <span>Numéro INAMI</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="inami"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="phoneNumber"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <PhoneIcon class="w-5 hidden sm:block" />
+                                        <span>Téléphone</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="PhoneIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="phoneNumber"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="gender"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <img
+                                            src="/images/icons/gender_white.png"
+                                            class="w-6 hidden sm:block"
+                                        >
+                                        <span>Sexe</span>
+                                    </label>
+                                </div>
+                                <Select>
+                                    <SelectTrigger
+                                        class="w-full bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
+                                        position="right"
+                                    >
+                                        <SelectValue />
+                                    </SelectTrigger>
+
+                                    <SelectContent class="border border-none">
+                                        <template
+                                            v-for="[key, value] in Object.entries(gender)"
+                                            :key="key"
+                                        >
+                                            <SelectItem :value="key">
+                                                {{ value }}
+                                            </SelectItem>
+                                        </template>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3 class="flex items-center space-x-4">
+                            <MapPinIcon class="w-6 text-gray-400" />
+                            <span class="text-lg">Adresse</span>
+                        </h3>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="streetAddress"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <MapIcon class="w-5 hidden sm:block" />
+                                        <span>Rue</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="MapIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="streetAddress"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="city"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <BuildingOffice2Icon class="w-5 hidden sm:block" />
+                                        <span>Ville</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="BuildingOffice2Icon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="city"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="country"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <FlagIcon class="w-5 hidden sm:block" />
+                                        <span>Pays</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="FlagIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="country"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="zipCode"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <img
+                                            src="/images/icons/zip_code.png"
+                                            class="w-4 hidden sm:block"
+                                        >
+                                        <span>Code postal</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="zipCode"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="complementaryAddress"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <EllipsisHorizontalCircleIcon class="w-5 hidden sm:block" />
+                                        <span class="text-nowrap w-full truncate">Complément d'adresse</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="EllipsisHorizontalCircleIcon"
+                                    type="text"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="complementaryAddress"
+                                    type="text"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="space-y-12 mt-4 xl:mt-0">
+                    <section>
+                        <h3 class="flex items-center space-x-4">
+                            <ShieldCheckIcon class="w-6 text-gray-400" />
+                            <span class="text-lg">Sécurité</span>
+                        </h3>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="currentPassword"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <KeyIcon class="w-5 hidden sm:block" />
+                                        <span>Mot de passe actuel</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="KeyIcon"
+                                    type="password"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="currentPassword"
+                                    type="password"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="newPassword"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <KeyIcon class="w-5 hidden sm:block" />
+                                        <span class="text-nowrap w-full truncate">Nouveau mot de passe</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="KeyIcon"
+                                    type="password"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="newPassword"
+                                    type="password"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="confirmPassword"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <KeyIcon class="w-5 hidden sm:block" />
+                                        <span class="text-nowrap w-full truncate">Confirmation mot de passe</span>
+                                    </label>
+                                </div>
+                                <InputIcon
+                                    :icon="KeyIcon"
+                                    type="password"
+                                    class="sm:hidden"
+                                />
+                                <Input
+                                    id="confirmPassword"
+                                    type="password"
+                                    class="w-full bg-transparent hidden sm:block"
+                                />
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="authTwoFactor"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <DevicePhoneMobileIcon class="w-5 hidden sm:block" />
+                                        <span class="text-nowrap w-full truncate">Authentification à deux facteurs</span>
+                                    </label>
+                                </div>
+                                <div
+                                    id="authTwoFactor"
+                                    class="flex items-center justify-center px-2 sm:space-x-1 space-x-4 mt-2 sm:mt-0"
+                                >
+                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
+                                        Activé
+                                    </div>
+                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
+                                        Désactivé
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2 mt-3">
+                                <Checkbox id="confirm" />
+                                <label
+                                    for="confirm"
+                                    class="font-sans font-light text-black/60 text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Confirmation de mot de passe
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mt-4 xl:mt-0">
+                        <h3 class="flex items-center space-x-4">
+                            <WrenchScrewdriverIcon class="w-6 text-gray-400" />
+                            <span class="text-lg">Préférences</span>
+                        </h3>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="language"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <LanguageIcon class="w-5 hidden sm:block" />
+                                        <span>Langue</span>
+                                    </label>
+                                </div>
+                                <Select>
+                                    <SelectTrigger
+                                        class="w-full bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
+                                        position="right"
+                                    >
+                                        <SelectValue />
+                                    </SelectTrigger>
+
+                                    <SelectContent class="border border-none">
+                                        <template
+                                            v-for="[key, value] in Object.entries(languages)"
+                                            :key="key"
+                                        >
+                                            <SelectItem :value="key">
+                                                {{ value }}
+                                            </SelectItem>
+                                        </template>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        for="notification"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <BellAlertIcon class="w-5 hidden sm:block" />
+                                        <span class="text-nowrap w-full truncate">Notification</span>
+                                    </label>
+                                </div>
+                                <div
+                                    id="notification"
+                                    class="flex items-center justify-center px-2 space-x-4 sm:space-x-1 mt-2 sm:mt-0"
+                                >
+                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
+                                        Activé
+                                    </div>
+                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
+                                        Désactivé
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2">
+                            <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
+                                <ChartPieIcon class="w-5" />
+                                <label>Statut de compte</label>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                                Activé
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                                Désactivé
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                                Suspendu
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="flex flex-col justify-end items-center pt-12 space-y-4">
+                        <Button class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white">
+                            <TrashIcon class="w-5" />
+                            <span>Supprimer compte</span>
+                        </Button>
+                        <Button class="flex w-48 ml-auto text-end">
+                            <PencilIcon class="w-5" />
+                            <span>Mettre à jour</span>
+                        </Button>
+                    </section>
+                </div>
+            </div>
+        </form>
+    </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import {
+    IdentificationIcon,
+    UserCircleIcon,
+    UserPlusIcon,
+    CalendarDaysIcon,
+    EnvelopeIcon,
+    PhoneIcon,
+    MapPinIcon,
+    MapIcon,
+    BuildingOffice2Icon,
+    FlagIcon,
+    EllipsisHorizontalCircleIcon,
+    ShieldCheckIcon,
+    KeyIcon,
+    DevicePhoneMobileIcon,
+    WrenchScrewdriverIcon,
+    LanguageIcon,
+    BellAlertIcon,
+    ChartPieIcon,
+    TrashIcon,
+    PencilIcon,
+    PencilSquareIcon,
+} from '@heroicons/vue/24/solid';
+
+const gender = {
+    male: 'Homme',
+    female: 'Femme',
+};
+
+const languages = {
+    fr: 'Français',
+    nl: 'Néerlandais',
+};
+
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
