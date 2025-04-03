@@ -36,73 +36,52 @@
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="lastname"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:h-9 sm:space-x-3"
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <UserCircleIcon class="w-5 hidden sm:block" />
+                                        <UserCircleIcon class="w-5" />
                                         <span>Nom</span>
                                     </label>
                                 </div>
-                                <InputIcon
-                                    :icon="UserCircleIcon"
-                                    type="text"
-                                    class="sm:hidden"
-                                />
-                                <Input
-                                    id="lastname"
-                                    type="text"
-                                    class="w-full bg-transparent hidden sm:block"
-                                />
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.lastname }}
+                                </p>
                             </div>
 
                             <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="firstname"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <UserPlusIcon class="w-5 hidden sm:block" />
+                                        <UserPlusIcon class="w-5" />
                                         <span>Prénom</span>
                                     </label>
                                 </div>
-                                <InputIcon
-                                    :icon="UserPlusIcon"
-                                    type="text"
-                                    class="sm:hidden"
-                                />
-                                <Input
-                                    id="firstname"
-                                    type="text"
-                                    class="w-full bg-transparent hidden sm:block"
-                                />
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.firstname }}
+                                </p>
                             </div>
 
                             <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
-                                        for="birthDate"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                        for="firstname"
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <CalendarDaysIcon class="w-5 hidden sm:block" />
+                                        <UserPlusIcon class="w-5" />
                                         <span>Date de naissance</span>
                                     </label>
                                 </div>
-                                <InputIcon
-                                    :icon="CalendarDaysIcon"
-                                    type="date"
-                                    class="sm:hidden"
-                                />
-                                <Input
-                                    id="birthDate"
-                                    type="date"
-                                    class="w-full bg-transparent hidden sm:block"
-                                />
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.date_of_birth || ' - ' }}
+                                </p>
                             </div>
 
                             <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="email"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:h-9 sm:space-x-3"
                                     >
                                         <EnvelopeIcon class="w-5 hidden sm:block" />
                                         <span>Email</span>
@@ -112,6 +91,7 @@
                                     :icon="EnvelopeIcon"
                                     type="email"
                                     class="sm:hidden"
+                                    icon-class="sm:hidden"
                                 />
                                 <Input
                                     id="email"
@@ -395,7 +375,7 @@
                                 />
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div class="block sm:grid sm:grid-cols-2 sm:h-9 sm:rounded-full">
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="authTwoFactor"
@@ -468,7 +448,7 @@
                                 </Select>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div class="block sm:grid sm:grid-cols-2 sm:h-9 sm:rounded-full">
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="notification"
@@ -549,6 +529,8 @@ import {
     PencilIcon,
     PencilSquareIcon,
 } from '@heroicons/vue/24/solid';
+
+const user = useState('user');
 
 const gender = {
     male: 'Homme',
