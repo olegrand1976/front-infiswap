@@ -6,6 +6,7 @@
     >
         <transition name="fade">
             <div
+                v-if="isOwnPatient"
                 v-show="isScrolled"
                 :class="clsx('w-full fixed top-10 z-50 text-center bg-red-300/50 py-5 transition-opacity ease-in-out duration-500', {
                     'opacity-0': !isScrolled,
@@ -26,16 +27,84 @@
         <section class="flex flex-col justify-between mb-8">
             <div class="space-y-6">
                 <div class="bg-primary text-white p-4 rounded">
-                    <UserCircleIcon class="w-28 mx-auto" />
-                    <p class="text-center mt-4">
-                        {{ patient.firstname }}
-                        <span
-                            v-if="patient.lastname"
-                            class="font-semibold"
-                        >
-                            {{ patient.lastname?.toUpperCase() }}
-                        </span>
-                    </p>
+                    <div class="relative group flex flex-col items-center">
+                        <div class="relative">
+                            <!-- Image ou icône -->
+                            <div class="w-28 h-28 rounded-full overflow-hidden mx-auto flex items-center justify-center bg-gray-100">
+                                <img
+                                    v-if="patient.profile?.profil_url"
+                                    :src="$config.public.API_URL + patient.profile.profil_url"
+                                    class="w-full h-full object-cover"
+                                />
+                                <UserCircleIcon v-else class="w-full h-full text-gray-400 p-4" />
+                            </div>
+
+                            <div v-if="isOwnPatient" class="absolute -right-1 -top-1 flex flex-col gap-1">
+                                <button
+                                    @click="isProfileUrlDialogOpen = true"
+                                    type="button"
+                                    class="bg-gray-200 text-gray-800 p-1.5 rounded-full hover:bg-gray-300 transition-all shadow-sm border border-gray-300"
+                                >
+                                    <PencilIcon class="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                    v-if="patient.profile?.profil_url"
+                                    @click="confirmDeleteAvatar"
+                                    type="button"
+                                    class="bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 transition-all shadow-sm border border-red-200"
+                                >
+                                    <TrashIcon class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <Dialog v-model:open="isDeleteDialogOpen">
+                            <DialogContent class="sm:max-w-md">
+                                <DialogHeader>
+                                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                                    <DialogDescription>
+                                        Êtes-vous sûr de vouloir supprimer cette photo de profil ?
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter class="gap-2 sm:gap-0">
+                                    <Button variant="outline" @click="isDeleteDialogOpen = false">
+                                        Annuler
+                                    </Button>
+                                    <Button variant="destructive" @click="deleteAvatar">
+                                        Supprimer
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
+                        <Dialog v-model:open="isProfileUrlDialogOpen">
+                            <DialogContent class="sm:max-w-[40rem]">
+                                <DialogHeader>
+                                    <DialogTitle>Modifier la photo de profil</DialogTitle>
+                                </DialogHeader>
+                                <div class="grid gap-4 py-4">
+                                    <div class="grid gap-2">
+                                        <FileUpload @file-selected="profileFile = $event" accept="image/*" />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button :loading="profileUpload.loading" @click="handleUploadProfile">
+                                        Sauvegarder
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
+                        <p class="text-center mt-4">
+                            {{ patient.firstname }}
+                            <span
+                                v-if="patient.lastname"
+                                class="font-semibold"
+                            >
+                                {{ patient.lastname?.toUpperCase() }}
+                            </span>
+                        </p>
+                    </div>
 
                     <Dialog v-model:open="isOpenDialog">
                         <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
@@ -151,6 +220,7 @@
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span class="font-semibold">Informations personnelles</span>
                         <PencilSquareIcon
+                            v-if="isOwnPatient"
                             class="w-5 text-white cursor-pointer"
                             @click="openDialog"
                         />
@@ -205,19 +275,40 @@
                 <div class="bg-gray-100 rounded-b">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
                         <span class="font-semibold">Notes de santé</span>
-                        <PencilSquareIcon
-                            class="w-5 text-white cursor-pointer"
+                        <PlusCircleIcon
+                            v-if="isOwnPatient"
+                            class="w-7 text-white cursor-pointer"
                             @click="openCareInfoDialog"
                         />
                     </h3>
 
                     <div class="px-4 py-6">
-                        <template v-if="formData.care_informations && formData.care_informations.length > 0">
+                        <template v-if="careInfoLoaded && formData.care_informations && formData.care_informations.length > 0">
                             <div
                                 v-for="(careInformation, careIndex) in formData.care_informations"
                                 :key="careIndex"
-                                class="space-y-5 mb-4"
+                                class="space-y-5 mb-4 p-4 bg-white rounded-lg shadow-sm relative"
                             >
+                                <div class="absolute top-3 right-3 flex space-x-2">
+                                    <button
+                                        v-if="isOwnPatient"
+                                        @click="editCareInfo(careIndex)"
+                                        type="button"
+                                        class="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                        title="Modifier cette note"
+                                    >
+                                        <PencilSquareIcon class="w-5 h-5 text-gray-500 hover:text-blue-500" />
+                                    </button>
+                                    <button
+                                        v-if="isOwnPatient"
+                                        @click.stop="removeSavedCareInfo(careIndex)"
+                                        type="button"
+                                        class="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                        title="Supprimer cette note"
+                                    >
+                                        <XMarkIcon class="w-5 h-5 text-gray-500 hover:text-red-500" />
+                                    </button>
+                                </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
                                     <h6 class="font-semibold">
                                         Titre
@@ -251,7 +342,7 @@
                                         {{ careInformation.recordDetails }}
                                     </p>
                                 </div>
-                                <hr class="border border-gray-200">
+                                <!-- <hr class="border border-gray-200"> -->
                             </div>
                         </template>
                         <template v-else>
@@ -265,15 +356,17 @@
                 <Dialog v-model:open="isCareInfoDialogOpen">
                     <DialogContent class="sm:max-w-[600px]">
                         <DialogHeader>
-                            <DialogTitle>Gestion des informations de soins</DialogTitle>
+                            <DialogTitle>
+                                {{ editingIndex !== null ? 'Modifier' : 'Ajouter' }} une information de soin
+                            </DialogTitle>
                             <DialogDescription>
-                                Ajoutez, modifiez ou supprimez les informations de soins du patient.
+                                {{ editingIndex !== null ? 'Modifiez' : 'Ajoutez' }} les détails de l'information de soin.
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="space-y-6 max-h-[400px] overflow-y-auto">
                             <div
-                                v-for="(info, index) in formData.care_informations"
+                                v-for="(info, index) in editableCareInformations"
                                 :key="index"
                                 class="p-4 bg-gray-50 rounded-lg relative"
                             >
@@ -339,14 +432,6 @@
                         </div>
 
                         <div class="flex justify-between mt-6">
-                            <Button
-                                variant="success"
-                                @click="addNewCareInfo"
-                            >
-                                <PlusCircleIcon class="mr-2" />
-                                <span>Ajouter</span>
-                            </Button>
-
                             <div class="space-x-2">
                                 <Button
                                     variant="outline"
@@ -357,7 +442,7 @@
                                 <Button
                                     @click="saveCareInformations"
                                 >
-                                    Enregistrer
+                                    {{ editingIndex !== null ? 'Modifier' : 'Enregistrer' }}
                                 </Button>
                             </div>
                         </div>
@@ -366,6 +451,7 @@
             </div>
 
             <Button
+                v-if="isOwnPatient"
                 class="mt-8 hidden lg:block"
                 type="submit"
                 :in-progress="inProgress"
@@ -377,7 +463,7 @@
         <section class="mb-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t">
+                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
                         Date de début d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
@@ -392,7 +478,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t">
+                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
                         Date de fin d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
@@ -529,6 +615,7 @@
                         </div>
 
                         <PlusCircleIcon
+                            v-if="isOwnPatient"
                             class="w-6 text-primary mt-8 ml-auto cursor-pointer"
                             title="Ajouter un autre heure"
                             @click="addTimeSlot(visitIndex)"
@@ -537,6 +624,7 @@
                 </div>
 
                 <Button
+                    v-if="isOwnPatient"
                     class="flex justify-center items-center mx-auto mt-4"
                     type="button"
                     @click="addVisit"
@@ -553,6 +641,7 @@
 
                 <div class="relative">
                     <Button
+                        v-if="isOwnPatient"
                         class="w-full flex items-center justify-center mt-4"
                         @click="openFileUploadDialog"
                     >
@@ -595,6 +684,7 @@
                                     </TableCell>
                                     <TableCell class="bg-gray-100">
                                         <Button
+                                            v-if="isOwnPatient"
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center text-black hover:text-white"
                                             @click="removeDocument(index, document.id)"
                                         >
@@ -660,6 +750,7 @@ import {
     XMarkIcon,
     CalendarDaysIcon,
     TrashIcon,
+    PencilIcon,
 } from '@heroicons/vue/24/solid';
 
 import clsx from 'clsx';
@@ -672,6 +763,14 @@ import type { Patient } from '~/lib/types';
 const { $apifetch } = useNuxtApp();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
+
+const isOwnPatient = ref(false);
+
+onMounted(() => {
+    // Lire l'information depuis localStorage
+    const ownershipData = JSON.parse(localStorage.getItem('patientOwnership') || '{}');
+    isOwnPatient.value = ownershipData[route.params.id] || false;
+});
 
 const isScrolled = ref(false);
 
@@ -795,6 +894,7 @@ const formData = ref({
 
 const transformCareInformations = (careInfo: any[]) => {
     return careInfo.map(info => ({
+        careInformationId: info.id,
         recordType: info.record_type,
         recordName: info.record_name,
         recordSeverity: info.record_severity,
@@ -1013,49 +1113,120 @@ const updatePatientCareTypes = () => {
 
 const isCareInfoDialogOpen = ref(false);
 const editableCareInformations = ref([]);
+const editingIndex = ref<number | null>(null);
+const careInfoLoaded = ref(true);
 
 const openCareInfoDialog = () => {
-    editableCareInformations.value = formData.value.care_informations.map(info => ({ ...info })) || [];
-    isCareInfoDialogOpen.value = true;
-};
-
-const addNewCareInfo = () => {
-    formData.value.care_informations.push({
+    editingIndex.value = null;
+    editableCareInformations.value = [{
         recordType: '',
         recordName: '',
         recordSeverity: '',
         recordDetails: '',
-    });
+    }];
+    isCareInfoDialogOpen.value = true;
+};
+
+const editCareInfo = (index: number) => {
+    editingIndex.value = index;
+    editableCareInformations.value = JSON.parse(JSON.stringify([formData.value.care_informations[index]]));
+    isCareInfoDialogOpen.value = true;
 };
 
 const removeCareInfo = (index: number) => {
-    formData.value.care_informations.splice(index, 1);
+    editableCareInformations.value.splice(index, 1);
 };
 
 const cancelCareInfoEdit = () => {
     isCareInfoDialogOpen.value = false;
     editableCareInformations.value = [];
+    editingIndex.value = null;
 };
 
 const saveCareInformations = async () => {
     try {
+        if (editingIndex.value !== null) {
+            // Modification d'un élément existant
+            formData.value.care_informations[editingIndex.value] = editableCareInformations.value[0];
+        }
+        else {
+            // Ajout d'un nouvel élément
+            if (!formData.value.care_informations) {
+                formData.value.care_informations = [];
+            }
+            formData.value.care_informations.push(editableCareInformations.value[0]);
+        }
+
         await $apifetch(`/api/patients/care-informations/update`, {
             method: 'PUT',
             body: {
-                care_informations: formData.value.care_informations.map(info => ({
-                    recordType: info.recordType,
-                    recordName: info.recordName,
-                    recordSeverity: info.recordSeverity,
-                    recordDetails: info.recordDetails,
-                })),
+                care_informations: formData.value.care_informations,
                 patientId: formData.value.patientId,
             },
         });
 
         isCareInfoDialogOpen.value = false;
+        editingIndex.value = null;
+        careInfoLoaded.value = true;
         $toast({
             description: 'Informations de soins mises à jour avec succès',
         });
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+    catch (error) {
+        careInfoLoaded.value = false;
+        let errorMessage = 'Une erreur s\'est produite';
+
+        if (error.response && error.response._data) {
+            const responseData = error.response._data;
+
+            if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            else if (responseData.errors) {
+                errorMessage = Object.values(responseData.errors)
+                    .flat()
+                    .join(', ');
+            }
+        }
+        else if (error.message) {
+            errorMessage = error.message;
+        }
+
+        $toast({
+            description: `${errorMessage}`,
+            variant: 'destructive',
+        });
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+};
+
+const removeSavedCareInfo = async (index: number) => {
+    try {
+        const deletedItem = formData.value.care_informations[index];
+
+        if (!deletedItem || !deletedItem.careInformationId) {
+            return $toast({ description: 'Impossible de supprimer cette note', variant: 'destructive' });
+        }
+
+        await $apifetch(`/api/patients/care-informations/delete`, {
+            method: 'DELETE',
+            body: {
+                careInformationId: deletedItem.careInformationId,
+                patientId: formData.value.patientId,
+            },
+        });
+
+        setTimeout(() => {
+            formData.value.care_informations.splice(index, 1);
+            $toast({
+                description: 'Note supprimée avec succès',
+            });
+        }, 2000);
     }
     catch (error) {
         let errorMessage = 'Une erreur s\'est produite';
@@ -1082,6 +1253,90 @@ const saveCareInformations = async () => {
         });
     }
 };
+
+const isProfileUrlDialogOpen = ref(false);
+const profileFile = ref(null);
+const profileUpload = useFile();
+
+const handleUploadProfile = async () => {
+    if (!profileFile.value) {
+        $toast.error('Veuillez sélectionner une image');
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('file', profileFile.value);
+
+        const response = await $apifetch(`/api/patients/profile/${patient.value.id}/upload`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Mise à jour reactive
+        if (!patient.value.profile) {
+            patient.value.profile = { profil_url: response.profil_url };
+        }
+        else {
+            patient.value.profile.profil_url = response.profil_url;
+        }
+
+        $toast({
+            description: 'Photo mise à jour',
+        });
+        isProfileUrlDialogOpen.value = false;
+    }
+    catch (error) {
+        $toast({
+            description: `${error}`,
+            variant: 'destructive',
+        });
+    }
+};
+
+// Dans votre setup()
+const isDeleteDialogOpen = ref(false);
+
+const confirmDeleteAvatar = () => {
+    isDeleteDialogOpen.value = true;
+};
+
+const deleteAvatar = async () => {
+    try {
+        const response = await $apifetch('/api/patients/profile/delete', {
+            method: 'DELETE',
+            body: {
+                patient: patient.value,
+                profile: patient.value.profile,
+            },
+        });
+
+        if (!response.success) {
+            throw new Error(response.message || 'Erreur lors de la suppression');
+        }
+
+        // Mise à jour locale
+        if (patient.value?.profile) {
+            patient.value.profile.profil_url = null;
+        }
+
+        isDeleteDialogOpen.value = false;
+        $toast({
+            description: 'Photo supprimée avec succès',
+        });
+    }
+    catch (error) {
+        console.error('Erreur suppression:', error);
+        $toast({
+            variant: 'destructive',
+            description: error.message || 'Échec de la suppression',
+        });
+    }
+};
+
+watch(profileFile, (newFile) => {
+    profileUpload.file.value = newFile;
+});
 
 const documentNote = ref('');
 const isDocumentDialogOpen = ref(false);

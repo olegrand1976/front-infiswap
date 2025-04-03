@@ -102,16 +102,20 @@
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>
+            <SidebarGroup
+                v-if="isFuture(user.trial_ends_at)"
+                class="text-sm rounded-xl pb-6 text-center"
+            >
+                Expiration de l’essai : {{ formatToDMY(user.trial_ends_at) }}
+            </SidebarGroup>
             <SidebarGroup>
-                <SidebarMenuButton class="bg-primary text-white">
-                    <Button
-                        class="w-full flex space-x-2 items-center justify-center"
-                        @click="logout"
-                    >
-                        <PowerIcon class="w-6 opacity-80" />
-                        <span>Déconnexion</span>
-                    </Button>
-                </SidebarMenuButton>
+                <Button
+                    class="w-full rounded flex space-x-2 items-center justify-arround"
+                    @click="logout"
+                >
+                    <PowerIcon class="w-6 opacity-80" />
+                    <span>Déconnexion</span>
+                </Button>
             </SidebarGroup>
         </SidebarContent>
     </Sidebar>
@@ -119,7 +123,6 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-
 import {
     SquaresPlusIcon,
     MapIcon,
@@ -135,10 +138,13 @@ import {
     ClipboardDocumentListIcon,
     PowerIcon,
 } from '@heroicons/vue/24/outline';
+import { isFuture, formatToDMY } from '~/composables/useDate';
 
 defineProps({
     collapsed: Boolean,
 });
+
+const user = useUser();
 
 const navigationItems = [
     {

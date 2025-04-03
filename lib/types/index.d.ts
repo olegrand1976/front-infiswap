@@ -27,6 +27,7 @@ export type User = {
     trial_ends_at?: string | null;
     nurse: Nurse;
     profile: Profile;
+    trial_ends_at?: string | null;
     created_at: string;
     updated_at: string;
 };

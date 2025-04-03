@@ -22,7 +22,7 @@ export const useAuth = () => {
         }
     }
 
-    async function login(credentials: { inami: string; password: string }) {
+    async function login(credentials: { identifier: string; password: string }) {
         if (isLoggedIn.value) return;
 
         await $apifetch('api/login', { method: 'post', body: credentials })

@@ -47,10 +47,10 @@
                         <div class="flex flex-col space-y-4">
                             <div class="flex w-full items-center space-x-1">
                                 <InputIcon
-                                    v-model="credentials.inami"
+                                    v-model="credentials.identifier"
                                     :icon="UserIcon"
                                     type="text"
-                                    placeholder="INAMI"
+                                    placeholder="INAMI ou email"
                                     class="text-sm w-full"
                                 />
                             </div>
@@ -135,10 +135,10 @@
                     <div class="flex flex-col space-y-6">
                         <div class="flex w-full items-center space-x-1">
                             <InputIcon
-                                v-model="credentials.inami"
+                                v-model="credentials.identifier"
                                 :icon="UserIcon"
                                 type="text"
-                                placeholder="INAMI"
+                                placeholder="INAMI ou email"
                                 class="text-sm w-full"
                             />
                         </div>
@@ -218,7 +218,7 @@ const { login } = useAuth();
 const { $toast } = useNuxtApp();
 
 const credentials = reactive({
-    inami: null,
+    identifier: null,
     password: '',
 });
 
