@@ -408,22 +408,23 @@
                         </DialogContent>
                     </Dialog>
 
-                    <div class="my-16 flex justify-center items-center">
-                        <!-- <div
-                            class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2"
+                    <div class="my-16 flex justify-between items-center">
+                        <div
+                            class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2 items-center"
                         >
-                            <div class="bg-primary rounded-s-full justify-center items-center px-auto">
-                                <span class="text-center text-white">Revenu</span>
+                            <div class="h-10 bg-primary rounded-s-full justify-center items-center">
+                                <p class="text-center text-white mt-2">
+                                    Revenu
+                                </p>
                             </div>
                             <div class="flex justify-center items-center mx-auto">
-                                <span class="text-center">8 000 £</span>
+                                <span class="text-center">{{ totalRevenue || 0 }} £</span>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="flex items-center">
                             <Button
                                 type="submit"
-                                class="w-64"
                                 :in-progress="inProgress"
                             >
                                 Enregistrer
@@ -471,6 +472,8 @@ const formData = reactive({
     endDate: '',
     replacement: [],
 });
+
+const totalRevenue = ref(0);
 
 const datePatients = ref<{
     [date: string]: {
@@ -680,10 +683,8 @@ const addPatientToTable = () => {
         return;
     }
 
-    // Déterminer la période en fonction de l'heure sélectionnée
     const actualPeriod = determineTimePeriod(selectedTime.value);
 
-    // Initialiser la structure si nécessaire
     if (!datePatients.value[currentDate.value]) {
         datePatients.value[currentDate.value] = {
             morning: [],
@@ -692,7 +693,6 @@ const addPatientToTable = () => {
         };
     }
 
-    // Ajouter le patient à la période appropriée pour la date courante
     datePatients.value[currentDate.value][actualPeriod].push({
         id: selectedPatient.value.id,
         firstname: selectedPatient.value.firstname,
@@ -705,13 +705,11 @@ const addPatientToTable = () => {
         time: selectedTime.value,
     });
 
-    // Trier les patients par heure
     datePatients.value[currentDate.value][actualPeriod].sort((a, b) => a.time.localeCompare(b.time));
 
-    // Mettre à jour formData.replacement pour la soumission
     updateReplacementData();
+    calculateTotalRevenue(); // Mettre à jour le revenu total
 
-    // Fermer le dialogue et réinitialiser les valeurs
     isDialogOpen.value = false;
     selectedTime.value = '';
     selectedPatient.value = null;
@@ -930,6 +928,29 @@ const reinitializeData = () => {
     copiedDates.value = {};
 };
 
+const calculateTotalRevenue = () => {
+    let total = 0;
+
+    Object.keys(datePatients.value).forEach((date) => {
+        Object.keys(datePatients.value[date]).forEach((period) => {
+            datePatients.value[date][period].forEach((patient) => {
+                if (patient.careTypes && patient.careTypes.length > 0) {
+                    patient.careTypes.forEach((careTypeId) => {
+                        const careType = careTypes.value.find(ct => ct.id === careTypeId);
+                        if (careType && careType.price) {
+                            total += parseFloat(careType.price);
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    totalRevenue.value = total;
+};
+
+watch(datePatients, calculateTotalRevenue, { deep: true });
+
 const removePatient = (date, patientId, time) => {
     const period = determineTimePeriod(time);
     if (datePatients.value[date] && datePatients.value[date][period]) {
@@ -937,6 +958,7 @@ const removePatient = (date, patientId, time) => {
             patient => !(patient.id === patientId && patient.time === time),
         );
         updateReplacementData();
+        calculateTotalRevenue();
         copiedDates.value = {};
     }
 };
