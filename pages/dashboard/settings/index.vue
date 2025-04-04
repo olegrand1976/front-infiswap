@@ -34,7 +34,127 @@
 
                             <PencilSquareIcon
                                 class="w-5 text-black/60 hover:text-primary cursor-pointer"
+                                @click="personalInfoDialog = true"
                             />
+
+                            <Dialog v-model:open="personalInfoDialog">
+                                <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Mise à jour</DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Vous pouvez mettre à jour ici vos informations personnelles
+                                    </DialogDescription>
+
+                                    <form class="mt-4 space-y-3">
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Nom
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.lastname"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Prénom
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.firstname"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Date de naissance
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.dateOfBirth"
+                                                type="date"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Email
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.email"
+                                                type="email"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Numéro INAMI
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.identifierNumber"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Téléphone
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.phoneNumber"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Sexe
+                                            </p>
+                                            <Select v-model="formPersonalInfo.gender">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-transparent text-nowrap border border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formPersonalInfo.gender" />
+                                                </SelectTrigger>
+
+                                                <SelectContent class="border border-none">
+                                                    <template
+                                                        v-for="[key, value] in Object.entries(genders)"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="key">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div class="flex justify-end items-center space-x-8 pt-6">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300"
+                                                @click="personalInfoDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                            >
+                                                Enregistrer
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -148,7 +268,107 @@
                                 <span class="text-lg">Adresse</span>
                             </h3>
 
-                            <PencilSquareIcon class="w-5 text-black/50 hover:text-primary cursor-pointer" />
+                            <PencilSquareIcon
+                                class="w-5 text-black/50 hover:text-primary cursor-pointer"
+                                @click="addressInfoDialog = true"
+                            />
+
+                            <Dialog v-model:open="addressInfoDialog">
+                                <DialogContent class="w-full sm:max-w-xl h-[28rem] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Mise à jour</DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Vous pouvez mettre à jour ici vos informations concernant votre adresse
+                                    </DialogDescription>
+ 
+                                    <form class="mt-4 space-y-3">
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Rue
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.streetAddress"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Ville
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.city"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Pays
+                                            </p>
+                                            <Select v-model="formAddress.country">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-transparent text-nowrap border border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formPersonalInfo.gender" />
+                                                </SelectTrigger>
+
+                                                <SelectContent class="border border-none">
+                                                    <template
+                                                        v-for="[key, value] in Object.entries(countries)"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="key">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Code postal
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.zipCode"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Complément d'adresse
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.additionalInfo"
+                                                type="text"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="flex justify-end items-center space-x-8 pt-6">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300"
+                                                @click="addressInfoDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                            >
+                                                Enregistrer
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -236,7 +456,9 @@
                                 <span class="text-lg">Sécurité</span>
                             </h3>
 
-                            <PencilSquareIcon class="w-5 text-black/60 hover:text-primary cursor-pointer" />
+                            <p class="text-primary font-semibold text-sm pt-4 cursor-pointer">
+                                Changer de mot de passe ?
+                            </p>
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -315,10 +537,11 @@
                                 </div>
                                 <Select>
                                     <SelectTrigger
-                                        class="w-full bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
+                                        v-model="formSetting"
+                                        class="w-full text-black bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
                                         position="right"
                                     >
-                                        <SelectValue />
+                                        <SelectValue :placeholder="languages[formSetting]" />
                                     </SelectTrigger>
 
                                     <SelectContent class="border border-none">
@@ -408,11 +631,15 @@ import {
     BellAlertIcon,
     ChartPieIcon,
     TrashIcon,
-    PencilIcon,
     PencilSquareIcon,
 } from '@heroicons/vue/24/solid';
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+
 const user = useState('user');
+const setting = JSON.parse(user.value.settings);
+
+const formSetting = ref(setting.language);
 
 const personalInfoDialog = ref(false);
 const addressInfoDialog = ref(false);
@@ -426,9 +653,38 @@ const formattedCountry = computed(() => {
     return user.value.profile.country == 'be' ? 'Belgique' : 'France';
 });
 
+const formPersonalInfo = reactive({
+    lastname: user.value.lastname,
+    firstname: user.value.firstname,
+    dateOfBirth: user.value.date_of_birth,
+    email: user.value.email,
+    identifierNumber: user.value.identifier_number,
+    phoneNumber: user.value.phone_number,
+    gender: user.value.gender,
+});
+
+const formAddress = reactive({
+    streetAddress: user.value.profile.street_address,
+    city: user.value.profile.city,
+    country: user.value.profile.country,
+    zipCode: user.value.profile.zip_code,
+    additionalInfo: user.value.additional_info,
+});
+
 const languages = {
     fr: 'Français',
     nl: 'Néerlandais',
+};
+
+const genders = {
+    M: 'Homme',
+    F: 'Femme',
+    X: 'X',
+};
+
+const countries = {
+    be: 'Belgique',
+    fr: 'France',
 };
 
 definePageMeta({
