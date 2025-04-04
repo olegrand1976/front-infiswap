@@ -78,8 +78,8 @@ const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
 
 const options = [
-    { label: 'Je cherche des remplacements', value: 'replace_me' },
-    { label: 'Je souhaite me faire remplacer', value: 'search_remplacement' },
+    { label: 'Je cherche des remplacements', value: 'search_remplacement' },
+    { label: 'Je souhaite me faire remplacer', value: 'replace_me' },
     { label: 'Faire les deux', value: 'all' },
 ];
 
@@ -115,6 +115,7 @@ const handleSubmit = async (event) => {
             $toast({
                 title: 'Succès',
             });
+            localStorage.setItem('userChoice', formData.value);
             setTimeout(() => {
                 navigateTo('/legal-chart');
             }, 2000);
@@ -123,11 +124,13 @@ const handleSubmit = async (event) => {
             $toast({
                 title: 'Succès',
             });
+            localStorage.setItem('userChoice', formData.value);
             setTimeout(() => {
-                navigateTo('/dashboard');
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                // navigateTo('/dashboard');
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 2000);
+                navigateTo('/legal-chart');
             }, 2000);
         }
     }
