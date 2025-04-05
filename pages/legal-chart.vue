@@ -38,11 +38,69 @@
                     </li>
                 </ul>
             </div>
+            <!-- Validation de la charte -->
+            <div class="mt-6 p-4 bg-gray-100 rounded-lg text-center">
+                <Label class="flex items-center justify-center space-x-2 cursor-pointer">
+                    <Input
+                        type="checkbox"
+                        v-model="isAccepted"
+                        class="h-5 w-5 text-primary rounded border-gray-300 focus:ring focus:ring-gray-300"
+                    />
+                    <span class="text-gray-700">
+                        Je reconnais avoir pris connaissance de la <span class="font-semibold">charte de bonne conduite</span> et je m'engage à la respecter.
+                    </span>
+                </Label>
+            </div>
+
+            <!-- Bouton de validation -->
+            <div class="mt-6 text-center">
+                <Button
+                    @click="validateCharte"
+                    :disabled="!isAccepted"
+                    class="px-6 py-2 rounded-lg text-white font-semibold transition duration-300"
+                    :class="isAccepted ? 'bg-primary hover:bg-primary' : 'bg-gray-400 cursor-not-allowed'"
+                >
+                    Valider
+                </Button>
+            </div>
         </div>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
+const isAccepted = ref(false);
+const { $toast } = useNuxtApp();
+
+const validateCharte = () => {
+    if (isAccepted.value) {
+        const userChoice = localStorage.getItem('userChoice');
+
+        $toast({
+            title: 'Succès',
+        });
+        if (userChoice === 'replace_me') {
+            setTimeout(() => {
+                navigateTo('/dashboard/replacements/create');
+            }, 1000);
+        }
+        if (userChoice === 'search_remplacement') {
+            setTimeout(() => {
+                navigateTo('/dashboard/replacements/search');
+            }, 1000);
+        }
+        else if (userChoice === 'all') {
+            setTimeout(() => {
+                navigateTo('/dashboard/replacements/create');
+            }, 1000);
+        }
+        else {
+            setTimeout(() => {
+                navigateTo('/dashboard');
+            }, 1000);
+        }
+    }
+};
+
 useHead({
     title: 'InfiSwap',
     meta: [{ name: 'description', content: '' }],
@@ -111,3 +169,10 @@ const privacyPolicy = [
     },
 ];
 </script>
+
+<style scoped>
+/* Désactive les interactions si la charte n'est pas acceptée */
+.pointer-events-none {
+    pointer-events: none;
+}
+</style>
