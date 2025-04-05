@@ -35,23 +35,29 @@
                                     v-if="patient.profile?.profil_url"
                                     :src="$config.public.API_URL + patient.profile.profil_url"
                                     class="w-full h-full object-cover"
+                                >
+                                <UserCircleIcon
+                                    v-else
+                                    class="w-full h-full text-gray-400 p-4"
                                 />
-                                <UserCircleIcon v-else class="w-full h-full text-gray-400 p-4" />
                             </div>
 
-                            <div v-if="isOwnPatient" class="absolute -right-1 -top-1 flex flex-col gap-1">
+                            <div
+                                v-if="isOwnPatient"
+                                class="absolute -right-1 -top-1 flex flex-col gap-1"
+                            >
                                 <button
-                                    @click="isProfileUrlDialogOpen = true"
                                     type="button"
                                     class="bg-gray-200 text-gray-800 p-1.5 rounded-full hover:bg-gray-300 transition-all shadow-sm border border-gray-300"
+                                    @click="isProfileUrlDialogOpen = true"
                                 >
                                     <PencilIcon class="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                     v-if="patient.profile?.profil_url"
-                                    @click="confirmDeleteAvatar"
                                     type="button"
                                     class="bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 transition-all shadow-sm border border-red-200"
+                                    @click="confirmDeleteAvatar"
                                 >
                                     <TrashIcon class="w-3.5 h-3.5" />
                                 </button>
@@ -67,10 +73,16 @@
                                     </DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter class="gap-2 sm:gap-0">
-                                    <Button variant="outline" @click="isDeleteDialogOpen = false">
+                                    <Button
+                                        variant="outline"
+                                        @click="isDeleteDialogOpen = false"
+                                    >
                                         Annuler
                                     </Button>
-                                    <Button variant="destructive" @click="deleteAvatar">
+                                    <Button
+                                        variant="destructive"
+                                        @click="deleteAvatar"
+                                    >
                                         Supprimer
                                     </Button>
                                 </DialogFooter>
@@ -84,11 +96,17 @@
                                 </DialogHeader>
                                 <div class="grid gap-4 py-4">
                                     <div class="grid gap-2">
-                                        <FileUpload @file-selected="profileFile = $event" accept="image/*" />
+                                        <FileUpload
+                                            accept="image/*"
+                                            @file-selected="profileFile = $event"
+                                        />
                                     </div>
                                 </div>
                                 <DialogFooter>
-                                    <Button :loading="profileUpload.loading" @click="handleUploadProfile">
+                                    <Button
+                                        :loading="profileUpload.loading"
+                                        @click="handleUploadProfile"
+                                    >
                                         Sauvegarder
                                     </Button>
                                 </DialogFooter>
@@ -292,19 +310,19 @@
                                 <div class="absolute top-3 right-3 flex space-x-2">
                                     <button
                                         v-if="isOwnPatient"
-                                        @click="editCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
                                         title="Modifier cette note"
+                                        @click="editCareInfo(careIndex)"
                                     >
                                         <PencilSquareIcon class="w-5 h-5 text-gray-500 hover:text-blue-500" />
                                     </button>
                                     <button
                                         v-if="isOwnPatient"
-                                        @click.stop="removeSavedCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
                                         title="Supprimer cette note"
+                                        @click.stop="removeSavedCareInfo(careIndex)"
                                     >
                                         <XMarkIcon class="w-5 h-5 text-gray-500 hover:text-red-500" />
                                     </button>
