@@ -157,6 +157,16 @@
 
                     <div class="col-span-2">
                         <InputIcon
+                            v-model="formData.address.zipCode"
+                            :icon="InboxArrowDownIcon"
+                            size="md"
+                            class="border border-gray-300"
+                            placeholder="Code postal *"
+                        />
+                    </div>
+
+                    <div class="col-span-2">
+                        <InputIcon
                             v-model="formData.address.city"
                             :icon="BuildingOffice2Icon"
                             size="md"
@@ -165,15 +175,7 @@
                         />
                     </div>
 
-                    <div class="col-span-2">
-                        <InputIcon
-                            v-model="formData.address.zipCode"
-                            :icon="InboxArrowDownIcon"
-                            size="md"
-                            class="border border-gray-300"
-                            placeholder="Code postal *"
-                        />
-                    </div>
+
 
                     <div class="col-span-2">
                         <Select v-model="formData.address.country">
