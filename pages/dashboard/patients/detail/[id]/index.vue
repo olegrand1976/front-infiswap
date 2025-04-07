@@ -73,10 +73,16 @@
                                     </DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter class="gap-4 sm:gap-4">
-                                    <Button variant="outline" @click="isDeleteDialogOpen = false">
+                                    <Button
+                                        variant="outline"
+                                        @click="isDeleteDialogOpen = false"
+                                    >
                                         Annuler
                                     </Button>
-                                    <Button variant="destructive" @click="deleteAvatar">
+                                    <Button
+                                        variant="destructive"
+                                        @click="deleteAvatar"
+                                    >
                                         Confirmer
                                     </Button>
                                 </DialogFooter>
