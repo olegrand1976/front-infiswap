@@ -1,5 +1,5 @@
 <template>
-    <div class="md:flex min-h-screen flex-row justify-center">
+    <div class="lg:flex min-h-screen flex-row justify-center">
         <div class="hidden lg:block bg-tertiary/30 xl:w-[110vw] lg:w-[95vw] md:w-[95vw] sm:w-[70vw] relative container">
             <div class="absolute bottom-0 xl:left-32 lg:left-20">
                 <LayoutsAppImage
@@ -31,20 +31,20 @@
             </div>
         </div>
 
+        <div class="lg:hidden">
+            <LayoutsHeaderMobile />
+        </div>
+
         <div class="container my-14 overflow-y-hidden lg:w-full md:h-auto flex flex-col justify-center items-center">
-            <div>
+            <div class="hidden lg:block">
                 <LayoutsAppImage
                     src="logo.png"
                     class="h-14 lg:h-28 mb-4"
                 />
             </div>
 
-            <!-- <h1 class="mb-4 lg:mb-8 xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl font-bold text-primary">
-                Inscription
-            </h1> -->
-
             <div class="w-full max-w-lg overflow-x-hidden font-light">
-                <h1 class="mb-4 text-sm lg:mb-6 xl:text-base text-center">
+                <h1 class="mb-4 px-4 text-sm lg:mb-6 xl:text-base text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -60,12 +60,6 @@
                             class="border border-gray-300"
                             placeholder="Nom *"
                         />
-                        <p
-                            v-if="error.lastname"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.lastname }}
-                        </p>
                     </div>
 
                     <div class="col-span-2 relative w-full items-center">
@@ -76,12 +70,6 @@
                             class="border border-gray-300"
                             placeholder="Prénoms *"
                         />
-                        <p
-                            v-if="error.firstname"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.firstname }}
-                        </p>
                     </div>
 
                     <div class="col-span-2 relative w-full items-center">
@@ -92,12 +80,6 @@
                             class="border border-gray-300"
                             placeholder="Email *"
                         />
-                        <p
-                            v-if="error.email"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.email }}
-                        </p>
                     </div>
 
                     <div class="col-span-2">
@@ -108,12 +90,6 @@
                             class="border border-gray-300"
                             placeholder="N° de téléphone"
                         />
-                        <p
-                            v-if="error.phoneNumber"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.phoneNumber }}
-                        </p>
                     </div>
 
                     <div class="col-span-2">
@@ -125,12 +101,6 @@
                             class="border border-gray-300"
                             placeholder="Mot de passe *"
                         />
-                        <p
-                            v-if="error.password"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.password }}
-                        </p>
                     </div>
 
                     <div class="col-span-2">
@@ -142,15 +112,9 @@
                             placeholder="Mot de passe *"
                             class="border border-gray-300"
                         />
-                        <p
-                            v-if="error.passwordConfirmation"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.passwordConfirmation }}
-                        </p>
                     </div>
 
-                    <div class="col-span-1 lg:col-span-2">
+                    <div class="col-span-2">
                         <Select v-model="formData.gender">
                             <SelectTrigger
                                 class="flex xl:h-auto sm:h-8 items-center rounded-full border border-gray-300"
@@ -209,15 +173,9 @@
                             class="border border-gray-300"
                             placeholder="Code postal *"
                         />
-                        <p
-                            v-if="error.address.zipCode"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.address.zipCode }}
-                        </p>
                     </div>
 
-                    <div class="col-span-1 lg:col-span-2">
+                    <div class="col-span-2">
                         <Select v-model="formData.address.country">
                             <SelectTrigger
                                 class="flex justify-between items-center rounded-full border border-gray-300"
@@ -268,7 +226,7 @@
                         />
                     </div>
 
-                    <div class="col-span-1 lg:col-span-2">
+                    <div class="col-span-2">
                         <Select v-model="formData.accountType">
                             <SelectTrigger
                                 class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border border-gray-300 disabled:opacity-100 disabled:cursor-default"
@@ -297,7 +255,7 @@
                         </Select>
                     </div>
 
-                    <div class="col-span-1 lg:col-span-2">
+                    <div class="col-span-2">
                         <Select v-model="formData.language">
                             <SelectTrigger
                                 class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
@@ -333,12 +291,6 @@
                             class="border border-gray-300"
                             placeholder="Numéro INAMI"
                         />
-                        <p
-                            v-if="error.identifierNumber"
-                            class="text-red-500 text-xs mt-1 ms-[5%]"
-                        >
-                            {{ error.identifierNumber }}
-                        </p>
                     </div>
 
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
@@ -375,13 +327,10 @@ import {
     LanguageIcon,
     IdentificationIcon,
     UsersIcon,
-    CalendarDateRangeIcon,
     BuildingOffice2Icon,
     MapPinIcon,
     InboxArrowDownIcon,
 } from '@heroicons/vue/24/solid';
-
-import * as yup from 'yup';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 
@@ -393,9 +342,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-const { $toast } = useNuxtApp();
-const router = useRouter();
 
 const genders = [
     {
@@ -470,26 +416,6 @@ const formData = reactive({
         city: '',
         zipCode: '',
         country: countries[0].value,
-        additionnalInformation: '',
-    },
-});
-
-const error = reactive({
-    lastname: '',
-    firstname: '',
-    email: '',
-    password: '',
-    accountType: '',
-    passwordConfirmation: '',
-    gender: '',
-    language: '',
-    phoneNumber: undefined,
-    identifierNumber: '',
-    address: {
-        street: '',
-        city: '',
-        zipCode: '',
-        country: '',
         additionnalInformation: '',
     },
 });
