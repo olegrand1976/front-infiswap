@@ -12,10 +12,18 @@
         >
             <div>
                 <Button
+                    v-if="!isLoggedIn"
                     class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
                     href="/login"
                 >
                     Connexion
+                </Button>
+                <Button
+                    v-if="isLoggedIn"
+                    class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
+                    href="/dashboard"
+                >
+                    Tableau de bord
                 </Button>
                 <nav class="flex ps-5 mt-8">
                     <ul class="flex flex-col text-sm space-y-9 items-start">
@@ -97,10 +105,11 @@
                         </li>
                     </ul>
                     <Button
+                        v-if="!isLoggedIn"
                         href="/register"
                         class="w-44 mx-auto inline-flex rounded-3xl font-bold mt-12  ml-1"
                     >
-                        S'inscrire
+                        Inscription
                     </Button>
                 </div>
             </div>
@@ -116,10 +125,11 @@ import {
     MapPinIcon,
     EnvelopeIcon,
     GlobeAltIcon,
-    ArrowRightIcon,
 } from '@heroicons/vue/24/outline';
 
 import { AlignRightIcon } from 'lucide-vue-next';
+
+const { isLoggedIn } = useAuth();
 
 const navigationItems = [
     { label: 'ACCUEIL', route: '/' },

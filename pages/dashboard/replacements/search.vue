@@ -92,6 +92,7 @@
                                             :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
                                             class="text-xs flex items-center"
                                             placeholder="8793"
+                                            @blur="handleBlur"
                                             @keydown.enter="addPostalCodeTag"
                                         />
                                     </TagsInput>
@@ -138,7 +139,7 @@
                                             :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
-                                            @blur="addCityTag"
+                                            @blur="handleBlur"
                                             @keydown.enter="addCityTag"
                                         />
                                     </TagsInput>
@@ -573,12 +574,8 @@ useHead({
 const { loading, getReplacements } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 
-const initialReplacements = ref(await getReplacements());
-const currentReplacements = ref(initialReplacements.value.data);
-
-onMounted(() => {
-    getReplacements();
-});
+const user = useState('user');
+const settings = JSON.parse(user.value.settings);
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -610,8 +607,8 @@ const hasShift = (details, period) => {
 };
 
 const formData = reactive({
-    postalCodeTags: [],
-    cityTags: [],
+    postalCodeTags: settings.replacement.zip_codes || [],
+    cityTags: settings.replacement.cities || [],
     selectedDays: [],
 });
 
@@ -697,6 +694,44 @@ const removeCityTag = (tag) => {
     formData.cityTags = formData.cityTags.filter(t => t !== tag);
 };
 
+const handleBlur = (event) => {
+    const inputEl = event.target;
+    const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        which: 13,
+        bubbles: true,
+        cancelable: true,
+    });
+
+    inputEl.dispatchEvent(enterEvent);
+};
+
+const sortReplacements = (replacements) => {
+    return replacements.sort((a, b) => {
+        const aMatches = a.details.some(detail =>
+            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+        );
+        const bMatches = b.details.some(detail =>
+            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+        );
+
+        if (aMatches && !bMatches) return -1;
+        if (!aMatches && bMatches) return 1;
+        return 0;
+    });
+};
+
+const initialReplacements = ref(await getReplacements());
+const currentReplacements = ref(sortReplacements(initialReplacements.value.data));
+
+onMounted(() => {
+    getReplacements();
+});
+
 const submit = async () => {
     isSubmitted.value = true;
 
@@ -708,10 +743,10 @@ const submit = async () => {
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
         });
-        currentReplacements.value = response.replacements.data;
+        currentReplacements.value = sortReplacements(response.replacements.data);
     }
     else {
-        currentReplacements.value = initialReplacements.value;
+        currentReplacements.value = sortReplacements(initialReplacements.value.data);
     }
 };
 
@@ -743,7 +778,7 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = initialReplacements.value.data;
+            currentReplacements.value = sortReplacements(initialReplacements.value.data);
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
@@ -759,6 +794,28 @@ definePageMeta({
     ssr: false,
 });
 </script>
+
+<style>
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+</style>
+
+<style>
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+</style>
 
 <style>
 .no-scrollbar {

@@ -92,6 +92,7 @@
                                             :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
                                             class="text-xs flex items-center"
                                             placeholder="8793"
+                                            @blur="handleBlur"
                                             @keydown.enter="addPostalCodeTag"
                                         />
                                     </TagsInput>
@@ -138,7 +139,7 @@
                                             :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
-                                            @blur="addCityTag"
+                                            @blur="handleBlur"
                                             @keydown.enter="addCityTag"
                                         />
                                     </TagsInput>
@@ -567,7 +568,7 @@ import { cn } from '@/lib/utils';
 import { selectDays } from '~/lib/utils';
 
 useHead({
-    title: 'Rechercher des remplacements',
+    title: 'Mes remplacements',
 });
 
 const { loading, getMyReplacements } = useReplacements();
@@ -579,6 +580,9 @@ const currentReplacements = ref(initialReplacements.value.data);
 onMounted(() => {
     getMyReplacements();
 });
+
+const user = useState('user');
+const settings = JSON.parse(user.value.settings);
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -610,8 +614,8 @@ const hasShift = (details, period) => {
 };
 
 const formData = reactive({
-    postalCodeTags: [],
-    cityTags: [],
+    postalCodeTags: settings.replacement.zip_codes || [],
+    cityTags: settings.replacement.cities || [],
     selectedDays: [],
     type: 'me',
 });
@@ -696,6 +700,20 @@ const addCityTag = () => {
 
 const removeCityTag = (tag) => {
     formData.cityTags = formData.cityTags.filter(t => t !== tag);
+};
+
+const handleBlur = (event) => {
+    const inputEl = event.target;
+    const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        which: 13,
+        bubbles: true,
+        cancelable: true,
+    });
+
+    inputEl.dispatchEvent(enterEvent);
 };
 
 const submit = async () => {

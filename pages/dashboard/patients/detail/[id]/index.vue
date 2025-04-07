@@ -35,23 +35,29 @@
                                     v-if="patient.profile?.profil_url"
                                     :src="$config.public.API_URL + patient.profile.profil_url"
                                     class="w-full h-full object-cover"
+                                >
+                                <UserCircleIcon
+                                    v-else
+                                    class="w-full h-full text-gray-400 p-4"
                                 />
-                                <UserCircleIcon v-else class="w-full h-full text-gray-400 p-4" />
                             </div>
 
-                            <div v-if="isOwnPatient" class="absolute -right-1 -top-1 flex flex-col gap-1">
+                            <div
+                                v-if="isOwnPatient"
+                                class="absolute -right-1 -top-1 flex flex-col gap-1"
+                            >
                                 <button
-                                    @click="isProfileUrlDialogOpen = true"
                                     type="button"
                                     class="bg-gray-200 text-gray-800 p-1.5 rounded-full hover:bg-gray-300 transition-all shadow-sm border border-gray-300"
+                                    @click="isProfileUrlDialogOpen = true"
                                 >
                                     <PencilIcon class="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                     v-if="patient.profile?.profil_url"
-                                    @click="confirmDeleteAvatar"
                                     type="button"
                                     class="bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 transition-all shadow-sm border border-red-200"
+                                    @click="confirmDeleteAvatar"
                                 >
                                     <TrashIcon class="w-3.5 h-3.5" />
                                 </button>
@@ -63,15 +69,15 @@
                                 <DialogHeader>
                                     <DialogTitle>Confirmer la suppression</DialogTitle>
                                     <DialogDescription>
-                                        Êtes-vous sûr de vouloir supprimer cette photo de profil ?
+                                        Êtes-vous sûr de vouloir supprimer cette photo de profil?
                                     </DialogDescription>
                                 </DialogHeader>
-                                <DialogFooter class="gap-2 sm:gap-0">
+                                <DialogFooter class="gap-4 sm:gap-4">
                                     <Button variant="outline" @click="isDeleteDialogOpen = false">
                                         Annuler
                                     </Button>
                                     <Button variant="destructive" @click="deleteAvatar">
-                                        Supprimer
+                                        Confirmer
                                     </Button>
                                 </DialogFooter>
                             </DialogContent>
@@ -84,11 +90,17 @@
                                 </DialogHeader>
                                 <div class="grid gap-4 py-4">
                                     <div class="grid gap-2">
-                                        <FileUpload @file-selected="profileFile = $event" accept="image/*" />
+                                        <FileUpload
+                                            accept="image/*"
+                                            @file-selected="profileFile = $event"
+                                        />
                                     </div>
                                 </div>
                                 <DialogFooter>
-                                    <Button :loading="profileUpload.loading" @click="handleUploadProfile">
+                                    <Button
+                                        :loading="profileUpload.loading"
+                                        @click="handleUploadProfile"
+                                    >
                                         Sauvegarder
                                     </Button>
                                 </DialogFooter>
@@ -204,6 +216,58 @@
                                         </option>
                                     </select>
                                 </div>
+                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Disponibilité
+                                    </p>
+                                    <select
+                                        v-model="formData.availability"
+                                        class="bg-transparent px-2 h-full rounded-e-full focus:outline-none"
+                                    >
+                                        <option
+                                            value="available"
+                                            :selected="formData.availability === 'available'"
+                                        >
+                                            Disponible
+                                        </option>
+                                        <option
+                                            value="unavailable"
+                                            :selected="formData.availability === 'unavailable'"
+                                        >
+                                            Indisponible
+                                        </option>
+                                        <option
+                                            value="absent"
+                                            :selected="formData.availability === 'absent'"
+                                        >
+                                            Absent
+                                        </option>
+                                        <option
+                                            value="hospitalized"
+                                            :selected="formData.availability === 'hospitalized'"
+                                        >
+                                            Hospitalisé
+                                        </option>
+                                        <option
+                                            value="on_vacation"
+                                            :selected="formData.availability === 'on_vacation'"
+                                        >
+                                            En vacances
+                                        </option>
+                                        <option
+                                            value="sick"
+                                            :selected="formData.availability === 'sick'"
+                                        >
+                                            Malade
+                                        </option>
+                                        <option
+                                            value="other"
+                                            :selected="formData.availability === 'other'"
+                                        >
+                                            Autre
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <Button
@@ -225,49 +289,60 @@
                             @click="openDialog"
                         />
                     </h3>
-                    <div class="flex flex-col gap-2 px-4 py-6 lg:gap-4">
-                        <div class="grid grid-cols-[40%_60%] gap-4">
-                            <div class="font-semibold">
-                                <!-- Numéro de registre national -->
-                                NISS
+                    <div class="flex flex-col gap-2 px-4 pt-6 pb-3 lg:gap-4">
+                        <div class="space-y-5 mb-4 p-4 bg-white rounded-lg shadow-sm relative">
+                            <div class="grid grid-cols-[40%_60%] gap-4">
+                                <div class="font-semibold">
+                                    <!-- Numéro de registre national -->
+                                    NISS
+                                </div>
+                                <div>{{ patient.social_security_number }}</div>
                             </div>
-                            <div>{{ patient.social_security_number }}</div>
-                        </div>
-                        <div
-                            v-if="patient.phone_number"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Téléphone
+                            <div
+                                v-if="patient.phone_number"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Téléphone
+                                </div>
+                                <div>{{ phoneNumber(patient.phone_number as string) }}</div>
                             </div>
-                            <div>{{ phoneNumber(patient.phone_number as string) }}</div>
-                        </div>
-                        <div
-                            v-if="patient.profile?.zip_code"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Code Postale
+                            <div
+                                v-if="patient.profile?.zip_code"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Code Postale
+                                </div>
+                                <div>{{ patient.profile.zip_code }}</div>
                             </div>
-                            <div>{{ patient.profile.zip_code }}</div>
-                        </div>
-                        <div
-                            v-if="patient.profile?.city"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Ville
+                            <div
+                                v-if="patient.profile?.city"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Ville
+                                </div>
+                                <div>{{ patient.profile.city }}</div>
                             </div>
-                            <div>{{ patient.profile.city }}</div>
-                        </div>
-                        <div
-                            v-if="patient.profile?.city"
-                            class="grid grid-cols-[40%_60%] gap-4"
-                        >
-                            <div class="font-semibold">
-                                Genre
+                            <div
+                                v-if="patient.gender"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Genre
+                                </div>
+                                <div>{{ patient.gender ?? 'Non genré' }}</div>
                             </div>
-                            <div>{{ patient.gender ?? 'Non genré' }}</div>
+                            <div
+                                v-if="patient.availability"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Disponibilité
+                                </div>
+                                <div>{{ availability[patient.availability] }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -283,7 +358,7 @@
                     </h3>
 
                     <div class="px-4 py-6">
-                        <template v-if="careInfoLoaded && formData.care_informations && formData.care_informations.length > 0">
+                        <template v-if="formData.care_informations && formData.care_informations.length">
                             <div
                                 v-for="(careInformation, careIndex) in formData.care_informations"
                                 :key="careIndex"
@@ -292,21 +367,21 @@
                                 <div class="absolute top-3 right-3 flex space-x-2">
                                     <button
                                         v-if="isOwnPatient"
-                                        @click="editCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
                                         title="Modifier cette note"
+                                        @click="editCareInfo(careIndex)"
                                     >
-                                        <PencilSquareIcon class="w-5 h-5 text-gray-500 hover:text-blue-500" />
+                                        <PencilSquareIcon class="w-6 text-gray-500 hover:text-blue-500" />
                                     </button>
                                     <button
                                         v-if="isOwnPatient"
-                                        @click.stop="removeSavedCareInfo(careIndex)"
                                         type="button"
                                         class="p-1 rounded-full hover:bg-gray-100 transition-colors"
                                         title="Supprimer cette note"
+                                        @click.stop="removeSavedCareInfo(careIndex)"
                                     >
-                                        <XMarkIcon class="w-5 h-5 text-gray-500 hover:text-red-500" />
+                                        <XCircleIcon class="w-7 text-gray-500 hover:text-red-500" />
                                     </button>
                                 </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
@@ -370,16 +445,6 @@
                                 :key="index"
                                 class="p-4 bg-gray-50 rounded-lg relative"
                             >
-                                <span
-                                    title="Supprimer"
-                                    style="background-color: black; color: white; font-style: italic; padding: 2px 5px; border-radius: 4px;"
-                                >
-                                    <XMarkIcon
-                                        class="w-5 h-5 absolute top-2 right-2 text-primary cursor-pointer"
-                                        @click="removeCareInfo(index)"
-                                    />
-                                </span>
-
                                 <div class="space-y-4">
                                     <div class="space-y-2">
                                         <Label>Titre</Label>
@@ -431,7 +496,7 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-between mt-6">
+                        <div class="flex justify-end mt-6">
                             <div class="space-x-2">
                                 <Button
                                     variant="outline"
@@ -748,6 +813,7 @@ import {
     CloudArrowDownIcon,
     PencilSquareIcon,
     XMarkIcon,
+    XCircleIcon,
     CalendarDaysIcon,
     TrashIcon,
     PencilIcon,
@@ -943,6 +1009,16 @@ const severities = {
     hight: 'Elevé',
 };
 
+const availability = {
+    available: 'Disponible',
+    unavailable: 'Indisponible',
+    absent: 'Absent',
+    hospitalized: 'Hospitalisé',
+    on_vacation: 'En vacances',
+    sick: 'Malade',
+    other: 'Autre',
+};
+
 const isOpenDialog = ref(false);
 
 const openDialog = () => {
@@ -962,44 +1038,40 @@ const updatePatientInfo = async () => {
             phoneNumber: formData.value.phoneNumber,
             zipCode: formData.value.zipCode,
             city: formData.value.city,
+            availability: formData.value.availability,
         };
 
-        await $apifetch(`/api/patients/information/${formData.value.patientId}`, {
+        // Envoi à l'API
+        const response = await $apifetch(`/api/patients/information/${formData.value.patientId}`, {
             method: 'PUT',
             body: payload,
         });
 
+        // Mise à jour locale des données (sans rechargement)
+        patient.value = {
+            ...patient.value,
+            lastname: formData.value.lastname,
+            firstname: formData.value.firstname,
+            social_security_number: formData.value.socialSecurityNumber,
+            phone_number: formData.value.phoneNumber,
+            gender: genderValue,
+            availability: formData.value.availability,
+            profile: {
+                ...patient.value.profile,
+                zip_code: formData.value.zipCode,
+                city: formData.value.city,
+            },
+        };
+
         isOpenDialog.value = false;
-        $toast({
-            description: 'Informations du patient mises à jour avec succès',
-        });
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        $toast({ description: 'Informations mises à jour avec succès' });
     }
     catch (error) {
         let errorMessage = 'Une erreur s\'est produite';
-
-        if (error.response && error.response._data) {
-            const responseData = error.response._data;
-
-            if (responseData.message) {
-                errorMessage = responseData.message;
-            }
-            else if (responseData.errors) {
-                errorMessage = Object.values(responseData.errors)
-                    .flat()
-                    .join(', ');
-            }
+        if (error.response?._data) {
+            errorMessage = error.response._data.message || Object.values(error.response._data.errors || {}).flat().join(', ');
         }
-        else if (error.message) {
-            errorMessage = error.message;
-        }
-
-        $toast({
-            description: `Erreur : ${errorMessage}`,
-            variant: 'destructive',
-        });
+        $toast({ description: `Erreur : ${errorMessage}`, variant: 'destructive' });
     }
 };
 
@@ -1133,10 +1205,6 @@ const editCareInfo = (index: number) => {
     isCareInfoDialogOpen.value = true;
 };
 
-const removeCareInfo = (index: number) => {
-    editableCareInformations.value.splice(index, 1);
-};
-
 const cancelCareInfoEdit = () => {
     isCareInfoDialogOpen.value = false;
     editableCareInformations.value = [];
@@ -1145,63 +1213,69 @@ const cancelCareInfoEdit = () => {
 
 const saveCareInformations = async () => {
     try {
+        careInfoLoaded.value = true;
+
+        const infoToSave = { ...editableCareInformations.value[0] };
+
         if (editingIndex.value !== null) {
-            // Modification d'un élément existant
-            formData.value.care_informations[editingIndex.value] = editableCareInformations.value[0];
+            // UPDATE
+            await $apifetch('/api/patients/care-informations/updatereal', {
+                method: 'PUT',
+                body: {
+                    care_informations: [{
+                        recordType: infoToSave.recordType,
+                        recordName: infoToSave.recordName,
+                        recordSeverity: infoToSave.recordSeverity,
+                        recordDetails: infoToSave.recordDetails,
+                        careInformationId: infoToSave.careInformationId,
+                    }],
+                    patientId: formData.value.patientId,
+                },
+            });
         }
         else {
-            // Ajout d'un nouvel élément
-            if (!formData.value.care_informations) {
-                formData.value.care_informations = [];
-            }
-            formData.value.care_informations.push(editableCareInformations.value[0]);
+            // CREATE
+            await $apifetch('/api/patients/care-informations', {
+                method: 'POST',
+                body: {
+                    care_informations: [{
+                        recordType: infoToSave.recordType,
+                        recordName: infoToSave.recordName,
+                        recordSeverity: infoToSave.recordSeverity,
+                        recordDetails: infoToSave.recordDetails,
+                    }],
+                    patientId: formData.value.patientId,
+                },
+            });
         }
 
-        await $apifetch(`/api/patients/care-informations/update`, {
-            method: 'PUT',
-            body: {
-                care_informations: formData.value.care_informations,
-                patientId: formData.value.patientId,
-            },
-        });
+        // Recharge les données dans les deux cas (CREATE et UPDATE)
+        const serverData = await $apifetch(`/api/patients/${formData.value.patientId}/care-informations`);
+
+        // Reformate les données pour correspondre à la structure attendue
+        if (serverData && serverData.patient_care_information) {
+            formData.value.care_informations = serverData.patient_care_information.map(item => ({
+                careInformationId: item.id,
+                recordType: item.record_type,
+                recordName: item.record_name,
+                recordSeverity: item.record_severity,
+                recordDetails: item.record_details,
+            }));
+        }
 
         isCareInfoDialogOpen.value = false;
         editingIndex.value = null;
-        careInfoLoaded.value = true;
-        $toast({
-            description: 'Informations de soins mises à jour avec succès',
-        });
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        $toast({ description: 'Enregistrement réussi' });
     }
     catch (error) {
-        careInfoLoaded.value = false;
-        let errorMessage = 'Une erreur s\'est produite';
-
-        if (error.response && error.response._data) {
-            const responseData = error.response._data;
-
-            if (responseData.message) {
-                errorMessage = responseData.message;
-            }
-            else if (responseData.errors) {
-                errorMessage = Object.values(responseData.errors)
-                    .flat()
-                    .join(', ');
-            }
-        }
-        else if (error.message) {
-            errorMessage = error.message;
-        }
-
+        console.error('Erreur lors de la sauvegarde :', error);
         $toast({
-            description: `${errorMessage}`,
+            description: error.response?._data?.message || error.message || 'Erreur lors de la sauvegarde',
             variant: 'destructive',
         });
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+    }
+    finally {
+        careInfoLoaded.value = false;
     }
 };
 
@@ -1221,12 +1295,10 @@ const removeSavedCareInfo = async (index: number) => {
             },
         });
 
-        setTimeout(() => {
-            formData.value.care_informations.splice(index, 1);
-            $toast({
-                description: 'Note supprimée avec succès',
-            });
-        }, 2000);
+        formData.value.care_informations.splice(index, 1);
+        $toast({
+            description: 'Note supprimée avec succès',
+        });
     }
     catch (error) {
         let errorMessage = 'Une erreur s\'est produite';

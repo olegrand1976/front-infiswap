@@ -78,8 +78,8 @@ const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
 
 const options = [
-    { label: 'Je cherche des remplacements', value: 'replace_me' },
-    { label: 'Je souhaite me faire remplacer', value: 'search_remplacement' },
+    { label: 'Je cherche des remplacements', value: 'search_remplacement' },
+    { label: 'Je souhaite me faire remplacer', value: 'replace_me' },
     { label: 'Faire les deux', value: 'all' },
 ];
 
@@ -115,20 +115,41 @@ const handleSubmit = async (event) => {
             $toast({
                 title: 'Succès',
             });
-            setTimeout(() => {
-                navigateTo('/legal-chart');
-            }, 2000);
+            if (formData.value === 'replace_me') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
+            if (formData.value === 'search_remplacement') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/search');
+                }, 1000);
+            }
+            else if (formData.value === 'all') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
         }
         else {
             $toast({
                 title: 'Succès',
             });
-            setTimeout(() => {
-                navigateTo('/dashboard');
+            if (formData.value === 'replace_me') {
                 setTimeout(() => {
-                    location.reload();
-                }, 2000);
-            }, 2000);
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
+            if (formData.value === 'search_remplacement') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/search');
+                }, 1000);
+            }
+            else if (formData.value === 'all') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
         }
     }
     catch (error) {
