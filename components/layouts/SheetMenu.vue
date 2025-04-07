@@ -1,23 +1,33 @@
 <template>
     <Sheet>
-        <SheetTrigger as-child>
-            <AlignRightIcon
-                class="text-primary cursor-pointer"
-                title="Menu de navigation"
-            />
+        <SheetTrigger
+            as-child
+            class="bg-primary rounded-full text-white p-1"
+        >
+            <Bars4Icon class="inline-block text-primary w-7 h-7" />
         </SheetTrigger>
         <SheetContent
             overlay-class="bg-black/5"
-            class="bg-muted pt-24"
+            class="bg-muted pt-16"
         >
             <div>
-                <Button
+                <div
                     v-if="!isLoggedIn"
-                    class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
-                    href="/login"
+                    class="flex justify-between gap-4"
                 >
-                    Connexion
-                </Button>
+                    <Button
+                        class="mx-auto inline-flex font-bold rounded-3xl ml-4 z-20"
+                        href="/login"
+                    >
+                        Connexion
+                    </Button>
+                    <Button
+                        class="mx-auto inline-flex font-bold rounded-3xl ml-4 z-20"
+                        href="/register"
+                    >
+                        Inscription
+                    </Button>
+                </div>
                 <Button
                     v-if="isLoggedIn"
                     class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
@@ -104,13 +114,6 @@
                             </NuxtLink>
                         </li>
                     </ul>
-                    <Button
-                        v-if="!isLoggedIn"
-                        href="/register"
-                        class="w-44 mx-auto inline-flex rounded-3xl font-bold mt-12  ml-1"
-                    >
-                        Inscription
-                    </Button>
                 </div>
             </div>
         </SheetContent>
@@ -127,7 +130,9 @@ import {
     GlobeAltIcon,
 } from '@heroicons/vue/24/outline';
 
-import { AlignRightIcon } from 'lucide-vue-next';
+import {
+    Bars4Icon,
+} from '@heroicons/vue/24/solid';
 
 const { isLoggedIn } = useAuth();
 
