@@ -115,23 +115,41 @@ const handleSubmit = async (event) => {
             $toast({
                 title: 'Succès',
             });
-            localStorage.setItem('userChoice', formData.value);
-            setTimeout(() => {
-                navigateTo('/legal-chart');
-            }, 2000);
+            if (formData.value === 'replace_me') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
+            if (formData.value === 'search_remplacement') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/search');
+                }, 1000);
+            }
+            else if (formData.value === 'all') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
         }
         else {
             $toast({
                 title: 'Succès',
             });
-            localStorage.setItem('userChoice', formData.value);
-            setTimeout(() => {
-                // navigateTo('/dashboard');
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 2000);
-                navigateTo('/legal-chart');
-            }, 2000);
+            if (formData.value === 'replace_me') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
+            if (formData.value === 'search_remplacement') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/search');
+                }, 1000);
+            }
+            else if (formData.value === 'all') {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/create');
+                }, 1000);
+            }
         }
     }
     catch (error) {

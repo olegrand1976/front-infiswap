@@ -44,7 +44,8 @@ export const useAuth = () => {
             })
             .then(() => {
                 setTimeout(() => {
-                    router.push('use-choice');
+                    // router.push('use-choice');
+                    router.push('legal-chart');
                 }, 2000);
                 return refresh();
             })

@@ -73,31 +73,14 @@ const { $toast } = useNuxtApp();
 
 const validateCharte = () => {
     if (isAccepted.value) {
-        const userChoice = localStorage.getItem('userChoice');
+        // const userChoice = localStorage.getItem('userChoice');
 
         $toast({
             title: 'Succès',
         });
-        if (userChoice === 'replace_me') {
-            setTimeout(() => {
-                navigateTo('/dashboard/replacements/create');
-            }, 1000);
-        }
-        if (userChoice === 'search_remplacement') {
-            setTimeout(() => {
-                navigateTo('/dashboard/replacements/search');
-            }, 1000);
-        }
-        else if (userChoice === 'all') {
-            setTimeout(() => {
-                navigateTo('/dashboard/replacements/create');
-            }, 1000);
-        }
-        else {
-            setTimeout(() => {
-                navigateTo('/dashboard');
-            }, 1000);
-        }
+        setTimeout(() => {
+            navigateTo('/use-choice');
+        }, 1000);
     }
 };
 
