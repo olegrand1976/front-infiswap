@@ -31,6 +31,13 @@
                     Connexion
                 </Button>
                 <Button
+                    v-if="!isLoggedIn"
+                    class="font-semibold text-base"
+                    href="/register"
+                >
+                    Inscription
+                </Button>
+                <Button
                     v-if="isLoggedIn"
                     class="font-semibold text-base"
                     href="/dashboard"
