@@ -1,14 +1,5 @@
 <template>
     <div>
-        <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
-            <h1 class="text-primary">
-                Rechercher des
-                <strong>
-                    remplacements
-                </strong>
-            </h1>
-        </div>
-
         <div class="flex mt-6">
             <Form
                 class="grid grid-cols-5 w-full gap-4"
@@ -568,11 +559,33 @@ import { cn } from '@/lib/utils';
 import { selectDays } from '~/lib/utils';
 
 useHead({
-    title: 'Rechercher des remplacements',
+    title: 'Mes remplacements',
 });
 
-const { loading, getReplacements } = useReplacements();
+// Définir les props
+const props = defineProps({
+    getData: {
+        type: Function,
+        required: true, // Assurez-vous que getData est fourni
+    },
+});
+
+const { loading } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
+
+const initialReplacements = ref([]);
+const currentReplacements = ref([]);
+
+// Fonction pour récupérer les données initiales
+const fetchInitialData = async () => {
+    const data = await props.getData();
+    initialReplacements.value = data;
+    currentReplacements.value = data.data;
+};
+
+onMounted(async () => {
+    await fetchInitialData();
+});
 
 const user = useState('user');
 const settings = JSON.parse(user.value.settings);
@@ -610,6 +623,7 @@ const formData = reactive({
     postalCodeTags: settings.replacement.zip_codes || [],
     cityTags: settings.replacement.cities || [],
     selectedDays: [],
+    type: 'me',
 });
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
@@ -708,30 +722,6 @@ const handleBlur = (event) => {
     inputEl.dispatchEvent(enterEvent);
 };
 
-const sortReplacements = (replacements) => {
-    return replacements.sort((a, b) => {
-        const aMatches = a.details.some(detail =>
-            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-        const bMatches = b.details.some(detail =>
-            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-
-        if (aMatches && !bMatches) return -1;
-        if (!aMatches && bMatches) return 1;
-        return 0;
-    });
-};
-
-const initialReplacements = ref(await getReplacements());
-const currentReplacements = ref(sortReplacements(initialReplacements.value.data));
-
-onMounted(() => {
-    getReplacements();
-});
-
 const submit = async () => {
     isSubmitted.value = true;
 
@@ -742,11 +732,12 @@ const submit = async () => {
             selectedDays: Array.from(formData.selectedDays),
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
         });
-        currentReplacements.value = sortReplacements(response.replacements.data);
+        currentReplacements.value = response.replacements.data;
     }
     else {
-        currentReplacements.value = sortReplacements(initialReplacements.value.data);
+        currentReplacements.value = initialReplacements.value;
     }
 };
 
@@ -778,7 +769,7 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = sortReplacements(initialReplacements.value.data);
+            currentReplacements.value = initialReplacements.value.data;
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
@@ -794,28 +785,6 @@ definePageMeta({
     ssr: false,
 });
 </script>
-
-<style>
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-</style>
-
-<style>
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-</style>
 
 <style>
 .no-scrollbar {
