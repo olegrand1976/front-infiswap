@@ -42,8 +42,8 @@
             <div class="mt-6 p-4 bg-gray-100 rounded-lg text-center">
                 <Label class="flex items-center justify-center space-x-2 cursor-pointer">
                     <Input
-                        type="checkbox"
                         v-model="isAccepted"
+                        type="checkbox"
                         class="h-5 w-5 text-primary rounded border-gray-300 focus:ring focus:ring-gray-300"
                     />
                     <span class="text-gray-700">
@@ -55,10 +55,10 @@
             <!-- Bouton de validation -->
             <div class="mt-6 text-center">
                 <Button
-                    @click="validateCharte"
                     :disabled="!isAccepted"
                     class="px-6 py-2 rounded-lg text-white font-semibold transition duration-300"
                     :class="isAccepted ? 'bg-primary hover:bg-primary' : 'bg-gray-400 cursor-not-allowed'"
+                    @click="validateCharte"
                 >
                     Valider
                 </Button>
