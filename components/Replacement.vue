@@ -73,7 +73,7 @@
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete
-                                                    @click="removePostalCodeTag(item)"
+                                                    @click="() => removeTag(formData.postalCodeTags, item)"
                                                 />
                                             </TagsInputItem>
                                         </div>
@@ -84,7 +84,7 @@
                                             class="text-xs flex items-center"
                                             placeholder="8793"
                                             @blur="handleBlur"
-                                            @keydown.enter="addPostalCodeTag"
+                                            @keydown.enter="() => addTag(postalCodeInput, formData.postalCodeTags)"
                                         />
                                     </TagsInput>
                                 </div>
@@ -120,7 +120,7 @@
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete
-                                                    @click="removeCityTag(item)"
+                                                    @click="() => removeTag(formData.cityTags, item)"
                                                 />
                                             </TagsInputItem>
                                         </div>
@@ -131,7 +131,7 @@
                                             class="text-xs flex items-center"
                                             placeholder="City38"
                                             @blur="handleBlur"
-                                            @keydown.enter="addCityTag"
+                                            @keydown.enter="() => addTag(cityInput, formData.cityTags)"
                                         />
                                     </TagsInput>
                                 </div>
@@ -266,33 +266,31 @@
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
-                                    <div
-                                        class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden"
-                                    >
+                                    <div class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden">
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                            v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
                                                             :key="index"
                                                             :class="cn('mr-1', {
                                                                 'text-success font-bold': isZipCodeHighlighted(detail),
                                                             })"
                                                         >
-                                                            {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                            {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
                                                         :key="index"
                                                         :class="cn('mr-1', {
                                                             'text-success font-bold': isZipCodeHighlighted(detail),
                                                         })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -301,33 +299,31 @@
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs">
-                                    <div
-                                        class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden"
-                                    >
+                                    <div class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden">
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                            v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
                                                             :key="index"
                                                             :class="cn('mr-1', {
                                                                 'text-success font-bold': hasMatchingCityFromUnique(detail),
                                                             })"
                                                         >
-                                                            {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                            {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
                                                         :key="index"
                                                         :class="cn('mr-1', {
                                                             'text-success font-bold': hasMatchingCityFromUnique(detail),
                                                         })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -336,16 +332,14 @@
                                 </TableCell>
 
                                 <TableCell class="bg-gray-100 text-xs pt-6">
-                                    <div
-                                        class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
-                                    >
+                                    <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                                    {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                                    {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
@@ -452,25 +446,25 @@
                                             <TooltipTrigger>
                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                     <span
-                                                        v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
                                                         :key="index"
                                                         :class="cn('mr-1', {
                                                             'text-success font-bold': isZipCodeHighlighted(detail),
                                                         })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </p>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <span
-                                                    v-for="(detail, index) in getUniqueZipCodes(replacement.details)"
+                                                    v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
                                                     :key="index"
                                                     :class="cn('mr-1', {
                                                         'text-success font-bold': isZipCodeHighlighted(detail),
                                                     })"
                                                 >
-                                                    {{ detail }}{{ index < getUniqueZipCodes(replacement.details).length - 1 ? ',' : '' }}
+                                                    {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
                                                 </span>
                                             </TooltipContent>
                                         </Tooltip>
@@ -490,25 +484,25 @@
                                             <TooltipTrigger>
                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                     <span
-                                                        v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
                                                         :key="index"
                                                         :class="cn('mr-1', {
                                                             'text-success font-bold': hasMatchingCityFromUnique(detail),
                                                         })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </p>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <span
-                                                    v-for="(detail, index) in getUniqueCities(replacement.details)"
+                                                    v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
                                                     :key="index"
                                                     :class="cn('mr-1', {
                                                         'text-success font-bold': hasMatchingCityFromUnique(detail),
                                                     })"
                                                 >
-                                                    {{ detail }}{{ index < getUniqueCities(replacement.details).length - 1 ? ',' : '' }}
+                                                    {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
                                                 </span>
                                             </TooltipContent>
                                         </Tooltip>
@@ -527,10 +521,10 @@
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
-                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                            {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            {{ getUniqueCareTypes(replacement.details).join(', ') }}
+                                            {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
@@ -558,30 +552,20 @@ import { useReplacements, useSearchReplacements } from '~/composables/useReplace
 import { cn } from '@/lib/utils';
 import { selectDays } from '~/lib/utils';
 
-useHead({
-    title: 'Mes remplacements',
-});
-
-// Définir les props
 const props = defineProps({
+    type: {
+        type: String,
+        required: false,
+        default: '',
+    },
     getData: {
         type: Function,
-        required: true, // Assurez-vous que getData est fourni
+        required: true,
     },
 });
 
 const { loading } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
-
-const initialReplacements = ref([]);
-const currentReplacements = ref([]);
-
-// Fonction pour récupérer les données initiales
-const fetchInitialData = async () => {
-    const data = await props.getData();
-    initialReplacements.value = data;
-    currentReplacements.value = data.data;
-};
 
 onMounted(async () => {
     await fetchInitialData();
@@ -623,7 +607,7 @@ const formData = reactive({
     postalCodeTags: settings.replacement.zip_codes || [],
     cityTags: settings.replacement.cities || [],
     selectedDays: [],
-    type: 'me',
+    type: props.type,
 });
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
@@ -649,26 +633,46 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const isSubmitted = ref(false);
+const sortReplacements = (replacements) => {
+    return replacements.sort((a, b) => {
+        const aMatches = a.details.some(detail =>
+            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+        );
+        const bMatches = b.details.some(detail =>
+            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+        );
 
-const getUniqueZipCodes = (details) => {
-    const zipCodes = details
-        .map(detail => detail?.patient?.zip_code?.toString()?.trim())
-        .filter(zipCode => zipCode);
-
-    return [...new Set(zipCodes)];
+        if (aMatches && !bMatches) return -1;
+        if (!aMatches && bMatches) return 1;
+        return 0;
+    });
 };
+
+const initialReplacements = ref([]);
+const currentReplacements = ref([]);
+
+const fetchInitialData = async () => {
+    const data = await props.getData();
+    initialReplacements.value = data;
+    currentReplacements.value = sortReplacements(data.data);
+};
+
+const isSubmitted = ref(false);
 
 const isZipCodeHighlighted = (zipCode) => {
     if (!isSubmitted.value) return false;
     return formData.postalCodeTags.includes(zipCode.toString().trim());
 };
 
-const getUniqueCities = (details) => {
-    const cities = details
-        .map(detail => detail?.patient?.city?.toLowerCase()?.trim())
-        .filter(city => city);
-    return [...new Set(cities)];
+const getUniqueValues = (details, extractor, transformer = x => x) => {
+    const values = details
+        .flatMap(detail => extractor(detail) || [])
+        .map(transformer)
+        .filter(value => value);
+
+    return [...new Set(values)];
 };
 
 const hasMatchingCityFromUnique = (city) => {
@@ -677,35 +681,16 @@ const hasMatchingCityFromUnique = (city) => {
     return formData.cityTags.some(tag => tag.toLowerCase() === normalizedCity) || formData.cityTags.some(tag => tag.toLowerCase().includes(normalizedCity));
 };
 
-const getUniqueCareTypes = (details) => {
-    const careTypes = details
-        .flatMap(detail => detail.care_types?.map(careType => careType.name) || [])
-        .filter(careType => careType);
-    return [...new Set(careTypes)];
-};
-
-const addPostalCodeTag = () => {
-    const zipCode = postalCodeInput.value.trim();
-    if (zipCode && !formData.postalCodeTags.includes(zipCode)) {
-        formData.postalCodeTags.push(zipCode);
-        postalCodeInput.value = '';
+const addTag = (inputRef, tagArrayRef, transformFn = (val) => val) => {
+    const value = transformFn(inputRef.value.trim());
+    if (value && !tagArrayRef.value.includes(value)) {
+        tagArrayRef.value.push(value);
+        inputRef.value = '';
     }
 };
 
-const removePostalCodeTag = (tag) => {
-    formData.postalCodeTags = formData.postalCodeTags.filter(t => t !== tag);
-};
-
-const addCityTag = () => {
-    const city = cityInput.value.trim().toLowerCase();
-    if (city && !formData.cityTags.includes(city)) {
-        formData.cityTags.push(city);
-        cityInput.value = '';
-    }
-};
-
-const removeCityTag = (tag) => {
-    formData.cityTags = formData.cityTags.filter(t => t !== tag);
+const removeTag = (tagArrayRef, tagToRemove) => {
+    tagArrayRef.value = tagArrayRef.value.filter(tag => tag !== tagToRemove);
 };
 
 const handleBlur = (event) => {
@@ -734,10 +719,10 @@ const submit = async () => {
             cities: toRaw(formData.cityTags),
             type: toRaw(formData.type),
         });
-        currentReplacements.value = response.replacements.data;
+        currentReplacements.value = sortReplacements(response.replacements.data);
     }
     else {
-        currentReplacements.value = initialReplacements.value;
+        currentReplacements.value = sortReplacements(initialReplacements.value.data);
     }
 };
 
@@ -769,7 +754,7 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = initialReplacements.value.data;
+            currentReplacements.value = sortReplacements(initialReplacements.value.data);
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {

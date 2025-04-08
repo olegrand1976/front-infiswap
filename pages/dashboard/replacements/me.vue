@@ -9,7 +9,10 @@
             </h1>
         </div>
 
-        <Replacement :get-data="getMyReplacements" />
+        <Replacement
+            type="me"
+            :get-data="getMyReplacements"
+        />
     </div>
 </template>
 
