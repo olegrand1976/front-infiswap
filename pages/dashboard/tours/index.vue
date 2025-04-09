@@ -332,26 +332,6 @@ const today = computed(() => {
     return `${day}-${month}-${year}`;
 });
 
-const value = ref(
-    new CalendarDate(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        new Date().getDate(),
-    ),
-);
-
-const selectedDate = computed(() => {
-    if (
-        value.value.day === new Date().getDate() && value.value.month === new Date().getMonth() + 1 && value.value.year === new Date().getFullYear()
-    ) {
-        return null;
-    }
-    const day = String(value.value.day).padStart(2, '0');
-    const month = String(value.value.month).padStart(2, '0');
-    const year = value.value.year;
-    return `${day}-${month}-${year}`;
-});
-
 const translatedVisitPeriod = (visitPeriod: string) => {
     switch (visitPeriod.toLowerCase()) {
         case 'morning':
@@ -388,10 +368,24 @@ const handleFetchCareType = (patientId: number) => {
     selectedPatientId.value = wasSelected ? null : patientId;
 };
 
-watch(value, (newValue) => {
-    const startDate = newValue;
-    formattedStart.value = `${startDate.year}-${String(startDate.month).padStart(2, '0')}-${String(startDate.day).padStart(2, '0')}`;
+const selectedDate = ref(null);
+const value = ref(
+    new CalendarDate(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        new Date().getDate(),
+    ),
+);
 
+watch(value, (newValue) => {
+    const day = String(newValue.day).padStart(2, '0');
+    const month = String(newValue.month).padStart(2, '0');
+    const year = newValue.year;
+    const formattedDate = `${day}-${month}-${year}`;
+    if (selectedDate.value !== formattedDate) {
+        selectedDate.value = formattedDate;
+    }
+    formattedStart.value = `${newValue.year}-${String(newValue.month).padStart(2, '0')}-${String(newValue.day).padStart(2, '0')}`;
     selectedPatientId.value = null;
     fetchTours(formattedStart.value, formattedStart.value);
 }, { deep: true });
