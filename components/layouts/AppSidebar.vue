@@ -129,7 +129,7 @@ import {
     ArrowPathIcon,
     UserGroupIcon,
     ChevronRightIcon,
-    QueueListIcon,
+    // QueueListIcon,
     ListBulletIcon,
     DocumentPlusIcon, DocumentMagnifyingGlassIcon,
     UserPlusIcon,
