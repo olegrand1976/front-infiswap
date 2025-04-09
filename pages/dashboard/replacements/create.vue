@@ -408,8 +408,8 @@
                         </DialogContent>
                     </Dialog>
 
-                    <div class="my-16 flex justify-between items-center">
-                        <div
+                    <div class="my-16 flex justify-center items-center">
+                        <!-- <div
                             class="h-10 w-44 bg-white text-sm rounded-full border border-primary grid grid-cols-2 items-center"
                         >
                             <div class="h-10 bg-primary rounded-s-full justify-center items-center">
@@ -420,11 +420,12 @@
                             <div class="flex justify-center items-center mx-auto">
                                 <span class="text-center">{{ totalRevenue || 0 }} £</span>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="flex items-center">
                             <Button
                                 type="submit"
+                                class="w-64"
                                 :in-progress="inProgress"
                             >
                                 Enregistrer
