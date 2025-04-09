@@ -175,12 +175,12 @@ const navigationItems = [
     },
     {
         label: 'Remplacements',
-        route: '/dashboard/replacements/',
+        route: '/dashboard/replacements',
         icon: ArrowPathIcon,
         children: [
             {
                 label: 'Rechercher',
-                route: '/dashboard/replacements/',
+                route: '/dashboard/replacements',
                 icon: DocumentMagnifyingGlassIcon,
             },
             {
