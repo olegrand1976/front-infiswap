@@ -82,6 +82,20 @@ export const useAuth = () => {
         });
     };
 
+    async function updatePasswordUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-password`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function updateAvatarUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-profil`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
     async function logout() {
         loading.value = false;
         try {
@@ -126,6 +140,8 @@ export const useAuth = () => {
         resendEmailVerification,
         updateUser,
         updateAddressUser,
+        updatePasswordUser,
+        updateAvatarUser,
         logout,
         forgotPassword,
         resetPassword,

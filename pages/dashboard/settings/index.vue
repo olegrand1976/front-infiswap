@@ -13,7 +13,18 @@
                         class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
                         @click="profileDialog = true"
                     />
+                    <TrashIcon
+                        v-if="user.profile?.profil_url"
+                        class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
+                        @click="deleteAvatarDialog = true"
+                    />
                     <img
+                        v-if="user.profile?.profil_url"
+                        :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                        class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
+                    >
+                    <img
+                        v-else
                         src="/images/icons/user-circle.png"
                         class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
                     >
@@ -38,6 +49,28 @@
                                 @click="handleUploadProfile"
                             >
                                 Sauvegarder
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog v-model:open="deleteAvatarDialog">
+                    <DialogContent class="sm:max-w-md h-52">
+                        <DialogHeader>
+                            <DialogTitle>Confirmer la suppression</DialogTitle>
+                            <DialogDescription>
+                                Êtes-vous sûr de vouloir supprimer cette photo de profil?
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter class="gap-4 sm:gap-4">
+                            <Button
+                                variant="outline"
+                                @click="deleteAvatarDialog = false"
+                            >
+                                Annuler
+                            </Button>
+                            <Button>
+                                Confirmer
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -386,7 +419,7 @@
                                                 Annuler
                                             </Button>
                                             <Button
-                                                type="submit"
+                                                @click="handleUpdateAddress"
                                             >
                                                 Enregistrer
                                             </Button>
@@ -480,97 +513,86 @@
                                 <ShieldCheckIcon class="w-6 text-gray-400" />
                                 <span class="text-lg">Sécurité</span>
                             </h3>
-
-                            <p
-                                class="text-primary font-semibold text-sm pt-4 cursor-pointer"
-                                @click="changePasswordDialog = true"
-                            >
-                                Changer de mot de passe ?
-                            </p>
-
-                            <Dialog v-model:open="changePasswordDialog">
-                                <DialogContent class="w-full sm:max-w-xl h-96 overflow-y-auto">
-                                    <DialogHeader>
-                                        <DialogTitle>Changer le mot de passe</DialogTitle>
-                                    </DialogHeader>
-                                    <DialogDescription>
-                                        Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
-                                    </DialogDescription>
-
-                                    <form class="mt-4 space-y-3">
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Mot de passe actuel
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.lastname"
-                                                type="password"
-                                                class="bg-transparent placeholder:text-black"
-                                            />
-                                        </div>
-
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Nouveau mot de passe
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.email"
-                                                type="password"
-                                                class="bg-transparent placeholder:text-black"
-                                            />
-                                        </div>
-
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary text-nowrap flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Confirmer mot de passe
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.identifierNumber"
-                                                type="password"
-                                                class="bg-transparent placeholder:text-black"
-                                            />
-                                        </div>
-
-                                        <div class="flex justify-end items-center space-x-8 pt-6">
-                                            <Button
-                                                variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300"
-                                                @click="changePasswordDialog = false"
-                                            >
-                                                Annuler
-                                            </Button>
-                                            <Button>
-                                                Enregistrer
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
                         </div>
 
                         <div class="mt-4 space-y-3">
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        for="currentPassword"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
-                                    >
-                                        <KeyIcon class="w-5 " />
-                                        <span>Mot de passe actuel</span>
-                                    </label>
-                                </div>
-                                <InputIcon
-                                    type="password"
-                                    class="sm:hidden"
+                            <div class="flex justify-between items-center">
+                                <label
+                                    for="currentPassword"
+                                    class="text-primary sm:font-normal font-semibold sm:flex sm:items-center sm:space-x-3"
+                                >
+                                    <KeyIcon class="w-5 " />
+                                    <span>Mot de passe</span>
+                                </label>
+
+                                <PencilSquareIcon
+                                    class="w-5 text-black/50 hover:text-primary font-semibold text-sm cursor-pointer"
+                                    @click="changePasswordDialog = true"
                                 />
-                                <Input
-                                    id="currentPassword"
-                                    type="password"
-                                    class="w-full bg-transparent hidden sm:block"
-                                />
+
+                                <Dialog v-model:open="changePasswordDialog">
+                                    <DialogContent class="w-full sm:max-w-xl h-96 overflow-y-auto">
+                                        <DialogHeader>
+                                            <DialogTitle>Changer le mot de passe</DialogTitle>
+                                        </DialogHeader>
+                                        <DialogDescription>
+                                            Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
+                                        </DialogDescription>
+
+                                        <form class="mt-4 space-y-3">
+                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                    Mot de passe actuel
+                                                </p>
+                                                <Input
+                                                    v-model="formPassword.currentPassword"
+                                                    type="password"
+                                                    class="bg-transparent placeholder:text-black"
+                                                />
+                                            </div>
+
+                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                    Nouveau mot de passe
+                                                </p>
+                                                <Input
+                                                    v-model="formPassword.password"
+                                                    type="password"
+                                                    class="bg-transparent placeholder:text-black"
+                                                />
+                                            </div>
+
+                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                                <p class="bg-primary text-nowrap flex items-center h-full text-white ps-4 rounded-s-full">
+                                                    Confirmer mot de passe
+                                                </p>
+                                                <Input
+                                                    v-model="formPassword.password_confirmation"
+                                                    type="password"
+                                                    class="bg-transparent placeholder:text-black"
+                                                />
+                                            </div>
+
+                                            <div class="flex justify-end items-center space-x-8 pt-6">
+                                                <Button
+                                                    variant="secondary"
+                                                    class="bg-gray-200 hover:bg-gray-300"
+                                                    @click="changePasswordDialog = false"
+                                                >
+                                                    Annuler
+                                                </Button>
+                                                <Button
+                                                    @click="handleChangePassword"
+                                                >
+                                                    Enregistrer
+                                                </Button>
+                                            </div>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
 
-                            <div class="flex items-center space-x-3">
+                            <div class="flex justify-between items-center space-x-3">
                                 <label
                                     for="authTwoFactor"
                                     class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
@@ -579,16 +601,6 @@
                                     <span class="w-full truncate">Authentification à deux facteurs</span>
                                 </label>
                                 <Switch id="authTwoFactor" />
-                            </div>
-
-                            <div class="flex items-center space-x-2 mt-3">
-                                <Checkbox id="confirm" />
-                                <label
-                                    for="confirm"
-                                    class="font-sans font-light text-black/60 text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    Confirmation de mot de passe
-                                </label>
                             </div>
                         </div>
                     </section>
@@ -610,9 +622,11 @@
                                         <span>Langue</span>
                                     </label>
                                 </div>
-                                <Select>
+                                <Select
+                                    v-model="formSetting"
+                                    @update:model-value="handleChangeLanguage"
+                                >
                                     <SelectTrigger
-                                        v-model="formSetting"
                                         class="w-full text-black bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
                                         position="right"
                                     >
@@ -631,35 +645,50 @@
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
+                    </section>
 
-                            <div class="flex items-center space-x-3">
-                                <label
-                                    for="notification"
-                                    class="text-primary sm:font-normal font-semibold sm:text-black sm:flex sm:items-center sm:space-x-3"
-                                >
-                                    <BellAlertIcon class="w-5 hidden sm:block" />
-                                    <span class="text-nowrap w-full truncate">Notification</span>
-                                </label>
-                                <Switch id="notification" />
+                    <section class="mt-4 xl:mt-0">
+                        <h3 class="flex items-center space-x-4">
+                            <BellAlertIcon class="w-6 text-gray-400" />
+                            <span class="text-lg">Notification</span>
+                        </h3>
+
+                        <div class="mt-4 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <Label for="newReplacement">Nouveau remplacement</Label>
+                                <Switch
+                                    id="newReplacement"
+                                    v-model:checked="notifNewReplacement"
+                                    @update:checked="handleChangeNotifNew"
+                                />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <Label for="acceptReplacement">Remplacement accepté</Label>
+                                <Switch
+                                    id="acceptReplacement"
+                                    v-model:checked="notifAcceptReplacement"
+                                    @update:checked="handleChangeNotifAccept"
+                                />
                             </div>
                         </div>
+                    </section>
 
-                        <div class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2">
-                            <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
-                                <ChartPieIcon class="w-5" />
-                                <label>Statut de compte</label>
-                            </div>
-                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
-                                Activé
-                            </div>
-                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
-                                Désactivé
-                            </div>
-                            <div
-                                class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer"
-                            >
-                                Suspendu
-                            </div>
+                    <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2">
+                        <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
+                            <ChartPieIcon class="w-5" />
+                            <label>Statut de compte</label>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                            Activé
+                        </div>
+                        <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                            Désactivé
+                        </div>
+                        <div
+                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer"
+                        >
+                            Suspendu
                         </div>
                     </section>
 
@@ -699,25 +728,33 @@ import {
     PencilSquareIcon,
 } from '@heroicons/vue/24/solid';
 
+import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useReports } from '~/composables/useReports';
 import { useAuth } from '~/composables/useAuth';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
 
-const { updateUser, updateAddressUser } = useAuth();
+const { updateUser, updateAddressUser, updatePasswordUser, updateAvatarUser} = useAuth();
+const { createPreferences, createNotifPreferences } = useReports();
 
 const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);
 
 const formSetting = ref(setting.language);
+const formPassword = reactive({
+    currentPassword: '',
+    password: '',
+    password_confirmation: '',
+});
 
 const personalInfoDialog = ref(false);
 const addressInfoDialog = ref(false);
 const changePasswordDialog = ref(false);
-
 const profileDialog = ref(false);
+const deleteAvatarDialog = ref(false);
 
 const formattedGender = computed(() => {
     return user.value.gender == 'F' ? 'Homme' : 'Femme';
@@ -807,13 +844,128 @@ const handleUpdateAddress = async () => {
         });
     }
     finally {
-        personalInfoDialog.value = false;
+        addressInfoDialog.value = false;
     }
 };
 
 const languages = {
     fr: 'Français',
     nl: 'Néerlandais',
+};
+
+const handleChangeLanguage = async () => {
+    const formData = reactive({
+        key: 'language',
+        value: formSetting.value,
+    });
+    await createPreferences(formData);
+};
+
+const handleChangePassword = async () => {
+    try {
+        await updatePasswordUser(formPassword);
+        $toast({
+            description: 'Mise à jour effectuée avec succès',
+        });
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+    finally {
+        changePasswordDialog.value = false;
+
+        formPassword.currentPassword = '';
+        formPassword.password = '';
+        formPassword.password_confirmation = '';
+    }
+};
+
+const verifyNotifNewRePlacement = () => {
+    return setting.notification == 'newReplacement' ? true : false;
+};
+
+const verifyNotifAcceptRePlacement = () => {
+    return setting.notification == 'acceptReplacement' ? true : false;
+};
+
+const notifNewReplacement = ref(verifyNotifNewRePlacement());
+const notifAcceptReplacement = ref(verifyNotifAcceptRePlacement());
+
+const handleChangeNotifNew = async () => {
+    try {
+        if (notifNewReplacement.value) {
+            const formData = reactive({
+                key: 'notification',
+                value: 'newReplacement',
+            });
+
+            await createNotifPreferences(formData);
+        }
+        else {
+            const formData = reactive({
+                key: 'notification',
+                value: '',
+            });
+
+            await createNotifPreferences(formData);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
+const handleChangeNotifAccept = async () => {
+    try {
+        if (notifAcceptReplacement.value) {
+            const formData = reactive({
+                key: 'notification',
+                value: 'acceptReplacement',
+            });
+
+            await createNotifPreferences(formData);
+        }
+        else {
+            const formData = reactive({
+                key: 'notification',
+                value: '',
+            });
+
+            await createNotifPreferences(formData);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
+const handleUploadProfile = async () => {
+    if (!profileFile.value) {
+        $toast({
+            description: 'Veuillez sélectionner une image',
+        });
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('profil_url', profileFile.value);
+
+        const response = await updateAvatarUser(formData);
+        user.value.profile.profil_url = response.profile.profil_url;
+
+        $toast({
+            description: 'Photo mise à jour',
+        });
+        profileDialog.value = false;
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 
 const genders = {
