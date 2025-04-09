@@ -11,12 +11,37 @@
                 <div class="relative">
                     <PencilSquareIcon
                         class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
+                        @click="profileDialog = true"
                     />
                     <img
                         src="/images/icons/user-circle.png"
                         class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
                     >
                 </div>
+
+                <Dialog v-model:open="profileDialog">
+                    <DialogContent class="sm:max-w-[40rem]">
+                        <DialogHeader>
+                            <DialogTitle>Modifier la photo de profil</DialogTitle>
+                        </DialogHeader>
+                        <div class="grid gap-4 py-4">
+                            <div class="grid gap-2">
+                                <FileUpload
+                                    accept="image/*"
+                                    @file-selected="profileFile = $event"
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                :loading="profileUpload.loading"
+                                @click="handleUploadProfile"
+                            >
+                                Sauvegarder
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
 
                 <div>
                     <LayoutsLogo class="w-36 sm:w-48" />
@@ -147,7 +172,7 @@
                                                 Annuler
                                             </Button>
                                             <Button
-                                                type="submit"
+                                                @click="updateInfoUser"
                                             >
                                                 Enregistrer
                                             </Button>
@@ -196,7 +221,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.date_of_birth || ' - ' }}
+                                    {{ formatDate(user.date_of_birth) || ' - ' }}
                                 </p>
                             </div>
 
@@ -456,9 +481,71 @@
                                 <span class="text-lg">Sécurité</span>
                             </h3>
 
-                            <p class="text-primary font-semibold text-sm pt-4 cursor-pointer">
+                            <p
+                                class="text-primary font-semibold text-sm pt-4 cursor-pointer"
+                                @click="changePasswordDialog = true"
+                            >
                                 Changer de mot de passe ?
                             </p>
+
+                            <Dialog v-model:open="changePasswordDialog">
+                                <DialogContent class="w-full sm:max-w-xl h-96 overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Changer le mot de passe</DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
+                                    </DialogDescription>
+
+                                    <form class="mt-4 space-y-3">
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Mot de passe actuel
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.lastname"
+                                                type="password"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Nouveau mot de passe
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.email"
+                                                type="password"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary text-nowrap flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Confirmer mot de passe
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.identifierNumber"
+                                                type="password"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <div class="flex justify-end items-center space-x-8 pt-6">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300"
+                                                @click="changePasswordDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button>
+                                                Enregistrer
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -483,27 +570,15 @@
                                 />
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:h-9 sm:rounded-full">
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        for="authTwoFactor"
-                                        class="text-primary truncate font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
-                                    >
-                                        <DevicePhoneMobileIcon class="w-5 hidden sm:block" />
-                                        <span class="w-full truncate">Authentification à deux facteurs</span>
-                                    </label>
-                                </div>
-                                <div
-                                    id="authTwoFactor"
-                                    class="flex items-center justify-center px-2 sm:space-x-1 space-x-4 mt-2 sm:mt-0"
+                            <div class="flex items-center space-x-3">
+                                <label
+                                    for="authTwoFactor"
+                                    class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
                                 >
-                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
-                                        Activé
-                                    </div>
-                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
-                                        Désactivé
-                                    </div>
-                                </div>
+                                    <DevicePhoneMobileIcon class="w-5 hidden sm:block" />
+                                    <span class="w-full truncate">Authentification à deux facteurs</span>
+                                </label>
+                                <Switch id="authTwoFactor" />
                             </div>
 
                             <div class="flex items-center space-x-2 mt-3">
@@ -557,27 +632,15 @@
                                 </Select>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:h-9 sm:rounded-full">
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        for="notification"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
-                                    >
-                                        <BellAlertIcon class="w-5 hidden sm:block" />
-                                        <span class="text-nowrap w-full truncate">Notification</span>
-                                    </label>
-                                </div>
-                                <div
-                                    id="notification"
-                                    class="flex items-center justify-center px-2 space-x-4 sm:space-x-1 mt-2 sm:mt-0"
+                            <div class="flex items-center space-x-3">
+                                <label
+                                    for="notification"
+                                    class="text-primary sm:font-normal font-semibold sm:text-black sm:flex sm:items-center sm:space-x-3"
                                 >
-                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
-                                        Activé
-                                    </div>
-                                    <div class="flex h-9 items-center justify-center rounded-full border border-gray-300 w-44 cursor-pointer">
-                                        Désactivé
-                                    </div>
-                                </div>
+                                    <BellAlertIcon class="w-5 hidden sm:block" />
+                                    <span class="text-nowrap w-full truncate">Notification</span>
+                                </label>
+                                <Switch id="notification" />
                             </div>
                         </div>
 
@@ -592,7 +655,9 @@
                             <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
                                 Désactivé
                             </div>
-                            <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                            <div
+                                class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer"
+                            >
                                 Suspendu
                             </div>
                         </div>
@@ -635,15 +700,24 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useAuth } from '~/composables/useAuth';
+import FileUpload from '~/components/ui/form/FileUpload.vue';
+import type { User } from '~/lib/types';
 
-const user = useState('user');
+const { $toast } = useNuxtApp();
+
+const { updateUser, updateAddressUser } = useAuth();
+
+const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);
 
 const formSetting = ref(setting.language);
 
 const personalInfoDialog = ref(false);
 const addressInfoDialog = ref(false);
-const securityInfoDialog = ref(false);
+const changePasswordDialog = ref(false);
+
+const profileDialog = ref(false);
 
 const formattedGender = computed(() => {
     return user.value.gender == 'F' ? 'Homme' : 'Femme';
@@ -653,10 +727,20 @@ const formattedCountry = computed(() => {
     return user.value.profile.country == 'be' ? 'Belgique' : 'France';
 });
 
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
+
 const formPersonalInfo = reactive({
+    id: user.value.id,
     lastname: user.value.lastname,
     firstname: user.value.firstname,
-    dateOfBirth: user.value.date_of_birth,
+    dateOfBirth: formatDate(user.value.date_of_birth),
     email: user.value.email,
     identifierNumber: user.value.identifier_number,
     phoneNumber: user.value.phone_number,
@@ -668,8 +752,64 @@ const formAddress = reactive({
     city: user.value.profile.city,
     country: user.value.profile.country,
     zipCode: user.value.profile.zip_code,
-    additionalInfo: user.value.additional_info,
+    additionalInfo: user.value.profile.additional_info,
 });
+
+const updateInfoUser = async () => {
+    try {
+        await updateUser(formPersonalInfo);
+
+        user.value.lastname = formPersonalInfo.lastname;
+        user.value.firstname = formPersonalInfo.firstname;
+        user.value.date_of_birth = formPersonalInfo.dateOfBirth;
+        user.value.email = formPersonalInfo.email;
+        user.value.identifier_number = formPersonalInfo.identifierNumber;
+        user.value.phone_number = formPersonalInfo.phoneNumber;
+        user.value.gender = formPersonalInfo.gender;
+
+        $toast({
+            description: 'Mise à jour effectué avec succès',
+        });
+    }
+    catch (error) {
+        console.log(error);
+
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+    finally {
+        personalInfoDialog.value = false;
+    }
+};
+
+const handleUpdateAddress = async () => {
+    try {
+        await updateAddressUser(formAddress);
+
+        user.value.profile.street_address = formAddress.streetAddress;
+        user.value.profile.city = formAddress.city;
+        user.value.profile.country = formAddress.country;
+        user.value.profile.zip_code = formAddress.zipCode;
+        user.value.profile.additional_info = formAddress.additionalInfo;
+
+        $toast({
+            description: 'Mise à jour effectué avec succès',
+        });
+    }
+    catch (error) {
+        console.log(error);
+
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+    finally {
+        personalInfoDialog.value = false;
+    }
+};
 
 const languages = {
     fr: 'Français',
@@ -686,6 +826,13 @@ const countries = {
     be: 'Belgique',
     fr: 'France',
 };
+
+const profileFile = ref(null);
+const profileUpload = useFile();
+
+watch(profileFile, (newFile) => {
+    profileUpload.file.value = newFile;
+});
 
 definePageMeta({
     layout: 'dashboard',

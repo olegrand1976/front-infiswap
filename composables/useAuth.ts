@@ -68,6 +68,20 @@ export const useAuth = () => {
         });
     }
 
+    async function updateUser(formData) {
+        return await $apifetch(`/api/users/${formData.id}/update-information`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function updateAddressUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-address`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
     async function logout() {
         loading.value = false;
         try {
@@ -110,6 +124,8 @@ export const useAuth = () => {
         register,
         registerBeta,
         resendEmailVerification,
+        updateUser,
+        updateAddressUser,
         logout,
         forgotPassword,
         resetPassword,
