@@ -102,12 +102,12 @@
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>
-            <SidebarGroup
+            <!-- <SidebarGroup
                 v-if="isFuture(user.trial_ends_at)"
                 class="text-sm rounded-xl pb-6 text-center"
             >
                 Expiration de l’essai : {{ formatToDMY(user.trial_ends_at) }}
-            </SidebarGroup>
+            </SidebarGroup> -->
             <SidebarGroup>
                 <Button
                     class="w-full rounded flex space-x-2 items-center justify-arround"
@@ -126,8 +126,6 @@ import { useRoute } from 'vue-router';
 import {
     SquaresPlusIcon,
     MapIcon,
-    FolderIcon,
-    Cog8ToothIcon,
     ArrowPathIcon,
     UserGroupIcon,
     ChevronRightIcon,
@@ -138,13 +136,13 @@ import {
     ClipboardDocumentListIcon,
     PowerIcon,
 } from '@heroicons/vue/24/outline';
-import { isFuture, formatToDMY } from '~/composables/useDate';
+// import { isFuture, formatToDMY } from '~/composables/useDate';
 
 defineProps({
     collapsed: Boolean,
 });
 
-const user = useUser();
+// const user = useUser();
 
 const navigationItems = [
     {

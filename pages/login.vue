@@ -138,7 +138,7 @@
                                 v-model="credentials.identifier"
                                 :icon="UserIcon"
                                 type="text"
-                                placeholder="INAMI ou email"
+                                placeholder="E-mail"
                                 class="text-sm w-full"
                             />
                         </div>
