@@ -139,6 +139,36 @@
                             {{ error.phoneNumber }}
                         </p>
                     </div>
+
+                    <div>
+                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
+                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                    <HeartIcon class="w-6 text-primary sm:text-white" />
+                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Catégorie</span>
+                                </div>
+                            </div>
+                            <Select v-model="formData.category">
+                                <SelectTrigger
+                                    class="w-full bg-transparent text-nowrap border border-none"
+                                    position="right"
+                                >
+                                    <SelectValue />
+                                </SelectTrigger>
+
+                                <SelectContent class="border border-none">
+                                    <template
+                                        v-for="[key, value] in Object.entries(category)"
+                                        :key="key"
+                                    >
+                                        <SelectItem :value="key">
+                                            {{ value }}
+                                        </SelectItem>
+                                    </template>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-6">
@@ -180,6 +210,7 @@ import {
     UserCircleIcon,
     PlusIcon,
     PhoneIcon,
+    HeartIcon,
 } from '@heroicons/vue/24/solid';
 import * as yup from 'yup';
 import { searchNurse } from '~/composables/usePatients';
@@ -204,6 +235,7 @@ const formData = reactive({
     zipCode: '',
     phoneNumber: '',
     accept: true,
+    category: 'ordinary',
 });
 
 const error = reactive({
@@ -213,6 +245,11 @@ const error = reactive({
     zipCode: '',
     phoneNumber: '',
 });
+
+const category = {
+    vipo: 'Vipo',
+    ordinary: 'Ordinaire',
+};
 
 const schema = yup.object().shape({
     lastname: yup.string()

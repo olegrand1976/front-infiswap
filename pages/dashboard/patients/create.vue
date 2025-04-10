@@ -218,6 +218,33 @@
                             </SelectContent>
                         </Select>
                     </div>
+
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <label for="Category">
+                                Catégorie *
+                            </label>
+                        </div>
+                        <Select v-model="formData.category">
+                            <SelectTrigger
+                                class="w-full bg-transparent text-nowrap border border-none"
+                                position="right"
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+
+                            <SelectContent class="border border-none">
+                                <template
+                                    v-for="[key, value] in Object.entries(category)"
+                                    :key="key"
+                                >
+                                    <SelectItem :value="key">
+                                        {{ value }}
+                                    </SelectItem>
+                                </template>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
                 <div class="flex flex-col">
@@ -466,6 +493,11 @@ const availabilities = {
     on_vacation: 'En vacances',
 };
 
+const category = {
+    vipo: 'Vipo',
+    ordinary: 'Ordinaire',
+};
+
 const gender = {
     M: 'Homme',
     F: 'Femme',
@@ -484,6 +516,7 @@ const initialFormData = {
     careEndDate: '',
     availability: 'available',
     gender: 'M',
+    category: 'ordinary',
     care_informations: [],
     visits: [
         {
