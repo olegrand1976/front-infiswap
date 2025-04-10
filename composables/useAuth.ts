@@ -96,6 +96,34 @@ export const useAuth = () => {
         });
     };
 
+    async function activeTwoFactorAuth(formData) {
+        return await $apifetch(`/api/users/2fa/toggle`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function verifyCode(formData) {
+        return await $apifetch(`/api/users/2fa/verify`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function updateStatusAccount(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-status`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function deleteAccount(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/soft-delete`, {
+            method: 'delete',
+            body: formData,
+        });
+    };
+
     async function logout() {
         loading.value = false;
         try {
@@ -142,7 +170,11 @@ export const useAuth = () => {
         updateAddressUser,
         updatePasswordUser,
         updateAvatarUser,
+        verifyCode,
+        activeTwoFactorAuth,
+        updateStatusAccount,
         logout,
+        deleteAccount,
         forgotPassword,
         resetPassword,
         refresh,

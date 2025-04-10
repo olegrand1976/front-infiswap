@@ -6,7 +6,7 @@
             </h1>
         </div>
 
-        <form class="mt-6 mb-12 bg-gray-100 p-3 sm:p-8 rounded-lg shadow">
+        <form class="mt-6 mb-12">
             <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
                 <div class="relative">
                     <PencilSquareIcon
@@ -83,7 +83,7 @@
 
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
                 <div class="space-y-12">
-                    <section>
+                    <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <IdentificationIcon class="w-6 text-gray-400" />
@@ -319,7 +319,7 @@
                         </div>
                     </section>
 
-                    <section>
+                    <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <MapPinIcon class="w-6 text-gray-400" />
@@ -401,7 +401,7 @@
 
                                         <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
                                             <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Complément d'adresse
+                                                Complément
                                             </p>
                                             <Input
                                                 v-model="formAddress.additionalInfo"
@@ -495,7 +495,7 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0  truncate text-nowrap"
                                     >
                                         <EllipsisHorizontalCircleIcon class="w-5" />
-                                        <span>Complément d'adresse</span>
+                                        <span>Complément</span>
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -507,7 +507,7 @@
                 </div>
 
                 <div class="space-y-12 mt-4 xl:mt-0">
-                    <section>
+                    <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <ShieldCheckIcon class="w-6 text-gray-400" />
@@ -519,7 +519,7 @@
                             <div class="flex justify-between items-center">
                                 <label
                                     for="currentPassword"
-                                    class="text-primary sm:font-normal font-semibold sm:flex sm:items-center sm:space-x-3"
+                                    class="text-primary sm:font-normal font-semibold flex items-center space-x-3"
                                 >
                                     <KeyIcon class="w-5 " />
                                     <span>Mot de passe</span>
@@ -600,12 +600,98 @@
                                     <DevicePhoneMobileIcon class="w-5 hidden sm:block" />
                                     <span class="w-full truncate">Authentification à deux facteurs</span>
                                 </label>
-                                <Switch id="authTwoFactor" />
+                                <Switch
+                                    id="authTwoFactor"
+                                    v-model:checked="enableTwoFactor"
+                                    @update:checked="handleEnableAuth2Fa"
+                                />
+
+                                <Dialog v-model:open="twoFactorDialog">
+                                    <DialogContent class="sm:max-w-[40rem]">
+                                        <DialogHeader>
+                                            <DialogTitle>Authentification à deux facteurs</DialogTitle>
+                                        </DialogHeader>
+                                        <div class="text-center mx-12 mt-8">
+                                            Afin d'activer cette option, veuillez entrer les 6 chiffres envoyés à votre adresse e-mail
+                                            <span class="font-semibold text-primary">{{ user.email }}</span>. Le code
+                                            envoyé est valide pour 5 min
+                                        </div>
+
+                                        <div class="flex justify-center items-center mt-6 mx-auto">
+                                            <PinInput
+                                                id="pin-input"
+                                                v-model="pinValue"
+                                                placeholder="○"
+                                            >
+                                                <PinInputGroup>
+                                                    <PinInputInput
+                                                        v-for="(id, index) in 6"
+                                                        :key="id"
+                                                        :index="index"
+                                                        class="w-12 h-12"
+                                                    />
+                                                </PinInputGroup>
+                                            </PinInput>
+                                        </div>
+
+                                        <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300"
+                                                @click="twoFactorDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                @click="handleVerifyCode"
+                                            >
+                                                Valider
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+
+                                <Dialog v-model:open="enterPasswordDialog">
+                                    <DialogContent class="sm:max-w-[36rem]">
+                                        <DialogHeader>
+                                            <DialogTitle>Authentification à deux facteurs</DialogTitle>
+                                        </DialogHeader>
+                                        <div class="mt-8">
+                                            Veuillez confirmer votre action en entrant votre mot de passe
+                                        </div>
+
+                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                                Mot de passe
+                                            </p>
+                                            <Input
+                                                v-model="currentPassword"
+                                                type="password"
+                                                class="bg-transparent placeholder:text-black"
+                                            />
+                                        </div>
+
+                                        <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300"
+                                                @click="enterPasswordDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                @click="disableAuth2Fa"
+                                            >
+                                                Valider
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </div>
                     </section>
 
-                    <section class="mt-4 xl:mt-0">
+                    <section class="mt-4 xl:mt-0 shadow rounded-lg p-6">
                         <h3 class="flex items-center space-x-4">
                             <WrenchScrewdriverIcon class="w-6 text-gray-400" />
                             <span class="text-lg">Préférences</span>
@@ -616,7 +702,7 @@
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="language"
-                                        class="text-primary font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
+                                        class="text-primary mb-4 sm:mb-0 font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
                                     >
                                         <LanguageIcon class="w-5 hidden sm:block" />
                                         <span>Langue</span>
@@ -648,7 +734,7 @@
                         </div>
                     </section>
 
-                    <section class="mt-4 xl:mt-0">
+                    <section class="mt-4 xl:mt-0 shadow rounded-lg p-6">
                         <h3 class="flex items-center space-x-4">
                             <BellAlertIcon class="w-6 text-gray-400" />
                             <span class="text-lg">Notification</span>
@@ -674,29 +760,155 @@
                         </div>
                     </section>
 
-                    <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2">
+                    <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2 shadow rounded-lg p-6">
                         <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
                             <ChartPieIcon class="w-5" />
                             <label>Statut de compte</label>
                         </div>
-                        <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+                        <div
+                            :class="isActivated ? 'text-white bg-primary' : 'text-black border border-gray-300'"
+                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full cursor-pointer"
+                            @click="enterPasswordActivateDialog = true"
+                        >
                             Activé
                         </div>
-                        <div class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer">
+
+                        <Dialog v-model:open="enterPasswordActivateDialog">
+                            <DialogContent class="sm:max-w-[36rem]">
+                                <DialogHeader>
+                                    <DialogTitle>Statut de votre compte</DialogTitle>
+                                </DialogHeader>
+                                <div class="mt-8">
+                                    Veuillez confirmer votre action en entrant votre mot de passe
+                                </div>
+
+                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Mot de passe
+                                    </p>
+                                    <Input
+                                        v-model="currentPassword"
+                                        type="password"
+                                        class="bg-transparent placeholder:text-black"
+                                    />
+                                </div>
+
+                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                    <Button
+                                        variant="secondary"
+                                        class="bg-gray-200 hover:bg-gray-300"
+                                        @click="enterPasswordActivateDialog = false"
+                                    >
+                                        Annuler
+                                    </Button>
+                                    <Button
+                                        @click="handleActivateStatus"
+                                    >
+                                        Valider
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
+                        <div
+                            :class="isActivated ? 'text-black border border-gray-300 ' : 'text-white bg-primary'"
+                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full cursor-pointer"
+                            @click="enterPasswordDeactivateDialog = true"
+                        >
                             Désactivé
                         </div>
+
+                        <Dialog v-model:open="enterPasswordDeactivateDialog">
+                            <DialogContent class="sm:max-w-[36rem]">
+                                <DialogHeader>
+                                    <DialogTitle>Statut de votre compte</DialogTitle>
+                                </DialogHeader>
+                                <div class="mt-8">
+                                    Veuillez confirmer votre action en entrant votre mot de passe
+                                </div>
+
+                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Mot de passe
+                                    </p>
+                                    <Input
+                                        v-model="currentPassword"
+                                        type="password"
+                                        class="bg-transparent placeholder:text-black"
+                                    />
+                                </div>
+
+                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                    <Button
+                                        variant="secondary"
+                                        class="bg-gray-200 hover:bg-gray-300"
+                                        @click="enterPasswordDeactivateDialog = false"
+                                    >
+                                        Annuler
+                                    </Button>
+                                    <Button
+                                        @click="handleDeactivateStatus"
+                                    >
+                                        Valider
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
                         <div
-                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300 cursor-pointer"
+                            :class="user.account_type != 'manager' ? 'disabled cursor-not-allowed opacity-70' : ' cursor-pointer'"
+                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300"
                         >
                             Suspendu
                         </div>
                     </section>
 
-                    <section class="flex flex-col justify-end items-center pt-48 space-y-4">
-                        <Button class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white">
+                    <section class="flex flex-col justify-end items-center pt-8 space-y-4">
+                        <Button
+                            class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white"
+                            @click="deleteAccountDialog = true"
+                        >
                             <TrashIcon class="w-5" />
                             <span>Supprimer compte</span>
                         </Button>
+
+                        <Dialog v-model:open="deleteAccountDialog">
+                            <DialogContent class="sm:max-w-[36rem]">
+                                <DialogHeader>
+                                    <DialogTitle>Supprimer votre compte</DialogTitle>
+                                </DialogHeader>
+                                <div class="mt-8">
+                                    Veuillez confirmer votre action en entrant votre mot de passe. En le confirmant, vous ne pouvez plus
+                                    accéder aux informations de votre compte.
+                                </div>
+
+                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Mot de passe
+                                    </p>
+                                    <Input
+                                        v-model="currentPassword"
+                                        type="password"
+                                        class="bg-transparent placeholder:text-black"
+                                    />
+                                </div>
+
+                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                    <Button
+                                        variant="secondary"
+                                        class="bg-gray-200 hover:bg-gray-300"
+                                        @click="deleteAccountDialog = false"
+                                    >
+                                        Annuler
+                                    </Button>
+                                    <Button
+                                        @click="handleDeleteAccount"
+                                    >
+                                        Valider
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </section>
                 </div>
             </div>
@@ -728,6 +940,7 @@ import {
     PencilSquareIcon,
 } from '@heroicons/vue/24/solid';
 
+import { useRouter } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useReports } from '~/composables/useReports';
@@ -736,8 +949,19 @@ import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
+const router = useRouter();
 
-const { updateUser, updateAddressUser, updatePasswordUser, updateAvatarUser} = useAuth();
+const {
+    updateUser,
+    updateAddressUser,
+    updatePasswordUser,
+    updateAvatarUser,
+    activeTwoFactorAuth,
+    verifyCode,
+    updateStatusAccount,
+    deleteAccount,
+    logout,
+} = useAuth();
 const { createPreferences, createNotifPreferences } = useReports();
 
 const user = useState<User>('user');
@@ -956,7 +1180,8 @@ const handleUploadProfile = async () => {
         formData.append('profil_url', profileFile.value);
 
         const response = await updateAvatarUser(formData);
-        user.value.profile.profil_url = response.profile.profil_url;
+
+        user.value.profile.profil_url = response.user.profile.profil_url;
 
         $toast({
             description: 'Photo mise à jour',
@@ -965,6 +1190,170 @@ const handleUploadProfile = async () => {
     }
     catch (error) {
         console.log(error);
+    }
+};
+
+const verifyTwoFactorStatus = () => {
+    if (user.value.two_factor_enabled == 1) {
+        return true;
+    }
+    else if (user.value.two_factor_enabled == 0) {
+        return false;
+    }
+};
+
+const enableTwoFactor = ref(verifyTwoFactorStatus());
+const twoFactorDialog = ref(false);
+const enterPasswordDialog = ref(false);
+const enterPasswordActivateDialog = ref(false);
+const enterPasswordDeactivateDialog = ref(false);
+const deleteAccountDialog = ref(false);
+const currentPassword = ref('');
+
+const handleEnableAuth2Fa = async () => {
+    if (enableTwoFactor.value) {
+        const formData = reactive({
+            twoFactorEnabled: true,
+            twoFactorType: 'mail',
+        });
+
+        await activeTwoFactorAuth(formData);
+
+        enableTwoFactor.value = false;
+        twoFactorDialog.value = true;
+    }
+    else {
+        enableTwoFactor.value = true;
+        enterPasswordDialog.value = true;
+    }
+};
+
+const disableAuth2Fa = async () => {
+    try {
+        const formData = reactive({
+            twoFactorEnabled: false,
+            currentPassword: currentPassword.value,
+        });
+
+        await activeTwoFactorAuth(formData);
+
+        enableTwoFactor.value = false;
+        enterPasswordDialog.value = false;
+
+        $toast({
+            description: 'Authentification à deux facteurs désactivé',
+        });
+
+        currentPassword.value = '';
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+};
+
+const pinValue = ref<string[]>([]);
+
+const handleVerifyCode = async () => {
+    const formData = reactive({
+        code: pinValue.value.join(''),
+    });
+    try {
+        await verifyCode(formData);
+
+        $toast({
+            description: 'Authentification à deux facteurs activé',
+        });
+
+        twoFactorDialog.value = false;
+        enableTwoFactor.value = true;
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+};
+
+const verifyStatusAccount = () => {
+    return user.value.status == 'activated' ? true : false;
+};
+
+const isActivated = ref(verifyStatusAccount());
+
+const handleActivateStatus = async () => {
+    const formData = reactive({
+        currentPassword: currentPassword.value,
+        status: 'activated',
+    });
+
+    try {
+        await updateStatusAccount(formData);
+
+        $toast({
+            description: 'Statut du compte mis à jour',
+        });
+
+        enterPasswordActivateDialog.value = false;
+        isActivated.value = true;
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+};
+
+const handleDeactivateStatus = async () => {
+    const formData = reactive({
+        currentPassword: currentPassword.value,
+        status: 'deactivated',
+    });
+
+    try {
+        await updateStatusAccount(formData);
+
+        $toast({
+            description: 'Statut du compte mis à jour',
+        });
+
+        enterPasswordDeactivateDialog.value = false;
+        isActivated.value = false;
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'Echec de la mise à jour',
+        });
+    }
+};
+
+const handleDeleteAccount = async () => {
+    const formData = reactive({
+        user: user.value.id,
+        password: currentPassword.value,
+    });
+
+    try {
+        await deleteAccount(formData);
+
+        deleteAccountDialog.value = false;
+        router.push('/');
+    }
+    catch (error) {
+        console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: 'La suppression du compte n\'a pas aboutie',
+        });
     }
 };
 
