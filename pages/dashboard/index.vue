@@ -5,66 +5,19 @@
                 <div class="bg-primary h-8 rounded-t-lg" />
 
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-                    <div>
-                        <h4 class="text-primary font-semibold">
-                            Remplacement(s) effectué(s)
-                        </h4>
-                        <div class="border-2 border-gray-200 rounded p-4 my-3">
-                            <h6 class="flex items-center space-x-4 text-sm">
-                                <span>Le dernier mois</span>
-                                <span class="text-primary">{{ previousMonth }}</span>
-                            </h6>
-                            <div class="flex justify-center items-center gap-3 mt-3">
-                                <p class="text-5xl font-semibold text-primary text-center">
-                                    {{ reports.replacement.done.count }}
-                                </p>
+                    <DashboardReportSection
+                        title="Remplacement(s) crée(s)"
+                        :count="reports.replacement.me"
+                    />
+                    <DashboardReportSection
+                        title="Annonce(s) repondue(s)"
+                        :count="reports.replacement.total"
+                    />
 
-                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
-                                    {{ reports.replacement.done.percentage }}%
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-primary font-semibold">
-                            Nombre d'annonce(s) passée(s)
-                        </h4>
-                        <div class="border-2 border-gray-200 rounded p-4 my-3">
-                            <h6 class="flex items-center space-x-4 text-sm">
-                                <span>Le dernier mois</span>
-                                <span class="text-primary">{{ previousMonth }}</span>
-                            </h6>
-                            <div class="flex justify-center items-center gap-3 mt-3">
-                                <p class="text-5xl font-semibold text-primary text-center">
-                                    {{ reports.replacement.ignored.count }}
-                                </p>
-                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
-                                    {{ reports.replacement.ignored.percentage }}%
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-primary font-semibold">
-                            Réponse(s) en attente(s)
-                        </h4>
-                        <div class="border-2 border-gray-200 rounded p-4 my-3">
-                            <h6 class="flex items-center space-x-4 text-sm">
-                                <span>Le dernier mois</span>
-                                <span class="text-primary">{{ previousMonth }}</span>
-                            </h6>
-                            <div class="flex justify-center items-center gap-3 mt-3">
-                                <p class="text-5xl font-semibold text-primary text-center">
-                                    {{ reports.replacement.pending.count }}
-                                </p>
-                                <!-- <div class="w-20 h-20 text-3xl flex items-center justify-center font-bold">
-                                    {{ reports.replacement.pending.percentage }}%
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
+                    <DashboardReportSection
+                        title="Réponse(s) accepté(s)"
+                        :count="reports.replacement.accepted"
+                    />
                 </div>
             </div>
 
@@ -374,12 +327,13 @@ import {
 } from '@/components/ui/tags-input';
 
 import { useReports } from '~/composables/useReports';
+import type { UserSettings } from '~/lib/types';
 
-const user = useState('user');
+const user = useUser();
 
-const { getReports, createPreferences } = useReports();
+const { reports, getReports, createPreferences } = useReports();
 
-const reports = await getReports();
+await getReports();
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -387,27 +341,30 @@ const formatDate = (dateString: string) => {
 };
 
 const formattedData = computed(() => {
-    return reports.replacement.reponded_per_month.map(item => ({
+    if (!reports.value || !reports.value.replacement) return [];
+
+    return reports.value.replacement.reponded_per_month.map(item => ({
         month: formatDate(item.month),
         annonces: item.count,
     }));
 });
 
-const zipCodes = ref<string[]>([]);
-const cities = ref<string[]>([]);
+const settings: UserSettings = JSON.parse(user.value.settings);
+const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
+const cities = ref<string[]>(settings.replacement?.cities ?? []);
 
 const addCityPreference = async (newCity: string) => {
     if (!newCity || cities.value.includes(newCity)) return;
 
     newCity = cities.value[cities.value.length - 1].trim();
 
-    const formData = reactive({
+    const formData = {
         key: 'replacement',
         value: {
             zip_codes: zipCodes.value,
             cities: cities.value,
         },
-    });
+    };
 
     await createPreferences(formData);
 };
@@ -417,13 +374,13 @@ const addZipCodePreference = async (newZipCode: string) => {
 
     newZipCode = zipCodes.value[zipCodes.value.length - 1].trim();
 
-    const formData = reactive({
+    const formData = {
         key: 'replacement',
         value: {
             zip_codes: zipCodes.value,
             cities: cities.value,
         },
-    });
+    };
 
     await createPreferences(formData);
 };
@@ -431,13 +388,13 @@ const addZipCodePreference = async (newZipCode: string) => {
 const removeZipCode = async (zipCode: string) => {
     zipCodes.value = zipCodes.value.filter(code => code !== zipCode);
 
-    const formData = reactive({
+    const formData = {
         key: 'replacement',
         value: {
             zip_codes: zipCodes.value,
             cities: cities.value,
         },
-    });
+    };
 
     await createPreferences(formData);
 };
@@ -445,51 +402,31 @@ const removeZipCode = async (zipCode: string) => {
 const removeCity = async (city: string) => {
     cities.value = cities.value.filter(c => c !== city);
 
-    const formData = reactive({
+    const formData = {
         key: 'replacement',
         value: {
             zip_codes: zipCodes.value,
             cities: cities.value,
         },
-    });
+    };
 
     await createPreferences(formData);
 };
 
 const previousMonth = ref('');
 
-onMounted(async () => {
-    await getReports();
+const currentDate = new Date();
 
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const months = [
-        'Janvier',
-        'Février',
-        'Mars',
-        'Avril',
-        'Mai',
-        'Juin',
-        'Juillet',
-        'Août',
-        'Septembre',
-        'Octobre',
-        'Novembre',
-        'Décembre',
-    ];
+const months = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
+];
 
-    const previousMonthIndex = (currentMonth - 1 + 12) % 12;
-    previousMonth.value = months[previousMonthIndex];
+const currentMonthIndex = currentDate.getMonth();
+const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
+previousMonth.value = months[previousMonthIndex];
 
-    const settings = JSON.parse(user.value.settings);
-
-    zipCodes.value = settings.replacement?.zip_codes;
-    cities.value = settings.replacement?.cities;
-});
-
-useHead({
-    title: 'Tableau de bord',
-});
+useHead({ title: 'Tableau de bord' });
 
 definePageMeta({
     layout: 'dashboard',

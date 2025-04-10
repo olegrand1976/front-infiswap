@@ -681,7 +681,7 @@ const hasMatchingCityFromUnique = (city) => {
     return formData.cityTags.some(tag => tag.toLowerCase() === normalizedCity) || formData.cityTags.some(tag => tag.toLowerCase().includes(normalizedCity));
 };
 
-const addTag = (inputRef, tagArrayRef, transformFn = (val) => val) => {
+const addTag = (inputRef, tagArrayRef, transformFn = val => val) => {
     const value = transformFn(inputRef.value.trim());
     if (value && !tagArrayRef.value.includes(value)) {
         tagArrayRef.value.push(value);

@@ -8,15 +8,16 @@ export const useReports = () => {
     const loading = useState('reportsLoading', () => false);
 
     const getReports = async () => {
+        loading.value = true;
         try {
             const response = await $apifetch('/api/reports', { method: 'GET' });
             reports.value = response;
-
-            return reports.value;
+            return response;
         }
         catch (err) {
             error.value = err;
-            console.error(err);
+            console.error('[getReports] error:', err?.data ?? err);
+            return null;
         }
         finally {
             loading.value = false;
@@ -37,6 +38,7 @@ export const useReports = () => {
     };
 
     return {
+        loading,
         reports,
         getReports,
         createPreferences,

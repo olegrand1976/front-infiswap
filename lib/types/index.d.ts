@@ -17,7 +17,7 @@ export type User = {
     validated_by?: number | null;
     validate_at?: string | null;
     email_verified_at?: string | null;
-    settings?: Record<string, any> | null;
+    settings?: string | null;
     remember_token?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
@@ -31,6 +31,17 @@ export type User = {
     created_at: string;
     updated_at: string;
 };
+
+interface ReplacementPreference {
+    cities: string[];
+    zip_codes: string[];
+    days: string[];
+}
+export interface UserSettings {
+    language: string;
+    replacement: ReplacementPreference;
+    choice: string;
+}
 
 export interface Nurse {
     id: number;
