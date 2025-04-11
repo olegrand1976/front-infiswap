@@ -129,22 +129,30 @@ import {
     ArrowPathIcon,
     UserGroupIcon,
     ChevronRightIcon,
-    // QueueListIcon,
     ListBulletIcon,
     DocumentPlusIcon, DocumentMagnifyingGlassIcon,
     UserPlusIcon,
     ClipboardDocumentListIcon,
     PowerIcon,
 } from '@heroicons/vue/24/outline';
+import type { FunctionalComponent } from 'vue';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
 
 defineProps({
     collapsed: Boolean,
 });
 
-// const user = useUser();
+const { isAdmin } = useAuth();
 
-const navigationItems = [
+interface NavigationItem {
+    label: string;
+    route: string;
+    icon: FunctionalComponent;
+    isActive?: boolean;
+    children?: NavigationItem[];
+}
+
+const nurseNavigationItems: NavigationItem[] = [
     {
         label: 'Informations',
         route: '/dashboard',
@@ -154,7 +162,6 @@ const navigationItems = [
         label: 'Mes patients',
         route: '/dashboard/patients',
         icon: UserGroupIcon,
-        isActive: true,
         children: [
             {
                 label: 'Listes',
@@ -195,17 +202,34 @@ const navigationItems = [
             },
         ],
     },
-    /*     {
-            label: 'Documents',
-            route: '/dashboard/documents',
-            icon: FolderIcon,
-        },
-        {
-            label: 'Paramètres',
-            route: '/dashboard/settings',
-            icon: Cog8ToothIcon,
-        }, */
 ];
+
+const adminNavigationItems: NavigationItem[] = [
+    {
+        label: 'Dashboard',
+        route: '/dashboard/admin',
+        icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Utilisateurs',
+        route: '/dashboard/admin/users',
+        icon: UserGroupIcon,
+    },
+    {
+        label: 'Patients',
+        route: '/dashboard/admin/patients',
+        icon: UserGroupIcon,
+    },
+    {
+        label: 'Remplacements',
+        route: '/dashboard/admin/replacements',
+        icon: ArrowPathIcon,
+    },
+];
+
+const navigationItems = computed(() => {
+    return isAdmin.value ? adminNavigationItems : nurseNavigationItems;
+});
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;

@@ -109,7 +109,7 @@ export default defineNuxtConfig({
         id: 'GTM-KFBFVVR3',
         defer: false,
         compatibility: false,
-        enabled: true,
+        enabled: process.env.NODE_ENV == 'production',
         debug: process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
