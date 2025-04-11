@@ -134,6 +134,7 @@ import {
     UserPlusIcon,
     ClipboardDocumentListIcon,
     PowerIcon,
+    HeartIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
@@ -218,7 +219,7 @@ const adminNavigationItems: NavigationItem[] = [
     {
         label: 'Patients',
         route: '/dashboard/admin/patients',
-        icon: UserGroupIcon,
+        icon: HeartIcon,
     },
     {
         label: 'Remplacements',
