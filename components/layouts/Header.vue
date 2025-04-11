@@ -10,6 +10,7 @@
                     <li
                         v-for="(item, index) in navigationItems"
                         :key="index"
+                        class="text-center"
                         :class="{
                             'text-primary font-semibold active-link': isActiveRoute(item.route),
                             'hover:text-primary/90 font-semibold text-dark animate duration-500': !isActiveRoute(item.route),
