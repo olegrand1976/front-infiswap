@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full px-6 sm:w-1/2 xl:w-1/3"
+        class="w-full px-6 sm:w-1/2 xl:w-1/3 mb-4"
         :class="containerClass"
     >
         <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-md">
