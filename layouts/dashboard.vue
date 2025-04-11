@@ -35,14 +35,21 @@
                 </div>
                 <div class="ml-auto mr-2">
                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Avatar>
-                                <AvatarImage
-                                    src="https://github.com/unovue.png"
-                                    alt="Infiswap-user-profile"
+                        <DropdownMenuTrigger class="flex items-center space-x-2">
+                            <template v-if="user.profile?.profil_url != null">
+                                <img
+                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                    class="w-12 h-12 rounded-full"
+                                >
+                            </template>
+                            <template v-else>
+                                <UserCircleIcon
+                                    class="w-12 text-black/40"
                                 />
-                                <AvatarFallback>IS</AvatarFallback>
-                            </Avatar>
+                            </template>
+                            <p class="font-medium">
+                                {{ user.firstname }} {{ user.lastname }}
+                            </p>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent class="mr-6">
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
@@ -70,5 +77,11 @@
 </template>
 
 <script lang="ts" setup>
+import { UserCircleIcon } from '@heroicons/vue/24/solid';
+import { useRuntimeConfig } from '#app';
+import type { User } from '~/lib/types';
+
+const user = useState<User>('user');
+
 const { logout } = useAuth();
 </script>
