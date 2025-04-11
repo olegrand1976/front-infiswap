@@ -137,6 +137,7 @@ import {
     UserPlusIcon,
     ClipboardDocumentListIcon,
     PowerIcon,
+    MapPinIcon,
 } from '@heroicons/vue/24/outline';
 import { isFuture, formatToDMY } from '~/composables/useDate';
 
@@ -167,6 +168,11 @@ const navigationItems = [
                 label: 'Nouveau',
                 route: '/dashboard/patients/create',
                 icon: UserPlusIcon,
+            },
+            {
+                label: 'De mon région',
+                route: '/dashboard/patients/myregion',
+                icon: MapPinIcon,
             },
         ],
     },

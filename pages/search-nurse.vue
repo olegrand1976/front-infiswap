@@ -3,170 +3,187 @@
         <template #title>
             Rechercher un(e) infirmier(e)
         </template>
-        <div class="container sm:my-24 max-w-3xl">
+        <div class="container">
             <form @submit.prevent="submit">
-                <div class="grid grid-cols-1 gap-4">
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center gap-2 pl-4 pr-2">
-                                <UserCircleIcon class="w-6 text-primary sm:text-white" />
-                                <span class="font-light hidden sm:inline text-primary sm:text-white">Nom</span>
-                            </div>
-                            <Input
-                                v-model="formData.lastname"
-                                placeholder="Nom"
-                                variant="transparent"
-                                class="w-full text-black placeholder:text-black/80"
-                                @blur="validateField('lastname')"
-                                @input="validateField('lastname')"
-                            />
-                        </div>
-                        <p
-                            v-if="error.lastname"
-                            class="text-red-500 text-xs mt-1 ms-[25%]"
-                        >
-                            {{ error.lastname }}
-                        </p>
-                    </div>
-
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
-                                <div class="flex space-x-4 text-white items-center ms-4 relative">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center gap-2 pl-4 pr-2">
                                     <UserCircleIcon class="w-6 text-primary sm:text-white" />
-                                    <PlusIcon class="w-3 text-primary sm:text-white absolute top-0 left-1" />
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Prénom</span>
+                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Nom</span>
                                 </div>
+                                <Input
+                                    v-model="formData.lastname"
+                                    placeholder="Doe"
+                                    variant="transparent"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
                             </div>
-                            <Input
-                                v-model="formData.firstname"
-                                variant="transparent"
-                                placeholder="Prenom"
-                                class="w-full text-black placeholder:text-black/80"
-                                @blur="validateField('firstname')"
-                                @input="validateField('firstname')"
-                            />
                         </div>
-                        <p
-                            v-if="error.firstname"
-                            class="text-red-500 text-xs mt-1 ms-[25%]"
-                        >
-                            {{ error.firstname }}
-                        </p>
-                    </div>
 
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
-                                <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                    <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                        <LayoutsAppImage
-                                            src="/icons/zip_code.png"
-                                            class="w-4"
-                                        />
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <UserCircleIcon class="w-6 text-primary sm:text-white" />
+                                        <PlusIcon class="w-3 text-primary sm:text-white absolute top-0 left-1" />
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Prénom</span>
                                     </div>
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Code postal</span>
                                 </div>
+                                <Input
+                                    v-model="formData.firstname"
+                                    variant="transparent"
+                                    placeholder="John"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
                             </div>
-                            <Input
-                                v-model="formData.zipCode"
-                                variant="transparent"
-                                placeholder="Code Postal"
-                                class="w-full text-black placeholder:text-black/80"
-                                @blur="validateField('zipCode')"
-                                @input="validateField('zipCode')"
-                            />
                         </div>
-                        <p
-                            v-if="error.zipCode"
-                            class="text-red-500 text-xs mt-1 ms-[25%]"
-                        >
-                            {{ error.zipCode }}
-                        </p>
-                    </div>
 
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
-                                <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                    <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                        <LayoutsAppImage
-                                            src="/icons/city_white.png"
-                                            class="w-8"
-                                        />
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                                            <LayoutsAppImage
+                                                src="/icons/zip_code.png"
+                                                class="w-4"
+                                            />
+                                        </div>
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Email</span>
                                     </div>
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Ville</span>
                                 </div>
+                                <Input
+                                    v-model="formData.email"
+                                    variant="transparent"
+                                    placeholder="doejohn@gmail.com"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
                             </div>
-                            <Input
-                                v-model="formData.city"
-                                variant="transparent"
-                                placeholder="Ville"
-                                class="w-full text-black placeholder:text-black/80"
-                                @blur="validateField('city')"
-                                @input="validateField('city')"
-                            />
                         </div>
-                        <p
-                            v-if="error.city"
-                            class="text-red-500 text-xs mt-1 ms-[25%]"
-                        >
-                            {{ error.city }}
-                        </p>
-                    </div>
 
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
-                                <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                    <PhoneIcon class="w-6 text-primary sm:text-white" />
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">N° de téléphone</span>
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                                            <LayoutsAppImage
+                                                src="/icons/zip_code.png"
+                                                class="w-4"
+                                            />
+                                        </div>
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">NISS *</span>
+                                    </div>
                                 </div>
+                                <Input
+                                    v-model="formData.niss"
+                                    variant="transparent"
+                                    placeholder="199648556596"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
                             </div>
-                            <Input
-                                v-model="formData.phoneNumber"
-                                variant="transparent"
-                                placeholder="0499010203"
-                                class="w-full text-black placeholder:text-black/80"
-                                @blur="validateField('phoneNumber')"
-                                @input="validateField('phoneNumber')"
-                            />
                         </div>
-                        <p
-                            v-if="error.phoneNumber"
-                            class="text-red-500 text-xs mt-1 ms-[25%]"
-                        >
-                            {{ error.phoneNumber }}
-                        </p>
-                    </div>
 
-                    <div>
-                        <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
-                            <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
-                                <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                    <HeartIcon class="w-6 text-primary sm:text-white" />
-                                    <span class="font-light hidden sm:inline text-primary sm:text-white">Catégorie</span>
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <PhoneIcon class="w-6 text-primary sm:text-white" />
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Téléphone</span>
+                                    </div>
                                 </div>
+                                <Input
+                                    v-model="formData.phoneNumber"
+                                    variant="transparent"
+                                    placeholder="0499010203"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
                             </div>
-                            <Select v-model="formData.category">
-                                <SelectTrigger
-                                    class="w-full bg-transparent text-nowrap border border-none"
-                                    position="right"
-                                >
-                                    <SelectValue />
-                                </SelectTrigger>
+                        </div>
 
-                                <SelectContent class="border border-none">
-                                    <template
-                                        v-for="[key, value] in Object.entries(category)"
-                                        :key="key"
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                                            <LayoutsAppImage
+                                                src="/icons/zip_code.png"
+                                                class="w-4"
+                                            />
+                                        </div>
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Code postal</span>
+                                    </div>
+                                </div>
+                                <Input
+                                    v-model="formData.zipCode"
+                                    variant="transparent"
+                                    placeholder="99333"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                                            <LayoutsAppImage
+                                                src="/icons/city_white.png"
+                                                class="w-8"
+                                            />
+                                        </div>
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Ville</span>
+                                    </div>
+                                </div>
+                                <Input
+                                    v-model="formData.city"
+                                    variant="transparent"
+                                    placeholder="Bruxelles"
+                                    class="w-full text-black placeholder:text-black/80"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <HeartIcon class="w-6 text-primary sm:text-white" />
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Catégorie</span>
+                                    </div>
+                                </div>
+                                <Select v-model="formData.category">
+                                    <SelectTrigger
+                                        class="w-full bg-transparent text-nowrap border border-none"
+                                        position="right"
                                     >
-                                        <SelectItem :value="key">
-                                            {{ value }}
-                                        </SelectItem>
-                                    </template>
-                                </SelectContent>
-                            </Select>
+                                        <SelectValue />
+                                    </SelectTrigger>
+
+                                    <SelectContent class="border border-none">
+                                        <template
+                                            v-for="[key, value] in Object.entries(category)"
+                                            :key="key"
+                                        >
+                                            <SelectItem :value="key">
+                                                {{ value }}
+                                            </SelectItem>
+                                        </template>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div class="h-40 lg:h-[450px] rounded-3xl border border-primary">
+                                <Textarea
+                                    v-model="formData.description"
+                                    placeholder="Écrivez votre description ici..."
+                                    class="w-full h-full resize-none rounded-xl p-4 text-black placeholder:text-black/80 bg-transparent outline-none"
+                                ></Textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,7 +206,6 @@
                     <Button
                         type="submit"
                         class="w-96 flex justify-center items-center mx-auto"
-                        :disabled="inProgress || !formData.accept || Object.values(error).some(msg => msg)"
                     >
                         <span>{{ inProgress ? 'Envoi en cours...' : 'Envoyer' }}</span>
                     </Button>
@@ -212,7 +228,6 @@ import {
     PhoneIcon,
     HeartIcon,
 } from '@heroicons/vue/24/solid';
-import * as yup from 'yup';
 import { searchNurse } from '~/composables/usePatients';
 
 const { $toast } = useNuxtApp();
@@ -231,11 +246,14 @@ definePageMeta({
 const formData = reactive({
     lastname: '',
     firstname: '',
-    city: '',
-    zipCode: '',
+    email: '',
+    niss: '',
     phoneNumber: '',
-    accept: true,
+    zipCode: '',
+    city: '',
     category: 'ordinary',
+    description: '',
+    accept: true,
 });
 
 const error = reactive({
@@ -251,78 +269,52 @@ const category = {
     ordinary: 'Ordinaire',
 };
 
-const schema = yup.object().shape({
-    lastname: yup.string()
-        .required('Le nom est requis')
-        .min(2, 'Le nom doit avoir minimum 2 caractères'),
-    firstname: yup.string()
-        .required('Le prénom est requis')
-        .min(2, 'Le prénom doit avoir minimum 2 caractères'),
-    zipCode: yup.string()
-        .required('Le code postal est requis')
-        .max(7, 'Le code postal ne doit pas dépasser les 7 caractères'),
-    city: yup.string()
-        .required('La ville est requise')
-        .min(2, 'La ville doit avoir minimum 2 caractères'),
-    phoneNumber: yup.string()
-        .required('Le numéro est requis')
-        .matches(/^\d{8,12}$/, 'Le numéro doit contenir entre 8 et 12 chiffres'),
-});
-
-const validateField = async (field: keyof typeof formData) => {
-    try {
-        await schema.validateAt(field, toRaw(formData));
-        error[field] = '';
-    }
-    catch (err) {
-        error[field] = (err as yup.ValidationError).message;
-    }
-};
-
-const validateRequiredFields = async () => {
-    let isValid = true;
-    try {
-        await schema.validate(toRaw(formData), { abortEarly: false });
-    }
-    catch (err) {
-        if (err instanceof yup.ValidationError) {
-            err.inner.forEach((e) => {
-                error[e.path] = e.message;
-                isValid = false;
-            });
-        }
-    }
-    return isValid;
-};
-
 const { submit, inProgress } = useSubmit(
-    async () => { // Ajout de async
-        console.log(formData);
-        const isValid = await validateRequiredFields();
-        if (isValid) {
-            return searchNurse().submitSearchNurse(formData).then(() => {
-                $toast({
-                    title: 'Succès',
-                    description: 'Envoi de formulaire effectué',
-                });
+    async () => {
+        Object.keys(error).forEach((key) => {
+            error[key] = '';
+        });
 
-                Object.keys(formData).forEach((key) => {
-                    (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
-                });
-                setTimeout(() => {
-                    router.push('/');
-                }, 2000);
+        try {
+            await searchNurse().submitSearchNurse(formData);
+
+            $toast({
+                title: 'Succès',
+                description: 'Envoi de formulaire effectué',
             });
+
+            Object.keys(formData).forEach((key) => {
+                (formData as Record<string, string | boolean>)[key] = key === 'accept' ? false : '';
+            });
+
+            setTimeout(() => {
+                router.push('/');
+            }, 2000);
         }
-    },
-    {
-        onError: () => {
+        catch (err) {
+            let errorMessage = 'Échec de l\'envoi du formulaire';
+
+            if (err?.data?.errors) {
+                const backendErrors = err.data.errors;
+                const firstKey = Object.keys(backendErrors)[0];
+
+                if (firstKey) {
+                    const firstError = backendErrors[firstKey];
+                    errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+                    error[firstKey] = errorMessage;
+                }
+            }
+            else if (err?.data?.message) {
+                errorMessage = err.data.message;
+            }
+
+            // Toast d'erreur
             $toast({
                 title: 'Oups! Une erreur s\'est produite',
-                description: 'Échec de l\'envoi du formulaire',
+                description: errorMessage,
                 variant: 'destructive',
             });
-        },
+        }
     },
 );
 </script>
