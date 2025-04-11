@@ -28,9 +28,19 @@ export type User = {
     nurse: Nurse;
     profile: Profile;
     trial_ends_at?: string | null;
+    roles: Role[];
+    permissions: string[];
     created_at: string;
     updated_at: string;
 };
+
+interface Role {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+}
 
 interface ReplacementPreference {
     cities: string[];

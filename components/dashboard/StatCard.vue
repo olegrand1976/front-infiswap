@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 defineProps({
-    value: String,
+    value: Number,
     label: String,
     colorClass: String,
     icon: Object,

@@ -11,6 +11,14 @@ export const useAuth = () => {
     const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
     const isLoggedIn = computed(() => !!user.value);
+    const isAdmin = computed(() => {
+        return user.value.roles.some(role => ['admin', 'dev'].includes(role.name));
+    });
+
+    const isManager = computed(() => {
+        return user.value.roles.some(role => ['test_manager', 'sale_manager'].includes(role.name));
+    });
+
     const loading = useState<boolean>('loading', () => false);
 
     async function refresh() {
@@ -106,6 +114,8 @@ export const useAuth = () => {
     return {
         user,
         isLoggedIn,
+        isAdmin,
+        isManager,
         login,
         register,
         registerBeta,
