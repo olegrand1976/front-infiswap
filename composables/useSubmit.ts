@@ -31,9 +31,8 @@ export function useSubmit<T>(
             succeeded.value = false;
             options?.onError?.(e);
             validationErrors.value = e.data?.errors ?? {};
-            if (e.response?.status === 422 && e.data?.errors) {
-                console.log(e.data.errors);
-                const firstError = Object.values(e.data.errors)[0]?.[0] ?? 'Une erreur est survenue';
+            if (e.data.message) {
+                const firstError = e.data.message ?? 'Une erreur est survenue';
                 $toast({
                     title: firstError,
                     variant: 'destructive',
