@@ -135,6 +135,7 @@ import {
     UserPlusIcon,
     ClipboardDocumentListIcon,
     PowerIcon,
+    Cog8ToothIcon,
 } from '@heroicons/vue/24/outline';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
 

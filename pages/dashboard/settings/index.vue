@@ -19,7 +19,7 @@
                         @click="deleteAvatarDialog = true"
                     />
                     <img
-                        v-if="user.profile?.profil_url"
+                        v-if="user.profile?.profil_url != null"
                         :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
                         class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
                     >
@@ -69,7 +69,9 @@
                             >
                                 Annuler
                             </Button>
-                            <Button>
+                            <Button
+                                @click="handleDeleteAvatar"
+                            >
                                 Confirmer
                             </Button>
                         </DialogFooter>
@@ -96,94 +98,96 @@
                             />
 
                             <Dialog v-model:open="personalInfoDialog">
-                                <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
+                                <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
-                                        <DialogTitle>Mise à jour</DialogTitle>
+                                        <DialogTitle class="text-center">
+                                            Mise à jour
+                                        </DialogTitle>
                                     </DialogHeader>
                                     <DialogDescription>
                                         Vous pouvez mettre à jour ici vos informations personnelles
                                     </DialogDescription>
 
                                     <form class="mt-4 space-y-3">
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Nom
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.lastname"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Prénom
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.firstname"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Date de naissance
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.dateOfBirth"
                                                 type="date"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Email
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.email"
                                                 type="email"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Numéro INAMI
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.identifierNumber"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Téléphone
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.phoneNumber"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Sexe
                                             </p>
                                             <Select v-model="formPersonalInfo.gender">
                                                 <SelectTrigger
-                                                    class="w-full text-black bg-transparent text-nowrap border border-none"
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
                                                     position="right"
                                                 >
                                                     <SelectValue :value="formPersonalInfo.gender" />
                                                 </SelectTrigger>
-
-                                                <SelectContent class="border border-none">
+                                                <SelectContent class="border-none">
                                                     <template
                                                         v-for="[key, value] in Object.entries(genders)"
                                                         :key="key"
@@ -196,15 +200,16 @@
                                             </Select>
                                         </div>
 
-                                        <div class="flex justify-end items-center space-x-8 pt-6">
+                                        <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
                                             <Button
                                                 variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300"
+                                                class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
                                                 @click="personalInfoDialog = false"
                                             >
                                                 Annuler
                                             </Button>
                                             <Button
+                                                class="w-full sm:w-auto"
                                                 @click="updateInfoUser"
                                             >
                                                 Enregistrer
@@ -254,7 +259,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formatDate(user.date_of_birth) || ' - ' }}
+                                    {{ formatStringDate(user.date_of_birth) || ' - ' }}
                                 </p>
                             </div>
 
@@ -332,50 +337,51 @@
                             />
 
                             <Dialog v-model:open="addressInfoDialog">
-                                <DialogContent class="w-full sm:max-w-xl h-[28rem] overflow-y-auto">
+                                <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
-                                        <DialogTitle>Mise à jour</DialogTitle>
+                                        <DialogTitle class="text-center">
+                                            Mise à jour
+                                        </DialogTitle>
                                     </DialogHeader>
                                     <DialogDescription>
                                         Vous pouvez mettre à jour ici vos informations concernant votre adresse
                                     </DialogDescription>
- 
+
                                     <form class="mt-4 space-y-3">
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Rue
                                             </p>
                                             <Input
                                                 v-model="formAddress.streetAddress"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Ville
                                             </p>
                                             <Input
                                                 v-model="formAddress.city"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Pays
                                             </p>
                                             <Select v-model="formAddress.country">
                                                 <SelectTrigger
-                                                    class="w-full text-black bg-transparent text-nowrap border border-none"
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
                                                     position="right"
                                                 >
-                                                    <SelectValue :value="formPersonalInfo.gender" />
+                                                    <SelectValue :value="formAddress.country" />
                                                 </SelectTrigger>
-
-                                                <SelectContent class="border border-none">
+                                                <SelectContent class="border-none">
                                                     <template
                                                         v-for="[key, value] in Object.entries(countries)"
                                                         :key="key"
@@ -388,37 +394,38 @@
                                             </Select>
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Code postal
                                             </p>
                                             <Input
                                                 v-model="formAddress.zipCode"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Complément
                                             </p>
                                             <Input
                                                 v-model="formAddress.additionalInfo"
                                                 type="text"
-                                                class="bg-transparent placeholder:text-black"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
-                                        <div class="flex justify-end items-center space-x-8 pt-6">
+                                        <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
                                             <Button
                                                 variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300"
+                                                class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
                                                 @click="addressInfoDialog = false"
                                             >
                                                 Annuler
                                             </Button>
                                             <Button
+                                                class="w-full sm:w-auto"
                                                 @click="handleUpdateAddress"
                                             >
                                                 Enregistrer
@@ -427,6 +434,7 @@
                                     </form>
                                 </DialogContent>
                             </Dialog>
+
                         </div>
 
                         <div class="mt-4 space-y-3">
@@ -519,7 +527,7 @@
                             <div class="flex justify-between items-center">
                                 <label
                                     for="currentPassword"
-                                    class="text-primary sm:font-normal font-semibold flex items-center space-x-3"
+                                    class="font-normal flex items-center space-x-3"
                                 >
                                     <KeyIcon class="w-5 " />
                                     <span>Mot de passe</span>
@@ -531,57 +539,60 @@
                                 />
 
                                 <Dialog v-model:open="changePasswordDialog">
-                                    <DialogContent class="w-full sm:max-w-xl h-96 overflow-y-auto">
+                                    <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                         <DialogHeader>
-                                            <DialogTitle>Changer le mot de passe</DialogTitle>
+                                            <DialogTitle class="text-center">
+                                                Changer le mot de passe
+                                            </DialogTitle>
                                         </DialogHeader>
                                         <DialogDescription>
                                             Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
                                         </DialogDescription>
 
                                         <form class="mt-4 space-y-3">
-                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                                <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                     Mot de passe actuel
                                                 </p>
                                                 <Input
                                                     v-model="formPassword.currentPassword"
                                                     type="password"
-                                                    class="bg-transparent placeholder:text-black"
+                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                                 />
                                             </div>
 
-                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                                <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                     Nouveau mot de passe
                                                 </p>
                                                 <Input
                                                     v-model="formPassword.password"
                                                     type="password"
-                                                    class="bg-transparent placeholder:text-black"
+                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                                 />
                                             </div>
 
-                                            <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                                <p class="bg-primary text-nowrap flex items-center h-full text-white ps-4 rounded-s-full">
+                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                                <p class="text-primary sm:text-white sm:bg-primary text-nowrap flex items-center h-full ps-4 rounded-s-full">
                                                     Confirmer mot de passe
                                                 </p>
                                                 <Input
                                                     v-model="formPassword.password_confirmation"
                                                     type="password"
-                                                    class="bg-transparent placeholder:text-black"
+                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                                 />
                                             </div>
 
-                                            <div class="flex justify-end items-center space-x-8 pt-6">
+                                            <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
                                                 <Button
                                                     variant="secondary"
-                                                    class="bg-gray-200 hover:bg-gray-300"
+                                                    class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
                                                     @click="changePasswordDialog = false"
                                                 >
                                                     Annuler
                                                 </Button>
                                                 <Button
+                                                    class="w-full sm:w-auto"
                                                     @click="handleChangePassword"
                                                 >
                                                     Enregistrer
@@ -634,7 +645,7 @@
                                             </PinInput>
                                         </div>
 
-                                        <DialogFooter class="mt-12 gap-4 sm:gap-4">
+                                        <DialogFooter class="mt-12 gap-4">
                                             <Button
                                                 variant="secondary"
                                                 class="bg-gray-200 hover:bg-gray-300"
@@ -652,39 +663,44 @@
                                 </Dialog>
 
                                 <Dialog v-model:open="enterPasswordDialog">
-                                    <DialogContent class="sm:max-w-[36rem]">
+                                    <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                         <DialogHeader>
-                                            <DialogTitle>Authentification à deux facteurs</DialogTitle>
+                                            <DialogTitle class="text-center">
+                                                Authentification à deux facteurs
+                                            </DialogTitle>
                                         </DialogHeader>
                                         <div class="mt-8">
                                             Veuillez confirmer votre action en entrant votre mot de passe
                                         </div>
 
-                                        <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                            <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                                Mot de passe
-                                            </p>
-                                            <Input
-                                                v-model="currentPassword"
-                                                type="password"
-                                                class="bg-transparent placeholder:text-black"
-                                            />
-                                        </div>
+                                        <form class="mt-4 space-y-3">
+                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                                <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                    Mot de passe
+                                                </p>
+                                                <Input
+                                                    v-model="currentPassword"
+                                                    type="password"
+                                                    class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                                />
+                                            </div>
 
-                                        <DialogFooter class="mt-12 gap-4 sm:gap-4">
-                                            <Button
-                                                variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300"
-                                                @click="enterPasswordDialog = false"
-                                            >
-                                                Annuler
-                                            </Button>
-                                            <Button
-                                                @click="disableAuth2Fa"
-                                            >
-                                                Valider
-                                            </Button>
-                                        </DialogFooter>
+                                            <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
+                                                <Button
+                                                    variant="secondary"
+                                                    class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                                                    @click="enterPasswordDialog = false"
+                                                >
+                                                    Annuler
+                                                </Button>
+                                                <Button
+                                                    class="w-full sm:w-auto"
+                                                    @click="disableAuth2Fa"
+                                                >
+                                                    Valider
+                                                </Button>
+                                            </DialogFooter>
+                                        </form>
                                     </DialogContent>
                                 </Dialog>
                             </div>
@@ -774,39 +790,44 @@
                         </div>
 
                         <Dialog v-model:open="enterPasswordActivateDialog">
-                            <DialogContent class="sm:max-w-[36rem]">
+                            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                 <DialogHeader>
-                                    <DialogTitle>Statut de votre compte</DialogTitle>
+                                    <DialogTitle class="text-center">
+                                        Statut de votre compte
+                                    </DialogTitle>
                                 </DialogHeader>
                                 <div class="mt-8">
                                     Veuillez confirmer votre action en entrant votre mot de passe
                                 </div>
 
-                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Mot de passe
-                                    </p>
-                                    <Input
-                                        v-model="currentPassword"
-                                        type="password"
-                                        class="bg-transparent placeholder:text-black"
-                                    />
-                                </div>
+                                <form class="mt-4 space-y-3">
+                                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            Mot de passe
+                                        </p>
+                                        <Input
+                                            v-model="currentPassword"
+                                            type="password"
+                                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                        />
+                                    </div>
 
-                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
-                                    <Button
-                                        variant="secondary"
-                                        class="bg-gray-200 hover:bg-gray-300"
-                                        @click="enterPasswordActivateDialog = false"
-                                    >
-                                        Annuler
-                                    </Button>
-                                    <Button
-                                        @click="handleActivateStatus"
-                                    >
-                                        Valider
-                                    </Button>
-                                </DialogFooter>
+                                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
+                                        <Button
+                                            variant="secondary"
+                                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                                            @click="enterPasswordActivateDialog = false"
+                                        >
+                                            Annuler
+                                        </Button>
+                                        <Button
+                                            class="w-full sm:w-auto"
+                                            @click="handleActivateStatus"
+                                        >
+                                            Valider
+                                        </Button>
+                                    </DialogFooter>
+                                </form>
                             </DialogContent>
                         </Dialog>
 
@@ -819,39 +840,44 @@
                         </div>
 
                         <Dialog v-model:open="enterPasswordDeactivateDialog">
-                            <DialogContent class="sm:max-w-[36rem]">
+                            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                 <DialogHeader>
-                                    <DialogTitle>Statut de votre compte</DialogTitle>
+                                    <DialogTitle class="text-center">
+                                        Statut de votre compte
+                                    </DialogTitle>
                                 </DialogHeader>
                                 <div class="mt-8">
                                     Veuillez confirmer votre action en entrant votre mot de passe
                                 </div>
 
-                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Mot de passe
-                                    </p>
-                                    <Input
-                                        v-model="currentPassword"
-                                        type="password"
-                                        class="bg-transparent placeholder:text-black"
-                                    />
-                                </div>
+                                <form class="mt-4 space-y-3">
+                                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            Mot de passe
+                                        </p>
+                                        <Input
+                                            v-model="currentPassword"
+                                            type="password"
+                                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                        />
+                                    </div>
 
-                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
-                                    <Button
-                                        variant="secondary"
-                                        class="bg-gray-200 hover:bg-gray-300"
-                                        @click="enterPasswordDeactivateDialog = false"
-                                    >
-                                        Annuler
-                                    </Button>
-                                    <Button
-                                        @click="handleDeactivateStatus"
-                                    >
-                                        Valider
-                                    </Button>
-                                </DialogFooter>
+                                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
+                                        <Button
+                                            variant="secondary"
+                                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                                            @click="enterPasswordDeactivateDialog = false"
+                                        >
+                                            Annuler
+                                        </Button>
+                                        <Button
+                                            class="w-full sm:w-auto"
+                                            @click="handleDeactivateStatus"
+                                        >
+                                            Valider
+                                        </Button>
+                                    </DialogFooter>
+                                </form>
                             </DialogContent>
                         </Dialog>
 
@@ -873,40 +899,45 @@
                         </Button>
 
                         <Dialog v-model:open="deleteAccountDialog">
-                            <DialogContent class="sm:max-w-[36rem]">
+                            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                 <DialogHeader>
-                                    <DialogTitle>Supprimer votre compte</DialogTitle>
+                                    <DialogTitle class="text-center">
+                                        Supprimer votre compte
+                                    </DialogTitle>
                                 </DialogHeader>
                                 <div class="mt-8">
                                     Veuillez confirmer votre action en entrant votre mot de passe. En le confirmant, vous ne pouvez plus
                                     accéder aux informations de votre compte.
                                 </div>
 
-                                <div class="grid grid-cols-[40%_60%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Mot de passe
-                                    </p>
-                                    <Input
-                                        v-model="currentPassword"
-                                        type="password"
-                                        class="bg-transparent placeholder:text-black"
-                                    />
-                                </div>
+                                <form class="mt-4 space-y-3">
+                                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            Mot de passe
+                                        </p>
+                                        <Input
+                                            v-model="currentPassword"
+                                            type="password"
+                                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                        />
+                                    </div>
 
-                                <DialogFooter class="mt-12 gap-4 sm:gap-4">
-                                    <Button
-                                        variant="secondary"
-                                        class="bg-gray-200 hover:bg-gray-300"
-                                        @click="deleteAccountDialog = false"
-                                    >
-                                        Annuler
-                                    </Button>
-                                    <Button
-                                        @click="handleDeleteAccount"
-                                    >
-                                        Valider
-                                    </Button>
-                                </DialogFooter>
+                                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
+                                        <Button
+                                            variant="secondary"
+                                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                                            @click="deleteAccountDialog = false"
+                                        >
+                                            Annuler
+                                        </Button>
+                                        <Button
+                                            class="w-full sm:w-auto"
+                                            @click="handleDeleteAccount"
+                                        >
+                                            Valider
+                                        </Button>
+                                    </DialogFooter>
+                                </form>
                             </DialogContent>
                         </Dialog>
                     </section>
@@ -960,7 +991,7 @@ const {
     verifyCode,
     updateStatusAccount,
     deleteAccount,
-    logout,
+    deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useReports();
 
@@ -988,13 +1019,22 @@ const formattedCountry = computed(() => {
     return user.value.profile.country == 'be' ? 'Belgique' : 'France';
 });
 
-const formatDate = (dateString) => {
+const formatStringDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
 };
 
 const formPersonalInfo = reactive({
@@ -1193,6 +1233,22 @@ const handleUploadProfile = async () => {
     }
 };
 
+const handleDeleteAvatar = async () => {
+    try {
+        await deleteAvatar(user.value.id);
+
+        user.value.profile.profil_url = null;
+
+        $toast({
+            description: 'Photo supprimée',
+        });
+        deleteAvatarDialog.value = false;
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
 const verifyTwoFactorStatus = () => {
     if (user.value.two_factor_enabled == 1) {
         return true;
@@ -1267,6 +1323,8 @@ const handleVerifyCode = async () => {
         $toast({
             description: 'Authentification à deux facteurs activé',
         });
+
+        pinValue.value = [];
 
         twoFactorDialog.value = false;
         enableTwoFactor.value = true;

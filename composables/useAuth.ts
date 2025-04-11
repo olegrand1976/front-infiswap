@@ -124,6 +124,13 @@ export const useAuth = () => {
         });
     };
 
+    async function deleteAvatar(id) {
+        return await $apifetch(`/api/users/${user.value.id}/delete-profil`, {
+            method: 'delete',
+            body: id,
+        });
+    };
+
     async function logout() {
         loading.value = false;
         try {
@@ -173,6 +180,7 @@ export const useAuth = () => {
         verifyCode,
         activeTwoFactorAuth,
         updateStatusAccount,
+        deleteAvatar,
         logout,
         deleteAccount,
         forgotPassword,
