@@ -27,7 +27,10 @@ defineProps({
     value: Number,
     label: String,
     colorClass: String,
-    icon: Object,
+    icon: {
+        type: [Object, Function],
+        required: true,
+    },
     containerClass: {
         type: String,
         default: '',
