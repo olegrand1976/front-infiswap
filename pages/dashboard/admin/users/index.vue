@@ -208,11 +208,11 @@ const columns: ColumnDef<User>[] = [
 ];
 
 const handleEdit = (user: User) => {
-
+    console.log(user);
 };
 
 const handleDelete = (user: User) => {
-
+    console.log(user);
 };
 
 const sorting = ref<SortingState>([]);
