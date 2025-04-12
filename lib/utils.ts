@@ -48,7 +48,9 @@ export function selectDays(day: string, days: string[]) {
     return days;
 }
 
-export function formatPhoneNumber(phoneNumber: string) {
+export function formatPhoneNumber(phoneNumber: string | null) {
+    if (phoneNumber == null) return;
+
     const cleanedNumber = phoneNumber.replace(/\D/g, '');
 
     return `${cleanedNumber.slice(0, 4)} ${cleanedNumber.slice(4, 6)} ${cleanedNumber.slice(6, 8)} ${cleanedNumber.slice(8)}`;

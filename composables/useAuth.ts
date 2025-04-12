@@ -1,6 +1,6 @@
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { AUTH_TOKEN } from '~/lib/constants';
-import type { User } from '~/lib/types';
+import type { Pagination, User } from '~/lib/types';
 
 export const useUser = () => {
     return useState<User | undefined>('user', () => undefined);
@@ -10,6 +10,7 @@ export const useAuth = () => {
     const router = useRouter();
     const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
+    const users = useState<Pagination<User> | null>('users', () => null);
     const isLoggedIn = computed(() => !!user.value);
     const isAdmin = computed(() => {
         return user.value.roles.some(role => ['admin', 'dev'].includes(role.name));
@@ -111,8 +112,16 @@ export const useAuth = () => {
         });
     }
 
+    async function getUsers() {
+        return await $apifetch('api/admin/users').then((response) => {
+            users.value = response.users;
+        });
+    }
+
     return {
         user,
+        users,
+        getUsers,
         isLoggedIn,
         isAdmin,
         isManager,

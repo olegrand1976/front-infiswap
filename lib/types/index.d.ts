@@ -5,6 +5,7 @@ export type User = {
     id: number;
     lastname: string;
     firstname: string;
+    full_name: string;
     identifier_number: string;
     email: string;
     password: string;
@@ -112,3 +113,22 @@ export type CareType = {
     price?: number;
     duration?: number;
 };
+export type Pagination<T> {
+    data: T[];
+    meta: {
+      current_page: number;
+      from: number | null;
+      last_page: number;
+      path: string;
+      per_page: number;
+      to: number | null;
+      total: number;
+    };
+    links: {
+      first: string | null;
+      last: string | null;
+      prev: string | null;
+      next: string | null;
+    };
+}
+  
