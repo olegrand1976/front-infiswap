@@ -185,7 +185,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Date', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));

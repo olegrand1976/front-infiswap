@@ -1,5 +1,6 @@
 import { useRouter } from 'vue-router';
 import { useState, useNuxtApp } from '#app';
+import type { Pagination, Replacement } from '~/lib/types';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
@@ -7,7 +8,7 @@ export const useReplacements = () => {
     const { $toast } = useNuxtApp();
 
     const myReplacements = useState('myReplacements', () => []);
-    const replacements = useState('replacements', () => []);
+    const replacements = useState<Pagination<Replacement> | null>('replacements', () => null);
     const error = useState('replacementError', () => null);
     const loading = useState('replacementLoading', () => false);
     const success = useState('replacementSuccess', () => false);
@@ -107,6 +108,48 @@ export const useReplacements = () => {
         }
     };
 
+    const getReplacementsForAdmin = async () => {
+        return await $apifetch('api/admin/replacements').then((response) => {
+            replacements.value = response.replacements;
+        });
+    };
+
+    const getFRStatus = (status: 'open' | 'closed'): string => {
+        return status === 'open' ? 'ouvert' : 'fermé';
+    };
+
+    interface PostalData {
+        zip_codes?: string[] | null;
+        cities?: string[] | null;
+        patients?: number[] | null;
+    };
+    const extractPostalDataFromReplacement = (replacement: Replacement): PostalData => {
+        const initialValue = {
+            zip_codes: [],
+            cities: [],
+            patients: [],
+        };
+
+        if (!replacement.details || !Array.isArray(replacement.details)) return initialValue;
+
+        const seen = new Set<string>();
+        const result: PostalData = initialValue;
+
+        replacement.details.forEach((detail) => {
+            const patient = detail.patient;
+            const key = `${patient.id}-${patient.zip_code}-${patient.city}`;
+
+            if (!seen.has(key)) {
+                seen.add(key);
+                result.patients.push(patient.id);
+                result.zip_codes.push(patient.zip_code);
+                result.cities.push(patient.city);
+            }
+        });
+
+        return result;
+    };
+
     return {
         error,
         loading,
@@ -116,6 +159,9 @@ export const useReplacements = () => {
         submitReplacement,
         getMyReplacements,
         getReplacements,
+        getReplacementsForAdmin,
+        getFRStatus,
+        extractPostalDataFromReplacement,
     };
 };
 

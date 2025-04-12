@@ -108,26 +108,26 @@ export type Patient = {
     profile: Profile;
     nurse: User;
     visit_times: {
-      id: number;
-      patient_id: number;
-      day_of_visit: string;
-      visits: {
-        time: string;
-        visit_period: string;
-        care_types: string[];
-      }[];
+        id: number;
+        patient_id: number;
+        day_of_visit: string;
+        visits: {
+            time: string;
+            visit_period: string;
+            care_types: string[];
+        }[];
     }[];
     care_informations: any[];
     patient_documents: any[];
     patient_care_type: PatientCareType[];
     created_at: string;
     updated_at: string;
-  };
-  
+};
+
 export type PatientCareType = {
     care_type_id: number;
     care_type_name: string;
-}
+};
 export type PatientDocument = {
     id: number;
     path: string;
@@ -137,25 +137,46 @@ export type PatientDocument = {
 export type CareType = {
     id: number;
     name: string;
-    price?: number;
     duration?: number;
 };
-export type Pagination<T> {
+export type Pagination<T> = {
     data: T[];
     meta: {
-      current_page: number;
-      from: number | null;
-      last_page: number;
-      path: string;
-      per_page: number;
-      to: number | null;
-      total: number;
+        current_page: number;
+        from: number | null;
+        last_page: number;
+        path: string;
+        per_page: number;
+        to: number | null;
+        total: number;
     };
     links: {
-      first: string | null;
-      last: string | null;
-      prev: string | null;
-      next: string | null;
+        first: string | null;
+        last: string | null;
+        prev: string | null;
+        next: string | null;
     };
-}
-  
+};
+
+export type Replacement = {
+    id: number;
+    nurse_id: number;
+    replaced_by?: number;
+    experience_years: number | null;
+    start_date: string;
+    end_date: string;
+    status: 'open' | 'closed';
+    details: ReplacementDetail[];
+    nurse_owner_full_name: string;
+    substitute_nurse?: string;
+};
+
+export type ReplacementDetail = {
+    id: number;
+    parent_id: number;
+    date: string;
+    day: string;
+    start_at: string;
+    patient: Patient;
+    care_types: CareType[];
+};
