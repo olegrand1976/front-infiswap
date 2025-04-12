@@ -88,9 +88,9 @@ import { h, ref } from 'vue';
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 
-import { DropdownAction } from '#components';
 import { formatInamiNumber, formatPhoneNumber, valueUpdater } from '~/lib/utils';
 import type { User } from '~/lib/types';
+import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
 
 definePageMeta({
     layout: 'dashboard',
@@ -198,15 +198,22 @@ const columns: ColumnDef<User>[] = [
         header: 'Actions',
         enableHiding: false,
         cell: ({ row }) => {
-            const payment = row.original;
-
-            return h(DropdownAction, {
-                payment,
-                onExpand: row.toggleExpanded,
+            const user = row.original;
+            return h(EditAndDeleteAction, {
+                onEdit: () => handleEdit(user),
+                onDelete: () => handleDelete(user),
             });
         },
     },
 ];
+
+const handleEdit = (user: User) => {
+
+};
+
+const handleDelete = (user: User) => {
+
+};
 
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
