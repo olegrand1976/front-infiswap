@@ -37,10 +37,18 @@ export const useReports = () => {
         });
     };
 
+    async function createNotifPreferences(formData) {
+        return await $apifetch(`/api/users/settings/notification`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
     return {
         loading,
         reports,
         getReports,
         createPreferences,
+        createNotifPreferences,
     };
 };

@@ -32,7 +32,7 @@ const sizeClasses = {
 </script>
 
 <template>
-    <div class="relative w-full items-center">
+    <div :class="cn('relative w-full items-center', props.class)">
         <input
             v-model="modelValue"
             :type="type || 'text'"

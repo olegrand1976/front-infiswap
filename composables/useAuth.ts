@@ -77,6 +77,69 @@ export const useAuth = () => {
         });
     }
 
+    async function updateUser(formData) {
+        return await $apifetch(`/api/users/${formData.id}/update-information`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function updateAddressUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-address`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function updatePasswordUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-password`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function updateAvatarUser(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-profil`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function activeTwoFactorAuth(formData) {
+        return await $apifetch(`/api/users/2fa/toggle`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function verifyCode(formData) {
+        return await $apifetch(`/api/users/2fa/verify`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function updateStatusAccount(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/update-status`, {
+            method: 'put',
+            body: formData,
+        });
+    };
+
+    async function deleteAccount(formData) {
+        return await $apifetch(`/api/users/${user.value.id}/soft-delete`, {
+            method: 'delete',
+            body: formData,
+        });
+    };
+
+    async function deleteAvatar(id) {
+        return await $apifetch(`/api/users/${user.value.id}/delete-profil`, {
+            method: 'delete',
+            body: id,
+        });
+    };
+
     async function logout() {
         loading.value = false;
         try {
@@ -129,7 +192,16 @@ export const useAuth = () => {
         register,
         registerBeta,
         resendEmailVerification,
+        updateUser,
+        updateAddressUser,
+        updatePasswordUser,
+        updateAvatarUser,
+        verifyCode,
+        activeTwoFactorAuth,
+        updateStatusAccount,
+        deleteAvatar,
         logout,
+        deleteAccount,
         forgotPassword,
         resetPassword,
         refresh,

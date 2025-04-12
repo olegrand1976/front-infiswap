@@ -140,6 +140,7 @@ import {
     ClipboardDocumentListIcon,
     PowerIcon,
     HeartIcon,
+    Cog8ToothIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 import { cn } from '@/lib/utils';
@@ -208,6 +209,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 icon: DocumentPlusIcon,
             },
         ],
+    },
+    {
+        label: 'Paramètres',
+        route: '/dashboard/settings',
+        icon: Cog8ToothIcon,
     },
 ];
 
