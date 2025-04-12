@@ -207,7 +207,7 @@ const nurseNavigationItems: NavigationItem[] = [
 
 const adminNavigationItems: NavigationItem[] = [
     {
-        label: 'Dashboard',
+        label: 'Tableau de bord',
         route: '/dashboard/admin',
         icon: SquaresPlusIcon,
     },
