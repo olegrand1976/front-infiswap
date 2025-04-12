@@ -59,3 +59,15 @@ export function formatPhoneNumber(phoneNumber: string | null) {
 export function getFullName(user: User) {
     return [user.firstname, user.lastname?.toUpperCase()].join(' ');
 }
+
+export function formatInamiNumber(inami: string | null) {
+    if (inami == null) return;
+
+    const cleanedNumber = inami.replace(/\D/g, '');
+
+    if (cleanedNumber.length === 11) {
+        return cleanedNumber.replace(/^(\d{1})(\d{2})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3.$4.$5');
+    }
+
+    return cleanedNumber.replace(/^(\d{4})(\d{4})$/, '$1.$2');
+}

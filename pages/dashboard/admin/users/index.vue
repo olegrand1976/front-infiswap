@@ -1,39 +1,17 @@
 <template>
     <div class="w-full">
-        <div class="flex items-center py-4">
-            <Input
-                class="max-w-sm"
-                placeholder="Filter emails..."
-                :model-value="table.getColumn('email')?.getFilterValue() as string"
-                @update:model-value=" table.getColumn('email')?.setFilterValue($event)"
-            />
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <Button
-                        variant="outline"
-                        class="ml-auto"
-                    >
-                        Columns <ChevronDown class="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuCheckboxItem
-                        v-for="column in table.getAllColumns().filter((column) => column.getCanHide())"
-                        :key="column.id"
-                        class="capitalize"
-                        :model-value="column.getIsVisible()"
-                        @update:model-value="(value) => {
-                            column.toggleVisibility(!!value)
-                        }"
-                    >
-                        {{ column.id }}
-                    </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+        <div class="p-6 mb-10 flex justify-between text-gray-700 shadow-md rounded-md bg-white">
+            <h1 class="font-bold text-xl">
+                Des utilisateurs
+            </h1>
+            <Button class="rounded-md">
+                <span><PlusCircleIcon /></span> Ajouter un utilisateur
+            </Button>
         </div>
+
         <div class="rounded-md border">
             <Table>
-                <TableHeader>
+                <TableHeader class="h-14">
                     <TableRow
                         v-for="headerGroup in table.getHeaderGroups()"
                         :key="headerGroup.id"
@@ -50,7 +28,7 @@
                         </TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody class="bg-white">
                     <template v-if="table.getRowModel().rows?.length">
                         <template
                             v-for="row in table.getRowModel().rows"
@@ -86,31 +64,6 @@
                 </TableBody>
             </Table>
         </div>
-
-        <div class="flex items-center justify-end space-x-2 py-4">
-            <div class="flex-1 text-sm text-muted-foreground">
-                {{ table.getFilteredSelectedRowModel().rows.length }} of
-                {{ table.getFilteredRowModel().rows.length }} row(s) selected.
-            </div>
-            <div class="space-x-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :disabled="!table.getCanPreviousPage()"
-                    @click="table.previousPage()"
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :disabled="!table.getCanNextPage()"
-                    @click="table.nextPage()"
-                >
-                    Next
-                </Button>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -130,14 +83,13 @@ import {
     useVueTable,
 } from '@tanstack/vue-table';
 
-import { ArrowUpDown, ChevronDown } from 'lucide-vue-next';
+import { ArrowUpDown } from 'lucide-vue-next';
 import { h, ref } from 'vue';
+import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 
-import { Input } from '@/components/ui/input';
-
 import { DropdownAction } from '#components';
-import { formatPhoneNumber, valueUpdater } from '~/lib/utils';
+import { formatInamiNumber, formatPhoneNumber, valueUpdater } from '~/lib/utils';
 import type { User } from '~/lib/types';
 
 definePageMeta({
@@ -162,6 +114,16 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
+        accessorKey: 'identifier_number',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['INAMI', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+        },
+        cell: ({ row }) => h('div', { class: 'lowercase' }, formatInamiNumber(row.getValue('identifier_number'))),
+    },
+    {
         accessorKey: 'email',
         header: ({ column }) => {
             return h(Button, {
@@ -171,7 +133,6 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue('email')),
     },
-
     {
         accessorKey: 'phone_number',
         header: ({ column }) => {
@@ -182,6 +143,54 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatPhoneNumber(row.getValue('phone_number')));
+        },
+    },
+    {
+        accessorKey: 'street_address',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Rue', h(ArrowUpDown, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: '' }, row.getValue('street_address'));
+        },
+    },
+    {
+        accessorKey: 'city',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: '' }, row.getValue('city'));
+        },
+    },
+    {
+        accessorKey: 'zip_code',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: '' }, row.getValue('zip_code'));
+        },
+    },
+    {
+        accessorKey: 'created_at',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {

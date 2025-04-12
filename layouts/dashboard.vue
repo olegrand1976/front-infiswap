@@ -3,35 +3,14 @@
         <Sidebar class="bg-white">
             <LayoutsAppSidebar />
         </Sidebar>
-        <SidebarInset class="w-full lg:w-96">
-            <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20">
+        <SidebarInset class="w-full lg:w-96 bg-gray-100">
+            <header class="flex h-20 shrink-0 items-center px-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20 bg-white shadow-md">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
                     <Separator
                         orientation="vertical"
                         class="mr-2 h-4"
                     />
-                    <!-- <Form>
-                        <FormField name="search">
-                            <FormItem>
-                                <FormControl>
-                                    <div class="flex lg:w-96 bg-gray-200 rounded-full items-center justify-between ps-3 pe-1">
-                                        <Input
-                                            :v-model="search"
-                                            placeholder="Rechercher"
-                                            class="w-44 sm:w-80 text-xs bg-transparent"
-                                        />
-                                        <Button
-                                            type="submit"
-                                            class="bg-primary text-white w-7 h-7 rounded-full"
-                                        >
-                                            <MagnifyingGlassIcon class="h-7 w-7" />
-                                        </Button>
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
-                    </Form> -->
                 </div>
                 <div class="ml-auto mr-2">
                     <DropdownMenu>
@@ -50,7 +29,6 @@
                             <DropdownMenuItem>
                                 <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
                             </DropdownMenuItem>
-                            <!-- <DropdownMenuItem>Parametres</DropdownMenuItem> -->
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 class="hover:bg-primary"
@@ -62,7 +40,12 @@
                     </DropdownMenu>
                 </div>
             </header>
-            <div class="flex flex-1 pl-10 pr-8 flex-col gap-4 pt-0 xl:w-full">
+            <div
+                :class="cn('flex flex-1 pr-8 flex-col gap-4 pt-0 xl:w-full', {
+                    'p-8': isAdmin,
+                    'pl-10': !isAdmin,
+                })"
+            >
                 <NuxtPage />
             </div>
         </SidebarInset>
@@ -70,5 +53,8 @@
 </template>
 
 <script lang="ts" setup>
+import { cn } from '@/lib/utils';
+
+const { isAdmin } = useAuth();
 const { logout } = useAuth();
 </script>

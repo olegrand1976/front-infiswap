@@ -1,7 +1,12 @@
 <template>
     <Sidebar>
         <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content">
-            <SidebarGroup class="bg-gray-100 h-full rounded-xl pb-6">
+            <SidebarGroup
+                :class="cn('h-full rounded-xl pb-6', {
+                    'bg-white': isAdmin,
+                    'bg-gray-100': !isAdmin,
+                })"
+            >
                 <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
                     <LayoutsLogo class="w-36" />
                 </SidebarHeader>
@@ -137,6 +142,7 @@ import {
     HeartIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
+import { cn } from '@/lib/utils';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
 
 defineProps({
