@@ -26,11 +26,11 @@
                             </template>
                             <template v-else>
                                 <UserCircleIcon
-                                    class="w-12 text-black/40"
+                                    class="w-10 text-black/40"
                                 />
                             </template>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent class="mr-6">
+                        <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
