@@ -71,3 +71,15 @@ export function formatInamiNumber(inami: string | null) {
 
     return cleanedNumber.replace(/^(\d{4})(\d{4})$/, '$1.$2');
 }
+
+export function formatNISS(input: string): string {
+    const raw = input.replace(/\D/g, '');
+
+    if (raw.length !== 11 && raw.length !== 8) return input;
+
+    if (raw.length === 11) {
+        return `${raw.slice(0, 6)}-${raw.slice(6, 9)}-${raw.slice(9, 11)}`;
+    }
+
+    return `${raw.slice(0, 6)}-${raw.slice(6)}`;
+}

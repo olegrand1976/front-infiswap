@@ -102,3 +102,20 @@ export const deletePatient = async (patientId) => {
         });
     });
 };
+
+export const usePatient = () => {
+    const { $apifetch } = useNuxtApp();
+
+    const patients = useState('patients', () => undefined);
+
+    async function getPatients() {
+        return await $apifetch('api/admin/patients').then((response) => {
+            patients.value = response.patients;
+        });
+    }
+
+    return {
+        patients,
+        getPatients,
+    };
+};

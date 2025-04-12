@@ -87,28 +87,47 @@ export type Profile = {
 
 export type Patient = {
     id: number;
-    nurse_id?: number | null;
     lastname: string;
     firstname: string;
-    email?: string | null;
-    gender?: 'M' | 'F' | null;
+    gender: 'M' | 'F' | string;
     social_security_number: string;
-    phone_number?: string | null;
-    care_start_date?: string | null;
-    care_end_date?: string | null;
-    availability: 'available' | 'unavailable' | 'absent' | 'hospitalized';
+    email: string | null;
+    availability: 'available' | 'unavailable' | string;
+    phone_number: string;
+    care_start_date: string | null;
+    care_end_date: string | null;
+    profil_url?: string | null;
+    street_address?: string | null;
+    city?: string | null;
+    zip_code?: string | null;
+    country?: string | null;
+    additional_info?: string | null;
+    social_media_links?: Record<string, any> | null;
+    emergency_contact_name?: string | null;
+    emergency_contact_phone?: string | null;
+    profile: Profile;
+    nurse: User;
+    visit_times: {
+      id: number;
+      patient_id: number;
+      day_of_visit: string;
+      visits: {
+        time: string;
+        visit_period: string;
+        care_types: string[];
+      }[];
+    }[];
+    care_informations: any[];
+    patient_documents: any[];
+    patient_care_type: PatientCareType[];
     created_at: string;
     updated_at: string;
-    profile?: Profile;
-    care_start_date: string;
-    care_end_date: string;
-    availability: string[];
-    care_informations: string[];
-    visit_times: string[];
-    patient_care_type: string[];
-    patient_documents?: PatientDocument[];
-};
-
+  };
+  
+export type PatientCareType = {
+    care_type_id: number;
+    care_type_name: string;
+}
 export type PatientDocument = {
     id: number;
     path: string;
