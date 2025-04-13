@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 
 import { formatNISS, formatPhoneNumber } from '~/lib/utils';
 import type { Patient } from '~/lib/types';
-import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
+import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
 
 useHead({ title: 'Patients' });
 

@@ -24,7 +24,7 @@ const delegatedProps = computed(() => {
         class="group"
     >
         <Button
-            :class="cn('', props.class)"
+            :class="cn('w-9 h-9 rounded-full hover:bg-primary hover:text-white transition-colors duration-150', props.class)"
             variant="outline"
         >
             <slot>

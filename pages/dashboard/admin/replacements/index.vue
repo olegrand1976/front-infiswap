@@ -20,7 +20,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 
 import type { Replacement } from '~/lib/types';
-import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
+import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
 import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });

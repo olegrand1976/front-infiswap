@@ -1,57 +1,59 @@
 <template>
-    <div class="rounded-md border">
-        <Table>
-            <TableHeader class="h-14">
-                <TableRow
-                    v-for="headerGroup in table.getHeaderGroups()"
-                    :key="headerGroup.id"
-                >
-                    <TableHead
-                        v-for="header in headerGroup.headers"
-                        :key="header.id"
+    <div class="w-full">
+        <div class="rounded-md border">
+            <Table>
+                <TableHeader class="h-14">
+                    <TableRow
+                        v-for="headerGroup in table.getHeaderGroups()"
+                        :key="headerGroup.id"
                     >
-                        <FlexRender
-                            v-if="!header.isPlaceholder"
-                            :render="header.column.columnDef.header"
-                            :props="header.getContext()"
-                        />
-                    </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody class="bg-white">
-                <template v-if="table.getRowModel().rows?.length">
-                    <template
-                        v-for="row in table.getRowModel().rows"
-                        :key="row.id"
-                    >
-                        <TableRow :data-state="row.getIsSelected() && 'selected'">
-                            <TableCell
-                                v-for="cell in row.getVisibleCells()"
-                                :key="cell.id"
-                            >
-                                <FlexRender
-                                    :render="cell.column.columnDef.cell"
-                                    :props="cell.getContext()"
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow v-if="row.getIsExpanded()">
-                            <TableCell :colspan="row.getAllCells().length">
-                                {{ JSON.stringify(row.original) }}
-                            </TableCell>
-                        </TableRow>
+                        <TableHead
+                            v-for="header in headerGroup.headers"
+                            :key="header.id"
+                        >
+                            <FlexRender
+                                v-if="!header.isPlaceholder"
+                                :render="header.column.columnDef.header"
+                                :props="header.getContext()"
+                            />
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody class="bg-white">
+                    <template v-if="table.getRowModel().rows?.length">
+                        <template
+                            v-for="row in table.getRowModel().rows"
+                            :key="row.id"
+                        >
+                            <TableRow :data-state="row.getIsSelected() && 'selected'">
+                                <TableCell
+                                    v-for="cell in row.getVisibleCells()"
+                                    :key="cell.id"
+                                >
+                                    <FlexRender
+                                        :render="cell.column.columnDef.cell"
+                                        :props="cell.getContext()"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow v-if="row.getIsExpanded()">
+                                <TableCell :colspan="row.getAllCells().length">
+                                    {{ JSON.stringify(row.original) }}
+                                </TableCell>
+                            </TableRow>
+                        </template>
                     </template>
-                </template>
-                <TableRow v-else>
-                    <TableCell
-                        :colspan="columns.length"
-                        class="h-24 text-center"
-                    >
-                        Aucune donnée à afficher
-                    </TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+                    <TableRow v-else>
+                        <TableCell
+                            :colspan="columns.length"
+                            class="h-24 text-center"
+                        >
+                            Aucune donnée à afficher
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
     </div>
 </template>
 

@@ -24,11 +24,11 @@ const delegatedProps = computed(() => {
         class="group"
     >
         <Button
-            :class="cn('', props.class)"
+            :class="cn('w-9 h-9 rounded-full hover:bg-primary hover:text-white transition-colors duration-150', props.class)"
             variant="outline"
         >
-            <slot class="w-16 h-16">
-                <ChevronLeft class="text-primary w-16 h-16 group-hover:text-white" />
+            <slot>
+                <ChevronLeft class="text-primary group-hover:text-white" />
             </slot>
         </Button>
     </PaginationPrev>

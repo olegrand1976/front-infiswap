@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
-import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
+import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
 
 useHead({ title: 'Utilisateurs' });
 
