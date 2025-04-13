@@ -13,7 +13,7 @@ export const useAuth = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
     const isLoggedIn = computed(() => !!user.value);
     const isAdmin = computed(() => {
-        return user.value.roles.some(role => ['admin', 'dev'].includes(role.name));
+        return user.value?.roles?.some(role => ['admin', 'dev'].includes(role.name)) ?? false;
     });
 
     const isManager = computed(() => {

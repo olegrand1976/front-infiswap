@@ -446,7 +446,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.street_address || ' - ' }}
+                                    {{ user.street_address || ' - ' }}
                                 </p>
                             </div>
 
@@ -460,7 +460,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.city || ' - ' }}
+                                    {{ user.city || ' - ' }}
                                 </p>
                             </div>
 
@@ -491,7 +491,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.zip_code || ' - ' }}
+                                    {{ user.zip_code || ' - ' }}
                                 </p>
                             </div>
 
@@ -505,7 +505,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.additionnal_info || ' - ' }}
+                                    {{ user.additional_info || ' - ' }}
                                 </p>
                             </div>
                         </div>
@@ -601,7 +601,7 @@
                                 </Dialog>
                             </div>
 
-                            <div class="flex justify-between items-center space-x-3">
+                            <!-- <div class="flex justify-between items-center space-x-3">
                                 <label
                                     for="authTwoFactor"
                                     class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
@@ -701,7 +701,7 @@
                                         </form>
                                     </DialogContent>
                                 </Dialog>
-                            </div>
+                            </div> -->
                         </div>
                     </section>
 
@@ -1337,7 +1337,7 @@ const handleVerifyCode = async () => {
 };
 
 const verifyStatusAccount = () => {
-    return user.value.status == 'activated' ? true : false;
+    return user.value.status == 'active' ? true : false;
 };
 
 const isActivated = ref(verifyStatusAccount());
@@ -1345,7 +1345,7 @@ const isActivated = ref(verifyStatusAccount());
 const handleActivateStatus = async () => {
     const formData = reactive({
         currentPassword: currentPassword.value,
-        status: 'activated',
+        status: 'active',
     });
 
     try {
@@ -1370,7 +1370,7 @@ const handleActivateStatus = async () => {
 const handleDeactivateStatus = async () => {
     const formData = reactive({
         currentPassword: currentPassword.value,
-        status: 'deactivated',
+        status: 'inactive',
     });
 
     try {

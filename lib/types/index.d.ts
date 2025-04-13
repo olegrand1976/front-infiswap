@@ -11,7 +11,6 @@ export type User = {
     password: string;
     gender: Gender;
     phone_number?: string | null;
-    profile_url?: string | null;
     date_of_birth?: string | null;
     account_type: AccountType;
     rate?: number | null;
@@ -38,7 +37,13 @@ export type User = {
     trial_ends_at?: string | null;
     nurse: Nurse;
     roles: Role[];
+    profile: Profile;
     permissions: string[];
+    two_factor_enabled: boolean;
+    two_factor_type: string;
+    two_factor_code: string;
+    two_factor_code_expires_at: string;
+    status: 'active' | 'inactive' | 'suspended';
     created_at: string;
     updated_at: string;
 };
