@@ -30,7 +30,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
-import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
+import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 
