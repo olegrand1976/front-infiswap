@@ -68,7 +68,6 @@ import {
     getCoreRowModel,
     getExpandedRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useVueTable,
 } from '@tanstack/vue-table';
@@ -94,7 +93,6 @@ const table = useVueTable({
     data: rows,
     columns: columns.value,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),

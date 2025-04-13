@@ -90,4 +90,6 @@ watch(currentPage, (newPage) => {
 watch(internalPerPage, (newPerPage) => {
     emit('update:perPage', Number(newPerPage));
 });
+
+console.log(internalPerPage.value);
 </script>
