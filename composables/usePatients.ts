@@ -134,7 +134,7 @@ export const useNearbyPatients = () => {
 
             patients.value = response.patients;
         }
-        catch (err: any) {
+        catch (err) {
             error.value = err?.data?.message || 'Erreur lors de la récupération des patients';
         }
     }
