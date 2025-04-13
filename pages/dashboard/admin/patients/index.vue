@@ -88,6 +88,8 @@ import { formatNISS, formatPhoneNumber, valueUpdater } from '~/lib/utils';
 import type { Patient } from '~/lib/types';
 import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
 
+useHead({ title: 'Patients' });
+
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],

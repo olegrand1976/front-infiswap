@@ -55,7 +55,7 @@
                             :colspan="columns.length"
                             class="h-24 text-center"
                         >
-                            No results.
+                            Aucune donnée à afficher
                         </TableCell>
                     </TableRow>
                 </TableBody>
@@ -88,6 +88,8 @@ import { valueUpdater } from '~/lib/utils';
 import type { Replacement } from '~/lib/types';
 import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
 import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
+
+useHead({ title: 'Remplacements' });
 
 definePageMeta({
     layout: 'dashboard',

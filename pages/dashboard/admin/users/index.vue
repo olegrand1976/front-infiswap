@@ -92,6 +92,8 @@ import { formatInamiNumber, formatPhoneNumber, valueUpdater } from '~/lib/utils'
 import type { User } from '~/lib/types';
 import EditAndDeleteAction from '~/components/layouts/EditAndDeleteAction.vue';
 
+useHead({ title: 'Utilisateurs' });
+
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],

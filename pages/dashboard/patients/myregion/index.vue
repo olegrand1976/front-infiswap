@@ -26,7 +26,11 @@
                     </tr>
                 </thead>
                 <tbody class="text-sm text-gray-800">
-                    <tr v-for="(patient, index) in patients" :key="index" class="border-t hover:bg-gray-50">
+                    <tr
+                        v-for="(patient, index) in patients"
+                        :key="index"
+                        class="border-t hover:bg-gray-50"
+                    >
                         <td class="px-4 py-2">
                             {{ patient.firstname }} {{ patient.lastname }}
                         </td>
@@ -41,8 +45,8 @@
                         </td>
                         <td class="px-4 py-2">
                             <button
-                                @click="markAsInterested(patient.id)"
                                 class="bg-primary text-white px-3 py-1 rounded hover:bg-gray-500 transition"
+                                @click="markAsInterested(patient.id)"
                             >
                                 Je suis intéressé
                             </button>

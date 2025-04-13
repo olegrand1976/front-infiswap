@@ -182,7 +182,7 @@
                                     v-model="formData.description"
                                     placeholder="Écrivez votre description ici..."
                                     class="w-full h-full resize-none rounded-xl p-4 text-black placeholder:text-black/80 bg-transparent outline-none"
-                                ></Textarea>
+                                />
                             </div>
                         </div>
                     </div>
