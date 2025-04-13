@@ -174,7 +174,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         id: 'actions',
-        header: 'Actions',
+        header: '',
         enableHiding: false,
         cell: ({ row }) => {
             const user = row.original;
