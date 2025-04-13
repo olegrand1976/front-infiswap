@@ -81,8 +81,7 @@ const currentPage = ref(props.defaultPage ?? 1);
 const internalPerPage = ref(PERPAGE);
 
 const emit = defineEmits<{
-    (e: 'update:page', value: number): void;
-    (e: 'update:perPage', value: number): void;
+    (e: 'update:page' | 'update:perPage', value: number): void;
 }>();
 
 watch(currentPage, (newPage) => {
