@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
 import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
+import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -134,7 +135,7 @@ const columns: ColumnDef<User>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const user = row.original;
-            return h(EditAndDeleteAction, {
+            return h(DropdownMenuAction, {
                 onEdit: () => handleEdit(user),
                 onDelete: () => handleDelete(user),
             });

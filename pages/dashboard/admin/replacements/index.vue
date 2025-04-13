@@ -20,7 +20,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 
 import type { Replacement } from '~/lib/types';
-import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
+import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
 import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });
@@ -129,7 +129,7 @@ const columns: ColumnDef<Replacement>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const replacement = row.original;
-            return h(EditAndDeleteAction, {
+            return h(DropdownMenuAction, {
                 onEdit: () => handleEdit(replacement),
                 onDelete: () => handleDelete(replacement),
             });

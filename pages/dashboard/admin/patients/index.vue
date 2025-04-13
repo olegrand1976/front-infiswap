@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 
 import { formatNISS, formatPhoneNumber } from '~/lib/utils';
 import type { Patient } from '~/lib/types';
-import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
+import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
 
 useHead({ title: 'Patients' });
 
@@ -132,7 +132,7 @@ const columns: ColumnDef<Patient>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const patient = row.original;
-            return h(EditAndDeleteAction, {
+            return h(DropdownMenuAction, {
                 onEdit: () => handleEdit(patient),
                 onDelete: () => handleDelete(patient),
             });
