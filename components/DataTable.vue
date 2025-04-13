@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full p-4 rounded-md bg-white">
+    <div>
         <div class="rounded-md border">
             <Table>
                 <TableHeader class="h-14 bg-gray-100">
