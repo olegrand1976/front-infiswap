@@ -1,34 +1,31 @@
 <template>
     <div class="w-full">
-        <div class="px-4 h-20 mb-10 flex items-center justify-between text-gray-700 shadow-md rounded-md bg-white">
-            <h1 class="font-bold text-xl">
-                Des utilisateurs
-            </h1>
-            <Button class="rounded-md">
-                <span><PlusCircleIcon /></span> Ajouter un utilisateur
-            </Button>
-        </div>
-
-        <DataTable
-            :data="dataUsers"
-            :columns="columns"
-        />
-        <div>
-            <CustomPagination
-                :default-page="page"
-                :per-page="perPage"
-                :total="users.total"
-                @update:page="refreshUsers"
-                @update:per-page="handlePerPageChange"
+        <DashboardAdminPageHeader title="Des utilisateurs">
+            <template #action>
+                <UsersCreateUserButton />
+            </template>
+        </DashboardAdminPageHeader>
+        <DashboardAdminPageContent>
+            <DataTable
+                :data="dataUsers"
+                :columns="columns"
             />
-        </div>
+            <div>
+                <CustomPagination
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="users.total"
+                    @update:page="refreshUsers"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
+        </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ArrowUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
-import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';

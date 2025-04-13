@@ -1,15 +1,13 @@
 <template>
     <div class="w-full">
-        <div class="px-6 h-20 mb-10 flex items-center justify-between text-gray-700 shadow-md rounded-md bg-white">
-            <h1 class="font-bold text-xl">
-                Des patients
-            </h1>
-        </div>
+        <DashboardAdminPageHeader title="Des patients" />
 
-        <DataTable
-            :data="patients.data"
-            :columns="columns"
-        />
+        <DashboardAdminPageContent>
+            <DataTable
+                :data="patients.data"
+                :columns="columns"
+            />
+        </DashboardAdminPageContent>
     </div>
 </template>
 
