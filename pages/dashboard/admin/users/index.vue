@@ -10,9 +10,17 @@
         </div>
 
         <DataTable
-            :data="users.data"
+            :data="dataUsers"
             :columns="columns"
         />
+        <div>
+            <CustomPagination
+                :default-page="page"
+                :per-page="perPage"
+                :total="users.total"
+                @update:page="refreshUsers"
+            />
+        </div>
     </div>
 </template>
 
@@ -25,7 +33,6 @@ import { Button } from '@/components/ui/button';
 
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
-import EditAndDeleteAction from '~/components/EditAndDeleteAction.vue';
 import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
 
 useHead({ title: 'Utilisateurs' });
@@ -36,7 +43,15 @@ definePageMeta({
 });
 const { users, getUsers } = useAuth();
 
-await getUsers();
+const perPage = ref(1);
+const page = ref(1);
+await getUsers(page.value, perPage.value);
+
+const dataUsers = computed(() => users.value?.data ?? []);
+
+const refreshUsers = async (page: number) => {
+    await getUsers(page, perPage.value);
+};
 
 const columns: ColumnDef<User>[] = [
     {

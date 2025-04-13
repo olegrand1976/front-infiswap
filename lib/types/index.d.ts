@@ -145,23 +145,26 @@ export type CareType = {
     duration?: number;
 };
 export type Pagination<T> = {
+    current_page: number;
     data: T[];
-    meta: {
-        current_page: number;
-        from: number | null;
-        last_page: number;
-        path: string;
-        per_page: number;
-        to: number | null;
-        total: number;
-    };
-    links: {
-        first: string | null;
-        last: string | null;
-        prev: string | null;
-        next: string | null;
-    };
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: PaginationLink[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
 };
+
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
 export type Replacement = {
     id: number;

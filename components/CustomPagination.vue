@@ -2,11 +2,12 @@
     <div class="p-4 flex justify-end bg-white">
         <Pagination
             v-slot="{ page }"
-            :items-per-page="5"
-            :total="data.meta.total"
+            v-model:page="currentPage"
+            :items-per-page="props.perPage ?? 15"
+            :total="props.total ?? 1"
             :sibling-count="1"
             show-edges
-            :default-page="2"
+            :default-page="props.defaultPage ?? 1"
         >
             <PaginationList
                 v-slot="{ items }"
@@ -44,9 +45,20 @@
 
 <script setup lang="ts">
 import { Pagination } from './ui/pagination';
-import type { Pagination as LaravelPagination } from '~/lib/types';
 
-defineProps<{
-    data: LaravelPagination<any[]>;
+const props = defineProps<{
+    defaultPage?: number;
+    total?: number;
+    perPage?: number;
 }>();
+
+const currentPage = ref(props.defaultPage ?? 1);
+
+const emit = defineEmits<{
+    (e: 'update:page', value: number): void;
+}>();
+
+watch(currentPage, (newPage) => {
+    emit('update:page', newPage);
+});
 </script>

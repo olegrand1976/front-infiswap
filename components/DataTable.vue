@@ -80,7 +80,9 @@ const props = defineProps<{
     columns: ColumnDef<any>[];
 }>();
 
-const { data, columns } = toRefs(props);
+const { columns } = toRefs(props);
+
+const rows = computed(() => props.data);
 
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
@@ -89,7 +91,7 @@ const rowSelection = ref({});
 const expanded = ref<ExpandedState>({});
 
 const table = useVueTable({
-    data: data.value,
+    data: rows,
     columns: columns.value,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

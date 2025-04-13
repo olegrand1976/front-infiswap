@@ -175,8 +175,13 @@ export const useAuth = () => {
         });
     }
 
-    async function getUsers() {
-        return await $apifetch('api/admin/users').then((response) => {
+    async function getUsers(page = 1, perPage = 2) {
+        return await $apifetch('api/admin/users', {
+            params: {
+                page: page,
+                perPage: perPage,
+            },
+        }).then((response) => {
             users.value = response.users;
         });
     }
