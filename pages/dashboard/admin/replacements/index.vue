@@ -18,7 +18,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 
 import type { Replacement } from '~/lib/types';
-import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
+import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });

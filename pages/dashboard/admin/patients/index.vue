@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 
 import { formatNISS, formatPhoneNumber } from '~/lib/utils';
 import type { Patient } from '~/lib/types';
-import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
+import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 
 useHead({ title: 'Patients' });
 
