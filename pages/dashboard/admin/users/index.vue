@@ -19,6 +19,7 @@
                 :per-page="perPage"
                 :total="users.total"
                 @update:page="refreshUsers"
+                @update:per-page="handlePerPageChange"
             />
         </div>
     </div>
@@ -34,6 +35,7 @@ import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
+import { PERPAGE } from '~/lib/constants';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -43,7 +45,7 @@ definePageMeta({
 });
 const { users, getUsers } = useAuth();
 
-const perPage = ref(1);
+const perPage = ref(PERPAGE);
 const page = ref(1);
 await getUsers(page.value, perPage.value);
 
@@ -51,6 +53,11 @@ const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
     await getUsers(page, perPage.value);
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    await getUsers(page.value, value);
 };
 
 const columns: ColumnDef<User>[] = [
