@@ -1,8 +1,8 @@
 <template>
-    <div class="w-full">
+    <div class="w-full p-4 rounded-md bg-white">
         <div class="rounded-md border">
             <Table>
-                <TableHeader class="h-14">
+                <TableHeader class="h-14 bg-gray-100">
                     <TableRow
                         v-for="headerGroup in table.getHeaderGroups()"
                         :key="headerGroup.id"
@@ -25,20 +25,20 @@
                             v-for="row in table.getRowModel().rows"
                             :key="row.id"
                         >
-                            <TableRow :data-state="row.getIsSelected() && 'selected'">
+                            <TableRow
+                                :data-state="row.getIsSelected() ? 'selected' : undefined"
+                                class="cursor-pointer"
+                                @click="() => row.toggleSelected()"
+                            >
                                 <TableCell
                                     v-for="cell in row.getVisibleCells()"
                                     :key="cell.id"
+                                    @click.stop
                                 >
                                     <FlexRender
                                         :render="cell.column.columnDef.cell"
                                         :props="cell.getContext()"
                                     />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow v-if="row.getIsExpanded()">
-                                <TableCell :colspan="row.getAllCells().length">
-                                    {{ JSON.stringify(row.original) }}
                                 </TableCell>
                             </TableRow>
                         </template>
@@ -53,6 +53,10 @@
                     </TableRow>
                 </TableBody>
             </Table>
+        </div>
+        <div class="flex-1 text-sm text-muted-foreground">
+            {{ table.getFilteredSelectedRowModel().rows.length }} par
+            {{ table.getFilteredRowModel().rows.length }} lignes.
         </div>
     </div>
 </template>
@@ -92,6 +96,7 @@ const expanded = ref<ExpandedState>({});
 const table = useVueTable({
     data: rows,
     columns: columns.value,
+    getRowId: (row, index) => row.id ?? index.toString(),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -108,5 +113,9 @@ const table = useVueTable({
         get rowSelection() { return rowSelection.value; },
         get expanded() { return expanded.value; },
     },
+});
+
+defineExpose({
+    table,
 });
 </script>

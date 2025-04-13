@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <div class="px-6 h-20 mb-10 flex items-center justify-between text-gray-700 shadow-md rounded-md bg-white">
+        <div class="px-4 h-20 mb-10 flex items-center justify-between text-gray-700 shadow-md rounded-md bg-white">
             <h1 class="font-bold text-xl">
                 Des utilisateurs
             </h1>
@@ -31,11 +31,11 @@ import { h } from 'vue';
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/DropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
+import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -62,12 +62,33 @@ const handlePerPageChange = async (value: number) => {
 
 const columns: ColumnDef<User>[] = [
     {
+        id: 'select',
+        header: ({ table }) => h(Checkbox, {
+            'checked': table.getIsAllPageRowsSelected()
+                ? true
+                : table.getIsSomePageRowsSelected()
+                    ? 'indeterminate'
+                    : false,
+            'onUpdate:checked': value => table.toggleAllPageRowsSelected(!!value),
+            'ariaLabel': 'Select all',
+            'class': 'mx-2',
+        }),
+        cell: ({ row }) => h(Checkbox, {
+            'checked': row.getIsSelected(),
+            'onUpdate:checked': value => row.toggleSelected(!!value),
+            'ariaLabel': 'Select row',
+            'class': 'mx-2',
+        }),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
         accessorKey: 'full_name',
         header: ({ column }) => {
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Nom', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -77,7 +98,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['INAMI', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['INAMI', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
@@ -87,7 +108,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Email', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue('email')),
     },
@@ -97,7 +118,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Téléphone', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatPhoneNumber(row.getValue('phone_number')));
