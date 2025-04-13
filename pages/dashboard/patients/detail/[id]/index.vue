@@ -125,7 +125,7 @@
                     </div>
 
                     <Dialog v-model:open="isOpenDialog">
-                        <DialogContent class="w-full sm:max-w-xl h-[36rem] overflow-y-auto">
+                        <DialogContent class="w-full sm:max-w-xl h-[32rem] 2xl:h-[40rem] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Mise à jour</DialogTitle>
                                 <DialogDescription>
@@ -274,6 +274,28 @@
                                         </option>
                                     </select>
                                 </div>
+                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Catégorie
+                                    </p>
+                                    <select
+                                        v-model="formData.category"
+                                        class="bg-transparent px-2 h-full rounded-e-full focus:outline-none"
+                                    >
+                                        <option
+                                            value="vipo"
+                                            :selected="formData.category === 'vipo'"
+                                        >
+                                            Vipo
+                                        </option>
+                                        <option
+                                            value="ordinary"
+                                            :selected="formData.category === 'ordinary'"
+                                        >
+                                            Ordinaire
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <Button
@@ -348,6 +370,15 @@
                                     Disponibilité
                                 </div>
                                 <div>{{ availability[patient.availability] }}</div>
+                            </div>
+                            <div
+                                v-if="patient.category"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Catégorie
+                                </div>
+                                <div>{{ category[patient.category] }}</div>
                             </div>
                         </div>
                     </div>
@@ -954,6 +985,7 @@ const formData = ref({
     zipCode: '',
     city: '',
     gender: '',
+    category: '',
     careStartDate: '',
     careEndDate: '',
     availability: [],
@@ -989,6 +1021,7 @@ const initializeFormData = () => {
             careStartDate: patient.value.care_start_date || '',
             careEndDate: patient.value.care_end_date || '',
             availability: patient.value.availability || [],
+            category: patient.value.category || '',
             care_informations: transformCareInformations(patient.value.care_informations || []),
             visits: migrateVisitTimes(patient.value.visit_times || []),
             patient_care_type: patient.value.patient_care_type || [],
@@ -1025,6 +1058,11 @@ const availability = {
     other: 'Autre',
 };
 
+const category = {
+    vipo: 'Vipo',
+    ordinary: 'Ordinaire',
+};
+
 const isOpenDialog = ref(false);
 
 const openDialog = () => {
@@ -1045,6 +1083,7 @@ const updatePatientInfo = async () => {
             zipCode: formData.value.zipCode,
             city: formData.value.city,
             availability: formData.value.availability,
+            category: formData.value.category,
         };
 
         // Envoi à l'API
@@ -1062,6 +1101,7 @@ const updatePatientInfo = async () => {
             phone_number: formData.value.phoneNumber,
             gender: genderValue,
             availability: formData.value.availability,
+            category: formData.value.category,
             profile: {
                 ...patient.value.profile,
                 zip_code: formData.value.zipCode,
@@ -1255,10 +1295,8 @@ const saveCareInformations = async () => {
             });
         }
 
-        // Recharge les données dans les deux cas (CREATE et UPDATE)
         const serverData = await $apifetch(`/api/patients/${formData.value.patientId}/care-informations`);
 
-        // Reformate les données pour correspondre à la structure attendue
         if (serverData && serverData.patient_care_information) {
             formData.value.care_informations = serverData.patient_care_information.map(item => ({
                 careInformationId: item.id,

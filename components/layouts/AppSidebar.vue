@@ -141,6 +141,7 @@ import {
     PowerIcon,
     HeartIcon,
     Cog8ToothIcon,
+    MapPinIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 import { cn } from '@/lib/utils';
@@ -180,6 +181,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 label: 'Nouveau',
                 route: '/dashboard/patients/create',
                 icon: UserPlusIcon,
+            },
+            {
+                label: 'De mon région',
+                route: '/dashboard/patients/myregion',
+                icon: MapPinIcon,
             },
         ],
     },

@@ -119,3 +119,29 @@ export const usePatient = () => {
         getPatients,
     };
 };
+
+export const useNearbyPatients = () => {
+    const { $apifetch } = useNuxtApp();
+
+    const patients = useState('nearbyPatients', () => []);
+    const error = useState('nearbyPatientsError', () => null);
+
+    async function fetchNearbyPatients() {
+        try {
+            const response = await $apifetch('/api/patients/nearby', {
+                method: 'GET',
+            });
+
+            patients.value = response.patients;
+        }
+        catch (err: any) {
+            error.value = err?.data?.message || 'Erreur lors de la récupération des patients';
+        }
+    }
+
+    return {
+        patients,
+        error,
+        fetchNearbyPatients,
+    };
+};
