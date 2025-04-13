@@ -11,7 +11,7 @@
                         <SelectItem
                             v-for="(item, index) in perPageOptions"
                             :key="index"
-                            :value="item.toString()"
+                            :value="item"
                         >
                             {{ item }}
                         </SelectItem>
@@ -22,7 +22,7 @@
 
         <Pagination
             v-slot="{ page }"
-            v-model:page="currentPageNumber"
+            v-model:page="currentPage"
             :items-per-page="Number(internalPerPage)"
             :total="props.total ?? 1"
             :sibling-count="1"
@@ -76,9 +76,9 @@ const props = defineProps<{
 }>();
 
 const perPageOptions = [5, 10, 25, 50];
-const currentPage = ref(props.defaultPage.toString() ?? '1');
-const internalPerPage = ref(PERPAGE.toString());
-const currentPageNumber = computed(() => Number(currentPage));
+const currentPage = ref(props.defaultPage ?? 1);
+const internalPerPage = ref(PERPAGE);
+
 const emit = defineEmits<{
     (e: 'update:page' | 'update:perPage', value: number): void;
 }>();
