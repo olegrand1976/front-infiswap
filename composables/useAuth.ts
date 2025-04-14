@@ -33,13 +33,33 @@ export const useAuth = () => {
 
     async function login(credentials: { identifier: string; password: string }) {
         if (isLoggedIn.value) return;
-
-        await $apifetch('api/login', { method: 'post', body: credentials })
-            .then(response => useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token);
-
-        navigateTo('/dashboard');
-        await refresh();
+    
+        try {
+            const response = await $apifetch('api/login', {
+                method: 'post',
+                body: credentials,
+            });
+    
+            if (response.token) {
+                useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
+                return await refresh();
+            }
+    
+            if (response.hash && response.two_factor_code) {
+                useCookie('2fa_hash').value = response.hash;
+                return {
+                    message: response.message,
+                    code: response.two_factor_code,
+                };
+            };
+        } catch (error: any) {
+            return {
+                status: 'error',
+                message: error.data?.message ?? 'Une erreur est survenue.',
+            };
+        }
     }
+    
 
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
@@ -114,6 +134,13 @@ export const useAuth = () => {
 
     async function verifyCode(formData) {
         return await $apifetch(`/api/users/2fa/verify`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
+    async function verify2fa(formData) {
+        return await $apifetch(`/api/verify-2fa`, {
             method: 'post',
             body: formData,
         });
@@ -202,6 +229,7 @@ export const useAuth = () => {
         updatePasswordUser,
         updateAvatarUser,
         verifyCode,
+        verify2fa,
         activeTwoFactorAuth,
         updateStatusAccount,
         deleteAvatar,

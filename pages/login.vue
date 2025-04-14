@@ -209,6 +209,7 @@
 
 <script lang="ts" setup>
 import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
+import { useCookie } from '#app';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import Button from '~/components/ui/button/Button.vue';
@@ -223,10 +224,14 @@ const credentials = reactive({
 });
 
 const { submit, inProgress } = useSubmit(
-    () => {
-        return login(credentials).then(() => {
-            router.push('/dashboard');
-        });
+    async () => {
+        await login(credentials);
+
+        if (useCookie('2fa_hash').value) {
+            return router.push('/two-factor-verification');
+        }
+
+        return router.push('/dashboard');
     },
     {
         onError: () => {

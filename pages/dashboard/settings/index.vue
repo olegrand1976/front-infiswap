@@ -220,7 +220,10 @@
                         </div>
 
                         <div class="mt-4 space-y-3">
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -234,7 +237,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -248,7 +254,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -262,7 +271,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -276,7 +288,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -290,7 +305,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -304,7 +322,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -436,7 +457,10 @@
                         </div>
 
                         <div class="mt-4 space-y-3">
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -446,11 +470,14 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.street_address || ' - ' }}
+                                    {{ user.profile.street_address || ' - ' }}
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -460,11 +487,14 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.city || ' - ' }}
+                                    {{ user.profile.city || ' - ' }}
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -478,7 +508,10 @@
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
@@ -491,11 +524,14 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.zip_code || ' - ' }}
+                                    {{ user.profile.zip_code || ' - ' }}
                                 </p>
                             </div>
 
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0  truncate text-nowrap"
@@ -601,7 +637,7 @@
                                 </Dialog>
                             </div>
 
-                            <!-- <div class="flex justify-between items-center space-x-3">
+                            <div class="flex justify-between items-center space-x-3">
                                 <label
                                     for="authTwoFactor"
                                     class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
@@ -701,7 +737,7 @@
                                         </form>
                                     </DialogContent>
                                 </Dialog>
-                            </div> -->
+                            </div>
                         </div>
                     </section>
 
@@ -712,7 +748,9 @@
                         </h3>
 
                         <div class="mt-4 space-y-3">
-                            <div class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full opacity-70 cursor-not-allowed"
+                            >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label
                                         for="language"
@@ -724,6 +762,7 @@
                                 </div>
                                 <Select
                                     v-model="formSetting"
+                                    disabled
                                     @update:model-value="handleChangeLanguage"
                                 >
                                     <SelectTrigger
@@ -970,7 +1009,8 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import { useRouter } from 'vue-router';
-import { useRuntimeConfig } from '#app';
+import { AUTH_TOKEN } from '~/lib/constants';
+import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useReports } from '~/composables/useReports';
 import { useAuth } from '~/composables/useAuth';
@@ -1010,7 +1050,7 @@ const profileDialog = ref(false);
 const deleteAvatarDialog = ref(false);
 
 const formattedGender = computed(() => {
-    return user.value.gender == 'F' ? 'Homme' : 'Femme';
+    return user.value.gender == 'F' ? 'Femme' : 'Homme';
 });
 
 const formattedCountry = computed(() => {
@@ -1047,10 +1087,10 @@ const formPersonalInfo = reactive({
 });
 
 const formAddress = reactive({
-    streetAddress: user.value.profile.street_address,
-    city: user.value.profile.city,
+    streetAddress: user.value.profile?.street_address,
+    city: user.value.profile?.city,
     country: user.value.profile.country,
-    zipCode: user.value.profile.zip_code,
+    zipCode: user.value.profile?.zip_code,
     additionalInfo: user.value.profile.additional_info,
 });
 
@@ -1069,6 +1109,8 @@ const updateInfoUser = async () => {
         $toast({
             description: 'Mise à jour effectué avec succès',
         });
+
+        personalInfoDialog.value = false;
     }
     catch (error) {
         console.log(error);
@@ -1077,9 +1119,6 @@ const updateInfoUser = async () => {
             variant: 'destructive',
             description: 'Echec de la mise à jour',
         });
-    }
-    finally {
-        personalInfoDialog.value = false;
     }
 };
 
@@ -1096,6 +1135,8 @@ const handleUpdateAddress = async () => {
         $toast({
             description: 'Mise à jour effectué avec succès',
         });
+
+        addressInfoDialog.value = false;
     }
     catch (error) {
         console.log(error);
@@ -1104,9 +1145,6 @@ const handleUpdateAddress = async () => {
             variant: 'destructive',
             description: 'Echec de la mise à jour',
         });
-    }
-    finally {
-        addressInfoDialog.value = false;
     }
 };
 
@@ -1129,6 +1167,12 @@ const handleChangePassword = async () => {
         $toast({
             description: 'Mise à jour effectuée avec succès',
         });
+
+        changePasswordDialog.value = false;
+
+        formPassword.currentPassword = '';
+        formPassword.password = '';
+        formPassword.password_confirmation = '';
     }
     catch (error) {
         console.log(error);
@@ -1136,13 +1180,6 @@ const handleChangePassword = async () => {
             variant: 'destructive',
             description: 'Echec de la mise à jour',
         });
-    }
-    finally {
-        changePasswordDialog.value = false;
-
-        formPassword.currentPassword = '';
-        formPassword.password = '';
-        formPassword.password_confirmation = '';
     }
 };
 
@@ -1248,12 +1285,7 @@ const handleDeleteAvatar = async () => {
 };
 
 const verifyTwoFactorStatus = () => {
-    if (user.value.two_factor_enabled == 1) {
-        return true;
-    }
-    else if (user.value.two_factor_enabled == 0) {
-        return false;
-    }
+    return user.value.two_factor_enabled;
 };
 
 const enableTwoFactor = ref(verifyTwoFactorStatus());
@@ -1400,6 +1432,8 @@ const handleDeleteAccount = async () => {
 
     try {
         await deleteAccount(formData);
+        user.value = null;
+        useCookie(AUTH_TOKEN).value = '';
 
         deleteAccountDialog.value = false;
         router.push('/');
