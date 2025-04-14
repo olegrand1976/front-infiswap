@@ -1,9 +1,9 @@
 <template>
     <div
-        class="container font-light grid grid-cols-5 gap-8 justify-between mt-12"
+        class="container font-light grid grid-cols-6 gap-8 justify-between mt-12"
     >
         <div
-            class="col-span-5 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
+            class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
         >
             <div
                 class="relative h-60 col-span-3 lg:col-span-1 lg:h-full w-full bg-red-200"
@@ -35,7 +35,8 @@
                 </p>
             </div>
         </div>
-        <div class="col-span-5 lg:col-span-2 p-4 lg:p-8 grid place-content-center relative bg-rose-400 shadow-lg rounded-lg overflow-hidden">
+
+        <div class="col-span-6 lg:col-span-2 p-4 lg:p-8 grid place-content-center relative bg-rose-400 shadow-lg rounded-lg overflow-hidden">
             <div class="text-white">
                 <p class="mb-4">
                     🚀 InfiSwap ouvre ses portes : rejoignez le mouvement ! 🩺
@@ -58,6 +59,15 @@
                     </Button>
                 </div>
             </div>
+        </div>
+
+        <div class="flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
+            <a href="/dashboard/replacements/create" class="transition-transform transform hover:scale-105">
+                <LayoutsAppImage
+                    src="/home/help_me.png"
+                    class="w-full max-w-xs h-48"
+                />
+            </a>
         </div>
     </div>
 </template>
