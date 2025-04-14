@@ -57,7 +57,6 @@
                             v-model="formData.lastname"
                             :icon="UserCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Nom *"
                         />
                     </div>
@@ -67,7 +66,6 @@
                             v-model="formData.firstname"
                             :icon="UserCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Prénoms *"
                         />
                     </div>
@@ -77,7 +75,6 @@
                             v-model="formData.email"
                             :icon="EnvelopeIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Email *"
                         />
                     </div>
@@ -87,7 +84,6 @@
                             v-model="formData.phoneNumber"
                             :icon="PhoneIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="N° de téléphone"
                         />
                     </div>
@@ -98,7 +94,6 @@
                             :icon="LockClosedIcon"
                             size="md"
                             type="password"
-                            class="border border-gray-300"
                             placeholder="Mot de passe *"
                         />
                     </div>
@@ -110,7 +105,6 @@
                             size="md"
                             type="password"
                             placeholder="Mot de passe *"
-                            class="border border-gray-300"
                         />
                     </div>
 
@@ -150,7 +144,6 @@
                             v-model="formData.address.street"
                             :icon="MapPinIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Rue *"
                         />
                     </div>
@@ -160,7 +153,6 @@
                             v-model="formData.address.zipCode"
                             :icon="InboxArrowDownIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Code postal *"
                         />
                     </div>
@@ -170,7 +162,6 @@
                             v-model="formData.address.city"
                             :icon="BuildingOffice2Icon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Ville *"
                         />
                     </div>
@@ -221,7 +212,6 @@
                             v-model="formData.address.additionnalInformation"
                             :icon="EllipsisHorizontalCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Complément d'adresse"
                         />
                     </div>
@@ -288,7 +278,6 @@
                             v-model="formData.identifierNumber"
                             :icon="IdentificationIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Numéro INAMI"
                         />
                     </div>
