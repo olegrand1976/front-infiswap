@@ -33,7 +33,8 @@
                             <div class="w-28 h-28 rounded-full overflow-hidden mx-auto flex items-center justify-center bg-gray-100">
                                 <img
                                     v-if="patient.profile?.profil_url"
-                                    :src="$config.public.API_URL + patient.profile.profil_url"
+                                    :src="$config.public.API_URL + '/storage/' + patient.profile.profil_url"
+                                    alt="Photo de profil"
                                     class="w-full h-full object-cover"
                                 >
                                 <UserCircleIcon

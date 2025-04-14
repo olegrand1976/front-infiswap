@@ -57,7 +57,6 @@
                             v-model="formData.lastname"
                             :icon="UserCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Nom *"
                         />
                     </div>
@@ -67,7 +66,6 @@
                             v-model="formData.firstname"
                             :icon="UserCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Prénoms *"
                         />
                     </div>
@@ -77,7 +75,6 @@
                             v-model="formData.email"
                             :icon="EnvelopeIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Email *"
                         />
                     </div>
@@ -87,7 +84,6 @@
                             v-model="formData.phoneNumber"
                             :icon="PhoneIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="N° de téléphone"
                         />
                     </div>
@@ -98,7 +94,6 @@
                             :icon="LockClosedIcon"
                             size="md"
                             type="password"
-                            class="border border-gray-300"
                             placeholder="Mot de passe *"
                         />
                     </div>
@@ -110,7 +105,6 @@
                             size="md"
                             type="password"
                             placeholder="Mot de passe *"
-                            class="border border-gray-300"
                         />
                     </div>
 
@@ -150,7 +144,6 @@
                             v-model="formData.address.street"
                             :icon="MapPinIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Rue *"
                         />
                     </div>
@@ -160,7 +153,6 @@
                             v-model="formData.address.zipCode"
                             :icon="InboxArrowDownIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Code postal *"
                         />
                     </div>
@@ -170,7 +162,6 @@
                             v-model="formData.address.city"
                             :icon="BuildingOffice2Icon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Ville *"
                         />
                     </div>
@@ -221,7 +212,6 @@
                             v-model="formData.address.additionnalInformation"
                             :icon="EllipsisHorizontalCircleIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Complément d'adresse"
                         />
                     </div>
@@ -288,9 +278,44 @@
                             v-model="formData.identifierNumber"
                             :icon="IdentificationIcon"
                             size="md"
-                            class="border border-gray-300"
                             placeholder="Numéro INAMI"
                         />
+                    </div>
+
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">
+                                Comment nous avez-vous connu ?
+                            </label>
+
+                            <select
+                                v-model="selectedReferral"
+                                class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white text-gray-600"
+                            >
+                                <option
+                                    disabled
+                                    value=""
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <option
+                                    v-for="option in referral_source"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+
+                            <input
+                                v-if="formData.referralSource.startsWith('other:')"
+                                type="text"
+                                class="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                                placeholder="Veuillez préciser"
+                                :value="formData.referralSource.replace('other:', '')"
+                                @input="formData.referralSource = `other:${$event.target.value}`"
+                            >
+                        </div>
                     </div>
 
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
@@ -400,6 +425,42 @@ const accountOptions = [
     },
 ];
 
+const referral_source = [
+    {
+        label: 'Publicité Facebook',
+        value: 'facebook_ads',
+    },
+    {
+        label: 'Post page Infiswap',
+        value: 'infiswap_post',
+    },
+    {
+        label: 'Communication forum infirmière',
+        value: 'nurse_forum',
+    },
+    {
+        label: 'Moteur de recherche',
+        value: 'search_engine',
+    },
+    {
+        label: 'Bouche à oreille',
+        value: 'word_of_mouth',
+    },
+    {
+        label: 'Autres',
+        value: 'other:',
+    },
+];
+
+const selectedReferral = computed({
+    get() {
+        return formData.referralSource.startsWith('other:') ? 'other:' : formData.referralSource;
+    },
+    set(val) {
+        formData.referralSource = val;
+    },
+});
+
 const formData = reactive({
     lastname: '',
     firstname: '',
@@ -418,6 +479,7 @@ const formData = reactive({
         country: countries[0].value,
         additionnalInformation: '',
     },
+    referralSource: '',
 });
 
 const route = useRoute();
