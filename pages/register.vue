@@ -292,7 +292,10 @@
                                 v-model="selectedReferral"
                                 class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white text-gray-600"
                             >
-                                <option disabled value="">
+                                <option
+                                    disabled
+                                    value=""
+                                >
                                     Sélectionnez une option
                                 </option>
                                 <option
@@ -311,7 +314,7 @@
                                 placeholder="Veuillez préciser"
                                 :value="formData.referralSource.replace('other:', '')"
                                 @input="formData.referralSource = `other:${$event.target.value}`"
-                            />
+                            >
                         </div>
                     </div>
 
