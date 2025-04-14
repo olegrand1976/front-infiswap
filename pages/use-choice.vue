@@ -1,11 +1,11 @@
 <template>
     <NuxtLayout name="guest-with-title">
         <template #title>
-            <p class="font-light">
+            <p class="container font-light text-3xl">
                 Pourquoi choisir notre site
             </p>
         </template>
-        <section class="container mx-auto px-6 py-16">
+        <section class="container mx-auto px-6 py-2 lg:py-16">
             <h2 class="text-3xl font-semibold text-primary text-center mb-8">
                 Bienvenue sur notre plateforme !
             </h2>
@@ -49,12 +49,12 @@
                         v-for="option in options"
                         :key="option.value"
                         :class="[
-                            'h-20 w-60 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
+                            'h-14 w-full lg:w-80 flex justify-center items-center border-2 rounded-full cursor-pointer transition-all duration-300 transform hover:scale-105',
                             formData === option.value ? 'bg-primary text-white border-primary' : 'border-gray-300 text-primary hover:bg-primary hover:text-white',
                         ]"
                         @click="selectOption(option.value)"
                     >
-                        <span class="text-lg font-medium text-center">{{ option.label }}</span>
+                        <span class="text-base font-medium text-center">{{ option.label }}</span>
                     </div>
                 </div>
 

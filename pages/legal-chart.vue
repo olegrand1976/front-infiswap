@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="guest-with-title">
         <template #title>
-            <p class="font-light">
+            <p class="container font-light text-3xl">
                 Charte de Bonne Conduite
             </p>
         </template>
@@ -38,7 +38,6 @@
                     </li>
                 </ul>
             </div>
-            <!-- Validation de la charte -->
             <div class="mt-6 p-4 bg-gray-100 rounded-lg text-center">
                 <Label class="flex items-center justify-center space-x-2 cursor-pointer">
                     <Input
@@ -52,7 +51,6 @@
                 </Label>
             </div>
 
-            <!-- Bouton de validation -->
             <div class="mt-6 text-center">
                 <Button
                     :disabled="!isAccepted"
@@ -85,7 +83,7 @@ const validateCharte = () => {
 };
 
 useHead({
-    title: 'InfiSwap',
+    title: 'Charte de Bonne Conduite',
     meta: [{ name: 'description', content: '' }],
 });
 
