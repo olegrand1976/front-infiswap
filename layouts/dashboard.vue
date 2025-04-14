@@ -1,14 +1,13 @@
 <template>
-    <SidebarProvider>
+    <SidebarProvider class="bg-green-300">
         <Sidebar class="bg-white">
             <LayoutsAppSidebar />
         </Sidebar>
-        <SidebarInset
-            :class="['w-full lg:w-96', {
+        <SidebarInset>
+            <!-- :class="['w-full w-96', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
-            }]"
-        >
+            }]" -->
             <header class="flex h-20 shrink-0 items-center px-6 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20 bg-white shadow-md">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
@@ -53,7 +52,7 @@
                 </div>
             </header>
             <div
-                class="flex flex-1 flex-col gap-4 xl:w-full p-6"
+                class="flex flex-1 flex-col gap-4 m-6"
             >
                 <NuxtPage />
             </div>

@@ -3,8 +3,8 @@
         <DashboardAdminPageHeader title="Nouvel utilisateur" />
         <DashboardAdminPageContent class="bg-gray-100">
             <form>
-                <div class="grid grid-cols-[40%_60%] gap-4 lg:gap-8">
-                    <div class="p-4">
+                <div class="grid grid-cols-3 gap-4 lg:gap-8">
+                    <div class="p-4 hidden lg:block">
                         <h1 class="font-semibold text-gray-600">
                             Information
                         </h1>
@@ -12,7 +12,7 @@
                             Les information personnelles
                         </p>
                     </div>
-                    <div class="bg-white p-4 rounded-md flex flex-col gap-4">
+                    <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
                             <InputIcon
                                 rounded="md"
@@ -66,9 +66,9 @@
                         </div>
                     </div>
                 </div>
-                <Separator class="my-10" />
-                <div class="grid grid-cols-[40%_60%] gap-4 lg:gap-8">
-                    <div class="p-4">
+                <Separator class="my-4 lg:my-10" />
+                <div class="grid grid-cols-3 gap-4 lg:gap-8">
+                    <div class="p-4 hidden lg:block">
                         <h1 class="font-semibold text-gray-600">
                             Adresse
                         </h1>
@@ -76,7 +76,7 @@
                             Les informations d'addresse
                         </p>
                     </div>
-                    <div class="bg-white p-4 rounded-md flex flex-col gap-4">
+                    <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
                             <InputIcon
                                 rounded="md"
