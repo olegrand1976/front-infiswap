@@ -51,8 +51,13 @@ const roundedClass = computed(() => {
 
 const isFocused = ref(false);
 
-const onFocus = () => { isFocused.value = true; };
-const onBlur = () => { isFocused.value = false; };
+const onFocus = () => {
+    isFocused.value = true;
+};
+
+const onBlur = () => {
+    isFocused.value = false;
+};
 </script>
 
 <template>
