@@ -282,6 +282,42 @@
                         />
                     </div>
 
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">
+                                Comment nous avez-vous connu ?
+                            </label>
+
+                            <select
+                                v-model="selectedReferral"
+                                class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white text-gray-600"
+                            >
+                                <option
+                                    disabled
+                                    value=""
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <option
+                                    v-for="option in referral_source"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+
+                            <input
+                                v-if="formData.referralSource.startsWith('other:')"
+                                type="text"
+                                class="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                                placeholder="Veuillez préciser"
+                                :value="formData.referralSource.replace('other:', '')"
+                                @input="formData.referralSource = `other:${$event.target.value}`"
+                            >
+                        </div>
+                    </div>
+
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
                         <Button
                             class="w-[50%]"
@@ -389,6 +425,42 @@ const accountOptions = [
     },
 ];
 
+const referral_source = [
+    {
+        label: 'Publicité Facebook',
+        value: 'facebook_ads',
+    },
+    {
+        label: 'Post page Infiswap',
+        value: 'infiswap_post',
+    },
+    {
+        label: 'Communication forum infirmière',
+        value: 'nurse_forum',
+    },
+    {
+        label: 'Moteur de recherche',
+        value: 'search_engine',
+    },
+    {
+        label: 'Bouche à oreille',
+        value: 'word_of_mouth',
+    },
+    {
+        label: 'Autres',
+        value: 'other:',
+    },
+];
+
+const selectedReferral = computed({
+    get() {
+        return formData.referralSource.startsWith('other:') ? 'other:' : formData.referralSource;
+    },
+    set(val) {
+        formData.referralSource = val;
+    },
+});
+
 const formData = reactive({
     lastname: '',
     firstname: '',
@@ -407,6 +479,7 @@ const formData = reactive({
         country: countries[0].value,
         additionnalInformation: '',
     },
+    referralSource: '',
 });
 
 const route = useRoute();
