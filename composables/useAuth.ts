@@ -42,7 +42,8 @@ export const useAuth = () => {
     
             if (response.token) {
                 useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
-                return await refresh();
+
+                return navigateTo('/dashboard');
             }
     
             if (response.hash && response.two_factor_code) {
@@ -140,10 +141,13 @@ export const useAuth = () => {
     };
 
     async function verify2fa(formData) {
-        return await $apifetch(`/api/verify-2fa`, {
+        const response = await $apifetch(`/api/verify-2fa`, {
             method: 'post',
             body: formData,
         });
+
+        useCookie(AUTH_TOKEN).value = response.token;
+        return navigateTo('/dashboard');
     };
 
     async function updateStatusAccount(formData) {

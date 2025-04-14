@@ -156,13 +156,11 @@ import {
     PinInputInput,
     PinInputSeparator,
 } from '@/components/ui/pin-input';
-import { useCookie, useRouter } from '#app';
-import { AUTH_TOKEN } from '~/lib/constants';
+import { useCookie } from '#app';
 
 const { $toast } = useNuxtApp();
-const router = useRouter();
 
-const { verify2fa, refresh } = useAuth();
+const { verify2fa } = useAuth();
 
 const pinValue = ref<string[]>([]);
 const hash = useCookie('2fa_hash');
@@ -174,14 +172,10 @@ const { submit, inProgress } = useSubmit(
             two_factor_code: pinValue.value.join(''),
         };
 
-        const response = await verify2fa(credentials);
-        useCookie(AUTH_TOKEN).value = response.token;
-        await refresh();
+        await verify2fa(credentials);
 
         useCookie('2fa_hash').value = '';
         pinValue.value = [];
-
-        return router.push('/dashboard');
     },
     {
         onError: () => {

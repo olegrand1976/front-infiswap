@@ -813,7 +813,7 @@
                         </div>
                     </section>
 
-                    <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2 shadow rounded-lg p-6">
+                    <!-- <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2 shadow rounded-lg p-6">
                         <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
                             <ChartPieIcon class="w-5" />
                             <label>Statut de compte</label>
@@ -924,7 +924,7 @@
                         >
                             Suspendu
                         </div>
-                    </section>
+                    </section> -->
 
                     <section class="flex flex-col justify-end items-center pt-8 space-y-4">
                         <Button
