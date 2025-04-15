@@ -3,11 +3,12 @@
         <Sidebar class="bg-white">
             <LayoutsAppSidebar />
         </Sidebar>
-        <SidebarInset>
-            <!-- :class="['w-full w-96', {
+        <SidebarInset
+            :class="cn('w-full w-96', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
-            }]" -->
+            })"
+        >
             <header class="flex h-20 shrink-0 items-center px-6 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20 bg-white shadow-md">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
@@ -64,6 +65,7 @@
 import { UserCircleIcon } from '@heroicons/vue/24/solid';
 import { useRuntimeConfig } from '#app';
 import type { User } from '~/lib/types';
+import { cn } from '@/lib/utils';
 
 const { isAdmin } = useAuth();
 
