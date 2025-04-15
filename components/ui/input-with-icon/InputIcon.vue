@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Component, HTMLAttributes } from 'vue';
 import { useVModel } from '@vueuse/core';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
@@ -58,6 +59,12 @@ const onFocus = () => {
 const onBlur = () => {
     isFocused.value = false;
 };
+
+const isPasswordVisible = ref(false);
+
+const togglePasswordVisibility = () => {
+    isPasswordVisible.value = !isPasswordVisible.value;
+};
 </script>
 
 <template>
@@ -72,10 +79,12 @@ const onBlur = () => {
         >{{ label }}</label>
         <input
             v-model="modelValue"
-            :type="type || 'text'"
+            :type="props.type === 'password' ? (isPasswordVisible ? 'text' : 'password') : props.type"
             :placeholder="placeholder"
             :class="cn(
-                'flex w-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:text-sm focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                'flex h-10 w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:text-sm focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                sizeClasses[size || 'md'],
+                props.class,
                 sizeClasses,
                 roundedClass,
                 { 'border-red-500': props.errors && props.errors.length > 0 },
@@ -90,6 +99,20 @@ const onBlur = () => {
             <component
                 :is="icon"
                 :class="cn('size-6', 'text-primary', props.iconClass)"
+            />
+        </span>
+        <span
+            v-if="props.type === 'password'"
+            class="absolute end-2 inset-y-0 flex items-center cursor-pointer"
+            @click="togglePasswordVisibility"
+        >
+            <EyeIcon
+                v-if="!isPasswordVisible"
+                class="h-5 w-5 text-gray-400"
+            />
+            <EyeSlashIcon
+                v-if="isPasswordVisible"
+                class="h-5 w-5 text-gray-400"
             />
         </span>
         <span
