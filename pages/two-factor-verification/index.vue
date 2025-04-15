@@ -18,14 +18,14 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col lg:space-y-8 space-y-12 justify-center items-center">
+            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col space-y-12 lg:space-y-8 justify-center items-center 2xl:space-y-12">
                 <div>
                     <LayoutsLogo class="w-64" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
                     Vérifiez votre<span class="font-bold"> boite email</span>
                 </h1>
-                <p class="text-center lg:w-96">
+                <p class="text-center lg:w-96 2xl:w-auto">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
                 </p>
                 <NuxtLink
@@ -128,7 +128,7 @@
                         <NuxtLink to="/auth/login">
                             <Button
                                 variant="outline"
-                                class="w-full rounded-full px-16"
+                                class="w-full rounded-full px-12"
                             >
                                 Retour
                             </Button>
@@ -137,7 +137,7 @@
                     <div>
                         <Button
                             type="submit"
-                            class="w-full rounded-full px-16"
+                            class="w-full rounded-full px-12"
                             :in-progress="inProgress"
                         >
                             Vérifier

@@ -33,19 +33,20 @@ export const useAuth = () => {
 
     async function login(credentials: { identifier: string; password: string }) {
         if (isLoggedIn.value) return;
-    
+
         try {
             const response = await $apifetch('api/login', {
                 method: 'post',
                 body: credentials,
             });
-    
+
             if (response.token) {
                 useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
-
+                await nextTick();
+                await refresh();
                 return navigateTo('/dashboard');
             }
-    
+
             if (response.hash && response.two_factor_code) {
                 useCookie('2fa_hash').value = response.hash;
                 return {
@@ -53,14 +54,14 @@ export const useAuth = () => {
                     code: response.two_factor_code,
                 };
             };
-        } catch (error: any) {
+        }
+        catch (error) {
             return {
                 status: 'error',
                 message: error.data?.message ?? 'Une erreur est survenue.',
             };
         }
     }
-    
 
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
@@ -147,6 +148,8 @@ export const useAuth = () => {
         });
 
         useCookie(AUTH_TOKEN).value = response.token;
+        await nextTick();
+        await refresh();
         return navigateTo('/dashboard');
     };
 

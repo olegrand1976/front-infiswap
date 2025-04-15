@@ -227,11 +227,14 @@ const { submit, inProgress } = useSubmit(
     async () => {
         await login(credentials);
 
+        await nextTick();
+
         if (useCookie('2fa_hash').value) {
             return router.push('/two-factor-verification');
         }
-
-        return router.push('/dashboard');
+        else {
+            return router.push('/dashboard');
+        }
     },
     {
         onError: () => {
