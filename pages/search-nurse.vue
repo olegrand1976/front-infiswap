@@ -44,12 +44,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                            <LayoutsAppImage
-                                                src="/icons/zip_code.png"
-                                                class="w-4"
-                                            />
-                                        </div>
+                                        <EnvelopeIcon class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Email</span>
                                     </div>
                                 </div>
@@ -66,12 +61,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                                            <LayoutsAppImage
-                                                src="/icons/zip_code.png"
-                                                class="w-4"
-                                            />
-                                        </div>
+                                        <IdentificationIcon class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">NISS *</span>
                                     </div>
                                 </div>
@@ -180,7 +170,7 @@
                             <div class="h-40 lg:h-[450px] rounded-3xl border border-primary">
                                 <Textarea
                                     v-model="formData.description"
-                                    placeholder="Écrivez votre description ici..."
+                                    placeholder="Veuillez préciser la raison de votre demande d’un infirmier"
                                     class="w-full h-full resize-none rounded-xl p-4 text-black placeholder:text-black/80 bg-transparent outline-none"
                                 />
                             </div>
@@ -188,7 +178,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6">
+                <div class="mt-6 flex items-center justify-center">
                     <Checkbox
                         id="accept"
                         v-model="formData.accept"
@@ -196,9 +186,9 @@
                     />
                     <label
                         for="accept"
-                        class="text-xs font-light ml-2"
+                        class="text-xs font-light ml-2 mt-2"
                     >
-                        Vous acceptez que vos coordonnées soient enregistrées dans notre base de données pour être transmises à notre réseau d'infirmières. Vos informations personnelles ne seront ni vendues ni transmises à des sociétés tierces.
+                        Vos coordonnées seront enregistrées et transmises à notre réseau d'infirmières, sans être partagées avec des tiers.
                     </label>
                 </div>
 
@@ -227,6 +217,8 @@ import {
     PlusIcon,
     PhoneIcon,
     HeartIcon,
+    EnvelopeIcon,
+    IdentificationIcon,
 } from '@heroicons/vue/24/solid';
 import { searchNurse } from '~/composables/usePatients';
 
@@ -308,7 +300,6 @@ const { submit, inProgress } = useSubmit(
                 errorMessage = err.data.message;
             }
 
-            // Toast d'erreur
             $toast({
                 title: 'Oups! Une erreur s\'est produite',
                 description: errorMessage,
