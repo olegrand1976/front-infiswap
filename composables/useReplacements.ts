@@ -150,6 +150,62 @@ export const useReplacements = () => {
         return result;
     };
 
+    const sendUrgentReplacement = async (formData) => {
+        loading.value = true;
+        error.value = null;
+        success.value = false;
+
+        try {
+            let response;
+
+            await $apifetch('/api/replacements/immediate', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+            }).then((res) => {
+                response = res;
+                $toast({
+                    description: 'Création d\'un remplacement rapide effectuée',
+                });
+            }).catch((error) => {
+                if (error.data && error.data.errors) {
+                    const backendErrors = error.data.errors;
+                    const errorMessages: string[] = [];
+
+                    Object.keys(backendErrors).forEach((field) => {
+                        backendErrors[field].forEach((message: string) => {
+                            errorMessages.push(message);
+                        });
+                    });
+
+                    if (errorMessages.length > 0) {
+                        $toast({
+                            description: errorMessages.join('/'),
+                            status: 'error',
+                            variant: 'destructive',
+                        });
+                    }
+                }
+                else {
+                    $toast({
+                        description: 'Une erreur est survenue. Veuillez réessayer.',
+                        status: 'error',
+                        variant: 'destructive',
+                    });
+                }
+            });
+
+            if (response?.success) {
+                success.value = true;
+            }
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     return {
         error,
         loading,
@@ -162,6 +218,7 @@ export const useReplacements = () => {
         getReplacementsForAdmin,
         getFRStatus,
         extractPostalDataFromReplacement,
+        sendUrgentReplacement,
     };
 };
 

@@ -142,6 +142,7 @@ import {
     HeartIcon,
     Cog8ToothIcon,
     MapPinIcon,
+    ClockIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 import { cn } from '@/lib/utils';
@@ -213,6 +214,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 label: 'Nouveau',
                 route: '/dashboard/replacements/create',
                 icon: DocumentPlusIcon,
+            },
+            {
+                label: 'Immédiat',
+                route: '/dashboard/replacements/immediate',
+                icon: ClockIcon,
             },
         ],
     },
