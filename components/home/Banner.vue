@@ -2,6 +2,50 @@
     <div
         class="container font-light grid grid-cols-6 gap-8 justify-between mt-12"
     >
+        <div class="relative col-span-5 lg:col-span-2 p-4 lg:p-8 grid place-content-center bg-rose-400 shadow-lg rounded-lg overflow-hidden">
+            <div
+                v-if="!user"
+                class="text-white"
+            >
+                <p class="mb-4">
+                    🚀 InfiSwap ouvre ses portes : rejoignez le mouvement ! 🩺
+                </p>
+                <p class="mb-4">
+                    Notre équipe a peaufiné chaque détail pour vous offrir une plateforme à la hauteur de vos attentes : simple, rapide et pensée pour les infirmier(ère)s de terrain.
+                </p>
+                <p class="mb-4">
+                    💡 Que vous cherchiez un remplacement, un complément d’heures ou une collaboration de long terme, tout commence ici.
+                </p>
+                <p class="mb-4">
+                    👉 Rejoignez-nous dès maintenant et faites partie des premiers utilisateurs d’InfiSwap !
+                </p>
+                <div class="text-center">
+                    <Button
+                        href="/register"
+                        class="w-36"
+                    >
+                        Inscription
+                    </Button>
+                </div>
+            </div>
+            <div
+                v-else
+                class="text-white text-center"
+            >
+                <div class="mb-2 lg:absolute right-4 top-4">
+                    <BellAlertIcon class="size-8 mx-auto animate-ring" />
+                </div>
+                <p>
+                    Pour une meilleure gestion de vos remplacements, commencez par encoder votre tournée sur infiswap, cela vous permettra de bénéficier de l'ensemble des fonctionnalités de la plateforme.
+                </p>
+                <p class="mt-2">
+                    👉 <NuxtLink
+                        href="/dashboard/patients/create"
+                        class="font-bold"
+                    >Votre tournée</NuxtLink>
+                </p>
+            </div>
+        </div>
         <div
             class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
         >
@@ -71,3 +115,30 @@
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { BellAlertIcon } from '@heroicons/vue/24/solid';
+
+const user = useUser();
+</script>
+
+<style>
+@keyframes ring {
+  0% { transform: rotate(0); }
+  1% { transform: rotate(15deg); }
+  3% { transform: rotate(-12deg); }
+  5% { transform: rotate(10deg); }
+  7% { transform: rotate(-8deg); }
+  9% { transform: rotate(6deg); }
+  11% { transform: rotate(-4deg); }
+  13% { transform: rotate(2deg); }
+  15% { transform: rotate(0); }
+  100% { transform: rotate(0); }
+}
+
+.animate-ring {
+  animation: ring 1.5s ease-in-out infinite;
+  transform-origin: top center;
+  display: inline-block;
+}
+</style>
