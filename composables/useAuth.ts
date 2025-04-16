@@ -34,11 +34,33 @@ export const useAuth = () => {
     async function login(credentials: { identifier: string; password: string }) {
         if (isLoggedIn.value) return;
 
-        await $apifetch('api/login', { method: 'post', body: credentials })
-            .then(response => useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token);
+        try {
+            const response = await $apifetch('api/login', {
+                method: 'post',
+                body: credentials,
+            });
 
-        navigateTo('/dashboard');
-        await refresh();
+            if (response.token) {
+                useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
+                await nextTick();
+                await refresh();
+                return navigateTo('/dashboard');
+            }
+
+            if (response.hash && response.two_factor_code) {
+                useCookie('2fa_hash').value = response.hash;
+                return {
+                    message: response.message,
+                    code: response.two_factor_code,
+                };
+            };
+        }
+        catch (error) {
+            return {
+                status: 'error',
+                message: error.data?.message ?? 'Une erreur est survenue.',
+            };
+        }
     }
 
     async function register(credentials) {
@@ -117,6 +139,18 @@ export const useAuth = () => {
             method: 'post',
             body: formData,
         });
+    };
+
+    async function verify2fa(formData) {
+        const response = await $apifetch(`/api/verify-2fa`, {
+            method: 'post',
+            body: formData,
+        });
+
+        useCookie(AUTH_TOKEN).value = response.token;
+        await nextTick();
+        await refresh();
+        return navigateTo('/dashboard');
     };
 
     async function updateStatusAccount(formData) {
@@ -202,6 +236,7 @@ export const useAuth = () => {
         updatePasswordUser,
         updateAvatarUser,
         verifyCode,
+        verify2fa,
         activeTwoFactorAuth,
         updateStatusAccount,
         deleteAvatar,

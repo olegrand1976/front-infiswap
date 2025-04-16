@@ -5,7 +5,7 @@
                 <div class="flex justify-center items-center my-auto">
                     <LayoutsAppImage
                         src="/auth/Group_1170.png"
-                        class="w-80"
+                        class="w-72"
                     />
                 </div>
 
@@ -18,18 +18,15 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col lg:space-y-8 space-y-12 justify-center items-center">
+            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col space-y-12 lg:space-y-8 justify-center items-center 2xl:space-y-12">
                 <div>
-                    <LayoutsLogo class="sm:w-64 lg:w-72" />
+                    <LayoutsLogo class="w-64" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Vérifiez votre <span class="font-bold">email</span>
+                    Vérifiez votre<span class="font-bold"> boite email</span>
                 </h1>
-                <p class="text-center lg:w-96 xl:text-base sm:text-sm">
+                <p class="text-center lg:w-96 2xl:w-auto">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
-                    <span>
-                        z*******@mews.com
-                    </span>
                 </p>
                 <NuxtLink
                     to="/"
@@ -38,59 +35,30 @@
                     Renvoyer l'email
                 </NuxtLink>
 
-                <Form>
-                    <FormField name="code">
-                        <FormItem>
-                            <FormControl>
-                                <div class="flex items-center justify-center">
-                                    <PinInput
-                                        id="pin-input"
-                                        v-model="code"
-                                        placeholder=""
-                                        @complete="handleComplete"
-                                    >
-                                        <PinInputGroup class="gap-x-4">
-                                            <template
-                                                v-for="(id, index) in 6"
-                                                :key="id"
-                                            >
-                                                <PinInputInput
-                                                    class="rounded-md border xl:w-12 xl:h-12 sm:w-10 sm:h-10"
-                                                    :index="index"
-                                                />
-                                                <template v-if="index !== 5">
-                                                    <PinInputSeparator class="hidden" />
-                                                </template>
-                                            </template>
-                                        </PinInputGroup>
-                                    </PinInput>
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
-
-                    <FormField name="ask">
-                        <FormItem>
-                            <FormControl>
-                                <div class="flex justify-center items-center space-x-2 mt-6">
-                                    <Checkbox id="ask" />
-                                    <label
-                                        for="ask"
-                                        class="font-sans xl:text-sm sm:text-xs font-light text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                    >
-                                        Ne plus demander sur cet appareil pendant 3 jours
-                                    </label>
-                                </div>
-                            </FormControl>
-                        </FormItem>
-                    </FormField>
+                <Form @submit="submit">
+                    <div class="flex items-center justify-center">
+                        <PinInput
+                            id="pin-input"
+                            v-model="pinValue"
+                            placeholder="○"
+                        >
+                            <PinInputGroup>
+                                <PinInputInput
+                                    v-for="(id, index) in 6"
+                                    :key="id"
+                                    :index="index"
+                                    class="w-12 h-12"
+                                />
+                            </PinInputGroup>
+                        </PinInput>
+                    </div>
 
                     <div class="flex flex-row justify-center space-x-12 mt-16">
                         <div>
                             <NuxtLink to="/">
                                 <Button
                                     variant="outline"
-                                    class="w-full px-16 rounded-full font-bold xl:text-base text-sm"
+                                    class="w-full rounded-full px-16"
                                 >
                                     Retour
                                 </Button>
@@ -99,7 +67,8 @@
                         <div>
                             <Button
                                 type="submit"
-                                class="w-full px-16 font-bold xl:text-base text-sm"
+                                class="w-full px-16"
+                                :in-progress="inProgress"
                             >
                                 Vérifier
                             </Button>
@@ -118,9 +87,6 @@
                 </h1>
                 <p class="text-center text-sm">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
-                    <span>
-                        z*******@mews.com
-                    </span>
                 </p>
                 <NuxtLink
                     to="/"
@@ -130,59 +96,39 @@
                 </NuxtLink>
             </div>
 
-            <Form class="mt-12">
-                <FormField name="code">
-                    <FormItem>
-                        <FormControl>
-                            <div class="flex items-center justify-center">
-                                <PinInput
-                                    id="pin-input"
-                                    v-model="code"
-                                    placeholder=""
-                                    @complete="handleComplete"
-                                >
-                                    <PinInputGroup class="gap-x-4">
-                                        <template
-                                            v-for="(id, index) in 6"
-                                            :key="id"
-                                        >
-                                            <PinInputInput
-                                                class="rounded-md border w-10 h-10"
-                                                :index="index"
-                                            />
-                                            <template v-if="index !== 5">
-                                                <PinInputSeparator class="hidden" />
-                                            </template>
-                                        </template>
-                                    </PinInputGroup>
-                                </PinInput>
-                            </div>
-                        </FormControl>
-                    </FormItem>
-                </FormField>
-
-                <FormField name="ask">
-                    <FormItem>
-                        <FormControl>
-                            <div class="flex justify-center items-center space-x-2 mt-6">
-                                <Checkbox id="ask" />
-                                <label
-                                    for="ask"
-                                    class="font-sans text-xs font-light text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    Ne plus demander sur cet appareil pendant 3 jours
-                                </label>
-                            </div>
-                        </FormControl>
-                    </FormItem>
-                </FormField>
+            <Form
+                class="mt-12"
+                @submit="submit"
+            >
+                <div class="flex items-center justify-center">
+                    <PinInput
+                        id="pin-input"
+                        v-model="pinValue"
+                        placeholder="○"
+                    >
+                        <PinInputGroup class="gap-x-4">
+                            <template
+                                v-for="(id, index) in 6"
+                                :key="id"
+                            >
+                                <PinInputInput
+                                    class="rounded-md border w-10 h-10"
+                                    :index="index"
+                                />
+                                <template v-if="index !== 5">
+                                    <PinInputSeparator class="hidden" />
+                                </template>
+                            </template>
+                        </PinInputGroup>
+                    </PinInput>
+                </div>
 
                 <div class="flex flex-row justify-center space-x-8 mt-16">
                     <div>
-                        <NuxtLink to="/">
+                        <NuxtLink to="/auth/login">
                             <Button
                                 variant="outline"
-                                class="w-full px-10 rounded-full font-bold xl:text-base text-sm"
+                                class="w-full rounded-full px-12"
                             >
                                 Retour
                             </Button>
@@ -191,7 +137,8 @@
                     <div>
                         <Button
                             type="submit"
-                            class="w-full px-16 font-bold xl:text-base text-sm"
+                            class="w-full rounded-full px-12"
+                            :in-progress="inProgress"
                         >
                             Vérifier
                         </Button>
@@ -209,6 +156,36 @@ import {
     PinInputInput,
     PinInputSeparator,
 } from '@/components/ui/pin-input';
+import { useCookie } from '#app';
+
+const { $toast } = useNuxtApp();
+
+const { verify2fa } = useAuth();
+
+const pinValue = ref<string[]>([]);
+const hash = useCookie('2fa_hash');
+
+const { submit, inProgress } = useSubmit(
+    async () => {
+        const credentials = {
+            hash: hash.value,
+            two_factor_code: pinValue.value.join(''),
+        };
+
+        await verify2fa(credentials);
+
+        useCookie('2fa_hash').value = '';
+        pinValue.value = [];
+    },
+    {
+        onError: () => {
+            $toast({
+                description: 'Code incorrect',
+                variant: 'destructive',
+            });
+        },
+    },
+);
 
 definePageMeta({
     layout: 'auth',
@@ -217,8 +194,4 @@ definePageMeta({
 useHead({
     title: 'Vérification 2FA',
 });
-
-const code = ref<string[]>([]);
-
-const handleComplete = (e: string[]) => alert(e.join(''));
 </script>
