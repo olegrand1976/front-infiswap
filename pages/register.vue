@@ -288,33 +288,48 @@
                                 Comment nous avez-vous connu ?
                             </label>
 
-                            <select
-                                v-model="selectedReferral"
-                                class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-white text-gray-600"
-                            >
-                                <option
-                                    disabled
-                                    value=""
-                                >
-                                    Sélectionnez une option
-                                </option>
-                                <option
-                                    v-for="option in referral_source"
-                                    :key="option.value"
-                                    :value="option.value"
-                                >
-                                    {{ option.label }}
-                                </option>
-                            </select>
+                            <div class="relative w-full">
+                                <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center text-primary">
+                                    <QuestionMarkCircleIcon class="w-6 h-6" />
+                                </div>
 
-                            <input
+                                <select
+                                    v-model="selectedReferral"
+                                    class="w-full appearance-none rounded-full border border-gray-300 py-2 px-4 pl-10 pr-10 text-sm bg-white text-gray-600"
+                                >
+                                    <option disabled value="">
+                                        Sélectionnez une option
+                                    </option>
+                                    <option
+                                        v-for="option in referral_source"
+                                        :key="option.value"
+                                        :value="option.value"
+                                    >
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-primary">
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <InputIcon
                                 v-if="formData.referralSource.startsWith('other:')"
-                                type="text"
-                                class="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                                :value="formData.referralSource.replace(/^other:/, '')"
+                                @input="event => formData.referralSource = `other:${event.target.value}`"
                                 placeholder="Veuillez préciser"
-                                :value="formData.referralSource.replace('other:', '')"
-                                @input="formData.referralSource = `other:${$event.target.value}`"
-                            >
+                                :icon="EllipsisHorizontalCircleIcon"
+                                class="w-full"
+                            />
                         </div>
                     </div>
 
@@ -355,6 +370,7 @@ import {
     BuildingOffice2Icon,
     MapPinIcon,
     InboxArrowDownIcon,
+    QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
