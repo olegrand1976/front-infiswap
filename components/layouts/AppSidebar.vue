@@ -59,11 +59,13 @@
                                                     'bg-primary/90 text-white': isActiveRoute(subItem.route),
                                                     'text-neutral-700 hover:bg-primary/20': !isActiveRoute(subItem.route),
                                                 }"
+                                                :onclick="closeSidebar"
                                             >
                                                 <SidebarMenuButton class="w-full h-full p-0">
                                                     <NuxtLink
                                                         :href="subItem.route"
                                                         class="flex items-center h-full w-full p-2"
+                                                        onclick="clicked"
                                                     >
                                                         <component
                                                             :is="subItem.icon"
@@ -80,7 +82,10 @@
                                     </CollapsibleContent>
                                 </Collapsible>
                             </SidebarMenuItem>
-                            <SidebarMenuItem v-else>
+                            <SidebarMenuItem
+                                v-else
+                                :onclick="closeSidebar"
+                            >
                                 <SidebarMenuButton
                                     as-child
                                     class="h-12"
@@ -144,6 +149,7 @@ import {
     MapPinIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
+import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
 
@@ -152,7 +158,12 @@ defineProps({
 });
 
 const { isAdmin } = useAuth();
-
+const { setOpenMobile, isMobile } = useSidebar();
+const closeSidebar = () => {
+    if (isMobile.value) {
+        setOpenMobile(false);
+    }
+};
 interface NavigationItem {
     label: string;
     route: string;
