@@ -44,7 +44,7 @@
                         </div>
                         <div>
                             <Select label="Sexe">
-                                <SelectTrigger position="right">
+                                <SelectTrigger position="right" class="rounded-md">
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
@@ -78,7 +78,7 @@
                         </div>
                         <div>
                             <Select label="Langue">
-                                <SelectTrigger position="right">
+                                <SelectTrigger position="right" class="rounded-md">
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
@@ -152,7 +152,7 @@
                     <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
                             <Select label="Type de compte">
-                                <SelectTrigger position="right">
+                                <SelectTrigger position="right" class="rounded-md">
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
