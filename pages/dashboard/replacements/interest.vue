@@ -18,7 +18,6 @@ onMounted(async () => {
     }
     catch (err) {
         console.error('Erreur:', err);
-        navigateTo('/');
     }
 });
 </script>

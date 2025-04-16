@@ -89,7 +89,7 @@ const { submit, inProgress } = useSubmit(async () => {
         sendUrgentReplacement(formData);
         setTimeout(() => {
             location.reload();
-        }, 1500);
+        }, 5000);
     }
     catch (err) {
         console.error('Error:', err);
