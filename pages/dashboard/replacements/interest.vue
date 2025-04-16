@@ -14,7 +14,7 @@ onMounted(async () => {
             method: 'GET',
         });
 
-        navigateTo('/');
+        navigateTo('/dashboard');
     }
     catch (err) {
         console.error('Erreur:', err);
