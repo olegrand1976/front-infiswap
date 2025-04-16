@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-with-title">
+    <!-- <NuxtLayout name="guest-with-title">
         <template #title>
             <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
                 <h1 class="text-2xl font-medium capitalize lg:text-3xl dark:text-white">
@@ -17,7 +17,10 @@
         >
             <Pricing />
         </div>
-    </NuxtLayout>
+    </NuxtLayout> -->
+    <section class="bg-white grid place-content-center">
+        <TemporaryFree />
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -26,6 +29,12 @@ useHead({
 });
 
 definePageMeta({
-    layout: false,
+    // layout: false,
 });
 </script>
+
+<style scoped>
+.bg-url {
+  background-image: url('/images/home/equipe_infirmier.png');
+}
+</style>
