@@ -216,8 +216,8 @@ const nurseNavigationItems: NavigationItem[] = [
                 icon: DocumentPlusIcon,
             },
             {
-                label: 'Immédiat',
-                route: '/dashboard/replacements/immediate',
+                label: 'Urgent',
+                route: '/dashboard/replacements/urgent',
                 icon: ClockIcon,
             },
         ],

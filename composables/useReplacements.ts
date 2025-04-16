@@ -343,3 +343,28 @@ export const changeStatusReplacement = () => {
 
     return { changeStatus };
 };
+
+export const useNearbyReplacements = () => {
+    const { $apifetch } = useNuxtApp();
+
+    const replacements = useState('replacements', () => []);
+    const error = useState('replacementsError', () => null);
+
+    async function fetchNearbyreplacements() {
+        try {
+            const response = await $apifetch('/api/replacements/open', {
+                method: 'GET',
+            });
+
+            replacements.value = response;
+        }
+        catch (err) {
+            error.value = err?.data?.message || 'Erreur lors de la récupération des patients';
+        }
+    }
+
+    return {
+        replacements,
+        fetchNearbyreplacements,
+    };
+};
