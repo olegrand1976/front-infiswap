@@ -1,6 +1,6 @@
 <template>
     <div
-        class="container font-light grid grid-cols-5 gap-8 justify-between lg:mt-12"
+        class="container font-light grid grid-cols-6 gap-8 justify-between mt-12"
     >
         <div class="relative col-span-5 lg:col-span-2 p-4 lg:p-8 grid place-content-center bg-rose-400 shadow-lg rounded-lg overflow-hidden">
             <div
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div
-            class="col-span-5 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
+            class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
         >
             <div
                 class="relative h-60 col-span-3 lg:col-span-1 lg:h-full w-full bg-red-200"
@@ -78,6 +78,40 @@
                     🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous !
                 </p>
             </div>
+        </div>
+
+        <div class="col-span-6 lg:col-span-2 p-4 lg:p-8 grid place-content-center relative bg-rose-400 shadow-lg rounded-lg overflow-hidden">
+            <div class="text-white">
+                <p class="mb-4">
+                    🚀 InfiSwap ouvre ses portes : rejoignez le mouvement ! 🩺
+                </p>
+                <p class="mb-4">
+                    Notre équipe a peaufiné chaque détail pour vous offrir une plateforme à la hauteur de vos attentes : simple, rapide et pensée pour les infirmier(ère)s de terrain.
+                </p>
+                <p class="mb-4">
+                    💡 Que vous cherchiez un remplacement, un complément d’heures ou une collaboration de long terme, tout commence ici.
+                </p>
+                <p class="mb-4">
+                    👉 Rejoignez-nous dès maintenant et faites partie des premiers utilisateurs d’InfiSwap !
+                </p>
+                <div class="text-center">
+                    <Button
+                        href="/register"
+                        class="w-36"
+                    >
+                        Inscription
+                    </Button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
+            <a href="/dashboard/replacements/create" class="transition-transform transform hover:scale-105">
+                <LayoutsAppImage
+                    src="/home/help_me.png"
+                    class="w-full max-w-xs h-48"
+                />
+            </a>
         </div>
     </div>
 </template>
