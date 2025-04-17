@@ -1,6 +1,6 @@
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { AUTH_TOKEN } from '~/lib/constants';
-import type { Pagination, User } from '~/lib/types';
+import type { Address, Pagination, User } from '~/lib/types';
 
 export const useUser = () => {
     return useState<User | undefined>('user', () => undefined);
@@ -13,7 +13,7 @@ export const useAuth = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
     const isLoggedIn = computed(() => !!user.value);
     const isAdmin = computed(() => {
-        return user.value?.roles?.some(role => ['admin', 'dev'].includes(role.name)) ?? false;
+        return user.value?.roles?.some(role => ['administrator', 'developer'].includes(role.name)) ?? false;
     });
 
     const isManager = computed(() => {
@@ -176,7 +176,7 @@ export const useAuth = () => {
     }
 
     async function getUsers(page = 1, perPage = 2) {
-        return await $apifetch('api/admin/users', {
+        return await $apifetch('api/users', {
             params: {
                 page: page,
                 perPage: perPage,
@@ -186,9 +186,30 @@ export const useAuth = () => {
         });
     }
 
+    type UserForm = {
+        lastname: string;
+        firstname: string;
+        identifierNumber: string;
+        email: string;
+        gender: string;
+        phoneNumber: string;
+        dateOfBirth: string | null;
+        language: 'fr' | 'en' | string;
+        accountType: string;
+        address: Address;
+    };
+
+    async function create(form: UserForm) {
+        return await $apifetch('api/users', {
+            method: 'POST',
+            body: form,
+        });
+    }
+
     return {
         user,
         users,
+        create,
         getUsers,
         isLoggedIn,
         isAdmin,

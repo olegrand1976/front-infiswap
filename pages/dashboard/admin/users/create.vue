@@ -2,7 +2,7 @@
     <div>
         <DashboardAdminPageHeader title="Nouvel utilisateur" />
         <DashboardAdminPageContent class="bg-gray-100">
-            <form>
+            <form @submit.prevent="submit">
                 <div class="grid grid-cols-3 gap-4 lg:gap-8">
                     <div class="p-4 hidden lg:block">
                         <h1 class="font-semibold text-gray-600">
@@ -15,83 +15,91 @@
                     <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
                             <InputIcon
+                                v-model="form.lastname"
                                 rounded="md"
                                 label="Nom"
-                                name="lastname"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.firstname"
                                 rounded="md"
                                 label="Prénom"
-                                name="firstname"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.identifierNumber"
                                 rounded="md"
                                 label="INAMI"
-                                name="identifier_number"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.email"
                                 rounded="md"
                                 type="email"
                                 label="Email"
-                                name="email"
                             />
                         </div>
                         <div>
-                            <Select label="Sexe">
-                                <SelectTrigger position="right" class="rounded-md">
+                            <Select
+                                v-model="form.gender"
+                                label="Sexe"
+                            >
+                                <SelectTrigger
+                                    position="right"
+                                    class="rounded-md"
+                                >
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
                                     <SelectGroup>
-                                        <div
-                                            v-for="gender in genders"
-                                            :key="gender.value"
-                                            class="flex justify-center items-center -ms-3"
+                                        <SelectItem
+                                            v-for="(gender, index) in genders"
+                                            :key="index"
+                                            :value="gender.value"
                                         >
-                                            <SelectItem :value="gender.value">
-                                                <span class="text-sm">{{ gender.label }}</span>
-                                            </SelectItem>
-                                        </div>
+                                            <span class="text-sm">{{ gender.label }}</span>
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.phoneNumber"
                                 rounded="md"
                                 label="Téléphone"
-                                name="phone_number"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.dateOfBirth"
                                 rounded="md"
                                 label="Date de naissance"
-                                name="date_of_birth"
                             />
                         </div>
                         <div>
-                            <Select label="Langue">
-                                <SelectTrigger position="right" class="rounded-md">
+                            <Select
+                                v-model="form.language"
+                                label="Langue"
+                            >
+                                <SelectTrigger
+                                    position="right"
+                                    class="rounded-md"
+                                >
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
                                     <SelectGroup>
-                                        <div
-                                            v-for="lang in languages"
-                                            :key="lang.value"
-                                            class="flex justify-center items-center -ms-3"
+                                        <SelectItem
+                                            v-for="(lang, index) in languages"
+                                            :key="index"
+                                            :value="lang.value"
                                         >
-                                            <SelectItem :value="lang.value">
-                                                <span class="text-sm">{{ lang.label }}</span>
-                                            </SelectItem>
-                                        </div>
+                                            <span class="text-sm">{{ lang.label }}</span>
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -111,30 +119,30 @@
                     <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
                             <InputIcon
+                                v-model="form.address.street"
                                 rounded="md"
                                 label="N° et rue"
-                                name="street"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.address.city"
                                 rounded="md"
                                 label="Ville"
-                                name="city"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.address.zipCode"
                                 rounded="md"
                                 label="Code postale"
-                                name="zipCode"
                             />
                         </div>
                         <div>
                             <InputIcon
+                                v-model="form.address.additionalInformation"
                                 rounded="md"
                                 label="Complément d'adresse"
-                                name="additionnalInformation"
                             />
                         </div>
                     </div>
@@ -151,21 +159,25 @@
                     </div>
                     <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                         <div>
-                            <Select label="Type de compte">
-                                <SelectTrigger position="right" class="rounded-md">
+                            <Select
+                                v-model="form.accountType"
+                                label="Type de compte"
+                            >
+                                <SelectTrigger
+                                    position="right"
+                                    class="rounded-md"
+                                >
                                     <SelectValue placeholder="Séléctionner..." />
                                 </SelectTrigger>
                                 <SelectContent class="border border-none">
                                     <SelectGroup>
-                                        <div
-                                            v-for="account in accountOptions"
-                                            :key="account.value"
-                                            class="flex justify-center items-center -ms-3"
+                                        <SelectItem
+                                            v-for="(account, index) in accountOptions"
+                                            :key="index"
+                                            :value="account.value"
                                         >
-                                            <SelectItem :value="account.value">
-                                                <span class="text-sm">{{ account.label }}</span>
-                                            </SelectItem>
-                                        </div>
+                                            <span class="text-sm">{{ account.label }}</span>
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -177,8 +189,9 @@
                     <Button
                         type="submit"
                         class="rounded-md w-52"
+                        :in-progress="inProgress"
                     >
-                        Enregistrer
+                        Créer un utilisateur
                     </Button>
                 </div>
             </form>
@@ -192,6 +205,34 @@ useHead({ title: 'Nouvel utilisateur' });
 definePageMeta({
     layout: 'dashboard',
 });
+
+const { create } = useAuth();
+
+const form = reactive({
+    lastname: null,
+    firstname: null,
+    identifierNumber: null,
+    email: null,
+    gender: null,
+    phoneNumber: null,
+    dateOfBirth: null,
+    language: 'fr',
+    accountType: null,
+    address: {
+        street: null,
+        city: null,
+        country: null,
+        zipCode: null,
+        additionalInformation: null,
+        accountType: null,
+    },
+});
+
+const { submit, inProgress } = useSubmit(
+    async () => {
+        return create(form);
+    },
+);
 
 const genders = [
     {
@@ -225,24 +266,24 @@ const languages = [
 
 const accountOptions = [
     {
+        label: 'Administrateur',
+        value: 'administrator',
+    },
+    {
+        label: 'Développeur',
+        value: 'developer',
+    },
+    {
         label: 'Infirmier(ère)',
         value: 'nurse',
     },
     {
-        label: 'Administrateur',
-        value: 'admin',
-    },
-    {
-        label: 'Collaborateur',
-        value: 'collaborator',
-    },
-    {
         label: 'Testeur',
-        value: 'test_manager',
+        value: 'tester',
     },
     {
         label: 'Commercial',
-        value: 'sale_manager',
+        value: 'sale_representative',
     },
 ];
 </script>
