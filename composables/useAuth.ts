@@ -47,11 +47,11 @@ export const useAuth = () => {
                 return navigateTo('/dashboard');
             }
 
-            if (response.hash && response.two_factor_code) {
+            if (response.hash) {
+                localStorage.setItem('credentials', JSON.stringify(credentials));
                 useCookie('2fa_hash').value = response.hash;
                 return {
                     message: response.message,
-                    code: response.two_factor_code,
                 };
             };
         }

@@ -28,12 +28,12 @@
                 <p class="text-center lg:w-96 2xl:w-auto">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
                 </p>
-                <NuxtLink
-                    to="/"
-                    class="underline text-blue-500 xl:text-sm sm:text-xs"
+                <Button
+                    class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-center xl:text-sm sm:text-xs"
+                    @click="resendCode"
                 >
-                    Renvoyer l'email
-                </NuxtLink>
+                    Renvoyer le code
+                </Button>
 
                 <Form @submit="submit">
                     <div class="flex items-center justify-center">
@@ -55,7 +55,7 @@
 
                     <div class="flex flex-row justify-center space-x-12 mt-16">
                         <div>
-                            <NuxtLink to="/">
+                            <NuxtLink to="/login">
                                 <Button
                                     variant="outline"
                                     class="w-full rounded-full px-16"
@@ -88,12 +88,12 @@
                 <p class="text-center text-sm">
                     Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
                 </p>
-                <NuxtLink
-                    to="/"
-                    class="underline text-blue-500 text-xs text-center"
+                <Button
+                    class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-xs text-center"
+                    @click="resendCode"
                 >
-                    Renvoyer l'email
-                </NuxtLink>
+                    Renvoyer le code
+                </Button>
             </div>
 
             <Form
@@ -125,7 +125,7 @@
 
                 <div class="flex flex-row justify-center space-x-8 mt-16">
                     <div>
-                        <NuxtLink to="/auth/login">
+                        <NuxtLink to="/login">
                             <Button
                                 variant="outline"
                                 class="w-full rounded-full px-12"
@@ -160,7 +160,25 @@ import { useCookie } from '#app';
 
 const { $toast } = useNuxtApp();
 
-const { verify2fa } = useAuth();
+const { verify2fa, login } = useAuth();
+
+const resendingCode = ref(false);
+
+const resendCode = async () => {
+    resendingCode.value = true;
+
+    return login(JSON.parse(localStorage.getItem('credentials'))).then(async (res) => {
+        await nextTick();
+
+        if (res.message) {
+            $toast({
+                description: 'Un nouveau code a été envoyé.',
+            });
+
+            resendingCode.value = false;
+        }
+    });
+};
 
 const pinValue = ref<string[]>([]);
 const hash = useCookie('2fa_hash');
@@ -175,6 +193,7 @@ const { submit, inProgress } = useSubmit(
         await verify2fa(credentials);
 
         useCookie('2fa_hash').value = '';
+        localStorage.removeItem('credentials');
         pinValue.value = [];
     },
     {

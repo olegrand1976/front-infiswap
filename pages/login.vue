@@ -230,7 +230,7 @@ const { submit, inProgress } = useSubmit(
         await nextTick();
 
         if (useCookie('2fa_hash').value) {
-            return router.push('/two-factor-verification');
+            return router.push('/2fa-challenge');
         }
         else {
             return router.push('/dashboard');
