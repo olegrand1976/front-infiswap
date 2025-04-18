@@ -1,11 +1,15 @@
 <template>
-    <div :class="['w-full p-4 rounded-md bg-white', customClass]">
+    <div :class="cn('w-full p-4 rounded-md bg-white', customClass)">
         <slot />
     </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    customClass?: string;
+import { cn } from '@/lib/utils';
+
+const props = defineProps<{
+    class?: string;
 }>();
+
+const customClass = computed(() => props.class);
 </script>
