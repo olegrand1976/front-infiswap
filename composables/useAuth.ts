@@ -237,6 +237,10 @@ export const useAuth = () => {
         return await $apifetch('api/users', {
             method: 'POST',
             body: form,
+        }).then(() => {
+            $toast({
+                description: 'Utilisateur créé avec succès',
+            });
         });
     }
 
@@ -244,6 +248,10 @@ export const useAuth = () => {
         return await $apifetch(`/api/users/${id}`, {
             method: 'PUT',
             body: form,
+        }).then(() => {
+            $toast({
+                description: 'Utilisateur mis à jour avec succès',
+            });
         });
     }
 

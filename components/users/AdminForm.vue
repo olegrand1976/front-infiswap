@@ -8,7 +8,7 @@ const props = defineProps<{
 const { create, update } = useAuth();
 const isEditMode = computed(() => !!props.user);
 
-const form = reactive({
+const getInitialValue = () => ({
     lastname: props.user?.lastname || null,
     firstname: props.user?.firstname || null,
     email: props.user?.email || null,
@@ -27,12 +27,18 @@ const form = reactive({
     },
 });
 
+const form = reactive(getInitialValue());
+
 const { submit, inProgress } = useSubmit(() => {
     if (isEditMode.value) {
         return update(props.user.id, form);
     }
 
     return create(form);
+}, {
+    onSuccess: () => {
+        Object.assign(form, getInitialValue());
+    },
 });
 
 const genders = [

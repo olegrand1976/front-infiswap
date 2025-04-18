@@ -2,7 +2,7 @@
     <div>
         <DashboardAdminPageHeader title="Nouvel utilisateur" />
         <DashboardAdminPageContent class="bg-gray-100">
-            <UserAdminForm />
+            <UsersAdminForm />
         </DashboardAdminPageContent>
     </div>
 </template>
