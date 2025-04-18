@@ -46,7 +46,7 @@
                         <DialogFooter>
                             <Button
                                 :loading="profileUpload.loading"
-                                @click="handleUploadProfile"
+                                @click="submit"
                             >
                                 Sauvegarder
                             </Button>
@@ -1014,6 +1014,7 @@ import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useReports } from '~/composables/useReports';
 import { useAuth } from '~/composables/useAuth';
+import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User } from '~/lib/types';
 
@@ -1242,31 +1243,34 @@ const handleChangeNotifAccept = async () => {
     }
 };
 
-const handleUploadProfile = async () => {
-    if (!profileFile.value) {
-        $toast({
-            description: 'Veuillez sélectionner une image',
-        });
-        return;
-    }
+const { submit } = useSubmit(
+    async () => {
+        if (!profileFile.value) {
+            $toast({
+                description: 'Veuillez sélectionner une image',
+                variant: 'destructive',
+            });
+            return;
+        }
 
-    try {
-        const formData = new FormData();
-        formData.append('profil_url', profileFile.value);
+        try {
+            const formData = new FormData();
+            formData.append('profil_url', profileFile.value);
 
-        const response = await updateAvatarUser(formData);
+            const response = await updateAvatarUser(formData);
 
-        user.value.profile.profil_url = response.user.profile.profil_url;
+            user.value.profile.profil_url = response.user.profile.profil_url;
 
-        $toast({
-            description: 'Photo mise à jour',
-        });
-        profileDialog.value = false;
-    }
-    catch (error) {
-        console.log(error);
-    }
-};
+            $toast({
+                description: 'Photo mise à jour',
+            });
+            profileDialog.value = false;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    },
+);
 
 const handleDeleteAvatar = async () => {
     try {
