@@ -56,6 +56,15 @@ interface Role {
     updated_at: string;
 }
 
+export interface Address {
+    street: string | null;
+    city: string | null;
+    country: string | null;
+    zipCode: string | null;
+    additionalInformation: string | null;
+    accountType: string | null;
+  };
+
 interface ReplacementPreference {
     cities: string[];
     zip_codes: string[];
