@@ -297,7 +297,10 @@
                                     v-model="selectedReferral"
                                     class="w-full appearance-none rounded-full border border-gray-300 py-2 px-4 pl-10 pr-10 text-sm bg-white text-gray-600"
                                 >
-                                    <option disabled value="">
+                                    <option
+                                        disabled
+                                        value=""
+                                    >
                                         Sélectionnez une option
                                     </option>
                                     <option
@@ -317,7 +320,11 @@
                                         stroke-width="2"
                                         viewBox="0 0 24 24"
                                     >
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M19 9l-7 7-7-7"
+                                        />
                                     </svg>
                                 </div>
                             </div>
@@ -325,10 +332,10 @@
                             <InputIcon
                                 v-if="formData.referralSource.startsWith('other:')"
                                 :value="formData.referralSource.replace(/^other:/, '')"
-                                @input="event => formData.referralSource = `other:${event.target.value}`"
                                 placeholder="Veuillez préciser"
                                 :icon="EllipsisHorizontalCircleIcon"
                                 class="w-full"
+                                @input="event => formData.referralSource = `other:${event.target.value}`"
                             />
                         </div>
                     </div>

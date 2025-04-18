@@ -747,6 +747,11 @@
                             <span class="text-lg">Préférences</span>
                         </h3>
 
+                        <InputPreferences
+                            :initial-zip-codes="zipCodes"
+                            :initial-cities="cities"
+                        />
+
                         <div class="mt-4 space-y-3">
                             <div
                                 class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full opacity-70 cursor-not-allowed"
@@ -1012,11 +1017,12 @@ import { useRouter } from 'vue-router';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import InputPreferences from '@/components/InputPreferences.vue';
 import { useReports } from '~/composables/useReports';
 import { useAuth } from '~/composables/useAuth';
 import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
-import type { User } from '~/lib/types';
+import type { User, UserSettings } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
 const router = useRouter();
@@ -1346,6 +1352,10 @@ const disableAuth2Fa = async () => {
 };
 
 const pinValue = ref<string[]>([]);
+
+const settings: UserSettings = JSON.parse(user.value.settings);
+const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
+const cities = ref<string[]>(settings.replacement?.cities ?? []);
 
 const handleVerifyCode = async () => {
     const formData = reactive({
