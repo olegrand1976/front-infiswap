@@ -87,13 +87,12 @@ const triggerFileInput = () => {
             @change="handleFileChange"
         >
 
-        <!-- Box for file preview -->
-        <div class="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-100">
+        <div class="h-60 md:h-80 w-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-100">
             <img
                 v-if="fileType === 'image'"
                 :src="previewUrl"
-                alt="Aperçu"
-                class="object-cover w-full h-full"
+                alt="file-upload"
+                class="object-cover"
             >
             <div
                 v-else-if="fileType !==null"
