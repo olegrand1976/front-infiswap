@@ -244,6 +244,10 @@ export const useAuth = () => {
         });
     }
 
+    async function show(id: number) {
+        return await $apifetch(`/api/users/${id}`);
+    }
+
     async function update(id: number, form: UserForm) {
         return await $apifetch(`/api/users/${id}`, {
             method: 'PUT',
@@ -260,6 +264,7 @@ export const useAuth = () => {
         users,
         create,
         update,
+        show,
         getUsers,
         isLoggedIn,
         isAdmin,

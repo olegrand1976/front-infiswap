@@ -19,7 +19,7 @@ const getInitialValue = () => ({
     language: 'fr',
     accountType: null,
     address: {
-        street: props.user?.profile.street_address || null,
+        street: props.user?.profile.street || null,
         city: props.user?.profile.city || null,
         country: props.user?.profile.country || null,
         zipCode: props.user?.profile.zip_code || null,
