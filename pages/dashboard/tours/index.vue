@@ -1,101 +1,109 @@
 <template>
     <div class="pt-4">
         <Form>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <CalendarTours
-                    v-model="value"
-                    class="rounded-md shadow-lg"
-                />
-                <div class="w-full bg-gray-100 rounded-lg h-full">
-                    <div class="bg-primary rounded-t-lg flex justify-between items-center px-2 ps-4 h-12">
-                        <h2 class="font-bold text-white">
-                            Liste des patients
-                        </h2>
-                        <div>
-                            <Button
-                                variant="secondary"
-                                class="text-primary"
-                                href="/dashboard/patients/create"
-                            >
-                                Créer nouveau patient
-                            </Button>
+            <div class="lg:pr-6">
+                <div class="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-5">
+                    <CalendarTours
+                        v-model="value"
+                        class="rounded-md shadow-lg w-full"
+                    />
+                    <div class="w-full bg-gray-100 rounded-lg h-full">
+                        <div class="bg-primary rounded-t-lg flex justify-between items-center px-2 ps-4 h-12">
+                            <h2 class="font-bold text-white">
+                                Liste des patients
+                            </h2>
+                            <div title="Créer un nouveau patient">
+                                <a href="/dashboard/patients/create">
+                                    <PlusCircleIcon class="w-6 h-6 text-white cursor-pointer mr-2" />
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="p-5">
-                        <p v-if="selectedDate === null">
-                            Aujourd'hui : {{ today }}
-                        </p>
-                        <p v-else>
-                            Pour la date de : {{ selectedDate }}
-                        </p>
-                        <Separator class="opacity-70 mt-4" />
-                        <div class="w-full max-h-64 overflow-y-scroll mt-4 space-y-2">
-                            <div>
-                                <div
-                                    v-if="loading"
-                                    class="flex justify-center items-center"
-                                >
-                                    <p>Chargement...</p>
-                                </div>
-                                <div
-                                    v-if="error"
-                                    class="flex justify-center items-center text-red-500"
-                                >
-                                    <p>Erreur lors du chargement des données : {{ error.message }}</p>
-                                </div>
-                                <div v-if="tours.length > 0 && !loading && !error">
+                        <div class="p-5">
+                            <p v-if="selectedDate === null">
+                                Aujourd'hui : {{ today }}
+                            </p>
+                            <p v-else>
+                                Date du : {{ selectedDate }}
+                            </p>
+                            <Separator class="mt-4 h-px bg-neutral-700 opacity-100" />
+                            <div class="w-full max-h-64 overflow-y-scroll mt-4 space-y-2">
+                                <div>
                                     <div
-                                        v-for="(item, index) in tours"
-                                        :key="item.id"
+                                        v-if="loading"
+                                        class="flex justify-center items-center"
                                     >
-                                        <div
-                                            class="bg-gray-200 grid grid-cols-[50%_50%] rounded-lg items-center ps-4 h-10 shadow-sm mt-2 cursor-pointer w-full"
-                                            :class="{
-                                                'bg-primary text-white': selectedPatientId === item.id || (index === 0 && !selectedPatientId),
-                                            }"
-                                            @click="handleFetchCareType(item.id)"
-                                        >
-                                            <p class="flex justify-between items-center w-full">
-                                                <span>{{ item.firstname }} {{ item.lastname }}
-                                                </span>
-                                            </p>
-                                            <div
-                                                class="flex justify-end mr-4 gap-2 text-white"
-                                                @click="openDialog(item.id, item.visit_times?.[0]?.id)"
-                                            >
-                                                <span class="truncate">Exclure de la tournée du jour</span>
-                                                <XCircleIcon
-                                                    class="h-6 w-6 mr-2 text-white stroke-2"
-                                                />
-                                            </div>
-                                        </div>
-                                        <Dialog v-model:open="isDialogOpen">
-                                            <DialogContent class="h-[28vh]">
-                                                <DialogHeader>
-                                                    <DialogTitle>Confirmer la suppression</DialogTitle>
-                                                    <DialogDescription>
-                                                        Etes-vous sur de vouloir supprimer ce patient ?
-                                                    </DialogDescription>
-                                                </DialogHeader>
-
-                                                <div class="flex space-x-8 justify-end items-center">
-                                                    <Button
-                                                        variant="secondary"
-                                                        @click="closeDialog"
-                                                    >
-                                                        Annuler
-                                                    </Button>
-                                                    <Button @click="submitDelete">
-                                                        Oui
-                                                    </Button>
-                                                </div>
-                                            </DialogContent>
-                                        </Dialog>
+                                        <p>Chargement...</p>
                                     </div>
-                                </div>
-                                <div v-else-if="tours.length === 0 && !loading && !error">
-                                    <p>Pas de données retournés</p>
+                                    <div
+                                        v-if="error"
+                                        class="flex justify-center items-center text-red-500"
+                                    >
+                                        <p>Erreur lors du chargement des données : {{ error.message }}</p>
+                                    </div>
+                                    <div v-if="tours.length > 0 && !loading && !error">
+                                        <div
+                                            v-for="(item, index) in tours"
+                                            :key="item.id"
+                                        >
+                                            <div
+                                                class="bg-gray-200 rounded-lg shadow-sm mt-2 cursor-pointer w-full px-4 py-2 flex items-center justify-between"
+                                                :class="{
+                                                    'bg-primary text-white': selectedPatientId === item.id || (index === 0 && !selectedPatientId),
+                                                }"
+                                                @click="handleFetchCareType(item.id)"
+                                            >
+                                                <div class="flex items-center gap-3">
+                                                    <div class="flex-shrink-0">
+                                                        <img
+                                                            v-if="item.profile?.profil_url"
+                                                            :src="$config.public.API_URL + '/storage/' + item.profile.profil_url"
+                                                            alt="Photo de profil"
+                                                            class="rounded-full h-9 w-9 object-cover"
+                                                        />
+                                                        <UserCircleIcon v-else class="h-10 w-10 text-gray-400" />
+                                                    </div>
+                                                    <div class="text-sm font-medium">
+                                                        {{ item.firstname }} {{ item.lastname }}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="flex items-center gap-2"
+                                                    @click.stop="openDialog(item.id, item.visit_times?.[0]?.id)"
+                                                >
+                                                    <div title="Exclure de la tournée du jour">
+                                                        <XCircleIcon class="h-5 w-5 text-white stroke-2 cursor-pointer" />
+                                                    </div>
+                                                    <CheckCircleIcon class="h-5 w-5 text-white stroke-2 cursor-pointer" />
+                                                </div>
+                                            </div>
+                                            <Dialog v-model:open="isDialogOpen">
+                                                <DialogContent class="h-[28vh]">
+                                                    <DialogHeader>
+                                                        <DialogTitle>Confirmer la suppression</DialogTitle>
+                                                        <DialogDescription>
+                                                            Etes-vous sur de vouloir supprimer ce patient ?
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+
+                                                    <div class="flex space-x-8 justify-end items-center">
+                                                        <Button
+                                                            variant="secondary"
+                                                            @click="closeDialog"
+                                                        >
+                                                            Annuler
+                                                        </Button>
+                                                        <Button @click="submitDelete">
+                                                            Oui
+                                                        </Button>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="tours.length === 0 && !loading && !error">
+                                        <p>Pas de données retournés</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,34 +112,35 @@
             </div>
             <div>
                 <div v-if="selectedPatient">
-                    <div class="mt-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+                    <div class="mt-6 pr-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-[32.5%_32.5%_35%] gap-2 w-full">
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
                                     <div class="flex-shrink-0">
-                                        <!-- <LayoutsAppImage
-                                            src="/home/infirmier_homme.png"
-                                            class="rounded-full h-16 w-16"
-                                        /> -->
-                                        <UserCircleIcon class="size-16" />
+                                        <img
+                                            v-if="selectedPatient.profile?.profil_url"
+                                            :src="$config.public.API_URL + '/storage/' + selectedPatient.profile.profil_url"
+                                            alt="Photo de profil"
+                                            class="rounded-full h-20 w-20"
+                                        >
+                                        <UserCircleIcon v-else class="size-20" />
                                     </div>
                                     <div class="ml-4 flex flex-grow justify-between items-center">
                                         <div class="text-lg">
-                                            {{ selectedPatient.firstname }}  <span class="font-semibold">
-                                                {{ selectedPatient.lastname }}</span>
+                                            <span class="font-semibold">{{ selectedPatient.firstname }}</span> {{ selectedPatient.lastname }}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="bg-gray-100">
                                     <div class="mt-4 bg-primary h-11 text-white p-2.5 rounded-t-lg font-bold text-lg">
-                                        <!-- Information : -->
+                                        <span class="ml-4">Information :</span>
                                     </div>
 
-                                    <div class="mt-4 p-4 rounded-lg shadow">
-                                        <div class="flex justify-between items-center border-b pb-2">
+                                    <div class="mt-4 p-4 rounded-lg shadow flex flex-col gap-y-4">
+                                        <div class="flex justify-between items-center border-b py-0">
                                             <span class="font-bold">Genre</span>
-                                            <span class="w-2/3 text-center">{{ selectedPatient.gender ?? 'Pas de données' }}</span>
+                                            <span class="w-2/3 text-left pl-4">{{ selectedPatient.gender ?? 'Pas de données' }}</span>
                                         </div>
                                         <template
                                             v-if="selectedPatient?.care_informations && selectedPatient.care_informations.length > 0"
@@ -139,47 +148,17 @@
                                             <div
                                                 v-for="(careInfo, index) in selectedPatient.care_informations"
                                                 :key="index"
-                                                class="flex justify-between items-center border-b py-2"
+                                                class="flex justify-between items-center border-b py-0"
                                             >
                                                 <span class="font-bold">{{ careInfo.record_type }}</span>
-                                                <span class="w-2/3 text-center">{{ careInfo.record_name }}</span>
+                                                <span class="w-2/3 text-left pl-4">{{ careInfo.record_name }}</span>
                                             </div>
                                         </template>
                                     </div>
                                 </div>
-
-                                <div class="w-full">
-                                    <div class="bg-gray-100 mt-4 rounded-lg">
-                                        <div
-                                            class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-lg"
-                                        >
-                                            Liste des types de soins
-                                        </div>
-                                        <div class="p-4 space-y-2">
-                                            <div
-                                                v-if="hasCareTypes"
-                                            >
-                                                <div
-                                                    v-for="(care, index) in uniqueCareTypes"
-                                                    :key="index"
-                                                    class="bg-gray-200 p-3 rounded-lg mt-2"
-                                                >
-                                                    {{ care }}
-                                                </div>
-                                            </div>
-                                            <div
-                                                v-else
-                                            >
-                                                <p class="text-center text-gray-500">
-                                                    Pas de données pour l'instant
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
-                            <div class="w-full">
+                            <div class="w-full pl-2">
                                 <div class="bg-gray-100 rounded-lg flex flex-col items-center pb-6">
                                     <div
                                         class="bg-primary text-white p-2.5 rounded-t-lg font-bold w-full text-base flex"
@@ -187,7 +166,7 @@
                                         <HomeIcon class="h-6 w-6 text-white mr-2" /> Ville
                                     </div>
                                     <div
-                                        class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary"
+                                        class="bg-white w-64 text-center rounded-full mt-4 py-2 border-2 border-primary"
                                     >
                                         {{ selectedPatient.profile?.city ?? 'Pas de données pour l\'instant' }}
                                     </div>
@@ -200,7 +179,7 @@
                                         <InboxIcon class="h-6 w-6 text-white mr-2" /> Code postal
                                     </div>
                                     <div
-                                        class="bg-white w-4/5 text-center rounded-full mt-4 py-3 border-2 border-primary"
+                                        class="bg-white w-64 text-center rounded-full mt-4 py-2 border-2 border-primary"
                                     >
                                         {{ selectedPatient.profile?.zip_code ?? 'Pas de données pour l\'instant' }}
                                     </div>
@@ -218,7 +197,7 @@
                                         <div
                                             v-for="visit in selectedPatient.visit_times"
                                             :key="visit.patient_id"
-                                            class="w-full"
+                                            class="w-64"
                                         >
                                             <div
                                                 v-for="visitItem in visit.visits"
@@ -227,12 +206,12 @@
                                             >
                                                 <div class="w-full max-w-lg mx-auto">
                                                     <div
-                                                        class="w-full rounded-lg mt-4 py-4 px-32 bg-primary text-white text-center"
+                                                        class="w-full rounded-lg mt-4 py-3 bg-primary text-white text-center"
                                                     >
                                                         {{ translatedVisitPeriod(visitItem.visit_period) }}
                                                     </div>
                                                     <div
-                                                        class="bg-white w-full text-center rounded-lg mt-4 py-3 border-2 border-gray-300 text-gray-400"
+                                                        class="bg-white w-full text-center rounded-lg mt-4 py-2 border-2 border-gray-300 text-gray-400"
                                                     >
                                                         {{ visitItem.time }}
                                                     </div>
@@ -246,6 +225,36 @@
                                         <p class="text-center text-gray-500">
                                             Pas de créneau trouvé
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full pl-2">
+                                <div class="bg-gray-100 rounded-lg">
+                                    <div
+                                        class="bg-primary text-white p-2.5 rounded-t-lg text-center font-bold text-base"
+                                    >
+                                        Liste des types de soins
+                                    </div>
+                                    <div class="p-4 space-y-2">
+                                        <div
+                                            v-if="hasCareTypes"
+                                        >
+                                            <div
+                                                v-for="(care, index) in uniqueCareTypes"
+                                                :key="index"
+                                                class="bg-gray-200 p-3 rounded-lg mt-2"
+                                            >
+                                                {{ care }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-else
+                                        >
+                                            <p class="text-center text-gray-500">
+                                                Pas de données pour l'instant
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -264,6 +273,8 @@ import {
     ClockIcon,
     HomeIcon,
     UserCircleIcon,
+    CheckCircleIcon,
+    PlusCircleIcon,
 } from '@heroicons/vue/24/solid';
 
 import { ref, watch, computed } from 'vue';
@@ -299,18 +310,18 @@ const submitDelete = async () => {
 
     const { patientId, visitId } = patientToDelete.value;
     try {
-        // 1. Sauvegarde des références avant modification
+        // 1. Saving references before modification
         const currentTours = tours.value;
         const currentSelectedId = selectedPatientId.value;
 
-        // 2. Suppression locale
+        // 2. Local deletion
         tours.value = currentTours.filter(patient => patient.id !== patientId);
 
         if (currentSelectedId === patientId) {
             selectedPatientId.value = tours.value[0]?.id || null;
         }
 
-        // 4. Suppression API (en arrière-plan)
+        // 4. API Removal (Background)
         await deleteTour(patientId, visitId).catch((error) => {
             console.error('Erreur API, rollback:', error);
             tours.value = currentTours;

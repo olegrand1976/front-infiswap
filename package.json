@@ -23,6 +23,7 @@
     "@vee-validate/nuxt": "^4.15.0",
     "@vueuse/core": "^12.8.2",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
+    "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -36,11 +37,14 @@
     "scule": "^1.3.0",
     "shadcn-nuxt": "^0.11.3",
     "tailwind-merge": "^2.6.0",
+    "tailwind-scrollbar": "^4.0.2",
+    "tailwindcss": "^4.1.4",
     "tailwindcss-animate": "^1.0.7",
     "yup": "^1.6.1"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.7.6",
+    "@tailwindcss/postcss": "^4.1.4",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
