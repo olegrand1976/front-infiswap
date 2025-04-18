@@ -240,10 +240,18 @@ export const useAuth = () => {
         });
     }
 
+    async function update(id: number, form: UserForm) {
+        return await $apifetch(`/api/users/${id}`, {
+            method: 'PUT',
+            body: form,
+        });
+    }
+
     return {
         user,
         users,
         create,
+        update,
         getUsers,
         isLoggedIn,
         isAdmin,

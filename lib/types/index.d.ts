@@ -62,7 +62,6 @@ export interface Address {
     country: string | null;
     zipCode: string | null;
     additionalInformation: string | null;
-    accountType: string | null;
 };
 
 interface ReplacementPreference {

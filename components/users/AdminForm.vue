@@ -5,6 +5,7 @@ const props = defineProps<{
     user?: User | null;
 }>();
 
+const { create, update } = useAuth();
 const isEditMode = computed(() => !!props.user);
 
 const form = reactive({
@@ -28,16 +29,10 @@ const form = reactive({
 
 const { submit, inProgress } = useSubmit(() => {
     if (isEditMode.value) {
-        return $fetch(`/api/users/${props.user.id}`, {
-            method: 'PUT',
-            body: form,
-        });
+        return update(props.user.id, form);
     }
 
-    return $fetch('/api/users', {
-        method: 'POST',
-        body: form,
-    });
+    return create(form);
 });
 
 const genders = [
@@ -284,7 +279,7 @@ const accountOptions = [
                 class="rounded-md w-52"
                 :in-progress="inProgress"
             >
-                Créer un utilisateur
+                {{ props.user ? 'Sauvegarder' : 'Créer un utilisateur' }}
             </Button>
         </div>
     </form>
