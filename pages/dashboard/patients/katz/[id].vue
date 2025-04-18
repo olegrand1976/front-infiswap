@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-5xl mx-auto py-10 px-4">
+    <div class="mx-auto py-10 px-4">
         <h1 class="text-2xl font-bold text-center text-primary mb-8">
             Calcul de Katz
         </h1>
@@ -45,7 +45,7 @@
                                 'bg-primary text-white': item.selected === choice.value,
                                 'bg-gray-100 text-gray-800': item.selected !== choice.value,
                             }"
-                            class="px-4 py-2 rounded-md cursor-pointer transition duration-300 text-center"
+                            class="px-4 py-2 rounded-md cursor-pointer transition duration-300 text-left flex items-center min-h-[4rem]"
                         >
                             {{ choice.label }}
                         </p>
@@ -89,8 +89,8 @@ const katzItems = ref([
         icon: BeakerIcon,
         choices: [
             { value: 1, label: '1. Capable de se laver complètement sans aide' },
-            { value: 2, label: '2. Aide partielle pour le haut ou le bas' },
-            { value: 3, label: '3. Aide partielle pour haut et bas' },
+            { value: 2, label: '2. Besoin d\'aide partielle pour se laver au-dessus ou en dessous de la ceinture' },
+            { value: 3, label: '3. Besoin d\'aide partielle pour se laver au-dessus et en-dessous de la ceinture' },
             { value: 4, label: '4. Totalement aidé pour le lavage' },
         ],
     },
@@ -99,10 +99,10 @@ const katzItems = ref([
         selected: 0,
         icon: BriefcaseIcon,
         choices: [
-            { value: 1, label: '1. S\'habille seul sans aide' },
-            { value: 2, label: '2. Aide pour mettre les vêtements' },
-            { value: 3, label: '3. Besoin de supervision' },
-            { value: 4, label: '4. Totalement dépendant' },
+            { value: 1, label: '1. S\'habille et se déshabille seul' },
+            { value: 2, label: '2. Besoin d\'aide pour s\'habiller au-dessus ou en-dessous (sans les lacets)' },
+            { value: 3, label: '3. Besoin d\'aide pour s\'habiller au-dessus et en-dessous' },
+            { value: 4, label: '4. Doit être aidé pour s\'habiller partout' },
         ],
     },
     {
@@ -110,10 +110,10 @@ const katzItems = ref([
         selected: 0,
         icon: ArrowsRightLeftIcon,
         choices: [
-            { value: 1, label: '1. Se lève/transfère seul' },
-            { value: 2, label: '2. Aide légère pour transfert' },
-            { value: 3, label: '3. Nécessite une aide importante' },
-            { value: 4, label: '4. Totalement dépendant' },
+            { value: 1, label: '1. Autonome pour le transfert et les déplacements, sans aide ni appareil' },
+            { value: 2, label: '2. Autonome avec l’aide d’un auxiliaire (béquilles, fauteuil roulant, etc.)' },
+            { value: 3, label: '3. Dépend d\'une aide pour au moins un transfert ou déplacement' },
+            { value: 4, label: '4. Grabataire ou en fauteuil roulant, totalement dépendant pour se déplacer' },
         ],
     },
     {
@@ -121,10 +121,10 @@ const katzItems = ref([
         selected: 0,
         icon: ArrowDownIcon,
         choices: [
-            { value: 1, label: '1. Va aux toilettes seul' },
-            { value: 2, label: '2. Aide pour se déplacer ou s\'essuyer' },
-            { value: 3, label: '3. Besoin d\'aide complète' },
-            { value: 4, label: '4. Utilise constamment des protections' },
+            { value: 1, label: '1. Va seul aux toilettes, s\'habille ou s\'essuie' },
+            { value: 2, label: '2. Besoin d\'aide pour un des trois : se déplacer, s\'habiller ou s\'essuyer' },
+            { value: 3, label: '3. Besoin d\'aide pour deux des trois : se déplacer, s\'habiller ou s\'essuyer' },
+            { value: 4, label: '4. Besoin d\'aide pour les trois : se déplacer, s\'habiller et s\'essuyer.' },
         ],
     },
     {
@@ -143,10 +143,10 @@ const katzItems = ref([
         selected: 0,
         icon: CakeIcon,
         choices: [
-            { value: 1, label: '1. Mange seul sans aide' },
-            { value: 2, label: '2. Aide pour couper ou préparer' },
-            { value: 3, label: '3. Nécessite surveillance pendant repas' },
-            { value: 4, label: '4. Nourri entièrement par quelqu\'un' },
+            { value: 1, label: '1. Peut manger et boire seul' },
+            { value: 2, label: '2. Besoin d\'aide avant de manger ou boire' },
+            { value: 3, label: '3. Besoin d\'aide partielle pour manger ou boire' },
+            { value: 4, label: '4. Totalement dépendant pour manger et boire' },
         ],
     },
 ]);
