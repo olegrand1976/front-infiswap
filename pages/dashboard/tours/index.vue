@@ -139,6 +139,14 @@
 
                                     <div class="mt-4 p-4 rounded-lg shadow flex flex-col gap-y-4">
                                         <div class="flex justify-between items-center border-b py-0">
+                                            <span class="font-bold">Téléphone</span>
+                                            <span class="w-2/3 text-left pl-4">{{ selectedPatient.phone_number ?? 'Pas de données' }}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center border-b py-0">
+                                            <span class="font-bold">Adresse</span>
+                                            <span class="w-2/3 text-left pl-4">{{ selectedPatient.profile.street_address ?? 'Pas de données' }}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center border-b py-0">
                                             <span class="font-bold">Genre</span>
                                             <span class="w-2/3 text-left pl-4">{{ selectedPatient.gender ?? 'Pas de données' }}</span>
                                         </div>
