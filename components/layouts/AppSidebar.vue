@@ -194,11 +194,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 route: '/dashboard/patients/create',
                 icon: UserPlusIcon,
             },
-            {
-                label: 'De mon région',
-                route: '/dashboard/patients/myregion',
-                icon: MapPinIcon,
-            },
+            // {
+            //     label: 'De ma région',
+            //     route: '/dashboard/patients/myregion',
+            //     icon: MapPinIcon,
+            // },
         ],
     },
     {
