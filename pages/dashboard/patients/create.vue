@@ -10,7 +10,6 @@
                             </h3>
                             <div class="bg-gray-100 p-4">
                                 <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
-                                    <CalendarDaysIcon class="w-5" />
                                     <Input
                                         v-model="formData.careStartDate"
                                         type="date"
@@ -25,7 +24,6 @@
                             </h3>
                             <div class="bg-gray-100 p-4">
                                 <div class="flex justify-center mx-auto bg-primary rounded-full px-3 h-9 items-center text-white w-52">
-                                    <CalendarDaysIcon class="w-5" />
                                     <Input
                                         v-model="formData.careEndDate"
                                         type="date"
