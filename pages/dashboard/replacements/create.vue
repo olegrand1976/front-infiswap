@@ -58,12 +58,23 @@
                     </div>
                 </div>
 
-                <div class="sm:mx-20 md:mx-0 ps-4">
-                    <RangeCalendar
-                        v-model="value"
-                        :min-value="todayCalendar"
-                        class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
-                    />
+                <div>
+                    <div class="px-4 mb-4">
+                        <Button
+                            class="flex text-xs items-center space-x-2"
+                            href="/dashboard/replacements/immediate"
+                        >
+                            Créer un remplacement rapide
+                            <ClockIcon class="w-6 h-6" />
+                        </Button>
+                    </div>
+                    <div class="sm:mx-20 md:mx-0 ps-4">
+                        <RangeCalendar
+                            v-model="value"
+                            :min-value="todayCalendar"
+                            class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -448,6 +459,7 @@ import {
     TrashIcon,
     PlusCircleIcon,
     ArrowPathRoundedSquareIcon,
+    ClockIcon,
 } from '@heroicons/vue/24/solid';
 
 import type { DateRange } from 'radix-vue';

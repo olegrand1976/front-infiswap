@@ -671,6 +671,14 @@ const { submit, inProgress } = useSubmit(async () => {
             });
 
             setTimeout(() => {
+                $toast({
+                    description: 'L\'échelle de Katz n\'a pas été mise à jour.',
+                    status: 'error',
+                    variant: 'destructive',
+                });
+            }, 1500);
+
+            setTimeout(() => {
                 router.push('/dashboard/patients');
             }, 3000);
         });
