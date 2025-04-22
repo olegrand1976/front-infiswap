@@ -1,7 +1,6 @@
 <template>
     <Select
         :default-value="defaultLanguage"
-        class="w-64"
         disabled
     >
         <SelectTrigger
