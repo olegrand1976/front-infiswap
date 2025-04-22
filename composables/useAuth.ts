@@ -16,10 +16,6 @@ export const useAuth = () => {
         return user.value?.roles?.some(role => ['administrator', 'developer'].includes(role.name)) ?? false;
     });
 
-    const isManager = computed(() => {
-        return user.value.roles.some(role => ['test_manager', 'sale_manager'].includes(role.name));
-    });
-
     const loading = useState<boolean>('loading', () => false);
 
     async function refresh() {
@@ -268,7 +264,6 @@ export const useAuth = () => {
         getUsers,
         isLoggedIn,
         isAdmin,
-        isManager,
         login,
         register,
         registerBeta,
