@@ -13,7 +13,6 @@
                 <TagsInput
                     v-model="zipCodes"
                     class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                    @keyup.enter="addZipCodePreference"
                 >
                     <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                         <TagsInputItem
@@ -30,7 +29,7 @@
                         class="-mt-1 sm:w-24 2xl:w-auto"
                         placeholder="8973"
                         @blur="handleBlur"
-                        @focus="zipCodeFocused = true"
+                        @keyup.enter="() => addPreference()"
                     />
                 </TagsInput>
 
@@ -55,7 +54,7 @@
                 <TagsInput
                     v-model="cities"
                     class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                    @keyup.enter="addCityPreference"
+                    @keyup.enter="addPreference"
                 >
                     <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                         <TagsInputItem
@@ -72,6 +71,7 @@
                         class="-mt-1 sm:w-24 2xl:w-auto"
                         placeholder="Bruxelles"
                         @blur="handleBlur"
+                        @keyup.enter="() => addPreference()"
                     />
                 </TagsInput>
             </div>
@@ -87,7 +87,7 @@ import {
     TagsInputItemDelete,
     TagsInputItemText,
 } from '@/components/ui/tags-input';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent } from '@/components/ui/tooltip';
 
 import { useReports } from '~/composables/useReports';
 
@@ -98,32 +98,10 @@ const props = defineProps<{
 
 const { createPreferences } = useReports();
 
-const zipCodeFocused = ref(false);
-
 const zipCodes = ref<string[]>(props.initialZipCodes);
 const cities = ref<string[]>(props.initialCities);
 
-const addCityPreference = async (newCity: string) => {
-    if (!newCity || cities.value.includes(newCity)) return;
-
-    newCity = cities.value[cities.value.length - 1].trim();
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
-
-const addZipCodePreference = async (newZipCode: string) => {
-    if (!newZipCode || zipCodes.value.includes(newZipCode)) return;
-
-    newZipCode = zipCodes.value[zipCodes.value.length - 1].trim();
-
+const addPreference = async () => {
     const formData = {
         key: 'replacement',
         value: {
@@ -165,6 +143,7 @@ const removeCity = async (city: string) => {
 
 const handleBlur = (event) => {
     const inputEl = event.target;
+
     const enterEvent = new KeyboardEvent('keydown', {
         key: 'Enter',
         code: 'Enter',
@@ -175,5 +154,11 @@ const handleBlur = (event) => {
     });
 
     inputEl.dispatchEvent(enterEvent);
+
+    nextTick(() => {
+        setTimeout(() => {
+            addPreference();
+        }, 0);
+    });
 };
 </script>
