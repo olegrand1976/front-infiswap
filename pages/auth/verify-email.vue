@@ -33,7 +33,10 @@
                     <hr class="mx-8">
                     <p class="md:text-sm sm:text-xs xl:mt-8 sm:mt-6 text-center">
                         Si vous n'avez pas encore reçu de mail,
-                        <Button variant="link" @click="resendEmailVerification">
+                        <Button
+                            variant="link"
+                            @click="resendEmailVerification"
+                        >
                             renvoyer le mail de confirmation
                         </Button>.
                     </p>

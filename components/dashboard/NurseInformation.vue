@@ -3,7 +3,6 @@
         <section class="grid grid-cols-1 items-center gap-4">
             <div class="bg-gray-100 rounded-b-lg">
                 <div class="bg-primary h-6 rounded-t-lg" />
-
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
                         title="Remplacement(s) crée(s)"
@@ -13,7 +12,6 @@
                         title="Annonce(s) repondue(s)"
                         :count="reports.total"
                     />
-
                     <DashboardReportSection
                         title="Réponse(s) accepté(s)"
                         :count="reports.accepted"
@@ -28,74 +26,10 @@
                     <h3 class="text-primary">
                         Mes préférences
                     </h3>
-
-                    <form class="mt-6 space-y-4">
-                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
-                                <label
-                                    class="font-semibold sm:font-normal mb-3 sm:mb-0"
-                                    for="zipCode"
-                                >
-                                    Codes postaux
-                                </label>
-                            </div>
-                            <TagsInput
-                                v-model="zipCodes"
-                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                                @keyup.enter="addZipCodePreference"
-                            >
-                                <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem
-                                        v-for="item in zipCodes"
-                                        :key="item"
-                                        :value="item"
-                                        class="-mt-1"
-                                    >
-                                        <TagsInputItemText class="text-xs" />
-                                        <TagsInputItemDelete @click="removeZipCode(item)" />
-                                    </TagsInputItem>
-                                </div>
-
-                                <TagsInputInput
-                                    class="-mt-1 sm:w-24 2xl:w-auto"
-                                    placeholder="8973"
-                                />
-                            </TagsInput>
-                        </div>
-
-                        <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
-                            <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
-                                <label
-                                    class="font-semibold sm:font-normal mb-3 sm:mb-0"
-                                    for="zipCode"
-                                >
-                                    Villes
-                                </label>
-                            </div>
-                            <TagsInput
-                                v-model="cities"
-                                class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                                @keyup.enter="addCityPreference"
-                            >
-                                <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
-                                    <TagsInputItem
-                                        v-for="item in cities"
-                                        :key="item"
-                                        :value="item"
-                                        class="-mt-1"
-                                    >
-                                        <TagsInputItemText class="text-xs" />
-                                        <TagsInputItemDelete @click="removeCity(item)" />
-                                    </TagsInputItem>
-                                </div>
-
-                                <TagsInputInput
-                                    class="-mt-1 sm:w-24 2xl:w-auto"
-                                    placeholder="Bruxelles"
-                                />
-                            </TagsInput>
-                        </div>
-                    </form>
+                    <InputPreferences
+                        :initial-zip-codes="zipCodes"
+                        :initial-cities="cities"
+                    />
                 </div>
 
                 <div class="bg-gray-100 rounded-b-lg relative mt-24">
@@ -118,29 +52,21 @@
                 <h3 class="text-primary font-bold sm:font-normal">
                     Tournée du jour
                 </h3>
-
                 <div class="my-3 hidden sm:block">
                     <Table>
                         <TableHeader>
                             <TableRow class="grid grid-cols-3 gap-0 border-gray-300">
-                                <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
-                                >
+                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Patient
                                 </TableHead>
-                                <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
-                                >
+                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Code postal
                                 </TableHead>
-                                <TableHead
-                                    class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white"
-                                >
+                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Ville
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
-
                         <TableBody>
                             <template v-if="props.tours.length != 0">
                                 <div
@@ -181,8 +107,7 @@
                                         class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
                                         disabled
                                     >
-                                        Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les
-                                        fonctionnalités
+                                        Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
                                     </Button>
                                 </p>
                             </template>
@@ -191,9 +116,7 @@
                 </div>
 
                 <div class="sm:hidden my-4">
-                    <template
-                        v-if="props.tours.length !== 0"
-                    >
+                    <template v-if="props.tours.length !== 0">
                         <div
                             v-for="(tour, index) in props.tours"
                             :key="index"
@@ -234,8 +157,7 @@
                                 class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
                                 disabled
                             >
-                                Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les
-                                fonctionnalités
+                                Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
                             </Button>
                         </p>
                     </template>
@@ -247,16 +169,7 @@
 
 <script setup lang="ts">
 import { LineChart } from '@/components/ui/chart-line';
-
-import {
-    TagsInput,
-    TagsInputInput,
-    TagsInputItem,
-    TagsInputItemDelete,
-    TagsInputItemText,
-} from '@/components/ui/tags-input';
-
-import { useReports } from '~/composables/useReports';
+import InputPreferences from '@/components/InputPreferences.vue';
 import type { UserSettings, Patient } from '~/lib/types';
 
 type MonthlyReport = {
@@ -278,8 +191,6 @@ const props = defineProps<{
 
 const user = useUser();
 
-const { createPreferences } = useReports();
-
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
     return `${month}/${year}`;
@@ -297,66 +208,6 @@ const formattedData = computed(() => {
 const settings: UserSettings = JSON.parse(user.value.settings);
 const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
 const cities = ref<string[]>(settings.replacement?.cities ?? []);
-
-const addCityPreference = async (newCity: string) => {
-    if (!newCity || cities.value.includes(newCity)) return;
-
-    newCity = cities.value[cities.value.length - 1].trim();
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
-
-const addZipCodePreference = async (newZipCode: string) => {
-    if (!newZipCode || zipCodes.value.includes(newZipCode)) return;
-
-    newZipCode = zipCodes.value[zipCodes.value.length - 1].trim();
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
-
-const removeZipCode = async (zipCode: string) => {
-    zipCodes.value = zipCodes.value.filter(code => code !== zipCode);
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
-
-const removeCity = async (city: string) => {
-    cities.value = cities.value.filter(c => c !== city);
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
 
 const previousMonth = ref('');
 

@@ -63,7 +63,7 @@ export interface Address {
     zipCode: string | null;
     additionalInformation: string | null;
     accountType: string | null;
-  };
+};
 
 interface ReplacementPreference {
     cities: string[];
