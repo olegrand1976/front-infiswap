@@ -42,7 +42,6 @@
                                     class="w-full h-full text-gray-400 p-4"
                                 />
                             </div>
-
                             <div
                                 v-if="isOwnPatient"
                                 class="absolute -right-1 -top-1 flex flex-col gap-1"
@@ -297,6 +296,18 @@
                                         </option>
                                     </select>
                                 </div>
+                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Échelle de KATZ
+                                    </p>
+                                    <button
+                                        type="button"
+                                        class="bg-transparent placeholder:text-black text-left ml-2"
+                                        @click="goToPatientKatz(patient)"
+                                    >
+                                        {{ formData.katz_code ? formData.katz_code : ' - - - - - -' }}
+                                    </button>
+                                </div>
                             </div>
 
                             <Button
@@ -380,6 +391,15 @@
                                     Catégorie
                                 </div>
                                 <div>{{ category[patient.category] }}</div>
+                            </div>
+                            <div
+                                v-if="patient.katz_code"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Échelle de KATZ
+                                </div>
+                                <div>{{ patient.katz_code }}</div>
                             </div>
                         </div>
                     </div>
@@ -868,10 +888,16 @@ const { $apifetch } = useNuxtApp();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const route = useRoute();
 
+const goToPatientKatz = (patient) => {
+    router.push({
+        path: `/dashboard/patients/katz/${patient.id}`,
+        query: { code: patient.katz_code },
+    });
+};
+
 const isOwnPatient = ref(false);
 
 onMounted(() => {
-    // Lire l'information depuis localStorage
     const ownershipData = JSON.parse(localStorage.getItem('patientOwnership') || '{}');
     isOwnPatient.value = ownershipData[route.params.id] || false;
 });
@@ -995,6 +1021,7 @@ const formData = ref({
     patient_care_type: [],
     patient_documents: [],
     patientId: '',
+    katz_code: '',
 });
 
 const transformCareInformations = (careInfo: any[]) => {
@@ -1028,6 +1055,7 @@ const initializeFormData = () => {
             patient_care_type: patient.value.patient_care_type || [],
             patient_documents: patient.value.patient_documents || [],
             patientId: patient.value.id,
+            katz_code: patient.value.katz_code,
         };
     }
 };
@@ -1103,6 +1131,7 @@ const updatePatientInfo = async () => {
             gender: genderValue,
             availability: formData.value.availability,
             category: formData.value.category,
+            katz_code: formData.value.katz_code,
             profile: {
                 ...patient.value.profile,
                 zip_code: formData.value.zipCode,
