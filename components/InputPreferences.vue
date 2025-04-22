@@ -1,7 +1,7 @@
 <template>
     <div>
         <form class="mt-6 space-y-4">
-            <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+            <div class="grid grid-cols-1 relative mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
                 <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                     <label
                         class="font-semibold sm:font-normal mb-3 sm:mb-0"
@@ -10,10 +10,26 @@
                         Codes postaux
                     </label>
                 </div>
+
+                <transition
+                    name="fade-up"
+                    enter-active-class="transition ease-out duration-300"
+                    enter-from-class="opacity-0 translate-y-4"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-200"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 translate-y-4"
+                >
+                    <div
+                        v-if="isZipCodeFocused"
+                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2 bg-gray-50 shadow rounded-md"
+                    >
+                        <p>Appuyer sur Entrée pour valider</p>
+                    </div>
+                </transition>
                 <TagsInput
                     v-model="zipCodes"
                     class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                    @keyup.enter="addZipCodePreference"
                 >
                     <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                         <TagsInputItem
@@ -29,21 +45,14 @@
                     <TagsInputInput
                         class="-mt-1 sm:w-24 2xl:w-auto"
                         placeholder="8973"
+                        @input="isZipCodeFocused = true"
                         @blur="handleBlur"
-                        @focus="zipCodeFocused = true"
+                        @keyup.enter="() => addPreference()"
                     />
                 </TagsInput>
-
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipContent>
-                            <p>Add to library</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
             </div>
 
-            <div class="grid grid-cols-1 mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+            <div class="grid grid-cols-1 relative mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
                 <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                     <label
                         class="font-semibold sm:font-normal mb-3 sm:mb-0"
@@ -52,10 +61,27 @@
                         Villes
                     </label>
                 </div>
+
+                <transition
+                    name="fade-up"
+                    enter-active-class="transition ease-out duration-300"
+                    enter-from-class="opacity-0 translate-y-4"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-200"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 translate-y-4"
+                >
+                    <div
+                        v-if="isCityFocused"
+                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2 bg-gray-50 shadow rounded-md"
+                    >
+                        <p>Appuyer sur Entrée pour valider</p>
+                    </div>
+                </transition>
                 <TagsInput
                     v-model="cities"
                     class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                    @keyup.enter="addCityPreference"
+                    @keyup.enter="addPreference"
                 >
                     <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                         <TagsInputItem
@@ -71,7 +97,9 @@
                     <TagsInputInput
                         class="-mt-1 sm:w-24 2xl:w-auto"
                         placeholder="Bruxelles"
+                        @input="isCityFocused = true"
                         @blur="handleBlur"
+                        @keyup.enter="() => addPreference()"
                     />
                 </TagsInput>
             </div>
@@ -87,7 +115,6 @@ import {
     TagsInputItemDelete,
     TagsInputItemText,
 } from '@/components/ui/tags-input';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { useReports } from '~/composables/useReports';
 
@@ -98,31 +125,15 @@ const props = defineProps<{
 
 const { createPreferences } = useReports();
 
-const zipCodeFocused = ref(false);
+const isZipCodeFocused = ref(false);
+const isCityFocused = ref(false);
 
 const zipCodes = ref<string[]>(props.initialZipCodes);
 const cities = ref<string[]>(props.initialCities);
 
-const addCityPreference = async (newCity: string) => {
-    if (!newCity || cities.value.includes(newCity)) return;
-
-    newCity = cities.value[cities.value.length - 1].trim();
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
-        },
-    };
-
-    await createPreferences(formData);
-};
-
-const addZipCodePreference = async (newZipCode: string) => {
-    if (!newZipCode || zipCodes.value.includes(newZipCode)) return;
-
-    newZipCode = zipCodes.value[zipCodes.value.length - 1].trim();
+const addPreference = async () => {
+    isZipCodeFocused.value = false;
+    isCityFocused.value = false;
 
     const formData = {
         key: 'replacement',
@@ -165,15 +176,29 @@ const removeCity = async (city: string) => {
 
 const handleBlur = (event) => {
     const inputEl = event.target;
-    const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true,
-        cancelable: true,
-    });
+    const inputElement = event.target.value;
 
-    inputEl.dispatchEvent(enterEvent);
+    if (inputElement != '') {
+        const enterEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            keyCode: 13,
+            which: 13,
+            bubbles: true,
+            cancelable: true,
+        });
+
+        inputEl.dispatchEvent(enterEvent);
+
+        nextTick(() => {
+            setTimeout(() => {
+                addPreference();
+            }, 0);
+        });
+    }
+    else {
+        isZipCodeFocused.value = false;
+        isCityFocused.value = false;
+    }
 };
 </script>
