@@ -679,6 +679,7 @@ const updatePatientCareTypes = () => {
     formData.value.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
 };
 
+const firstErrorField = ref(null);
 const { submit, inProgress } = useSubmit(async () => {
     try {
         // await schema.validate(formData.value, { abortEarly: false });
