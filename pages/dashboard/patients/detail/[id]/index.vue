@@ -196,6 +196,16 @@
                                 </div>
                                 <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
                                     <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                        Adresse
+                                    </p>
+                                    <Input
+                                        v-model="formData.streetAddress"
+                                        type="text"
+                                        class="bg-transparent placeholder:text-black"
+                                    />
+                                </div>
+                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
+                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
                                         Genre
                                     </p>
                                     <select
@@ -364,6 +374,15 @@
                                     Ville
                                 </div>
                                 <div>{{ patient.profile.city }}</div>
+                            </div>
+                            <div
+                                v-if="patient.profile?.street_address"
+                                class="grid grid-cols-[40%_60%] gap-4"
+                            >
+                                <div class="font-semibold">
+                                    Adresse
+                                </div>
+                                <div>{{ patient.profile.street_address }}</div>
                             </div>
                             <div
                                 v-if="patient.gender"
@@ -1011,6 +1030,7 @@ const formData = ref({
     phoneNumber: '',
     zipCode: '',
     city: '',
+    streetAddress: '',
     gender: '',
     category: '',
     careStartDate: '',
@@ -1046,6 +1066,7 @@ const initializeFormData = () => {
             phoneNumber: patient.value.phone_number || '',
             zipCode: patient.value.profile?.zip_code || '',
             city: patient.value.profile?.city || '',
+            streetAddress: patient.value.profile?.street_address || '',
             careStartDate: patient.value.care_start_date || '',
             careEndDate: patient.value.care_end_date || '',
             availability: patient.value.availability || [],
@@ -1111,6 +1132,7 @@ const updatePatientInfo = async () => {
             phoneNumber: formData.value.phoneNumber,
             zipCode: formData.value.zipCode,
             city: formData.value.city,
+            streetAddress: formData.value.streetAddress,
             availability: formData.value.availability,
             category: formData.value.category,
         };
@@ -1136,6 +1158,7 @@ const updatePatientInfo = async () => {
                 ...patient.value.profile,
                 zip_code: formData.value.zipCode,
                 city: formData.value.city,
+                street_address: formData.value.streetAddress,
             },
         };
 
