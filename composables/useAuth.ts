@@ -89,6 +89,25 @@ export const useAuth = () => {
         );
     }
 
+    async function registerImmediate(credentials) {
+        return $apifetch('/api/register-immediate', { method: 'post', body: credentials })
+            .then((response) => {
+                useCookie(AUTH_TOKEN).value = response.token;
+            })
+            .then(() => {
+                $toast({
+                    description: 'Inscription rapide réussie',
+                });
+            })
+            .then(() => {
+                setTimeout(() => {
+                    navigateTo('/dashboard/replacements/immediate');
+                }, 2000);
+                return refresh();
+            })
+            .catch((error) => { throw error; });
+    }
+
     async function resendEmailVerification() {
         return await $apifetch('/api/email/verification-notification', {
             method: 'post',
@@ -251,6 +270,7 @@ export const useAuth = () => {
         login,
         register,
         registerBeta,
+        registerImmediate,
         resendEmailVerification,
         updateUser,
         updateAddressUser,

@@ -13,9 +13,7 @@ export const useNursePatients = () => {
         error.value = null;
 
         try {
-            // const response = await $apifetch(`/api/nurses/${$user.nurse.id}/patients`, { method: 'GET' });
             const response = await $apifetch(`/api/nurses/${user.value.nurse.id}/patients`, { method: 'GET' });
-            console.log('Données récupérées :', response.patients);
             nursePatients.value = response.patients.patients;
         }
         catch (err) {
