@@ -16,10 +16,6 @@ export const useAuth = () => {
         return user.value?.roles?.some(role => ['administrator', 'developer'].includes(role.name)) ?? false;
     });
 
-    const isManager = computed(() => {
-        return user.value.roles.some(role => ['test_manager', 'sale_manager'].includes(role.name));
-    });
-
     const loading = useState<boolean>('loading', () => false);
 
     async function refresh() {
@@ -256,6 +252,25 @@ export const useAuth = () => {
         return await $apifetch('api/users', {
             method: 'POST',
             body: form,
+        }).then(() => {
+            $toast({
+                description: 'Utilisateur créé avec succès',
+            });
+        });
+    }
+
+    async function show(id: number) {
+        return await $apifetch(`/api/users/${id}`);
+    }
+
+    async function update(id: number, form: UserForm) {
+        return await $apifetch(`/api/users/${id}`, {
+            method: 'PUT',
+            body: form,
+        }).then(() => {
+            $toast({
+                description: 'Utilisateur mis à jour avec succès',
+            });
         });
     }
 
@@ -263,10 +278,11 @@ export const useAuth = () => {
         user,
         users,
         create,
+        update,
+        show,
         getUsers,
         isLoggedIn,
         isAdmin,
-        isManager,
         login,
         register,
         registerBeta,
