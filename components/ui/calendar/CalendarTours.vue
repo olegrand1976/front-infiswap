@@ -32,7 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
             </div>
         </CalendarHeader>
 
-        <div class="flex flex-col gap-y-6 mt-4 sm:flex-row sm:gap-x-12 sm:gap-y-0">
+        <div class="flex flex-col gap-y-6 mt-4 mb-6 sm:flex-row sm:gap-x-12 sm:gap-y-0">
             <CalendarGrid
                 v-for="month in grid"
                 :key="month.value.toString()"
@@ -52,7 +52,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                     <CalendarGridRow
                         v-for="(weekDates, index) in month.rows"
                         :key="`weekDate-${index}`"
-                        class="mt-2 w-full flex space-x-2"
+                        class="mt-2 w-full flex space-x-2 mt-5"
                     >
                         <CalendarCell
                             v-for="weekDate in weekDates"
