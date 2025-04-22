@@ -190,6 +190,27 @@
                     </div>
 
                     <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
+                        <div class="bg-primary flex items-center text-white ps-4 rounded-s-full">
+                            <label for="streetAddress">
+                                Adresse *
+                            </label>
+                        </div>
+                        <Input
+                            id="streetAddress"
+                            v-model="formData.streetAddress"
+                            type="text"
+                            class="w-full bg-transparent"
+                            placeholder="2, rue de l'Ancre"
+                        />
+                        <p
+                            v-if="error.streetAddress"
+                            class="text-red-500 text-nowrap text-xs my-1 ms-[105%]"
+                        >
+                            {{ error.streetAddress }}
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 xl:grid-cols-[30%_70%] border border-primary h-9 rounded-full">
                         <div
                             class="bg-primary flex items-center text-white ps-4 rounded-s-full"
                             title="Un patient hospitalisé? Passez-le en indisponible."
@@ -512,6 +533,7 @@ const initialFormData = {
     phoneNumber: '',
     zipCode: '',
     city: '',
+    streetAddress: '',
     careStartDate: '',
     careEndDate: '',
     availability: 'available',
@@ -543,6 +565,7 @@ const error = reactive({
     phoneNumber: '',
     zipCode: '',
     city: '',
+    streetAddress: '',
 });
 
 const days = {
