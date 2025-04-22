@@ -88,9 +88,15 @@ const handleInterest = async (replacementId, nurseId) => {
         });
     }
     catch (error) {
+        let errorMessage = 'Une erreur est survenue.';
+
+        if (error?.response?._data?.message) {
+            errorMessage = error.response._data.message;
+        }
+
         $toast({
-            title: 'Oups! Une erreur s\'est produite',
-            description: 'Erreur lors de l’enregistrement de l’intérêt', error,
+            title: 'Oups !',
+            description: errorMessage,
             variant: 'destructive',
         });
     }
