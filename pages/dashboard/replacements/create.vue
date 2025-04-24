@@ -152,7 +152,7 @@
 
                 <div class="mt-12 md:mt-6">
                     <div class="overflow-x-auto">
-                        <Table>
+                        <Table v-if="datePatients && Object.keys(datePatients).length > 0">
                             <TableHeader class="w-full md:grid md:grid-cols-3 gap-2 border-none block">
                                 <div
                                     v-for="(label, key) in periodLabels"
