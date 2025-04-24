@@ -26,14 +26,13 @@ export const useReplacements = () => {
             await $apifetch('/api/replacements', {
                 method: 'POST',
                 body: JSON.stringify(formData),
-            }).then((res) => {
-                response = res;
+            }).then(() => {
                 $toast({
                     description: 'Création effectuée',
                 });
 
                 setTimeout(() => {
-                    router.replace('detail/' + response.replacement.id);
+                    router.push('me');
                 }, 3000);
             }).catch((error) => {
                 if (error.data && error.data.errors) {
