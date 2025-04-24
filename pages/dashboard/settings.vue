@@ -267,7 +267,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formatStringDate(user.date_of_birth) || ' - ' }}
+                                    {{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : '' }}
                                 </p>
                             </div>
 
@@ -1057,7 +1057,16 @@ const profileDialog = ref(false);
 const deleteAvatarDialog = ref(false);
 
 const formattedGender = computed(() => {
-    return user.value.gender == 'F' ? 'Femme' : 'Homme';
+    switch (user.value.gender) {
+        case 'F':
+            return 'Femme';
+        case 'M':
+            return 'Homme';
+        case 'X':
+            return 'X';
+        default:
+            return '';
+    }
 });
 
 const formattedCountry = computed(() => {
@@ -1074,6 +1083,10 @@ const formatStringDate = (dateString) => {
 };
 
 const formatDate = (dateString) => {
+    if (!dateString || dateString === '01/01/1970') {
+        return null;
+    }
+
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
