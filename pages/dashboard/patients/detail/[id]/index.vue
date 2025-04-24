@@ -411,7 +411,7 @@
                                 </div>
                                 <div>{{ category[patient.category] }}</div>
                             </div>
-                            <div
+                            <!-- <div
                                 v-if="patient.katz_code"
                                 class="grid grid-cols-[40%_60%] gap-4"
                             >
@@ -419,6 +419,18 @@
                                     Échelle de KATZ
                                 </div>
                                 <div>{{ patient.katz_code }}</div>
+                            </div> -->
+                            <div class="grid grid-cols-[30%_65%_5%] items-center border border-primary h-9 rounded-full">
+                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
+                                    Échelle de KATZ
+                                </p>
+                                <div class="ml-2">
+                                    {{ patient.katz_code ? patient.katz_code : ' - - - - - -' }}
+                                </div>
+                                <PencilSquareIcon
+                                    class="w-4 h-4 text-primary cursor-pointer"
+                                    @click="goToPatientKatz(patient)"
+                                />
                             </div>
                         </div>
                     </div>
