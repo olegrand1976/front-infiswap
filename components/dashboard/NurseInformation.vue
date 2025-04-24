@@ -55,14 +55,14 @@
                 <div class="my-3 hidden sm:block">
                     <Table>
                         <TableHeader>
-                            <TableRow class="grid grid-cols-3 gap-0 border-gray-300">
-                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                            <TableRow class="w-full grid grid-cols-3 justify-between items-center gap-x-4 2xl:gap-x-16 border-gray-300">
+                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Patient
                                 </TableHead>
-                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="w-[13rem] p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
+                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
                                     Ville
                                 </TableHead>
                             </TableRow>
@@ -73,22 +73,22 @@
                                     v-for="(tour, index) in props.tours"
                                     :key="index"
                                 >
-                                    <TableRow class="cursor-pointer grid grid-cols-3 gap-0 border border-gray-300">
-                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
+                                    <TableRow class="cursor-pointer w-full grid grid-cols-3 justify-between items-center gap-x-4 2xl:gap-x-16 border border-gray-300">
+                                        <TableCell class="py-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tour.lastname }} {{ tour.firstname }}
                                                 </span>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
+                                        <TableCell class="py-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tour.profile.zip_code }}
                                                 </span>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="w-[13rem] p-3 text-center bg-gray-100">
+                                        <TableCell class="py-3 text-center bg-gray-100">
                                             <div class="flex h-10 justify-center items-center bg-gray-200">
                                                 <span class="truncate w-full px-2 text-center">
                                                     {{ tour.profile.city }}
