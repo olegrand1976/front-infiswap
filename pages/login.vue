@@ -237,10 +237,9 @@ const { submit, inProgress } = useSubmit(
         }
     },
     {
-        onError: () => {
+        onError: (error) => {
             $toast({
-                title: 'Erreur',
-                description: 'Identifiant ou mot de passe incorrect',
+                description: error.message,
                 variant: 'destructive',
             });
         },

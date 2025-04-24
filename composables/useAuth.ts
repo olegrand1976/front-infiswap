@@ -43,22 +43,23 @@ export const useAuth = () => {
                 useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
                 await nextTick();
                 await refresh();
-                return navigateTo('/dashboard');
+                return;
             }
 
             if (response.hash) {
                 localStorage.setItem('credentials', JSON.stringify(credentials));
                 useCookie('2fa_hash').value = response.hash;
-                return {
-                    message: response.message,
-                };
-            };
+                return;
+            }
+            throw createError({
+                statusMessage: 'Identifiant ou mot de passe incorrect',
+            });
         }
         catch (error) {
-            return {
-                status: 'error',
-                message: error.data?.message ?? 'Une erreur est survenue.',
-            };
+            throw createError({
+                statusCode: error.statusCode,
+                statusMessage: error.data?.message || 'Une erreur est survenue.',
+            });
         }
     }
 
