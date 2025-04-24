@@ -804,7 +804,7 @@
                                 <Switch
                                     id="newReplacement"
                                     v-model:checked="notifNewReplacement"
-                                    @update:checked="handleChangeNotifNew"
+                                    @update:checked="handleChangeNotif"
                                 />
                             </div>
                             <div class="flex justify-between items-center">
@@ -812,7 +812,7 @@
                                 <Switch
                                     id="acceptReplacement"
                                     v-model:checked="notifAcceptReplacement"
-                                    @update:checked="handleChangeNotifAccept"
+                                    @update:checked="handleChangeNotif"
                                 />
                             </div>
                         </div>
@@ -1190,59 +1190,20 @@ const handleChangePassword = async () => {
     }
 };
 
-const verifyNotifNewRePlacement = () => {
-    return setting.notification == 'newReplacement' ? true : false;
-};
+const notifNewReplacement = ref(setting.notification?.new_replacement);
+const notifAcceptReplacement = ref(setting.notification?.replacement_accepted);
 
-const verifyNotifAcceptRePlacement = () => {
-    return setting.notification == 'acceptReplacement' ? true : false;
-};
-
-const notifNewReplacement = ref(verifyNotifNewRePlacement());
-const notifAcceptReplacement = ref(verifyNotifAcceptRePlacement());
-
-const handleChangeNotifNew = async () => {
+const handleChangeNotif = async () => {
     try {
-        if (notifNewReplacement.value) {
-            const formData = reactive({
-                key: 'notification',
-                value: 'newReplacement',
-            });
+        const formData = reactive({
+            key: 'notification',
+            value: {
+                new_replacement: notifNewReplacement.value,
+                replacement_accepted: notifAcceptReplacement.value,
+            },
+        });
 
-            await createNotifPreferences(formData);
-        }
-        else {
-            const formData = reactive({
-                key: 'notification',
-                value: '',
-            });
-
-            await createNotifPreferences(formData);
-        }
-    }
-    catch (error) {
-        console.log(error);
-    }
-};
-
-const handleChangeNotifAccept = async () => {
-    try {
-        if (notifAcceptReplacement.value) {
-            const formData = reactive({
-                key: 'notification',
-                value: 'acceptReplacement',
-            });
-
-            await createNotifPreferences(formData);
-        }
-        else {
-            const formData = reactive({
-                key: 'notification',
-                value: '',
-            });
-
-            await createNotifPreferences(formData);
-        }
+        await createNotifPreferences(formData);
     }
     catch (error) {
         console.log(error);
