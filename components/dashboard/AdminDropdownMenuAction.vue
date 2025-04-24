@@ -22,10 +22,10 @@ defineProps<{
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="onEdit?.()">
                 Modifier
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="onDelete?.()">
                 Supprimer
             </DropdownMenuItem>
         </DropdownMenuContent>

@@ -171,20 +171,24 @@ const columns: ColumnDef<User>[] = [
     },
     {
         id: 'actions',
-        header: '',
+        header: () => {
+            return h('div', { class: 'mx-2' }, 'Actions');
+        },
         enableHiding: false,
         cell: ({ row }) => {
             const user = row.original;
-            return h(DropdownMenuAction, {
-                onEdit: () => handleEdit(user),
-                onDelete: () => handleDelete(user),
-            });
+            return h('div', { class: 'flex justify-center' }, [
+                h(DropdownMenuAction, {
+                    onEdit: () => handleEdit(user),
+                    onDelete: () => handleDelete(user),
+                }),
+            ]);
         },
     },
 ];
 
 const handleEdit = (user: User) => {
-    console.log(user);
+    navigateTo(`/dashboard/admin/users/${user.id}`);
 };
 
 const handleDelete = (user: User) => {

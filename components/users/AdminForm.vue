@@ -20,11 +20,11 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     group: user?.group || null,
     accountType: user?.account_type || null,
     address: {
-        street: user?.profile.street_address || null,
-        city: user?.profile.city || null,
-        country: user?.profile.country || null,
-        zipCode: user?.profile.zip_code || null,
-        additionalInformation: user?.profile.additional_info || null,
+        street: user?.profile?.street_address || null,
+        city: user?.profile?.city || null,
+        country: user?.profile?.country || null,
+        zipCode: user?.profile?.zip_code || null,
+        additionalInformation: user?.profile?.additional_info || null,
     },
 });
 
@@ -106,6 +106,10 @@ const accountOptions = [
     {
         label: 'Commercial',
         value: 'sale_representative',
+    },
+    {
+        label: 'Aucun',
+        value: 'none',
     },
 ];
 </script>
