@@ -142,14 +142,6 @@
                     </div>
                 </div>
 
-                <Button
-                    type="submit"
-                    class="mt-32 md:mt-4 w-64 md:w-auto flex text-xs md:text-base justify-center mx-auto md:mx-0 md:justify-end md:ml-auto"
-                    :in-progress="inProgress"
-                >
-                    Enregistrer
-                </Button>
-
                 <div class="mt-12 md:mt-6">
                     <div class="overflow-x-auto">
                         <Table>
