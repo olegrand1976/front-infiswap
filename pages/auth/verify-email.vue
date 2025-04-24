@@ -35,7 +35,7 @@
                         Si vous n'avez pas encore reçu de mail,
                         <Button
                             variant="link"
-                            @click="resendEmailVerification"
+                            @click="resendEmailVerification(user.email)"
                         >
                             renvoyer le mail de confirmation
                         </Button>.

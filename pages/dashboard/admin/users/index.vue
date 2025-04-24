@@ -24,9 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
+import { XCircleIcon, ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
@@ -40,7 +40,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, getUsers, forceDelete } = useAuth();
+const { users, getUsers, forceDelete, resendEmailVerification } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -85,7 +85,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -95,7 +95,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['INAMI', h(ArrowUpDown, { class: '' })]);
+            }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
@@ -105,9 +105,25 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue('email')),
+        cell: ({ row }) => {
+            const email = row.getValue('email');
+            const isVerified = row.original.email_verified_at !== null;
+
+            return h('div', {
+                class: 'flex items-center gap-2 lowercase',
+            }, [
+                h('span', email),
+                isVerified
+                    ? h('', { class: 'w-4 h-4 text-green-500' })
+                    : h(XCircleIcon, {
+                            class: 'w-4 h-4 text-red-500 cursor-pointer',
+                            title: 'Renvoyer le mail de vérification',
+                            onClick: () => resendEmailVerification(row.original.email),
+                        }),
+            ]);
+        },
     },
     {
         accessorKey: 'phone_number',
@@ -115,7 +131,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatPhoneNumber(row.getValue('phone_number')));
@@ -127,7 +143,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Rue', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Rue', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('street_address'));
@@ -139,7 +155,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('city'));
@@ -151,7 +167,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
+            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('zip_code'));
@@ -163,10 +179,10 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Date', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));
+            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {
@@ -177,14 +193,33 @@ const columns: ColumnDef<User>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const user = row.original;
+            const actions = [
+                {
+                    label: 'Modifier',
+                    onClick: () => handleEdit(user),
+                },
+                {
+                    label: 'Supprimer',
+                    confirm: true,
+                    onClick: () => handleDelete(user),
+                },
+            ];
+
+            if (user.email_verified_at == null) {
+                actions.push({
+                    label: 'Renvoie mail',
+                    onClick: () => resendEmailVerification(user.email),
+                });
+            }
+
             return h('div', { class: 'flex justify-center' }, [
                 h(DropdownMenuAction, {
-                    onEdit: () => handleEdit(user),
-                    onDelete: () => handleDelete(user),
+                    actions: actions,
                 }),
             ]);
         },
     },
+
 ];
 
 const handleEdit = (user: User) => {

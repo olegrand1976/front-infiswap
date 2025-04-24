@@ -108,9 +108,10 @@ export const useAuth = () => {
             .catch((error) => { throw error; });
     }
 
-    async function resendEmailVerification() {
+    async function resendEmailVerification(email: string) {
         return await $apifetch('/api/email/verification-notification', {
             method: 'post',
+            body: { email: email },
         }).then(() => {
             $toast({
                 description: 'E-mail envoyé avec succès.',
