@@ -2,13 +2,16 @@
     <div class="pt-4">
         <Form @submit="submit">
             <div
-                class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
+                class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:space-x-16 md:mx-0"
             >
-                <div>
-                    Selection de vos
+                <div class="bg-white shadow max-w-sm rounded-2xl p-5 h-44 flex items-center text-gray-700 border border-gray-200">
+                    <p class="leading-relaxed">
+                        <span class="font-semibold text-gray-800">Sélectionnez les dates de votre remplacement :</span> <br>
+                        Saisissez-les manuellement ou cliquez sur le calendrier.
+                    </p>
                 </div>
 
-                <div class="flex space-x-6">
+                <div class="flex flex-col w-full space-y-8 sm:space-y-0 sm:flex-row sm:space-x-6">
                     <div class="bg-primary border border-primary sm:h-64 rounded-2xl p-2 sm:mx-20 md:px-2 md:mx-0">
                         <div class="bg-white rounded-2xl h-10 p-2">
                             <h2 class="font-bold text-primary text-center">
