@@ -277,6 +277,22 @@ export const useAuth = () => {
         return response.user;
     }
 
+    async function forceDelete(user: number) {
+        await $apifetch(`/api/users/${user}`, {
+            method: 'DELETE',
+        }).then(() => {
+            $toast({
+                description: 'Suppression réussie.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la suppression.',
+                });
+            });
+    }
+
     return {
         user,
         users,
@@ -284,6 +300,7 @@ export const useAuth = () => {
         create,
         update,
         show,
+        forceDelete,
         getUsers,
         isLoggedIn,
         isAdmin,

@@ -40,7 +40,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, getUsers } = useAuth();
+const { users, getUsers, forceDelete } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -97,7 +97,7 @@ const columns: ColumnDef<User>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['INAMI', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'lowercase' }, formatInamiNumber(row.getValue('identifier_number'))),
+        cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
     {
         accessorKey: 'email',
@@ -118,7 +118,7 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: '' }, formatPhoneNumber(row.getValue('phone_number')));
+            return h('div', { class: 'text-center' }, formatPhoneNumber(row.getValue('phone_number')));
         },
     },
     {
@@ -130,7 +130,7 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Rue', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: '' }, row.getValue('street_address'));
+            return h('div', { class: 'text-center' }, row.getValue('street_address'));
         },
     },
     {
@@ -142,7 +142,7 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: '' }, row.getValue('city'));
+            return h('div', { class: 'text-center' }, row.getValue('city'));
         },
     },
     {
@@ -154,7 +154,7 @@ const columns: ColumnDef<User>[] = [
             }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: '' }, row.getValue('zip_code'));
+            return h('div', { class: 'text-center' }, row.getValue('zip_code'));
         },
     },
     {
@@ -191,7 +191,9 @@ const handleEdit = (user: User) => {
     navigateTo(`/dashboard/admin/users/${user.id}`);
 };
 
-const handleDelete = (user: User) => {
-    console.log(user);
+const handleDelete = async (user: User) => {
+    return await forceDelete(user.id).then(async () => {
+        await getUsers(page.value, perPage.value);
+    });
 };
 </script>
