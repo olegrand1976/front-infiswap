@@ -1,5 +1,5 @@
 export type Gender = 'M' | 'F';
-export type AccountType = 'dev' | 'admin' | 'manager' | 'nurse' | 'patient';
+export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative';
 
 export type User = {
     id: number;
@@ -13,6 +13,7 @@ export type User = {
     phone_number?: string | null;
     date_of_birth?: string | null;
     account_type: AccountType;
+    group: number | null;
     rate?: number | null;
     validated_by?: number | null;
     validate_at?: string | null;
@@ -48,21 +49,26 @@ export type User = {
     updated_at: string;
 };
 
-interface Role {
+type RolePivot = {
+    model_type: string;
+    model_id: number;
+    role_id: number;
+};
+
+type Role = {
     id: number;
     name: string;
     guard_name: string;
     created_at: string;
     updated_at: string;
-}
-
+    pivot: RolePivot;
+};
 export interface Address {
     street: string | null;
     city: string | null;
     country: string | null;
     zipCode: string | null;
     additionalInformation: string | null;
-    accountType: string | null;
 };
 
 interface ReplacementPreference {

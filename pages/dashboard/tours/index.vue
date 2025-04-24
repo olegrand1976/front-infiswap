@@ -60,8 +60,11 @@
                                                             :src="$config.public.API_URL + '/storage/' + item.profile.profil_url"
                                                             alt="Photo de profil"
                                                             class="rounded-full h-9 w-9 object-cover"
+                                                        >
+                                                        <UserCircleIcon
+                                                            v-else
+                                                            class="h-10 w-10 text-gray-400"
                                                         />
-                                                        <UserCircleIcon v-else class="h-10 w-10 text-gray-400" />
                                                     </div>
                                                     <div class="text-sm font-medium">
                                                         {{ item.firstname }} {{ item.lastname }}
@@ -123,7 +126,10 @@
                                             alt="Photo de profil"
                                             class="rounded-full h-20 w-20"
                                         >
-                                        <UserCircleIcon v-else class="size-20" />
+                                        <UserCircleIcon
+                                            v-else
+                                            class="size-20"
+                                        />
                                     </div>
                                     <div class="ml-4 flex flex-grow justify-between items-center">
                                         <div class="text-lg">

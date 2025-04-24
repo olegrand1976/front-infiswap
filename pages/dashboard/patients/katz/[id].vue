@@ -10,11 +10,14 @@
             class="mb-4 border border-gray-200 rounded-xl shadow bg-white"
         >
             <button
-                @click="toggle(index)"
                 class="w-full flex justify-between items-center px-6 py-4 text-left text-lg font-semibold text-gray-800 hover:bg-blue-50"
+                @click="toggle(index)"
             >
                 <div class="flex items-center justify-center gap-3">
-                    <component :is="item.icon" class="w-5 h-5" />
+                    <component
+                        :is="item.icon"
+                        class="w-5 h-5"
+                    />
                     <span>{{ item.category }}</span>
                 </div>
                 <div class="text-base ml-auto mr-4">
@@ -28,11 +31,18 @@
                     stroke-width="2"
                     viewBox="0 0 24 24"
                 >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 9l-7 7-7-7"
+                    />
                 </svg>
             </button>
 
-            <div v-if="item.open" class="px-6 pb-4 pt-2">
+            <div
+                v-if="item.open"
+                class="px-6 pb-4 pt-2"
+            >
                 <div class="grid grid-cols-2 gap-4">
                     <div
                         v-for="(choice, i) in item.choices"
@@ -40,12 +50,12 @@
                         class="col-span-1"
                     >
                         <p
-                            @click="selectChoice(item, choice)"
                             :class="{
                                 'bg-primary text-white': item.selected === choice.value,
                                 'bg-gray-100 text-gray-800': item.selected !== choice.value,
                             }"
                             class="px-4 py-2 rounded-md cursor-pointer transition duration-300 text-left flex items-center min-h-[4rem]"
+                            @click="selectChoice(item, choice)"
                         >
                             {{ choice.label }}
                         </p>
@@ -211,7 +221,7 @@ onMounted(() => {
     const katzCode = route.query.code;
 
     if (katzCode && katzCode.length === katzItems.value.length) {
-        katzItems.value.forEach(item => {
+        katzItems.value.forEach((item) => {
             item.open = true;
         });
 

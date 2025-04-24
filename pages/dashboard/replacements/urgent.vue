@@ -50,8 +50,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <button
+                                class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
                                 @click="handleInterest(replacement.id, user.nurse.id)"
-                                class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow">
+                            >
                                 Je suis intéressé
                             </button>
                         </td>

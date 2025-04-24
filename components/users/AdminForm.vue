@@ -8,38 +8,56 @@ const props = defineProps<{
 const { create, update } = useAuth();
 const isEditMode = computed(() => !!props.user);
 
-const getInitialValue = () => ({
-    lastname: props.user?.lastname || null,
-    firstname: props.user?.firstname || null,
-    email: props.user?.email || null,
-    identifierNumber: props.user?.identifier_number || null,
-    gender: props.user?.gender || null,
-    phoneNumber: props.user?.phone_number || null,
-    dateOfBirth: props.user?.date_of_birth || null,
+const getInitialValue = (user: User | null | undefined = props.user) => ({
+    lastname: user?.lastname || null,
+    firstname: user?.firstname || null,
+    email: user?.email || null,
+    identifierNumber: user?.identifier_number || null,
+    gender: user?.gender || null,
+    phoneNumber: user?.phone_number || null,
+    dateOfBirth: user?.date_of_birth || null,
     language: 'fr',
-    accountType: null,
+    group: user?.group || null,
+    accountType: user?.account_type || null,
     address: {
-        street: props.user?.profile.street_address || null,
-        city: props.user?.profile.city || null,
-        country: props.user?.profile.country || null,
-        zipCode: props.user?.profile.zip_code || null,
-        additionalInformation: props.user?.profile.additional_info || null,
+        street: user?.profile.street_address || null,
+        city: user?.profile.city || null,
+        country: user?.profile.country || null,
+        zipCode: user?.profile.zip_code || null,
+        additionalInformation: user?.profile.additional_info || null,
     },
 });
 
 const form = reactive(getInitialValue());
-
-const { submit, inProgress } = useSubmit(() => {
-    if (isEditMode.value) {
-        return update(props.user.id, form);
+const { $toast } = useNuxtApp();
+const { submit, inProgress } = useSubmit(async () => {
+    if (isEditMode.value && props.user?.id) {
+        const updatedUser = await update(props.user.id, form);
+        resetForm(updatedUser);
+        return;
     }
 
-    return create(form);
+    await create(form);
+    resetForm(undefined);
 }, {
     onSuccess: () => {
-        Object.assign(form, getInitialValue());
+        $toast({
+            description: isEditMode.value ? 'Utilisateur mis à jour avec succès' : 'Utilisateur créé avec succès',
+        });
     },
 });
+
+function resetForm(user?: User | null) {
+    Object.assign(form, getInitialValue(user));
+}
+
+watch(
+    () => props.user,
+    (newUser) => {
+        resetForm(newUser);
+    },
+    { immediate: true },
+);
 
 const genders = [
     {
@@ -58,6 +76,7 @@ const genders = [
         name: 'neutre',
     },
 ];
+
 const languages = [
     {
         value: 'fr',
@@ -81,12 +100,8 @@ const accountOptions = [
         value: 'developer',
     },
     {
-        label: 'Infirmier(ère)',
-        value: 'nurse',
-    },
-    {
-        label: 'Testeur',
-        value: 'tester',
+        label: 'Collaborateur',
+        value: 'collaborator',
     },
     {
         label: 'Commercial',
@@ -275,6 +290,14 @@ const accountOptions = [
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                </div>
+                <div>
+                    <InputIcon
+                        v-model="form.group"
+                        rounded="md"
+                        type="number"
+                        label="Groupe"
+                    />
                 </div>
             </div>
         </div>

@@ -80,7 +80,10 @@
             </div>
         </div>
         <div class="flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
-            <a href="/dashboard/replacements/immediate" class="transition-transform transform hover:scale-105">
+            <a
+                href="/dashboard/replacements/immediate"
+                class="transition-transform transform hover:scale-105"
+            >
                 <LayoutsAppImage
                     src="/home/help_me.png"
                     class="w-full max-w-xs h-48"

@@ -247,6 +247,7 @@ export const useAuth = () => {
         identifierNumber: string;
         email: string;
         gender: string;
+        group: number;
         phoneNumber: string;
         dateOfBirth: string | null;
         language: 'fr' | 'en' | string;
@@ -255,14 +256,12 @@ export const useAuth = () => {
     };
 
     async function create(form: UserForm) {
-        return await $apifetch('api/users', {
+        const response = await $apifetch('api/users', {
             method: 'POST',
             body: form,
-        }).then(() => {
-            $toast({
-                description: 'Utilisateur créé avec succès',
-            });
         });
+
+        return response.user;
     }
 
     async function show(id: number) {
@@ -270,14 +269,12 @@ export const useAuth = () => {
     }
 
     async function update(id: number, form: UserForm) {
-        return await $apifetch(`/api/users/${id}`, {
+        const response = await $apifetch(`/api/users/${id}`, {
             method: 'PUT',
             body: form,
-        }).then(() => {
-            $toast({
-                description: 'Utilisateur mis à jour avec succès',
-            });
         });
+
+        return response.user;
     }
 
     return {
