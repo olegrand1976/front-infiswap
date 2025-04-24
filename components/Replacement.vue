@@ -619,7 +619,7 @@ const frenchDays = {
     friday: 'Vendredi',
     saturday: 'Samedi',
     sunday: 'Dimanche',
-    all: 'Tous les jours',
+    all: 'Tous',
 };
 
 const toggleDay = (day: string) => {
