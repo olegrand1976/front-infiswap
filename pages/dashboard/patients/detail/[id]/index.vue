@@ -306,18 +306,6 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="grid grid-cols-[30%_70%] items-center border border-primary h-9 rounded-full">
-                                    <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                        Échelle de KATZ
-                                    </p>
-                                    <button
-                                        type="button"
-                                        class="bg-transparent placeholder:text-black text-left ml-2"
-                                        @click="goToPatientKatz(patient)"
-                                    >
-                                        {{ formData.katz_code ? formData.katz_code : ' - - - - - -' }}
-                                    </button>
-                                </div>
                             </div>
 
                             <Button
@@ -411,26 +399,19 @@
                                 </div>
                                 <div>{{ category[patient.category] }}</div>
                             </div>
-                            <!-- <div
-                                v-if="patient.katz_code"
-                                class="grid grid-cols-[40%_60%] gap-4"
+                            <div
+                                class="grid grid-cols-[40%_60%] gap-4 items-center"
                             >
                                 <div class="font-semibold">
                                     Échelle de KATZ
                                 </div>
-                                <div>{{ patient.katz_code }}</div>
-                            </div> -->
-                            <div class="grid grid-cols-[30%_65%_5%] items-center border border-primary h-9 rounded-full">
-                                <p class="bg-primary flex items-center h-full text-white ps-4 rounded-s-full">
-                                    Échelle de KATZ
-                                </p>
-                                <div class="ml-2">
-                                    {{ patient.katz_code ? patient.katz_code : ' - - - - - -' }}
+                                <div class="flex justify-between items-center">
+                                    <span>{{ patient.katz_code ? patient.katz_code : ' - - - - - -' }}</span>
+                                    <PencilSquareIcon
+                                        class="w-4 h-4 cursor-pointer me-4"
+                                        @click="goToPatientKatz(patient)"
+                                    />
                                 </div>
-                                <PencilSquareIcon
-                                    class="w-4 h-4 text-primary cursor-pointer"
-                                    @click="goToPatientKatz(patient)"
-                                />
                             </div>
                         </div>
                     </div>
