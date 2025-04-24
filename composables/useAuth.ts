@@ -15,6 +15,9 @@ export const useAuth = () => {
     const isAdmin = computed(() => {
         return user.value?.roles?.some(role => ['administrator', 'developer'].includes(role.name)) ?? false;
     });
+    const hasChangedAvatar = computed(() => {
+        return user.value?.profile?.profil_url;
+    });
 
     const loading = useState<boolean>('loading', () => false);
 
@@ -136,11 +139,13 @@ export const useAuth = () => {
     };
 
     async function updateAvatarUser(formData) {
-        return await $apifetch(`/api/users/${user.value.id}/update-profil`, {
+        const response = await $apifetch(`/api/users/${user.value.id}/update-profil`, {
             method: 'post',
             body: formData,
         });
-    };
+
+        return response;
+    }
 
     async function activeTwoFactorAuth(formData) {
         return await $apifetch(`/api/users/2fa/toggle`, {
@@ -277,6 +282,7 @@ export const useAuth = () => {
     return {
         user,
         users,
+        hasChangedAvatar,
         create,
         update,
         show,

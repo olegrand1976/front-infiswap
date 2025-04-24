@@ -25,7 +25,7 @@
                             </p>
                             <template v-if="user.profil_url != null">
                                 <Avatar>
-                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url" />
+                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
                                     <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
                                 </Avatar>
                             </template>
@@ -67,7 +67,7 @@ import { useRuntimeConfig } from '#app';
 import type { User } from '~/lib/types';
 import { cn } from '@/lib/utils';
 
-const { isAdmin } = useAuth();
+const { isAdmin, hasChangedAvatar } = useAuth();
 
 const user = useState<User>('user');
 
