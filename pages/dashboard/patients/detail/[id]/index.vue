@@ -537,7 +537,7 @@
                                     <div class="space-y-2">
                                         <Label>Gravité</Label>
                                         <Select v-model="info.recordSeverity">
-                                            <SelectTrigger class="text-nowrap">
+                                            <SelectTrigger class="text-nowrap rounded">
                                                 <SelectValue placeholder="Sélectionnez la gravité" />
                                             </SelectTrigger>
                                             <SelectContent>
