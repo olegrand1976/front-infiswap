@@ -1,6 +1,5 @@
 export default defineNuxtConfig({
     modules: [
-        '@nuxtjs/tailwindcss',
         '@zadigetvoltaire/nuxt-gtm',
         'nuxt-gtag',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
