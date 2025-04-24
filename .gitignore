@@ -8,6 +8,7 @@ node_modules
 .data
 .env
 dist
+.idea
 launch-docker.sh
 .qodo
 android
