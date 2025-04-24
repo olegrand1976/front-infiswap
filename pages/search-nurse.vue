@@ -164,10 +164,40 @@
                                 </Select>
                             </div>
                         </div>
+
+                        <div>
+                            <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
+                                <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
+                                    <div class="flex space-x-4 text-white items-center ms-4 relative">
+                                        <HeartIcon class="w-6 text-primary sm:text-white" />
+                                        <span class="font-light hidden sm:inline text-primary sm:text-white">Préférence</span>
+                                    </div>
+                                </div>
+                                <Select v-model="formData.preference">
+                                    <SelectTrigger
+                                        class="w-full bg-transparent text-nowrap border border-none"
+                                        position="right"
+                                    >
+                                        <SelectValue />
+                                    </SelectTrigger>
+
+                                    <SelectContent class="border border-none">
+                                        <template
+                                            v-for="[key, value] in Object.entries(preference)"
+                                            :key="key"
+                                        >
+                                            <SelectItem :value="key">
+                                                {{ value }}
+                                            </SelectItem>
+                                        </template>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <div>
-                            <div class="h-40 lg:h-[450px] rounded-3xl border border-primary">
+                            <div class="h-40 lg:h-[490px] rounded-3xl border border-primary">
                                 <Textarea
                                     v-model="formData.description"
                                     placeholder="Veuillez préciser la raison de votre demande d’un infirmier"
@@ -244,6 +274,7 @@ const formData = reactive({
     zipCode: '',
     city: '',
     category: 'ordinary',
+    preference: 'no_preference',
     description: '',
     accept: true,
 });
@@ -259,6 +290,13 @@ const error = reactive({
 const category = {
     vipo: 'Vipo',
     ordinary: 'Ordinaire',
+};
+
+const preference = {
+    no_preference: 'Peu importe',
+    F: 'Femme',
+    M: 'Homme',
+    X: 'X',
 };
 
 const { submit, inProgress } = useSubmit(
