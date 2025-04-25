@@ -28,7 +28,9 @@
                         ETAPE 2
                     </div>
                     <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
-                        <p class="mb-3 text-primary text-center font-medium">Planifier ma tournée</p>
+                        <p class="mb-3 text-primary text-center font-medium">
+                            Planifier ma tournée
+                        </p>
                         <ul class="mb-4 space-y-1 text-sm flex-grow">
                             <li class="flex items-start">
                                 <span class="text-primary font-bold mr-2">•</span>J'organise mon parcours à l'avance; mon remplaçant n'a plus qu'à suivre l'itinéraire
@@ -47,7 +49,9 @@
                         ETAPE 3
                     </div>
                     <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
-                        <p class="mb-3 text-primary text-center font-medium">Proposer mes disponibilités</p>
+                        <p class="mb-3 text-primary text-center font-medium">
+                            Proposer mes disponibilités
+                        </p>
                         <ul class="mb-4 space-y-1 text-sm flex-grow">
                             <li class="flex items-start">
                                 <span class="text-primary font-bold mr-2">•</span>Je recherche des missions de remplacement
@@ -66,7 +70,9 @@
                         ETAPE 4
                     </div>
                     <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
-                        <p class="mb-3 text-primary text-center font-medium">Demander un remplaçant</p>
+                        <p class="mb-3 text-primary text-center font-medium">
+                            Demander un remplaçant
+                        </p>
                         <ul class="mb-4 space-y-1 text-sm flex-grow">
                             <li class="flex items-start">
                                 <span class="text-primary font-bold mr-2">•</span>J'ai besoin d'un remplaçant planifié ou en urgence
