@@ -108,6 +108,10 @@ const accountOptions = [
         value: 'sale_representative',
     },
     {
+        label: 'Infirmier(e)',
+        value: 'nurse',
+    },
+    {
         label: 'Aucun',
         value: 'none',
     },
