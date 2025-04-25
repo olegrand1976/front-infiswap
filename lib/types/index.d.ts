@@ -1,5 +1,5 @@
 export type Gender = 'M' | 'F';
-export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative';
+export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
 
 export type User = {
     id: number;

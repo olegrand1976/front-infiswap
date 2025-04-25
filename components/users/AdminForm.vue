@@ -18,7 +18,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     dateOfBirth: user?.date_of_birth || null,
     language: 'fr',
     group: user?.group || null,
-    accountType: user?.account_type || null,
+    accountType: user?.account_type || 'nurse',
     address: {
         street: user?.profile?.street_address || null,
         city: user?.profile?.city || null,
