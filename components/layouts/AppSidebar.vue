@@ -1,6 +1,6 @@
 <template>
     <Sidebar>
-        <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content">
+        <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content min-w-[260px] w-[260px]">
             <SidebarGroup
                 :class="cn('h-full rounded-xl pb-6', {
                     'bg-white': isAdmin,
@@ -207,31 +207,26 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: MapIcon,
     },
     {
-        label: 'Remplacements',
-        route: '/dashboard/replacements',
+        label: 'Proposer un remplacement',
+        route: '/dashboard/replacements/create',
         icon: ArrowPathIcon,
         children: [
             {
-                label: 'Rechercher',
-                route: '/dashboard/replacements',
-                icon: DocumentMagnifyingGlassIcon,
+                label: 'Me faire remplacer',
+                route: '/dashboard/replacements/create',
+                icon: DocumentPlusIcon,
             },
             {
                 label: 'Mes remplacements',
                 route: '/dashboard/replacements/me',
                 icon: ListBulletIcon,
             },
-            {
-                label: 'Nouveau',
-                route: '/dashboard/replacements/create',
-                icon: DocumentPlusIcon,
-            },
-            {
-                label: 'Urgent',
-                route: '/dashboard/replacements/urgent',
-                icon: ClockIcon,
-            },
         ],
+    },
+    {
+        label: 'Chercher un remplacement',
+        route: '/dashboard/replacements',
+        icon: DocumentMagnifyingGlassIcon,
     },
     {
         label: 'Paramètres',
