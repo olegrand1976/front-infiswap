@@ -1,8 +1,87 @@
 <template>
     <div class="space-y-6">
         <section class="grid grid-cols-1 items-center gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+                <div class="rounded-xl overflow-hidden border border-primary flex flex-col">
+                    <div class="bg-primary text-white p-3 text-center text-sm font-bold tracking-wide uppercase">
+                        ETAPE 1
+                    </div>
+                    <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
+                        <p class="mb-3 text-primary text-center font-medium">
+                            Pré-enregistrer mes patients
+                        </p>
+                        <ul class="mb-4 space-y-1 text-sm flex-grow">
+                            <li class="flex items-start">
+                                <span class="text-primary font-bold mr-2">•</span>Je créer les fiches dès maintenant pour passer le relais en 2 clics
+                            </li>
+                        </ul>
+                        <div class="pt-4">
+                            <button class="bg-primary text-white w-full py-2 rounded-md text-sm font-semibold hover:bg-primary/90 transition">
+                                Pré-enregistrer maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-xl overflow-hidden border border-primary flex flex-col">
+                    <div class="bg-primary text-white p-3 text-center text-sm font-bold tracking-wide uppercase">
+                        ETAPE 2
+                    </div>
+                    <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
+                        <p class="mb-3 text-primary text-center font-medium">Planifier ma tournée</p>
+                        <ul class="mb-4 space-y-1 text-sm flex-grow">
+                            <li class="flex items-start">
+                                <span class="text-primary font-bold mr-2">•</span>J'organise mon parcours à l'avance; mon remplaçant n'a plus qu'à suivre l'itinéraire
+                            </li>
+                        </ul>
+                        <div class="pt-4">
+                            <button class="bg-primary text-white w-full py-2 rounded-md text-sm font-semibold hover:bg-primary/90 transition">
+                                Planifier maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-xl overflow-hidden border border-primary flex flex-col">
+                    <div class="bg-primary text-white p-3 text-center text-sm font-bold tracking-wide uppercase">
+                        ETAPE 3
+                    </div>
+                    <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
+                        <p class="mb-3 text-primary text-center font-medium">Proposer mes disponibilités</p>
+                        <ul class="mb-4 space-y-1 text-sm flex-grow">
+                            <li class="flex items-start">
+                                <span class="text-primary font-bold mr-2">•</span>Je recherche des missions de remplacement
+                            </li>
+                        </ul>
+                        <div class="pt-4">
+                            <button class="bg-primary text-white w-full py-2 rounded-md text-sm font-semibold hover:bg-primary/90 transition">
+                                Proposer maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-xl overflow-hidden border border-success flex flex-col">
+                    <div class="bg-success text-white p-3 text-center text-sm font-bold tracking-wide uppercase">
+                        ETAPE 4
+                    </div>
+                    <div class="bg-white text-gray-700 p-5 flex flex-col flex-grow">
+                        <p class="mb-3 text-primary text-center font-medium">Demander un remplaçant</p>
+                        <ul class="mb-4 space-y-1 text-sm flex-grow">
+                            <li class="flex items-start">
+                                <span class="text-primary font-bold mr-2">•</span>J'ai besoin d'un remplaçant planifié ou en urgence
+                            </li>
+                        </ul>
+                        <div class="pt-4">
+                            <button class="bg-success text-white w-full py-2 rounded-md text-sm font-semibold hover:bg-success/90 transition">
+                                Demander maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="bg-gray-100 rounded-b-lg">
-                <div class="bg-primary h-6 rounded-t-lg" />
+                <!-- <div class="bg-primary h-6 rounded-t-lg" /> -->
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
                         title="Remplacement(s) crée(s)"
