@@ -1,5 +1,5 @@
 <template>
-    <div :class="cn('w-full p-4 rounded-md bg-white', customClass)">
+    <div :class="cn('w-full rounded-md bg-white', customClass)">
         <slot />
     </div>
 </template>

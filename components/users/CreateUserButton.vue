@@ -3,7 +3,8 @@
         class="rounded-md"
         href="/dashboard/admin/users/create"
     >
-        <span><PlusCircleIcon /></span> Ajouter un utilisateur
+        <span><PlusCircleIcon /></span>
+        <span class="hidden lg:inline-block">Ajouter un utilisateur</span>
     </Button>
 </template>
 
