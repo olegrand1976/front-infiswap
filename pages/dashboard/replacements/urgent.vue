@@ -64,6 +64,8 @@ const user = useUser();
 const { $apifetch, $toast } = useNuxtApp();
 const { replacements, fetchNearbyreplacements } = useNearbyReplacements();
 
+await fetchNearbyreplacements();
+
 const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const day = String(date.getDate()).padStart(2, '0');
@@ -96,10 +98,6 @@ const handleInterest = async (replacementId, nurseId) => {
         });
     }
 };
-
-onMounted(() => {
-    fetchNearbyreplacements();
-});
 
 useHead({
     title: 'Liste des remplacements rapides',
