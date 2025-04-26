@@ -3,7 +3,7 @@
         <div class="flex items-center gap-2 mr-8">
             <span>Par page : </span>
             <Select v-model="internalPerPage">
-                <SelectTrigger class="w-20">
+                <SelectTrigger class="w-20 rounded">
                     <SelectValue :placeholder="internalPerPage.toString()" />
                 </SelectTrigger>
                 <SelectContent>
