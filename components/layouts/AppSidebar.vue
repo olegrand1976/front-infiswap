@@ -146,7 +146,6 @@ import {
     PowerIcon,
     HeartIcon,
     Cog8ToothIcon,
-    MapPinIcon,
     ClockIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
@@ -180,33 +179,6 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: SquaresPlusIcon,
     },
     {
-        label: 'Mes patients',
-        route: '/dashboard/patients',
-        icon: UserGroupIcon,
-        children: [
-            {
-                label: 'Listes',
-                route: '/dashboard/patients',
-                icon: ClipboardDocumentListIcon,
-            },
-            {
-                label: 'Nouveau',
-                route: '/dashboard/patients/create',
-                icon: UserPlusIcon,
-            },
-            // {
-            //     label: 'De ma région',
-            //     route: '/dashboard/patients/myregion',
-            //     icon: MapPinIcon,
-            // },
-        ],
-    },
-    {
-        label: 'Tournées',
-        route: '/dashboard/tours',
-        icon: MapIcon,
-    },
-    {
         label: 'Remplacements',
         route: '/dashboard/replacements',
         icon: ArrowPathIcon,
@@ -234,6 +206,33 @@ const nurseNavigationItems: NavigationItem[] = [
         ],
     },
     {
+        label: 'Mes patients',
+        route: '/dashboard/patients',
+        icon: UserGroupIcon,
+        children: [
+            {
+                label: 'Listes',
+                route: '/dashboard/patients',
+                icon: ClipboardDocumentListIcon,
+            },
+            {
+                label: 'Nouveau',
+                route: '/dashboard/patients/create',
+                icon: UserPlusIcon,
+            },
+            // {
+            //     label: 'De ma région',
+            //     route: '/dashboard/patients/myregion',
+            //     icon: MapPinIcon,
+            // },
+        ],
+    },
+    {
+        label: 'Tournées',
+        route: '/dashboard/tours',
+        icon: MapIcon,
+    },
+    {
         label: 'Paramètres',
         route: '/dashboard/settings',
         icon: Cog8ToothIcon,
@@ -247,6 +246,11 @@ const adminNavigationItems: NavigationItem[] = [
         icon: SquaresPlusIcon,
     },
     {
+        label: 'Remplacements',
+        route: '/dashboard/admin/replacements',
+        icon: ArrowPathIcon,
+    },
+    {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
         icon: UserGroupIcon,
@@ -255,11 +259,6 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Patients',
         route: '/dashboard/admin/patients',
         icon: HeartIcon,
-    },
-    {
-        label: 'Remplacements',
-        route: '/dashboard/admin/replacements',
-        icon: ArrowPathIcon,
     },
 ];
 
