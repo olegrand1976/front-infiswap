@@ -166,9 +166,9 @@
                                 Jour
                             </TableHead>
                             <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
-                                <span>Matin</span>
-                                <span>Midi</span>
-                                <span>Soir</span>
+                                <div class="text-center">Matin</div>
+                                <div class="text-center">Midi</div>
+                                <div class="text-center">Soir</div>
                             </TableHead>
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                 Codes postaux
