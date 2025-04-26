@@ -14,9 +14,6 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Nom & Prénom
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                             Heures concernées
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
@@ -36,9 +33,6 @@
                         :key="replacement.id"
                         class="border-t border-gray-200 hover:bg-gray-50"
                     >
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                            {{ replacement.nurse_firstname || 'N/A' }} {{ replacement.nurse_lastname || 'N/A' }}
-                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                             {{ replacement.start_time }} - {{ replacement.end_time }}
                         </td>
