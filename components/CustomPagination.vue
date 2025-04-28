@@ -1,7 +1,7 @@
 <template>
     <div class="p-4 flex justify-end bg-white">
         <div class="flex items-center gap-2 mr-8">
-            <span>Par page : </span>
+            <span class="hidden sm:block">Par page : </span>
             <Select v-model="internalPerPage">
                 <SelectTrigger class="w-20 rounded">
                     <SelectValue :placeholder="internalPerPage.toString()" />

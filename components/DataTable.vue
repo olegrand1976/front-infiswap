@@ -54,10 +54,10 @@
                 </TableBody>
             </Table>
         </div>
-        <div class="flex-1 m-1 text-sm text-muted-foreground">
+        <!-- <div class="flex-1 m-1 text-sm text-muted-foreground">
             {{ table.getFilteredSelectedRowModel().rows.length }} par
             {{ table.getFilteredRowModel().rows.length }} lignes.
-        </div>
+        </div> -->
     </div>
 </template>
 

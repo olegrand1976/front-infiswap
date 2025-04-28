@@ -294,6 +294,26 @@ export const useAuth = () => {
             });
     }
 
+    async function validate(user: number) {
+        try {
+            const response = await $apifetch(`/api/users/${user}/validate`, {
+                method: 'PUT',
+            });
+
+            $toast({
+                description: 'Validation réussie.',
+            });
+
+            return response.user;
+        }
+        catch {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur est survenue lors de la validation.',
+            });
+        }
+    }
+
     return {
         user,
         users,
@@ -301,6 +321,7 @@ export const useAuth = () => {
         create,
         update,
         show,
+        validate,
         forceDelete,
         getUsers,
         isLoggedIn,

@@ -33,6 +33,7 @@ import type { User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
+import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -40,7 +41,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, getUsers, forceDelete, resendEmailVerification } = useAuth();
+const { users, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -90,16 +91,6 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
-        accessorKey: 'identifier_number',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
-    },
-    {
         accessorKey: 'email',
         header: ({ column }) => {
             return h(Button, {
@@ -108,22 +99,45 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            const email = row.getValue('email');
             const isVerified = row.original.email_verified_at !== null;
 
-            return h('div', {
-                class: 'flex items-center gap-2 lowercase',
-            }, [
-                h('span', email),
+            return h('div', { class: 'flex items-center gap-2 lowercase' }, [
+                h('span', row.getValue('email')),
                 isVerified
-                    ? h('', { class: 'w-4 h-4 text-green-500' })
-                    : h(XCircleIcon, {
-                            class: 'w-4 h-4 text-red-500 cursor-pointer',
-                            title: 'Renvoyer le mail de vérification',
-                            onClick: () => resendEmailVerification(row.original.email),
-                        }),
+                    ? h('div', { class: '' })
+                    : [
+                            h(XCircleIcon, {
+                                class: 'w-4 h-4 text-red-500 cursor-pointer',
+                                title: 'Renvoyer le mail de vérification',
+                                onClick: () => resendEmailVerification(row.original.email),
+                            }),
+                            h(ConfirmDialog, {
+                                title: 'Valider l\'email',
+                                description: 'Veux-tu valider cet email manuellement ?',
+                                onConfirm: () => validateEmail(row.original.id),
+                                cancelText: 'Non',
+                                confirmText: 'Oui, valider',
+                            }, {
+                                trigger: () =>
+                                    h(Button, {
+                                        variant: 'success',
+                                        size: 'sm',
+                                        class: 'h-6 text-xs',
+                                    }, 'Valider'),
+                            }),
+                        ],
             ]);
         },
+    },
+    {
+        accessorKey: 'identifier_number',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
     {
         accessorKey: 'phone_number',
@@ -230,5 +244,13 @@ const handleDelete = async (user: User) => {
     return await forceDelete(user.id).then(async () => {
         await getUsers(page.value, perPage.value);
     });
+};
+
+const validateEmail = async (id: number) => {
+    const response = await validate(id);
+
+    users.value.data = users.value.data.map(user =>
+        user.id === id ? { ...user, email_verified_at: response.email_verified_at } : user,
+    );
 };
 </script>
