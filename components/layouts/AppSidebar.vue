@@ -146,9 +146,9 @@ import {
     PowerIcon,
     HeartIcon,
     Cog8ToothIcon,
-    ClockIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
+import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
 // import { isFuture, formatToDMY } from '~/composables/useDate';
@@ -177,6 +177,11 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Informations',
         route: '/dashboard',
         icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Remplacement rapide',
+        route: '/dashboard/replacements/immediate',
+        icon: QuickReplacementIcon,
     },
     {
         label: 'Proposer un remplacement',
