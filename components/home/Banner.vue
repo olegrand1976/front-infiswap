@@ -2,7 +2,7 @@
     <div
         class="container font-light grid grid-cols-6 gap-8 justify-between lg:mt-12"
     >
-        <div class="relative col-span-5 lg:col-span-2 p-4 lg:p-8 grid place-content-center bg-rose-400 shadow-lg rounded-lg overflow-hidden">
+        <div class="relative col-span-6 lg:col-span-2 p-4 lg:p-8 grid place-content-center bg-rose-400 shadow-lg rounded-lg overflow-hidden">
             <div
                 v-if="!user"
                 class="text-white"
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div
-            class="col-span-5 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
+            class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
         >
             <div
                 class="relative h-60 col-span-3 lg:col-span-1 lg:h-full w-full bg-red-200"
