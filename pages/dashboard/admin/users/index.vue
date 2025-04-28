@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
-import { XCircleIcon, ArrowsUpDownIcon, CheckIcon } from '@heroicons/vue/24/solid';
+import { XCircleIcon, ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
