@@ -1,18 +1,23 @@
 <template>
     <div class="space-y-6">
-        <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
-            <h1 class="text-primary">
+        <div class="bg-gray-100 flex items-center px-6 rounded-lg w-full h-12">
+            <img
+                src="/public/images/home/help_me.png"
+                class="h-10 w-10 object-contain mr-3"
+                alt="Aide"
+            />
+            <h1 class="text-primary text-sm font-medium">
                 Remplacement immédiat
-                <strong>
+                <strong class="font-semibold">
                     pour aujourd'hui
                 </strong>
             </h1>
         </div>
 
         <Form @submit="submit">
-            <div class="bg-gray-100 rounded-xl px-6 py-6 mx-auto max-w-xl">
+            <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
                 <h3 class="text-center text-lg text-primary py-4 font-bold">
-                    Création remplacement
+                    Besoin d’aide rapidement ? Rien de plus simple !
                 </h3>
                 <div class="space-y-4">
                     <div class="flex flex-wrap gap-6 mt-4">
@@ -35,16 +40,84 @@
                                 input-class="rounded-full"
                             />
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 xl:grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
-                        <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
-                            <label for="zipCode">Codes postaux *</label>
+
+                        <div class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center">
+                            <h5 class="text-sm text-gray-700 font-medium">
+                                Nombre de patients *
+                            </h5>
+                            <Input
+                                v-model="formData.patientCount"
+                                placeholder="10"
+                                class="w-full bg-white text-sm text-gray-700 focus:outline-none rounded-full border border-primary h-11 px-3"
+                            />
                         </div>
-                        <Input
-                            v-model="formData.zipCode"
-                            placeholder="99333,99334"
-                            class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                        />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
+                            <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
+                                <label for="zipCodes">Codes postaux *</label>
+                            </div>
+                            <Input
+                                v-model="zipCodesInput"
+                                @change="handleZipCodesChange"
+                                placeholder="1090,1190"
+                                class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                            />
+                        </div>
+
+                        <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
+                            <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
+                                <label for="cities">Villes *</label>
+                            </div>
+                            <Input
+                                v-model="citiesInput"
+                                @change="handleCitiesChange"
+                                placeholder="Bruxelles, Bruges"
+                                class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-[30%_70%] items-center mt-4">
+                        <h5>Type de soin</h5>
+                        <Select
+                            v-model="formData.careTypes"
+                            multiple
+                        >
+                            <SelectTrigger
+                                class="w-full bg-white shadow rounded-full text-nowrap border border-none"
+                                position="right"
+                            >
+                                <SelectValue class="truncate w-[200rem]">
+                                    <template v-if="getSelectedCareTypesText(formData.careTypes)">
+                                        {{ getSelectedCareTypesText(formData.careTypes) }}
+                                    </template>
+                                    <template v-else>
+                                        <span class="text-black/60">
+                                            Sélectionner un type de soin
+                                        </span>
+                                    </template>
+                                </SelectValue>
+                            </SelectTrigger>
+
+                            <SelectContent class="border border-none">
+                                <SelectGroup class="w-32">
+                                    <div
+                                        v-for="careType in careTypes"
+                                        :key="careType.id"
+                                        class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                        @click="handleCareTypeClick(formData, careType.id)"
+                                    >
+                                        <Checkbox
+                                            :checked="formData.careTypes.includes(careType.id)"
+                                            class="mr-2"
+                                        />
+                                        <label class="text-xs text-nowrap cursor-pointer">
+                                            {{ careType.name }}
+                                        </label>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 <Button
@@ -72,14 +145,53 @@ definePageMeta({
     ssr: false,
 });
 
+const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
+
+const zipCodesInput = ref('');
+const citiesInput = ref('');
 
 const formData = reactive({
     startTime: '',
     endTime: '',
-    zipCode: '',
+    patientCount: '',
+    zipCodes: [],
+    cities: [],
+    careTypes: [],
 });
+
+const handleCareTypeClick = (timeSlot, careTypes) => {
+    const index = timeSlot.careTypes.indexOf(careTypes);
+    if (index === -1) {
+        timeSlot.careTypes.push(careTypes);
+    }
+    else {
+        timeSlot.careTypes.splice(index, 1);
+    }
+    timeSlot.careTypes = [...timeSlot.careTypes];
+};
+
+const getSelectedCareTypesText = (selectedIds) => {
+    return careTypes.value
+        .filter(ct => selectedIds.includes(ct.id))
+        .map(ct => ct.name)
+        .join(', ');
+};
+
+const handleZipCodesChange = () => {
+    formData.zipCodes = zipCodesInput.value
+        .split(',')
+        .map(zip => zip.trim())
+        .filter(zip => zip !== '');
+};
+
+const handleCitiesChange = () => {
+    formData.cities = citiesInput.value
+        .split(',')
+        .map(city => city.trim())
+        .filter(city => city !== '');
+};
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
@@ -88,7 +200,7 @@ const { submit, inProgress } = useSubmit(async () => {
         });
         sendUrgentReplacement(formData);
         setTimeout(() => {
-            location.reload();
+            navigateTo('/dashboard/replacements/me');
         }, 5000);
     }
     catch (err) {
@@ -99,5 +211,9 @@ const { submit, inProgress } = useSubmit(async () => {
             variant: 'destructive',
         });
     }
+});
+
+onMounted(() => {
+    fetchCareTypes();
 });
 </script>
