@@ -52,113 +52,122 @@
                 <h3 class="text-primary font-bold sm:font-normal">
                     Tournée du jour
                 </h3>
-                <div class="my-3 hidden sm:block">
-                    <Table>
-                        <TableHeader>
-                            <TableRow class="w-full grid grid-cols-3 justify-between items-center gap-x-4 2xl:gap-x-16 border-gray-300">
-                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
-                                    Patient
-                                </TableHead>
-                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
-                                    Code postal
-                                </TableHead>
-                                <TableHead class="p-3 text-center flex h-10 justify-center items-center bg-primary text-white">
-                                    Ville
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <template v-if="props.tours.length != 0">
-                                <div
-                                    v-for="(tour, index) in props.tours"
-                                    :key="index"
-                                >
-                                    <TableRow class="cursor-pointer w-full grid grid-cols-3 justify-between items-center gap-x-4 2xl:gap-x-16 border border-gray-300">
-                                        <TableCell class="py-3 text-center bg-gray-100">
-                                            <div class="flex h-10 justify-center items-center bg-gray-200">
-                                                <span class="truncate w-full px-2 text-center">
-                                                    {{ tour.lastname }} {{ tour.firstname }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell class="py-3 text-center bg-gray-100">
-                                            <div class="flex h-10 justify-center items-center bg-gray-200">
-                                                <span class="truncate w-full px-2 text-center">
-                                                    {{ tour.profile.zip_code }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell class="py-3 text-center bg-gray-100">
-                                            <div class="flex h-10 justify-center items-center bg-gray-200">
-                                                <span class="truncate w-full px-2 text-center">
-                                                    {{ tour.profile.city }}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <p class="text-center text-black/70 mt-6">
-                                    Aucune tournée à afficher pour le moment
-                                </p>
-                                <p>
-                                    <Button
-                                        class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
-                                        disabled
-                                    >
-                                        Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
-                                    </Button>
-                                </p>
-                            </template>
-                        </TableBody>
-                    </Table>
-                </div>
+                <p class="mt-4">
+                    Liste patient du jour
+                </p>
 
-                <div class="sm:hidden my-4">
-                    <template v-if="props.tours.length !== 0">
+                <div class="my-3">
+                    <template v-if="tours.length > 0">
                         <div
-                            v-for="(tour, index) in props.tours"
-                            :key="index"
-                            class="bg-gray-100 p-3 rounded-lg space-y-4"
+                            v-for="tour in tours"
+                            :key="tour.id"
+                            class="bg-white rounded-lg shadow-md p-4 mb-4"
                         >
-                            <div class="space-y-2">
-                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
-                                    Patient
-                                </h3>
-                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
-                                    {{ tour.lastname }} {{ tour.firstname }}
-                                </p>
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center">
+                                    <!-- <div class="flex-shrink-0">
+                                        <img
+                                            :src="$config.public.API_URL + tour.profile.profil_url"
+                                            alt="image"
+                                            class="w-16 h-16 rounded-full object-cover border-2"
+                                        >
+                                    </div> -->
+
+                                    <span class="font-bold text-lg">{{ tour.firstname }} {{ tour.lastname }}</span>
+                                </div>
+                                <div
+                                    v-for="(visitTime, idx) in tour.visit_times"
+                                    :key="visitTime.id"
+                                >
+                                    <button
+                                        class="w-8 h-8 flex items-center justify-center bg-gray-400 text-white rounded-full"
+                                        @click="openDialog(tour.id, visitTime.id)"
+                                    >
+                                        ✖
+                                    </button>
+                                </div>
+
+                                <Dialog v-model:open="isDialogOpen">
+                                    <DialogContent class="h-[28vh]">
+                                        <DialogHeader>
+                                            <DialogTitle>Confirmer la suppression</DialogTitle>
+                                            <DialogDescription>
+                                                Êtes-vous sûr de vouloir supprimer ce patient ?
+                                            </DialogDescription>
+                                        </DialogHeader>
+
+                                        <div class="flex space-x-8 justify-end items-center">
+                                            <Button
+                                                variant="secondary"
+                                                @click="closeDialog"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button @click="submitDelete()">
+                                                Oui
+                                            </Button>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
-                            <div class="space-y-2">
-                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
-                                    Code postal
-                                </h3>
-                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
-                                    {{ tour.profile.zip_code }}
-                                </p>
+
+                            <div class="flex gap-2">
+                                <div class="flex-1">
+                                    <div class="bg-gray-200 text-black font-semibold text-center py-2 rounded-md">
+                                        Code postaux
+                                    </div>
+                                    <div class="mt-2 text-center bg-white p-2 rounded-md border">
+                                        {{ tour.profile.zip_code }}
+                                    </div>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="bg-gray-200 text-black font-semibold text-center py-2 rounded-md">
+                                        Ville
+                                    </div>
+                                    <div class="mt-2 text-center bg-white p-2 rounded-md border">
+                                        {{ tour.profile.city }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="space-y-2">
-                                <h3 class="text-center text-white font-semibold bg-primary py-3 px-3 rounded">
-                                    Ville
-                                </h3>
-                                <p class="text-center bg-gray-200 py-3 px-3 rounded">
-                                    {{ tour.profile.city }}
-                                </p>
+
+                            <div class="bg-gray-200 text-black font-semibold text-center py-2 mt-4 rounded-md">
+                                Types de soins à pratiquer
+                            </div>
+
+                            <div v-if="tour?.visit_times?.length">
+                                <div
+                                    v-for="(visitTimes, idx1) in tour.visit_times"
+                                    :key="'vt-' + idx1"
+                                >
+                                    <div
+                                        v-for="(visit, idx2) in visitTimes.visits"
+                                        :key="'v-' + idx2"
+                                    >
+                                        <div v-if="visit.care_types && visit.care_types.length">
+                                            <div
+                                                v-for="(careType, idx3) in visit.care_types"
+                                                :key="'ct-' + idx3"
+                                                class="bg-white p-2 rounded-md border mt-2"
+                                            >
+                                                <span>{{ careType }}</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="text-gray-500"
+                                        >
+                                            Aucun soin spécifié
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </template>
+
                     <template v-else>
-                        <p class="text-center text-xs text-black/50 mt-6">
+                        <p class="text-center text-black/70 mt-6">
                             Aucune tournée à afficher pour le moment
-                        </p>
-                        <p>
-                            <Button
-                                class="w-64 flex justify-center mx-auto text-wrap mt-8 h-24 rounded"
-                                disabled
-                            >
-                                Enregistrer votre tournée sur InfiSwap pour bénéficier de toutes les fonctionnalités
-                            </Button>
                         </p>
                     </template>
                 </div>
@@ -221,4 +230,36 @@ const months = [
 const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
+
+const isDialogOpen = ref(false);
+const patientToDelete = ref<{ patientId: number; visitId: number } | null>(null);
+
+const openDialog = (patientId: number, visitId: number) => {
+    patientToDelete.value = { patientId, visitId };
+    isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+    isDialogOpen.value = false;
+    patientToDelete.value = null;
+};
+
+const submitDelete = async () => {
+    if (!patientToDelete.value) return;
+
+    const { patientId, visitId } = patientToDelete.value;
+
+    try {
+        await deleteTour(patientId, visitId).catch((error) => {
+            console.error('Erreur API, rollback:', error);
+            // tours.value = currentTours;
+        });
+    }
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+    }
+    finally {
+        closeDialog();
+    }
+};
 </script>
