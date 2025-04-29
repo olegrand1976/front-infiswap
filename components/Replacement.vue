@@ -197,14 +197,14 @@
                                 <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                             </TableRow>
                         </div>
-                        <div v-else-if="currentReplacements.length === 0">
+                        <div v-else-if="filteredReplacements.length === 0">
                             <p class="text-center text-gray-500 py-8">
                                 Aucun résultat n'est trouvé
                             </p>
                         </div>
                         <div v-else>
                             <TableRow
-                                v-for="replacement in currentReplacements"
+                                v-for="replacement in filteredReplacements"
                                 :key="replacement.id"
                                 class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                             >
@@ -343,13 +343,13 @@
                         <Skeleton class="h-32 w-full bg-gray-100" />
                     </div>
                 </div>
-                <div v-else-if="currentReplacements.length === 0">
+                <div v-else-if="filteredReplacements.length === 0">
                     <p class="text-center text-gray-500 py-8">
                         Aucun résultat n'est trouvé
                     </p>
                 </div>
                 <div
-                    v-for="replacement in currentReplacements"
+                    v-for="replacement in filteredReplacements"
                     v-else
                     :key="replacement?.id"
                     class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12 relative"
@@ -534,6 +534,11 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    filterType: {
+        type: String,
+        required: false,
+        default: 'all',
+    },
 });
 
 const { loading } = useReplacements();
@@ -575,13 +580,22 @@ const hasShift = (details, period) => {
     return details.some(detail => getShift(detail.start_at) === period);
 };
 
-// Method to check if a replacement is urgent
 const isUrgentReplacement = (replacement) => {
-    // Check if the patients array is empty for this replacement
     return replacement.details.every(detail => !detail.patient
         || (Array.isArray(detail.patient) && detail.patient.length === 0)
         || Object.keys(detail.patient || {}).length === 0);
 };
+
+const filteredReplacements = computed(() => {
+    if (props.filterType === 'all') {
+        return currentReplacements.value;
+    }
+
+    return currentReplacements.value.filter((replacement) => {
+        const isUrgent = isUrgentReplacement(replacement);
+        return props.filterType === 'urgent' ? isUrgent : !isUrgent;
+    });
+});
 
 const formData = reactive({
     postalCodeTags: settings.replacement.zip_codes || [],

@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class=" flex items-center justify-between w-full ">
+        <div class="flex items-center justify-between w-full">
             <h1 class="py-3 text-primary bg-gray-100 w-[75%] px-9 rounded-lg">
                 Mes <strong>
                     remplacements
                 </strong>
             </h1>
 
-            <Select>
+            <Select v-model="selectedFilter">
                 <SelectTrigger
                     class="bg-white my-0.5 w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
                     position="right"
@@ -35,6 +35,7 @@
         <Replacement
             type="me"
             :get-data="getMyReplacements"
+            :filter-type="selectedFilter"
         />
     </div>
 </template>
