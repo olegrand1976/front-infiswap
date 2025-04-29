@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 useHead({
-    title: 'Abonnements',
+    title: 'Tarifs',
 });
 
 definePageMeta({
