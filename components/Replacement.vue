@@ -304,7 +304,7 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="bg-gray-100 text-xs pt-6">
+                                <TableCell class="bg-gray-100 text-xs pt-5">
                                     <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                         <TooltipProvider>
                                             <Tooltip>
@@ -319,13 +319,22 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell class="text-xs text-center bg-[#F1F2F7] pt-6 overflow-x-hidden">
+                                <TableCell
+                                    class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4"
+                                >
                                     <Button
-                                        class="inline-block h-10 rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacements/detail/${replacement.id}`"
                                     >
                                         <EyeIcon class="h-6 mt-1" />
                                     </Button>
+                                    <!-- <Button
+                                        v-if="user.nurse.id == replacement.nurse_id"
+                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                        @click="() => handleCloseReplacement(replacement)"
+                                    >
+                                        <XMarkIcon class="h-6 mt-1" />
+                                    </Button> -->
                                 </TableCell>
                             </TableRow>
                         </div>
@@ -517,7 +526,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
@@ -762,6 +771,11 @@ watch(
     },
     { deep: true },
 );
+
+const handleCloseReplacement = async (replacement) => {
+    console.log(`${user.value.nurse.id} == ${replacement.nurse_id}`);
+    console.log(replacement.nurse_id);
+};
 
 definePageMeta({
     layout: 'dashboard',

@@ -205,6 +205,13 @@ export const useReplacements = () => {
         }
     };
 
+    const updateReplacement = async (formData) => {
+        await $apifetch('/api/replacements/immediate', {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     return {
         error,
         loading,
@@ -216,6 +223,7 @@ export const useReplacements = () => {
         getReplacements,
         getReplacementsForAdmin,
         getFRStatus,
+        updateReplacement,
         extractPostalDataFromReplacement,
         sendUrgentReplacement,
     };
