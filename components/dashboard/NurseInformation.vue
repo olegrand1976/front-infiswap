@@ -100,7 +100,10 @@
             </div>
 
             <div class="relative sm:hidden">
-                <div ref="carousel" class="flex overflow-hidden w-full mb-16">
+                <div
+                    ref="carousel"
+                    class="flex overflow-hidden w-full mb-16"
+                >
                     <div class="min-w-full flex justify-center items-center p-4 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                             <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
@@ -179,7 +182,6 @@
                         </div>
                     </div>
 
-
                     <div class="min-w-full flex justify-center items-center p-4 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                             <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
@@ -207,8 +209,10 @@
                     </div>
                 </div>
 
-                <button @click="nextStep"
-                        class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-primary text-white px-6 py-2 rounded-md">
+                <button
+                    class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-primary text-white px-6 py-2 rounded-md"
+                    @click="nextStep"
+                >
                     Étape suivante
                 </button>
             </div>
@@ -434,15 +438,15 @@ const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
 
-const carousel = ref<HTMLElement | null>(null)
-let currentStep = ref(0)
+const carousel = ref<HTMLElement | null>(null);
+const currentStep = ref(0);
 
 function nextStep() {
-  if (!carousel.value) return
-  const items = carousel.value.children
-  currentStep.value = (currentStep.value + 1) % items.length
-  const target = items[currentStep.value] as HTMLElement
-  carousel.value.scrollTo({ left: target.offsetLeft, behavior: 'smooth' })
+    if (!carousel.value) return;
+    const items = carousel.value.children;
+    currentStep.value = (currentStep.value + 1) % items.length;
+    const target = items[currentStep.value] as HTMLElement;
+    carousel.value.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
 }
 </script>
 

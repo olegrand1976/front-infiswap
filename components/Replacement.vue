@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="flex mt-6">
-            <Form
-                class="grid grid-cols-5 w-full gap-4"
-            >
+            <Form class="grid grid-cols-5 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
@@ -22,7 +20,6 @@
                                                 class="text-xs w-[200%] truncate"
                                             />
                                         </SelectTrigger>
-
                                         <SelectContent class="border border-none">
                                             <SelectGroup class="w-32">
                                                 <div
@@ -72,12 +69,9 @@
                                                 class="flex-shrink-0 max-w-24"
                                             >
                                                 <TagsInputItemText class="text-xs" />
-                                                <TagsInputItemDelete
-                                                    @click="() => removeTag(formData.postalCodeTags, item)"
-                                                />
+                                                <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
                                             </TagsInputItem>
                                         </div>
-
                                         <TagsInputInput
                                             v-model="postalCodeInput"
                                             :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
@@ -92,13 +86,13 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4  md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
                                 <div
                                     class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
-                                    title="Saisissez la vile puis appuyer sur Entrée pour l'ajouter"
+                                    title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
                                 >
                                     <h5 class="text-white text-xs">
                                         <span class="xl:hidden">Ville(s)</span>
@@ -119,12 +113,9 @@
                                                 class="flex-shrink-0 max-w-24"
                                             >
                                                 <TagsInputItemText class="text-xs" />
-                                                <TagsInputItemDelete
-                                                    @click="() => removeTag(formData.cityTags, item)"
-                                                />
+                                                <TagsInputItemDelete @click="() => removeTag(formData.cityTags, item)" />
                                             </TagsInputItem>
                                         </div>
-
                                         <TagsInputInput
                                             v-model="cityInput"
                                             :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
@@ -147,7 +138,7 @@
                         <ArrowPathIcon class="w-6" />
                     </Button>
                     <Button
-                        class=" text-sm bg-primary"
+                        class="text-sm bg-primary"
                         @click="submit"
                     >
                         <MagnifyingGlassIcon class="w-6" />
@@ -198,29 +189,12 @@
                                 :key="index"
                                 class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
                             >
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
-
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
-
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
-
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
-
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
-
-                                <TableCell>
-                                    <Skeleton class="h-10 w-full bg-gray-100" />
-                                </TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                             </TableRow>
                         </div>
                         <div v-else-if="currentReplacements.length === 0">
@@ -232,8 +206,15 @@
                             <TableRow
                                 v-for="replacement in currentReplacements"
                                 :key="replacement.id"
-                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden"
+                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                             >
+                                <div
+                                    v-if="isUrgentReplacement(replacement)"
+                                    class="urgent-indicator"
+                                >
+                                    URGENT
+                                </div>
+
                                 <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                         <span>{{ formatDate(replacement.start_date) }}</span>
@@ -246,25 +227,19 @@
 
                                 <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                     <div>
-                                        <span
-                                            v-if="hasShift(replacement.details, 'morning')"
-                                        >
+                                        <span v-if="hasShift(replacement.details, 'morning')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
-                                        <span
-                                            v-if="hasShift(replacement.details, 'afternoon')"
-                                        >
+                                        <span v-if="hasShift(replacement.details, 'afternoon')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
-                                        <span
-                                            v-if="hasShift(replacement.details, 'evening')"
-                                        >
+                                        <span v-if="hasShift(replacement.details, 'evening')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
@@ -278,25 +253,21 @@
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
+                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="index"
-                                                            :class="cn('mr-1', {
-                                                                'text-success font-bold': isZipCodeHighlighted(detail),
-                                                            })"
+                                                            :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
                                                         >
-                                                            {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
+                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
+                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                         :key="index"
-                                                        :class="cn('mr-1', {
-                                                            'text-success font-bold': isZipCodeHighlighted(detail),
-                                                        })"
+                                                        :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
+                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -311,25 +282,21 @@
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
+                                                            v-for="(city, index) in JSON.parse(replacement.cities)"
                                                             :key="index"
-                                                            :class="cn('mr-1', {
-                                                                'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                            })"
+                                                            :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
                                                         >
-                                                            {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
+                                                            {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
+                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
                                                         :key="index"
-                                                        :class="cn('mr-1', {
-                                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                        })"
+                                                        :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
+                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -342,10 +309,10 @@
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
+                                                    {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
+                                                    {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
@@ -385,8 +352,16 @@
                     v-for="replacement in currentReplacements"
                     v-else
                     :key="replacement?.id"
-                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12"
+                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12 relative"
                 >
+                    <!-- Urgent indicator for mobile view -->
+                    <div
+                        v-if="isUrgentReplacement(replacement)"
+                        class="urgent-indicator"
+                    >
+                        URGENT
+                    </div>
+
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">
@@ -452,25 +427,21 @@
                                             <TooltipTrigger>
                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                     <span
-                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
+                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                         :key="index"
-                                                        :class="cn('mr-1', {
-                                                            'text-success font-bold': isZipCodeHighlighted(detail),
-                                                        })"
+                                                        :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
+                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </p>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <span
-                                                    v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim())"
+                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                     :key="index"
-                                                    :class="cn('mr-1', {
-                                                        'text-success font-bold': isZipCodeHighlighted(detail),
-                                                    })"
+                                                    :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
                                                 >
-                                                    {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.zip_code, zipCode => zipCode?.toString()?.trim()).length - 1 ? ',' : '' }}
+                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                 </span>
                                             </TooltipContent>
                                         </Tooltip>
@@ -490,25 +461,21 @@
                                             <TooltipTrigger>
                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                     <span
-                                                        v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
+                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
                                                         :key="index"
-                                                        :class="cn('mr-1', {
-                                                            'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                        })"
+                                                        :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
                                                     >
-                                                        {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
+                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                     </span>
                                                 </p>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <span
-                                                    v-for="(detail, index) in getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim())"
+                                                    v-for="(city, index) in JSON.parse(replacement.cities)"
                                                     :key="index"
-                                                    :class="cn('mr-1', {
-                                                        'text-success font-bold': hasMatchingCityFromUnique(detail),
-                                                    })"
+                                                    :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
                                                 >
-                                                    {{ detail }}{{ index < getUniqueValues(replacement.details, detail => detail?.patient?.city, city => city?.toLowerCase()?.trim()).length - 1 ? ',' : '' }}
+                                                    {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                 </span>
                                             </TooltipContent>
                                         </Tooltip>
@@ -527,10 +494,10 @@
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
-                                            {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
+                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            {{ getUniqueValues(replacement.details, detail => detail.care_types?.map(careType => careType.name)).join(', ') }}
+                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
@@ -553,7 +520,6 @@
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
-
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays } from '~/lib/utils';
@@ -609,6 +575,14 @@ const hasShift = (details, period) => {
     return details.some(detail => getShift(detail.start_at) === period);
 };
 
+// Method to check if a replacement is urgent
+const isUrgentReplacement = (replacement) => {
+    // Check if the patients array is empty for this replacement
+    return replacement.details.every(detail => !detail.patient
+        || (Array.isArray(detail.patient) && detail.patient.length === 0)
+        || Object.keys(detail.patient || {}).length === 0);
+};
+
 const formData = reactive({
     postalCodeTags: settings.replacement.zip_codes || [],
     cityTags: settings.replacement.cities || [],
@@ -641,6 +615,15 @@ const selectedDaysPlaceholder = computed(() => {
 
 const sortReplacements = (replacements) => {
     return replacements.sort((a, b) => {
+        // First sort by urgency
+        const aIsUrgent = isUrgentReplacement(a);
+        const bIsUrgent = isUrgentReplacement(b);
+
+        // Urgent replacements come first
+        if (aIsUrgent && !bIsUrgent) return -1;
+        if (!aIsUrgent && bIsUrgent) return 1;
+
+        // Then sort by matching criteria
         const aMatches = a.details.some(detail =>
             formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
             || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
@@ -777,13 +760,13 @@ definePageMeta({
 });
 </script>
 
-<style>
-.no-scrollbar {
+  <style>
+  .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
+  }
 
-.no-scrollbar::-webkit-scrollbar {
+  .no-scrollbar::-webkit-scrollbar {
     display: none;
-}
-</style>
+  }
+  </style>

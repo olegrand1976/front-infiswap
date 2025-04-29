@@ -201,6 +201,11 @@ const nurseNavigationItems: NavigationItem[] = [
         ],
     },
     {
+        label: 'Chercher un remplacement',
+        route: '/dashboard/replacements',
+        icon: DocumentMagnifyingGlassIcon,
+    },
+    {
         label: 'Mes patients',
         route: '/dashboard/patients',
         icon: UserGroupIcon,
@@ -226,11 +231,6 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Tournées',
         route: '/dashboard/tours',
         icon: MapIcon,
-    },
-    {
-        label: 'Chercher un remplacement',
-        route: '/dashboard/replacements',
-        icon: DocumentMagnifyingGlassIcon,
     },
     {
         label: 'Paramètres',

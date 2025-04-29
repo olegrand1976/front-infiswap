@@ -5,7 +5,7 @@
                 src="/public/images/home/help_me.png"
                 class="h-10 w-10 object-contain mr-3"
                 alt="Aide"
-            />
+            >
             <h1 class="text-primary text-sm font-medium">
                 Remplacement immédiat
                 <strong class="font-semibold">
@@ -59,9 +59,9 @@
                             </div>
                             <Input
                                 v-model="zipCodesInput"
-                                @change="handleZipCodesChange"
                                 placeholder="1090,1190"
                                 class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                                @change="handleZipCodesChange"
                             />
                         </div>
 
@@ -71,9 +71,9 @@
                             </div>
                             <Input
                                 v-model="citiesInput"
-                                @change="handleCitiesChange"
                                 placeholder="Bruxelles, Bruges"
                                 class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                                @change="handleCitiesChange"
                             />
                         </div>
                     </div>
@@ -201,7 +201,7 @@ const { submit, inProgress } = useSubmit(async () => {
         sendUrgentReplacement(formData);
         setTimeout(() => {
             navigateTo('/dashboard/replacements/me');
-        }, 5000);
+        }, 3000);
     }
     catch (err) {
         console.error('Error:', err);
