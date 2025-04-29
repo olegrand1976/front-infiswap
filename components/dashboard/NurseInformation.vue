@@ -102,9 +102,9 @@
             <div class="relative sm:hidden">
                 <div
                     ref="carousel"
-                    class="flex overflow-hidden w-full mb-16"
+                    class="flex overflow-x-hidden w-full scroll-smooth transition-all"
                 >
-                    <div class="min-w-full flex justify-center items-center p-4 rounded-md">
+                    <div class="min-w-full flex justify-center items-center p-10 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                             <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                 ETAPE 1
@@ -130,7 +130,7 @@
                         </div>
                     </div>
 
-                    <div class="min-w-full flex justify-center items-center p-4 rounded-md">
+                    <div class="min-w-full flex justify-center items-center p-10 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                             <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                 ETAPE 2
@@ -156,7 +156,7 @@
                         </div>
                     </div>
 
-                    <div class="min-w-full flex justify-center items-center p-4 rounded-md">
+                    <div class="min-w-full flex justify-center items-center p-10 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                             <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                 ETAPE 3
@@ -182,7 +182,7 @@
                         </div>
                     </div>
 
-                    <div class="min-w-full flex justify-center items-center p-4 rounded-md">
+                    <div class="min-w-full flex justify-center items-center p-10 rounded-md">
                         <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                             <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                 ETAPE 4
@@ -209,12 +209,35 @@
                     </div>
                 </div>
 
-                <button
-                    class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-primary text-white px-6 py-2 rounded-md"
-                    @click="nextStep"
-                >
-                    Étape suivante
-                </button>
+                <div class="absolute top-1/2 left-0 transform -translate-y-[70%] z-10">
+                    <button
+                        class="bg-primary text-white w-9 h-9 flex items-center justify-center rounded-full shadow-md text-2xl pb-2"
+                        @click="prevStep"
+                    >
+                        ←
+                    </button>
+                </div>
+                <div class="absolute top-1/2 right-0 transform -translate-y-[70%] z-10">
+                    <button
+                        class="bg-primary text-white w-9 h-9 flex items-center justify-center rounded-full shadow-md text-2xl pb-2"
+                        @click="nextStep"
+                    >
+                        →
+                    </button>
+                </div>
+
+                <div class="flex justify-center space-x-2">
+                    <template
+                        v-for="index in itemsCount"
+                        :key="index"
+                    >
+                        <button
+                            class="w-2 h-2 rounded-full"
+                            :class="currentStep === index - 1 ? 'bg-primary' : 'bg-gray-300'"
+                            @click="goToStep(index - 1)"
+                        />
+                    </template>
+                </div>
             </div>
 
             <div class="bg-gray-100 rounded-b-lg">
@@ -393,6 +416,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import type { UserSettings, Patient } from '~/lib/types';
@@ -447,15 +471,30 @@ const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
 
-const carousel = ref<HTMLElement | null>(null);
+const carousel = ref(null);
 const currentStep = ref(0);
+const itemsCount = ref(0);
 
-function nextStep() {
+onMounted(() => {
+    if (carousel.value) {
+        itemsCount.value = carousel.value.children.length;
+    }
+});
+
+function goToStep(index) {
     if (!carousel.value) return;
     const items = carousel.value.children;
-    currentStep.value = (currentStep.value + 1) % items.length;
-    const target = items[currentStep.value] as HTMLElement;
+    currentStep.value = index % items.length;
+    const target = items[currentStep.value];
     carousel.value.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+}
+
+function prevStep() {
+    goToStep((currentStep.value - 1 + itemsCount.value) % itemsCount.value);
+}
+
+function nextStep() {
+    goToStep((currentStep.value + 1) % itemsCount.value);
 }
 const isDialogOpen = ref(false);
 const patientToDelete = ref<{ patientId: number; visitId: number } | null>(null);
@@ -499,3 +538,4 @@ const submitDelete = async () => {
   padding-bottom: 20px;
 }
 </style>
+
