@@ -9,6 +9,7 @@ node_modules
 .env
 dist
 .idea
+.DS_Store
 launch-docker.sh
 .qodo
 android

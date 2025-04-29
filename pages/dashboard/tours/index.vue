@@ -2,12 +2,24 @@
     <div class="pt-4">
         <Form>
             <div class="lg:pr-6">
-                <div class="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-5">
+                <div class="grid grid-cols-1 lg:grid-cols-[10%_50%_38%] gap-5">
+                    <div class="flex justify-center items-center">
+                        <a
+                            href="/dashboard/replacements/immediate"
+                            class="transition-transform transform hover:scale-105"
+                        >
+                            <img
+                                src="/public/images/home/help_me.png"
+                                class="h-32 w-32 object-contain"
+                                alt="Aide"
+                            />
+                        </a>
+                    </div>
                     <CalendarTours
                         v-model="value"
                         class="rounded-md shadow-lg w-full"
                     />
-                    <div class="w-full bg-gray-100 rounded-lg h-full">
+                    <div class="w-full bg-gray-100 rounded-lg h-full mr-8">
                         <div class="bg-primary rounded-t-lg flex justify-between items-center px-2 ps-4 h-12">
                             <h2 class="font-bold text-white">
                                 Liste des patients
@@ -115,7 +127,7 @@
             </div>
             <div>
                 <div v-if="selectedPatient">
-                    <div class="mt-6 pr-6">
+                    <div class="mt-6 lg:pr-6">
                         <div class="grid grid-cols-1 lg:grid-cols-[32.5%_32.5%_35%] gap-2 w-full">
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">

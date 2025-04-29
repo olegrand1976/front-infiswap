@@ -6,6 +6,10 @@
             </p>
         </template>
         <div class="max-w-7xl mx-auto p-6">
+            <div class="container my-6 p-4 rounded-xl bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 text-sm leading-relaxed shadow-sm text-center">
+                Le mail que vous venez de recevoir peut être dans vos <span class="font-semibold">spams</span>.
+                Si vous ne le trouvez pas, allez y jeter un coup d'œil.
+            </div>
             <div class="container text-center md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6">
                 InfiSwap est une plateforme fondée sur la confiance, la collaboration et le respect mutuel entre professionnels de santé.
                 En intégrant notre communauté, chaque infirmier s’engage à respecter des principes éthiques essentiels afin de garantir une relation de travail harmonieuse et professionnelle.

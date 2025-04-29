@@ -2,78 +2,87 @@
     <div class="pt-4">
         <Form @submit="submit">
             <div
-                class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:mx-0"
+                class="flex flex-col space-y-8 justify-center mx-auto md:space-y-0 md:flex-row md:justify-between md:space-x-16 md:mx-0"
             >
-                <div class="bg-primary border border-primary rounded-2xl h-full p-2 sm:mx-20 md:px-2 md:mx-0">
-                    <div class="bg-white rounded-2xl h-10 p-2">
-                        <h2 class="font-bold text-primary text-center">
-                            Période de remplacement
-                        </h2>
-                    </div>
-
-                    <div class="p-5">
-                        <FormField name="formData.startDate">
-                            <FormItem class="flex items-center space-x-8 text-white">
-                                <FormLabel>
-                                    Début
-                                </FormLabel>
-                                <FormControl>
-                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
-                                        <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input
-                                            v-model="formData.startDate"
-                                            placeholder="jj/mm/aaaa"
-                                            type="date"
-                                            :min="formData.startDate || today"
-                                            class="text-xs w-full text-black/70 bg-transparent"
-                                            @input="handleDateInput('start')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
-
-                        <Separator class="opacity-70 my-4" />
-
-                        <FormField name="formData.endDate">
-                            <FormItem class="flex items-center space-x-[3.25rem] text-white">
-                                <FormLabel>
-                                    Fin
-                                </FormLabel>
-                                <FormControl>
-                                    <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
-                                        <CalendarIcon class="w-6 h-6 text-primary" />
-                                        <Input
-                                            v-model="formData.endDate"
-                                            placeholder="jj/mm/aaaa"
-                                            type="date"
-                                            :min="formData.startDate || today"
-                                            class="text-xs w-full text-black/70 bg-transparent"
-                                            @input="handleDateInput('end')"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        </FormField>
-                    </div>
+                <div class="bg-white shadow max-w-sm rounded-2xl p-5 h-44 flex items-center text-gray-700 border border-gray-200">
+                    <p class="leading-relaxed">
+                        <span class="font-semibold text-gray-800">Sélectionnez les dates de votre remplacement :</span> <br>
+                        Saisissez-les manuellement ou cliquez sur le calendrier.
+                    </p>
                 </div>
 
-                <div>
-                    <div class="px-4 mb-4">
-                        <Button
-                            class="flex text-xs items-center space-x-2"
-                            href="/dashboard/replacements/immediate"
-                        >
-                            Créer un remplacement rapide
-                            <ClockIcon class="w-6 h-6" />
-                        </Button>
+                <div class="flex flex-col w-full space-y-8 sm:space-y-0 sm:flex-row sm:space-x-6">
+                    <div class="bg-primary border border-primary sm:h-64 rounded-2xl p-2 sm:mx-20 md:px-2 md:mx-0">
+                        <div class="bg-white rounded-2xl h-10 p-2">
+                            <h2 class="font-bold text-primary text-center">
+                                Période de remplacement
+                            </h2>
+                        </div>
+
+                        <div class="p-5">
+                            <FormField name="formData.startDate">
+                                <FormItem class="flex items-center space-x-8 text-white">
+                                    <FormLabel>
+                                        Début
+                                    </FormLabel>
+                                    <FormControl>
+                                        <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
+                                            <CalendarIcon class="w-6 h-6 text-primary" />
+                                            <Input
+                                                v-model="formData.startDate"
+                                                placeholder="jj/mm/aaaa"
+                                                type="date"
+                                                :min="formData.startDate || today"
+                                                class="text-xs w-full text-black/70 bg-transparent"
+                                                @input="handleDateInput('start')"
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                            </FormField>
+
+                            <Separator class="opacity-70 my-4" />
+
+                            <FormField name="formData.endDate">
+                                <FormItem class="flex items-center space-x-[3.25rem] text-white">
+                                    <FormLabel>
+                                        Fin
+                                    </FormLabel>
+                                    <FormControl>
+                                        <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
+                                            <CalendarIcon class="w-6 h-6 text-primary" />
+                                            <Input
+                                                v-model="formData.endDate"
+                                                placeholder="jj/mm/aaaa"
+                                                type="date"
+                                                :min="formData.startDate || today"
+                                                class="text-xs w-full text-black/70 bg-transparent"
+                                                @input="handleDateInput('end')"
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                            </FormField>
+                        </div>
                     </div>
-                    <div class="sm:mx-20 md:mx-0 ps-4">
-                        <RangeCalendar
-                            v-model="value"
-                            :min-value="todayCalendar"
-                            class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
-                        />
+
+                    <div>
+                        <div class="px-4 mb-4">
+                            <Button
+                                class="flex text-xs items-center space-x-2"
+                                href="/dashboard/replacements/immediate"
+                            >
+                                Créer un remplacement rapide
+                                <ClockIcon class="w-6 h-6" />
+                            </Button>
+                        </div>
+                        <div class="sm:mx-20 md:mx-0 ps-4">
+                            <RangeCalendar
+                                v-model="value"
+                                :min-value="todayCalendar"
+                                class="flex flex-col justify-center md:block p-4 rounded-md shadow-lg"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
