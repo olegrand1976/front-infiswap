@@ -12,7 +12,7 @@
                                 src="/public/images/home/help_me.png"
                                 class="h-32 w-32 object-contain"
                                 alt="Aide"
-                            />
+                            >
                         </a>
                     </div>
                     <CalendarTours
