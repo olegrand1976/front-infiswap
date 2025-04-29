@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import { useCookie } from '#app';
 import Replacement from '~/components/Replacement.vue';
 import { useReplacements } from '~/composables/useReplacements';
 
@@ -53,6 +54,17 @@ const replacementFilters = {
 };
 
 const selectedFilter = ref('all');
+const filterCookie = useCookie('selectedFilter');
+
+onMounted(() => {
+    if (filterCookie.value) {
+        selectedFilter.value = filterCookie.value;
+    }
+});
+
+watch(selectedFilter, (newFilter) => {
+    filterCookie.value = newFilter;
+});
 
 useHead({
     title: 'Rechercher un remplacement',

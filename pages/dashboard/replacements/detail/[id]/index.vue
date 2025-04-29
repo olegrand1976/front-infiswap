@@ -4,7 +4,7 @@
             <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:flex-row justify-between items-center">
                 <Button
                     class="text-sm -ml-24 sm:ml-0"
-                    href="/dashboard/replacements"
+                    @click="goBack"
                 >
                     <span class="text-xs">Retour</span>
                 </Button>
@@ -76,7 +76,7 @@
         </div>
 
         <section
-            v-if="groupedDetails.length>0"
+            v-if="groupedDetails.length > 0"
             class="mt-24 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8"
         >
             <div
@@ -118,7 +118,7 @@
                                 </h4>
                             </div>
                             <div class="mt-4 space-y-4">
-                                <div class="bg-gray-200 text-xs py-2 rounded px-3">
+                                <div class="bg-gray-200 text-sm py-2 rounded px-3">
                                     <span>{{ group.careTypes }}</span>
                                 </div>
                             </div>
@@ -215,6 +215,10 @@ const formData = reactive({
     comment: '',
 });
 
+const goBack = () => {
+    window.history.back();
+};
+
 const groupedDetails = computed(() => {
     const grouped = {};
 
@@ -232,9 +236,9 @@ const groupedDetails = computed(() => {
             }
 
             grouped[detail.date].times.add(formatTime(detail.start_at));
-            detail.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
-            grouped[detail.date].zipCodes.add(detail.patient.zip_code);
-            grouped[detail.date].cities.add(detail.patient.city);
+            replacement.value.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
+            JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[detail.date].zipCodes.add(zipCode));
+            JSON.parse(replacement.value.cities).forEach(city => grouped[detail.date].cities.add(city));
             if (detail.patient.firstname || detail.patient.lastname) {
                 grouped[detail.date].patients.add(getFullName(detail.patient));
             }

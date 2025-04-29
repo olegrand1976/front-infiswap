@@ -354,7 +354,6 @@
                     :key="replacement?.id"
                     class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12 relative"
                 >
-                    <!-- Urgent indicator for mobile view -->
                     <div
                         v-if="isUrgentReplacement(replacement)"
                         class="urgent-indicator"
@@ -629,15 +628,12 @@ const selectedDaysPlaceholder = computed(() => {
 
 const sortReplacements = (replacements) => {
     return replacements.sort((a, b) => {
-        // First sort by urgency
         const aIsUrgent = isUrgentReplacement(a);
         const bIsUrgent = isUrgentReplacement(b);
 
-        // Urgent replacements come first
         if (aIsUrgent && !bIsUrgent) return -1;
         if (!aIsUrgent && bIsUrgent) return 1;
 
-        // Then sort by matching criteria
         const aMatches = a.details.some(detail =>
             formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
             || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),

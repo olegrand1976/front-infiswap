@@ -2,9 +2,7 @@
     <div>
         <div class="flex items-center justify-between w-full">
             <h1 class="py-3 text-primary bg-gray-100 w-[75%] px-9 rounded-lg">
-                Mes <strong>
-                    remplacements
-                </strong>
+                Mes <strong>remplacements</strong>
             </h1>
 
             <Select v-model="selectedFilter">
@@ -41,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { useCookie } from '#app';
 import Replacement from '~/components/Replacement.vue';
 import { useReplacements } from '~/composables/useReplacements';
 
@@ -53,6 +52,17 @@ const replacementFilters = {
 };
 
 const selectedFilter = ref('all');
+const filterCookie = useCookie('selectedFilter');
+
+onMounted(() => {
+    if (filterCookie.value) {
+        selectedFilter.value = filterCookie.value;
+    }
+});
+
+watch(selectedFilter, (newFilter) => {
+    filterCookie.value = newFilter;
+});
 
 useHead({
     title: 'Mes remplacements',
