@@ -285,6 +285,73 @@
                     <div class="col-span-2 lg:col-span-4">
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700">
+                                Quels sont vos préférences pour une remplacement ?
+                            </label>
+
+                            <div class="flex space-x-4">
+                                <div class="flex-1">
+                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_pour_valider']">
+                                        <InputIcon
+                                            v-model="zipCodeInput"
+                                            :icon="InboxArrowDownIcon"
+                                            size="md"
+                                            :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                            @keydown.enter.prevent="addZipCode"
+                                            @blur="addZipCode"
+                                        />
+                                    </div>
+                                    <div v-if="formData.zipCodesArray.length > 0" class="flex flex-wrap gap-2 mt-2">
+                                        <div
+                                            v-for="(zipCode, index) in formData.zipCodesArray"
+                                            :key="index"
+                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                                        >
+                                            {{ zipCode }}
+                                            <button
+                                                type="button"
+                                                @click="removeZipCode(index)"
+                                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                            >
+                                                &times;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_pour_valider']">
+                                        <InputIcon
+                                            v-model="cityInput"
+                                            :icon="BuildingOffice2Icon"
+                                            size="md"
+                                            :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                            @keydown.enter.prevent="addCity"
+                                        />
+                                    </div>
+                                    <div v-if="formData.citiesArray.length > 0" class="flex flex-wrap gap-2 mt-2">
+                                        <div
+                                            v-for="(city, index) in formData.citiesArray"
+                                            :key="index"
+                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                                        >
+                                            {{ city }}
+                                            <button
+                                                type="button"
+                                                @click="removeCity(index)"
+                                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                            >
+                                                &times;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">
                                 Comment nous avez-vous connu ?
                             </label>
 
@@ -503,7 +570,40 @@ const formData = reactive({
         additionnalInformation: '',
     },
     referralSource: '',
+    zipCodesArray: [],
+    citiesArray: [],
 });
+
+const zipCodeInput = ref('');
+const cityInput = ref('');
+
+const addZipCode = () => {
+    if (zipCodeInput.value.trim()) {
+        const code = zipCodeInput.value.trim();
+        if (!formData.zipCodesArray.includes(code)) {
+            formData.zipCodesArray.push(code);
+        }
+        zipCodeInput.value = '';
+    }
+};
+
+const addCity = () => {
+    if (cityInput.value.trim()) {
+        const city = cityInput.value.trim();
+        if (!formData.citiesArray.includes(city)) {
+            formData.citiesArray.push(city);
+        }
+        cityInput.value = '';
+    }
+};
+
+const removeZipCode = (index) => {
+    formData.zipCodesArray.splice(index, 1);
+};
+
+const removeCity = (index) => {
+    formData.citiesArray.splice(index, 1);
+};
 
 const route = useRoute();
 const { register } = useAuth();
@@ -515,7 +615,12 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        return register(formData);
+        const formDataForBackend = {
+            ...formData,
+            zipCodes: formData.zipCodesArray.join(', '),
+            cities: formData.citiesArray.join(', '),
+        };
+        return register(formDataForBackend);
     },
 );
 
