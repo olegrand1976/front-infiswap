@@ -214,6 +214,12 @@
                                 >
                                     URGENT
                                 </div>
+                                <div
+                                    v-if="isPastReplacement(replacement)"
+                                    class="past-indicator"
+                                >
+                                    PASSÉ
+                                </div>
 
                                 <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
@@ -691,6 +697,27 @@ const sortReplacements = (replacements) => {
         if (!aMatches && bMatches) return 1;
         return 0;
     });
+};
+
+const isPastReplacement = (replacement) => {
+    const currentDate = new Date();
+    const endDate = new Date(replacement.end_date);
+
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+
+    const endYear = endDate.getFullYear();
+    const endMonth = endDate.getMonth();
+    const endDay = endDate.getDate();
+
+    if (endYear < currentYear) return true;
+    if (endYear > currentYear) return false;
+    if (endMonth < currentMonth) return true;
+    if (endMonth > currentMonth) return false;
+    if (endDay < currentDay) return true;
+
+    return false;
 };
 
 const initialReplacements = ref([]);
