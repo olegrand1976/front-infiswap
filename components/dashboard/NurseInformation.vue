@@ -244,7 +244,7 @@
                 <!-- <div class="bg-primary h-6 rounded-t-lg" /> -->
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
-                        title="Remplacement(s) crée(s)"
+                        title="Demande de remplacement"
                         :count="reports.me"
                     />
                     <DashboardReportSection
