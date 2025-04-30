@@ -538,4 +538,3 @@ const submitDelete = async () => {
   padding-bottom: 20px;
 }
 </style>
-
