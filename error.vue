@@ -4,9 +4,6 @@
             <div v-if="error?.statusCode===404">
                 <ErrorNotFound />
             </div>
-            <!-- <div v-else>
-                <ErrorBasic />
-            </div> -->
         </ClientOnly>
     </div>
 </template>
