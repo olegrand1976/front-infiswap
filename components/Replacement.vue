@@ -328,13 +328,43 @@
                                     >
                                         <EyeIcon class="h-6 mt-1" />
                                     </Button>
-                                    <!-- <Button
+                                    <Button
                                         v-if="user.nurse.id == replacement.nurse_id"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        @click="() => handleCloseReplacement(replacement)"
+                                        @click="closeReplacementDialog = true"
                                     >
                                         <XMarkIcon class="h-6 mt-1" />
-                                    </Button> -->
+                                    </Button>
+
+                                    <Dialog v-model:open="closeReplacementDialog">
+                                        <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                            <DialogHeader>
+                                                <DialogTitle>
+                                                    Fermer le remplacement
+                                                </DialogTitle>
+                                                <DialogDescription class="mt-3 mb-6">
+                                                    Etes-vous sur de vouloir fermer ce remplacement ?
+                                                </DialogDescription>
+                                            </DialogHeader>
+
+                                            <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                <Button
+                                                    variant="secondary"
+                                                    class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                    @click="closeReplacementDialog = false"
+                                                >
+                                                    Non
+                                                </Button>
+                                                <Button
+                                                    variant="default"
+                                                    class="px-8"
+                                                    @click="handleCloseReplacement(replacement)"
+                                                >
+                                                    Oui
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                 </TableCell>
                             </TableRow>
                         </div>
@@ -365,7 +395,7 @@
                 >
                     <div
                         v-if="isUrgentReplacement(replacement)"
-                        class="urgent-indicator"
+                        class="urgent-indicator mt-9"
                     >
                         URGENT
                     </div>
@@ -513,12 +543,22 @@
                         </div>
                     </div>
 
-                    <Button
-                        class="col-span-2 flex justify-center items-center mx-auto mt-4 py-2 px-6"
-                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                    >
-                        Voir plus
-                    </Button>
+                    <div class="col-span-2 mt-4 flex space-x-8 justify-center items-center mx-auto">
+                        <Button
+                            v-if="user.nurse.id == replacement.nurse_id"
+                            variant="secondary"
+                            class="py-2 px-6 bg-gray-200 hover:bg-gray-300 text-black text-base"
+                            @click="closeReplacementDialog = true"
+                        >
+                            Fermer
+                        </Button>
+                        <Button
+                            class="py-2 px-6"
+                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                        >
+                            Voir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -531,6 +571,8 @@ import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInpu
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays } from '~/lib/utils';
+
+const { $toast } = useNuxtApp();
 
 const props = defineProps({
     type: {
@@ -549,7 +591,7 @@ const props = defineProps({
     },
 });
 
-const { loading } = useReplacements();
+const { loading, updateReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 
 onMounted(async () => {
@@ -595,14 +637,7 @@ const isUrgentReplacement = (replacement) => {
 };
 
 const filteredReplacements = computed(() => {
-    if (props.filterType === 'all') {
-        return currentReplacements.value;
-    }
-
-    return currentReplacements.value.filter((replacement) => {
-        const isUrgent = isUrgentReplacement(replacement);
-        return props.filterType === 'urgent' ? isUrgent : !isUrgent;
-    });
+    return currentReplacements.value.filter(replacement => replacement.status === 'open' && (props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement)));
 });
 
 const formData = reactive({
@@ -772,9 +807,21 @@ watch(
     { deep: true },
 );
 
+const closeReplacementDialog = ref(false);
+
 const handleCloseReplacement = async (replacement) => {
-    console.log(`${user.value.nurse.id} == ${replacement.nurse_id}`);
-    console.log(replacement.nurse_id);
+    replacement.status = 'closed';
+
+    const response = await updateReplacement(replacement);
+
+    if (response) {
+        $toast({
+            description: response.message,
+        });
+
+        currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
+        closeReplacementDialog.value = false;
+    }
 };
 
 definePageMeta({
@@ -784,13 +831,13 @@ definePageMeta({
 });
 </script>
 
-  <style>
-  .no-scrollbar {
+<style>
+.no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
+}
 
-  .no-scrollbar::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-  </style>
+}
+</style>

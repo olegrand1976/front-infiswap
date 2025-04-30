@@ -206,8 +206,8 @@ export const useReplacements = () => {
     };
 
     const updateReplacement = async (formData) => {
-        await $apifetch('/api/replacements/immediate', {
-            method: 'POST',
+        return await $apifetch(`/api/replacements/${formData.id}`, {
+            method: 'PUT',
             body: formData,
         });
     };

@@ -33,7 +33,6 @@
         </div>
 
         <Replacement
-            type="me"
             :get-data="getReplacements"
             :filter-type="selectedFilter"
         />
