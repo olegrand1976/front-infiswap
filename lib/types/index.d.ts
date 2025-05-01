@@ -8,7 +8,7 @@ export type User = {
     full_name: string;
     identifier_number: string;
     email: string;
-    password: string;
+    password?: string;
     gender: Gender;
     phone_number?: string | null;
     date_of_birth?: string | null;

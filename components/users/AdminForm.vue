@@ -13,6 +13,8 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     firstname: user?.firstname || null,
     email: user?.email || null,
     identifierNumber: user?.identifier_number || null,
+    password: null,
+    passwordConfirmation: null,
     gender: user?.gender || null,
     phoneNumber: user?.phone_number || null,
     dateOfBirth: user?.date_of_birth || null,
@@ -220,6 +222,22 @@ const accountOptions = [
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                </div>
+                <div>
+                    <InputIcon
+                        v-model="form.password"
+                        rounded="md"
+                        type="password"
+                        label="Mot de passe"
+                    />
+                </div>
+                <div>
+                    <InputIcon
+                        v-model="form.passwordConfirmation"
+                        rounded="md"
+                        type="password"
+                        label="Confirmation mot de passe"
+                    />
                 </div>
             </div>
         </div>
