@@ -300,7 +300,10 @@
                                             @blur="addZipCode"
                                         />
                                     </div>
-                                    <div v-if="formData.zipCodesArray.length > 0" class="flex flex-wrap gap-2 mt-2">
+                                    <div
+                                        v-if="formData.zipCodesArray.length > 0"
+                                        class="flex flex-wrap gap-2 mt-2"
+                                    >
                                         <div
                                             v-for="(zipCode, index) in formData.zipCodesArray"
                                             :key="index"
@@ -309,8 +312,8 @@
                                             {{ zipCode }}
                                             <button
                                                 type="button"
-                                                @click="removeZipCode(index)"
                                                 class="ml-2 text-gray-500 hover:text-gray-700"
+                                                @click="removeZipCode(index)"
                                             >
                                                 &times;
                                             </button>
@@ -328,7 +331,10 @@
                                             @keydown.enter.prevent="addCity"
                                         />
                                     </div>
-                                    <div v-if="formData.citiesArray.length > 0" class="flex flex-wrap gap-2 mt-2">
+                                    <div
+                                        v-if="formData.citiesArray.length > 0"
+                                        class="flex flex-wrap gap-2 mt-2"
+                                    >
                                         <div
                                             v-for="(city, index) in formData.citiesArray"
                                             :key="index"
@@ -337,8 +343,8 @@
                                             {{ city }}
                                             <button
                                                 type="button"
-                                                @click="removeCity(index)"
                                                 class="ml-2 text-gray-500 hover:text-gray-700"
+                                                @click="removeCity(index)"
                                             >
                                                 &times;
                                             </button>

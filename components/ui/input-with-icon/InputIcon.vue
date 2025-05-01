@@ -103,7 +103,11 @@ const togglePasswordVisibility = () => {
         </span>
         <span
             v-if="props.type === 'password'"
-            class="absolute end-2 inset-y-0 flex items-center cursor-pointer"
+            :class="cn('absolute end-2 inset-y-0 flex items-center cursor-pointer',
+                       {
+                           'top-6': label,
+                       },
+            )"
             @click="togglePasswordVisibility"
         >
             <EyeIcon
