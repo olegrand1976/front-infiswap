@@ -5,7 +5,7 @@ const props = defineProps<{
     user?: User | null;
 }>();
 
-const { create, update } = useAuth();
+const { create, update, generatePassword } = useAuth();
 const isEditMode = computed(() => !!props.user);
 
 const getInitialValue = (user: User | null | undefined = props.user) => ({
@@ -52,6 +52,13 @@ const { submit, inProgress } = useSubmit(async () => {
 function resetForm(user?: User | null) {
     Object.assign(form, getInitialValue(user));
 }
+
+const generateNewPassword = () => {
+    const password = generatePassword();
+
+    form.password = password;
+    form.passwordConfirmation = password;
+};
 
 watch(
     () => props.user,
@@ -223,7 +230,11 @@ const accountOptions = [
                         </SelectContent>
                     </Select>
                 </div>
-                <div>
+                <div class="relative">
+                    <span
+                        class="absolute right-2 top-0.5 z-40 text-primary text-xs font-bold cursor-pointer"
+                        @click="generateNewPassword"
+                    >Générer</span>
                     <InputIcon
                         v-model="form.password"
                         rounded="md"

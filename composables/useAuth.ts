@@ -314,6 +314,14 @@ export const useAuth = () => {
         }
     }
 
+    function generatePassword(length: number = 12): string {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+        const charsLength = chars.length;
+        const array = crypto.getRandomValues(new Uint32Array(length));
+
+        return Array.from(array, n => chars[n % charsLength]).join('');
+    }
+
     return {
         user,
         users,
@@ -345,5 +353,6 @@ export const useAuth = () => {
         forgotPassword,
         resetPassword,
         refresh,
+        generatePassword,
     };
 };
