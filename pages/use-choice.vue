@@ -142,7 +142,7 @@ const handleSubmit = async (event) => {
             }
             if (formData.value === 'search_remplacement') {
                 setTimeout(() => {
-                    navigateTo('/dashboard/replacements/search');
+                    navigateTo('/dashboard/replacements');
                 }, 1000);
             }
             else if (formData.value === 'all') {
