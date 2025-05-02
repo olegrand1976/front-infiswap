@@ -2,7 +2,7 @@ import type { Updater } from '@tanstack/vue-table';
 import type { Ref } from 'vue';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { User } from './types';
+import type { AccountType, User } from './types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -82,4 +82,31 @@ export function formatNISS(input: string): string {
     }
 
     return `${raw.slice(0, 6)}-${raw.slice(6)}`;
+}
+
+export function getRole(role: AccountType) {
+    const activeRole = ref('nurse');
+
+    switch (role) {
+        case 'administrator':
+            activeRole.value = 'Administrateur';
+            break;
+        case 'developer':
+            activeRole.value = 'Développeur';
+            break;
+        case 'manager':
+            activeRole.value = 'Gestionnaire';
+            break;
+        case 'collaborator':
+            activeRole.value = 'Collaborateur';
+            break;
+        case 'sale_representative' :
+            activeRole.value = 'Commerciale';
+            break;
+        default:
+            activeRole.value = 'Infirmier(e)';
+            break;
+    }
+
+    return activeRole.value;
 }

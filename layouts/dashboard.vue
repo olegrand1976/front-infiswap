@@ -20,9 +20,19 @@
                 <div class="ml-auto">
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">
-                            <p class="font-medium">
-                                {{ user.full_name }}
-                            </p>
+                            <div>
+                                <p class="font-medium">
+                                    {{ user.full_name }}
+                                </p>
+                                <p
+                                    :class="cn('text-xs -mt-1 text-end font-bold', {
+                                        'text-success': isAdmin,
+                                        'text-primary': !isAdmin,
+                                    })"
+                                >
+                                    {{ getRole(user.account_type) }}
+                                </p>
+                            </div>
                             <template v-if="user.profil_url != null">
                                 <Avatar>
                                     <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
@@ -31,12 +41,22 @@
                             </template>
                             <template v-else>
                                 <UserCircleIcon
-                                    class="w-10 text-black/40"
+                                    class="w-12 text-black/40"
                                 />
                             </template>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                            <template v-if="roles.length>1">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    v-for="(role, index) in roles.filter((role) => role!==user.account_type)"
+                                    :key="index"
+                                    @click="switchRole(role)"
+                                >
+                                    Passer en {{ getRole(role) }}
+                                </DropdownMenuItem>
+                            </template>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
@@ -64,12 +84,19 @@
 <script lang="ts" setup>
 import { UserCircleIcon } from '@heroicons/vue/24/solid';
 import { useRuntimeConfig } from '#app';
-import type { User } from '~/lib/types';
+import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
+import { getRole } from '~/lib/utils';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
-
+const roles = ref<AccountType[]>();
 const user = useState<User>('user');
 
-const { logout } = useAuth();
+const { logout, getRoles, switchRole } = useAuth();
+
+onMounted(async () => {
+    roles.value = await getRoles();
+
+    console.log(roles.value);
+});
 </script>
