@@ -118,6 +118,10 @@ const toggleRole = (role: AccountType) => {
         form.roles.push(role);
     }
 };
+
+const formattedRoles = computed(() => {
+    return form.roles.map(getRole).join(', ');
+});
 </script>
 
 <template>
@@ -302,23 +306,23 @@ const toggleRole = (role: AccountType) => {
                         v-model="form.roles"
                         label="Type de compte"
                         multiple
+                        class="w-full"
                     >
                         <SelectTrigger
                             position="right"
-                            class="rounded-md w-full"
+                            class="rounded-md text-nowrap"
                         >
-                            <SelectValue class="w-full">
-                                <template v-for="role in user?.roles">
-                                    {{ getRole(role) }},
-                                </template>
+                            <SelectValue>
+                                {{ formattedRoles }}
                             </SelectValue>
                         </SelectTrigger>
-                        <SelectContent class="border border-none">
-                            <SelectGroup>
+                        <SelectContent class="border border-none w-full">
+                            <SelectGroup class="w-full">
                                 <div
                                     v-for="(role, index) in accountOptions"
                                     :key="index"
                                     :value="role"
+                                    class="cursor-pointer"
                                     @click="toggleRole(role)"
                                 >
                                     <Checkbox
