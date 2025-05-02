@@ -37,7 +37,7 @@ export type User = {
     emergency_contact_phone?: string | null;
     trial_ends_at?: string | null;
     nurse: Nurse;
-    roles: Role[];
+    roles: AccountType[];
     profile: Profile;
     permissions: string[];
     two_factor_enabled: boolean;

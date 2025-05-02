@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { User } from '~/lib/types';
+import type { AccountType, User } from '~/lib/types';
+import { getRole } from '~/lib/utils';
 
 const props = defineProps<{
     user?: User | null;
@@ -20,7 +21,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     dateOfBirth: user?.date_of_birth || null,
     language: 'fr',
     group: user?.group || null,
-    accountType: user?.account_type || 'nurse',
+    roles: user?.roles || ['nurse'],
     address: {
         street: user?.profile?.street_address || null,
         city: user?.profile?.city || null,
@@ -99,32 +100,24 @@ const languages = [
     },
 ];
 
-const accountOptions = [
-    {
-        label: 'Administrateur',
-        value: 'administrator',
-    },
-    {
-        label: 'Développeur',
-        value: 'developer',
-    },
-    {
-        label: 'Collaborateur',
-        value: 'collaborator',
-    },
-    {
-        label: 'Commercial',
-        value: 'sale_representative',
-    },
-    {
-        label: 'Infirmier(e)',
-        value: 'nurse',
-    },
-    {
-        label: 'Aucun',
-        value: 'none',
-    },
+const accountOptions: AccountType[] = [
+    'administrator',
+    'developer',
+    'collaborator',
+    'sale_representative',
+    'nurse',
 ];
+
+const toggleRole = (role: AccountType) => {
+    const index = form.roles.indexOf(role);
+
+    if (index > -1) {
+        form.roles.splice(index, 1);
+    }
+    else {
+        form.roles.push(role);
+    }
+};
 </script>
 
 <template>
@@ -306,24 +299,34 @@ const accountOptions = [
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                 <div>
                     <Select
-                        v-model="form.accountType"
+                        v-model="form.roles"
                         label="Type de compte"
+                        multiple
                     >
                         <SelectTrigger
                             position="right"
-                            class="rounded-md"
+                            class="rounded-md w-full"
                         >
-                            <SelectValue placeholder="Séléctionner..." />
+                            <SelectValue class="w-full">
+                                <template v-for="role in user?.roles">
+                                    {{ getRole(role) }},
+                                </template>
+                            </SelectValue>
                         </SelectTrigger>
                         <SelectContent class="border border-none">
                             <SelectGroup>
-                                <SelectItem
-                                    v-for="(account, index) in accountOptions"
+                                <div
+                                    v-for="(role, index) in accountOptions"
                                     :key="index"
-                                    :value="account.value"
+                                    :value="role"
+                                    @click="toggleRole(role)"
                                 >
-                                    <span class="text-sm">{{ account.label }}</span>
-                                </SelectItem>
+                                    <Checkbox
+                                        :checked="form.roles.includes(role)"
+                                        class="mr-2"
+                                    />
+                                    <span class="text-sm">{{ getRole(role) }}</span>
+                                </div>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
