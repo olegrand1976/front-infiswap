@@ -8,54 +8,6 @@
                     </div>
                     <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                         <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                            Pré-enregistrer mes patients
-                        </p>
-                        <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
-                            <li class="flex items-start">
-                                <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                <span>Je créer les fiches dès maintenant pour passer le relais en 2 clics</span>
-                            </li>
-                        </ul>
-                        <div class="pt-2 md:pt-4">
-                            <a href="/dashboard/patients/create">
-                                <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-xs md:text-sm font-semibold hover:bg-primary/90 transition">
-                                    Pré-enregistrer
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                    <div class="bg-primary text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
-                        ETAPE 2
-                    </div>
-                    <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                        <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                            Planifier ma tournée
-                        </p>
-                        <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
-                            <li class="flex items-start">
-                                <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                <span>J'organise mon parcours à l'avance ; mon remplaçant n’a plus qu’à suivre l’itinéraire</span>
-                            </li>
-                        </ul>
-                        <div class="pt-2 md:pt-4">
-                            <a href="/dashboard/patients/create">
-                                <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-xs md:text-sm font-semibold hover:bg-primary/90 transition">
-                                    Planifier
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                    <div class="bg-primary text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
-                        ETAPE 3
-                    </div>
-                    <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                        <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
                             Proposer mes disponibilités
                         </p>
                         <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
@@ -76,7 +28,7 @@
 
                 <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                     <div class="bg-success text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
-                        ETAPE 4
+                        ETAPE 2
                     </div>
                     <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                         <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
@@ -99,63 +51,13 @@
                 </div>
             </div>
 
-            <div class="relative sm:hidden mx-8">
+            <div class="relative md:hidden mx-8">
                 <Carousel>
                     <CarouselContent>
                         <CarouselItem>
                             <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                                 <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     ETAPE 1
-                                </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                                        Pré-enregistrer mes patients
-                                    </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
-                                        <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>Je créer les fiches dès maintenant pour passer le relais en 2 clics</span>
-                                        </li>
-                                    </ul>
-                                    <div class="pt-2 md:pt-4">
-                                        <a href="/dashboard/patients/create">
-                                            <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
-                                                Pré-enregistrer
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                                <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
-                                    ETAPE 2
-                                </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                                        Planifier ma tournée
-                                    </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
-                                        <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>J'organise mon parcours à l'avance ; mon remplaçant n’a plus qu’à suivre l’itinéraire</span>
-                                        </li>
-                                    </ul>
-                                    <div class="pt-2 md:pt-4">
-                                        <a href="/dashboard/patients/create">
-                                            <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
-                                                Planifier
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                                <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
-                                    ETAPE 3
                                 </div>
                                 <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                                     <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
@@ -180,7 +82,7 @@
                         <CarouselItem>
                             <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                                 <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
-                                    ETAPE 4
+                                    ETAPE 2
                                 </div>
                                 <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                                     <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
@@ -212,7 +114,7 @@
                 <!-- <div class="bg-primary h-6 rounded-t-lg" /> -->
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
-                        title="Demande de remplacement"
+                        title="Demandes de remplacement"
                         :count="reports.me"
                     />
                     <DashboardReportSection
