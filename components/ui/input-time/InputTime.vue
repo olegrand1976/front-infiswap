@@ -44,6 +44,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    timeRange: {
+        type: String,
+        default: '',
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -54,6 +58,19 @@ const selectedMinute = ref(0);
 
 const displayValue = computed(() => {
     return `${String(selectedHour.value).padStart(2, '0')}:${String(selectedMinute.value).padStart(2, '0')}`;
+});
+
+const filteredHours = computed(() => {
+    switch (props.timeRange) {
+        case 'morning':
+            return Array.from({ length: 6 }, (_, i) => i + 6);
+        case 'afternoon':
+            return Array.from({ length: 6 }, (_, i) => i + 12);
+        case 'evening':
+            return Array.from({ length: 6 }, (_, i) => i + 18);
+        default:
+            return Array.from({ length: 24 }, (_, i) => i);
+    }
 });
 
 watch(() => props.modelValue, (newValue) => {
@@ -165,17 +182,17 @@ onUnmounted(() => {
                     :class="hoursContainerClass"
                 >
                     <button
-                        v-for="hour in 24"
-                        :key="`hour-${hour-1}`"
+                        v-for="hour in filteredHours"
+                        :key="`hour-${hour}`"
                         type="button"
                         class="px-4 py-2 text-center hover:bg-gray-50 w-full"
                         :class="[
                             hourButtonClass,
-                            { 'bg-gray-100 font-bold': selectedHour === (hour-1) },
+                            { 'bg-gray-100 font-bold': selectedHour === hour },
                         ]"
-                        @click="selectHour(hour-1)"
+                        @click="selectHour(hour)"
                     >
-                        {{ String(hour-1).padStart(2, '0') }}
+                        {{ String(hour).padStart(2, '0') }}
                     </button>
                 </div>
                 <div
