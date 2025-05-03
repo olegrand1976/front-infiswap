@@ -205,33 +205,33 @@ const nurseNavigationItems: NavigationItem[] = [
         route: '/dashboard/replacements',
         icon: DocumentMagnifyingGlassIcon,
     },
-    {
-        label: 'Mes patients',
-        route: '/dashboard/patients',
-        icon: UserGroupIcon,
-        children: [
-            {
-                label: 'Listes',
-                route: '/dashboard/patients',
-                icon: ClipboardDocumentListIcon,
-            },
-            {
-                label: 'Nouveau',
-                route: '/dashboard/patients/create',
-                icon: UserPlusIcon,
-            },
-            // {
-            //     label: 'De ma région',
-            //     route: '/dashboard/patients/myregion',
-            //     icon: MapPinIcon,
-            // },
-        ],
-    },
-    {
-        label: 'Tournées',
-        route: '/dashboard/tours',
-        icon: MapIcon,
-    },
+    // {
+    //     label: 'Mes patients',
+    //     route: '/dashboard/patients',
+    //     icon: UserGroupIcon,
+    //     children: [
+    //         {
+    //             label: 'Listes',
+    //             route: '/dashboard/patients',
+    //             icon: ClipboardDocumentListIcon,
+    //         },
+    //         {
+    //             label: 'Nouveau',
+    //             route: '/dashboard/patients/create',
+    //             icon: UserPlusIcon,
+    //         },
+    //         // {
+    //         //     label: 'De ma région',
+    //         //     route: '/dashboard/patients/myregion',
+    //         //     icon: MapPinIcon,
+    //         // },
+    //     ],
+    // },
+    // {
+    //     label: 'Tournées',
+    //     route: '/dashboard/tours',
+    //     icon: MapIcon,
+    // },
     {
         label: 'Paramètres',
         route: '/dashboard/settings',
