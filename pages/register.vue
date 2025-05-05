@@ -288,7 +288,7 @@
                                 Quels sont vos préférences pour une remplacement ?
                             </label>
 
-                            <div class="hidden md:flex space-x-4">
+                            <div class="hidden lg:flex space-x-4">
                                 <div class="flex-1">
                                     <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']">
                                         <InputIcon
@@ -355,7 +355,7 @@
                                 </div>
                             </div>
 
-                            <div class="block md:hidden">
+                            <div class="block lg:hidden">
                                 <div class="flex-1">
                                     <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']">
                                         <InputIcon
