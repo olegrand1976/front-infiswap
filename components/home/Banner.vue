@@ -29,7 +29,7 @@
                         </Button>
                     </div>
 
-                    <p class="pt-4">👉 Rejoignez les premiers utilisateurs !</p>
+                    <p class="pt-4">👉 Rejoignez-nous dès maintenant !</p>
 
                     <div class="flex justify-center">
                         <NuxtLink
