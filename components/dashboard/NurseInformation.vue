@@ -4,16 +4,16 @@
             <div class="hidden md:grid grid-cols-2 gap-3 p-4 md:grid-cols-4 md:gap-6">
                 <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                     <div class="bg-primary text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
-                        ETAPE 1
+                        Rechercher un remplacement
                     </div>
                     <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                         <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                            Proposer mes disponibilités
+                            Rechercher un remplacement
                         </p>
                         <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                             <li class="flex items-start">
                                 <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                <span>Je recherche des missions de remplacement</span>
+                                <span>Vous cherchez un remplaçant pour compléter votre tournée ?</span>
                             </li>
                         </ul>
                         <div class="pt-2 md:pt-4">
@@ -28,16 +28,16 @@
 
                 <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                     <div class="bg-success text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
-                        ETAPE 2
+                        Me faire remplacer
                     </div>
                     <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                         <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
-                            Demander un remplaçant
+                            Me faire remplacer
                         </p>
                         <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                             <li class="flex items-start">
                                 <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                <span>Besoin d'un remplaçant planifié ou en urgence</span>
+                                <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
                             </li>
                         </ul>
                         <div class="pt-2 md:pt-4">
@@ -57,16 +57,16 @@
                         <CarouselItem>
                             <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                                 <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
-                                    ETAPE 1
+                                    Rechercher un remplacement
                                 </div>
                                 <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                                     <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
-                                        Proposer mes disponibilités
+                                        Rechercher un remplacement
                                     </p>
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>Je recherche des missions de remplacement</span>
+                                            <span>Vous cherchez un remplaçant pour compléter votre tournée ?</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
@@ -82,16 +82,16 @@
                         <CarouselItem>
                             <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
                                 <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
-                                    ETAPE 2
+                                    Me faire remplacer
                                 </div>
                                 <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
                                     <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
-                                        Demander un remplaçant
+                                        Me faire remplacer
                                     </p>
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>Besoin d'un remplaçant planifié ou en urgence</span>
+                                            <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
