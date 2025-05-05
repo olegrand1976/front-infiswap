@@ -2,10 +2,14 @@
 import type { SelectRootEmits, SelectRootProps } from 'radix-vue';
 import { SelectRoot, useForwardPropsEmits } from 'radix-vue';
 
-const props = defineProps<SelectRootProps & {
+type CustomSelectProps = Omit<SelectRootProps, 'modelValue'> & {
+    modelValue: any;
     label?: string;
-}>();
+};
+
+const props = defineProps<CustomSelectProps>();
 const emits = defineEmits<SelectRootEmits>();
+
 const forwarded = useForwardPropsEmits(props, emits);
 </script>
 

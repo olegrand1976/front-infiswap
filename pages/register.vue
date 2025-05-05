@@ -290,13 +290,14 @@
 
                             <div class="flex space-x-4">
                                 <div class="flex-1">
-                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_pour_valider']">
+                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']">
                                         <InputIcon
                                             v-model="zipCodeInput"
                                             :icon="InboxArrowDownIcon"
                                             size="md"
                                             :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
                                             @keydown.enter.prevent="addZipCode"
+                                            @keydown.space.prevent="addZipCode"
                                             @blur="addZipCode"
                                         />
                                     </div>
@@ -329,6 +330,7 @@
                                             size="md"
                                             :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
                                             @keydown.enter.prevent="addCity"
+                                            @keydown.space.prevent="addCity"
                                         />
                                     </div>
                                     <div

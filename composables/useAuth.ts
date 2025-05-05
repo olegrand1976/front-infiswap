@@ -1,6 +1,6 @@
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { AUTH_TOKEN } from '~/lib/constants';
-import type { Address, Pagination, User } from '~/lib/types';
+import type { AccountType, Address, Pagination, User } from '~/lib/types';
 
 export const useUser = () => {
     return useState<User | undefined>('user', () => undefined);
@@ -12,9 +12,11 @@ export const useAuth = () => {
     const user = useUser();
     const users = useState<Pagination<User> | null>('users', () => null);
     const isLoggedIn = computed(() => !!user.value);
-    const isAdmin = computed(() => {
-        return user.value?.roles?.some(role => ['administrator', 'developer'].includes(role.name)) ?? false;
+
+    const isAdmin = computed((): boolean => {
+        return ['administrator', 'developer'].includes(user.value?.account_type ?? '');
     });
+
     const hasChangedAvatar = computed(() => {
         return user.value?.profile?.profil_url;
     });
@@ -252,7 +254,7 @@ export const useAuth = () => {
         phoneNumber: string;
         dateOfBirth: string | null;
         language: 'fr' | 'en' | string;
-        accountType: string;
+        roles: AccountType[];
         address: Address;
     };
 
@@ -322,6 +324,19 @@ export const useAuth = () => {
         return Array.from(array, n => chars[n % charsLength]).join('');
     }
 
+    async function getRoles() {
+        return await $apifetch('/api/user/roles');
+    };
+
+    async function switchRole(role: string) {
+        return await $apifetch('/api/user/switch-role', {
+            method: 'PUT',
+            body: { role: role },
+        }).then(async () => {
+            await refresh();
+            router.push('/dashboard');
+        });
+    }
     return {
         user,
         users,
@@ -354,5 +369,7 @@ export const useAuth = () => {
         resetPassword,
         refresh,
         generatePassword,
+        getRoles,
+        switchRole,
     };
 };
