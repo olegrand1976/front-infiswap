@@ -6,6 +6,22 @@
             </template>
         </DashboardAdminPageHeader>
         <DashboardAdminPageContent>
+            <div class="p-4 flex gap-3">
+                <InputIcon
+                    v-model="name"
+                    rounded="md"
+                    placeholder="Filter par Nom ou Prénom"
+                    class="max-w-sm"
+                    @change="filterUsers('name')"
+                />
+                <InputIcon
+                    v-model="zipCode"
+                    rounded="md"
+                    placeholder="Filter par C.P"
+                    class="max-w-sm"
+                    @change="filterUsers('zip')"
+                />
+            </div>
             <DataTable
                 :data="dataUsers"
                 :columns="columns"
@@ -43,19 +59,40 @@ definePageMeta({
 });
 const { users, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
+const zipCode = ref(null);
+const name = ref(null);
+
 const perPage = ref(PERPAGE);
 const page = ref(1);
-await getUsers(page.value, perPage.value);
+const option = ref(null);
+
+await getUsers(page.value, perPage.value, option.value);
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value);
+    await getUsers(page, perPage.value, option.value);
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getUsers(page.value, value);
+    await getUsers(page.value, value, option.value);
+};
+
+const filterUsers = async (by: 'zip' | 'name') => {
+    if (by == 'zip') {
+        option.value = {
+            zip: zipCode.value,
+        };
+    }
+
+    if (by == 'name') {
+        option.value = {
+            name: name.value,
+        };
+    }
+
+    await getUsers(page.value, perPage.value, option.value);
 };
 
 const columns: ColumnDef<User>[] = [

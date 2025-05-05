@@ -233,11 +233,12 @@ export const useAuth = () => {
         });
     }
 
-    async function getUsers(page = 1, perPage = 2) {
+    async function getUsers(page = 1, perPage = 15, options = {}) {
         return await $apifetch('api/users', {
             params: {
                 page: page,
                 perPage: perPage,
+                ...options,
             },
         }).then((response) => {
             users.value = response.users;

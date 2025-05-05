@@ -96,7 +96,5 @@ const { logout, getRoles, switchRole } = useAuth();
 
 onMounted(async () => {
     roles.value = await getRoles();
-
-    console.log(roles.value);
 });
 </script>
