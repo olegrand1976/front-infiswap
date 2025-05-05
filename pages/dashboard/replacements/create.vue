@@ -215,6 +215,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: 'auth',
+    middleware: ['auth', 'verified', 'subscribed'],
 });
 </script>
