@@ -7,25 +7,38 @@
                 v-if="!user"
                 class="text-white"
             >
-                <p class="mb-4">
-                    🚀 InfiSwap ouvre ses portes : rejoignez le mouvement ! 🩺
-                </p>
-                <p class="mb-4">
-                    Notre équipe a peaufiné chaque détail pour vous offrir une plateforme à la hauteur de vos attentes : simple, rapide et pensée pour les infirmier(ère)s de terrain.
-                </p>
-                <p class="mb-4">
-                    💡 Que vous cherchiez un remplacement, un complément d’heures ou une collaboration de long terme, tout commence ici.
-                </p>
-                <p class="mb-4">
-                    👉 Rejoignez-nous dès maintenant et faites partie des premiers utilisateurs d’InfiSwap !
-                </p>
-                <div class="text-center">
-                    <Button
-                        href="/register"
-                        class="w-36"
-                    >
-                        Inscription
-                    </Button>
+                <h2 class="text-lg lg:text-xl font-semibold">🚀 InfiSwap est là ! 🩺</h2>
+                <p>Une plateforme simple et rapide pour les infirmier(ère)s.</p>
+
+                <div class="space-y-4 pt-6">
+                    <div class="grid grid-cols-1 gap-4">
+                        <Button
+                            href="/dashboard/replacements/create"
+                            class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                        >
+                            Me faire remplacer
+                        </Button>
+
+                        <p class="text-center">ou</p>
+
+                        <Button
+                            href="/dashboard/replacements"
+                            class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                        >
+                            Je cherche un remplacement
+                        </Button>
+                    </div>
+
+                    <p class="pt-4">👉 Rejoignez les premiers utilisateurs !</p>
+
+                    <div class="flex justify-center">
+                        <NuxtLink
+                            href="/register"
+                            class="text-white underline underline-offset-2 text-sm font-medium shadow-sm"
+                        >
+                            Inscription
+                        </NuxtLink>
+                    </div>
                 </div>
             </div>
             <div
@@ -36,7 +49,27 @@
                     <BellAlertIcon class="size-8 mx-auto animate-ring" />
                 </div>
                 <p>
-                    Pour une meilleure gestion de vos remplacements, commencez par encoder votre tournée sur infiswap, cela vous permettra de bénéficier de l'ensemble des fonctionnalités de la plateforme.
+                    Pour une meilleure gestion de vos remplacements, commencez par encoder votre tournée sur infiswap
+                </p>
+                <div class="grid grid-cols-1 gap-4">
+                    <Button
+                        href="/dashboard/replacements/create"
+                        class="mt-4 w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                    >
+                        Me faire remplacer
+                    </Button>
+
+                    <p>ou</p>
+
+                    <Button
+                        href="/dashboard/replacements"
+                        class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                    >
+                        Je cherche un remplacement
+                    </Button>
+                </div>
+                <p class="mt-4">
+                    cela vous permettra de bénéficier de l'ensemble des fonctionnalités de la plateforme.
                 </p>
                 <p class="mt-2">
                     👉 <NuxtLink
