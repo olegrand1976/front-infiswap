@@ -12,14 +12,15 @@
                     rounded="md"
                     placeholder="Filter par Nom ou Prénom"
                     class="max-w-sm"
-                    @change="filterUsers('name')"
+                    @input="filterUsers('name')"
                 />
                 <InputIcon
                     v-model="zipCode"
                     rounded="md"
                     placeholder="Filter par C.P"
                     class="max-w-sm"
-                    @change="filterUsers('zip')"
+                    type="number"
+                    @input="filterUsers('zip')"
                 />
             </div>
             <DataTable
@@ -60,7 +61,7 @@ definePageMeta({
 const { users, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const zipCode = ref(null);
-const name = ref(null);
+const name = ref('');
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -80,17 +81,7 @@ const handlePerPageChange = async (value: number) => {
 };
 
 const filterUsers = async (by: 'zip' | 'name') => {
-    if (by == 'zip') {
-        option.value = {
-            zip: zipCode.value,
-        };
-    }
-
-    if (by == 'name') {
-        option.value = {
-            name: name.value,
-        };
-    }
+    option.value = by === 'zip' ? { zip: zipCode.value } : { name: name.value };
 
     await getUsers(page.value, perPage.value, option.value);
 };
