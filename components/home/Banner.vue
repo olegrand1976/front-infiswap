@@ -14,7 +14,7 @@
                     <div class="grid grid-cols-1 gap-4">
                         <Button
                             href="/dashboard/replacements/create"
-                            class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                            class="w-full bg-white text-primary hover:bg-white/95 text-sm font-medium shadow-sm hover:shadow"
                         >
                             Me faire remplacer
                         </Button>
@@ -23,7 +23,7 @@
 
                         <Button
                             href="/dashboard/replacements"
-                            class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                            class="w-full bg-white text-primary hover:bg-white/95 text-sm font-medium shadow-sm hover:shadow"
                         >
                             Je cherche un remplacement
                         </Button>
@@ -54,7 +54,7 @@
                 <div class="grid grid-cols-1 gap-4">
                     <Button
                         href="/dashboard/replacements/create"
-                        class="mt-4 w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                        class="mt-4 w-full bg-white text-primary hover:bg-white/95 text-sm font-medium shadow-sm hover:shadow"
                     >
                         Me faire remplacer
                     </Button>
@@ -63,7 +63,7 @@
 
                     <Button
                         href="/dashboard/replacements"
-                        class="w-full text-white hover:underline text-sm font-medium shadow-sm hover:shadow"
+                        class="w-full bg-white text-primary hover:bg-white/95 text-sm font-medium shadow-sm hover:shadow"
                     >
                         Je cherche un remplacement
                     </Button>
