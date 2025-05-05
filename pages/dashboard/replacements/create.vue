@@ -4,7 +4,7 @@
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow">
                     <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                        Séléctionnez la rangée de date ici
+                        Sélectionnez la rangée de date ici
                     </h2>
                     <RangeCalendar
                         v-model="value"
@@ -96,30 +96,74 @@
                     />
                 </div>
 
-                <div class="flex flex-col space-y-2">
+                <div class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']">
                     <label
                         class="text-primary font-semibold"
                     >
                         Codes postaux
                     </label>
                     <InputIcon
-                        v-model="formData.zipCodes"
+                        id="zipCodes"
+                        v-model="formData.zipCodesInput"
                         placeholder="6565,4561,1237"
                         class="w-full"
+                        @keyup="handleZipCodeKeys"
                     />
+
+                    <div
+                        v-if="formData.zipCodes.length"
+                        class="flex flex-wrap gap-2 mt-2"
+                    >
+                        <div
+                            v-for="(zip, index) in formData.zipCodes"
+                            :key="index"
+                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                        >
+                            {{ zip }}
+                            <button
+                                type="button"
+                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                @click="removeZipCode(index)"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex flex-col space-y-2">
+                <div class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']">
                     <label
                         class="text-primary font-semibold"
                     >
                         Villes
                     </label>
                     <InputIcon
-                        v-model="formData.cities"
+                        id="cities"
+                        v-model="formData.citiesInput"
                         placeholder="Anvers, Bruges, Gand"
                         class="w-full"
+                        @keyup="handleCityKeys"
                     />
+
+                    <div
+                        v-if="formData.cities.length"
+                        class="flex flex-wrap gap-2 mt-2"
+                    >
+                        <div
+                            v-for="(city, index) in formData.cities"
+                            :key="index"
+                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                        >
+                            {{ city }}
+                            <button
+                                type="button"
+                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                @click="removeCity(index)"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex flex-col space-y-2">
@@ -233,7 +277,26 @@ const formData = reactive({
         },
     },
     comment: '',
+    zipCodesInput: '',
+    citiesInput: '',
 });
+
+const handleZipCodeKeys = (event) => {
+    const keys = [' ', ',', 'Enter'];
+    if (keys.includes(event.key)) {
+        event.preventDefault();
+        let value = formData.zipCodesInput.trim();
+        value = value.replace(/[, ]$/, '');
+        if (value && !formData.zipCodes.includes(value)) {
+            formData.zipCodes.push(value);
+        }
+        formData.zipCodesInput = '';
+    }
+};
+
+const removeZipCode = (index) => {
+    formData.zipCodes.splice(index, 1);
+};
 
 const handleCareTypeClick = (timeSlot, careTypes) => {
     const index = timeSlot.careTypes.indexOf(careTypes);
@@ -251,6 +314,23 @@ const getSelectedCareTypesText = (selectedIds) => {
         .filter(ct => selectedIds.includes(ct.id))
         .map(ct => ct.name)
         .join(', ');
+};
+
+const handleCityKeys = (event) => {
+    const keys = [' ', ',', 'Enter'];
+    if (keys.includes(event.key)) {
+        event.preventDefault();
+        let value = formData.citiesInput.trim();
+        value = value.replace(/[, ]$/, '');
+        if (value && !formData.cities.includes(value)) {
+            formData.cities.push(value);
+        }
+        formData.citiesInput = '';
+    }
+};
+
+const removeCity = (index) => {
+    formData.cities.splice(index, 1);
 };
 
 await fetchCareTypes();

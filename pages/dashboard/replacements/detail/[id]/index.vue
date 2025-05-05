@@ -124,10 +124,7 @@
                             </div>
                         </div>
 
-                        <div
-                            v-if="replacement.details && replacement.details.length > 0"
-                            class="bg-gray-200 mt-8"
-                        >
+                        <div class="bg-gray-200 mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
                                     Zone(s) géographique(s) couverte(s)
@@ -246,8 +243,7 @@ const groupedDetails = computed(() => {
                 grouped[detail.date].patients.add(getFullName(detail.patient));
             }
         });
-    }
-    else if (replacement.value.timeSlot) {
+    } else if (replacement.value.timeSlot) {
         const timeSlots = JSON.parse(replacement.value.timeSlot);
         const date = formatDate(replacement.value.start_date);
         grouped[date] = {
@@ -255,8 +251,18 @@ const groupedDetails = computed(() => {
             times: new Set(Object.values(timeSlots).map(slot => JSON.parse(slot).startAt)),
             patients: new Set(),
             careTypes: new Set(replacement.value.care_types.map(care => care.name)),
-            zipCodes: new Set(),
-            cities: new Set(),
+            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
+            cities: new Set(JSON.parse(replacement.value.cities)),
+        };
+    } else {
+        const date = formatDate(replacement.value.start_date);
+        grouped[date] = {
+            date: date,
+            times: new Set(),
+            patients: new Set(),
+            careTypes: new Set(replacement.value.care_types.map(care => care.name)),
+            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
+            cities: new Set(JSON.parse(replacement.value.cities)),
         };
     }
 
