@@ -11,7 +11,7 @@ export const useAuth = () => {
     const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
     const users = useState<Pagination<User> | null>('users', () => null);
-    const isLoggedIn = computed(() => !!user.value);
+    const isLoggedIn = computed(() => !!user.value && !!user.value.email_verified_at);
 
     const isAdmin = computed((): boolean => {
         return ['administrator', 'developer'].includes(user.value?.account_type ?? '');

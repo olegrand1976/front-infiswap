@@ -2,8 +2,15 @@
     <div>
         <div class="bg-tertiary/30 h-screen relative mx-auto flex justify-center items-center">
             <div class="container relative mx-auto lg:p-6 sm:p-4 mb-16 flex flex-col xl:space-y-8 sm:space-y-6 justify-center items-center bg-white shadow-lg rounded-2xl md:w-[65%] sm:w-[85%] w-[90%]">
-                <div class="absolute sm:top-4 sm:right-4 top-2 right-2">
-                    <span @click="navigateTo('/')">
+                <div class="absolute top-2 sm:top-4 left-2 right-2 flex justify-between items-center">
+                    <Button
+                        variant="link"
+                        @click="navigateTo('/')"
+                    >
+                        Accueil
+                    </Button>.
+
+                    <span @click="navigateTo('/')" class="mt-[-10px] mr-2">
                         <XCircle class="h-5 w-5 sm:h-4 sm:w-4 text-primary cursor-pointer" />
                     </span>
                 </div>
