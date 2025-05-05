@@ -1,14 +1,86 @@
 <template>
     <Form @submit="submit">
         <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="shadow sm:mx-12 lg:mx-6">
-                <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                    Séléctionnez la rangée de date ici
-                </h2>
-                <RangeCalendar
-                    v-model="value"
-                    class="flex flex-col justify-center md:block p-4 rounded--b-lg"
-                />
+            <div class="sm:mx-12 lg:mx-6">
+                <div class="shadow">
+                    <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
+                        Séléctionnez la rangée de date ici
+                    </h2>
+                    <RangeCalendar
+                        v-model="value"
+                        class="flex flex-col justify-center md:block p-4 rounded-b-lg mb-8"
+                    />
+                </div>
+
+                <div class="mt-8 rounded-b-lg border border-gray-200">
+                    <h3 class="w-full text-white font-medium text-center bg-primary py-4 rounded-t-lg">
+                        Créneaux horaires
+                    </h3>
+                    <div class="p-3 sm:p-6 flex flex-col gap-4">
+                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
+                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
+                                Matin
+                            </p>
+                            <div class="col-span-4 sm:col-span-3 flex justify-between space-x-2  items-center">
+                                <InputTime
+                                    v-model="formData.timeSlot.morning.startAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="morning"
+                                />
+                                <p>à</p>
+                                <InputTime
+                                    v-model="formData.timeSlot.morning.endAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="morning"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
+                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
+                                Après-midi
+                            </p>
+                            <div class="col-span-4 sm:col-span-3 flex space-x-2 justify-between items-center">
+                                <InputTime
+                                    v-model="formData.timeSlot.afternoon.startAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="afternoon"
+                                />
+                                <p>à</p>
+                                <InputTime
+                                    v-model="formData.timeSlot.afternoon.endAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="afternoon"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
+                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
+                                Soir
+                            </p>
+                            <div class="col-span-4 sm:col-span-3 flex space-x-2 justify-between items-center">
+                                <InputTime
+                                    v-model="formData.timeSlot.evening.startAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="evening"
+                                />
+                                <p>à</p>
+                                <InputTime
+                                    v-model="formData.timeSlot.evening.endAt"
+                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                    input-class="rounded-full"
+                                    time-range="evening"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
@@ -18,11 +90,36 @@
                     >
                         Nombre de patients
                     </label>
-                    <input
+                    <InputIcon
                         v-model="formData.patientCount"
                         placeholder="Entrer un nombre"
-                        class="border p-2 rounded-full"
+                    />
+                </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label
+                        class="text-primary font-semibold"
                     >
+                        Codes postaux
+                    </label>
+                    <InputIcon
+                        v-model="formData.zipCodes"
+                        placeholder="6565,4561,1237"
+                        class="w-full"
+                    />
+                </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label
+                        class="text-primary font-semibold"
+                    >
+                        Villes
+                    </label>
+                    <InputIcon
+                        v-model="formData.cities"
+                        placeholder="Anvers, Bruges, Gand"
+                        class="w-full"
+                    />
                 </div>
 
                 <div class="flex flex-col space-y-2">
@@ -36,7 +133,7 @@
                         multiple
                     >
                         <SelectTrigger
-                            class="w-full bg-white rounded-full text-nowrap border border-gray-200"
+                            class="w-full bg-white rounded-full text-nowrap border border-gray-300"
                             position="right"
                         >
                             <SelectValue class="truncate w-[200rem]">
@@ -45,7 +142,7 @@
                                 </template>
                                 <template v-else>
                                     <span class="text-black/60">
-                                        Sélectionner un type de soin
+                                        Sélectionner
                                     </span>
                                 </template>
                             </SelectValue>
@@ -73,67 +170,17 @@
                 </div>
 
                 <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold">
-                        Créneau horaire
+                    <label
+                        class="text-primary font-semibold"
+                    >
+                        Commentaire
                     </label>
-                    <div class="w-full flex flex-col items-center gap-4">
-                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-16 2xl:space-x-[6.5rem] 2xl:-ml-[20%] items-center">
-                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
-                                Matin
-                            </p>
-                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.morning.startAt"
-                                    input-class="rounded-full"
-                                    time-range="morning"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.morning.endAt"
-                                    input-class="rounded-full"
-                                    time-range="morning"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-8 2xl:space-x-16 2xl:-ml-[20%] items-center">
-                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
-                                Après-midi
-                            </p>
-                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.afternoon.startAt"
-                                    input-class="rounded-full"
-                                    time-range="afternoon"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.afternoon.endAt"
-                                    input-class="rounded-full"
-                                    time-range="afternoon"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-20 2xl:space-x-28 2xl:-ml-[20%] items-center">
-                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
-                                Soir
-                            </p>
-                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.evening.startAt"
-                                    input-class="rounded-full"
-                                    time-range="evening"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.evening.endAt"
-                                    input-class="rounded-full"
-                                    time-range="evening"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Textarea
+                        v-model="formData.comment"
+                        placeholder="Écrivez un commentaire"
+                        rows="13"
+                        class="w-full border border-gray-400 focus-within:border-primary"
+                    />
                 </div>
             </div>
         </section>
@@ -150,6 +197,7 @@
 <script lang="ts" setup>
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { InputTime } from '@/components/ui/input-time';
+import { InputIcon } from '~/components/ui/input-with-icon';
 import { useReplacements } from '@/composables/useReplacements';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
@@ -167,6 +215,8 @@ const formData = reactive({
     startDate: `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`,
     endDate: '',
     patientCount: null,
+    zipCodes: [],
+    cities: [],
     careTypes: [],
     timeSlot: {
         morning: {
@@ -182,6 +232,7 @@ const formData = reactive({
             endAt: '',
         },
     },
+    comment: '',
 });
 
 const handleCareTypeClick = (timeSlot, careTypes) => {

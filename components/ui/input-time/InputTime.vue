@@ -126,7 +126,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="relative w-[150px]"
+        class="relative min-w-36"
         :class="containerClass"
         @click.stop
     >

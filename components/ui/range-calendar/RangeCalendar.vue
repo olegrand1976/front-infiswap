@@ -23,7 +23,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         v-bind="forwarded"
         locale="fr"
     >
-        <RangeCalendarHeader class="flex justify-between items-center">
+        <RangeCalendarHeader class="w-full flex justify-between items-center">
             <RangeCalendarHeading class="text-primary font-bold" />
             <div class="flex space-x-3">
                 <RangeCalendarPrevButton />
