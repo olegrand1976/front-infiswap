@@ -14,7 +14,7 @@
             </h1>
         </div>
 
-        <Form @submit.prevent="submit">
+        <Form @submit="submit">
             <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
                 <h3 class="text-center text-lg text-primary py-4 font-bold">
                     Besoin d’aide rapidement ? Rien de plus simple !
@@ -54,7 +54,7 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
-                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']"
+                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
                         >
                             <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
                                 <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
@@ -65,7 +65,7 @@
                                     v-model="formData.zipCodesInput"
                                     placeholder="1090, 1190"
                                     class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                    @keyup.enter.prevent="handleZipCodeKeys"
+                                    @keyup="handleZipCodeKeys"
                                 />
                             </div>
 
@@ -88,7 +88,7 @@
                         </div>
 
                         <div
-                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']"
+                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
                         >
                             <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
                                 <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
@@ -99,7 +99,7 @@
                                     v-model="formData.citiesInput"
                                     placeholder="Bruxelles, Bruges"
                                     class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                    @keyup.enter.prevent="handleCityKeys"
+                                    @keyup="handleCityKeys"
                                 />
                             </div>
 
