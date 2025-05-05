@@ -233,19 +233,19 @@
 
                                 <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                     <div>
-                                        <span v-if="hasShift(replacement.details, 'morning')">
+                                        <span v-if="hasShift(replacement, 'morning')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
-                                        <span v-if="hasShift(replacement.details, 'afternoon')">
+                                        <span v-if="hasShift(replacement, 'afternoon')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
-                                        <span v-if="hasShift(replacement.details, 'evening')">
+                                        <span v-if="hasShift(replacement, 'evening')">
                                             <CheckCircleIcon class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
@@ -404,6 +404,13 @@
                         class="urgent-indicator mt-9"
                     >
                         URGENT
+                    </div>
+
+                    <div
+                        v-if="isPastReplacement(replacement)"
+                        class="past-indicator mt-9"
+                    >
+                        PASSÉ
                     </div>
 
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -632,14 +639,19 @@ const getShift = (startAt) => {
     return 'evening';
 };
 
-const hasShift = (details, period) => {
-    return details.some(detail => getShift(detail.start_at) === period);
+const hasShift = (replacement, period) => {
+    if (replacement.details && replacement.details.length > 0) {
+        return replacement.details.some(detail => getShift(detail.start_at) === period);
+    }
+    else if (replacement.timeSlot) {
+        const timeSlots = JSON.parse(replacement.timeSlot);
+        return Object.keys(timeSlots).includes(period);
+    }
+    return false;
 };
 
 const isUrgentReplacement = (replacement) => {
-    return replacement.details.every(detail => !detail.patient
-        || (Array.isArray(detail.patient) && detail.patient.length === 0)
-        || Object.keys(detail.patient || {}).length === 0);
+    return !replacement.timeSlot;
 };
 
 const filteredReplacements = computed(() => {
