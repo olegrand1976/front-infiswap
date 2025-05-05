@@ -406,6 +406,13 @@
                         URGENT
                     </div>
 
+                    <div
+                        v-if="isPastReplacement(replacement)"
+                        class="past-indicator mt-9"
+                    >
+                        PASSÉ
+                    </div>
+
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">

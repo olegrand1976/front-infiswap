@@ -1,7 +1,7 @@
 <template>
     <Form @submit="submit">
-        <section class="mt-4 grid grid-cols-2 gap-8">
-            <div class="shadow mx-12">
+        <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="shadow sm:mx-12 lg:mx-6">
                 <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
                     Séléctionnez la rangée de date ici
                 </h2>
@@ -11,7 +11,7 @@
                 />
             </div>
 
-            <div class="flex flex-col space-y-6 text-sm mr-12">
+            <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
                     <label
                         class="text-primary font-semibold"
@@ -77,9 +77,11 @@
                         Créneau horaire
                     </label>
                     <div class="w-full flex flex-col items-center gap-4">
-                        <div class="flex space-x-16 items-center">
-                            <p>Matin</p>
-                            <div class="flex space-x-4 justify-between items-center">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-16 2xl:space-x-[6.5rem] 2xl:-ml-[20%] items-center">
+                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
+                                Matin
+                            </p>
+                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
                                 <InputTime
                                     v-model="formData.timeSlot.morning.startAt"
                                     input-class="rounded-full"
@@ -94,9 +96,11 @@
                             </div>
                         </div>
 
-                        <div class="flex space-x-8 items-center">
-                            <p>Après-midi</p>
-                            <div class="flex space-x-4 justify-between items-center">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-8 2xl:space-x-16 2xl:-ml-[20%] items-center">
+                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
+                                Après-midi
+                            </p>
+                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
                                 <InputTime
                                     v-model="formData.timeSlot.afternoon.startAt"
                                     input-class="rounded-full"
@@ -111,9 +115,11 @@
                             </div>
                         </div>
 
-                        <div class="flex space-x-20 items-center">
-                            <p>Soir</p>
-                            <div class="flex space-x-4 justify-between items-center">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-20 2xl:space-x-28 2xl:-ml-[20%] items-center">
+                            <p class="mr-auto ml-2 sm:ml-0 font-semibold sm:font-normal">
+                                Soir
+                            </p>
+                            <div class="flex space-x-4 2xl:space-x-8 justify-between items-center">
                                 <InputTime
                                     v-model="formData.timeSlot.evening.startAt"
                                     input-class="rounded-full"
@@ -133,7 +139,7 @@
         </section>
 
         <Button
-            class="flex items-center justify-center mx-auto mt-12 w-72"
+            class="flex items-center justify-center mx-auto mt-12 2xl:mt-24 w-72"
             type="submit"
         >
             Enregistrer
