@@ -434,7 +434,7 @@
                             <div class="grid grid-cols-3 py-2">
                                 <div class="flex justify-center">
                                     <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'morning')"
+                                        v-if="hasShift(replacement, 'morning')"
                                         class="h-5 w-5 text-success"
                                     />
                                     <span
@@ -444,7 +444,7 @@
                                 </div>
                                 <div class="flex justify-center">
                                     <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'afternoon')"
+                                        v-if="hasShift(replacement, 'afternoon')"
                                         class="h-5 w-5 text-success"
                                     />
                                     <span
@@ -454,7 +454,7 @@
                                 </div>
                                 <div class="flex justify-center">
                                     <CheckCircleIcon
-                                        v-if="hasShift(replacement.details, 'evening')"
+                                        v-if="hasShift(replacement, 'evening')"
                                         class="h-5 w-5 text-success"
                                     />
                                     <span

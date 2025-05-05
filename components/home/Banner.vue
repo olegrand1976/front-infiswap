@@ -7,7 +7,9 @@
                 v-if="!user"
                 class="text-white text-center"
             >
-                <h2 class="text-lg lg:text-xl font-semibold">🚀 InfiSwap est là ! 🩺</h2>
+                <h2 class="text-lg lg:text-xl font-semibold">
+                    🚀 InfiSwap est là ! 🩺
+                </h2>
                 <p>Une plateforme simple et rapide pour les infirmier(ère)s.</p>
 
                 <div class="space-y-4 pt-6">
@@ -19,7 +21,9 @@
                             Me faire remplacer
                         </Button>
 
-                        <p class="text-center">ou</p>
+                        <p class="text-center">
+                            ou
+                        </p>
 
                         <Button
                             href="/dashboard/replacements"
@@ -29,7 +33,9 @@
                         </Button>
                     </div>
 
-                    <p class="pt-4">👉 Rejoignez les premiers utilisateurs !</p>
+                    <p class="pt-4">
+                        👉 Rejoignez les premiers utilisateurs !
+                    </p>
 
                     <div class="flex justify-center">
                         <NuxtLink
