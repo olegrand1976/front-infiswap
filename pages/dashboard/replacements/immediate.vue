@@ -226,7 +226,8 @@ const handleZipCodeKeys = (event) => {
     const keys = [' ', ',', 'Enter'];
     if (keys.includes(event.key)) {
         event.preventDefault();
-        const value = formData.zipCodesInput.trim();
+        let value = formData.zipCodesInput.trim();
+        value = value.replace(/[, ]$/, '');
         if (value && !formData.zipCodes.includes(value)) {
             formData.zipCodes.push(value);
         }
@@ -242,8 +243,8 @@ const handleCityKeys = (event) => {
     const keys = [' ', ',', 'Enter'];
     if (keys.includes(event.key)) {
         event.preventDefault();
-        const value = formData.citiesInput.trim();
-
+        let value = formData.citiesInput.trim();
+        value = value.replace(/[, ]$/, '');
         if (value && !formData.cities.includes(value)) {
             formData.cities.push(value);
         }
