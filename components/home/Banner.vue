@@ -5,7 +5,7 @@
         <div class="relative col-span-6 lg:col-span-2 p-4 lg:p-8 grid place-content-center bg-rose-400 shadow-lg rounded-lg overflow-hidden">
             <div
                 v-if="!user"
-                class="text-white"
+                class="text-white text-center"
             >
                 <h2 class="text-lg lg:text-xl font-semibold">🚀 InfiSwap est là ! 🩺</h2>
                 <p>Une plateforme simple et rapide pour les infirmier(ère)s.</p>
@@ -70,12 +70,6 @@
                 </div>
                 <p class="mt-4">
                     cela vous permettra de bénéficier de l'ensemble des fonctionnalités de la plateforme.
-                </p>
-                <p class="mt-2">
-                    👉 <NuxtLink
-                        href="/dashboard/patients/create"
-                        class="font-bold"
-                    >Votre tournée</NuxtLink>
                 </p>
             </div>
         </div>
