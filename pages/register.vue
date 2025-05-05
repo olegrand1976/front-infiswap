@@ -388,7 +388,7 @@
                                             {{ zipCode }}
                                             <button
                                                 type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                                class="ml-2 text-gray-500 hover:text-gray-700 relative z-10"
                                                 @click="removeZipCode(index)"
                                             >
                                                 &times;
@@ -428,7 +428,7 @@
                                             {{ city }}
                                             <button
                                                 type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700"
+                                                class="ml-2 text-gray-500 hover:text-gray-700 relative z-10"
                                                 @click="removeCity(index)"
                                             >
                                                 &times;
