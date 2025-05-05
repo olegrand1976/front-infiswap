@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-6">
         <section class="grid grid-cols-1 items-center gap-4">
-            <div class="hidden md:grid grid-cols-2 gap-3 p-4 md:grid-cols-4 md:gap-6">
+            <div class="hidden md:grid grid-cols-2 gap-3 p-4 lg:grid-cols-4 lg:gap-6">
                 <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
                     <div class="bg-primary text-white p-2 md:p-3 text-center text-xs md:text-base font-bold tracking-wide uppercase">
                         Rechercher un remplacement
