@@ -53,28 +53,72 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
-                            <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
-                                <label for="zipCodes">Codes postaux *</label>
+                        <div
+                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
+                        >
+                            <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
+                                <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
+                                    <label for="zipCodes">Codes postaux *</label>
+                                </div>
+                                <Input
+                                    id="zipCodes"
+                                    v-model="formData.zipCodesInput"
+                                    placeholder="1090, 1190"
+                                    class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                                    @keyup="handleZipCodeKeys"
+                                />
                             </div>
-                            <Input
-                                v-model="zipCodesInput"
-                                placeholder="1090,1190"
-                                class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                @change="handleZipCodesChange"
-                            />
+
+                            <div v-if="formData.zipCodes.length" class="flex flex-wrap gap-2 mt-2">
+                                <div
+                                    v-for="(zip, index) in formData.zipCodes"
+                                    :key="index"
+                                    class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                                >
+                                    {{ zip }}
+                                    <button
+                                        type="button"
+                                        class="ml-2 text-gray-500 hover:text-gray-700"
+                                        @click="removeZipCode(index)"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
-                            <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
-                                <label for="cities">Villes *</label>
+                        <div
+                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
+                        >
+                            <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
+                                <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
+                                    <label for="cities">Villes *</label>
+                                </div>
+                                <Input
+                                    id="cities"
+                                    v-model="formData.citiesInput"
+                                    placeholder="Bruxelles, Bruges"
+                                    class="w-full bg-white text-sm text-gray-700 focus:outline-none"
+                                    @keyup="handleCityKeys"
+                                />
                             </div>
-                            <Input
-                                v-model="citiesInput"
-                                placeholder="Bruxelles, Bruges"
-                                class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                @change="handleCitiesChange"
-                            />
+
+                            <div v-if="formData.cities.length" class="flex flex-wrap gap-2 mt-2">
+                                <div
+                                    v-for="(city, index) in formData.cities"
+                                    :key="index"
+                                    class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                                >
+                                    {{ city }}
+                                    <button
+                                        type="button"
+                                        class="ml-2 text-gray-500 hover:text-gray-700"
+                                        @click="removeCity(index)"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="grid grid-cols-[30%_70%] items-center mt-4">
@@ -149,9 +193,6 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
 
-const zipCodesInput = ref('');
-const citiesInput = ref('');
-
 const formData = reactive({
     startTime: '',
     endTime: '',
@@ -159,6 +200,8 @@ const formData = reactive({
     zipCodes: [],
     cities: [],
     careTypes: [],
+    zipCodesInput: '',
+    citiesInput: '',
 });
 
 const handleCareTypeClick = (timeSlot, careTypes) => {
@@ -179,18 +222,38 @@ const getSelectedCareTypesText = (selectedIds) => {
         .join(', ');
 };
 
-const handleZipCodesChange = () => {
-    formData.zipCodes = zipCodesInput.value
-        .split(',')
-        .map(zip => zip.trim())
-        .filter(zip => zip !== '');
+const handleZipCodeKeys = (event) => {
+    const keys = [' ', ',', 'Enter'];
+    if (keys.includes(event.key)) {
+        event.preventDefault();
+        let value = formData.zipCodesInput.trim();
+        value = value.replace(/[, ]$/, '');
+        if (value && !formData.zipCodes.includes(value)) {
+            formData.zipCodes.push(value);
+        }
+        formData.zipCodesInput = '';
+    }
 };
 
-const handleCitiesChange = () => {
-    formData.cities = citiesInput.value
-        .split(',')
-        .map(city => city.trim())
-        .filter(city => city !== '');
+const removeZipCode = (index) => {
+    formData.zipCodes.splice(index, 1);
+};
+
+const handleCityKeys = (event) => {
+    const keys = [' ', ',', 'Enter'];
+    if (keys.includes(event.key)) {
+        event.preventDefault();
+        let value = formData.citiesInput.trim();
+        value = value.replace(/[, ]$/, '');
+        if (value && !formData.cities.includes(value)) {
+            formData.cities.push(value);
+        }
+        formData.citiesInput = '';
+    }
+};
+
+const removeCity = (index) => {
+    formData.cities.splice(index, 1);
 };
 
 const { submit, inProgress } = useSubmit(async () => {
