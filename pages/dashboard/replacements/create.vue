@@ -1,5 +1,5 @@
 <template>
-    <Form @submit="submit">
+    <form @submit.prevent="submit">
         <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow">
@@ -21,7 +21,7 @@
                             <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
                                 Matin
                             </p>
-                            <div class="col-span-4 sm:col-span-3 flex justify-between space-x-2  items-center">
+                            <div class="col-span-4 sm:col-span-3 flex justify-between space-x-2 items-center">
                                 <InputTime
                                     v-model="formData.timeSlot.morning.startAt"
                                     class="w-20 sm:w-48 lg:w-20 2xl:w-48"
@@ -85,9 +85,7 @@
 
             <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
-                    <label
-                        class="text-primary font-semibold"
-                    >
+                    <label class="text-primary font-semibold">
                         Nombre de patients
                     </label>
                     <InputIcon
@@ -96,80 +94,23 @@
                     />
                 </div>
 
-                <div class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']">
-                    <label
-                        class="text-primary font-semibold"
-                    >
-                        Codes postaux
-                    </label>
-                    <InputIcon
-                        id="zipCodes"
-                        v-model="formData.zipCodesInput"
-                        placeholder="6565,4561,1237"
-                        class="w-full"
-                        @keyup="handleZipCodeKeys"
-                    />
+                <InputTagManager
+                    v-model="formData.zipCodes"
+                    label="Codes postaux"
+                    placeholder="6565,4561,1237"
+                    :is-mobile="isMobileView"
+                />
 
-                    <div
-                        v-if="formData.zipCodes.length"
-                        class="flex flex-wrap gap-2 mt-2"
-                    >
-                        <div
-                            v-for="(zip, index) in formData.zipCodes"
-                            :key="index"
-                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                        >
-                            {{ zip }}
-                            <button
-                                type="button"
-                                class="ml-2 text-gray-500 hover:text-gray-700"
-                                @click="removeZipCode(index)"
-                            >
-                                &times;
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']">
-                    <label
-                        class="text-primary font-semibold"
-                    >
-                        Villes
-                    </label>
-                    <InputIcon
-                        id="cities"
-                        v-model="formData.citiesInput"
-                        placeholder="Anvers, Bruges, Gand"
-                        class="w-full"
-                        @keyup="handleCityKeys"
-                    />
-
-                    <div
-                        v-if="formData.cities.length"
-                        class="flex flex-wrap gap-2 mt-2"
-                    >
-                        <div
-                            v-for="(city, index) in formData.cities"
-                            :key="index"
-                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                        >
-                            {{ city }}
-                            <button
-                                type="button"
-                                class="ml-2 text-gray-500 hover:text-gray-700"
-                                @click="removeCity(index)"
-                            >
-                                &times;
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <InputTagManager
+                    v-model="formData.cities"
+                    label="Villes"
+                    placeholder="Anvers, Bruges, Gand"
+                    :is-mobile="isMobileView"
+                    class="mt-4"
+                />
 
                 <div class="flex flex-col space-y-2">
-                    <label
-                        class="text-primary font-semibold"
-                    >
+                    <label class="text-primary font-semibold">
                         Type de soins
                     </label>
                     <Select
@@ -214,9 +155,7 @@
                 </div>
 
                 <div class="flex flex-col space-y-2">
-                    <label
-                        class="text-primary font-semibold"
-                    >
+                    <label class="text-primary font-semibold">
                         Commentaire
                     </label>
                     <Textarea
@@ -232,6 +171,7 @@
         <Button
             class="flex items-center justify-center mx-auto mt-12 2xl:mt-24 w-72"
             type="submit"
+            :in-progress="inProgress"
         >
             Enregistrer
         </Button>
@@ -241,14 +181,15 @@
 <script lang="ts" setup>
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { InputTime } from '@/components/ui/input-time';
-import { InputIcon } from '~/components/ui/input-with-icon';
 import { useReplacements } from '@/composables/useReplacements';
+import InputTagManager from '@/components/InputTagManager.vue';
+import { useCareTypes } from '@/composables/useCareTypes';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 
 const start = today(getLocalTimeZone());
-const end = null;
+const end = today(getLocalTimeZone());
 
 const value = ref({
     start,
@@ -257,7 +198,7 @@ const value = ref({
 
 const formData = reactive({
     startDate: `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`,
-    endDate: '',
+    endDate: `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`,
     patientCount: null,
     zipCodes: [],
     cities: [],
@@ -281,23 +222,6 @@ const formData = reactive({
     citiesInput: '',
 });
 
-const handleZipCodeKeys = (event) => {
-    const keys = [' ', ',', 'Enter'];
-    if (keys.includes(event.key)) {
-        event.preventDefault();
-        let value = formData.zipCodesInput.trim();
-        value = value.replace(/[, ]$/, '');
-        if (value && !formData.zipCodes.includes(value)) {
-            formData.zipCodes.push(value);
-        }
-        formData.zipCodesInput = '';
-    }
-};
-
-const removeZipCode = (index) => {
-    formData.zipCodes.splice(index, 1);
-};
-
 const handleCareTypeClick = (timeSlot, careTypes) => {
     const index = timeSlot.careTypes.indexOf(careTypes);
     if (index === -1) {
@@ -316,28 +240,37 @@ const getSelectedCareTypesText = (selectedIds) => {
         .join(', ');
 };
 
-const handleCityKeys = (event) => {
-    const keys = [' ', ',', 'Enter'];
-    if (keys.includes(event.key)) {
-        event.preventDefault();
-        let value = formData.citiesInput.trim();
-        value = value.replace(/[, ]$/, '');
-        if (value && !formData.cities.includes(value)) {
-            formData.cities.push(value);
-        }
-        formData.citiesInput = '';
-    }
-};
+const isMobileView = ref(false);
 
-const removeCity = (index) => {
-    formData.cities.splice(index, 1);
-};
+onMounted(() => {
+    if (import.meta.client) {
+        isMobileView.value = window.innerWidth <= 1024;
+    }
+});
 
 await fetchCareTypes();
 
-const { submit } = useSubmit(async () => {
+const resetForm = () => {
+    formData.startDate = `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`;
+    formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
+    formData.patientCount = null;
+    formData.zipCodes = [];
+    formData.cities = [];
+    formData.careTypes = [];
+    formData.timeSlot = {
+        morning: { startAt: '', endAt: '' },
+        afternoon: { startAt: '', endAt: '' },
+        evening: { startAt: '', endAt: '' },
+    };
+    formData.comment = '';
+    formData.zipCodesInput = '';
+    formData.citiesInput = '';
+};
+
+const { submit, inProgress } = useSubmit(async () => {
     formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
     await submitReplacement(formData);
+    resetForm();
 });
 
 useHead({

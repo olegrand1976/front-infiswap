@@ -22,7 +22,10 @@
                     type="number"
                     @input="filterUsers()"
                 />
-                <Button class="rounded-md" @click="resetFilter">
+                <Button
+                    class="rounded-md"
+                    @click="resetFilter"
+                >
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>

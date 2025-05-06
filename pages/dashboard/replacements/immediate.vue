@@ -52,78 +52,57 @@
                             />
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div
-                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
-                        >
-                            <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
-                                <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
-                                    <label for="zipCodes">Codes postaux *</label>
-                                </div>
-                                <Input
-                                    id="zipCodes"
-                                    v-model="formData.zipCodesInput"
-                                    placeholder="1090, 1190"
-                                    class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                    @keyup="handleZipCodeKeys"
-                                />
-                            </div>
+                    <div class="block lg:hidden space-y-4">
+                        <div>
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
+                                Codes postaux *
+                            </h5>
+                            <InputTagManager
+                                v-model="formData.zipCodes"
+                                placeholder="6565,4561,1237"
+                                class="w-full pt-6"
+                                :is-mobile="true"
+                            />
+                        </div>
 
-                            <div
-                                v-if="formData.zipCodes.length"
-                                class="flex flex-wrap gap-2 mt-2"
-                            >
-                                <div
-                                    v-for="(zip, index) in formData.zipCodes"
-                                    :key="index"
-                                    class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                >
-                                    {{ zip }}
-                                    <button
-                                        type="button"
-                                        class="ml-2 text-gray-500 hover:text-gray-700 relative z-10"
-                                        @click="removeZipCode(index)"
-                                    >
-                                        &times;
-                                    </button>
-                                </div>
+                        <div>
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
+                                Villes *
+                            </h5>
+                            <InputTagManager
+                                v-model="formData.cities"
+                                placeholder="Anvers, Bruges, Gand"
+                                class="w-full pt-6"
+                                :is-mobile="true"
+                            />
+                        </div>
+                    </div>
+                    <div class="hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                        <div class="flex items-center gap-2">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-6">
+                                Codes postaux *
+                            </h5>
+                            <div class="w-3/4">
+                                <InputTagManager
+                                    v-model="formData.zipCodes"
+                                    placeholder="6565,4561,1237"
+                                    class="w-full pt-6"
+                                    :is-mobile="false"
+                                />
                             </div>
                         </div>
 
-                        <div
-                            class="relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Espace_pour_valider']"
-                        >
-                            <div class="grid grid-cols-[35%_65%] border border-primary h-11 rounded-full overflow-hidden">
-                                <div class="bg-primary flex items-center justify-center text-white text-sm font-medium px-4">
-                                    <label for="cities">Villes *</label>
-                                </div>
-                                <Input
-                                    id="cities"
-                                    v-model="formData.citiesInput"
-                                    placeholder="Bruxelles, Bruges"
-                                    class="w-full bg-white text-sm text-gray-700 focus:outline-none"
-                                    @keyup="handleCityKeys"
+                        <div class="flex items-center gap-2">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap w-1/4 pt-6">
+                                Villes *
+                            </h5>
+                            <div class="w-3/4">
+                                <InputTagManager
+                                    v-model="formData.cities"
+                                    placeholder="Anvers, Bruges, Gand"
+                                    class="w-full pt-6"
+                                    :is-mobile="false"
                                 />
-                            </div>
-
-                            <div
-                                v-if="formData.cities.length"
-                                class="flex flex-wrap gap-2 mt-2"
-                            >
-                                <div
-                                    v-for="(city, index) in formData.cities"
-                                    :key="index"
-                                    class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                >
-                                    {{ city }}
-                                    <button
-                                        type="button"
-                                        class="ml-2 text-gray-500 hover:text-gray-700"
-                                        @click="removeCity(index)"
-                                    >
-                                        &times;
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,6 +163,7 @@
 
 <script setup lang="ts">
 import { InputTime } from '@/components/ui/input-time';
+import InputTagManager from '@/components/InputTagManager.vue';
 
 useHead({
     title: 'Remplacement rapide',
@@ -226,40 +206,6 @@ const getSelectedCareTypesText = (selectedIds) => {
         .filter(ct => selectedIds.includes(ct.id))
         .map(ct => ct.name)
         .join(', ');
-};
-
-const handleZipCodeKeys = (event) => {
-    const keys = [' ', ',', 'Enter'];
-    if (keys.includes(event.key)) {
-        event.preventDefault();
-        let value = formData.zipCodesInput.trim();
-        value = value.replace(/[, ]$/, '');
-        if (value && !formData.zipCodes.includes(value)) {
-            formData.zipCodes.push(value);
-        }
-        formData.zipCodesInput = '';
-    }
-};
-
-const removeZipCode = (index) => {
-    formData.zipCodes.splice(index, 1);
-};
-
-const handleCityKeys = (event) => {
-    const keys = [' ', ',', 'Enter'];
-    if (keys.includes(event.key)) {
-        event.preventDefault();
-        let value = formData.citiesInput.trim();
-        value = value.replace(/[, ]$/, '');
-        if (value && !formData.cities.includes(value)) {
-            formData.cities.push(value);
-        }
-        formData.citiesInput = '';
-    }
-};
-
-const removeCity = (index) => {
-    formData.cities.splice(index, 1);
 };
 
 const { submit, inProgress } = useSubmit(async () => {

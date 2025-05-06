@@ -290,151 +290,44 @@
 
                             <div class="hidden lg:flex space-x-4">
                                 <div class="flex-1">
-                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']">
-                                        <InputIcon
-                                            v-model="zipCodeInput"
-                                            :icon="InboxArrowDownIcon"
-                                            size="md"
-                                            :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
-                                            @keydown.enter.prevent="addZipCode"
-                                            @keydown.space.prevent="addZipCode"
-                                            @blur="addZipCode"
-                                        />
-                                    </div>
-                                    <div
-                                        v-if="formData.zipCodesArray.length > 0"
-                                        class="flex flex-wrap gap-2 mt-2"
-                                    >
-                                        <div
-                                            v-for="(zipCode, index) in formData.zipCodesArray"
-                                            :key="index"
-                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                        >
-                                            {{ zipCode }}
-                                            <button
-                                                type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700"
-                                                @click="removeZipCode(index)"
-                                            >
-                                                &times;
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <InputTagManager
+                                        v-model="formData.zipCodesArray"
+                                        :icon="InboxArrowDownIcon"
+                                        label="Codes postaux *"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :is-mobile="false"
+                                    />
                                 </div>
 
                                 <div class="flex-1">
-                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_pour_valider']">
-                                        <InputIcon
-                                            v-model="cityInput"
-                                            :icon="BuildingOffice2Icon"
-                                            size="md"
-                                            :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
-                                            @keydown.enter.prevent="addCity"
-                                            @keydown.space.prevent="addCity"
-                                        />
-                                    </div>
-                                    <div
-                                        v-if="formData.citiesArray.length > 0"
-                                        class="flex flex-wrap gap-2 mt-2"
-                                    >
-                                        <div
-                                            v-for="(city, index) in formData.citiesArray"
-                                            :key="index"
-                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                        >
-                                            {{ city }}
-                                            <button
-                                                type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700"
-                                                @click="removeCity(index)"
-                                            >
-                                                &times;
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <InputTagManager
+                                        v-model="formData.citiesArray"
+                                        :icon="BuildingOffice2Icon"
+                                        label="Villes"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :is-mobile="false"
+                                    />
                                 </div>
                             </div>
-
                             <div class="block lg:hidden">
                                 <div class="flex-1">
-                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_ou_Espace_pour_valider']">
-                                        <InputIcon
-                                            v-model="zipCodeInput"
-                                            :icon="InboxArrowDownIcon"
-                                            size="md"
-                                            :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
-                                            @keydown.enter.prevent="addZipCode"
-                                            @keydown.space.prevent="addZipCode"
-                                            @blur="addZipCode"
-                                            class="pr-10"
-                                        />
-                                        <button
-                                            type="button"
-                                            @click="addZipCode"
-                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary"
-                                        >
-                                            <PlusCircleIcon class="h-6 w-6" />
-                                        </button>
-                                    </div>
-                                    <div
-                                        v-if="formData.zipCodesArray.length > 0"
-                                        class="flex flex-wrap gap-2 mt-2"
-                                    >
-                                        <div
-                                            v-for="(zipCode, index) in formData.zipCodesArray"
-                                            :key="index"
-                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                        >
-                                            {{ zipCode }}
-                                            <button
-                                                type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700 relative z-10"
-                                                @click="removeZipCode(index)"
-                                            >
-                                                &times;
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <InputTagManager
+                                        v-model="formData.zipCodesArray"
+                                        :icon="InboxArrowDownIcon"
+                                        label="Codes postaux *"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :is-mobile="true"
+                                    />
                                 </div>
 
                                 <div class="flex-1 mt-4">
-                                    <div class="relative flex-1 group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-10 before:left-0 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1 before:content-['Appuyer_sur_Entrée_pour_valider']">
-                                        <InputIcon
-                                            v-model="cityInput"
-                                            :icon="BuildingOffice2Icon"
-                                            size="md"
-                                            :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
-                                            @keydown.enter.prevent="addCity"
-                                            @keydown.space.prevent="addCity"
-                                            class="pr-10"
-                                        />
-                                        <button
-                                            type="button"
-                                            @click="addCity"
-                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary"
-                                        >
-                                            <PlusCircleIcon class="h-6 w-6" />
-                                        </button>
-                                    </div>
-                                    <div
-                                        v-if="formData.citiesArray.length > 0"
-                                        class="flex flex-wrap gap-2 mt-2"
-                                    >
-                                        <div
-                                            v-for="(city, index) in formData.citiesArray"
-                                            :key="index"
-                                            class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                                        >
-                                            {{ city }}
-                                            <button
-                                                type="button"
-                                                class="ml-2 text-gray-500 hover:text-gray-700 relative z-10"
-                                                @click="removeCity(index)"
-                                            >
-                                                &times;
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <InputTagManager
+                                        v-model="formData.citiesArray"
+                                        :icon="BuildingOffice2Icon"
+                                        label="Villes"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :is-mobile="true"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -536,10 +429,10 @@ import {
     MapPinIcon,
     InboxArrowDownIcon,
     QuestionMarkCircleIcon,
-    PlusCircleIcon,
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import InputTagManager from '~/components/InputTagManager.vue';
 
 import {
     Select,
@@ -665,37 +558,6 @@ const formData = reactive({
     zipCodesArray: [],
     citiesArray: [],
 });
-
-const zipCodeInput = ref('');
-const cityInput = ref('');
-
-const addZipCode = () => {
-    if (zipCodeInput.value.trim()) {
-        const code = zipCodeInput.value.trim();
-        if (!formData.zipCodesArray.includes(code)) {
-            formData.zipCodesArray.push(code);
-        }
-        zipCodeInput.value = '';
-    }
-};
-
-const addCity = () => {
-    if (cityInput.value.trim()) {
-        const city = cityInput.value.trim();
-        if (!formData.citiesArray.includes(city)) {
-            formData.citiesArray.push(city);
-        }
-        cityInput.value = '';
-    }
-};
-
-const removeZipCode = (index) => {
-    formData.zipCodesArray.splice(index, 1);
-};
-
-const removeCity = (index) => {
-    formData.citiesArray.splice(index, 1);
-};
 
 const route = useRoute();
 const { register } = useAuth();
