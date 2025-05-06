@@ -48,13 +48,13 @@
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
                     <div class="bg-white flex items-center justify-center shadow w-72 rounded-full">
                         <span
-                            v-if="listResponse.length == 0"
+                            v-if="replacement.response_count == 0"
                             class="text-xs text-primary"
                         >
                             Aucun
                         </span>
                         <span
-                            v-else-if="listResponse.length == 1"
+                            v-else-if="replacement.response_count == 1"
                             class="text-xs text-primary"
                         >
                             1 intéressé
@@ -63,7 +63,7 @@
                             v-else
                             class="text-xs text-primary"
                         >
-                            {{ listResponse.length }} intéressés
+                            {{ replacement.response_count }}  intéressés
                         </span>
                     </div>
                 </div>
@@ -196,7 +196,7 @@ import {
     ChevronRightIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
-import { useDetailReplacement, useListResponse, sendResponse } from '~/composables/useReplacements';
+import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { getFullName } from '~/lib/utils';
 
 const user = useState('user');
@@ -205,7 +205,6 @@ const replacementId = route.params.id;
 const respondedBy = computed(() => user.value?.id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
-const { listResponse, fetchListResponse } = useListResponse(replacementId);
 
 const { isDisabled } = sendResponse();
 
@@ -309,7 +308,6 @@ const endDate = computed(() => {
 });
 
 await fetchReplacement();
-await fetchListResponse();
 
 useHead({
     title: 'Détail de remplacement',

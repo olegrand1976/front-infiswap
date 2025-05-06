@@ -5,7 +5,7 @@
             <span class="lg:hidden">Intéressées</span>
         </h1>
         <template v-if="listResponse.length != 0">
-            <div class="flex items-center lg:space-x-8 gap-2 mt-6 p-2">
+            <div class="flex items-center sm:space-x-4 lg:space-x-8 gap-2 mt-6 p-2">
                 <h4 class="font-bold hidden lg:inline-block text-sm text-primary">
                     Période
                 </h4>
@@ -120,7 +120,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, StarIcon, ArrowPathIcon, BriefcaseIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
 
@@ -163,39 +163,39 @@ const endDate = computed(() =>
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
 );
 
-const displayCities = (settings) => {
-    if (!settings) return 'Aucune ville';
-    const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
-    return data?.replacement?.cities?.join(', ') || 'Aucune ville';
-};
+// const displayCities = (settings) => {
+//     if (!settings) return 'Aucune ville';
+//     const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
+//     return data?.replacement?.cities?.join(', ') || 'Aucune ville';
+// };
 
-// Méthode pour extraire les codes postaux
-const getZipCodes = (settings) => {
-    try {
-        const parsed = JSON.parse(settings);
-        return parsed?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
-    }
-    catch {
-        return 'Format invalide';
-    }
-};
+// // Méthode pour extraire les codes postaux
+// const getZipCodes = (settings) => {
+//     try {
+//         const parsed = JSON.parse(settings);
+//         return parsed?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
+//     }
+//     catch {
+//         return 'Format invalide';
+//     }
+// };
 
-const handlesubmit = async (id) => {
-    try {
-        await changeStatus(id);
-        $toast({
-            title: 'Succès',
-            description: 'Infirmier accepté',
-        });
-    }
-    catch (e) {
-        $toast({
-            title: 'Oups! Une erreur s\'est produite',
-            description: 'Veuillez réessayer',
-            variant: 'destructive',
-        });
-    }
-};
+// const handlesubmit = async (id) => {
+//     try {
+//         await changeStatus(id);
+//         $toast({
+//             title: 'Succès',
+//             description: 'Infirmier accepté',
+//         });
+//     }
+//     catch (e) {
+//         $toast({
+//             title: 'Oups! Une erreur s\'est produite',
+//             description: 'Veuillez réessayer',
+//             variant: 'destructive',
+//         });
+//     }
+// };
 
 useHead({
     title: 'Liste des personnes intéréssées par le remplacement',
