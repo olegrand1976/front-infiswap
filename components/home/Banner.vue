@@ -33,7 +33,9 @@
                         </Button>
                     </div>
 
-                    <p class="pt-4">👉 Rejoignez-nous dès maintenant !</p>
+                    <p class="pt-4">
+                        👉 Rejoignez-nous dès maintenant !
+                    </p>
 
                     <div class="flex justify-center">
                         <NuxtLink
