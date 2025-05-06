@@ -49,7 +49,10 @@
                             </Button>
                         </div>
                     </div>
-                    <div v-if="zipCodes.length > 0" class="flex flex-wrap gap-2 mt-2 min-w-96">
+                    <div
+                        v-if="zipCodes.length > 0"
+                        class="flex flex-wrap gap-2 mt-2 min-w-96"
+                    >
                         <TagsInputItem
                             v-for="item in zipCodes"
                             :key="item"
@@ -62,7 +65,10 @@
                 </TagsInput>
             </div>
 
-            <div v-if="zipCodes.length > 0" class="lg:my-6 invisible">
+            <div
+                v-if="zipCodes.length > 0"
+                class="lg:my-6 invisible"
+            >
                 .
             </div>
 
@@ -129,7 +135,10 @@
                 </TagsInput>
             </div>
 
-            <div v-if="cities.length > 0" class="lg:my-6 invisible">
+            <div
+                v-if="cities.length > 0"
+                class="lg:my-6 invisible"
+            >
                 .
             </div>
         </form>
