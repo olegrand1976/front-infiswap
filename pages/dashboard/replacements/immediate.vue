@@ -60,7 +60,7 @@
                             <InputTagManager
                                 v-model="formData.zipCodes"
                                 placeholder="6565,4561,1237"
-                                class="w-full"
+                                class="w-full pt-6"
                                 :is-mobile="true"
                             />
                         </div>
@@ -72,35 +72,35 @@
                             <InputTagManager
                                 v-model="formData.cities"
                                 placeholder="Anvers, Bruges, Gand"
-                                class="w-full"
+                                class="w-full pt-6"
                                 :is-mobile="true"
                             />
                         </div>
                     </div>
                     <div class="hidden lg:grid lg:grid-cols-2 lg:gap-4">
                         <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-6">
                                 Codes postaux *
                             </h5>
                             <div class="w-3/4">
                                 <InputTagManager
                                     v-model="formData.zipCodes"
                                     placeholder="6565,4561,1237"
-                                    class="w-full"
+                                    class="w-full pt-6"
                                     :is-mobile="false"
                                 />
                             </div>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap w-1/4">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap w-1/4 pt-6">
                                 Villes *
                             </h5>
                             <div class="w-3/4">
                                 <InputTagManager
                                     v-model="formData.cities"
                                     placeholder="Anvers, Bruges, Gand"
-                                    class="w-full"
+                                    class="w-full pt-6"
                                     :is-mobile="false"
                                 />
                             </div>
