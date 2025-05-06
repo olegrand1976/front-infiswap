@@ -250,9 +250,27 @@ onMounted(() => {
 
 await fetchCareTypes();
 
+const resetForm = () => {
+    formData.startDate = `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`;
+    formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
+    formData.patientCount = null;
+    formData.zipCodes = [];
+    formData.cities = [];
+    formData.careTypes = [];
+    formData.timeSlot = {
+        morning: { startAt: '', endAt: '' },
+        afternoon: { startAt: '', endAt: '' },
+        evening: { startAt: '', endAt: '' },
+    };
+    formData.comment = '';
+    formData.zipCodesInput = '';
+    formData.citiesInput = '';
+};
+
 const { submit, inProgress } = useSubmit(async () => {
     formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
     await submitReplacement(formData);
+    resetForm();
 });
 
 useHead({
