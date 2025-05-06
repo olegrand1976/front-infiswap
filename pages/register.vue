@@ -296,6 +296,7 @@
                                         label="Codes postaux *"
                                         :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
                                         :is-mobile="false"
+                                        :only-comma-validation="false"
                                     />
                                 </div>
 
@@ -306,6 +307,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
                                         :is-mobile="false"
+                                        :only-comma-validation="true"
                                     />
                                 </div>
                             </div>

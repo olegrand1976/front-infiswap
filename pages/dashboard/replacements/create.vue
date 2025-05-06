@@ -99,6 +99,7 @@
                     label="Codes postaux"
                     placeholder="6565,4561,1237"
                     :is-mobile="isMobileView"
+                    :only-comma-validation="false"
                 />
 
                 <InputTagManager
@@ -107,6 +108,7 @@
                     placeholder="Anvers, Bruges, Gand"
                     :is-mobile="isMobileView"
                     class="mt-4"
+                    :only-comma-validation="true"
                 />
 
                 <div class="flex flex-col space-y-2">
