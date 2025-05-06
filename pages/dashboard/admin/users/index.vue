@@ -6,6 +6,27 @@
             </template>
         </DashboardAdminPageHeader>
         <DashboardAdminPageContent>
+            <div class="p-4 flex gap-3 items-center">
+                <InputIcon
+                    v-model="option.name"
+                    rounded="md"
+                    placeholder="Filter par Nom ou Prénom"
+                    class="max-w-sm"
+                    @input="filterUsers()"
+                />
+                <InputIcon
+                    v-model="option.zip"
+                    rounded="md"
+                    placeholder="Filter par C.P"
+                    class="max-w-sm"
+                    type="number"
+                    @input="filterUsers()"
+                />
+                <Button class="rounded-md" @click="resetFilter">
+                    <ArrowPathIcon class="md:mr-2" />
+                    <span class="hidden md:inline-block">Restaurer</span>
+                </Button>
+            </div>
             <DataTable
                 :data="dataUsers"
                 :columns="columns"
@@ -26,7 +47,7 @@
 <script setup lang="ts">
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
-import { XCircleIcon, ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
+import { XCircleIcon, ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
@@ -45,17 +66,38 @@ const { users, getUsers, forceDelete, resendEmailVerification, validate } = useA
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
-await getUsers(page.value, perPage.value);
+const initialFilter = {
+    name: null,
+    zip: null,
+};
+const option = ref({ ...initialFilter });
+
+await getUsers(page.value, perPage.value, option.value);
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value);
+    await getUsers(page, perPage.value, option.value);
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getUsers(page.value, value);
+    await getUsers(page.value, value, option.value);
+};
+
+const filterUsers = async () => {
+    await getUsers(page.value, perPage.value, { ...option.value });
+};
+
+const resetFilter = async () => {
+    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    if (isSame) {
+        return;
+    }
+
+    option.value = { ...initialFilter };
+
+    await getUsers();
 };
 
 const columns: ColumnDef<User>[] = [
