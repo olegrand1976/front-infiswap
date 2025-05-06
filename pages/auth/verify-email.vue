@@ -10,7 +10,10 @@
                         Accueil
                     </Button>.
 
-                    <span @click="navigateTo('/')" class="mt-[-10px] mr-2">
+                    <span
+                        class="mt-[-10px] mr-2"
+                        @click="navigateTo('/')"
+                    >
                         <XCircle class="h-5 w-5 sm:h-4 sm:w-4 text-primary cursor-pointer" />
                     </span>
                 </div>

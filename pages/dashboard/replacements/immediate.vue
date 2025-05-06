@@ -52,30 +52,56 @@
                             />
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight">
+                    <div class="block lg:hidden space-y-4">
+                        <div>
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
                                 Codes postaux *
                             </h5>
-                            <div class="flex-1">
-                                <ZipCodeInput
+                            <InputTagManager
+                                v-model="formData.zipCodes"
+                                placeholder="6565,4561,1237"
+                                class="w-full"
+                                :is-mobile="true"
+                            />
+                        </div>
+
+                        <div>
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
+                                Villes *
+                            </h5>
+                            <InputTagManager
+                                v-model="formData.cities"
+                                placeholder="Anvers, Bruges, Gand"
+                                class="w-full"
+                                :is-mobile="true"
+                            />
+                        </div>
+                    </div>
+                    <div class="hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                        <div class="flex items-center gap-2">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4">
+                                Codes postaux *
+                            </h5>
+                            <div class="w-3/4">
+                                <InputTagManager
                                     v-model="formData.zipCodes"
-                                    input-id="zipCodes"
-                                    placeholder="1090, 1190"
-                                    class="flex-1"
+                                    placeholder="6565,4561,1237"
+                                    class="w-full"
+                                    :is-mobile="false"
                                 />
                             </div>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap w-1/4">
                                 Villes *
                             </h5>
-                            <div class="flex-1">
-                                <ZipCodeInput
+                            <div class="w-3/4">
+                                <InputTagManager
                                     v-model="formData.cities"
-                                    input-id="cities"
-                                    placeholder="Bruxelles, Bruges"
+                                    placeholder="Anvers, Bruges, Gand"
+                                    class="w-full"
+                                    :is-mobile="false"
                                 />
                             </div>
                         </div>
@@ -137,7 +163,7 @@
 
 <script setup lang="ts">
 import { InputTime } from '@/components/ui/input-time';
-import ZipCodeInput from '@/components/ZipCodeInput.vue';
+import InputTagManager from '@/components/InputTagManager.vue';
 
 useHead({
     title: 'Remplacement rapide',

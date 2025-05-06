@@ -290,39 +290,43 @@
 
                             <div class="hidden lg:flex space-x-4">
                                 <div class="flex-1">
-                                    <ZipCodeInput
+                                    <InputTagManager
                                         v-model="formData.zipCodesArray"
-                                        input-id="zipCodes"
-                                        placeholder="Codes postaux *"
                                         :icon="InboxArrowDownIcon"
+                                        label="Codes postaux *"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :is-mobile="false"
                                     />
                                 </div>
 
                                 <div class="flex-1">
-                                    <ZipCodeInput
+                                    <InputTagManager
                                         v-model="formData.citiesArray"
-                                        input-id="cities"
-                                        placeholder="Villes"
                                         :icon="BuildingOffice2Icon"
+                                        label="Villes"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :is-mobile="false"
                                     />
                                 </div>
                             </div>
                             <div class="block lg:hidden">
                                 <div class="flex-1">
-                                    <ZipCodeInput
+                                    <InputTagManager
                                         v-model="formData.zipCodesArray"
-                                        input-id="zipCodes"
-                                        placeholder="Codes postaux *"
                                         :icon="InboxArrowDownIcon"
+                                        label="Codes postaux *"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :is-mobile="true"
                                     />
                                 </div>
 
                                 <div class="flex-1 mt-4">
-                                    <ZipCodeInput
+                                    <InputTagManager
                                         v-model="formData.citiesArray"
-                                        input-id="cities"
-                                        placeholder="Villes"
                                         :icon="BuildingOffice2Icon"
+                                        label="Villes"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :is-mobile="true"
                                     />
                                 </div>
                             </div>
@@ -428,6 +432,7 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import InputTagManager from '~/components/InputTagManager.vue';
 
 import {
     Select,
