@@ -48,32 +48,34 @@
                             <Input
                                 v-model="formData.patientCount"
                                 placeholder="10"
-                                class="w-full bg-white text-sm text-gray-700 focus:outline-none rounded-full border border-primary h-11 px-3"
+                                class="w-full text-sm text-gray-700 rounded-full border border-solid border-gray-400 focus:outline-none h-10 px-3"
                             />
                         </div>
                     </div>
-                    <div class="block lg:hidden space-y-4">
+                    <div class="block lg:hidden">
                         <div>
-                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight">
                                 Codes postaux *
                             </h5>
                             <InputTagManager
                                 v-model="formData.zipCodes"
                                 placeholder="6565,4561,1237"
-                                class="w-full pt-6"
+                                class="w-[104%] pt-4"
                                 :is-mobile="true"
+                                :only-comma-validation="false"
                             />
                         </div>
 
                         <div>
-                            <h5 class="text-sm text-gray-700 font-medium leading-tight mb-1">
+                            <h5 class="text-sm text-gray-700 font-medium leading-tight mt-4">
                                 Villes *
                             </h5>
                             <InputTagManager
                                 v-model="formData.cities"
                                 placeholder="Anvers, Bruges, Gand"
-                                class="w-full pt-6"
+                                class="w-[104%] pt-4"
                                 :is-mobile="true"
+                                :only-comma-validation="true"
                             />
                         </div>
                     </div>
@@ -88,6 +90,7 @@
                                     placeholder="6565,4561,1237"
                                     class="w-full pt-6"
                                     :is-mobile="false"
+                                    :only-comma-validation="false"
                                 />
                             </div>
                         </div>
@@ -102,6 +105,7 @@
                                     placeholder="Anvers, Bruges, Gand"
                                     class="w-full pt-6"
                                     :is-mobile="false"
+                                    :only-comma-validation="true"
                                 />
                             </div>
                         </div>
