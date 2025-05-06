@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex items-center justify-between w-full">
-            <h1 class="py-3 text-primary bg-gray-100 w-[75%] px-9 rounded-lg">
+            <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[75%] sm:px-9 rounded-lg">
                 Rechercher <strong>
                     un remplacement
                 </strong>
@@ -9,7 +9,7 @@
 
             <Select v-model="selectedFilter">
                 <SelectTrigger
-                    class="bg-white my-0.5 w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
+                    class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
                     position="right"
                 >
                     <SelectValue

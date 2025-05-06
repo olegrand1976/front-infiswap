@@ -1,19 +1,19 @@
 <template>
     <div class="pt-2">
-        <div class="flex space-x-3 justify-between">
-            <div class="w-[55%] rounded bg-gray-100 h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:flex-row justify-between items-center">
+        <div class="flex flex-col sm:flex-row sm:space-x-3 justify-between">
+            <div class="w-full sm:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
                 <Button
-                    class="text-sm -ml-24 sm:ml-0"
+                    class="text-sm w-24 sm:w-auto"
                     @click="goBack"
                 >
                     <span class="text-xs">Retour</span>
                 </Button>
 
-                <div class="flex items-center space-x-8">
-                    <h4 class="font-bold text-sm text-primary ml-16 sm:ml-4 xl:ml-0">
+                <div class="mt-20 sm:mt-auto flex flex-col space-y-6 sm:space-y-0 sm:flex-row w-full sm:w-auto sm:items-center sm:space-x-8">
+                    <h4 class="font-semibold text-sm sm:text-primary sm:ml-4 xl:ml-0">
                         Période
                     </h4>
-                    <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
+                    <div class="flex justify-between sm:justify-start sm:space-x-5 items-center rounded-full bg-primary sm:w-40">
                         <span class="text-xs text-white ms-3">Début</span>
                         <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
                             <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
@@ -25,7 +25,7 @@
                             />
                         </div>
                     </div>
-                    <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
+                    <div class="flex justify-between sm:justify-start sm:space-x-5 items-center rounded-full bg-primary sm:w-40">
                         <span class="text-xs text-white ms-3">Fin</span>
                         <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
                             <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
@@ -42,7 +42,7 @@
 
             <div
                 v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
-                class="w-[45%] h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
+                class="mt-12 sm:mt-0 w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
             >
                 <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
@@ -77,7 +77,7 @@
 
         <section
             v-if="groupedDetails.length > 0"
-            class="mt-24 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8"
+            class="mt-8 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8"
         >
             <div
                 v-for="(group, index) in groupedDetails"
@@ -124,10 +124,7 @@
                             </div>
                         </div>
 
-                        <div
-                            v-if="replacement.details && replacement.details.length > 0"
-                            class="bg-gray-200 mt-8"
-                        >
+                        <div class="bg-gray-200 mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
                                     Zone(s) géographique(s) couverte(s)
@@ -255,8 +252,19 @@ const groupedDetails = computed(() => {
             times: new Set(Object.values(timeSlots).map(slot => JSON.parse(slot).startAt)),
             patients: new Set(),
             careTypes: new Set(replacement.value.care_types.map(care => care.name)),
-            zipCodes: new Set(),
-            cities: new Set(),
+            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
+            cities: new Set(JSON.parse(replacement.value.cities)),
+        };
+    }
+    else {
+        const date = formatDate(replacement.value.start_date);
+        grouped[date] = {
+            date: date,
+            times: new Set(),
+            patients: new Set(),
+            careTypes: new Set(replacement.value.care_types.map(care => care.name)),
+            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
+            cities: new Set(JSON.parse(replacement.value.cities)),
         };
     }
 
@@ -300,10 +308,8 @@ const endDate = computed(() => {
     return replacement.value.end_date ? formatDate(replacement.value.end_date) : '';
 });
 
-onMounted(async () => {
-    await fetchReplacement();
-    await fetchListResponse();
-});
+await fetchReplacement();
+await fetchListResponse();
 
 useHead({
     title: 'Détail de remplacement',
@@ -312,6 +318,5 @@ useHead({
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>

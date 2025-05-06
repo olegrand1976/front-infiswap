@@ -69,7 +69,10 @@
                                 />
                             </div>
 
-                            <div v-if="formData.zipCodes.length" class="flex flex-wrap gap-2 mt-2">
+                            <div
+                                v-if="formData.zipCodes.length"
+                                class="flex flex-wrap gap-2 mt-2"
+                            >
                                 <div
                                     v-for="(zip, index) in formData.zipCodes"
                                     :key="index"
@@ -103,7 +106,10 @@
                                 />
                             </div>
 
-                            <div v-if="formData.cities.length" class="flex flex-wrap gap-2 mt-2">
+                            <div
+                                v-if="formData.cities.length"
+                                class="flex flex-wrap gap-2 mt-2"
+                            >
                                 <div
                                     v-for="(city, index) in formData.cities"
                                     :key="index"

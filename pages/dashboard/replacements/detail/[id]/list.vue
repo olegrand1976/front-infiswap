@@ -201,13 +201,10 @@ useHead({
     title: 'Liste des personnes intéréssées par le remplacement',
 });
 
-onMounted(() => {
-    fetchListResponse();
-});
+await fetchListResponse();
 
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>
