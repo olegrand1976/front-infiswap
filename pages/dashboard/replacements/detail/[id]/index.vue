@@ -1,7 +1,7 @@
 <template>
     <div class="pt-2">
-        <div class="flex flex-col sm:flex-row sm:space-x-3 justify-between">
-            <div class="w-full sm:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
+        <div class="flex flex-col space-y-0 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
+            <div class="w-full lg:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
                 <Button
                     class="text-sm w-24 sm:w-auto"
                     @click="goBack"
@@ -42,7 +42,7 @@
 
             <div
                 v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
-                class="mt-12 sm:mt-0 w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
+                class="mt-12 sm:mt-0 w-[45%] sm:w-full lg:w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
             >
                 <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
                     <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
