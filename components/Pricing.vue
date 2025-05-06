@@ -142,7 +142,7 @@ const {
 const user = useUser();
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified', 'unsubscribed'],
+    middleware: ['auth', 'verified'],
 });
 
 const trialLoading = ref(false);

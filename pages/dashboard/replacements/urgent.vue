@@ -105,7 +105,7 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth-help', 'subscribed'],
+    middleware: ['auth-help'],
     ssr: false,
 });
 </script>
