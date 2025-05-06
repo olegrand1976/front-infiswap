@@ -110,6 +110,7 @@ const handleBlur = () => {
         addItem();
     }
 };
+// script
 </script>
 
 <style scoped>
