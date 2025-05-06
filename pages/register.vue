@@ -311,7 +311,6 @@
                                     />
                                 </div>
                             </div>
-
                             <div class="block lg:hidden">
                                 <div class="flex-1">
                                     <InputTagManager
