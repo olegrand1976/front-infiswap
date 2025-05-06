@@ -752,9 +752,9 @@
                             :initial-cities="cities"
                         />
 
-                        <div class="mt-4 space-y-3">
+                        <div class="mt-12 lg:mt-4 space-y-3">
                             <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full opacity-70 cursor-not-allowed"
+                                class="block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full opacity-70 cursor-not-allowed"
                             >
                                 <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                                     <label

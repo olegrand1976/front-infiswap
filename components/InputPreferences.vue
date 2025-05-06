@@ -29,30 +29,46 @@
                 </transition>
                 <TagsInput
                     v-model="zipCodes"
-                    class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
+                    class="h-9 bg-transparent border sm:border-none border-primary rounded-full"
                 >
-                    <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
+                    <div class="flex items-center gap-2">
+                        <TagsInputInput
+                            class="-mt-1 sm:w-24 2xl:w-auto"
+                            placeholder="8973"
+                            @input="isZipCodeFocused = true"
+                            @blur="handleBlur"
+                            @keyup.enter="() => addPreference()"
+                        />
+                        <div class="md:hidden absolute right-0 top-14 transform -translate-y-1/2 z-10">
+                            <Button
+                                type="button"
+                                class="text-white bg-primary px-3 py-1 rounded-full text-sm shadow"
+                                @click="addPreference"
+                            >
+                                Ajouter
+                            </Button>
+                        </div>
+                    </div>
+                    <div v-if="zipCodes.length > 0" class="flex flex-wrap gap-2 mt-2 min-w-96">
                         <TagsInputItem
                             v-for="item in zipCodes"
                             :key="item"
                             :value="item"
-                            class="-mt-1"
                         >
                             <TagsInputItemText class="text-xs" />
                             <TagsInputItemDelete @click="removeZipCode(item)" />
                         </TagsInputItem>
                     </div>
-                    <TagsInputInput
-                        class="-mt-1 sm:w-24 2xl:w-auto"
-                        placeholder="8973"
-                        @input="isZipCodeFocused = true"
-                        @blur="handleBlur"
-                        @keyup.enter="() => addPreference()"
-                    />
                 </TagsInput>
             </div>
 
-            <div class="grid grid-cols-1 relative mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full">
+            <div v-if="zipCodes.length > 0" class="lg:my-6 invisible">
+                .
+            </div>
+
+            <div
+                class="grid grid-cols-1 relative mb-16 sm:mb-0 sm:grid-cols-[40%_60%] sm:border sm:border-primary h-9 sm:rounded-full"
+            >
                 <div class="sm:bg-primary sm:w-full flex items-center text-primary sm:text-white ps-4 rounded-s-full">
                     <label
                         class="font-semibold sm:font-normal mb-3 sm:mb-0"
@@ -80,10 +96,26 @@
                 </transition>
                 <TagsInput
                     v-model="cities"
-                    class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
+                    class="h-9 bg-transparent border sm:border-none border-primary rounded-full"
                     @keyup.enter="addPreference"
                 >
-                    <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
+                    <TagsInputInput
+                        class="-mt-1 sm:w-24 2xl:w-auto"
+                        placeholder="Bruxelles"
+                        @input="isCityFocused = true"
+                        @blur="handleBlur"
+                        @keyup.enter="() => addPreference()"
+                    />
+                    <div class="md:hidden absolute right-0 top-14 transform -translate-y-1/2 z-10">
+                        <Button
+                            type="button"
+                            class="text-white bg-primary px-3 py-2 rounded-full text-sm shadow"
+                            @click="addPreference"
+                        >
+                            Ajouter
+                        </Button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-2 min-w-96">
                         <TagsInputItem
                             v-for="item in cities"
                             :key="item"
@@ -94,14 +126,11 @@
                             <TagsInputItemDelete @click="removeCity(item)" />
                         </TagsInputItem>
                     </div>
-                    <TagsInputInput
-                        class="-mt-1 sm:w-24 2xl:w-auto"
-                        placeholder="Bruxelles"
-                        @input="isCityFocused = true"
-                        @blur="handleBlur"
-                        @keyup.enter="() => addPreference()"
-                    />
                 </TagsInput>
+            </div>
+
+            <div v-if="cities.length > 0" class="lg:my-6 invisible">
+                .
             </div>
         </form>
     </div>
