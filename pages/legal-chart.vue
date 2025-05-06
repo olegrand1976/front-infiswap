@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="guest-with-title">
         <template #title>
-            <p class="container font-light text-3xl">
+            <p class="container font-bold md:font-light text-3xl">
                 Charte de Bonne Conduite
             </p>
         </template>
@@ -10,12 +10,12 @@
                 Le mail que vous venez de recevoir peut être dans vos <span class="font-semibold">spams</span>.
                 Si vous ne le trouvez pas, allez y jeter un coup d'œil.
             </div>
-            <div class="container text-center md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6">
+            <div class="container text-center w-full font-light mb-4 lg:mb-6">
                 InfiSwap est une plateforme fondée sur la confiance, la collaboration et le respect mutuel entre professionnels de santé.
                 En intégrant notre communauté, chaque infirmier s’engage à respecter des principes éthiques essentiels afin de garantir une relation de travail harmonieuse et professionnelle.
             </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
-                <ol class="space-y-4 list-decimal pl-6 mt-2">
+                <ol class="space-y-4 pl-3 list-decimal mt-2">
                     <li
                         v-for="(privacy, index) in privacyPolicy"
                         :key="index"
@@ -26,7 +26,7 @@
                     </li>
                 </ol>
 
-                <ul class="lg:col-span-2 flex flex-col space-y-4">
+                <ul class="md:col-span-2 flex flex-col space-y-4">
                     <li
                         v-for="(privacy, index) in privacyPolicy"
                         :id="String(index)"
