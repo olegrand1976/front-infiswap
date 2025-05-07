@@ -1,6 +1,10 @@
 <template>
     <div class="pt-3">
-        <h1 class="rounded bg-gray-100 text-primary text-center lg:text-start font-bold p-2 lg:p-4">
+        <Button @click="goBack">
+            Retour
+        </Button>
+
+        <h1 class="mt-4 rounded bg-gray-100 text-primary text-center lg:text-start font-bold p-2 lg:p-4">
             <span class="hidden lg:inline-block">Personnes intéressées par mon remplacement</span>
             <span class="lg:hidden">Intéressées</span>
         </h1>
@@ -129,6 +133,10 @@ const { changeStatus } = changeStatusReplacement();
 const route = useRoute();
 const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
+
+const goBack = () => {
+    window.history.back();
+};
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
 const updateStatus = async (id: number, status: string) => {
