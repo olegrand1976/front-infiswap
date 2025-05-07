@@ -234,7 +234,7 @@ const groupedDetails = computed(() => {
                 };
             }
 
-            grouped[detail.date].times.add(formatTime(detail.start_at));
+            grouped[detail.date].times.add(`${formatTime(detail.start_at)} - ${formatTime(detail.end_at)}`);
             replacement.value.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
             JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[detail.date].zipCodes.add(zipCode));
             JSON.parse(replacement.value.cities).forEach(city => grouped[detail.date].cities.add(city));
@@ -244,11 +244,11 @@ const groupedDetails = computed(() => {
         });
     }
     else if (replacement.value.timeSlot) {
-        const timeSlots = JSON.parse(replacement.value.timeSlot);
+        const timeSlot = JSON.parse(replacement.value.timeSlot);
         const date = formatDate(replacement.value.start_date);
         grouped[date] = {
             date: date,
-            times: new Set(Object.values(timeSlots).map(slot => JSON.parse(slot).startAt)),
+            times: new Set([`${formatTime(timeSlot.start_at)} - ${formatTime(timeSlot.end_at)}`]),
             patients: new Set(),
             careTypes: new Set(replacement.value.care_types.map(care => care.name)),
             zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
@@ -295,6 +295,7 @@ const formatDate = (isoString) => {
 };
 
 const formatTime = (time) => {
+    if (!time) return '';
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
 };
