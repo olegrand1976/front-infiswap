@@ -63,6 +63,7 @@
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="false"
+                                @keydown.enter.prevent
                             />
                         </div>
 
@@ -76,6 +77,7 @@
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="true"
+                                @keydown.enter.prevent
                             />
                         </div>
                     </div>
@@ -112,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-[30%_70%] items-center mt-4">
+                    <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
                         <h5>Type de soin</h5>
                         <Select
                             v-model="formData.careTypes"
