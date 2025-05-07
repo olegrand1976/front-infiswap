@@ -32,6 +32,19 @@
                     class="h-9 bg-transparent border sm:border-none border-primary rounded-full"
                 >
                     <div class="flex items-center gap-2">
+                        <div
+                            v-if="zipCodes.length > 0"
+                            class="flex flex-wrap gap-2 mt-2 min-w-96"
+                        >
+                            <TagsInputItem
+                                v-for="item in zipCodes"
+                                :key="item"
+                                :value="item"
+                            >
+                                <TagsInputItemText class="text-xs" />
+                                <TagsInputItemDelete @click="removeZipCode(item)" />
+                            </TagsInputItem>
+                        </div>
                         <TagsInputInput
                             class="-mt-1 sm:w-24 2xl:w-auto"
                             placeholder="8973"
@@ -48,19 +61,6 @@
                                 Ajouter
                             </Button>
                         </div>
-                    </div>
-                    <div
-                        v-if="zipCodes.length > 0"
-                        class="flex flex-wrap gap-2 mt-2 min-w-96"
-                    >
-                        <TagsInputItem
-                            v-for="item in zipCodes"
-                            :key="item"
-                            :value="item"
-                        >
-                            <TagsInputItemText class="text-xs" />
-                            <TagsInputItemDelete @click="removeZipCode(item)" />
-                        </TagsInputItem>
                     </div>
                 </TagsInput>
             </div>

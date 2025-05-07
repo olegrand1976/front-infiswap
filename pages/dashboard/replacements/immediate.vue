@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-[30%_70%] items-center mt-4">
+                    <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
                         <h5>Type de soin</h5>
                         <Select
                             v-model="formData.careTypes"

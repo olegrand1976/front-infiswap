@@ -17,10 +17,20 @@
             <Button
                 v-if="isMobile"
                 type="button"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white"
+                class="absolute right-1 top-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1.5 text-sm shadow-md transition-all"
                 @click="addItem"
             >
                 Ajouter
+            </Button>
+
+            <Button
+                v-else
+                variant="ghost"
+                class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
+                @click="addItem"
+                title="Ajouter"
+            >
+                <PlusIcon class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
             </Button>
         </div>
         <div
@@ -46,6 +56,7 @@
 </template>
 
 <script setup>
+import { PlusIcon } from '@heroicons/vue/24/outline';
 import { InputIcon } from '~/components/ui/input-with-icon';
 
 const props = defineProps({

@@ -294,8 +294,9 @@
                                         v-model="formData.zipCodesArray"
                                         :icon="InboxArrowDownIcon"
                                         label="Codes postaux *"
-                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                         :is-mobile="false"
+                                        @keydown.enter.prevent
                                     />
                                 </div>
 
@@ -304,8 +305,9 @@
                                         v-model="formData.citiesArray"
                                         :icon="BuildingOffice2Icon"
                                         label="Villes"
-                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="false"
+                                        @keydown.enter.prevent
                                     />
                                 </div>
                             </div>
@@ -315,7 +317,7 @@
                                         v-model="formData.zipCodesArray"
                                         :icon="InboxArrowDownIcon"
                                         label="Codes postaux *"
-                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Ajouter un autre code postal'"
+                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                         :is-mobile="true"
                                     />
                                 </div>
@@ -325,7 +327,7 @@
                                         v-model="formData.citiesArray"
                                         :icon="BuildingOffice2Icon"
                                         label="Villes"
-                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Ajouter une autre ville'"
+                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="true"
                                     />
                                 </div>
