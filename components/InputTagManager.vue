@@ -97,7 +97,7 @@ const handleKeyUp = (event) => {
         }
     }
     else {
-        const keys = props.onlyCommaValidation ? [','] : [' ', ','];
+        const keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
         if (keys.includes(event.key)) {
             event.preventDefault();
             addItem();

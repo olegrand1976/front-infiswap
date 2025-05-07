@@ -155,50 +155,30 @@ export const useReplacements = () => {
         success.value = false;
 
         try {
-            let response;
-
             await $apifetch('/api/replacements/immediate', {
                 method: 'POST',
                 body: JSON.stringify(formData),
-            }).then((res) => {
-                response = res;
-                $toast({
-                    description: 'Création d\'un remplacement rapide effectuée',
-                });
-            }).catch((error) => {
-                if (error.data && error.data.errors) {
-                    const backendErrors = error.data.errors;
-                    const errorMessages: string[] = [];
-
-                    Object.keys(backendErrors).forEach((field) => {
-                        backendErrors[field].forEach((message: string) => {
-                            errorMessages.push(message);
-                        });
-                    });
-
-                    if (errorMessages.length > 0) {
-                        $toast({
-                            description: errorMessages.join('/'),
-                            status: 'error',
-                            variant: 'destructive',
-                        });
-                    }
-                }
-                else {
-                    $toast({
-                        description: 'Une erreur est survenue. Veuillez réessayer.',
-                        status: 'error',
-                        variant: 'destructive',
-                    });
-                }
             });
 
-            if (response?.success) {
-                success.value = true;
-            }
+            success.value = true;
+            console.log('Tsy efako ', success.value);
+            return true;
         }
         catch (err) {
+            if (err.data && err.data.errors) {
+                const backendErrors = err.data.errors;
+                const firstField = Object.keys(backendErrors)[0];
+                const firstMessage = backendErrors[firstField][0];
+
+                $toast({
+                    description: firstMessage,
+                    status: 'error',
+                    variant: 'destructive',
+                });
+            }
+
             error.value = err;
+            throw err;
         }
         finally {
             loading.value = false;
