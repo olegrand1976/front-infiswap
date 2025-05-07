@@ -70,11 +70,11 @@
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
-                                        <a href="/dashboard/replacements">
+                                        <NuxtLink to="/dashboard/replacements">
                                             <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
                                                 Proposer
                                             </button>
-                                        </a>
+                                        </NuxtLink>
                                     </div>
                                 </div>
                             </div>
@@ -95,11 +95,11 @@
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
-                                        <a href="/dashboard/replacements/create">
+                                        <NuxtLink to="/dashboard/replacements/create">
                                             <button class="bg-success text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-success/90 transition">
                                                 Demander
                                             </button>
-                                        </a>
+                                        </NuxtLink>
                                     </div>
                                 </div>
                             </div>
