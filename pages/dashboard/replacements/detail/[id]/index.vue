@@ -77,7 +77,7 @@
 
         <section
             v-if="groupedDetails.length > 0"
-            class="mt-8 sm:mt-6 mb-8 h-auto grid grid-cols-1 md:grid-cols-2 gap-8"
+            class="mt-8 sm:mt-6 mb-8 h-auto flex flex-col items-center space-y-8"
         >
             <div
                 v-for="(group, index) in groupedDetails"
