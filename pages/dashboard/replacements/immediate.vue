@@ -60,7 +60,7 @@
                             <InputTagManager
                                 v-model="formData.zipCodes"
                                 placeholder="6565,4561,1237"
-                                class="w-[104%] pt-4"
+                                class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="false"
                             />
@@ -73,7 +73,7 @@
                             <InputTagManager
                                 v-model="formData.cities"
                                 placeholder="Anvers, Bruges, Gand"
-                                class="w-[104%] pt-4"
+                                class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="true"
                             />
@@ -91,6 +91,7 @@
                                     class="w-full pt-6"
                                     :is-mobile="false"
                                     :only-comma-validation="false"
+                                    @keydown.enter.prevent
                                 />
                             </div>
                         </div>
@@ -105,7 +106,8 @@
                                     placeholder="Anvers, Bruges, Gand"
                                     class="w-full pt-6"
                                     :is-mobile="false"
-                                    :only-comma-validation="true"
+                                    :only-comma-validation="false"
+                                    @keydown.enter.prevent
                                 />
                             </div>
                         </div>
@@ -214,21 +216,19 @@ const getSelectedCareTypesText = (selectedIds) => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        $toast({
-            description: 'Création du remplacement rapide effectuée',
-        });
-        sendUrgentReplacement(formData);
-        setTimeout(() => {
-            navigateTo('/dashboard/replacements/me');
-        }, 3000);
+        const result = await sendUrgentReplacement(formData);
+        if (result === true) {
+            $toast({
+                description: 'Création du remplacement rapide effectuée',
+            });
+
+            setTimeout(() => {
+                navigateTo('/dashboard/replacements/me');
+            }, 2000);
+        }
     }
     catch (err) {
-        console.error('Error:', err);
-        $toast({
-            description: 'Une erreur s\'est produite',
-            status: 'error',
-            variant: 'destructive',
-        });
+        console.error('Erreur soumise:', err);
     }
 });
 
