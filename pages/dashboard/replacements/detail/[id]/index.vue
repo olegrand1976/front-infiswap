@@ -1,6 +1,6 @@
 <template>
     <div class="pt-2">
-        <div class="flex flex-col space-y-0 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
+        <div class="flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div class="w-full lg:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
                 <Button
                     class="text-sm w-24 sm:w-auto"
@@ -77,13 +77,13 @@
 
         <section
             v-if="groupedDetails.length > 0"
-            class="mt-8 sm:mt-6 mb-8 h-auto flex flex-col items-center space-y-8"
+            class="mt-8 sm:mt-6 2xl:mt-12 mb-8 h-auto flex flex-col items-center space-y-8"
         >
             <div
                 v-for="(group, index) in groupedDetails"
                 :key="index"
             >
-                <div class="bg-gray-100 space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
+                <div class="bg-gray-100 sm:w-[28rem] lg:w-[32rem] 2xl:w-[40rem] space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
                     <div>
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
