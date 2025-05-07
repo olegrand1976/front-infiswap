@@ -161,7 +161,6 @@ export const useReplacements = () => {
             });
 
             success.value = true;
-            console.log('Tsy efako ', success.value);
             return true;
         }
         catch (err) {

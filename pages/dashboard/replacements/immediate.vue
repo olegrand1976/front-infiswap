@@ -217,7 +217,6 @@ const getSelectedCareTypesText = (selectedIds) => {
 const { submit, inProgress } = useSubmit(async () => {
     try {
         const result = await sendUrgentReplacement(formData);
-        console.log('Aonaaa ', result);
         if (result === true) {
             $toast({
                 description: 'Création du remplacement rapide effectuée',
