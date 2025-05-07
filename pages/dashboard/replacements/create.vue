@@ -12,73 +12,22 @@
                     />
                 </div>
 
-                <div class="mt-8 rounded-b-lg border border-gray-200">
-                    <h3 class="w-full text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                        Créneaux horaires
-                    </h3>
-                    <div class="p-3 sm:p-6 flex flex-col gap-4">
-                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
-                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
-                                Matin
-                            </p>
-                            <div class="col-span-4 sm:col-span-3 flex justify-between space-x-2 items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.morning.startAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="morning"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.morning.endAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="morning"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
-                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
-                                Après-midi
-                            </p>
-                            <div class="col-span-4 sm:col-span-3 flex space-x-2 justify-between items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.afternoon.startAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="afternoon"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.afternoon.endAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="afternoon"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-4 gap-y-2 lg:gap-y-0 items-center">
-                            <p class="col-span-4 sm:col-span-1 font-semibold sm:font-normal">
-                                Soir
-                            </p>
-                            <div class="col-span-4 sm:col-span-3 flex space-x-2 justify-between items-center">
-                                <InputTime
-                                    v-model="formData.timeSlot.evening.startAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="evening"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="formData.timeSlot.evening.endAt"
-                                    class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                    input-class="rounded-full"
-                                    time-range="evening"
-                                />
-                            </div>
-                        </div>
+                <div class="mt-8">
+                    <label class="text-primary font-semibold">
+                        Créneau horaire
+                    </label>
+                    <div class="mt-2 flex space-x-5 sm:space-x-8 items-center">
+                        <InputTime
+                            v-model="formData.timeSlot.startAt"
+                            class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                            input-class="rounded-full"
+                        />
+                        <p>à</p>
+                        <InputTime
+                            v-model="formData.timeSlot.endAt"
+                            class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                            input-class="rounded-full"
+                        />
                     </div>
                 </div>
             </div>
@@ -163,7 +112,7 @@
                     <Textarea
                         v-model="formData.comment"
                         placeholder="Écrivez un commentaire"
-                        rows="13"
+                        rows="8"
                         class="w-full border border-gray-400 focus-within:border-primary"
                     />
                 </div>
@@ -171,7 +120,7 @@
         </section>
 
         <Button
-            class="flex items-center justify-center mx-auto mt-12 2xl:mt-24 w-72"
+            class="flex items-center justify-center mx-auto mt-16 mb-8 2xl:mt-24 w-72"
             type="submit"
             :in-progress="inProgress"
         >
@@ -191,7 +140,7 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 
 const start = today(getLocalTimeZone());
-const end = today(getLocalTimeZone());
+const end = null;
 
 const value = ref({
     start,
@@ -200,24 +149,14 @@ const value = ref({
 
 const formData = reactive({
     startDate: `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`,
-    endDate: `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`,
+    endDate: ``,
     patientCount: null,
     zipCodes: [],
     cities: [],
     careTypes: [],
     timeSlot: {
-        morning: {
-            startAt: '',
-            endAt: '',
-        },
-        afternoon: {
-            startAt: '',
-            endAt: '',
-        },
-        evening: {
-            startAt: '',
-            endAt: '',
-        },
+        startAt: '',
+        endAt: '',
     },
     comment: '',
     zipCodesInput: '',
@@ -259,11 +198,8 @@ const resetForm = () => {
     formData.zipCodes = [];
     formData.cities = [];
     formData.careTypes = [];
-    formData.timeSlot = {
-        morning: { startAt: '', endAt: '' },
-        afternoon: { startAt: '', endAt: '' },
-        evening: { startAt: '', endAt: '' },
-    };
+    formData.timeSlot.startAt = '';
+    formData.timeSlot.endAt = '';
     formData.comment = '';
     formData.zipCodesInput = '';
     formData.citiesInput = '';

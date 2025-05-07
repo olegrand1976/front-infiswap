@@ -110,3 +110,48 @@ export function getRole(role: AccountType) {
 
     return activeRole.value;
 }
+
+export function getPeriodsFromTimeSlot(startAt, endAt = null) {
+    if (!startAt) return [];
+
+    const toMinutes = (time) => {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
+    const startMinutes = toMinutes(startAt);
+    const endMinutes = endAt ? toMinutes(endAt) : startMinutes + 60;
+
+    const periods = new Set();
+
+    const morningStart = 0;
+    const morningEnd = 12 * 60 + 59;
+    const afternoonStart = 13 * 60;
+    const afternoonEnd = 17 * 60 + 59;
+    const eveningStart = 18 * 60;
+    const eveningEnd = 23 * 60 + 59;
+
+    if (
+        (startMinutes <= morningEnd && endMinutes >= morningStart)
+        || (startMinutes >= morningStart && startMinutes <= morningEnd)
+        || (endMinutes >= morningStart && endMinutes <= morningEnd)
+    ) {
+        periods.add('morning');
+    }
+    if (
+        (startMinutes <= afternoonEnd && endMinutes >= afternoonStart)
+        || (startMinutes >= afternoonStart && startMinutes <= afternoonEnd)
+        || (endMinutes >= afternoonStart && endMinutes <= afternoonEnd)
+    ) {
+        periods.add('afternoon');
+    }
+    if (
+        (startMinutes <= eveningEnd && endMinutes >= eveningStart)
+        || (startMinutes >= eveningStart && startMinutes <= eveningEnd)
+        || (endMinutes >= eveningStart && endMinutes <= eveningEnd)
+    ) {
+        periods.add('evening');
+    }
+
+    return Array.from(periods);
+}
