@@ -319,6 +319,7 @@
                                         label="Codes postaux *"
                                         :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                         :is-mobile="true"
+                                        @keydown.enter.prevent
                                     />
                                 </div>
 
@@ -329,6 +330,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="true"
+                                        @keydown.enter.prevent
                                     />
                                 </div>
                             </div>

@@ -63,6 +63,7 @@
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="false"
+                                @keydown.enter.prevent
                             />
                         </div>
 
@@ -76,6 +77,7 @@
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="true"
+                                @keydown.enter.prevent
                             />
                         </div>
                     </div>
