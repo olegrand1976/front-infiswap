@@ -50,7 +50,10 @@
                             >
                                 Je suis intéressé
                             </button>
-                            <span v-else class="text-sm text-gray-500">
+                            <span
+                                v-else
+                                class="text-sm text-gray-500"
+                            >
                                 Intérêt confirmé
                             </span>
                         </td>
