@@ -27,8 +27,8 @@
                 v-else
                 variant="ghost"
                 class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
-                @click="addItem"
                 title="Ajouter"
+                @click="addItem"
             >
                 <PlusIcon class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
             </Button>

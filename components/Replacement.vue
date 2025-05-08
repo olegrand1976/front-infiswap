@@ -570,7 +570,7 @@ import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
-import { selectDays } from '~/lib/utils';
+import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
 
@@ -600,7 +600,6 @@ onMounted(async () => {
 
 const user = useState('user');
 const settings = JSON.parse(user.value.settings);
-
 const postalCodeInput = ref('');
 const cityInput = ref('');
 
@@ -612,33 +611,43 @@ const formatDate = (isoString) => {
     return `${day}/${month}/${year}`;
 };
 
-const getShift = (startAt) => {
-    if (!startAt) return null;
-
-    const [hours] = startAt.split(':').map(Number);
-
-    if (hours >= 0 && hours < 12) {
-        return 'morning';
-    }
-    if (hours >= 12 && hours < 18) {
-        return 'afternoon';
-    }
-    return 'evening';
+const normalizeTime = (time) => {
+    if (!time) return null;
+    return time.split(':').slice(0, 2).join(':');
 };
 
 const hasShift = (replacement, period) => {
-    if (replacement.details && replacement.details.length > 0) {
-        return replacement.details.some(detail => getShift(detail.start_at) === period);
+    const periods = new Set();
+
+    const timeSlotRaw = replacement.time_slot || replacement.timeSlot;
+    if (timeSlotRaw) {
+        const timeSlot = typeof timeSlotRaw === 'string' ? JSON.parse(timeSlotRaw) : timeSlotRaw;
+        if (timeSlot.start_at) {
+            const startAt = normalizeTime(timeSlot.start_at);
+            const endAt = normalizeTime(timeSlot.end_at);
+
+            const timeSlotPeriods = getPeriodsFromTimeSlot(startAt, endAt);
+            timeSlotPeriods.forEach(p => periods.add(p));
+        }
     }
-    else if (replacement.timeSlot) {
-        const timeSlots = JSON.parse(replacement.timeSlot);
-        return Object.keys(timeSlots).includes(period);
+
+    if (replacement.details && Array.isArray(replacement.details)) {
+        replacement.details.forEach((detail) => {
+            if (detail.start_at) {
+                const startAt = normalizeTime(detail.start_at);
+                const endAt = normalizeTime(detail.end_at);
+
+                const detailPeriods = getPeriodsFromTimeSlot(startAt, endAt);
+                detailPeriods.forEach(p => periods.add(p));
+            }
+        });
     }
-    return false;
+
+    return periods.has(period);
 };
 
 const isUrgentReplacement = (replacement) => {
-    return !replacement.timeSlot;
+    return !replacement.time_slot && replacement.details.length != 0;
 };
 
 const isReplacementActive = (replacement) => {
@@ -662,8 +671,7 @@ const isReplacementActive = (replacement) => {
 
 const filteredReplacements = computed(() => {
     return currentReplacements.value.filter(
-        replacement =>
-            replacement.status === 'open'
+        replacement => replacement.status === 'open'
             && isReplacementActive(replacement)
             && (props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement)),
     );
@@ -707,13 +715,14 @@ const sortReplacements = (replacements) => {
         if (aIsUrgent && !bIsUrgent) return -1;
         if (!aIsUrgent && bIsUrgent) return 1;
 
-        const aMatches = a.details.some(detail =>
-            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+        const aMatches = a.details.some(
+            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
         );
-        const bMatches = b.details.some(detail =>
-            formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-            || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
+
+        const bMatches = b.details.some(
+            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
+                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
         );
 
         if (aMatches && !bMatches) return -1;
@@ -721,6 +730,7 @@ const sortReplacements = (replacements) => {
 
         const dateA = new Date(a.start_date).getTime() || 0;
         const dateB = new Date(b.start_date).getTime() || 0;
+
         return dateB - dateA;
     });
 };
@@ -752,8 +762,10 @@ const getUniqueValues = (details, extractor, transformer = x => x) => {
 
 const hasMatchingCityFromUnique = (city) => {
     if (!isSubmitted.value) return false;
+
     const normalizedCity = city.toLowerCase().trim();
-    return formData.cityTags.some(tag => tag.toLowerCase() === normalizedCity) || formData.cityTags.some(tag => tag.toLowerCase().includes(normalizedCity));
+    return formData.cityTags.some(tag => tag.toLowerCase() === normalizedCity)
+        || formData.cityTags.some(tag => tag.toLowerCase().includes(normalizedCity));
 };
 
 const addTag = (inputRef, tagArrayRef, transformFn = val => val) => {
@@ -785,7 +797,9 @@ const handleBlur = (event) => {
 const submit = async () => {
     isSubmitted.value = true;
 
-    const hasSearchCriteria = formData.selectedDays.length > 0 || formData.postalCodeTags.length > 0 || formData.cityTags.length > 0;
+    const hasSearchCriteria = formData.selectedDays.length > 0
+        || formData.postalCodeTags.length > 0
+        || formData.cityTags.length > 0;
 
     if (hasSearchCriteria) {
         const response = await fetchReplacements({
@@ -794,6 +808,7 @@ const submit = async () => {
             cities: toRaw(formData.cityTags),
             type: toRaw(formData.type),
         });
+
         currentReplacements.value = sortReplacements(response.replacements.data);
     }
     else {
@@ -810,9 +825,11 @@ const reinitializeFilter = () => {
 watch(() => formData.postalCodeTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
+
 watch(() => formData.cityTags, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
+
 watch(() => formData.selectedDays, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
@@ -843,7 +860,6 @@ const closeReplacementDialog = ref(false);
 
 const handleCloseReplacement = async (replacement) => {
     replacement.status = 'closed';
-
     const response = await updateReplacement(replacement);
 
     if (response) {
@@ -863,13 +879,13 @@ definePageMeta({
 });
 </script>
 
-<style>
-.no-scrollbar {
+  <style>
+  .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
+  }
 
-.no-scrollbar::-webkit-scrollbar {
+  .no-scrollbar::-webkit-scrollbar {
     display: none;
-}
-</style>
+  }
+  </style>
