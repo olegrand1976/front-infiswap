@@ -14,13 +14,16 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Heures concernées
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                             Date
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Code Postal
+                            Heures concernées
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                            Codes postaux
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                            Villes
                         </th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
                             Action
@@ -34,25 +37,36 @@
                         class="border-t border-gray-200 hover:bg-gray-50"
                     >
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                            {{ replacement.start_time }} - {{ replacement.end_time }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                             {{ formatDate(replacement.start_date) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                            {{ replacement.nurse_zip_code || 'N/A' }}
+                            {{ replacement.start_time }} à {{ replacement.end_time }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            {{ replacement.zip_codes }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            {{ replacement.cities }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                            <button
-                                v-if="!interestedReplacements.includes(replacement.id)"
-                                class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
-                                @click="handleInterest(replacement.id, user.nurse.id)"
-                            >
-                                Je suis intéressé
-                            </button>
-                            <span v-else class="text-sm text-gray-500">
-                                Intérêt confirmé
-                            </span>
+                            <template v-if="replacement.is_grayed">
+                                <span class="text-sm text-gray-400 italic">
+                                    Demande en cours
+                                </span>
+                            </template>
+                            <template v-else-if="interestedReplacements.includes(replacement.id)">
+                                <span class="text-sm text-gray-500">
+                                    Intérêt confirmé
+                                </span>
+                            </template>
+                            <template v-else>
+                                <button
+                                    class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
+                                    @click="handleInterest(replacement.id, user.nurse.id)"
+                                >
+                                    Je suis intéressé
+                                </button>
+                            </template>
                         </td>
                     </tr>
                 </tbody>
