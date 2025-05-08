@@ -93,7 +93,7 @@ const formatDate = (dateStr) => {
 
 const currentPage = ref(1);
 
-const perPage = 5;
+const perPage = 10;
 
 const paginatedReplacements = computed(() => {
     const start = (currentPage.value - 1) * perPage;
