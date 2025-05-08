@@ -77,6 +77,7 @@
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :only-comma-validation="true"
+                                :no-space-validation="true"
                                 @keydown.enter.prevent
                             />
                         </div>
@@ -109,6 +110,7 @@
                                     class="w-full pt-6"
                                     :is-mobile="false"
                                     :only-comma-validation="false"
+                                    :no-space-validation="true"
                                     @keydown.enter.prevent
                                 />
                             </div>

@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1"
-        :data-hint="isMobile ? 'Cliquer sur Ajouter pour valider' : onlyCommaValidation ? 'Appuyer sur Virgule pour valider' : 'Appuyer sur Espace ou Virgule pour valider'"
+        :data-hint="isMobile ? 'Cliquer sur Ajouter pour valider' : onlyCommaValidation ? 'Appuyer sur Virgule pour valider' : 'Appuyer sur Entrée ou Virgule pour valider'"
     >
         <label class="text-primary font-semibold">{{ label }}</label>
         <div class="relative flex-1 gap-x-4">
@@ -72,6 +72,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    noSpaceValidation: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -108,7 +112,14 @@ const handleKeyUp = (event) => {
         }
     }
     else {
-        const keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+        let keys = [];
+        if (props.noSpaceValidation) {
+            keys = [',', 'Enter'];
+        }
+        else {
+            keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+        }
+
         if (keys.includes(event.key)) {
             event.preventDefault();
             addItem();
