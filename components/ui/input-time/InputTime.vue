@@ -1,4 +1,6 @@
 <script setup>
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+
 const props = defineProps({
     modelValue: {
         type: String,
@@ -84,6 +86,7 @@ watch(() => props.modelValue, (newValue) => {
 const selectHour = (hour) => {
     selectedHour.value = hour;
     updateValue();
+    showPicker.value = false; // Close picker after selecting hour
 };
 
 const selectMinute = (minute) => {
@@ -109,6 +112,10 @@ const handleManualInput = (event) => {
     }
 };
 
+const handleClockClick = () => {
+    showPicker.value = true; // Show full picker on clock click
+};
+
 onMounted(() => {
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.time-picker-container')) {
@@ -126,7 +133,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="relative min-w-36"
+        class="relative min-w-36 time-picker-container"
         :class="containerClass"
         @click.stop
     >
@@ -139,17 +146,15 @@ onUnmounted(() => {
                 :value="displayValue"
                 placeholder="HH:mm"
                 pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
-                class="w-full px-3 py-2 pr-10 text-sm border-2 border-gray-300  focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                class="w-full px-3 py-2 pr-10 text-sm border-2 border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 :class="inputClass"
                 @input="handleManualInput"
-                @focus="showPicker = true"
-                @click="showPicker = true"
             >
             <button
                 type="button"
                 class="absolute right-2 text-gray-600 hover:text-gray-800 cursor-pointer"
                 :class="iconButtonClass"
-                @click="showPicker = true"
+                @click="handleClockClick"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +179,7 @@ onUnmounted(() => {
         <Transition name="fade">
             <div
                 v-if="showPicker"
-                class="absolute top-full left-0 mt-1 flex bg-white border border-gray-200  shadow-lg z-50"
+                class="absolute top-full left-0 mt-1 flex bg-white border border-gray-200 shadow-lg z-50"
                 :class="dropdownClass"
             >
                 <div
@@ -219,8 +224,8 @@ onUnmounted(() => {
 </template>
 
 <style>
-    .fade-enter-active,
-    .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
     transition: opacity 0.2s ease;
 }
 
