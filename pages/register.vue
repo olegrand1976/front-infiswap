@@ -307,6 +307,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="false"
+                                        :no-space-validation="true"
                                         @keydown.enter.prevent
                                     />
                                 </div>
@@ -330,6 +331,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="true"
+                                        :no-space-validation="true"
                                         @keydown.enter.prevent
                                     />
                                 </div>
