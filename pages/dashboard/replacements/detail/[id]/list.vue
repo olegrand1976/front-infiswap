@@ -101,14 +101,31 @@
                             >
                                 <CheckCircleIcon class="size-7" /> <span>Accepté</span>
                             </div>
-                            <Button
-                                v-else
-                                class="w-1/2 block mx-auto"
-                                :class="{ 'opacity-50 cursor-not-allowed': loading }"
-                                @click="updateStatus(list.id, 'confirmed')"
+                            <div
+                                v-else-if="list.status==='canceled'"
+                                class="flex mx-auto gap-2 w-1/2 text-primary items-center font-bold"
                             >
-                                Accepter
-                            </Button>
+                                <XMarkIcon class="size-7" /> <span>Refusé</span>
+                            </div>
+                            <div
+                                v-else
+                                class="flex justify-center gap-4 w-full mt-2"
+                            >
+                                <Button
+                                    class="w-1/2"
+                                    :class="{ 'opacity-50 cursor-not-allowed': loading }"
+                                    @click="updateStatus(list.id, 'confirmed')"
+                                >
+                                    Accepter
+                                </Button>
+                                <Button
+                                    class="w-1/2"
+                                    :class="{ 'opacity-50 cursor-not-allowed': loading }"
+                                    @click="updateStatus(list.id, 'canceled')"
+                                >
+                                    Refuser
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +141,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
 
