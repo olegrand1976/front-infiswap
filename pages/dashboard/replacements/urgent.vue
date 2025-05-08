@@ -2,9 +2,9 @@
     <div class="space-y-6">
         <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
             <h1 class="text-primary">
-                Liste des remplacements immédiates
+                Liste des remplacements urgentes
                 <strong>
-                    du moment
+                    pour aujourd'hui
                 </strong>
             </h1>
         </div>
@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="replacement in replacements"
+                        v-for="replacement in paginatedReplacements"
                         :key="replacement.id"
                         class="border-t border-gray-200 hover:bg-gray-50"
                     >
@@ -44,25 +44,42 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <button
+                                v-if="!interestedReplacements.includes(replacement.id)"
                                 class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
                                 @click="handleInterest(replacement.id, user.nurse.id)"
                             >
                                 Je suis intéressé
                             </button>
+                            <span v-else class="text-sm text-gray-500">
+                                Intérêt confirmé
+                            </span>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div class="flex justify-center mt-10">
+                <Pagination
+                    :key="currentPage"
+                    :total="totalPages"
+                    :default-page="currentPage"
+                    :prev-next-class="'w-8 h-8 text-sm hover:bg-primary'"
+                    :item-class="'w-8 h-8 text-sm'"
+                    @page-change="onPageChange"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useNearbyReplacements } from '~/composables/useReplacements';
+import Pagination from '@/components/layouts/Pagination.vue';
 
 const user = useUser();
 const { $apifetch, $toast } = useNuxtApp();
 const { replacements, fetchNearbyreplacements } = useNearbyReplacements();
+
+const interestedReplacements = ref<number[]>([]);
 
 await fetchNearbyreplacements();
 
@@ -74,11 +91,30 @@ const formatDate = (dateStr) => {
     return `${day}-${month}-${year}`;
 };
 
+const currentPage = ref(1);
+
+const perPage = 10;
+
+const paginatedReplacements = computed(() => {
+    const start = (currentPage.value - 1) * perPage;
+    const end = start + perPage;
+    return replacements.value.slice(start, end);
+});
+
+const totalPages = computed(() => {
+    return Math.ceil(replacements.value.length / perPage);
+});
+
+function onPageChange(page: number) {
+    currentPage.value = page;
+}
+
 const handleInterest = async (replacementId, nurseId) => {
     try {
         await $apifetch(`/api/replacements/interest/${replacementId}/${nurseId}`, {
             method: 'GET',
         });
+        interestedReplacements.value.push(replacementId);
         $toast({
             title: 'Succès',
             description: 'Intérêt marqué avec succès !',
