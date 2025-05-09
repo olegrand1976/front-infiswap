@@ -83,8 +83,8 @@
                         </div>
                     </div>
                     <div class="hidden lg:grid lg:grid-cols-2 lg:gap-4">
-                        <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-6">
+                        <div class="flex items-start gap-2 h-full">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10">
                                 Codes postaux *
                             </h5>
                             <div class="w-3/4">
@@ -99,8 +99,8 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap w-1/4 pt-6">
+                        <div class="flex items-start gap-2 h-full ml-4">
+                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10">
                                 Villes *
                             </h5>
                             <div class="w-3/4">
@@ -116,6 +116,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
                         <h5>Type de soin</h5>
                         <Select
