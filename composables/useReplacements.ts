@@ -334,23 +334,41 @@ export const useNearbyReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
     const replacements = useState('replacements', () => []);
+    const pagination = useState('replacementsPagination', () => ({
+        current_page: 1,
+        per_page: 10,
+        total: 0,
+        last_page: 1,
+    }));
     const error = useState('replacementsError', () => null);
 
-    async function fetchNearbyreplacements() {
+    async function fetchNearbyreplacements(page = 1, perPage = 10) {
         try {
             const response = await $apifetch('/api/replacements/open', {
                 method: 'GET',
+                query: {
+                    page,
+                    perPage,
+                },
             });
 
-            replacements.value = response;
+            replacements.value = response.data;
+            pagination.value = {
+                current_page: response.current_page,
+                per_page: response.per_page,
+                total: response.total,
+                last_page: response.last_page,
+            };
         }
         catch (err) {
-            error.value = err?.data?.message || 'Erreur lors de la récupération des patients';
+            error.value = err?.data?.message || 'Erreur lors de la récupération des remplacements';
         }
     }
 
     return {
         replacements,
+        pagination,
         fetchNearbyreplacements,
+        error,
     };
 };

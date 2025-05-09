@@ -32,7 +32,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="replacement in paginatedReplacements"
+                        v-for="replacement in replacements"
                         :key="replacement.id"
                         class="border-t border-gray-200 hover:bg-gray-50"
                     >
@@ -71,14 +71,12 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="flex justify-center mt-10">
-                <Pagination
-                    :key="currentPage"
-                    :total="totalPages"
-                    :default-page="currentPage"
-                    :prev-next-class="'w-8 h-8 text-sm hover:bg-primary'"
-                    :item-class="'w-8 h-8 text-sm'"
-                    @page-change="onPageChange"
+            <div class="flex justify-center mt-4">
+                <CustomPagination
+                    :default-page="pagination.current_page"
+                    :total="pagination.total"
+                    @update:page="currentPage = $event"
+                    @update:perPage="perPage = $event"
                 />
             </div>
         </div>
@@ -87,15 +85,21 @@
 
 <script setup lang="ts">
 import { useNearbyReplacements } from '~/composables/useReplacements';
-import Pagination from '@/components/layouts/Pagination.vue';
 
 const user = useUser();
 const { $apifetch, $toast } = useNuxtApp();
-const { replacements, fetchNearbyreplacements } = useNearbyReplacements();
+const { replacements, fetchNearbyreplacements, pagination } = useNearbyReplacements();
 
 const interestedReplacements = ref<number[]>([]);
 
-await fetchNearbyreplacements();
+const currentPage = ref(pagination.value.current_page);
+const perPage = ref(pagination.value.per_page);
+
+watch([currentPage, perPage], async ([newPage, newPerPage]) => {
+    await fetchNearbyreplacements(newPage, newPerPage);
+});
+
+await fetchNearbyreplacements(currentPage.value, perPage.value);
 
 const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -104,24 +108,6 @@ const formatDate = (dateStr) => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
 };
-
-const currentPage = ref(1);
-
-const perPage = 10;
-
-const paginatedReplacements = computed(() => {
-    const start = (currentPage.value - 1) * perPage;
-    const end = start + perPage;
-    return replacements.value.slice(start, end);
-});
-
-const totalPages = computed(() => {
-    return Math.ceil(replacements.value.length / perPage);
-});
-
-function onPageChange(page: number) {
-    currentPage.value = page;
-}
 
 const handleInterest = async (replacementId, nurseId) => {
     try {
