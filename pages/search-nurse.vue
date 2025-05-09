@@ -139,7 +139,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <HeartIcon class="w-6 text-primary sm:text-white" />
+                                        <FaceSmileIcon class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Catégorie</span>
                                     </div>
                                 </div>
@@ -249,6 +249,7 @@ import {
     HeartIcon,
     EnvelopeIcon,
     IdentificationIcon,
+    FaceSmileIcon,
 } from '@heroicons/vue/24/solid';
 import { searchNurse } from '~/composables/usePatients';
 
