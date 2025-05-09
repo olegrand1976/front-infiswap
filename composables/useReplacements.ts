@@ -344,13 +344,14 @@ export const useNearbyReplacements = () => {
     }));
     const error = useState('replacementsError', () => null);
 
-    async function fetchNearbyreplacements(page = 1, perPage = perPage.value) {
+    async function fetchNearbyreplacements(page = 1, customPerPage) {
+        const pageSize = customPerPage ?? perPage.value;
         try {
             const response = await $apifetch('/api/replacements/open', {
                 method: 'GET',
                 query: {
                     page,
-                    perPage,
+                    perPage: pageSize,
                 },
             });
 
