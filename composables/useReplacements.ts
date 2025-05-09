@@ -1,6 +1,7 @@
 import { useRouter } from 'vue-router';
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, Replacement } from '~/lib/types';
+import { PERPAGE } from '~/lib/constants';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
@@ -334,15 +335,16 @@ export const useNearbyReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
     const replacements = useState('replacements', () => []);
+    const perPage = ref(PERPAGE);
     const pagination = useState('replacementsPagination', () => ({
         current_page: 1,
-        per_page: 10,
+        per_page: perPage.value,
         total: 0,
         last_page: 1,
     }));
     const error = useState('replacementsError', () => null);
 
-    async function fetchNearbyreplacements(page = 1, perPage = 10) {
+    async function fetchNearbyreplacements(page = 1, perPage = perPage.value) {
         try {
             const response = await $apifetch('/api/replacements/open', {
                 method: 'GET',
