@@ -76,7 +76,7 @@
                     :default-page="pagination.current_page"
                     :total="pagination.total"
                     @update:page="currentPage = $event"
-                    @update:perPage="perPage = $event"
+                    @update:per-page="perPage = $event"
                 />
             </div>
         </div>
