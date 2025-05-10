@@ -4,7 +4,7 @@
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow">
                     <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                        Sélectionnez la rangée de date ici
+                        Sélectionner la période de remplacement
                     </h2>
                     <RangeCalendar
                         v-model="value"
