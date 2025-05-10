@@ -31,13 +31,12 @@ export function useSubmit<T>(
             succeeded.value = false;
             options?.onError?.(e);
             validationErrors.value = e.data?.errors ?? {};
-            if (e.data.message) {
-                const firstError = e.data.message ?? 'Une erreur est survenue';
-                $toast({
-                    title: firstError,
-                    variant: 'destructive',
-                });
-            }
+            const firstError = e.data?.message || 'Une erreur est survenue';
+
+            $toast({
+                title: firstError,
+                variant: 'destructive',
+            });
         }
         finally {
             inProgress.value = false;
