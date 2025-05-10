@@ -49,6 +49,7 @@
                     placeholder="6565,4561,1237"
                     :is-mobile="isMobileView"
                     :count="4"
+                    @keydown.enter.prevent
                 />
 
                 <InputTagManager
@@ -58,6 +59,7 @@
                     :is-mobile="isMobileView"
                     class="mt-4"
                     :no-space-validation="true"
+                    @keydown.enter.prevent
                 />
 
                 <div class="flex flex-col space-y-2">
