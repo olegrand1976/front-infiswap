@@ -156,8 +156,11 @@
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
             class="my-12"
         >
-            <Form @submit="submit">
-                <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
+            <Form
+                v-if="replacement?.candidate == false"
+                @submit="submit"
+            >
+                <div class="flex justify-center items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
                         <Button
                             type="submit"
@@ -172,17 +175,14 @@
                             </span>
                         </Button>
                     </div>
-
-                    <div class="flex space-x-8 mr-4">
-                        <Button class="rounded-full p-1 w-8 h-8">
-                            <ChevronLeftIcon class="w-8 h-8 text-white" />
-                        </Button>
-                        <Button class="rounded-full p-1 w-8 h-8">
-                            <ChevronRightIcon class="w-8 h-8 text-white" />
-                        </Button>
-                    </div>
                 </div>
             </Form>
+            <div
+                v-else
+                class="flex justify-center items-center gap-2 text-success"
+            >
+                <CheckCircleIcon class="size-6" /> <span>Réponse envoyée</span>
+            </div>
         </div>
     </div>
 </template>
@@ -192,8 +192,7 @@ import {
     CalendarDaysIcon,
     ClockIcon,
     HomeIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
+    CheckCircleIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
@@ -219,7 +218,7 @@ const goBack = () => {
         window.history.back();
     }
     else {
-        navigateTo('/dashboard');
+        navigateTo('/dashboard/replacements');
     }
 };
 
@@ -288,6 +287,11 @@ const {
 } = useSubmit(
     async () => {
         await sendResponse().submitResponse(formData);
+    },
+    {
+        onSuccess: () => {
+            replacement.value.candidate = true;
+        },
     },
 );
 
