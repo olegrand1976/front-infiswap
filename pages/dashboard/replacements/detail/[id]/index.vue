@@ -215,7 +215,12 @@ const formData = reactive({
 });
 
 const goBack = () => {
-    window.history.back();
+    if (window.history.length > 1) {
+        window.history.back();
+    }
+    else {
+        navigateTo('/dashboard');
+    }
 };
 
 const groupedDetails = computed(() => {
