@@ -35,7 +35,7 @@
             <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
-                        Nombre de patients
+                        Nombre de patients par jour
                     </label>
                     <InputIcon
                         v-model="formData.patientCount"
