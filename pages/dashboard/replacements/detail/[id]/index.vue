@@ -202,7 +202,7 @@ import { getFullName } from '~/lib/utils';
 const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
-const respondedBy = computed(() => user.value?.id || null);
+const respondedBy = computed(() => user.value?.nurse_id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
