@@ -131,6 +131,7 @@
 
 <script lang="ts" setup>
 import { getLocalTimeZone, today } from '@internationalized/date';
+import type { DateRange } from 'reka-ui';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
