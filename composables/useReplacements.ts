@@ -306,17 +306,23 @@ export const sendResponse = () => {
     };
 };
 
-export const useListResponse = (replacementId) => {
+export const useListResponse = (id) => {
     const { $apifetch } = useNuxtApp();
 
     const listResponse = useState('listResponse', () => []);
     const loading = useState('loading', () => false);
+
     async function fetchListResponse() {
-        const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
+        const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET' });
         listResponse.value = response.responses;
     }
 
-    return { loading, listResponse, fetchListResponse };
+    async function getReplacementResponses() {
+        const response = await $apifetch(`api/replacement-responses/nurse/${id}`, { method: 'GET' });
+        listResponse.value = response.data;
+    }
+
+    return { loading, listResponse, fetchListResponse, getReplacementResponses };
 };
 
 export const changeStatusReplacement = () => {
