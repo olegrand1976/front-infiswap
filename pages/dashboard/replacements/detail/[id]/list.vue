@@ -156,6 +156,7 @@ const goBack = () => {
 };
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
+
 const updateStatus = async (id: number, status: string) => {
     try {
         await changeStatus(id, status);
