@@ -1,11 +1,11 @@
 <template>
     <div class="space-y-6">
         <div class="bg-gray-100 flex items-center px-6 rounded-lg w-full h-12">
-            <img
-                src="/public/images/home/help_me.png"
+            <LayoutsAppImage
+                src="/home/help_me.png"
                 class="h-10 w-10 object-contain mr-3"
                 alt="Aide"
-            >
+            />
             <h1 class="text-primary text-sm font-medium">
                 Remplacement immédiat
                 <strong class="font-semibold">
@@ -175,6 +175,7 @@
 <script setup lang="ts">
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
+import { LayoutsAppImage } from '#components';
 
 useHead({
     title: 'Remplacement rapide',
