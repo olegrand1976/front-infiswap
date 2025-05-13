@@ -21,58 +21,10 @@ export const useReplacements = () => {
         error.value = null;
         success.value = false;
 
-        try {
-            let response;
-
-            await $apifetch('/api/replacements', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-            }).then(() => {
-                $toast({
-                    description: 'Création effectuée',
-                });
-
-                setTimeout(() => {
-                    router.push('me');
-                }, 3000);
-            }).catch((error) => {
-                if (error.data && error.data.errors) {
-                    const backendErrors = error.data.errors;
-                    const errorMessages: string[] = [];
-
-                    Object.keys(backendErrors).forEach((field) => {
-                        backendErrors[field].forEach((message: string) => {
-                            errorMessages.push(message);
-                        });
-                    });
-
-                    if (errorMessages.length > 0) {
-                        $toast({
-                            description: errorMessages.join('/'),
-                            status: 'error',
-                            variant: 'destructive',
-                        });
-                    }
-                }
-                else {
-                    $toast({
-                        description: 'Une erreur est survenue. Veuillez réessayer.',
-                        status: 'error',
-                        variant: 'destructive',
-                    });
-                }
-            });
-
-            if (response?.success) {
-                success.value = true;
-            }
-        }
-        catch (err) {
-            error.value = err;
-        }
-        finally {
-            loading.value = false;
-        }
+        return await $apifetch('/api/replacements', {
+            method: 'POST',
+            body: JSON.stringify(formData),
+        });
     };
 
     const getReplacements = async () => {
@@ -307,17 +259,23 @@ export const sendResponse = () => {
     };
 };
 
-export const useListResponse = (replacementId) => {
+export const useListResponse = (id) => {
     const { $apifetch } = useNuxtApp();
 
     const listResponse = useState('listResponse', () => []);
     const loading = useState('loading', () => false);
+
     async function fetchListResponse() {
-        const response = await $apifetch(`api/replacement-responses/${replacementId}`, { method: 'GET' });
+        const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET' });
         listResponse.value = response.responses;
     }
 
-    return { loading, listResponse, fetchListResponse };
+    async function getReplacementResponses() {
+        const response = await $apifetch(`api/replacement-responses/nurse/${id}`, { method: 'GET' });
+        listResponse.value = response.data;
+    }
+
+    return { loading, listResponse, fetchListResponse, getReplacementResponses };
 };
 
 export const changeStatusReplacement = () => {

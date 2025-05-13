@@ -135,23 +135,20 @@
 import { useRoute } from 'vue-router';
 import {
     SquaresPlusIcon,
-    MapIcon,
     ArrowPathIcon,
     UserGroupIcon,
     ChevronRightIcon,
     ListBulletIcon,
-    DocumentPlusIcon, DocumentMagnifyingGlassIcon,
-    UserPlusIcon,
-    ClipboardDocumentListIcon,
     PowerIcon,
-    HeartIcon,
+    DocumentMagnifyingGlassIcon,
+    UsersIcon,
     Cog8ToothIcon,
+    HeartIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
-// import { isFuture, formatToDMY } from '~/composables/useDate';
 
 defineProps({
     collapsed: Boolean,
@@ -187,23 +184,21 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Proposer un remplacement',
         route: '/dashboard/replacements/create',
         icon: ArrowPathIcon,
-        children: [
-            {
-                label: 'Me faire remplacer',
-                route: '/dashboard/replacements/create',
-                icon: DocumentPlusIcon,
-            },
-            {
-                label: 'Mes remplacements',
-                route: '/dashboard/replacements/me',
-                icon: ListBulletIcon,
-            },
-        ],
+    },
+    {
+        label: 'Mes remplacements',
+        route: '/dashboard/replacements/me',
+        icon: ListBulletIcon,
     },
     {
         label: 'Chercher un remplacement',
         route: '/dashboard/replacements',
         icon: DocumentMagnifyingGlassIcon,
+    },
+    {
+        label: 'Mes réponses reçues',
+        route: '/dashboard/replacements/responses',
+        icon: UsersIcon,
     },
     // {
     //     label: 'Mes patients',

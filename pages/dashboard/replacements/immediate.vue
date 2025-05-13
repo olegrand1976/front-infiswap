@@ -62,7 +62,7 @@
                                 placeholder="6565,4561,1237"
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
-                                :only-comma-validation="false"
+                                :comma-validation="false"
                                 @keydown.enter.prevent
                             />
                         </div>
@@ -76,7 +76,7 @@
                                 placeholder="Anvers, Bruges, Gand"
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
-                                :only-comma-validation="true"
+                                :comma-validation="true"
                                 :no-space-validation="true"
                                 @keydown.enter.prevent
                             />
@@ -93,7 +93,7 @@
                                     placeholder="6565,4561,1237"
                                     class="w-full pt-6"
                                     :is-mobile="false"
-                                    :only-comma-validation="false"
+                                    :comma-validation="false"
                                     @keydown.enter.prevent
                                 />
                             </div>
@@ -108,8 +108,7 @@
                                     v-model="formData.cities"
                                     placeholder="Anvers, Bruges, Gand"
                                     class="w-full pt-6"
-                                    :is-mobile="false"
-                                    :only-comma-validation="false"
+                                    :comma-validation="true"
                                     :no-space-validation="true"
                                     @keydown.enter.prevent
                                 />
