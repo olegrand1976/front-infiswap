@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex mt-6">
-            <Form class="grid grid-cols-5 w-full gap-4">
+            <Form class="grid grid-cols-1 sm:grid-cols-5 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
@@ -12,7 +12,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 w-56 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -66,7 +66,7 @@
                                                 v-for="item in formData.postalCodeTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-24"
+                                                class="flex-shrink-0 max-w-30"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
