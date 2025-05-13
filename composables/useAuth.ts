@@ -101,12 +101,6 @@ export const useAuth = () => {
                     description: 'Inscription rapide réussie',
                 });
             })
-            .then(() => {
-                setTimeout(() => {
-                    navigateTo('/dashboard/replacements/immediate');
-                }, 2000);
-                return refresh();
-            })
             .catch((error) => { throw error; });
     }
 

@@ -407,7 +407,7 @@
                         </Button>
                     </div>
                 </form>
-                <div class="text-sm text-center mt-4">
+                <div class="text-sm text-center mt-6">
                     <span>Vous avez déjà un compte ?</span>
                     <NuxtLink
                         to="/login"

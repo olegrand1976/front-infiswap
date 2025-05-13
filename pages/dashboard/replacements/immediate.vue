@@ -183,7 +183,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth-help'],
     ssr: false,
 });
 
@@ -234,6 +233,10 @@ const { submit, inProgress } = useSubmit(async () => {
         }
     }
     catch (err) {
+        if (err.response?.status === 401) {
+            localStorage.setItem('pendingReplacement', JSON.stringify(formData));
+            return navigateTo('/register-immediate');
+        }
         console.error('Erreur soumise:', err);
     }
 });

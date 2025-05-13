@@ -22,7 +22,7 @@
                         <DropdownMenuTrigger class="flex items-center space-x-2">
                             <div>
                                 <p class="font-medium">
-                                    {{ user.full_name }}
+                                    {{ user?.full_name || 'xxx XXX' }}
                                 </p>
                                 <p
                                     :class="cn('text-xs -mt-1 text-end font-bold', {
@@ -30,10 +30,10 @@
                                         'text-primary': !isAdmin,
                                     })"
                                 >
-                                    {{ getRole(user.account_type) }}
+                                    {{ getRole(user?.account_type) }}
                                 </p>
                             </div>
-                            <template v-if="user.profil_url != null">
+                            <template v-if="user?.profil_url != null">
                                 <Avatar>
                                     <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
                                     <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>

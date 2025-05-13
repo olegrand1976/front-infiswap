@@ -97,7 +97,7 @@
                         </Button>
                     </div>
                 </form>
-                <div class="text-sm text-center mt-4">
+                <div class="text-sm text-center mt-6">
                     <span>Vous avez déjà un compte ?</span>
                     <NuxtLink
                         to="/login"
@@ -129,6 +129,8 @@ const formData = reactive({
 
 const route = useRoute();
 const { registerImmediate } = useAuth();
+const { sendUrgentReplacement } = useReplacements();
+const { $toast } = useNuxtApp();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -137,7 +139,24 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        return registerImmediate(formData);
+        await registerImmediate(formData);
+        const pendingReplacement = localStorage.getItem('pendingReplacement');
+
+        if (pendingReplacement) {
+            const replacementData = JSON.parse(pendingReplacement);
+            const result = await sendUrgentReplacement(replacementData);
+
+            if (result === true) {
+                localStorage.removeItem('pendingReplacement');
+                $toast({
+                    description: 'Création du remplacement rapide effectuée',
+                });
+
+                setTimeout(() => {
+                    navigateTo('/login');
+                }, 2000);
+            }
+        }
     },
 );
 
