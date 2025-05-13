@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1"
-        :data-hint="isMobile ? 'Cliquer sur Ajouter pour valider' : onlyCommaValidation ? 'Appuyer sur Virgule pour valider' : 'Appuyer sur Entrée ou Virgule pour valider'"
+        :data-hint="isMobile ? 'Cliquer sur PLUS ou ENTRER pour valider' : onlyCommaValidation ? 'Appuyer sur Virgule pour valider' : 'Appuyer sur ENTRER ou VIRGULE pour valider'"
     >
         <label class="text-primary font-semibold">{{ label }}</label>
         <div class="relative flex-1 gap-x-4">
@@ -10,21 +10,11 @@
                 :icon="icon"
                 :placeholder="placeholder"
                 class="w-full"
-                :class="{ 'pr-10': isMobile }"
                 @keyup="handleKeyUp"
                 @blur="handleBlur"
             />
-            <Button
-                v-if="isMobile"
-                type="button"
-                class="absolute right-1 top-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1.5 text-sm shadow-md transition-all"
-                @click="addItem"
-            >
-                Ajouter
-            </Button>
 
             <Button
-                v-else
                 variant="ghost"
                 class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
                 title="Ajouter"
@@ -64,6 +54,10 @@ const props = defineProps({
     icon: Object,
     placeholder: String,
     modelValue: Array,
+    count: {
+        type: Number,
+        required: false,
+    },
     isMobile: {
         type: Boolean,
         default: false,
@@ -106,7 +100,15 @@ const removeItem = (index) => {
 
 const handleKeyUp = (event) => {
     if (props.isMobile) {
-        if (event.key === 'Enter') {
+        let keys = [];
+        if (props.noSpaceValidation) {
+            keys = [',', 'Enter'];
+        }
+        else {
+            keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+        }
+
+        if (keys.includes(event.key)) {
             event.preventDefault();
             addItem();
         }
@@ -128,7 +130,7 @@ const handleKeyUp = (event) => {
 };
 
 const handleBlur = () => {
-    if (!props.isMobile) {
+    if (!props.isMobile || (props.count && inputValue.value.length === props.count)) {
         addItem();
     }
 };

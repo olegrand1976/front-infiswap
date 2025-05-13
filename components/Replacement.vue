@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex mt-6">
-            <Form class="grid grid-cols-5 w-full gap-4">
+            <Form class="grid grid-cols-1 sm:grid-cols-5 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1">
                     <FormField name="days">
                         <FormItem>
@@ -12,7 +12,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 w-56 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -66,7 +66,7 @@
                                                 v-for="item in formData.postalCodeTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-24"
+                                                class="flex-shrink-0 max-w-30"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
@@ -174,7 +174,7 @@
                                 Ville(s)
                             </TableHead>
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Type de soin
+                                Types de soins
                             </TableHead>
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                 Action
@@ -391,7 +391,7 @@
                     v-for="replacement in filteredReplacements"
                     v-else
                     :key="replacement?.id"
-                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-12 relative"
+                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-16 relative"
                 >
                     <div
                         v-if="isUrgentReplacement(replacement)"
@@ -456,7 +456,7 @@
                     <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Codes postaux
+                                {{ JSON.parse(replacement.zip_codes).length > 1 ? 'Codes postaux' : 'Code postal' }}
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-2 text-center truncate">
@@ -490,7 +490,7 @@
 
                         <div class="grid grid-cols-1 items-center gap-2">
                             <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Ville(s)
+                                {{ JSON.parse(replacement.cities).length > 1 ? 'Villes' : 'Ville' }}
                             </h4>
                             <div class="py-3 bg-gray-200 text-center rounded">
                                 <p class="py-2 px-2 text-center truncate w-full">
@@ -525,7 +525,7 @@
 
                     <div class="col-span-2">
                         <h4 class="bg-primary text-white py-2 text-center rounded">
-                            Type(s) de soin(s)
+                            {{ replacement.care_types.length <= 1 ? 'Type de soin' : 'Types de soins' }}
                         </h4>
                         <div class="mt-3 py-3 bg-gray-200 text-center rounded">
                             <p class="truncate w-full px-2">
@@ -543,7 +543,7 @@
                         </div>
                     </div>
 
-                    <div class="col-span-2 mt-4 flex space-x-8 justify-center items-center mx-auto">
+                    <div class="col-span-2 my-4 flex space-x-8 justify-center items-center mx-auto">
                         <Button
                             v-if="user.nurse.id == replacement.nurse_id"
                             variant="secondary"

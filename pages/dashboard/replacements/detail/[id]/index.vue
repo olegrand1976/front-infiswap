@@ -1,7 +1,10 @@
 <template>
     <div class="pt-2">
         <div class="flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
-            <div class="w-full lg:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
+            <div
+                :class="{ 'w-full': !(user?.nurse && replacement.nurse_id === user.nurse.id), 'w-full lg:w-[55%]': (user?.nurse && replacement.nurse_id === user.nurse.id) }"
+                class="rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center"
+            >
                 <Button
                     class="text-sm w-24 sm:w-auto"
                     @click="goBack"
@@ -63,7 +66,7 @@
                             v-else
                             class="text-xs text-primary"
                         >
-                            {{ replacement.response_count }}  intéressés
+                            {{ replacement.response_count }} intéressés
                         </span>
                     </div>
                 </div>
@@ -156,8 +159,11 @@
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
             class="my-12"
         >
-            <Form @submit="submit">
-                <div class="flex justify-between items-center mt-10 bg-gray-100 h-12 rounded">
+            <Form
+                v-if="replacement?.candidate == false"
+                @submit="submit"
+            >
+                <div class="flex justify-center items-center mt-10 bg-gray-100 h-12 rounded">
                     <div>
                         <Button
                             type="submit"
@@ -172,17 +178,14 @@
                             </span>
                         </Button>
                     </div>
-
-                    <div class="flex space-x-8 mr-4">
-                        <Button class="rounded-full p-1 w-8 h-8">
-                            <ChevronLeftIcon class="w-8 h-8 text-white" />
-                        </Button>
-                        <Button class="rounded-full p-1 w-8 h-8">
-                            <ChevronRightIcon class="w-8 h-8 text-white" />
-                        </Button>
-                    </div>
                 </div>
             </Form>
+            <div
+                v-else
+                class="flex justify-center items-center gap-2 text-success"
+            >
+                <CheckCircleIcon class="size-6" /> <span>Réponse envoyée</span>
+            </div>
         </div>
     </div>
 </template>
@@ -192,8 +195,7 @@ import {
     CalendarDaysIcon,
     ClockIcon,
     HomeIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
+    CheckCircleIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
@@ -202,7 +204,7 @@ import { getFullName } from '~/lib/utils';
 const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
-const respondedBy = computed(() => user.value?.id || null);
+const respondedBy = computed(() => user.value?.nurse_id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
@@ -215,7 +217,12 @@ const formData = reactive({
 });
 
 const goBack = () => {
-    window.history.back();
+    if (window.history.length > 1) {
+        window.history.back();
+    }
+    else {
+        navigateTo('/dashboard/replacements');
+    }
 };
 
 const groupedDetails = computed(() => {
@@ -283,6 +290,11 @@ const {
 } = useSubmit(
     async () => {
         await sendResponse().submitResponse(formData);
+    },
+    {
+        onSuccess: () => {
+            replacement.value.candidate = true;
+        },
     },
 );
 

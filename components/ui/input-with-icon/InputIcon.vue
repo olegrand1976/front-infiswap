@@ -21,6 +21,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
     (e: 'update:modelValue', payload: string | number): void;
+    (e: 'blur', payload: FocusEvent): void;
 }>();
 
 const modelValue = useVModel(props, 'modelValue', emits, {
@@ -56,10 +57,6 @@ const onFocus = () => {
     isFocused.value = true;
 };
 
-const onBlur = () => {
-    isFocused.value = false;
-};
-
 const isPasswordVisible = ref(false);
 
 const togglePasswordVisibility = () => {
@@ -90,7 +87,7 @@ const togglePasswordVisibility = () => {
                 { 'border-red-500': props.errors && props.errors.length > 0 },
             )"
             @focus="onFocus"
-            @blur="onBlur"
+            @blur="$emit('blur', $event)"
         >
         <span
             v-if="icon"

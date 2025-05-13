@@ -4,7 +4,7 @@
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow">
                     <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                        Sélectionnez la rangée de date ici
+                        Sélectionner la période de remplacement
                     </h2>
                     <RangeCalendar
                         v-model="value"
@@ -35,7 +35,7 @@
             <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
-                        Nombre de patients
+                        Nombre de patients par jour
                     </label>
                     <InputIcon
                         v-model="formData.patientCount"
@@ -48,7 +48,8 @@
                     label="Codes postaux"
                     placeholder="6565,4561,1237"
                     :is-mobile="isMobileView"
-                    :only-comma-validation="false"
+                    :count="4"
+                    @keydown.enter.prevent
                 />
 
                 <InputTagManager
@@ -57,7 +58,8 @@
                     placeholder="Anvers, Bruges, Gand"
                     :is-mobile="isMobileView"
                     class="mt-4"
-                    :only-comma-validation="true"
+                    :no-space-validation="true"
+                    @keydown.enter.prevent
                 />
 
                 <div class="flex flex-col space-y-2">
@@ -131,6 +133,7 @@
 
 <script lang="ts" setup>
 import { getLocalTimeZone, today } from '@internationalized/date';
+import type { DateRange } from 'reka-ui';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';

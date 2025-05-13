@@ -192,6 +192,7 @@ export type Replacement = {
     details: ReplacementDetail[];
     nurse_owner_full_name: string;
     substitute_nurse?: string;
+    candidate?: boolean;
 };
 
 export type ReplacementDetail = {

@@ -108,7 +108,7 @@
                                 <XMarkIcon class="size-7" /> <span>Refusé</span>
                             </div>
                             <div
-                                v-else
+                                v-if="!hasConfirmed() && list.status !== 'canceled'"
                                 class="flex justify-center gap-4 w-full mt-2"
                             >
                                 <Button
@@ -156,6 +156,7 @@ const goBack = () => {
 };
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
+
 const updateStatus = async (id: number, status: string) => {
     try {
         await changeStatus(id, status);
@@ -187,6 +188,9 @@ const startDate = computed(() =>
 const endDate = computed(() =>
     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
 );
+
+const hasConfirmed = () =>
+    listResponse.value?.some(item => item.status === 'confirmed');
 
 // const displayCities = (settings) => {
 //     if (!settings) return 'Aucune ville';

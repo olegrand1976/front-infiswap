@@ -1,6 +1,7 @@
 import { useRouter } from 'vue-router';
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, Replacement } from '~/lib/types';
+import { PERPAGE } from '~/lib/constants';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
@@ -340,23 +341,43 @@ export const useNearbyReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
     const replacements = useState('replacements', () => []);
+    const perPage = ref(PERPAGE);
+    const pagination = useState('replacementsPagination', () => ({
+        current_page: 1,
+        per_page: perPage.value,
+        total: 0,
+        last_page: 1,
+    }));
     const error = useState('replacementsError', () => null);
 
-    async function fetchNearbyreplacements() {
+    async function fetchNearbyreplacements(page = 1, customPerPage) {
+        const pageSize = customPerPage ?? perPage.value;
         try {
             const response = await $apifetch('/api/replacements/open', {
                 method: 'GET',
+                query: {
+                    page,
+                    perPage: pageSize,
+                },
             });
 
-            replacements.value = response;
+            replacements.value = response.data;
+            pagination.value = {
+                current_page: response.current_page,
+                per_page: response.per_page,
+                total: response.total,
+                last_page: response.last_page,
+            };
         }
         catch (err) {
-            error.value = err?.data?.message || 'Erreur lors de la récupération des patients';
+            error.value = err?.data?.message || 'Erreur lors de la récupération des remplacements';
         }
     }
 
     return {
         replacements,
+        pagination,
         fetchNearbyreplacements,
+        error,
     };
 };
