@@ -48,6 +48,7 @@
                     label="Codes postaux"
                     placeholder="6565,4561,1237"
                     :is-mobile="isMobileView"
+                    :comma-validation="false"
                     :count="4"
                     @keydown.enter.prevent
                 />
@@ -58,6 +59,7 @@
                     placeholder="Anvers, Bruges, Gand"
                     :is-mobile="isMobileView"
                     class="mt-4"
+                    :comma-validation="true"
                     :no-space-validation="true"
                     @keydown.enter.prevent
                 />
