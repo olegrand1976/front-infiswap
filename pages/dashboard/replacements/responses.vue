@@ -15,7 +15,7 @@
                     class="bg-gray-100 shadow p-6 rounded-lg 2xl:col-span-1"
                 >
                     <h1 class="text-primary font-semibold">
-                        <template v-if="listResponse.length = 1">
+                        <template v-if="listResponse.length === 1">
                             Remplacement
                         </template>
                         <template v-else>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div
-                    v-if="response?.responses?.length != 0"
+                    v-if="visibleResponses(response.responses).length != 0"
                     class="2xl:col-span-2"
                 >
                     <Table>
@@ -77,7 +77,7 @@
 
                         <TableBody class="rounded-b-lg">
                             <TableRow
-                                v-for="responseDetail in response.responses"
+                                v-for="responseDetail in visibleResponses(response.responses)"
                                 :key="responseDetail.id"
                                 class="grid grid-cols-3 my-2 gap-2 border border-none overflow-x-hidden relative"
                             >
@@ -100,19 +100,34 @@
                                 </TableCell>
 
                                 <TableCell class="flex space-x-4 justify-center items-center bg-[#F1F2F7] text-sm">
-                                    <Button
-                                        class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                        title="Accepter"
-                                    >
-                                        <CheckIcon class="w-4" />
-                                    </Button>
-
-                                    <Button
-                                        class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                        title="Rejeter"
-                                    >
-                                        <XMarkIcon class="w-4" />
-                                    </Button>
+                                    <template v-if="responseDetail.status === 'confirmed'">
+                                        <p class="flex items-center space-x-2 text-success font-medium">
+                                            <CheckBadgeIcon class="w-6" />
+                                            <span>Accepté</span>
+                                        </p>
+                                    </template>
+                                    <template v-else-if="responseDetail.status === 'canceled'">
+                                        <p class="flex items-center space-x-2 text-red-600 font-medium">
+                                            <XCircleIcon class="w-6" />
+                                            <span>Refusé</span>
+                                        </p>
+                                    </template>
+                                    <template v-else>
+                                        <Button
+                                            class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
+                                            title="Rejeter"
+                                            @click="handleReject(responseDetail)"
+                                        >
+                                            <XMarkIcon class="w-4" />
+                                        </Button>
+                                        <Button
+                                            class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
+                                            title="Accepter"
+                                            @click="handleAccept(responseDetail)"
+                                        >
+                                            <CheckIcon class="w-4" />
+                                        </Button>
+                                    </template>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
@@ -124,17 +139,47 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, XCircleIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
-import { useListResponse } from '~/composables/useReplacements';
+import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 
 const user = useState('user');
 
 const { listResponse, getReplacementResponses } = useListResponse(user.value.nurse.id);
+const { changeStatus } = changeStatusReplacement();
 
 useHead({
     title: 'Mes réponses reçues',
 });
+
+const visibleResponses = (responses: any[]) => {
+    const filteredResponses = responses.filter(response => response.status !== 'canceled');
+
+    if (filteredResponses.some(response => response.status === 'confirmed')) {
+        return filteredResponses.filter(response => response.status === 'confirmed');
+    }
+
+    return filteredResponses;
+};
+const handleAccept = async (responseDetail) => {
+    try {
+        await changeStatus(responseDetail.id, 'confirmed');
+        responseDetail.status = 'confirmed';
+    }
+    catch (error) {
+        console.error('Failed to update status:', error);
+    }
+};
+
+const handleReject = async (responseDetail) => {
+    try {
+        await changeStatus(responseDetail.id, 'canceled');
+        responseDetail.status = 'canceled';
+        await getReplacementResponses();
+    } catch (error) {
+        console.error('Failed to update status:', error);
+    }
+};
 
 onMounted(async () => {
     await getReplacementResponses();
