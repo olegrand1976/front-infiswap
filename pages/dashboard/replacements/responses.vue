@@ -107,9 +107,9 @@
                                         </p>
                                     </template>
                                     <template v-else-if="responseDetail.status === 'canceled'">
-                                        <p class="flex items-center space-x-2 text-red-600 font-medium">
+                                        <p class="flex items-center space-x-2 text-primary font-medium">
                                             <XCircleIcon class="w-6" />
-                                            <span>Refusé</span>
+                                            <span>Rejeté</span>
                                         </p>
                                     </template>
                                     <template v-else>
