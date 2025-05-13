@@ -296,6 +296,7 @@
                                         label="Codes postaux *"
                                         :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                         :is-mobile="false"
+                                        :comma-validation="false"
                                         @keydown.enter.prevent
                                     />
                                 </div>
@@ -307,6 +308,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="false"
+                                        :comma-validation="true"
                                         :no-space-validation="true"
                                         @keydown.enter.prevent
                                     />
@@ -320,6 +322,7 @@
                                         label="Codes postaux *"
                                         :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                         :is-mobile="true"
+                                        :comma-validation="false"
                                         @keydown.enter.prevent
                                     />
                                 </div>
@@ -331,6 +334,7 @@
                                         label="Villes"
                                         :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                         :is-mobile="true"
+                                        :comma-validation="true"
                                         :no-space-validation="true"
                                         @keydown.enter.prevent
                                     />

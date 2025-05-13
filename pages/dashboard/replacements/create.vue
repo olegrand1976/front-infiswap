@@ -145,6 +145,8 @@ const { submitReplacement } = useReplacements();
 const start = today(getLocalTimeZone());
 const end = null;
 
+const { $toast } = useNuxtApp();
+
 const value = ref({
     start,
     end,
@@ -196,7 +198,7 @@ await fetchCareTypes();
 
 const resetForm = () => {
     formData.startDate = `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`;
-    formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
+    formData.endDate = '';
     formData.patientCount = null;
     formData.zipCodes = [];
     formData.cities = [];
@@ -211,7 +213,33 @@ const resetForm = () => {
 const { submit, inProgress } = useSubmit(async () => {
     formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
     await submitReplacement(formData);
-    resetForm();
+}, {
+    onSuccess: () => {
+        $toast({
+            description: 'Création effectuée',
+        });
+        resetForm();
+    },
+    onError: (error) => {
+        if (error.data && error.data.errors) {
+            const backendErrors = error.data.errors;
+            const errorMessages: string[] = [];
+
+            Object.keys(backendErrors).forEach((field) => {
+                backendErrors[field].forEach((message: string) => {
+                    errorMessages.push(message);
+                });
+            });
+
+            if (errorMessages.length > 0) {
+                $toast({
+                    description: errorMessages.join('/'),
+                    status: 'error',
+                    variant: 'destructive',
+                });
+            }
+        }
+    },
 });
 
 useHead({

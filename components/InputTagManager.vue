@@ -1,7 +1,7 @@
 <template>
     <div
-        class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-2 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1"
-        :data-hint="isMobile ? 'Cliquer sur PLUS ou ENTRER pour valider' : onlyCommaValidation ? 'Appuyer sur Virgule pour valider' : 'Appuyer sur ENTRER ou VIRGULE pour valider'"
+        class="flex flex-col space-y-2 relative group focus-within:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-300 before:absolute before:-top-8 before:sm:-top-4 before:left-4 before:bg-gray-100 before:text-gray-800 before:text-sm before:rounded-md before:shadow-md before:px-3 before:py-1"
+        :data-hint="commaValidation ? 'Appuyer sur PLUS, VIRGULE ou ENTRER pour valider' : 'Appuyer sur PLUS, VIRGULE, ESPACE ou ENTRER pour valider'"
     >
         <label class="text-primary font-semibold">{{ label }}</label>
         <div class="relative flex-1 gap-x-4">
@@ -62,7 +62,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    onlyCommaValidation: {
+    commaValidation: {
         type: Boolean,
         default: false,
     },
@@ -105,7 +105,7 @@ const handleKeyUp = (event) => {
             keys = [',', 'Enter'];
         }
         else {
-            keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+            keys = props.commaValidation ? [','] : [' ', ',', 'Enter'];
         }
 
         if (keys.includes(event.key)) {
@@ -119,7 +119,7 @@ const handleKeyUp = (event) => {
             keys = [',', 'Enter'];
         }
         else {
-            keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+            keys = props.commaValidation ? [','] : [' ', ',', 'Enter'];
         }
 
         if (keys.includes(event.key)) {

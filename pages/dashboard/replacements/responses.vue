@@ -176,7 +176,8 @@ const handleReject = async (responseDetail) => {
         await changeStatus(responseDetail.id, 'canceled');
         responseDetail.status = 'canceled';
         await getReplacementResponses();
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Failed to update status:', error);
     }
 };
