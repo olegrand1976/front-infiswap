@@ -1,7 +1,10 @@
 <template>
     <div class="pt-2">
         <div class="flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
-            <div class="w-full lg:w-[55%] rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center">
+            <div
+                :class="{ 'w-full': !(user?.nurse && replacement.nurse_id === user.nurse.id), 'w-full lg:w-[55%]': (user?.nurse && replacement.nurse_id === user.nurse.id) }"
+                class="rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center"
+            >
                 <Button
                     class="text-sm w-24 sm:w-auto"
                     @click="goBack"
@@ -63,7 +66,7 @@
                             v-else
                             class="text-xs text-primary"
                         >
-                            {{ replacement.response_count }}  intéressés
+                            {{ replacement.response_count }} intéressés
                         </span>
                     </div>
                 </div>
