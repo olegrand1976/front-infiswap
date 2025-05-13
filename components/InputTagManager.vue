@@ -100,7 +100,15 @@ const removeItem = (index) => {
 
 const handleKeyUp = (event) => {
     if (props.isMobile) {
-        if (event.key === 'Enter') {
+        let keys = [];
+        if (props.noSpaceValidation) {
+            keys = [',', 'Enter'];
+        }
+        else {
+            keys = props.onlyCommaValidation ? [','] : [' ', ',', 'Enter'];
+        }
+
+        if (keys.includes(event.key)) {
             event.preventDefault();
             addItem();
         }

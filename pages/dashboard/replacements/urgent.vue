@@ -111,8 +111,13 @@ const formatDate = (dateStr) => {
 
 const handleInterest = async (replacementId, nurseId) => {
     try {
-        await $apifetch(`/api/replacements/interest/${replacementId}/${nurseId}`, {
-            method: 'GET',
+        await $apifetch('/api/replacement-responses/send', {
+            method: 'POST',
+            body: {
+                replacementId: replacementId,
+                respondedBy: nurseId,
+                comment: null,
+            },
         });
         interestedReplacements.value.push(replacementId);
         $toast({
