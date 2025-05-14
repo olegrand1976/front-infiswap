@@ -219,6 +219,7 @@ const getSelectedCareTypesText = (selectedIds) => {
         .join(', ');
 };
 
+const pendingReplacement = useState('pendingReplacement', () => null);
 const { submit, inProgress } = useSubmit(async () => {
     try {
         const result = await sendUrgentReplacement(formData);
@@ -234,7 +235,7 @@ const { submit, inProgress } = useSubmit(async () => {
     }
     catch (err) {
         if (err.response?.status === 401) {
-            localStorage.setItem('pendingReplacement', JSON.stringify(formData));
+            pendingReplacement.value = formData;
             return navigateTo('/register-immediate');
         }
         console.error('Erreur soumise:', err);

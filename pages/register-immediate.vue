@@ -140,14 +140,13 @@ const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
         await registerImmediate(formData);
-        const pendingReplacement = localStorage.getItem('pendingReplacement');
+        const pendingReplacement = useState('pendingReplacement');
 
-        if (pendingReplacement) {
-            const replacementData = JSON.parse(pendingReplacement);
-            const result = await sendUrgentReplacement(replacementData);
+        if (pendingReplacement.value) {
+            const result = await sendUrgentReplacement(pendingReplacement.value);
 
             if (result === true) {
-                localStorage.removeItem('pendingReplacement');
+                pendingReplacement.value = null;
                 $toast({
                     description: 'Création du remplacement rapide effectuée',
                 });
