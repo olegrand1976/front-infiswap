@@ -8,9 +8,9 @@ export default defineNuxtRouteMiddleware(async () => {
 
     if (user.value) {
         if (!user.value.email_verified_at) {
+            await $apifetch('api/logout', { method: 'post' });
             user.value = null;
             token.value = '';
-            await $apifetch('api/logout', { method: 'post' });
             return navigateTo('/');
         }
         return navigateTo('/dashboard', { replace: true });
