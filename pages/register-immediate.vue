@@ -131,7 +131,6 @@ const route = useRoute();
 const { registerImmediate } = useAuth();
 const { sendUrgentReplacement } = useReplacements();
 const { $toast } = useNuxtApp();
-const { logout } = useAuth();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -152,7 +151,6 @@ const { submit, inProgress } = useSubmit(
                 $toast({
                     description: 'Création du remplacement rapide effectuée',
                 });
-                await logout();
                 setTimeout(() => {
                     navigateTo('/');
                 }, 2000);
