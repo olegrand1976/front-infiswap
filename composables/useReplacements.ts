@@ -1,11 +1,9 @@
-import { useRouter } from 'vue-router';
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, Replacement } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
-    const router = useRouter();
     const { $toast } = useNuxtApp();
 
     const myReplacements = useState('myReplacements', () => []);
@@ -144,6 +142,33 @@ export const useReplacements = () => {
         });
     };
 
+    const updateAgainReplacement = async (formData) => {
+        return await $apifetch(`/api/replacements/update-again/${formData.id}`, {
+            method: 'PUT',
+            body: formData,
+        });
+    };
+
+    async function showReplacement(id: number) {
+        return await $apifetch(`/api/replacements/${id}`);
+    }
+
+    async function forceDelete(replacement: number) {
+        await $apifetch(`/api/replacements/${replacement}`, {
+            method: 'DELETE',
+        }).then(() => {
+            $toast({
+                description: 'Suppression réussie.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la suppression.',
+                });
+            });
+    }
+
     return {
         error,
         loading,
@@ -156,8 +181,11 @@ export const useReplacements = () => {
         getReplacementsForAdmin,
         getFRStatus,
         updateReplacement,
+        updateAgainReplacement,
         extractPostalDataFromReplacement,
         sendUrgentReplacement,
+        showReplacement,
+        forceDelete,
     };
 };
 
