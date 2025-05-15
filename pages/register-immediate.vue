@@ -130,7 +130,7 @@ const formData = reactive({
 const route = useRoute();
 const { registerImmediate } = useAuth();
 const { sendUrgentReplacement } = useReplacements();
-const { $toast } = useNuxtApp();
+const { $toast, $apifetch } = useNuxtApp();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -140,20 +140,19 @@ const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
         await registerImmediate(formData);
-        const pendingReplacement = localStorage.getItem('pendingReplacement');
+        const pendingReplacement = useState('pendingReplacement');
 
-        if (pendingReplacement) {
-            const replacementData = JSON.parse(pendingReplacement);
-            const result = await sendUrgentReplacement(replacementData);
+        if (pendingReplacement.value) {
+            const result = await sendUrgentReplacement(pendingReplacement.value);
 
             if (result === true) {
-                localStorage.removeItem('pendingReplacement');
+                pendingReplacement.value = null;
                 $toast({
                     description: 'Création du remplacement rapide effectuée',
                 });
-
+                await $apifetch('api/logout', { method: 'post' });
                 setTimeout(() => {
-                    navigateTo('/login');
+                    navigateTo('/');
                 }, 2000);
             }
         }
