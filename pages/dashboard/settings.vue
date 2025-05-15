@@ -160,7 +160,8 @@
                                             <Input
                                                 v-model="formPersonalInfo.identifierNumber"
                                                 type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                                :placeholder="!formPersonalInfo.identifierNumber ? '19960116' : ''"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-gray-400 h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
@@ -171,7 +172,8 @@
                                             <Input
                                                 v-model="formPersonalInfo.phoneNumber"
                                                 type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                                :placeholder="!formPersonalInfo.phoneNumber ? '00 32 2 374 XX XX' : ''"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-gray-400 h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
                                         </div>
 
@@ -267,7 +269,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : '' }}
+                                    {{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}
                                 </p>
                             </div>
 
@@ -300,8 +302,8 @@
                                         <span>Numéro INAMI</span>
                                     </label>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.identifier_number }}
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded" :class="{ 'text-gray-400': !user?.identifier_number }">
+                                    {{ user.identifier_number || '19960116' }}
                                 </p>
                             </div>
 
@@ -317,8 +319,8 @@
                                         <span>Téléphone</span>
                                     </label>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.phone_number }}
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded" :class="{ 'text-gray-400': !user?.phone_number }">
+                                    {{ user?.phone_number || '00 32 2 374 XX XX' }}
                                 </p>
                             </div>
 
@@ -1132,13 +1134,18 @@ const updateInfoUser = async () => {
 
         personalInfoDialog.value = false;
     }
-    catch (error) {
-        console.log(error);
+    catch (err) {
+        if (err.data && err.data.errors) {
+            const backendErrors = err.data.errors;
+            const firstField = Object.keys(backendErrors)[0];
+            const firstMessage = backendErrors[firstField][0];
 
-        $toast({
-            variant: 'destructive',
-            description: 'Echec de la mise à jour',
-        });
+            $toast({
+                description: firstMessage,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
     }
 };
 
@@ -1158,13 +1165,18 @@ const handleUpdateAddress = async () => {
 
         addressInfoDialog.value = false;
     }
-    catch (error) {
-        console.log(error);
+    catch (err) {
+        if (err.data && err.data.errors) {
+            const backendErrors = err.data.errors;
+            const firstField = Object.keys(backendErrors)[0];
+            const firstMessage = backendErrors[firstField][0];
 
-        $toast({
-            variant: 'destructive',
-            description: 'Echec de la mise à jour',
-        });
+            $toast({
+                description: firstMessage,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
     }
 };
 
@@ -1194,12 +1206,18 @@ const handleChangePassword = async () => {
         formPassword.password = '';
         formPassword.password_confirmation = '';
     }
-    catch (error) {
-        console.log(error);
-        $toast({
-            variant: 'destructive',
-            description: 'Echec de la mise à jour',
-        });
+    catch (err) {
+        if (err.data && err.data.errors) {
+            const backendErrors = err.data.errors;
+            const firstField = Object.keys(backendErrors)[0];
+            const firstMessage = backendErrors[firstField][0];
+
+            $toast({
+                description: firstMessage,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
     }
 };
 
