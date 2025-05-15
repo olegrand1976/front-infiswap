@@ -47,7 +47,7 @@ const adminReports = computed(() => {
             items: [
                 {
                     value: reports.value.registration_statistics.today + reports.value.registration_statistics.yesterday,
-                    label: `Ce jour - ${new Date().toLocaleDateString('fr-FR')}`,
+                    label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
                     icon: UserGroupIcon,
                     containerClass: 'string',
@@ -61,7 +61,7 @@ const adminReports = computed(() => {
                 },
                 {
                     value: reports.value.registration_statistics.total,
-                    label: 'Total en DB',
+                    label: 'Total ',
                     colorClass: 'bg-pink-600',
                     icon: UserGroupIcon,
                     containerClass: 'string',
@@ -73,7 +73,7 @@ const adminReports = computed(() => {
             items: [
                 {
                     value: reports.value.patient_by_nurse_statistics.today + reports.value.patient_by_nurse_statistics.yesterday,
-                    label: `Ce jour - ${new Date().toLocaleDateString('fr-FR')}`,
+                    label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
                     icon: HeartIcon,
                     containerClass: 'string',
@@ -87,7 +87,7 @@ const adminReports = computed(() => {
                 },
                 {
                     value: reports.value.patient_by_nurse_statistics.total,
-                    label: 'Total en DB',
+                    label: 'Total ',
                     colorClass: 'bg-pink-600',
                     icon: HeartIcon,
                     containerClass: 'string',
@@ -99,7 +99,7 @@ const adminReports = computed(() => {
             items: [
                 {
                     value: reports.value.tour_statistics.today + reports.value.tour_statistics.yesterday,
-                    label: `Ce jour - ${new Date().toLocaleDateString('fr-FR')}`,
+                    label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
                     icon: MapPinIcon,
                     containerClass: 'string',
@@ -113,7 +113,7 @@ const adminReports = computed(() => {
                 },
                 {
                     value: reports.value.tour_statistics.total,
-                    label: 'Total en DB',
+                    label: 'Total ',
                     colorClass: 'bg-pink-600',
                     icon: MapPinIcon,
                     containerClass: 'string',
@@ -125,7 +125,7 @@ const adminReports = computed(() => {
             items: [
                 {
                     value: reports.value.accepted_replacement_statistics.today + reports.value.accepted_replacement_statistics.yesterday,
-                    label: `Ce jour - ${new Date().toLocaleDateString('fr-FR')}`,
+                    label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
                     icon: ArrowPathIcon,
                     containerClass: 'string',
@@ -139,7 +139,7 @@ const adminReports = computed(() => {
                 },
                 {
                     value: reports.value.accepted_replacement_statistics.total,
-                    label: 'Total en DB',
+                    label: 'Total ',
                     colorClass: 'bg-pink-600',
                     icon: ArrowPathIcon,
                     containerClass: 'string',
@@ -151,7 +151,7 @@ const adminReports = computed(() => {
             items: [
                 {
                     value: reports.value.replacement_response_statistics.today + reports.value.replacement_response_statistics.yesterday,
-                    label: `Ce jour - ${new Date().toLocaleDateString('fr-FR')}`,
+                    label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
                     icon: PaperAirplaneIcon,
                     containerClass: 'string',
@@ -165,7 +165,7 @@ const adminReports = computed(() => {
                 },
                 {
                     value: reports.value.replacement_response_statistics.total,
-                    label: 'Total en DB',
+                    label: 'Total ',
                     colorClass: 'bg-pink-600',
                     icon: PaperAirplaneIcon,
                     containerClass: 'string',

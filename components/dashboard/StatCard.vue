@@ -10,10 +10,19 @@
                     class="w-8 h-8 text-white"
                 />
             </div>
-            <div class="mx-5">
-                <h4 class="text-2xl font-semibold text-gray-700">
-                    {{ value }}
-                </h4>
+            <div class="mx-5 w-full">
+                <div class="w-full flex justify-between items-center">
+                    <h4 class="text-2xl font-semibold text-gray-700">
+                        {{ value }}
+                    </h4>
+
+                    <p
+                        v-if="colorClass == 'bg-indigo-600'"
+                        class="text-xs text-indigo-600"
+                    >
+                        {{ new Date().toLocaleDateString('fr-FR') }}
+                    </p>
+                </div>
                 <div class="text-gray-500">
                     {{ label }}
                 </div>
