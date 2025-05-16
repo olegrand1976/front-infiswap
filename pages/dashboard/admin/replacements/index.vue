@@ -159,7 +159,7 @@ const columns: ColumnDef<Replacement>[] = [
                 patients = extractPostalDataFromReplacement(row.original)?.patients?.length || 0;
             }
 
-            return h('div', {}, patients);
+            return h('div', { class: 'capitalize' }, patients);
         },
     },
     // {
@@ -223,7 +223,7 @@ const columns: ColumnDef<Replacement>[] = [
                 zipCodes = extractPostalDataFromReplacement(row.original)?.zip_codes?.join(', ') || '';
             }
 
-            return h('div', { class: 'capitalize' }, zipCodes);
+            return h('div', { class: 'capitalize truncate max-w-[200px] whitespace-nowrap overflow-hidden' }, zipCodes);
         },
     },
     {
@@ -283,7 +283,7 @@ const columns: ColumnDef<Replacement>[] = [
                 cities = extractPostalDataFromReplacement(row.original)?.cities?.join(', ') || '';
             }
 
-            return h('div', { class: 'capitalize' }, cities);
+            return h('div', { class: 'capitalize truncate max-w-[200px] whitespace-nowrap overflow-hidden' }, cities);
         },
     },
     {
@@ -295,7 +295,7 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Créateur', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'capitalize' }, row.original.nurse_owner_full_name);
+            return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.nurse_owner_full_name);
         },
     },
     {
@@ -307,33 +307,33 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'capitalize' }, row.original.substitute_nurse);
+            return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.substitute_nurse);
         },
     },
-    // {
-    //     id: 'response_count',
-    //     accessorKey: 'response_count',
-    //     header: ({ column }) =>
-    //         h(Button, {
-    //             variant: 'ghost',
-    //             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-    //         }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
-    //     cell: ({ row }) => {
-    //         const nurses = row.original.response_count ?? 0;
-    //         const id = row.original.id;
+    {
+        id: 'response_count',
+        accessorKey: 'response_count',
+        header: ({ column }) =>
+            h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+        cell: ({ row }) => {
+            const nurses = row.original.response_count ?? 0;
+            const id = row.original.id;
 
-    //         return h(
-    //             NuxtLink,
-    //             {
-    //                 to: `/dashboard/admin/replacements/interest/${id}`,
-    //                 class: 'text-blue-600 hover:underline',
-    //                 style: 'display: block; text-align: center;',
-    //             },
-    //             () => nurses.toString(),
-    //         );
-    //     },
-    //     sortingFn: 'alphanumeric',
-    // },
+            return h(
+                NuxtLink,
+                {
+                    to: `/dashboard/admin/replacements/interest/${id}`,
+                    class: 'text-blue-600 hover:underline',
+                    style: 'display: block; text-align: center;',
+                },
+                () => nurses.toString(),
+            );
+        },
+        sortingFn: 'alphanumeric',
+    },
     {
         accessorKey: 'type',
         header: ({ column }) => {
