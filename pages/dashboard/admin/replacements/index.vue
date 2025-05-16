@@ -310,37 +310,37 @@ const columns: ColumnDef<Replacement>[] = [
             return h('div', { class: 'capitalize' }, row.original.substitute_nurse);
         },
     },
-    {
-        id: 'response_count',
-        accessorKey: 'response_count',
-        header: ({ column }) =>
-            h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
-        cell: ({ row }) => {
-            const nurses = row.original.response_count ?? 0;
-            const id = row.original.id;
+    // {
+    //     id: 'response_count',
+    //     accessorKey: 'response_count',
+    //     header: ({ column }) =>
+    //         h(Button, {
+    //             variant: 'ghost',
+    //             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+    //         }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+    //     cell: ({ row }) => {
+    //         const nurses = row.original.response_count ?? 0;
+    //         const id = row.original.id;
 
-            return h(
-                NuxtLink,
-                {
-                    to: `/dashboard/admin/replacements/interest/${id}`,
-                    class: 'text-blue-600 hover:underline',
-                    style: 'display: block; text-align: center;',
-                },
-                () => nurses.toString(),
-            );
-        },
-        sortingFn: 'alphanumeric',
-    },
+    //         return h(
+    //             NuxtLink,
+    //             {
+    //                 to: `/dashboard/admin/replacements/interest/${id}`,
+    //                 class: 'text-blue-600 hover:underline',
+    //                 style: 'display: block; text-align: center;',
+    //             },
+    //             () => nurses.toString(),
+    //         );
+    //     },
+    //     sortingFn: 'alphanumeric',
+    // },
     {
         accessorKey: 'type',
         header: ({ column }) => {
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Type', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Type', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]);
         },
         cell: ({ row }) => {
             const type = row.original.type;
