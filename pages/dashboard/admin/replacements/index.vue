@@ -222,12 +222,12 @@ const columns: ColumnDef<Replacement>[] = [
         header: 'Intéressé',
         cell: ({ row }) => {
             const nurses = row.original.response_count;
-            const nurseId = row.original.nurse_id;
+            const id = row.original.id;
 
             return h(
                 NuxtLink,
                 {
-                    to: `/dashboard/admin/replacements/interest/${nurseId}`,
+                    to: `/dashboard/admin/replacements/interest/${id}`,
                     class: 'text-blue-600 hover:underline',
                 },
                 () => nurses.toString(),

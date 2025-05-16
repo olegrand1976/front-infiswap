@@ -230,7 +230,7 @@ fetchCareTypes();
                     <p class="mt-4 text-sm text-gray-700 items-center text-center">
                         <strong class="text-gray-700">Nombre de personnes intéressées :</strong>
                         <NuxtLink
-                            :to="`/dashboard/admin/replacements/interest/${form.responseCount}`"
+                            :to="`/dashboard/admin/replacements/interest/${form.id}`"
                             class="ml-2 text-blue-600 hover:underline font-medium"
                         >
                             {{ form.responseCount }} personne<span v-if="form.responseCount > 1">s</span>
