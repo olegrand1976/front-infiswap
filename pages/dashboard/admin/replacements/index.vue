@@ -131,11 +131,13 @@ const columns: ColumnDef<Replacement>[] = [
                 try {
                     const parsed = JSON.parse(patients);
                     return Array.isArray(parsed) ? parsed.length : 0;
-                } catch (e) {
+                }
+                catch (e) {
                     console.error(e);
                     return 0;
                 }
-            } else if (!patients) {
+            }
+            else if (!patients) {
                 const extracted = extractPostalDataFromReplacement(row);
                 return extracted?.patients?.length || 0;
             }
@@ -159,7 +161,7 @@ const columns: ColumnDef<Replacement>[] = [
                 patients = extractPostalDataFromReplacement(row.original)?.patients?.length || 0;
             }
 
-            return h('div', { class: 'capitalize' }, patients);
+            return h('div', { class: 'capitalize text-center w-full' }, patients);
         },
     },
     // {
