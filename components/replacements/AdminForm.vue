@@ -181,7 +181,7 @@ fetchCareTypes();
 <template>
     <form @submit.prevent="submit">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
-            <div class="p-4">
+            <div class="lg-p-4">
                 <h1 class="font-semibold text-gray-600">
                     Remplacement
                 </h1>
@@ -190,7 +190,7 @@ fetchCareTypes();
                 </p>
 
                 <div class="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
-                    <div class="flex flex-col items-center text-center gap-4 sm:gap-6">
+                    <div class="flex flex-col items-center text-center lg:gap-4">
                         <div class="relative">
                             <!-- <img
                                 v-if="form?.nurseOwnerProfilUrl != null"
