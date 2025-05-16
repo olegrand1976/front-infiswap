@@ -302,7 +302,10 @@
                                         <span>Numéro INAMI</span>
                                     </label>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded" :class="{ 'text-gray-400': !user?.identifier_number }">
+                                <p
+                                    class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded"
+                                    :class="{ 'text-gray-400': !user?.identifier_number }"
+                                >
                                     {{ user.identifier_number || '19960116' }}
                                 </p>
                             </div>
@@ -319,7 +322,10 @@
                                         <span>Téléphone</span>
                                     </label>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded" :class="{ 'text-gray-400': !user?.phone_number }">
+                                <p
+                                    class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded"
+                                    :class="{ 'text-gray-400': !user?.phone_number }"
+                                >
                                     {{ user?.phone_number || '00 32 2 374 XX XX' }}
                                 </p>
                             </div>

@@ -4,8 +4,13 @@
             Mes <strong>réponses reçues</strong>
         </h1>
 
-        <div class="grid my-4 md:my-8">
-            <template v-if="listResponse.length != 0">
+        <template v-if="listResponse != 0">
+            <p class="text-black/50 mt-16 text-center">
+                Aucune donnée à afficher pour le moment
+            </p>
+        </template>
+        <template v-else>
+            <div class="grid my-4 md:my-8">
                 <div
                     v-for="(response, index) in listResponse"
                     :key="index"
@@ -158,13 +163,8 @@
                         </Table>
                     </div>
                 </div>
-            </template>
-            <template v-else>
-                <p class="text-center text-black/70 mt-8">
-                    Aucune donnée à afficher pour le moment
-                </p>
-            </template>
-        </div>
+            </div>
+        </template>
 
         <Dialog v-model:open="nurseDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
