@@ -365,7 +365,12 @@ fetchCareTypes();
                 </div>
 
                 <div>
-                    <InputIcon v-model="form.patientCount" rounded="md" label="Nombre de patients" type="number" />
+                    <InputIcon
+                        v-model="form.patientCount"
+                        rounded="md"
+                        label="Nombre de patients"
+                        type="number"
+                    />
                 </div>
 
                 <div class="flex flex-col gap-2 w-full">
@@ -399,7 +404,10 @@ fetchCareTypes();
 
                 <div class="flex flex-col gap-2">
                     <h5>Type de soin</h5>
-                    <Select v-model="form.careTypes" multiple>
+                    <Select
+                        v-model="form.careTypes"
+                        multiple
+                    >
                         <SelectTrigger
                             class="w-full bg-white rounded-lg text-nowrap border border-2 border-gray-300"
                             position="right"
@@ -442,7 +450,11 @@ fetchCareTypes();
         <Separator class="my-4 lg:my-10" />
 
         <div class="col-span-3 grid place-content-center">
-            <Button type="submit" class="rounded-md w-52" :in-progress="inProgress">
+            <Button
+                type="submit"
+                class="rounded-md w-52"
+                :in-progress="inProgress"
+            >
                 {{ props.replacement ? 'Sauvegarder' : 'Créer un remplacement' }}
             </Button>
         </div>

@@ -105,7 +105,7 @@ const columns: ColumnDef<Replacement>[] = [
                 };
             }
 
-            const formatTime = (time) => (time ? time.slice(0, 5) : '-');
+            const formatTime = time => (time ? time.slice(0, 5) : '-');
             const start = formatTime(slot?.start_at);
             const end = formatTime(slot?.end_at);
 
@@ -125,7 +125,7 @@ const columns: ColumnDef<Replacement>[] = [
             );
         },
         accessorFn: (row) => {
-            let patients = row.patient_count;
+            const patients = row.patient_count;
 
             if (patients && typeof patients === 'string') {
                 try {
@@ -191,7 +191,7 @@ const columns: ColumnDef<Replacement>[] = [
             );
         },
         accessorFn: (row) => {
-            let zipCodes = row.zip_codes;
+            const zipCodes = row.zip_codes;
 
             if (zipCodes && typeof zipCodes === 'string') {
                 try {
@@ -241,7 +241,7 @@ const columns: ColumnDef<Replacement>[] = [
             );
         },
         accessorFn: (row) => {
-            let cities = row.cities;
+            const cities = row.cities;
 
             if (cities) {
                 if (typeof cities === 'string') {

@@ -22,7 +22,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in responses" :key="index" class="hover:bg-gray-50">
+                    <tr
+                        v-for="(item, index) in responses"
+                        :key="index"
+                        class="hover:bg-gray-50"
+                    >
                         <td class="px-4 py-2 border-b">
                             {{ item.repondedBy.full_name }}
                         </td>
@@ -36,7 +40,10 @@
                             {{ traduireStatut(item.status) }}
                         </td>
                         <td class="px-4 py-2 border-b">
-                            <NuxtLink :to="`/dashboard/admin/users/${item.repondedBy.id}`" class="text-blue-600 hover:underline">
+                            <NuxtLink
+                                :to="`/dashboard/admin/users/${item.repondedBy.id}`"
+                                class="text-blue-600 hover:underline"
+                            >
                                 Voir détail
                             </NuxtLink>
                         </td>
