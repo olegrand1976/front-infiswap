@@ -319,7 +319,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+            }, () => ['Intéressés', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
         cell: ({ row }) => {
             const nurses = row.original.response_count ?? 0;
             const id = row.original.id;
