@@ -4,6 +4,22 @@
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
+        <div class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0">
+            <div class="flex items-center justify-between w-full">
+                <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[85%] sm:px-9 rounded-lg">
+                    Remplacements <strong>les plus récentes</strong>
+                </h1>
+                <NuxtLink to="/dashboard/replacements/immediate">
+                    <Button class="text-sm bg-primary">
+                        Créer remplacement
+                    </Button>
+                </NuxtLink>
+            </div>
+            <ReplacementHome
+                :get-data="getAccordingReplacements"
+                class="w-full"
+            />
+        </div>
         <div>
             <HomeReplaceMeContainer />
         </div>
@@ -31,6 +47,11 @@
 </template>
 
 <script setup lang="ts">
+import ReplacementHome from '~/components/ReplacementHome.vue';
+import { useReplacements } from '~/composables/useReplacements';
+
+const { getAccordingReplacements } = useReplacements();
+
 useHead({
     title: 'Accueil',
     meta: [{ name: 'description', content: 'Page d\'accueil....' }],

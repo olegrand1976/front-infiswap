@@ -42,6 +42,23 @@ export const useReplacements = () => {
         }
     };
 
+    const getAccordingReplacements = async () => {
+        try {
+            loading.value = true;
+            const response = await $apifetch('/api/replacements/according-figure', { method: 'GET' });
+            replacements.value = response.replacements;
+
+            return replacements.value;
+        }
+        catch (err) {
+            error.value = err;
+            console.error(err);
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     const getMyReplacements = async () => {
         try {
             const response = await $apifetch('/api/replacements/me', { method: 'GET' });
@@ -178,6 +195,7 @@ export const useReplacements = () => {
         submitReplacement,
         getMyReplacements,
         getReplacements,
+        getAccordingReplacements,
         getReplacementsForAdmin,
         getFRStatus,
         updateReplacement,
