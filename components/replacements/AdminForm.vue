@@ -180,8 +180,8 @@ fetchCareTypes();
 
 <template>
     <form @submit.prevent="submit">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
-            <div class="lg-p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
+            <div class="lg:p-4 pb-6">
                 <h1 class="font-semibold text-gray-600">
                     Remplacement
                 </h1>
