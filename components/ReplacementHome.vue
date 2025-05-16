@@ -4,7 +4,7 @@
             <div class="hidden lg:block">
                 <Table>
                     <TableHeader class="w-full">
-                        <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                        <TableRow class="grid grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
                             <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                 Jour
                             </TableHead>
@@ -28,21 +28,17 @@
                             <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                 Types de soins
                             </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Action
-                            </TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody class="rounded-b-lg">
                         <div v-if="loading">
                             <TableRow
-                                v-for="(_, index) in Array.from({ length: 10 })"
+                                v-for="(_, index) in Array.from({ length: 5 })"
                                 :key="index"
-                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                                class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
                             >
                                 <TableCell><Skeleton class="h-10 w-[200px] bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -58,7 +54,7 @@
                             <TableRow
                                 v-for="replacement in replacements"
                                 :key="replacement.id"
-                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement)"
@@ -169,25 +165,6 @@
                                             </Tooltip>
                                         </TooltipProvider>
                                     </div>
-                                </TableCell>
-
-                                <TableCell
-                                    class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4"
-                                >
-                                    <Button
-                                        v-if="isAdmin"
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        :href="`/dashboard/admin/replacements/${replacement.id}`"
-                                    >
-                                        <EyeIcon class="h-6 mt-1" />
-                                    </Button>
-                                    <Button
-                                        v-else
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                    >
-                                        <EyeIcon class="h-6 mt-1" />
-                                    </Button>
                                 </TableCell>
                             </TableRow>
                         </div>
@@ -365,23 +342,6 @@
                             </p>
                         </div>
                     </div>
-
-                    <div class="col-span-2 my-4 flex space-x-8 justify-center items-center mx-auto">
-                        <Button
-                            v-if="isAdmin"
-                            class="py-2 px-6"
-                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                        >
-                            Voir plus
-                        </Button>
-                        <Button
-                            v-else
-                            class="py-2 px-6"
-                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                        >
-                            Voir plus
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -392,10 +352,8 @@
 import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useReplacements } from '~/composables/useReplacements';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
-import { useAuth } from '~/composables/useAuth';
 
 const { loading, replacements, getAccordingReplacements } = useReplacements();
-const { isAdmin } = useAuth();
 
 onMounted(() => {
     getAccordingReplacements();

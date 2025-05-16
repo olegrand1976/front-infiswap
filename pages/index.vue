@@ -4,11 +4,13 @@
             <HomeBanner />
             <HomeSearchNurseContainer />
         </div>
-        <div class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0">
+        <div
+            class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
+        >
             <div class="flex items-center justify-between w-full">
-                <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[85%] sm:px-9 rounded-lg">
-                    Remplacements <strong>les plus récentes</strong>
-                </h1>
+                <h3 class="xl:text-xl lg:text-xl md:text-xl sm:text-xl text-xl text-primary">
+                    <span>Remplacements </span> <span class="font-bold">les plus récentes</span>
+                </h3>
                 <NuxtLink to="/dashboard/replacements/immediate">
                     <Button class="text-sm bg-primary">
                         Créer remplacement
@@ -19,6 +21,22 @@
                 :get-data="getAccordingReplacements"
                 class="w-full"
             />
+            <NuxtLink
+                v-if="isAdmin"
+                to="/dashboard/admin/replacements"
+            >
+                <Button class="text-sm bg-primary mb-4">
+                    Voir plus
+                </Button>
+            </NuxtLink>
+            <NuxtLink
+                v-else
+                to="/dashboard/replacements"
+            >
+                <Button class="text-sm bg-primary mb-4">
+                    Voir plus
+                </Button>
+            </NuxtLink>
         </div>
         <div>
             <HomeReplaceMeContainer />
@@ -49,8 +67,10 @@
 <script setup lang="ts">
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
+import { useAuth } from '~/composables/useAuth';
 
 const { getAccordingReplacements } = useReplacements();
+const { isAdmin } = useAuth();
 
 useHead({
     title: 'Accueil',
