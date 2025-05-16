@@ -319,7 +319,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+            }, () => ['Intéressés', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
         cell: ({ row }) => {
             const nurses = row.original.response_count ?? 0;
             const id = row.original.id;
@@ -349,10 +349,10 @@ const columns: ColumnDef<Replacement>[] = [
 
             const isImmediate = type === 'immediate';
             const badgeClass = isImmediate
-                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs'
-                : 'bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs';
+                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold'
+                : 'bg-white text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
 
-            const displayText = isImmediate ? 'URGENT' : 'classique';
+            const displayText = isImmediate ? 'URGENT' : '';
 
             return h('span', { class: badgeClass }, displayText);
         },
