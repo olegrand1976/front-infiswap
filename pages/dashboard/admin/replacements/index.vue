@@ -113,7 +113,36 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        header: 'Patients',
+        id: 'patients',
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                },
+                () => ['Patients', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+            );
+        },
+        accessorFn: (row) => {
+            let patients = row.patient_count;
+
+            if (patients && typeof patients === 'string') {
+                try {
+                    const parsed = JSON.parse(patients);
+                    return Array.isArray(parsed) ? parsed.length : 0;
+                } catch (e) {
+                    console.error(e);
+                    return 0;
+                }
+            } else if (!patients) {
+                const extracted = extractPostalDataFromReplacement(row);
+                return extracted?.patients?.length || 0;
+            }
+
+            return patients;
+        },
+        sortingFn: 'basic',
         cell: ({ row }) => {
             let patients = row.original.patient_count;
 
@@ -127,7 +156,7 @@ const columns: ColumnDef<Replacement>[] = [
                 }
             }
             else if (!patients) {
-                patients = extractPostalDataFromReplacement(row.original).patients.length;
+                patients = extractPostalDataFromReplacement(row.original)?.patients?.length || 0;
             }
 
             return h('div', {}, patients);
@@ -148,7 +177,36 @@ const columns: ColumnDef<Replacement>[] = [
     //     },
     // },
     {
-        header: 'C.P',
+        id: 'zip_codes',
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                },
+                () => ['C.P', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+            );
+        },
+        accessorFn: (row) => {
+            let zipCodes = row.zip_codes;
+
+            if (zipCodes && typeof zipCodes === 'string') {
+                try {
+                    const parsed = JSON.parse(zipCodes);
+                    return Array.isArray(parsed) ? parsed.join(', ') : zipCodes;
+                }
+                catch (e) {
+                    console.error(e);
+                    return '';
+                }
+            }
+            else {
+                const extracted = extractPostalDataFromReplacement(row);
+                return extracted?.zip_codes?.join(', ') || '';
+            }
+        },
+        sortingFn: 'alphanumeric',
         cell: ({ row }) => {
             let zipCodes = row.original.zip_codes;
 
@@ -162,14 +220,48 @@ const columns: ColumnDef<Replacement>[] = [
                 }
             }
             else {
-                zipCodes = extractPostalDataFromReplacement(row.original).zip_codes.join(', ');
+                zipCodes = extractPostalDataFromReplacement(row.original)?.zip_codes?.join(', ') || '';
             }
 
             return h('div', { class: 'capitalize' }, zipCodes);
         },
     },
     {
-        header: 'Villes',
+        id: 'cities',
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                },
+                () => ['Villes', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+            );
+        },
+        accessorFn: (row) => {
+            let cities = row.cities;
+
+            if (cities) {
+                if (typeof cities === 'string') {
+                    try {
+                        const parsed = JSON.parse(cities);
+                        return Array.isArray(parsed) ? parsed.join(', ') : cities;
+                    }
+                    catch (e) {
+                        console.error(e);
+                        return '';
+                    }
+                }
+                else if (Array.isArray(cities)) {
+                    return cities.join(', ');
+                }
+            }
+            else {
+                const extracted = extractPostalDataFromReplacement(row);
+                return extracted?.cities?.join(', ') || '';
+            }
+        },
+        sortingFn: 'alphanumeric',
         cell: ({ row }) => {
             let cities = row.original.cities;
 
@@ -188,7 +280,7 @@ const columns: ColumnDef<Replacement>[] = [
                 }
             }
             else {
-                cities = extractPostalDataFromReplacement(row.original).cities.join(', ');
+                cities = extractPostalDataFromReplacement(row.original)?.cities?.join(', ') || '';
             }
 
             return h('div', { class: 'capitalize' }, cities);
@@ -219,9 +311,15 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        header: 'Intéressé',
+        id: 'response_count',
+        accessorKey: 'response_count',
+        header: ({ column }) =>
+            h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Intéressé', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const nurses = row.original.response_count;
+            const nurses = row.original.response_count ?? 0;
             const id = row.original.id;
 
             return h(
@@ -233,6 +331,7 @@ const columns: ColumnDef<Replacement>[] = [
                 () => nurses.toString(),
             );
         },
+        sortingFn: 'alphanumeric',
     },
     {
         accessorKey: 'type',
