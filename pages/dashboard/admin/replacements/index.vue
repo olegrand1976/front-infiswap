@@ -349,10 +349,10 @@ const columns: ColumnDef<Replacement>[] = [
 
             const isImmediate = type === 'immediate';
             const badgeClass = isImmediate
-                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs'
-                : 'bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs';
+                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold'
+                : 'bg-white text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
 
-            const displayText = isImmediate ? 'URGENT' : 'classique';
+            const displayText = isImmediate ? 'URGENT' : '';
 
             return h('span', { class: badgeClass }, displayText);
         },
