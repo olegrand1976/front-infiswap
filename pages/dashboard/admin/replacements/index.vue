@@ -327,6 +327,7 @@ const columns: ColumnDef<Replacement>[] = [
                 {
                     to: `/dashboard/admin/replacements/interest/${id}`,
                     class: 'text-blue-600 hover:underline',
+                    style: 'display: block; text-align: center;',
                 },
                 () => nurses.toString(),
             );
