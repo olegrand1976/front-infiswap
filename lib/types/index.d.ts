@@ -188,9 +188,24 @@ export type Replacement = {
     experience_years: number | null;
     start_date: string;
     end_date: string;
+    visibility: 'public' | 'group' | 'friends';
     status: 'open' | 'closed';
+    type: 'immediate' | 'classic';
+    patient_count?: number;
+    zip_codes?: string[] | string;
+    cities?: string[] | string;
+    care_types?: string[] | string;
+    timeSlot?: {
+        start_at: string;
+        end_at: string;
+    };
+    comment?: string;
     details: ReplacementDetail[];
     nurse_owner_full_name: string;
+    nurse_owner_email: string;
+    nurse_owner_phone_number: string;
+    nurse_owner_profil_url: string;
+    response_count: number;
     substitute_nurse?: string;
     candidate?: boolean;
 };

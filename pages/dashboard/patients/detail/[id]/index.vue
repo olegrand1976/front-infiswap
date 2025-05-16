@@ -704,6 +704,7 @@
 
                             <div class="grid grid-cols-[30%_70%] items-center mt-4">
                                 <h5>Heure</h5>
+                                <p>{{  timeSlot.time }}</p>
                                 <InputTime
                                     v-model="timeSlot.time"
                                     input-class="shadow rounded-full"
