@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Replacement } from '~/lib/types';
-// import { useRuntimeConfig } from '#app';
+import { useRuntimeConfig } from '#app';
 
 const props = defineProps<{
     replacement?: Replacement | null;
@@ -192,17 +192,13 @@ fetchCareTypes();
                 <div class="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
                     <div class="flex flex-col items-center text-center lg:gap-4">
                         <div class="relative">
-                            <!-- <img
-                                v-if="form?.nurseOwnerProfilUrl != null"
+                            <img
+                                v-if="form?.nurseOwnerProfilUrl"
                                 :src="useRuntimeConfig().public.API_URL + '/storage/' + form?.nurseOwnerProfilUrl"
                                 class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border border-gray-300"
                             >
                             <img
                                 v-else
-                                src="/images/icons/user-circle.png"
-                                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full opacity-60"
-                            > -->
-                            <img
                                 src="/images/icons/user-circle.png"
                                 class="w-20 h-20 sm:w-24 sm:h-24 rounded-full opacity-60"
                             >
