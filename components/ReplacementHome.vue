@@ -175,6 +175,14 @@
                                     class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4"
                                 >
                                     <Button
+                                        v-if="isAdmin"
+                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                        :href="`/dashboard/admin/replacements/${replacement.id}`"
+                                    >
+                                        <EyeIcon class="h-6 mt-1" />
+                                    </Button>
+                                    <Button
+                                        v-else
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacements/detail/${replacement.id}`"
                                     >
@@ -360,6 +368,14 @@
 
                     <div class="col-span-2 my-4 flex space-x-8 justify-center items-center mx-auto">
                         <Button
+                            v-if="isAdmin"
+                            class="py-2 px-6"
+                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                        >
+                            Voir plus
+                        </Button>
+                        <Button
+                            v-else
                             class="py-2 px-6"
                             :href="`/dashboard/replacements/detail/${replacement.id}`"
                         >
@@ -376,8 +392,10 @@
 import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useReplacements } from '~/composables/useReplacements';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import { useAuth } from '~/composables/useAuth';
 
 const { loading, replacements, getAccordingReplacements } = useReplacements();
+const { isAdmin } = useAuth();
 
 onMounted(() => {
     getAccordingReplacements();
