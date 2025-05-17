@@ -155,3 +155,20 @@ export function getPeriodsFromTimeSlot(startAt, endAt = null) {
 
     return Array.from(periods);
 }
+
+export function formatCalendarDate(date: { day: number | null; month: number | null; year: number | null }): string | null {
+    if (date == null) {
+        return null;
+    }
+    const day = String(date.day).padStart(2, '0');
+    const month = String(date.month).padStart(2, '0');
+    const year = String(date.year);
+    return `${day}/${month}/${year}`;
+}
+
+export function formatRange(range: { start: { day: number | null; month: number | null; year: number | null }; end: { day: number | null; month: number | null; year: number | null } }) {
+    return {
+        start: formatCalendarDate(range.start),
+        end: formatCalendarDate(range.end),
+    };
+}
