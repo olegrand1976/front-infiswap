@@ -156,7 +156,7 @@ const value = ref({
 }) as Ref<DateRange>;
 
 const formData = reactive({
-    startDate: null,
+    startDate: formatRange(value.value).start,
     endDate: null,
     patientCount: null,
     zipCodes: [],
@@ -214,7 +214,7 @@ const resetForm = () => {
 };
 
 const { submit, inProgress } = useSubmit(async () => {
-    console.log(value.value);
+    console.log(formData);
     const formatted = formatRange(value.value);
 
     formData.startDate = formatted.start;
