@@ -349,7 +349,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon } from '@heroicons/vue/24/outline';
 import { useReplacements } from '~/composables/useReplacements';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 

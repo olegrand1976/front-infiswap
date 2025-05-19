@@ -5,6 +5,7 @@
             <HomeSearchNurseContainer />
         </div>
         <div
+            v-if="replacements"
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
             <div class="flex items-center justify-between w-full">
@@ -69,8 +70,9 @@ import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
 
-const { getAccordingReplacements } = useReplacements();
+const { replacements, getAccordingReplacements } = useReplacements();
 const { isAdmin } = useAuth();
+getAccordingReplacements();
 
 useHead({
     title: 'Accueil',
