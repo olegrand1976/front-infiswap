@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { Component, HTMLAttributes } from 'vue';
-import { useVModel } from '@vueuse/core';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
+import { useVModel } from '@vueuse/core';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
     defaultValue?: string | number;
-    modelValue?: string | number;
+    modelValue?: string | number | Date;
     rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
     label?: string;
     placeholder?: HTMLAttributes['placeholder'];

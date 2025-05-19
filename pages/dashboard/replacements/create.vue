@@ -140,6 +140,7 @@ import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
+import { formatRange } from '~/lib/utils';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
@@ -155,8 +156,8 @@ const value = ref({
 }) as Ref<DateRange>;
 
 const formData = reactive({
-    startDate: `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`,
-    endDate: ``,
+    startDate: formatRange(value.value).start,
+    endDate: null,
     patientCount: null,
     zipCodes: [],
     cities: [],
@@ -199,8 +200,8 @@ onMounted(() => {
 await fetchCareTypes();
 
 const resetForm = () => {
-    formData.startDate = `${value.value.start.year}-${String(value.value.start.month).padStart(2, '0')}-${String(value.value.start.day).padStart(2, '0')}`;
-    formData.endDate = '';
+    formData.startDate = null;
+    formData.endDate = null;
     formData.patientCount = null;
     formData.zipCodes = [];
     formData.cities = [];
@@ -213,7 +214,12 @@ const resetForm = () => {
 };
 
 const { submit, inProgress } = useSubmit(async () => {
-    formData.endDate = `${value.value.end.year}-${String(value.value.end.month).padStart(2, '0')}-${String(value.value.end.day).padStart(2, '0')}`;
+    console.log(formData);
+    const formatted = formatRange(value.value);
+
+    formData.startDate = formatted.start;
+    formData.endDate = formatted.end;
+
     await submitReplacement(formData);
 }, {
     onSuccess: () => {
@@ -221,26 +227,6 @@ const { submit, inProgress } = useSubmit(async () => {
             description: 'Création effectuée',
         });
         resetForm();
-    },
-    onError: (error) => {
-        if (error.data && error.data.errors) {
-            const backendErrors = error.data.errors;
-            const errorMessages: string[] = [];
-
-            Object.keys(backendErrors).forEach((field) => {
-                backendErrors[field].forEach((message: string) => {
-                    errorMessages.push(message);
-                });
-            });
-
-            if (errorMessages.length > 0) {
-                $toast({
-                    description: errorMessages.join('/'),
-                    status: 'error',
-                    variant: 'destructive',
-                });
-            }
-        }
     },
 });
 
