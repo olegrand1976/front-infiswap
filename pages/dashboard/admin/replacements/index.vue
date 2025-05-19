@@ -36,16 +36,14 @@ await getReplacementsForAdmin();
 const columns: ColumnDef<Replacement>[] = [
     {
         accessorKey: 'start_date',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
-        },
+        header: ({ column }) => h(Button, {
+            variant: 'ghost',
+            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            style: 'white-space: nowrap;',
+        }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const period = formatToDMY(row.original.start_date) + ' - ' + formatToDMY(row.original.end_date);
-
-            return h('div', { class: 'capitalize' }, period);
+            return h('div', { style: 'white-space: nowrap; min-width: 200px;' }, period);
         },
     },
     {
@@ -310,6 +308,21 @@ const columns: ColumnDef<Replacement>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.substitute_nurse);
+        },
+    },
+    {
+        accessorFn: row => (row.matching_nurses || []).join(', '),
+        id: 'matching_nurses',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', {
+                class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden'
+            }, (row.original.matching_nurses || []).join(', '));
         },
     },
     {

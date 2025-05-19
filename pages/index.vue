@@ -75,6 +75,7 @@ import { useAuth } from '~/composables/useAuth';
 
 const { replacements, getAccordingReplacements } = useReplacements();
 const { isAdmin } = useAuth();
+
 getAccordingReplacements();
 
 useHead({

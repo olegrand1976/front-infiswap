@@ -77,6 +77,7 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
     nurseOwnerPhoneNumber: replacement?.nurse_owner_phone_number ?? '',
     nurseOwnerProfilUrl: replacement?.nurse_owner_profil_url ?? '',
+    matchingNurses: replacement?.matching_nurses ?? '',
     substituteNurse: replacement?.substitute_nurse ?? '',
     candidate: replacement?.candidate ?? false,
     responseCount: replacement?.response_count ?? null,
@@ -232,6 +233,20 @@ fetchCareTypes();
                             {{ form.responseCount }} personne<span v-if="form.responseCount > 1">s</span>
                         </NuxtLink>
                     </p>
+                </div>
+
+                <div
+                    v-if="form.matchingNurses && form.matchingNurses.length"
+                    class="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-md"
+                >
+                    <h3 class="text-gray-700 font-semibold mb-3 text-center">
+                        Liste des personnes notifiées
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                        <li v-for="(nurse, index) in form.matchingNurses" :key="index">
+                            {{ nurse }}
+                        </li>
+                    </ul>
                 </div>
             </div>
 
