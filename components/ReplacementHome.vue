@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="grid my-8">
+        <div class="grid my-2">
             <div class="hidden lg:block">
                 <Table>
                     <TableHeader class="w-full">
@@ -191,7 +191,7 @@
                     v-for="replacement in replacements.slice(0, 1)"
                     v-else
                     :key="replacement?.id"
-                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-16 relative"
+                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-4 relative"
                 >
                     <div
                         v-if="isUrgentReplacement(replacement)"
