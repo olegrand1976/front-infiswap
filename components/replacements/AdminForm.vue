@@ -237,13 +237,18 @@ fetchCareTypes();
 
                 <div
                     v-if="form.matchingNurses && form.matchingNurses.length"
-                    class="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-md"
+                    class="mt-6 bg-white p-6 rounded-xl border border-gray-200 shadow-md"
                 >
-                    <h3 class="text-gray-700 font-semibold mb-3 text-center">
+                    <h3 class="text-lg font-bold text-center text-gray-800 mb-4 tracking-wide">
                         Liste des personnes notifiées
                     </h3>
-                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
-                        <li v-for="(nurse, index) in form.matchingNurses" :key="index">
+
+                    <ul class="divide-y divide-gray-100 text-sm">
+                        <li
+                            v-for="(nurse, index) in form.matchingNurses"
+                            :key="index"
+                            class="py-2 px-3 hover:bg-gray-50 transition-colors rounded-md"
+                        >
                             {{ nurse }}
                         </li>
                     </ul>
