@@ -47,6 +47,9 @@
                 <h1 class="mb-4 px-4 text-sm lg:mb-6 xl:text-base text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, pour une inscription rapide</span>
                 </h1>
+                <h2 class="mb-4 px-4 text-sm lg:mb-6 xl:text-base text-center">
+                    Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.
+                </h2>
                 <form
                     class="grid grid-cols-2 lg:grid-cols-4 gap-4"
                     @submit.prevent="submit"
