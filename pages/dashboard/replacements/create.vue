@@ -47,10 +47,10 @@
                 </div>
 
                 <div class="mt-8">
-                    <label class="text-primary font-semibold">
+                    <label class="text-primary sm:flex sm:justify-center sm:items-center font-semibold">
                         Créneau horaire
                     </label>
-                    <div class="mt-2 flex space-x-5 sm:space-x-8 items-center">
+                    <div class="mt-2 flex sm:justify-center space-x-5 sm:space-x-8 items-center">
                         <InputTime
                             v-model="formData.timeSlot.startAt"
                             class="w-20 sm:w-48 lg:w-20 2xl:w-48"
