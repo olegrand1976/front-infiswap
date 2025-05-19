@@ -19,7 +19,7 @@
                         <div class="pt-2 md:pt-4">
                             <NuxtLink to="/dashboard/replacements">
                                 <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-xs md:text-sm font-semibold hover:bg-primary/90 transition">
-                                    Proposer
+                                    Rechercher
                                 </button>
                             </NuxtLink>
                         </div>
@@ -72,7 +72,7 @@
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements">
                                             <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
-                                                Proposer
+                                                Rechercher
                                             </button>
                                         </NuxtLink>
                                     </div>
