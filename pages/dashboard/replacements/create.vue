@@ -2,14 +2,48 @@
     <form @submit.prevent="submit">
         <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="sm:mx-12 lg:mx-6">
-                <div class="shadow">
+                <div class="shadow pb-8">
                     <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
                         Sélectionner la période de remplacement
                     </h2>
                     <RangeCalendar
                         v-model="value"
-                        class="flex flex-col justify-center md:block p-4 rounded-b-lg mb-8"
+                        class="flex flex-col justify-center md:block p-4 rounded-b-lg mb-6"
                     />
+                    <div class="mb-6 relative -mt-4 text-center text-black/50">
+                        <hr class="border-b border-gray-200 mx-8">
+                        <p class="absolute -top-5 left-[45%] text-center bg-white p-3 text-black/60">
+                            OU
+                        </p>
+                    </div>
+                    <div class="flex flex-col space-y-4 justify-center items-center mx-auto">
+                        <h2 class="text-center font-semibold text-black/70">
+                            Saisir manuellement la date
+                        </h2>
+                        <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-16 2xl:gap-32">
+                            <div class="flex flex-col space-y-2">
+                                <label class="font-semibold text-primary text-center">
+                                    Date de début
+                                </label>
+                                <Input
+                                    v-model="startDateInput"
+                                    type="date"
+                                    class="outline-gray-200 rounded-full"
+                                />
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <label class="font-semibold text-primary text-center">
+                                    Date de fin
+                                </label>
+                                <Input
+                                    v-model="endDateInput"
+                                    type="date"
+                                    class="outline-gray-200 rounded-full"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8">
@@ -32,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col space-y-6 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
+            <div class="flex flex-col space-y-8 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
                         Nombre de patients par jour
@@ -116,7 +150,7 @@
                     <Textarea
                         v-model="formData.comment"
                         placeholder="Écrivez un commentaire"
-                        rows="8"
+                        rows="11"
                         class="w-full border border-gray-400 focus-within:border-primary"
                     />
                 </div>
@@ -134,7 +168,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, today, parseDate } from '@internationalized/date';
 import type { DateRange } from 'reka-ui';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
@@ -171,12 +205,37 @@ const formData = reactive({
     citiesInput: '',
 });
 
+// Computed properties for manual date inputs
+const startDateInput = computed({
+    get: () => value.value.start ? value.value.start.toString() : '',
+    set: (date: string) => {
+        if (date) {
+            value.value.start = parseDate(date);
+            formData.startDate = formatRange(value.value).start;
+        }
+    },
+});
+
+const endDateInput = computed({
+    get: () => value.value.end ? value.value.end.toString() : '',
+    set: (date: string) => {
+        if (date) {
+            value.value.end = parseDate(date);
+            formData.endDate = formatRange(value.value).end;
+        } else {
+            value.value.end = null;
+            formData.endDate = null;
+        }
+    },
+});
+
 const handleCareTypeClick = (timeSlot, careTypes) => {
     const index = timeSlot.careTypes.indexOf(careTypes);
     if (index === -1) {
-        timeSlot.careTypes.push(careTypes);
-    }
-    else {
+        timeSlot.careTypes.push
+
+(careTypes);
+    } else {
         timeSlot.careTypes.splice(index, 1);
     }
     timeSlot.careTypes = [...timeSlot.careTypes];
@@ -200,7 +259,8 @@ onMounted(() => {
 await fetchCareTypes();
 
 const resetForm = () => {
-    formData.startDate = null;
+    value.value = { start: today(getLocalTimeZone()), end: null };
+    formData.startDate = formatRange(value.value).start;
     formData.endDate = null;
     formData.patientCount = null;
     formData.zipCodes = [];
@@ -214,12 +274,9 @@ const resetForm = () => {
 };
 
 const { submit, inProgress } = useSubmit(async () => {
-    console.log(formData);
     const formatted = formatRange(value.value);
-
     formData.startDate = formatted.start;
     formData.endDate = formatted.end;
-
     await submitReplacement(formData);
 }, {
     onSuccess: () => {
