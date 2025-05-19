@@ -10,7 +10,7 @@
         >
             <div class="flex items-center justify-between w-full">
                 <h3 class="xl:text-xl lg:text-xl md:text-xl sm:text-xl text-xl text-primary">
-                    <span>Remplacements </span> <span class="font-bold">les plus récentes</span>
+                    <span>Découvrez les remplacements </span> <span class="font-bold">les plus récentes</span>
                 </h3>
                 <NuxtLink to="/dashboard/replacements/immediate">
                     <Button class="text-sm bg-primary">
@@ -18,26 +18,29 @@
                     </Button>
                 </NuxtLink>
             </div>
-            <ReplacementHome
-                :get-data="getAccordingReplacements"
-                class="w-full"
-            />
-            <NuxtLink
-                v-if="isAdmin"
-                to="/dashboard/admin/replacements"
-            >
-                <Button class="text-sm bg-primary mb-4">
-                    Voir plus
-                </Button>
-            </NuxtLink>
-            <NuxtLink
-                v-else
-                to="/dashboard/replacements"
-            >
-                <Button class="text-sm bg-primary mb-4">
-                    Voir plus
-                </Button>
-            </NuxtLink>
+            <div class="w-full">
+                <ReplacementHome
+                    :get-data="getAccordingReplacements"
+                />
+                <div class="w-full flex justify-center">
+                    <NuxtLink
+                        v-if="isAdmin"
+                        to="/dashboard/admin/replacements"
+                    >
+                        <Button class="text-base bg-primary lg:mb-4 px-16 py-3">
+                            Voir plus
+                        </Button>
+                    </NuxtLink>
+                    <NuxtLink
+                        v-else
+                        to="/dashboard/replacements"
+                    >
+                        <Button class="text-base bg-primary lg:mb-4 px-16 py-3">
+                            Voir plus
+                        </Button>
+                    </NuxtLink>
+                </div>
+            </div>
         </div>
         <div>
             <HomeReplaceMeContainer />
