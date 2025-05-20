@@ -51,10 +51,14 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm sm:text-base gap-2">
                         <p
                             v-if="item.response.created_at"
-                            class="text-gray-500">
+                            class="text-gray-500"
+                        >
                             Candidature envoyée le {{ formatDate(item.response.created_at) }}
                         </p>
-                        <div v-else class="h-5"></div>
+                        <div
+                            v-else
+                            class="h-5"
+                        />
                         <NuxtLink
                             :to="`/dashboard/replacements/detail/${item.replacement.id}`"
                             class="text-primary hover:underline font-medium"

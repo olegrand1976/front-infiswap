@@ -222,7 +222,8 @@ const endDateInput = computed({
         if (date) {
             value.value.end = parseDate(date);
             formData.endDate = formatRange(value.value).end;
-        } else {
+        }
+        else {
             value.value.end = null;
             formData.endDate = null;
         }
@@ -234,8 +235,9 @@ const handleCareTypeClick = (timeSlot, careTypes) => {
     if (index === -1) {
         timeSlot.careTypes.push
 
-(careTypes);
-    } else {
+        (careTypes);
+    }
+    else {
         timeSlot.careTypes.splice(index, 1);
     }
     timeSlot.careTypes = [...timeSlot.careTypes];

@@ -321,7 +321,7 @@ const columns: ColumnDef<Replacement>[] = [
         },
         cell: ({ row }) => {
             return h('div', {
-                class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden'
+                class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
             }, (row.original.matching_nurses || []).join(', '));
         },
     },
