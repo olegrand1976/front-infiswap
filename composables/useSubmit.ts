@@ -29,14 +29,28 @@ export function useSubmit<T>(
         catch (e) {
             error.value = e;
             succeeded.value = false;
-            options?.onError?.(e);
-            validationErrors.value = e.data?.errors ?? {};
-            const firstError = e.data?.message || 'Une erreur est survenue';
 
-            $toast({
-                title: firstError,
-                variant: 'destructive',
-            });
+            if (e.data?.errors) {
+                validationErrors.value = e.data.errors;
+
+                const firstErrorKey = Object.keys(e.data.errors)[0];
+                const firstErrorMessage = e.data.errors[firstErrorKey]?.[0] || 'Une erreur de validation est survenue';
+
+                $toast({
+                    title: firstErrorMessage,
+                    variant: 'destructive',
+                });
+            }
+            else {
+                const errorMessage = e.data?.message || e.message || 'Une erreur est survenue';
+
+                $toast({
+                    title: errorMessage,
+                    variant: 'destructive',
+                });
+
+                options?.onError?.(e);
+            }
         }
         finally {
             inProgress.value = false;
