@@ -23,9 +23,11 @@
                                 au
                                 <span class="text-primary">{{ formatDate(item.replacement.end_date) }}</span>
                             </p>
-                            <p class="text-sm sm:text-base text-gray-500 mt-3 leading-snug">
-                                Type : <span class="capitalize text-primary font-medium">{{ item.replacement.type }}</span> |
-                                Visibilité : <span class="capitalize font-medium text-success">{{ item.replacement.visibility }}</span>
+                            <p
+                                v-if="item.replacement.type === 'immediate'"
+                                class="text-sm sm:text-base bg-primary text-white font-bold mt-3 px-3 py-1 rounded inline-block leading-snug"
+                            >
+                                <span class="capitalize">URGENT</span>
                             </p>
                         </div>
 

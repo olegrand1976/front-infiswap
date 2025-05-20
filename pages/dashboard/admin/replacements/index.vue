@@ -311,7 +311,7 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorFn: row => (row.matching_nurses || []).join(', '),
+        accessorFn: row => (row.matching_nurses || []).map(nurse => nurse.full_name).join(', '),
         id: 'matching_nurses',
         header: ({ column }) => {
             return h(Button, {
@@ -322,7 +322,7 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             return h('div', {
                 class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
-            }, (row.original.matching_nurses || []).join(', '));
+            }, (row.original.matching_nurses || []).map(nurse => nurse.full_name).join(', '));
         },
     },
     {
