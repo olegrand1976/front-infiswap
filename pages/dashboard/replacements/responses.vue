@@ -4,7 +4,7 @@
             Mes <strong>réponses reçues</strong>
         </h1>
 
-        <template v-if="listResponse != 0">
+        <template v-if="listResponse == 0">
             <p class="text-black/50 mt-16 text-center">
                 Aucune donnée à afficher pour le moment
             </p>
