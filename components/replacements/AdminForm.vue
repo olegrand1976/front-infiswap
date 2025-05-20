@@ -249,7 +249,9 @@ fetchCareTypes();
                             :key="index"
                             class="py-2 px-3 hover:bg-gray-50 transition-colors rounded-md"
                         >
-                            <div class="font-semibold text-gray-800">{{ nurse.full_name }}</div>
+                            <div class="font-semibold text-gray-800">
+                                {{ nurse.full_name }}
+                            </div>
                             <div class="text-gray-500 text-xs mt-1">
                                 <span class="font-medium text-gray-600">Email :</span> {{ nurse.email }}<br>
                                 <span class="font-medium text-gray-600">Code postal :</span> {{ nurse.zip_code }}
