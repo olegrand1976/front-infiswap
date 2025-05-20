@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-6">
         <section class="grid grid-cols-1 items-center gap-4">
-            <div class="hidden md:block mx-8">
+            <div class="hidden lg:block mx-8">
                 <Carousel :opts="{ slidesToScroll: 1, slidesToShow: 3 }">
                     <CarouselContent>
                         <CarouselItem class="basis-1/3">
@@ -113,7 +113,7 @@
                 </Carousel>
             </div>
 
-            <div class="relative md:hidden mx-8">
+            <div class="relative lg:hidden mx-8">
                 <Carousel>
                     <CarouselContent>
                         <CarouselItem>
