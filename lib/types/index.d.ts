@@ -205,6 +205,7 @@ export type Replacement = {
     nurse_owner_email: string;
     nurse_owner_phone_number: string;
     nurse_owner_profil_url: string;
+    matching_nurses: string;
     response_count: number;
     substitute_nurse?: string;
     candidate?: boolean;
