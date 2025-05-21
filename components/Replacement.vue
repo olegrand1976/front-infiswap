@@ -366,6 +366,7 @@
                                         </DialogContent>
                                     </Dialog>
                                 </TableCell>
+                                <span class="bg-white h-[0.01em]"></span>
                             </TableRow>
                         </div>
                     </TableBody>
@@ -373,193 +374,146 @@
             </div>
 
             <div class="lg:hidden">
-                <div v-if="loading && loadingSearch">
-                    <div
-                        v-for="(_, index) in Array.from({ length: 3 })"
-                        :key="index"
-                        class="grid grid-cols-1"
-                    >
-                        <Skeleton class="h-32 w-full bg-gray-100" />
-                    </div>
-                </div>
-                <div v-else-if="filteredReplacements.length === 0">
-                    <p class="text-center text-gray-500 py-8">
-                        Aucun résultat n'est trouvé
-                    </p>
-                </div>
-                <div
-                    v-for="replacement in filteredReplacements"
-                    v-else
-                    :key="replacement?.id"
-                    class="grid grid-cols-2 gap-4 rounded bg-gray-100 mb-16 relative"
-                >
-                    <div
-                        v-if="isUrgentReplacement(replacement)"
-                        class="urgent-indicator mt-9"
-                    >
-                        URGENT
-                    </div>
+                <Table>
+                    <TableHeader class="w-full">
+                        <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                            <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                Date
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Localité
+                            </TableHead>
+                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                Action
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
 
-                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                Jour
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.start_date) }}</span>
-                                <span>   au   </span>
-                                <span class="py-1 px-3 bg-gray-300">{{ formatDate(replacement.end_date) }}</span>
-                            </div>
+                    <TableBody class="rounded-b-lg">
+                        <div v-if="loading && loadingSearch">
+                            <TableRow
+                                v-for="(_, index) in Array.from({ length: 10 })"
+                                :key="index"
+                                class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden h-16"
+                            >
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                            </TableRow>
                         </div>
-
-                        <div class="flex flex-col gap-2">
-                            <div class="grid grid-cols-3 bg-primary text-white py-2 rounded-md">
-                                <span class="text-center text-sm">Matin</span>
-                                <span class="text-center text-sm">Après-midi</span>
-                                <span class="text-center text-sm">Soir</span>
-                            </div>
-                            <div class="grid grid-cols-3 py-2">
-                                <div class="flex justify-center">
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement, 'morning')"
-                                        class="h-5 w-5 text-success"
-                                    />
-                                    <span
-                                        v-else
-                                        class="h-5 w-5"
-                                    />
-                                </div>
-                                <div class="flex justify-center">
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement, 'afternoon')"
-                                        class="h-5 w-5 text-success"
-                                    />
-                                    <span
-                                        v-else
-                                        class="h-5 w-5"
-                                    />
-                                </div>
-                                <div class="flex justify-center">
-                                    <CheckCircleIcon
-                                        v-if="hasShift(replacement, 'evening')"
-                                        class="h-5 w-5 text-success"
-                                    />
-                                    <span
-                                        v-else
-                                        class="h-5 w-5"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                {{ JSON.parse(replacement.zip_codes).length > 1 ? 'Codes postaux' : 'Code postal' }}
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-2 text-center truncate">
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
-                                                    <span
-                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
-                                                        :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
-                                                    >
-                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
-                                                    </span>
-                                                </p>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <span
-                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
-                                                    :key="index"
-                                                    :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
-                                                >
-                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
-                                                </span>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 items-center gap-2">
-                            <h4 class="bg-primary text-white py-2 text-center rounded">
-                                {{ JSON.parse(replacement.cities).length > 1 ? 'Villes' : 'Ville' }}
-                            </h4>
-                            <div class="py-3 bg-gray-200 text-center rounded">
-                                <p class="py-2 px-2 text-center truncate w-full">
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
-                                                    <span
-                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
-                                                        :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
-                                                    >
-                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
-                                                    </span>
-                                                </p>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <span
-                                                    v-for="(city, index) in JSON.parse(replacement.cities)"
-                                                    :key="index"
-                                                    :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
-                                                >
-                                                    {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
-                                                </span>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2">
-                        <h4 class="bg-primary text-white py-2 text-center rounded">
-                            {{ replacement.care_types.length <= 1 ? 'Type de soin' : 'Types de soins' }}
-                        </h4>
-                        <div class="mt-3 py-3 bg-gray-200 text-center rounded">
-                            <p class="truncate w-full px-2">
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+                        <div v-else-if="filteredReplacements.length === 0">
+                            <p class="text-center text-gray-500 py-8">
+                                Aucun résultat n'est trouvé
                             </p>
                         </div>
-                    </div>
+                        <div v-else>
+                            <TableRow
+                                v-for="replacement in filteredReplacements"
+                                :key="replacement.id"
+                                class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
+                            >
+                                <div
+                                    v-if="isUrgentReplacement(replacement)"
+                                    class="urgent-indicator -ml-[-2]"
+                                >
+                                    URGENT
+                                </div>
 
-                    <div class="col-span-2 my-4 flex space-x-8 justify-center items-center mx-auto">
-                        <Button
-                            v-if="user.nurse.id == replacement.nurse_id"
-                            variant="secondary"
-                            class="py-2 px-6 bg-gray-200 hover:bg-gray-300 text-black text-base"
-                            @click="closeReplacementDialog = true"
-                        >
-                            Fermer
-                        </Button>
-                        <Button
-                            class="py-2 px-6"
-                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                        >
-                            Voir plus
-                        </Button>
-                    </div>
-                </div>
+                                <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
+                                    <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
+                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                    </div>
+                                    <span class="text-xs mb-1">au</span>
+                                    <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                        <span>{{ formatDate(replacement.end_date) }}</span>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                    <div class="bg-[#E4E7F4] rounded p-2">
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger class="block w-full text-start">
+                                                    <div class="flex flex-col space-y-1 max-h-16 overflow-y-hidden">
+                                                        <span
+                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            :key="index"
+                                                            :class="cn('text-sm leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                        >
+                                                            {{ zipCode }}
+                                                        </span>
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent class="text-sm max-w-[200px]">
+                                                    <div class="flex flex-wrap gap-1">
+                                                        <span
+                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            :key="'tooltip-' + index"
+                                                            :class="cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                        >
+                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                        </span>
+                                                    </div>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell
+                                    class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4"
+                                >
+                                    <div class="flex flex-col items-center justify-center space-y-2">
+                                        <Button
+                                            v-if="user.nurse.id == replacement.nurse_id"
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                            @click="closeReplacementDialog = true"
+                                        >
+                                            <XMarkIcon class="h-6 mt-1" />
+                                        </Button>
+                                        <Button
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                        >
+                                            <EyeIcon class="h-6 mt-1" />
+                                        </Button>
+                                    </div>
+
+                                    <Dialog v-model:open="closeReplacementDialog">
+                                        <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                            <DialogHeader>
+                                                <DialogTitle>
+                                                    Fermer le remplacement
+                                                </DialogTitle>
+                                                <DialogDescription class="mt-3 mb-6">
+                                                    Etes-vous sur de vouloir fermer ce remplacement ?
+                                                </DialogDescription>
+                                            </DialogHeader>
+
+                                            <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                <Button
+                                                    variant="secondary"
+                                                    class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                    @click="closeReplacementDialog = false"
+                                                >
+                                                    Non
+                                                </Button>
+                                                <Button
+                                                    variant="default"
+                                                    class="px-8"
+                                                    @click="handleCloseReplacement(replacement)"
+                                                >
+                                                    Oui
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                </TableCell>
+                                <span class="bg-white h-[0.01em]"></span>
+                            </TableRow>
+                        </div>
+                    </TableBody>
+                </Table>
             </div>
         </div>
     </div>
