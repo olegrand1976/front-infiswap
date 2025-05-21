@@ -126,7 +126,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
@@ -177,40 +177,6 @@ const endDate = computed(() =>
 
 const hasConfirmed = () =>
     listResponse.value?.some(item => item.status === 'confirmed');
-
-// const displayCities = (settings) => {
-//     if (!settings) return 'Aucune ville';
-//     const data = typeof settings === 'string' ? JSON.parse(settings) : settings;
-//     return data?.replacement?.cities?.join(', ') || 'Aucune ville';
-// };
-
-// // Méthode pour extraire les codes postaux
-// const getZipCodes = (settings) => {
-//     try {
-//         const parsed = JSON.parse(settings);
-//         return parsed?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
-//     }
-//     catch {
-//         return 'Format invalide';
-//     }
-// };
-
-// const handlesubmit = async (id) => {
-//     try {
-//         await changeStatus(id);
-//         $toast({
-//             title: 'Succès',
-//             description: 'Infirmier accepté',
-//         });
-//     }
-//     catch (e) {
-//         $toast({
-//             title: 'Oups! Une erreur s\'est produite',
-//             description: 'Veuillez réessayer',
-//             variant: 'destructive',
-//         });
-//     }
-// };
 
 useHead({
     title: 'Liste des personnes intéréssées par le remplacement',
