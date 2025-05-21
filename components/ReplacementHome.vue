@@ -213,19 +213,29 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement)"
-                                    class="urgent-indicator -ml-[-2]"
+                                    class="urgent-indicator -ml-[-2] text-xs"
                                 >
                                     URGENT
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                    <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.start_date) }}</span>
-                                    </div>
-                                    <span class="text-xs mb-1">au</span>
-                                    <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.end_date) }}</span>
-                                    </div>
+                                    <template v-if="replacement.start_date !== replacement.end_date">
+                                        <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                        <span class="text-xs mb-1">au</span>
+                                        <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.end_date) }}</span>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div
+                                            class="flex h-full w-full justify-center items-center"
+                                            style="min-height: 3rem;"
+                                        >
+                                            <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                    </template>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
@@ -237,7 +247,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="index"
-                                                            class="mr-1 text-sm"
+                                                            class="mr-1 text-xs"
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>

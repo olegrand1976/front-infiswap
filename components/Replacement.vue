@@ -132,17 +132,19 @@
                 </div>
                 <div class="col-span-4 md:col-span-2 lg:col-span-1 flex gap-3">
                     <Button
-                        class="bg-primary"
+                        class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
                         @click="reinitializeFilter"
                     >
                         <ArrowPathIcon class="w-6" />
+                        <span class="ml-2 block lg:hidden text-xs md:text-sm">Réinitialiser</span>
                     </Button>
+
                     <Button
-                        class="text-sm bg-primary"
+                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto"
                         @click="submit"
                     >
                         <MagnifyingGlassIcon class="w-6" />
-                        Rechercher
+                        <span class="ml-2 text-xs md:text-sm">Rechercher</span>
                     </Button>
                 </div>
             </Form>
@@ -414,19 +416,29 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement)"
-                                    class="urgent-indicator -ml-[-2]"
+                                    class="urgent-indicator -ml-[-2] text-xs"
                                 >
                                     URGENT
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                    <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.start_date) }}</span>
-                                    </div>
-                                    <span class="text-xs mb-1">au</span>
-                                    <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.end_date) }}</span>
-                                    </div>
+                                    <template v-if="replacement.start_date !== replacement.end_date">
+                                        <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                        <span class="text-xs mb-1">au</span>
+                                        <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.end_date) }}</span>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div
+                                            class="flex h-full w-full justify-center items-center"
+                                            style="min-height: 3rem;"
+                                        >
+                                            <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                    </template>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
@@ -434,16 +446,21 @@
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger class="block w-full text-start">
-                                                    <div class="flex flex-col space-y-1 max-h-16 overflow-y-hidden">
+                                                    <div class="flex flex-col space-y-1">
                                                         <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
                                                             :key="index"
-                                                            :class="cn('text-sm leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
                                                         >
                                                             {{ zipCode }}
                                                         </span>
+
+                                                        <span v-if="JSON.parse(replacement.zip_codes).length > 3" class="text-xs text-gray-500">
+                                                            ...
+                                                        </span>
                                                     </div>
                                                 </TooltipTrigger>
+
                                                 <TooltipContent class="text-sm max-w-[200px]">
                                                     <div class="flex flex-wrap gap-1">
                                                         <span
