@@ -16,26 +16,26 @@
                     <h4 class="font-semibold text-sm sm:text-primary sm:ml-4 xl:ml-0">
                         Période
                     </h4>
-                    <div class="flex justify-between sm:justify-start sm:space-x-5 items-center rounded-full bg-primary sm:w-40">
+                    <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
                         <span class="text-xs text-white ms-3">Début</span>
-                        <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
+                        <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
                             <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
                             <Input
                                 v-model="startDate"
                                 variant="transparent"
-                                class="text-xs text-primary w-24"
+                                class="text-xs font-bold text-primary w-24"
                                 disabled
                             />
                         </div>
                     </div>
-                    <div class="flex justify-between sm:justify-start sm:space-x-5 items-center rounded-full bg-primary sm:w-40">
+                    <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
                         <span class="text-xs text-white ms-3">Fin</span>
-                        <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
+                        <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
                             <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
                             <Input
                                 v-model="endDate"
                                 variant="transparent"
-                                class="text-xs text-primary w-24"
+                                class="text-xs font-bold text-primary w-24"
                                 disabled
                             />
                         </div>
@@ -45,35 +45,31 @@
 
             <div
                 v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
-                class="mt-12 sm:mt-0 w-[45%] sm:w-full lg:w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center"
+                class="mt-12 sm:mt-0 w-full lg:w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center gap-2"
             >
-                <div class="flex space-x-3 bg-primary h-10 rounded-full w-72">
-                    <span class="text-xs text-white mt-3 font-normal text-nowrap ml-3">Nombre infirmier intéressé</span>
-                    <div class="bg-white flex items-center justify-center shadow w-72 rounded-full">
+                <div class="flex items-center text-center space-x-3 bg-primary h-10 border-2 border-primary rounded-full w-72">
+                    <div>
                         <span
-                            v-if="replacement.response_count == 0"
-                            class="text-xs text-primary"
-                        >
-                            Aucun
-                        </span>
-                        <span
-                            v-else-if="replacement.response_count == 1"
-                            class="text-xs text-primary"
-                        >
-                            1 intéressé
-                        </span>
+                            v-if="replacement.response_count < 2"
+                            class="text-sm text-white text-nowrap ml-3"
+                        >Intéressée</span>
                         <span
                             v-else
-                            class="text-xs text-primary"
+                            class="text-sm font-bold text-white text-nowrap ml-3"
+                        >Intéressées</span>
+                    </div>
+                    <div class="bg-white h-full flex items-center justify-center shadow w-72 rounded-full">
+                        <span
+                            class="font-bold text-primary"
                         >
-                            {{ replacement.response_count }} intéressés
+                            {{ replacement.response_count ?? 0 }}
                         </span>
                     </div>
                 </div>
                 <Button
                     :href="`/dashboard/replacements/detail/${replacement.id}/list`"
                 >
-                    <span class="text-xs">Liste</span>
+                    <span class="text-sm font-bold">voir liste</span>
                 </Button>
             </div>
         </div>

@@ -368,7 +368,7 @@
                                         </DialogContent>
                                     </Dialog>
                                 </TableCell>
-                                <span class="bg-white h-[0.01em]"></span>
+                                <span class="bg-white h-[0.01em]" />
                             </TableRow>
                         </div>
                     </TableBody>
@@ -455,7 +455,10 @@
                                                             {{ zipCode }}
                                                         </span>
 
-                                                        <span v-if="JSON.parse(replacement.zip_codes).length > 3" class="text-xs text-gray-500">
+                                                        <span
+                                                            v-if="JSON.parse(replacement.zip_codes).length > 3"
+                                                            class="text-xs text-gray-500"
+                                                        >
                                                             ...
                                                         </span>
                                                     </div>
@@ -526,7 +529,7 @@
                                         </DialogContent>
                                     </Dialog>
                                 </TableCell>
-                                <span class="bg-white h-[0.01em]"></span>
+                                <span class="bg-white h-[0.01em]" />
                             </TableRow>
                         </div>
                     </TableBody>

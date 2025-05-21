@@ -1,7 +1,7 @@
 <template>
     <LayoutsAppImage
         :src="'logo.png'"
-        alt="InfiSwap"
+        alt="logo-InfiSwap"
         class="hover:cursor-pointer"
         :class="classe"
         format="png"

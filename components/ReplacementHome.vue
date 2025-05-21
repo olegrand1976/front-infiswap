@@ -281,7 +281,7 @@
                                         </Button>
                                     </div>
                                 </TableCell>
-                                <span class="bg-white h-[0.01em]"></span>
+                                <span class="bg-white h-[0.01em]" />
                             </TableRow>
                         </div>
                     </TableBody>
