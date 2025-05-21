@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Des replacements" />
+        <DashboardAdminPageHeader title="Des remplacements" />
 
         <DashboardAdminPageContent>
             <DataTable
@@ -363,7 +363,7 @@ const columns: ColumnDef<Replacement>[] = [
             const isImmediate = type === 'immediate';
             const badgeClass = isImmediate
                 ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold'
-                : 'bg-white text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
+                : 'bg-transparent text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
 
             const displayText = isImmediate ? 'URGENT' : '';
 

@@ -112,18 +112,18 @@
                                 class="flex justify-center gap-4 w-full mt-2"
                             >
                                 <Button
-                                    class="w-1/2"
-                                    :class="{ 'opacity-50 cursor-not-allowed': loading }"
-                                    @click="updateStatus(list.id, 'confirmed')"
-                                >
-                                    Accepter
-                                </Button>
-                                <Button
-                                    class="w-1/2"
+                                    class="w-1/2 hover:bg-primary/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'canceled')"
                                 >
                                     Refuser
+                                </Button>
+                                <Button
+                                    class="w-1/2 bg-success hover:bg-success/90"
+                                    :class="{ 'opacity-50 cursor-not-allowed': loading }"
+                                    @click="updateStatus(list.id, 'confirmed')"
+                                >
+                                    Accepter
                                 </Button>
                             </div>
                         </div>
