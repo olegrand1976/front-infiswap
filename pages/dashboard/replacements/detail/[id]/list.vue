@@ -43,49 +43,38 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 lg:gap-4 justify-between items-center"
                 >
                     <div
-                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900"
+                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-gray-100/50 shadow-xl rounded-lg text-gray-900"
                     >
-                        <div class="rounded-t-lg h-32 overflow-hidden">
+                        <div class="rounded-t-lg h-32 overflow-hidden bg-white">
                             <LayoutsLogo classe="object-cover object-top w-full" />
                         </div>
-                        <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-                            <UserCircleIcon />
+                        <div class="mx-auto grid place-content-center w-32 h-32 relative -mt-16 border-4 border-primary rounded-full overflow-hidden">
+                            <img
+                                v-if="list.repondedBy.profil_url"
+                                :src="useRuntimeConfig().public.API_URL + '/storage/' + list.repondedBy.profil_url"
+                                class="rounded-full border-2 border-success"
+                            >
+                            <UserCircleIcon v-else />
                         </div>
-                        <div class="text-center mt-2">
+                        <div class="text-center mt-4">
                             <h2 class="font-semibold">
                                 {{ getFullName(list.repondedBy) }}
                             </h2>
                         </div>
-                        <!-- <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
-                            <li class="flex flex-col items-center justify-around">
-                                <StarIcon class="size-7"/>
-                                <div>5</div>
-                            </li>
-                            <li class="flex flex-col items-center justify-between">
-                                <ArrowPathIcon class="size-6"/>
-                                <div>0</div>
-                            </li>
-                            <li class="flex flex-col items-center justify-around">
-                                <BriefcaseIcon class="size-6"/>
-                                <div>15</div>
-                            </li>
-                        </ul> -->
+
                         <ul class="py-4 mt-2 text-gray-700 text-center">
-                            <li class="flex gap-1 justify-center items-center">
-                                <IdentificationIcon class="size-5" />
-                                <span>
-                                    {{ list.repondedBy.identifier_number }}
-                                </span>
-                            </li>
-                            <li class="flex gap-1 justify-center items-center">
+                            <li class="flex gap-1 h-6 justify-center items-center">
                                 <MapPinIcon class="size-5" />
                                 <span>
-                                    {{ list.repondedBy.profile.zip_code ?? '---' }} {{ list.repondedBy.profile.city ?? '---' }}
+                                    {{ list.repondedBy.profile.zip_code ?? '---' }}
                                 </span>
                             </li>
-                            <li class="flex gap-1 justify-center items-center">
-                                <PhoneIcon class="size-4" />
-                                <div>
+                            <li class="flex mt-2 h-6 gap-1 justify-center items-center">
+                                <PhoneIcon
+                                    v-show="list.status ==='confirmed'"
+                                    class="size-4"
+                                />
+                                <div v-show="list.status === 'confirmed'">
                                     {{ list.repondedBy.phone_number ? formatPhoneNumber(list.repondedBy.phone_number) : '---' }}
                                 </div>
                             </li>
@@ -95,7 +84,7 @@
                                 v-if="list.status==='confirmed'"
                                 class="flex mx-auto gap-2 w-1/2 text-success items-center font-bold"
                             >
-                                <CheckCircleIcon class="size-7" /> <span>Accepté</span>
+                                <CheckCircleIcon class="w-full my-1" /> <span>Accepté</span>
                             </div>
                             <div
                                 v-else-if="list.status==='canceled'"
@@ -140,6 +129,7 @@ import { useRoute } from 'vue-router';
 import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, IdentificationIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
+import { useRuntimeConfig } from '#app';
 
 const { changeStatus } = changeStatusReplacement();
 
