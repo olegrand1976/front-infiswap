@@ -8,14 +8,21 @@
             v-if="replacements"
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
-            <div class="flex items-center justify-between w-full">
-                <h3 class="xl:text-xl lg:text-xl md:text-xl sm:text-xl text-xl text-primary">
-                    <span>Découvrez les remplacements </span> <span class="font-bold">les plus récentes</span>
+            <div class="flex items-center justify-between w-full text-primary">
+                <h3 class="hidden md:block xl:text-xl lg:text-xl md:text-xl sm:text-xl text-xl">
+                    <span>Découvrez les remplacements </span> <span class="font-bold">les plus récents</span>
                 </h3>
-                <NuxtLink to="/dashboard/replacements/immediate">
-                    <Button class="text-sm bg-primary">
-                        Créer remplacement
+                <h3 class="md:hidden text-xl font-bold flex items-center gap-2">
+                    <SparklesIcon class="size-5" /> Des remplacements
+                </h3>
+                <NuxtLink
+                    to="/dashboard/replacements/immediate"
+                    class="flex items-center"
+                >
+                    <Button class="hidden md:inline-block text-sm bg-primary">
+                        <span>Créer remplacement</span>
                     </Button>
+                    <PlusCircleIcon class="inline-block md:hidden w-8 h-8 text-primary" />
                 </NuxtLink>
             </div>
             <div class="w-full">
@@ -51,17 +58,6 @@
         <section>
             <HomePlanningContainer />
         </section>
-        <!-- <section class="sm:-mt-16">
-            <HomeSubscribeBanner
-                bg-class="bg-white"
-                title-class="text-white sm:text-primary"
-                form-class="bg-primary"
-                icon-class="text-white"
-                input-class="text-white placeholder:text-white"
-                button-class="text-primary"
-                link-class="text-primary"
-            />
-        </section> -->
         <section>
             <HomeAppDownloadSection />
         </section>
@@ -69,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { PlusCircleIcon, SparklesIcon } from '@heroicons/vue/24/solid';
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
