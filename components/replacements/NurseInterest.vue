@@ -66,7 +66,7 @@ defineProps<{
     responses: ReplacementResponse[];
 }>();
 
-const traduireStatut = (statut) => {
+const traduireStatut = (statut: string) => {
     switch (statut) {
         case 'pending':
             return 'En cours';
