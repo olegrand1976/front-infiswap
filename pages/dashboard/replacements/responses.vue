@@ -105,7 +105,7 @@
                                                 <img
                                                     class="w-14"
                                                     :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
-                                                />
+                                                >
                                             </template>
                                             <p>
                                                 {{ responseDetail?.respondedBy?.firstname }} {{ responseDetail?.respondedBy?.lastname }}
