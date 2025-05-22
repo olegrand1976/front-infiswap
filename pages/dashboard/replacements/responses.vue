@@ -14,7 +14,7 @@
                 <div
                     v-for="(response, index) in listResponse"
                     :key="index"
-                    class="overflow-y-auto grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:gap-8 h-full"
+                    class="overflow-y-auto grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 lg:gap-8 h-full"
                 >
                     <div
                         v-if="response?.responses?.length != 0"
@@ -108,7 +108,7 @@
                                             </template>
                                             <template v-else>
                                                 <img
-                                                    class="w-14 rounded-full"
+                                                    class="w-10 h-10 rounded-full object-cover object-center"
                                                     :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
                                                 >
                                             </template>
@@ -273,7 +273,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, XCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
@@ -300,17 +300,6 @@ const handleAccept = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'confirmed');
         responseDetail.status = 'confirmed';
-    }
-    catch (error) {
-        console.error('Failed to update status:', error);
-    }
-};
-
-const handleReject = async (responseDetail: ReplacementResponse) => {
-    try {
-        await changeStatus(responseDetail.id, 'canceled');
-        responseDetail.status = 'canceled';
-        await getReplacementResponses();
     }
     catch (error) {
         console.error('Failed to update status:', error);

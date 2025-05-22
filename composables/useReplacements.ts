@@ -343,10 +343,19 @@ export const useListResponse = (id) => {
 };
 
 export const changeStatusReplacement = () => {
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
     const changeStatus = async (responseId: number, status: string) => {
         return await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
             method: 'PUT',
+        }).then(() => {
+            $toast({
+                description: 'Mise à jour effectuée',
+            });
+        }).catch(() => {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur est survenue lors de la mise à jour.',
+            });
         });
     };
 
