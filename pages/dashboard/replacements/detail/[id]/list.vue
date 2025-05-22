@@ -82,9 +82,8 @@
                         <div class="p-4 border-t mx-8 mt-2">
                             <div
                                 v-if="list.status==='confirmed'"
-                                class="flex mx-auto gap-2 w-1/2 text-success items-center font-bold"
-                            >
-                                <CheckCircleIcon class="w-full my-1" /> <span>Accepté</span>
+                                class="flex justify-center items-center gap-2 mx-auto gap-2 w-1/2 text-success items-center"                            >
+                                <CheckCircleIcon class="size-8" /> <span>Accepté</span>
                             </div>
                             <div
                                 v-else-if="list.status==='canceled'"
@@ -126,7 +125,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import { formatPhoneNumber, getFullName } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';

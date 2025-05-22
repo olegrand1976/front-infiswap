@@ -280,8 +280,8 @@ const showAllNurses = () => {
 
                     <button
                         v-if="shouldShowMoreButton"
-                        @click="showAllNurses"
                         class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        @click="showAllNurses"
                     >
                         Voir plus (+{{ remainingNursesCount }})
                     </button>

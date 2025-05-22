@@ -149,7 +149,8 @@
 
                         <div
                             v-if="replacement.comment"
-                            class="bg-gray-200 mt-8">
+                            class="bg-gray-200 mt-8"
+                        >
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
                                     Description
