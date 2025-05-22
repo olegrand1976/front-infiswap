@@ -4,7 +4,7 @@
             Mes <strong>réponses reçues</strong>
         </h1>
 
-        <template v-if="listResponse == 0">
+        <template v-if="listResponse.length === 0">
             <p class="text-black/50 mt-16 text-center">
                 Aucune donnée à afficher pour le moment
             </p>
@@ -210,7 +210,7 @@
                             ? useRuntimeConfig().public.API_URL + '/storage/' + selectedNurse.respondedBy.profile.profil_url
                             : '/icons/user-circle.png'"
                         class="w-8 h-8 sm:w-12 sm:h-12 rounded-full opacity-60"
-                    />
+                    >
                     <div class="flex flex-col space-y-2">
                         <h6 class="font-medium">
                             {{ selectedNurse.respondedBy.firstname }} {{ selectedNurse.respondedBy.lastname }}
@@ -287,9 +287,9 @@
 import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, XCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
-import type { ReplacementResponse } from '~/lib/types';
+import type { ReplacementResponse, User } from '~/lib/types';
 
-const user = useState('user');
+const user = useState<User>('user');
 const { listResponse, getReplacementResponses } = useListResponse(user.value.nurse.id);
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
@@ -356,7 +356,7 @@ const formatArray = (jsonString: string) => {
         const array = JSON.parse(jsonString);
         return array.join(', ');
     }
-    catch (e) {
+    catch {
         return jsonString;
     }
 };
@@ -366,7 +366,7 @@ const formatTimeSlot = (timeSlot: string) => {
         const slot = JSON.parse(timeSlot);
         return `${slot.start_at} - ${slot.end_at}`;
     }
-    catch (e) {
+    catch {
         return timeSlot;
     }
 };
