@@ -195,6 +195,12 @@
                 </div>
             </Form>
             <div
+                v-else-if="replacement?.replaced_by !== null"
+                class="flex justify-center items-center gap-2 text-white"
+            >
+                <NoSymbolIcon class="size-6" /> <span>Fermé</span>
+            </div>
+            <div
                 v-else
                 class="flex justify-center items-center gap-2 text-success"
             >
@@ -210,6 +216,7 @@ import {
     ClockIcon,
     HomeIcon,
     CheckCircleIcon,
+    NoSymbolIcon,
 } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
