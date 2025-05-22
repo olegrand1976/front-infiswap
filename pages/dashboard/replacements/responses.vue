@@ -136,10 +136,6 @@
                                                 </Button>
                                             </template>
                                             <template v-else-if="responseDetail.status === 'canceled'">
-                                                <p class="flex items-center space-x-2 text-primary font-medium">
-                                                    <XCircleIcon class="w-6" />
-                                                    <span>Rejeté</span>
-                                                </p>
                                                 <Button
                                                     class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
                                                     title="Accepter"
@@ -149,13 +145,6 @@
                                                 </Button>
                                             </template>
                                             <template v-else>
-                                                <Button
-                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                    title="Rejeter"
-                                                    @click="handleReject(responseDetail)"
-                                                >
-                                                    <XMarkIcon class="w-4" />
-                                                </Button>
                                                 <Button
                                                     class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
                                                     title="Accepter"
