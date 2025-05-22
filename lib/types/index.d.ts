@@ -220,3 +220,16 @@ export type ReplacementDetail = {
     patient: Patient;
     care_types: CareType[];
 };
+
+export type ReplacementResponse = {
+    id: number;
+    replacement_id: number;
+    reponded_by: number;
+    status: 'pending' | 'confirmed' | 'canceled';
+    reason?: string;
+    comment?: string;
+    created_at: string;
+    updated_at: string;
+    confirmed_at: string;
+    repondedBy: User;
+};

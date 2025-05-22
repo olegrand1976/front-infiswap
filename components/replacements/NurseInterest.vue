@@ -36,7 +36,11 @@
                         <td class="px-4 py-2 border-b">
                             {{ item.repondedBy.phone_number }}
                         </td>
-                        <td class="px-4 py-2 border-b">
+                        <td
+                            :class="cn('px-4 py-2 border-b', {
+                                'font-bold text-success': item.status === 'confirmed',
+                            })"
+                        >
                             {{ traduireStatut(item.status) }}
                         </td>
                         <td class="px-4 py-2 border-b">
@@ -55,12 +59,12 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-    responses: {
-        type: Array,
-        required: true,
-    },
-});
+import { cn } from '@/lib/utils';
+import type { ReplacementResponse } from '~/lib/types';
+
+defineProps<{
+    responses: ReplacementResponse[];
+}>();
 
 const traduireStatut = (statut) => {
     switch (statut) {
