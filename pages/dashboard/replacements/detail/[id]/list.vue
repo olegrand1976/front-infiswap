@@ -82,7 +82,8 @@
                         <div class="p-4 border-t mx-8 mt-2">
                             <div
                                 v-if="list.status==='confirmed'"
-                                class="flex justify-center items-center gap-2 mx-auto gap-2 w-1/2 text-success items-center"                            >
+                                class="flex justify-center items-center gap-2 mx-auto w-1/2 text-success"
+                            >
                                 <CheckCircleIcon class="size-8" /> <span>Accepté</span>
                             </div>
                             <div
