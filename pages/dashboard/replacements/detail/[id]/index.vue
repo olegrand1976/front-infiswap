@@ -196,7 +196,7 @@
             </Form>
             <div
                 v-else-if="replacement?.replaced_by !== null"
-                class="flex justify-center items-center gap-2 text-white"
+                class="flex justify-center items-center gap-2 text-primary font-bold"
             >
                 <NoSymbolIcon class="size-6" /> <span>Fermé</span>
             </div>
