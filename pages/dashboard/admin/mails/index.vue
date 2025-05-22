@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Mail" />
+        <MailComposer />
     </div>
 </template>
 
