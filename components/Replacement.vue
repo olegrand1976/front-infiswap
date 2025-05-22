@@ -211,10 +211,10 @@
                                 class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement)"
+                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
                                     class="urgent-indicator"
                                 >
-                                    URGENT
+                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
 
                                 <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
@@ -415,10 +415,10 @@
                                 class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement)"
+                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
                                     class="urgent-indicator -ml-[-2] text-xs"
                                 >
-                                    URGENT
+                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
@@ -853,13 +853,13 @@ definePageMeta({
 });
 </script>
 
-  <style>
-  .no-scrollbar {
+<style>
+.no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
+}
 
-  .no-scrollbar::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-  </style>
+}
+</style>
