@@ -14,11 +14,11 @@
                 <div
                     v-for="(response, index) in listResponse"
                     :key="index"
-                    class="overflow-y-auto grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8 h-full"
+                    class="overflow-y-auto grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:gap-8 h-full"
                 >
                     <div
                         v-if="response?.responses?.length != 0"
-                        class="bg-gray-100 shadow p-6 rounded-lg 2xl:col-span-1"
+                        class="bg-gray-100 shadow p-6 rounded-lg 2xl:col-span-1 mb-5 mt-8 md:mt-0"
                     >
                         <div class="flex justify-between items-center">
                             <h1 class="text-primary font-semibold">
@@ -47,8 +47,13 @@
                                 Période
                             </p>
                             <p>
-                                {{ new Date(response?.parent?.start_date).toLocaleDateString('fr-FR') }} -
-                                {{ new Date(response?.parent?.end_date).toLocaleDateString('fr-FR') }}
+                                <template v-if="response?.parent?.start_date === response?.parent?.end_date">
+                                    {{ new Date(response?.parent?.start_date).toLocaleDateString('fr-FR') }}
+                                </template>
+                                <template v-else>
+                                    {{ new Date(response?.parent?.start_date).toLocaleDateString('fr-FR') }} -
+                                    {{ new Date(response?.parent?.end_date).toLocaleDateString('fr-FR') }}
+                                </template>
                             </p>
                         </div>
                         <div class="mt-4 grid grid-cols-[40%_60%]">
@@ -97,13 +102,13 @@
                                         :key="responseDetail.id"
                                         class="grid grid-cols-3 my-2 gap-2 border border-none overflow-x-hidden relative"
                                     >
-                                        <TableCell class="flex justify-center space-x-2 items-center bg-[#F1F2F7] text-sm">
+                                        <TableCell class="flex flex-col sm:flex-row items-center justify-center space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
                                             <template v-if="responseDetail?.respondedBy?.profile?.profil_url == null">
-                                                <UserCircleIcon class="w-6 text-black/60" />
+                                                <UserCircleIcon class="w-10 sm:w-6 text-black/60" />
                                             </template>
                                             <template v-else>
                                                 <img
-                                                    class="w-14"
+                                                    class="w-14 rounded-full"
                                                     :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
                                                 >
                                             </template>
@@ -116,18 +121,32 @@
                                             {{ responseDetail?.respondedBy?.profile?.city }}
                                         </TableCell>
 
-                                        <TableCell class="flex space-x-1.5 justify-center items-center bg-[#F1F2F7] text-sm">
+                                        <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
                                             <template v-if="responseDetail.status === 'confirmed'">
                                                 <p class="flex items-center space-x-2 text-success font-medium">
                                                     <CheckBadgeIcon class="w-6" />
                                                     <span>Accepté</span>
                                                 </p>
+                                                <Button
+                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
+                                                    title="Annuler"
+                                                    @click="handleCancel(responseDetail)"
+                                                >
+                                                    <XMarkIcon class="w-4" />
+                                                </Button>
                                             </template>
                                             <template v-else-if="responseDetail.status === 'canceled'">
                                                 <p class="flex items-center space-x-2 text-primary font-medium">
                                                     <XCircleIcon class="w-6" />
                                                     <span>Rejeté</span>
                                                 </p>
+                                                <Button
+                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
+                                                    title="Accepter"
+                                                    @click="handleAccept(responseDetail)"
+                                                >
+                                                    <CheckIcon class="w-4" />
+                                                </Button>
                                             </template>
                                             <template v-else>
                                                 <Button
@@ -144,14 +163,14 @@
                                                 >
                                                     <CheckIcon class="w-4" />
                                                 </Button>
-                                                <Button
-                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                    title="Détail"
-                                                    @click="openNurseDialog(responseDetail)"
-                                                >
-                                                    <EyeIcon class="w-4" />
-                                                </Button>
                                             </template>
+                                            <Button
+                                                class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
+                                                title="Détail"
+                                                @click="openNurseDialog(responseDetail)"
+                                            >
+                                                <EyeIcon class="w-4" />
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
@@ -170,14 +189,23 @@
         <Dialog v-model:open="nurseDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Informations de l'infirmier</DialogTitle>
+                    <DialogTitle
+                        v-if="selectedNurse.respondedBy.gender === 'F'"
+                    >
+                        Informations de l'infirmière
+                    </DialogTitle>
+                    <DialogTitle
+                        v-else
+                    >
+                        Informations de l'infirmier
+                    </DialogTitle>
                 </DialogHeader>
 
                 <div
                     v-if="selectedNurse"
                     class="flex space-x-4 items-center mt-4"
                 >
-                    <LayoutsAppImage
+                    <img
                         :src="selectedNurse.respondedBy?.profile?.profil_url
                             ? useRuntimeConfig().public.API_URL + '/storage/' + selectedNurse.respondedBy.profile.profil_url
                             : '/icons/user-circle.png'"
@@ -207,7 +235,8 @@
                     class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
-                        Adresse e-mail
+                        <span class="hidden md:inline">Adresse e-mail</span>
+                        <span class="md:hidden">Email</span>
                     </h5>
                     <p class="ps-4">
                         {{ selectedNurse.respondedBy.email }}
@@ -271,11 +300,11 @@ useHead({
 });
 
 const visibleResponses = (responses: ReplacementResponse[]) => {
-    const filteredResponses = responses.filter(response => response.status !== 'canceled');
-    if (filteredResponses.some(response => response.status === 'confirmed')) {
-        return filteredResponses.filter(response => response.status === 'confirmed');
+    const hasConfirmed = responses.some(response => response.status === 'confirmed');
+    if (hasConfirmed) {
+        return responses.filter(response => response.status === 'confirmed');
     }
-    return filteredResponses;
+    return responses;
 };
 
 const handleAccept = async (responseDetail: ReplacementResponse) => {
@@ -292,6 +321,17 @@ const handleReject = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'canceled');
         responseDetail.status = 'canceled';
+        await getReplacementResponses();
+    }
+    catch (error) {
+        console.error('Failed to update status:', error);
+    }
+};
+
+const handleCancel = async (responseDetail: ReplacementResponse) => {
+    try {
+        await changeStatus(responseDetail.id, 'pending');
+        responseDetail.status = 'pending';
         await getReplacementResponses();
     }
     catch (error) {
