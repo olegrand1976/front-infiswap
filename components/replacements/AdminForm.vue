@@ -179,7 +179,7 @@ watch(
 fetchCareTypes();
 
 const showAll = ref(false);
-const limit = 4;
+const limit = 5;
 
 const visibleNurses = computed(() => {
     return showAll.value ? form.matchingNurses : form.matchingNurses.slice(0, limit);
