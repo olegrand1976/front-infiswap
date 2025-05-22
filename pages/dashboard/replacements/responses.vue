@@ -102,7 +102,8 @@
                                                 <UserCircleIcon class="w-6 text-black/60" />
                                             </template>
                                             <template v-else>
-                                                <LayoutsAppImage
+                                                <img
+                                                    class="w-14"
                                                     :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
                                                 />
                                             </template>
