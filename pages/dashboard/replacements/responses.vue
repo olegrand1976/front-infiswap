@@ -257,6 +257,7 @@
 import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, XCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import type { ReplacementResponse } from '~/lib/types';
 
 const user = useState('user');
 const { listResponse, getReplacementResponses } = useListResponse(user.value.nurse.id);
@@ -268,7 +269,7 @@ useHead({
     title: 'Mes réponses reçues',
 });
 
-const visibleResponses = (responses: any[]) => {
+const visibleResponses = (responses: ReplacementResponse[]) => {
     const filteredResponses = responses.filter(response => response.status !== 'canceled');
     if (filteredResponses.some(response => response.status === 'confirmed')) {
         return filteredResponses.filter(response => response.status === 'confirmed');
@@ -276,7 +277,7 @@ const visibleResponses = (responses: any[]) => {
     return filteredResponses;
 };
 
-const handleAccept = async (responseDetail) => {
+const handleAccept = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'confirmed');
         responseDetail.status = 'confirmed';
@@ -286,7 +287,7 @@ const handleAccept = async (responseDetail) => {
     }
 };
 
-const handleReject = async (responseDetail) => {
+const handleReject = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'canceled');
         responseDetail.status = 'canceled';
@@ -297,14 +298,12 @@ const handleReject = async (responseDetail) => {
     }
 };
 
-const openNurseDialog = (responseDetail) => {
+const openNurseDialog = (responseDetail: ReplacementResponse) => {
     selectedNurse.value = responseDetail;
     nurseDialog.value = true;
 };
 
-onMounted(async () => {
-    await getReplacementResponses();
-});
+await getReplacementResponses();
 
 definePageMeta({
     layout: 'dashboard',

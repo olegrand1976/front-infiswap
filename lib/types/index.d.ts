@@ -231,5 +231,6 @@ export type ReplacementResponse = {
     created_at: string;
     updated_at: string;
     confirmed_at: string;
+    respondedBy: User;
     repondedBy: User;
 };
