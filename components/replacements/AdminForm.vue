@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { EyeIcon } from '@heroicons/vue/24/solid';
 import type { Replacement } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 
@@ -18,7 +19,7 @@ const formatDate = (dateString: string | null) => {
     return `${year}-${month}-${day}`;
 };
 
-const transformCareInformations = (careInfo: any) => {
+const transformCareInformations = (careInfo: string | object) => {
     try {
         const parsed = typeof careInfo === 'string' ? JSON.parse(careInfo) : careInfo;
         return Array.isArray(parsed)
@@ -247,9 +248,13 @@ const showAllNurses = () => {
                         <strong class="text-gray-700">Nombre de personnes intéressées :</strong>
                         <NuxtLink
                             :to="`/dashboard/admin/replacements/interest/${form.id}`"
-                            class="ml-2 text-blue-600 hover:underline font-medium"
+                            class="ml-2 flex items-center justify-center gap-1 text-primary hover:underline font-bold"
                         >
                             {{ form.responseCount }} personne<span v-if="form.responseCount > 1">s</span>
+                            <EyeIcon
+                                v-if="form.responseCount>0"
+                                class="size-4"
+                            />
                         </NuxtLink>
                     </p>
                 </div>
