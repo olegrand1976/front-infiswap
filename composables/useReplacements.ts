@@ -75,11 +75,23 @@ export const useReplacements = () => {
         }
     };
 
-    const getReplacementsForAdmin = async () => {
-        return await $apifetch('api/admin/replacements').then((response) => {
+    // const getReplacementsForAdmin = async () => {
+    //     return await $apifetch('api/admin/replacements').then((response) => {
+    //         replacements.value = response.replacements;
+    //     });
+    // };
+
+    async function getReplacementsForAdmin(page = 1, perPage = 15, options = {}) {
+        return await $apifetch('api/admin/replacements', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
             replacements.value = response.replacements;
         });
-    };
+    }
 
     const getFRStatus = (status: 'open' | 'closed'): string => {
         return status === 'open' ? 'ouvert' : 'fermé';

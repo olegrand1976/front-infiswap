@@ -7,6 +7,15 @@
                 :data="replacements.data"
                 :columns="columns"
             />
+            <div>
+                <CustomPagination
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="replacements.total"
+                    @update:page="refreshReplacement"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -18,6 +27,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { NuxtLink } from '#components';
 
+import { PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
@@ -31,7 +41,18 @@ definePageMeta({
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 
-await getReplacementsForAdmin();
+const perPage = ref(PERPAGE);
+const page = ref(1);
+await getReplacementsForAdmin(page.value, perPage.value);
+
+const refreshReplacement = async (page: number) => {
+    await getReplacementsForAdmin(page, perPage.value);
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    await getReplacementsForAdmin(page.value, value);
+};
 
 const columns: ColumnDef<Replacement>[] = [
     {
@@ -107,7 +128,9 @@ const columns: ColumnDef<Replacement>[] = [
             const start = formatTime(slot?.start_at);
             const end = formatTime(slot?.end_at);
 
-            return h('div', {}, `${start} - ${end}`);
+            const timeText = start === end ? start : `${start} - ${end}`;
+
+            return h('div', {}, timeText);
         },
     },
     {

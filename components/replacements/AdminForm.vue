@@ -177,6 +177,25 @@ watch(
     { immediate: true },
 );
 fetchCareTypes();
+
+const showAll = ref(false);
+const limit = 4;
+
+const visibleNurses = computed(() => {
+    return showAll.value ? form.matchingNurses : form.matchingNurses.slice(0, limit);
+});
+
+const shouldShowMoreButton = computed(() => {
+    return form.matchingNurses.length > limit && !showAll.value;
+});
+
+const remainingNursesCount = computed(() => {
+    return form.matchingNurses.length - limit;
+});
+
+const showAllNurses = () => {
+    showAll.value = true;
+};
 </script>
 
 <template>
@@ -245,7 +264,7 @@ fetchCareTypes();
 
                     <ul class="divide-y divide-gray-100 text-sm">
                         <li
-                            v-for="(nurse, index) in form.matchingNurses"
+                            v-for="(nurse, index) in visibleNurses"
                             :key="index"
                             class="py-2 px-3 hover:bg-gray-50 transition-colors rounded-md"
                         >
@@ -258,6 +277,14 @@ fetchCareTypes();
                             </div>
                         </li>
                     </ul>
+
+                    <button
+                        v-if="shouldShowMoreButton"
+                        @click="showAllNurses"
+                        class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                        Voir plus (+{{ remainingNursesCount }})
+                    </button>
                 </div>
             </div>
 
