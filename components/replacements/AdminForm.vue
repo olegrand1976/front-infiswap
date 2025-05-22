@@ -86,16 +86,20 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
 
 const form = reactive(getInitialValue());
 const { $toast } = useNuxtApp();
+
 const { submit, inProgress } = useSubmit(async () => {
+    if (form.details.length > 0) {
+        if (form.details[0].start_at) {
+            form.timeSlot.start_at = form.details[0].start_at;
+        }
+        if (form.details[0].end_at) {
+            form.timeSlot.end_at = form.details[0].end_at;
+        }
+    }
     if (isEditMode.value && props.replacement?.id) {
         await updateAgainReplacement(form);
-        // const updateReplacement = await updateAgainReplacement(form);
-        // resetForm(updateReplacement);
         return;
     }
-
-    // await create(form);
-    // resetForm(undefined);
 }, {
     onSuccess: () => {
         $toast({
