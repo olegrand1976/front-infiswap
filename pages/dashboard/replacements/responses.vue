@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1 class="py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            Mes <strong>réponses reçues</strong>
+        <h1 class="p-3 text-primary mb-4 rounded-lg font-bold">
+            Historique de mes réponses
         </h1>
 
         <template v-if="listResponse.length === 0">
@@ -10,15 +10,15 @@
             </p>
         </template>
         <template v-else>
-            <div class="grid my-4 md:my-8">
+            <div class="grid gap-4 lg:gap-8 text-sm">
                 <div
                     v-for="(response, index) in listResponse"
                     :key="index"
-                    class="overflow-y-auto grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 lg:gap-8 h-full"
+                    class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 bg-gray-100 p-2 lg:p-4 rounded"
                 >
                     <div
                         v-if="response?.responses?.length != 0"
-                        class="bg-gray-100 shadow p-6 rounded-lg 2xl:col-span-1 mb-5 mt-8 md:mt-0"
+                        class="rounded-md col-span-3 lg:col-span-1"
                     >
                         <div class="flex justify-between items-center">
                             <h1 class="text-primary font-semibold">
@@ -78,16 +78,16 @@
 
                     <div
                         v-if="visibleResponses(response.responses).length != 0"
-                        class="2xl:col-span-2"
+                        class="col-span-3 lg:col-span-2"
                     >
                         <Table>
                             <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-3 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                <TableRow class="grid grid-cols-3 overflow-x-hidden border-none">
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
                                         Infirmier
                                     </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
-                                        Ville
+                                        Code Postal
                                     </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
                                         Action
@@ -102,23 +102,23 @@
                                         :key="responseDetail.id"
                                         class="grid grid-cols-3 my-2 gap-2 border border-none overflow-x-hidden relative"
                                     >
-                                        <TableCell class="flex flex-col sm:flex-row items-center justify-center space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
+                                        <TableCell class="flex flex-col sm:flex-row items-center justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
                                             <template v-if="responseDetail?.respondedBy?.profile?.profil_url == null">
-                                                <UserCircleIcon class="w-10 sm:w-6 text-black/60" />
+                                                <UserCircleIcon class="size-8 text-black/60" />
                                             </template>
                                             <template v-else>
                                                 <img
-                                                    class="w-10 h-10 rounded-full object-cover object-center"
+                                                    class="w-8 h-8 rounded-full object-cover object-center"
                                                     :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
                                                 >
                                             </template>
                                             <p>
-                                                {{ responseDetail?.respondedBy?.firstname }} {{ responseDetail?.respondedBy?.lastname }}
+                                                {{ responseDetail?.respondedBy?.full_name }}
                                             </p>
                                         </TableCell>
 
                                         <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ responseDetail?.respondedBy?.profile?.city }}
+                                            {{ responseDetail?.respondedBy?.profile?.zip_code }}
                                         </TableCell>
 
                                         <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
