@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="flex mt-6">
-            <Form class="grid grid-cols-1 sm:grid-cols-5 w-full gap-4">
-                <div class="col-span-4 md:col-span-2 lg:col-span-1">
+            <Form class="grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 w-full gap-4">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -12,7 +12,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-56 lg:w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -42,7 +42,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
+                <div class="col-span-4 md:col-span-2 lg:w-64 lg:ml-6 xl:ml-0 xl:w-[22rem] 2xl:ml-16 2xl:w-[26rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -56,7 +56,7 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
-                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden']"
@@ -86,7 +86,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ml-[6.5rem] xl:-ms-16 lg:w-72 2xl:w-[26rem] 2xl:ml-4">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
@@ -100,7 +100,7 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
-                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
                                             :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden']"
@@ -130,7 +130,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 flex gap-3">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 2xl:ml-52 flex gap-3">
                     <Button
                         class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
                         @click="reinitializeFilter"
@@ -140,7 +140,7 @@
                     </Button>
 
                     <Button
-                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto"
+                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
                         @click="submit"
                     >
                         <MagnifyingGlassIcon class="w-6" />
