@@ -173,8 +173,14 @@
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
             class="my-12"
         >
+            <div
+                v-if="replacement?.replaced_by !== null"
+                class="flex justify-center items-center gap-2 text-primary font-bold"
+            >
+                <NoSymbolIcon class="size-6" /> <span>Fermé</span>
+            </div>
             <Form
-                v-if="replacement?.candidate == false"
+                v-else-if="replacement?.candidate == false"
                 @submit="submit"
             >
                 <div class="flex justify-center items-center mt-10 bg-gray-100 h-12 rounded">
@@ -194,12 +200,6 @@
                     </div>
                 </div>
             </Form>
-            <div
-                v-else-if="replacement?.replaced_by !== null"
-                class="flex justify-center items-center gap-2 text-primary font-bold"
-            >
-                <NoSymbolIcon class="size-6" /> <span>Fermé</span>
-            </div>
             <div
                 v-else
                 class="flex justify-center items-center gap-2 text-success"
