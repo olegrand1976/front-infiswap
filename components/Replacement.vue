@@ -541,6 +541,17 @@
                     </TableBody>
                 </Table>
             </div>
+
+            <div class="mt-4">
+                <CustomPagination
+                    v-if="pagination.total > 5"
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="pagination.total"
+                    @update:page="refreshReplacements"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -552,6 +563,8 @@ import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputI
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
+import { PERPAGE } from '~/lib/constants';
+import type { User, Replacement } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
 
@@ -571,11 +584,20 @@ const props = defineProps({
 const { loading, updateReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 
-onMounted(async () => {
-    await fetchInitialData();
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const pagination = ref({
+    current_page: 1,
+    per_page: PERPAGE,
+    total: 0,
+    last_page: 1,
 });
 
-const user = useState('user');
+onMounted(async () => {
+    await fetchInitialData(page.value, perPage.value);
+});
+
+const user = useState<User>('user');
 const settings = ref({});
 try {
     settings.value = JSON.parse(user.value.settings);
@@ -640,9 +662,19 @@ const filteredReplacements = computed(() => {
     );
 });
 
+const replacement = ref<Replacement | undefined>();
+
 const formData = reactive({
-    postalCodeTags: settings.value?.replacement?.zip_codes || [],
-    cityTags: settings.value?.replacement?.cities || [],
+    postalCodeTags: Array.isArray(replacement.value?.zip_codes)
+        ? replacement.value.zip_codes
+        : replacement.value?.zip_codes
+            ? [replacement.value.zip_codes]
+            : [],
+    cityTags: Array.isArray(replacement.value?.cities)
+        ? replacement.value.cities
+        : replacement.value?.cities
+            ? [replacement.value.cities]
+            : [],
     selectedDays: [],
     type: props.type,
 });
@@ -670,18 +702,55 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const initialReplacements = ref([]);
+const initialReplacements = ref({
+    replacements: {
+        data: [],
+        current_page: 1,
+        per_page: 10,
+        total: 0,
+        last_page: 1,
+    },
+});
 const currentReplacements = ref([]);
 
-const fetchInitialData = async () => {
+const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
     const response = await fetchReplacements({
         postalCode: [],
         cities: [],
         selectedDays: [],
         type: props.type,
+        page,
+        perPage,
     });
     initialReplacements.value = response;
     currentReplacements.value = response.replacements.data;
+    pagination.value = {
+        current_page: response.replacements.current_page,
+        per_page: response.replacements.per_page,
+        total: response.replacements.total,
+        last_page: response.replacements.last_page,
+    };
+};
+
+const refreshReplacements = async (newPage: number) => {
+    page.value = newPage;
+    if (isSubmitted.value) {
+        await submit();
+    }
+    else {
+        await fetchInitialData(newPage, perPage.value);
+    }
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    page.value = 1;
+    if (isSubmitted.value) {
+        await submit();
+    }
+    else {
+        await fetchInitialData(1, value);
+    }
 };
 
 const isSubmitted = ref(false);
@@ -747,12 +816,20 @@ const submit = async () => {
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
             type: toRaw(formData.type),
+            page: page.value,
+            perPage: perPage.value,
         });
 
         currentReplacements.value = response.replacements.data;
+        pagination.value = {
+            current_page: response.replacements.current_page,
+            per_page: response.replacements.per_page,
+            total: response.replacements.total,
+            last_page: response.replacements.last_page,
+        };
     }
     else {
-        currentReplacements.value = initialReplacements.value.replacements.data;
+        await fetchInitialData(page.value, perPage.value);
     }
 };
 
@@ -760,6 +837,7 @@ const reinitializeFilter = () => {
     formData.postalCodeTags = [];
     formData.cityTags = [];
     formData.selectedDays = [];
+    page.value = 1;
 };
 
 watch(() => formData.postalCodeTags, () => {
@@ -787,6 +865,12 @@ watch(
             && newDays.length === 0
         ) {
             currentReplacements.value = initialReplacements.value.replacements.data;
+            pagination.value = {
+                current_page: initialReplacements.value.replacements.current_page,
+                per_page: initialReplacements.value.replacements.per_page,
+                total: initialReplacements.value.replacements.total,
+                last_page: initialReplacements.value.replacements.last_page,
+            };
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
@@ -808,6 +892,7 @@ const handleCloseReplacement = async (replacement) => {
         });
 
         currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
+        pagination.value.total -= 1;
         closeReplacementDialog.value = false;
     }
 };

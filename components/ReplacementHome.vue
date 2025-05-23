@@ -58,7 +58,7 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement)"
-                                    class="urgent-indicator"
+                                    class="-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md bg-primary text-white"
                                 >
                                     URGENT
                                 </div>
