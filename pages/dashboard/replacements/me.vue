@@ -32,7 +32,6 @@
 
         <Replacement
             type="me"
-            :get-data="getMyReplacements"
             :filter-type="selectedFilter"
         />
     </div>
@@ -41,9 +40,6 @@
 <script setup lang="ts">
 import { useCookie } from '#app';
 import Replacement from '~/components/Replacement.vue';
-import { useReplacements } from '~/composables/useReplacements';
-
-const { getMyReplacements } = useReplacements();
 
 const replacementFilters = {
     all: 'Tous',

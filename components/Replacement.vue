@@ -59,14 +59,14 @@
                                         class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
-                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden'"
+                                            :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden']"
                                             class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
                                             <TagsInputItem
                                                 v-for="item in formData.postalCodeTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-30"
+                                                class="flex-shrink-0 max-w-[7.5rem]"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
@@ -74,7 +74,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="postalCodeInput"
-                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
+                                            :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="8793"
                                             @blur="handleBlur"
@@ -103,14 +103,14 @@
                                         class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
-                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
+                                            :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden']"
                                             class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
                                             <TagsInputItem
                                                 v-for="item in formData.cityTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-24"
+                                                class="flex-shrink-0 max-w-[6rem]"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.cityTags, item)" />
@@ -118,7 +118,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
+                                            :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
                                             @blur="handleBlur"
@@ -212,7 +212,10 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    class="urgent-indicator"
+                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                { 'bg-yellow-400': replacement.replaced_by !== null },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                    )]"
                                 >
                                     {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
@@ -257,7 +260,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="index"
-                                                            :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
@@ -267,7 +270,7 @@
                                                     <span
                                                         v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                         :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                        :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                     >
                                                         {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                     </span>
@@ -286,7 +289,7 @@
                                                         <span
                                                             v-for="(city, index) in JSON.parse(replacement.cities)"
                                                             :key="index"
-                                                            :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
+                                                            :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                         >
                                                             {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                         </span>
@@ -296,7 +299,7 @@
                                                     <span
                                                         v-for="(city, index) in JSON.parse(replacement.cities)"
                                                         :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
+                                                        :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                     >
                                                         {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                     </span>
@@ -416,7 +419,10 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    class="urgent-indicator -ml-[-2] text-xs"
+                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                { 'bg-yellow-400': replacement.replaced_by !== null },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                    )]"
                                 >
                                     {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
@@ -450,7 +456,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
                                                             :key="index"
-                                                            :class="cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}
                                                         </span>
@@ -469,7 +475,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="'tooltip-' + index"
-                                                            :class="cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
@@ -541,7 +547,8 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
+import { toRaw } from 'vue';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
@@ -553,10 +560,6 @@ const props = defineProps({
         type: String,
         required: false,
         default: '',
-    },
-    getData: {
-        type: Function,
-        required: true,
     },
     filterType: {
         type: String,
@@ -573,7 +576,14 @@ onMounted(async () => {
 });
 
 const user = useState('user');
-const settings = JSON.parse(user.value.settings);
+const settings = ref({});
+try {
+    settings.value = JSON.parse(user.value.settings);
+}
+catch (e) {
+    console.error('Error parsing user settings:', e);
+}
+
 const postalCodeInput = ref('');
 const cityInput = ref('');
 
@@ -621,39 +631,18 @@ const hasShift = (replacement, period) => {
 };
 
 const isUrgentReplacement = (replacement) => {
-    return !replacement.time_slot && replacement.details.length != 0;
-};
-
-const isReplacementActive = (replacement) => {
-    const currentDate = new Date();
-    const endDate = new Date(replacement.end_date);
-
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    const currentDay = currentDate.getDate();
-
-    const endYear = endDate.getFullYear();
-    const endMonth = endDate.getMonth();
-    const endDay = endDate.getDate();
-
-    if (endYear > currentYear) return true;
-    if (endYear < currentYear) return false;
-    if (endMonth > currentMonth) return true;
-    if (endMonth < currentMonth) return false;
-    return endDay >= currentDay;
+    return !replacement.time_slot && replacement.details.length > 0;
 };
 
 const filteredReplacements = computed(() => {
     return currentReplacements.value.filter(
-        replacement => replacement.status === 'open'
-            && isReplacementActive(replacement)
-            && (props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement)),
+        replacement => props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement),
     );
 });
 
 const formData = reactive({
-    postalCodeTags: settings.replacement.zip_codes || [],
-    cityTags: settings.replacement.cities || [],
+    postalCodeTags: settings.value?.replacement?.zip_codes || [],
+    cityTags: settings.value?.replacement?.cities || [],
     selectedDays: [],
     type: props.type,
 });
@@ -681,41 +670,18 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const sortReplacements = (replacements) => {
-    return replacements.sort((a, b) => {
-        const aIsUrgent = isUrgentReplacement(a);
-        const bIsUrgent = isUrgentReplacement(b);
-
-        if (aIsUrgent && !bIsUrgent) return -1;
-        if (!aIsUrgent && bIsUrgent) return 1;
-
-        const aMatches = a.details.some(
-            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-
-        const bMatches = b.details.some(
-            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-
-        if (aMatches && !bMatches) return -1;
-        if (!aMatches && bMatches) return 1;
-
-        const dateA = new Date(a.start_date).getTime() || 0;
-        const dateB = new Date(b.start_date).getTime() || 0;
-
-        return dateB - dateA;
-    });
-};
-
 const initialReplacements = ref([]);
 const currentReplacements = ref([]);
 
 const fetchInitialData = async () => {
-    const data = await props.getData();
-    initialReplacements.value = data;
-    currentReplacements.value = sortReplacements(data.data);
+    const response = await fetchReplacements({
+        postalCode: [],
+        cities: [],
+        selectedDays: [],
+        type: props.type,
+    });
+    initialReplacements.value = response;
+    currentReplacements.value = response.replacements.data;
 };
 
 const isSubmitted = ref(false);
@@ -783,10 +749,10 @@ const submit = async () => {
             type: toRaw(formData.type),
         });
 
-        currentReplacements.value = sortReplacements(response.replacements.data);
+        currentReplacements.value = response.replacements.data;
     }
     else {
-        currentReplacements.value = sortReplacements(initialReplacements.value.data);
+        currentReplacements.value = initialReplacements.value.replacements.data;
     }
 };
 
@@ -820,7 +786,7 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = sortReplacements(initialReplacements.value.data);
+            currentReplacements.value = initialReplacements.value.replacements.data;
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {

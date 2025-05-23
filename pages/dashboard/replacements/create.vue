@@ -178,6 +178,7 @@ import { formatRange } from '~/lib/utils';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
+const router = useRouter();
 
 const start = today(getLocalTimeZone());
 const end = null;
@@ -205,7 +206,6 @@ const formData = reactive({
     citiesInput: '',
 });
 
-// Computed properties for manual date inputs
 const startDateInput = computed({
     get: () => value.value.start ? value.value.start.toString() : '',
     set: (date: string) => {
@@ -233,9 +233,7 @@ const endDateInput = computed({
 const handleCareTypeClick = (timeSlot, careTypes) => {
     const index = timeSlot.careTypes.indexOf(careTypes);
     if (index === -1) {
-        timeSlot.careTypes.push
-
-        (careTypes);
+        timeSlot.careTypes.push(careTypes);
     }
     else {
         timeSlot.careTypes.splice(index, 1);
@@ -286,6 +284,9 @@ const { submit, inProgress } = useSubmit(async () => {
             description: 'Création effectuée',
         });
         resetForm();
+        setTimeout(() => {
+            router.push('/dashboard/replacements/me');
+        }, 2000);
     },
 });
 
