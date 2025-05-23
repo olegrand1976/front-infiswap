@@ -334,7 +334,7 @@
                                         <EyeIcon class="h-6 mt-1" />
                                     </Button>
                                     <Button
-                                        v-if="user.nurse.id == replacement.nurse_id"
+                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         @click="closeReplacementDialog = true"
                                     >
@@ -491,7 +491,7 @@
                                 >
                                     <div class="flex flex-col items-center justify-center space-y-2">
                                         <Button
-                                            v-if="user.nurse.id == replacement.nurse_id"
+                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             @click="closeReplacementDialog = true"
                                         >
