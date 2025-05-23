@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: 'Mail' });
+useHead({ title: 'Gestion des mails' });
 
 definePageMeta({
     layout: 'dashboard',

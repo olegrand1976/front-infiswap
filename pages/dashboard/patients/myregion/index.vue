@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { useNearbyPatients } from '~/composables/usePatients';
 
-const { patients, error, fetchNearbyPatients } = useNearbyPatients();
+const { patients, fetchNearbyPatients } = useNearbyPatients();
 const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
 const user = useUser();

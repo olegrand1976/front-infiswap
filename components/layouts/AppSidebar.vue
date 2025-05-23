@@ -144,7 +144,6 @@ import {
     UsersIcon,
     Cog8ToothIcon,
     HeartIcon,
-    EnvelopeIcon,
 } from '@heroicons/vue/24/outline';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
@@ -255,11 +254,6 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Patients',
         route: '/dashboard/admin/patients',
         icon: HeartIcon,
-    },
-    {
-        label: 'Mail',
-        route: '/dashboard/admin/mails',
-        icon: EnvelopeIcon,
     },
 ];
 
