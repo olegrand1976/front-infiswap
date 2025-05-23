@@ -222,10 +222,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'zip_code',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('zip_code'),
             }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -280,6 +280,35 @@ const columns: ColumnDef<User>[] = [
     },
 
 ];
+
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const toggleSort = () => {
+    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
+const setSort = (columnKey: string) => {
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
+    else {
+        sort.by = columnKey;
+        sort.order = 'ASC';
+    }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await getUsers(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by });
+    },
+    { deep: true },
+);
 
 const handleEdit = (user: User) => {
     navigateTo(`/dashboard/admin/users/${user.id}`);
