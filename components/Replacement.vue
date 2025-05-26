@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="flex mt-6">
-            <Form class="grid grid-cols-1 sm:grid-cols-5 w-full gap-4">
-                <div class="col-span-4 md:col-span-2 lg:col-span-1">
+            <Form class="grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 w-full gap-4">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -12,7 +12,7 @@
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-56 lg:w-36 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
+                                            class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -42,7 +42,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:w-[22rem]">
+                <div class="col-span-4 md:col-span-2 lg:w-64 lg:ml-6 xl:ml-0 xl:w-[22rem] 2xl:ml-16 2xl:w-[26rem]">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -56,17 +56,17 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
-                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
-                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden'"
+                                            :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden']"
                                             class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
                                             <TagsInputItem
                                                 v-for="item in formData.postalCodeTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-30"
+                                                class="flex-shrink-0 max-w-[7.5rem]"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
@@ -74,7 +74,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="postalCodeInput"
-                                            :class="Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full'"
+                                            :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="8793"
                                             @blur="handleBlur"
@@ -86,7 +86,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ms-16 lg:w-72">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ml-[6.5rem] xl:-ms-16 lg:w-72 2xl:w-[26rem] 2xl:ml-4">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
@@ -100,17 +100,17 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
-                                        class="w-[14rem] flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
-                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden'"
+                                            :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden']"
                                             class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                                         >
                                             <TagsInputItem
                                                 v-for="item in formData.cityTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="flex-shrink-0 max-w-24"
+                                                class="flex-shrink-0 max-w-[6rem]"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.cityTags, item)" />
@@ -118,7 +118,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full'"
+                                            :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
                                             @blur="handleBlur"
@@ -130,7 +130,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 flex gap-3">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 2xl:ml-52 flex gap-3">
                     <Button
                         class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
                         @click="reinitializeFilter"
@@ -140,7 +140,7 @@
                     </Button>
 
                     <Button
-                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto"
+                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
                         @click="submit"
                     >
                         <MagnifyingGlassIcon class="w-6" />
@@ -212,7 +212,10 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    class="urgent-indicator"
+                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                { 'bg-yellow-400': replacement.replaced_by !== null },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                    )]"
                                 >
                                     {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
@@ -257,7 +260,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="index"
-                                                            :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
@@ -267,7 +270,7 @@
                                                     <span
                                                         v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                         :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                        :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                     >
                                                         {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                     </span>
@@ -286,7 +289,7 @@
                                                         <span
                                                             v-for="(city, index) in JSON.parse(replacement.cities)"
                                                             :key="index"
-                                                            :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
+                                                            :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                         >
                                                             {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                         </span>
@@ -296,7 +299,7 @@
                                                     <span
                                                         v-for="(city, index) in JSON.parse(replacement.cities)"
                                                         :key="index"
-                                                        :class="cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })"
+                                                        :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                     >
                                                         {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                     </span>
@@ -331,7 +334,7 @@
                                         <EyeIcon class="h-6 mt-1" />
                                     </Button>
                                     <Button
-                                        v-if="user.nurse.id == replacement.nurse_id"
+                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         @click="closeReplacementDialog = true"
                                     >
@@ -416,7 +419,10 @@
                             >
                                 <div
                                     v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    class="urgent-indicator -ml-[-2] text-xs"
+                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                { 'bg-yellow-400': replacement.replaced_by !== null },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                    )]"
                                 >
                                     {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
                                 </div>
@@ -450,7 +456,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
                                                             :key="index"
-                                                            :class="cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}
                                                         </span>
@@ -469,7 +475,7 @@
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="'tooltip-' + index"
-                                                            :class="cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })"
+                                                            :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
@@ -485,7 +491,7 @@
                                 >
                                     <div class="flex flex-col items-center justify-center space-y-2">
                                         <Button
-                                            v-if="user.nurse.id == replacement.nurse_id"
+                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             @click="closeReplacementDialog = true"
                                         >
@@ -535,16 +541,30 @@
                     </TableBody>
                 </Table>
             </div>
+
+            <div class="mt-4">
+                <CustomPagination
+                    v-if="pagination.total > 5"
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="pagination.total"
+                    @update:page="refreshReplacements"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
+import { toRaw } from 'vue';
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
+import { PERPAGE } from '~/lib/constants';
+import type { User, Replacement } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
 
@@ -553,10 +573,6 @@ const props = defineProps({
         type: String,
         required: false,
         default: '',
-    },
-    getData: {
-        type: Function,
-        required: true,
     },
     filterType: {
         type: String,
@@ -568,12 +584,28 @@ const props = defineProps({
 const { loading, updateReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 
-onMounted(async () => {
-    await fetchInitialData();
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const pagination = ref({
+    current_page: 1,
+    per_page: PERPAGE,
+    total: 0,
+    last_page: 1,
 });
 
-const user = useState('user');
-const settings = JSON.parse(user.value.settings);
+onMounted(async () => {
+    await fetchInitialData(page.value, perPage.value);
+});
+
+const user = useState<User>('user');
+const settings = ref({});
+try {
+    settings.value = JSON.parse(user.value.settings);
+}
+catch (e) {
+    console.error('Error parsing user settings:', e);
+}
+
 const postalCodeInput = ref('');
 const cityInput = ref('');
 
@@ -621,39 +653,28 @@ const hasShift = (replacement, period) => {
 };
 
 const isUrgentReplacement = (replacement) => {
-    return !replacement.time_slot && replacement.details.length != 0;
-};
-
-const isReplacementActive = (replacement) => {
-    const currentDate = new Date();
-    const endDate = new Date(replacement.end_date);
-
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    const currentDay = currentDate.getDate();
-
-    const endYear = endDate.getFullYear();
-    const endMonth = endDate.getMonth();
-    const endDay = endDate.getDate();
-
-    if (endYear > currentYear) return true;
-    if (endYear < currentYear) return false;
-    if (endMonth > currentMonth) return true;
-    if (endMonth < currentMonth) return false;
-    return endDay >= currentDay;
+    return !replacement.time_slot && replacement.details.length > 0;
 };
 
 const filteredReplacements = computed(() => {
     return currentReplacements.value.filter(
-        replacement => replacement.status === 'open'
-            && isReplacementActive(replacement)
-            && (props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement)),
+        replacement => props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement),
     );
 });
 
+const replacement = ref<Replacement | undefined>();
+
 const formData = reactive({
-    postalCodeTags: settings.replacement.zip_codes || [],
-    cityTags: settings.replacement.cities || [],
+    postalCodeTags: Array.isArray(replacement.value?.zip_codes)
+        ? replacement.value.zip_codes
+        : replacement.value?.zip_codes
+            ? [replacement.value.zip_codes]
+            : [],
+    cityTags: Array.isArray(replacement.value?.cities)
+        ? replacement.value.cities
+        : replacement.value?.cities
+            ? [replacement.value.cities]
+            : [],
     selectedDays: [],
     type: props.type,
 });
@@ -681,41 +702,55 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const sortReplacements = (replacements) => {
-    return replacements.sort((a, b) => {
-        const aIsUrgent = isUrgentReplacement(a);
-        const bIsUrgent = isUrgentReplacement(b);
-
-        if (aIsUrgent && !bIsUrgent) return -1;
-        if (!aIsUrgent && bIsUrgent) return 1;
-
-        const aMatches = a.details.some(
-            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-
-        const bMatches = b.details.some(
-            detail => formData.postalCodeTags.includes(detail.patient?.zip_code?.toString()?.trim())
-                || formData.cityTags.includes(detail.patient?.city?.toLowerCase()?.trim()),
-        );
-
-        if (aMatches && !bMatches) return -1;
-        if (!aMatches && bMatches) return 1;
-
-        const dateA = new Date(a.start_date).getTime() || 0;
-        const dateB = new Date(b.start_date).getTime() || 0;
-
-        return dateB - dateA;
-    });
-};
-
-const initialReplacements = ref([]);
+const initialReplacements = ref({
+    replacements: {
+        data: [],
+        current_page: 1,
+        per_page: 10,
+        total: 0,
+        last_page: 1,
+    },
+});
 const currentReplacements = ref([]);
 
-const fetchInitialData = async () => {
-    const data = await props.getData();
-    initialReplacements.value = data;
-    currentReplacements.value = sortReplacements(data.data);
+const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
+    const response = await fetchReplacements({
+        postalCode: [],
+        cities: [],
+        selectedDays: [],
+        type: props.type,
+        page,
+        perPage,
+    });
+    initialReplacements.value = response;
+    currentReplacements.value = response.replacements.data;
+    pagination.value = {
+        current_page: response.replacements.current_page,
+        per_page: response.replacements.per_page,
+        total: response.replacements.total,
+        last_page: response.replacements.last_page,
+    };
+};
+
+const refreshReplacements = async (newPage: number) => {
+    page.value = newPage;
+    if (isSubmitted.value) {
+        await submit();
+    }
+    else {
+        await fetchInitialData(newPage, perPage.value);
+    }
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    page.value = 1;
+    if (isSubmitted.value) {
+        await submit();
+    }
+    else {
+        await fetchInitialData(1, value);
+    }
 };
 
 const isSubmitted = ref(false);
@@ -781,12 +816,20 @@ const submit = async () => {
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
             type: toRaw(formData.type),
+            page: page.value,
+            perPage: perPage.value,
         });
 
-        currentReplacements.value = sortReplacements(response.replacements.data);
+        currentReplacements.value = response.replacements.data;
+        pagination.value = {
+            current_page: response.replacements.current_page,
+            per_page: response.replacements.per_page,
+            total: response.replacements.total,
+            last_page: response.replacements.last_page,
+        };
     }
     else {
-        currentReplacements.value = sortReplacements(initialReplacements.value.data);
+        await fetchInitialData(page.value, perPage.value);
     }
 };
 
@@ -794,6 +837,7 @@ const reinitializeFilter = () => {
     formData.postalCodeTags = [];
     formData.cityTags = [];
     formData.selectedDays = [];
+    page.value = 1;
 };
 
 watch(() => formData.postalCodeTags, () => {
@@ -820,7 +864,13 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = sortReplacements(initialReplacements.value.data);
+            currentReplacements.value = initialReplacements.value.replacements.data;
+            pagination.value = {
+                current_page: initialReplacements.value.replacements.current_page,
+                per_page: initialReplacements.value.replacements.per_page,
+                total: initialReplacements.value.replacements.total,
+                last_page: initialReplacements.value.replacements.last_page,
+            };
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
@@ -842,6 +892,7 @@ const handleCloseReplacement = async (replacement) => {
         });
 
         currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
+        pagination.value.total -= 1;
         closeReplacementDialog.value = false;
     }
 };

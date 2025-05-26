@@ -1,3 +1,4 @@
+```vue
 <template>
     <div class="w-full">
         <DashboardAdminPageHeader title="Des remplacements" />
@@ -25,6 +26,7 @@ import { ArrowUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { NuxtLink } from '#components';
 
 import { PERPAGE } from '~/lib/constants';
@@ -195,7 +197,6 @@ const columns: ColumnDef<Replacement>[] = [
     //     },
     //     cell: ({ row }) => {
     //         const status = row.original.status;
-
     //         return h(ReplacementStatus, { status: status });
     //     },
     // },
@@ -343,9 +344,20 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            return h('div', {
-                class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
-            }, (row.original.matching_nurses || []).map(nurse => nurse.full_name).join(', '));
+            const nurses = (row.original.matching_nurses || []).map(nurse => nurse.full_name);
+            const nursesText = nurses.join(', ');
+            return h(TooltipProvider, {
+                'skip-delay': true,
+            }, () => [
+                h(Tooltip, {}, () => [
+                    h(TooltipTrigger, { class: 'truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, () => [
+                        h('span', { class: 'capitalize' }, nursesText),
+                    ]),
+                    h(TooltipContent, { class: 'max-w-[300px] p-2 bg-gray-100 rounded shadow-lg z-50' }, () =>
+                        nurses.map(name => h('div', name)),
+                    ),
+                ]),
+            ]);
         },
     },
     {
@@ -459,3 +471,9 @@ const handleDelete = async (replacement: Replacement) => {
     await getReplacementsForAdmin();
 };
 </script>
+
+<style scoped>
+:deep(.truncate) {
+    overflow: visible !important;
+}
+</style>

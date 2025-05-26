@@ -222,7 +222,21 @@ export const useReplacements = () => {
 export const useSearchReplacements = () => {
     const { $apifetch } = useNuxtApp();
 
-    const replacements = useState('replacements', () => []);
+    const replacements = useState<Pagination<Replacement>>('replacements', () => ({
+        data: [],
+        current_page: 1,
+        per_page: PERPAGE,
+        total: 0,
+        last_page: 1,
+        first_page_url: '',
+        last_page_url: '',
+        next_page_url: null,
+        prev_page_url: null,
+        path: '',
+        from: 0,
+        to: 0,
+        links: [],
+    }));
     const error = useState('replacementError', () => null);
     const loadingSearch = useState('replacementLoading', () => false);
 
@@ -231,6 +245,8 @@ export const useSearchReplacements = () => {
         cities = [],
         selectedDays = [],
         type = '',
+        page = 1,
+        perPage = PERPAGE,
     } = {}) {
         loadingSearch.value = true;
         error.value = null;
@@ -240,19 +256,24 @@ export const useSearchReplacements = () => {
             cities: cities,
             days: selectedDays,
             type: type,
+            page,
+            perPage,
         };
 
         try {
             const response = await $apifetch('api/replacements/search', {
                 method: 'POST',
                 body: JSON.stringify(data),
+                query: { page, perPage },
             });
 
+            replacements.value = response.replacements;
             return response;
         }
         catch (err) {
             console.error('Erreur lors de la requête :', err);
-            error.value = err.message || 'Une erreur est survenue';
+            error.value = err.message;
+            throw err;
         }
         finally {
             loadingSearch.value = false;
