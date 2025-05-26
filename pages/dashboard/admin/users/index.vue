@@ -210,10 +210,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'city',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('city'),
             }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
