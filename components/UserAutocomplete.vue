@@ -23,7 +23,7 @@
                     @click="selectUser(user)"
                     class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                 >
-                    {{ user.firstname }} {{ user.lastname }} - {{ user.email }}
+                    {{ user.firstname || 'nom indéfini' }} {{ user.lastname || '' }} - {{ user.email }}
                 </li>
             </ul>
         </div>

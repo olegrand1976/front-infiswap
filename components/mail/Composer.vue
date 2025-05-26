@@ -1,20 +1,24 @@
 <template>
     <div class="min-h-screen flex flex-col lg:flex-row p-1 space-y-4 lg:space-y-0 lg:space-x-4">
         <div class="md:w-1/3 w-full bg-white rounded-lg shadow flex flex-col">
-            <div class="flex items-center justify-between bg-primary rounded-t-lg py-1.5 px-4">
+            <div class="flex items-center justify-between bg-primary rounded-t-lg py-3 px-4">
                 <h2 class="font-semibold text-white text-center flex-1">
                     Historique des e-mails envoyés
                 </h2>
-                <button
-                    title="Nouveau message"
-                    @click="showModal = true"
-                    class="bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-1.5 rounded-lg"
-                >
-                    <PlusCircleIcon class="h-6 w-6" />
-                </button>
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-8rem)]">
+                <div class="fixed top-46 left-0 right-0 z-50 px-4 lg:hidden">
+                    <div class="flex justify-center">
+                        <button
+                            title="Nouveau message"
+                            @click="showModal = true"
+                            class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
+                        >
+                            Nouveau message
+                        </button>
+                    </div>
+                </div>
                 <div
                     v-if="!mail"
                 >
@@ -53,6 +57,17 @@
                         <div class="absolute bottom-2 right-4 text-xs text-gray-400">
                             {{ formatDate(mailItem.created_at) }}
                         </div>
+                    </div>
+                </div>
+                <div class="sticky hidden lg:block bottom-6 pt-4">
+                    <div class="flex justify-center mb-2 px-4">
+                        <button
+                            title="Nouveau message"
+                            @click="showModal = true"
+                            class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
+                        >
+                            Nouveau message
+                        </button>
                     </div>
                 </div>
             </div>
