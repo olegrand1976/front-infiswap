@@ -273,7 +273,51 @@
                         </Select>
                     </div>
 
-                    <div class="col-span-2 sm:col-span-1 lg:col-span-2">
+                    <div class="col-span-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Votre pays de travail
+                        </label>
+                        <Select v-model="formData.address.workingAt">
+                            <SelectTrigger
+                                class="flex justify-between items-center rounded-full border border-gray-300 mt-1"
+                                position="right"
+                            >
+                                <LayoutsAppImage
+                                    src="/icons/plus.png"
+                                    class="h-4 ml-2"
+                                />
+                                <SelectValue
+                                    placeholder="Pays"
+                                    class="ml-3 block w-full"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none w-full">
+                                <SelectGroup>
+                                    <div
+                                        v-for="workingAt in countryOfWork"
+                                        :key="workingAt.value"
+                                        class="flex justify-center items-center -ms-3 w-full"
+                                    >
+                                        <SelectItem :value="workingAt.value">
+                                            <div class="flex w-full">
+                                                <LayoutsAppImage
+                                                    :src="workingAt.icon"
+                                                    :alt="workingAt.name"
+                                                    class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
+                                                    format="png"
+                                                />
+                                                <div class="sm:text-xs xl:text-sm">
+                                                    {{ workingAt.label }}
+                                                </div>
+                                            </div>
+                                        </SelectItem>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="col-span-2 lg:mt-[1.55rem]">
                         <InputIcon
                             v-model="formData.identifierNumber"
                             :icon="IdentificationIcon"
@@ -486,6 +530,21 @@ const countries = [
     },
 ];
 
+const countryOfWork = [
+    {
+        value: 'Belgique',
+        label: 'Belgique',
+        name: 'belgique',
+        icon: '/icons/belgium.png',
+    },
+    {
+        value: 'France',
+        label: 'France',
+        name: 'france',
+        icon: '/icons/fr.png',
+    },
+];
+
 const languages = [
     {
         value: 'fr',
@@ -546,6 +605,16 @@ const selectedReferral = computed({
     },
 });
 
+const getDefaultCountry = () => {
+    const url = useRequestURL();
+    const host = url.hostname;
+
+    if (host.endsWith('.fr')) return 'France';
+    if (host.endsWith('.be')) return 'Belgique';
+
+    return 'Belgique';
+};
+
 const formData = reactive({
     lastname: '',
     firstname: '',
@@ -562,6 +631,7 @@ const formData = reactive({
         city: '',
         zipCode: '',
         country: countries[0].value,
+        workingAt: getDefaultCountry(),
         additionnalInformation: '',
     },
     referralSource: '',
