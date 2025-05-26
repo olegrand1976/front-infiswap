@@ -80,7 +80,7 @@ await getUsers(page.value, perPage.value, option.value);
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value, option.value);
+    await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
 };
 
 const handlePerPageChange = async (value: number) => {
