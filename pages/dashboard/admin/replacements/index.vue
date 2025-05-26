@@ -18,7 +18,7 @@
             </div>
 
             <Dialog v-model:open="dialogOpen">
-                <DialogContent>
+                <DialogContent class="max-h-80 overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
                             <template v-if="selectedNurses.length === 1">
@@ -34,8 +34,14 @@
                             <li
                                 v-for="nurse in selectedNurses"
                                 :key="nurse"
+                                class="flex justify-between items-center"
                             >
-                                {{ nurse }}
+                                <span>
+                                    {{ nurse.full_name }}
+                                </span>
+                                <span>
+                                    {{ nurse.zip_code }}
+                                </span>
                             </li>
                         </ul>
                     </div>
@@ -373,8 +379,8 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            const nurses = (row.original.matching_nurses || []).map(nurse => nurse.full_name);
-            const displayText = nurses.join(', ');
+            const nurses = (row.original.matching_nurses || []).map(nurse => nurse);
+            const displayText = nurses.map(nurse => nurse.full_name).join(', ');
 
             return h('div', { class: 'flex items-center' }, [
                 h('div', {
