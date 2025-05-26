@@ -29,6 +29,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
         zipCode: user?.profile?.zip_code || null,
         additionalInformation: user?.profile?.additional_info || null,
     },
+    settings: user?.settings || null,
 });
 
 const form = reactive(getInitialValue());
@@ -48,6 +49,22 @@ const { submit, inProgress } = useSubmit(async () => {
             description: isEditMode.value ? 'Utilisateur mis à jour avec succès' : 'Utilisateur créé avec succès',
         });
     },
+});
+
+const extractedZipCodes = computed(() => {
+    try {
+        const data = typeof props.user?.settings === 'string'
+            ? JSON.parse(props.user?.settings)
+            : props.user?.settings;
+
+        return Array.isArray(data?.replacement?.zip_codes)
+            ? data.replacement.zip_codes.join(', ')
+            : '';
+    }
+    catch (e) {
+        console.error('Erreur parsing settings:', e);
+        return '';
+    }
 });
 
 function resetForm(user?: User | null) {
@@ -288,6 +305,29 @@ const formattedRoles = computed(() => {
                         label="Complément d'adresse"
                     />
                 </div>
+            </div>
+        </div>
+        <Separator class="my-4 lg:my-10" />
+        <div class="grid grid-cols-3 gap-4 lg:gap-8">
+            <div class="p-4 hidden lg:block">
+                <h1 class="font-semibold text-gray-600">
+                    Préférence
+                </h1>
+                <p class="mt-2 text-md text-gray-500">
+                    Les informations sur les codes postaux de préférence
+                </p>
+            </div>
+            <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
+                <!--<p>{{ extractedZipCodes }}</p> -->
+                <!-- <InputTagManager
+                    v-model="form.settings.zip_codes"
+                    placeholder="6565,4561,1237"
+                    class="pt-3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    :is-mobile="false"
+                    :comma-validation="false"
+                    label="Codes postaux"
+                    @keydown.enter.prevent
+                /> -->
             </div>
         </div>
         <Separator class="my-4 lg:my-10" />
