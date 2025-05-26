@@ -127,20 +127,20 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'full_name',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('firstname'),
             }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
         accessorKey: 'email',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('email'),
             }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -176,20 +176,20 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'identifier_number',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('identifier_number'),
             }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
     {
         accessorKey: 'phone_number',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('phone_number'),
             }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -198,10 +198,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'street_address',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('street_address'),
             }, () => ['Rue', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -234,10 +234,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'created_at',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('created_at'),
             }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -296,7 +296,7 @@ const setSort = (columnKey: string) => {
     }
     else {
         sort.by = columnKey;
-        sort.order = 'ASC';
+        sort.order = 'DESC';
     }
 };
 
