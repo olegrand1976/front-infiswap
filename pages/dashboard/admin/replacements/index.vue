@@ -1,4 +1,3 @@
-```vue
 <template>
     <div class="w-full">
         <DashboardAdminPageHeader title="Des remplacements" />
@@ -17,17 +16,43 @@
                     @update:per-page="handlePerPageChange"
                 />
             </div>
+
+            <Dialog v-model:open="dialogOpen">
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            <template v-if="selectedNurses.length === 1">
+                                Personne notifiée ({{ selectedNurses.length }})
+                            </template>
+                            <template v-else>
+                                Personnes notifiées ({{ selectedNurses.length }})
+                            </template>
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div class="mt-4">
+                        <ul class="space-y-2">
+                            <li
+                                v-for="nurse in selectedNurses"
+                                :key="nurse"
+                            >
+                                {{ nurse }}
+                            </li>
+                        </ul>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ArrowUpDown } from 'lucide-vue-next';
+import { EyeIcon } from '@heroicons/vue/24/outline';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { NuxtLink } from '#components';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
@@ -46,6 +71,9 @@ const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, e
 const perPage = ref(PERPAGE);
 const page = ref(1);
 await getReplacementsForAdmin(page.value, perPage.value);
+
+const dialogOpen = ref(false);
+const selectedNurses = ref<string[]>([]);
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
@@ -197,6 +225,7 @@ const columns: ColumnDef<Replacement>[] = [
     //     },
     //     cell: ({ row }) => {
     //         const status = row.original.status;
+
     //         return h(ReplacementStatus, { status: status });
     //     },
     // },
@@ -345,18 +374,20 @@ const columns: ColumnDef<Replacement>[] = [
         },
         cell: ({ row }) => {
             const nurses = (row.original.matching_nurses || []).map(nurse => nurse.full_name);
-            const nursesText = nurses.join(', ');
-            return h(TooltipProvider, {
-                'skip-delay': true,
-            }, () => [
-                h(Tooltip, {}, () => [
-                    h(TooltipTrigger, { class: 'truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, () => [
-                        h('span', { class: 'capitalize' }, nursesText),
-                    ]),
-                    h(TooltipContent, { class: 'max-w-[300px] p-2 bg-gray-100 rounded shadow-lg z-50' }, () =>
-                        nurses.map(name => h('div', name)),
-                    ),
-                ]),
+            const displayText = nurses.join(', ');
+
+            return h('div', { class: 'flex items-center' }, [
+                h('div', {
+                    class: 'ml-2 capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
+                }, displayText),
+                nurses.length > 0 && h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    onClick: () => {
+                        selectedNurses.value = nurses;
+                        dialogOpen.value = true;
+                    },
+                }, () => h(EyeIcon, { class: 'h-4 w-4' })),
             ]);
         },
     },
@@ -471,9 +502,3 @@ const handleDelete = async (replacement: Replacement) => {
     await getReplacementsForAdmin();
 };
 </script>
-
-<style scoped>
-:deep(.truncate) {
-    overflow: visible !important;
-}
-</style>
