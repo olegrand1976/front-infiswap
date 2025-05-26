@@ -236,6 +236,19 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        accessorKey: 'settings',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Préférences', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            console.log('settings ', row);
+            return h('div', { class: 'text-center' }, row.getValue('settings'));
+        },
+    },
+    {
         accessorKey: 'created_at',
         header: () => {
             return h(Button, {
