@@ -31,6 +31,7 @@ export type User = {
     city?: string | null;
     zip_code?: string | null;
     country?: string | null;
+    working_at?: string | null;
     additional_info?: string | null;
     social_media_links?: Record<string, any> | null;
     emergency_contact_name?: string | null;
@@ -97,8 +98,9 @@ export type Profile = {
     city?: string | null;
     zip_code?: string | null;
     country?: string | null;
+    working_at?: string | null;
     additional_info?: string | null;
-    social_media_links?: Record<string, any> | null;
+    social_media_links?: Record<string> | null;
     emergency_contact_name?: string | null;
     emergency_contact_phone?: string | null;
     created_at: string;

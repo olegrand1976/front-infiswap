@@ -424,6 +424,30 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Pays de travail
+                                            </p>
+                                            <Select v-model="formAddress.workingAt">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formAddress.workingAt" />
+                                                </SelectTrigger>
+                                                <SelectContent class="border-none">
+                                                    <template
+                                                        v-for="(value, key) in ['Belgique', 'France']"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="value">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Code postal
                                             </p>
                                             <Input
@@ -524,10 +548,24 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <img
-                                            src="/images/icons/zip_code.png"
-                                            class="w-5"
-                                        >
+                                        <BuildingOfficeIcon class="w-5" />
+                                        <span>Pays de travail</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.profile.working_at || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <EnvelopeOpenIcon class="w-5" />
                                         <span>Code postal</span>
                                     </label>
                                 </div>
@@ -1016,9 +1054,10 @@ import {
     WrenchScrewdriverIcon,
     LanguageIcon,
     BellAlertIcon,
-    ChartPieIcon,
     TrashIcon,
     PencilSquareIcon,
+    BuildingOfficeIcon,
+    EnvelopeOpenIcon
 } from '@heroicons/vue/24/solid';
 
 import { useRouter } from 'vue-router';
@@ -1042,7 +1081,7 @@ const {
     updateAvatarUser,
     activeTwoFactorAuth,
     verifyCode,
-    updateStatusAccount,
+    // updateStatusAccount,
     deleteAccount,
     deleteAvatar,
 } = useAuth();
@@ -1078,11 +1117,11 @@ const formattedGender = computed(() => {
 });
 
 const formattedCountry = computed(() => {
-    if (user.value.profile && user.value.profile.country) {
-        return user.value.profile?.country == 'be' ? 'Belgique' : 'France';
+    if (user.value.profile && user.value.profile.country && user.value.profile?.country == 'be') {
+        return 'Belgique';
     }
 
-    return 'Belgique';
+    return 'France';
 });
 
 const formatStringDate = (dateString) => {
@@ -1124,6 +1163,7 @@ const formAddress = reactive({
     country: user.value.profile?.country ?? 'Belgique',
     zipCode: user.value.profile?.zip_code,
     additionalInfo: user.value.profile?.additional_info,
+    workingAt: user.value.profile?.working_at,
 });
 
 const updateInfoUser = async () => {
@@ -1168,6 +1208,7 @@ const handleUpdateAddress = async () => {
         user.value.profile.country = formAddress.country;
         user.value.profile.zip_code = formAddress.zipCode;
         user.value.profile.additional_info = formAddress.additionalInfo;
+        user.value.profile.working_at = formAddress.workingAt;
 
         $toast({
             description: 'Mise à jour effectué avec succès',
@@ -1303,8 +1344,8 @@ const verifyTwoFactorStatus = () => {
 const enableTwoFactor = ref(verifyTwoFactorStatus());
 const twoFactorDialog = ref(false);
 const enterPasswordDialog = ref(false);
-const enterPasswordActivateDialog = ref(false);
-const enterPasswordDeactivateDialog = ref(false);
+// const enterPasswordActivateDialog = ref(false);
+// const enterPasswordDeactivateDialog = ref(false);
 const deleteAccountDialog = ref(false);
 const currentPassword = ref('');
 
@@ -1384,61 +1425,61 @@ const handleVerifyCode = async () => {
     }
 };
 
-const verifyStatusAccount = () => {
-    return user.value.status == 'active' ? true : false;
-};
+// const verifyStatusAccount = () => {
+//     return user.value.status == 'active' ? true : false;
+// };
 
-const isActivated = ref(verifyStatusAccount());
+// const isActivated = ref(verifyStatusAccount());
 
-const handleActivateStatus = async () => {
-    const formData = reactive({
-        currentPassword: currentPassword.value,
-        status: 'active',
-    });
+// const handleActivateStatus = async () => {
+//     const formData = reactive({
+//         currentPassword: currentPassword.value,
+//         status: 'active',
+//     });
 
-    try {
-        await updateStatusAccount(formData);
+//     try {
+//         await updateStatusAccount(formData);
 
-        $toast({
-            description: 'Statut du compte mis à jour',
-        });
+//         $toast({
+//             description: 'Statut du compte mis à jour',
+//         });
 
-        enterPasswordActivateDialog.value = false;
-        isActivated.value = true;
-    }
-    catch (error) {
-        console.log(error);
-        $toast({
-            variant: 'destructive',
-            description: 'Echec de la mise à jour',
-        });
-    }
-};
+//         enterPasswordActivateDialog.value = false;
+//         isActivated.value = true;
+//     }
+//     catch (error) {
+//         console.log(error);
+//         $toast({
+//             variant: 'destructive',
+//             description: 'Echec de la mise à jour',
+//         });
+//     }
+// };
 
-const handleDeactivateStatus = async () => {
-    const formData = reactive({
-        currentPassword: currentPassword.value,
-        status: 'inactive',
-    });
+// const handleDeactivateStatus = async () => {
+//     const formData = reactive({
+//         currentPassword: currentPassword.value,
+//         status: 'inactive',
+//     });
 
-    try {
-        await updateStatusAccount(formData);
+//     try {
+//         await updateStatusAccount(formData);
 
-        $toast({
-            description: 'Statut du compte mis à jour',
-        });
+//         $toast({
+//             description: 'Statut du compte mis à jour',
+//         });
 
-        enterPasswordDeactivateDialog.value = false;
-        isActivated.value = false;
-    }
-    catch (error) {
-        console.log(error);
-        $toast({
-            variant: 'destructive',
-            description: 'Echec de la mise à jour',
-        });
-    }
-};
+//         enterPasswordDeactivateDialog.value = false;
+//         isActivated.value = false;
+//     }
+//     catch (error) {
+//         console.log(error);
+//         $toast({
+//             variant: 'destructive',
+//             description: 'Echec de la mise à jour',
+//         });
+//     }
+// };
 
 const handleDeleteAccount = async () => {
     const formData = reactive({
