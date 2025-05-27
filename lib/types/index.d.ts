@@ -33,13 +33,13 @@ export type User = {
     country?: string | null;
     working_at?: string | null;
     additional_info?: string | null;
-    social_media_links?: Record<string, any> | null;
+    social_media_links?: Record<string> | null;
     emergency_contact_name?: string | null;
     emergency_contact_phone?: string | null;
     trial_ends_at?: string | null;
     nurse: Nurse;
     roles: AccountType[];
-    profile: Profile;
+    profile?: Profile;
     permissions: string[];
     two_factor_enabled: boolean;
     two_factor_type: string;
@@ -123,8 +123,8 @@ export type Patient = {
     city?: string | null;
     zip_code?: string | null;
     country?: string | null;
+    social_media_links?: Record<string, string> | null;
     additional_info?: string | null;
-    social_media_links?: Record<string, any> | null;
     emergency_contact_name?: string | null;
     emergency_contact_phone?: string | null;
     profile: Profile;
@@ -139,8 +139,8 @@ export type Patient = {
             care_types: string[];
         }[];
     }[];
-    care_informations: any[];
-    patient_documents: any[];
+    care_informations: Record<string, string[]>;
+    patient_documents: Record<string, string[]>;
     patient_care_type: PatientCareType[];
     created_at: string;
     updated_at: string;

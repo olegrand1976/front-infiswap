@@ -553,7 +553,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.working_at || ' - ' }}
+                                    {{ user.profile?.working_at || ' - ' }}
                                 </p>
                             </div>
 
@@ -1057,7 +1057,7 @@ import {
     TrashIcon,
     PencilSquareIcon,
     BuildingOfficeIcon,
-    EnvelopeOpenIcon
+    EnvelopeOpenIcon,
 } from '@heroicons/vue/24/solid';
 
 import { useRouter } from 'vue-router';
@@ -1201,20 +1201,19 @@ const updateInfoUser = async () => {
 
 const handleUpdateAddress = async () => {
     try {
-        await updateAddressUser(formAddress);
+        await updateAddressUser(formAddress).then(() => {
+            addressInfoDialog.value = false;
+            user.value.profile.street_address = formAddress.streetAddress;
+            user.value.profile.city = formAddress.city;
+            user.value.profile.country = formAddress.country;
+            user.value.profile.zip_code = formAddress.zipCode;
+            user.value.profile.additional_info = formAddress.additionalInfo;
+            user.value.profile.working_at = formAddress.workingAt;
 
-        user.value.profile.street_address = formAddress.streetAddress;
-        user.value.profile.city = formAddress.city;
-        user.value.profile.country = formAddress.country;
-        user.value.profile.zip_code = formAddress.zipCode;
-        user.value.profile.additional_info = formAddress.additionalInfo;
-        user.value.profile.working_at = formAddress.workingAt;
-
-        $toast({
-            description: 'Mise à jour effectué avec succès',
+            $toast({
+                description: 'Mise à jour effectué avec succès',
+            });
         });
-
-        addressInfoDialog.value = false;
     }
     catch (err) {
         if (err.data && err.data.errors) {
