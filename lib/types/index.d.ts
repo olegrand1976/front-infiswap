@@ -1,4 +1,4 @@
-export type Gender = 'M' | 'F';
+export type Gender = 'M' | 'F' | 'X';
 export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
 
 export type User = {

@@ -478,7 +478,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.street_address || ' - ' }}
+                                    {{ user.profile?.street_address || ' - ' }}
                                 </p>
                             </div>
 
@@ -495,7 +495,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.city || ' - ' }}
+                                    {{ user.profile?.city || ' - ' }}
                                 </p>
                             </div>
 
@@ -532,7 +532,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile.zip_code || ' - ' }}
+                                    {{ user.profile?.zip_code || ' - ' }}
                                 </p>
                             </div>
 
@@ -1078,7 +1078,11 @@ const formattedGender = computed(() => {
 });
 
 const formattedCountry = computed(() => {
-    return user.value.profile.country == 'be' ? 'Belgique' : 'France';
+    if (user.value.profile && user.value.profile.country) {
+        return user.value.profile?.country == 'be' ? 'Belgique' : 'France';
+    }
+
+    return 'Belgique';
 });
 
 const formatStringDate = (dateString) => {
@@ -1117,9 +1121,9 @@ const formPersonalInfo = reactive({
 const formAddress = reactive({
     streetAddress: user.value.profile?.street_address,
     city: user.value.profile?.city,
-    country: user.value.profile.country,
+    country: user.value.profile?.country ?? 'Belgique',
     zipCode: user.value.profile?.zip_code,
-    additionalInfo: user.value.profile.additional_info,
+    additionalInfo: user.value.profile?.additional_info,
 });
 
 const updateInfoUser = async () => {
