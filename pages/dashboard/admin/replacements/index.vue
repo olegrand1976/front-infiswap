@@ -18,7 +18,7 @@
             </div>
 
             <Dialog v-model:open="dialogOpen">
-                <DialogContent class="max-h-80 overflow-y-auto">
+                <DialogContent class="max-h-[30rem] overflow-y-scroll overflow-x-hidden">
                     <DialogHeader>
                         <DialogTitle>
                             <template v-if="selectedNurses.length === 1">
