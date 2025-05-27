@@ -1,6 +1,9 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Des utilisateurs">
+        <DashboardAdminPageHeader
+            title="Des utilisateurs"
+            :count="count"
+        >
             <template #action>
                 <UsersCreateUserButton />
             </template>
@@ -65,7 +68,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
+const { users, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
