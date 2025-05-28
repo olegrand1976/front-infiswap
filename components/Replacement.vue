@@ -141,7 +141,7 @@
 
                     <Button
                         class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
-                        @click="submit"
+                        @click="submitSearch"
                     >
                         <MagnifyingGlassIcon class="w-6" />
                         <span class="ml-2 text-xs md:text-sm">Rechercher</span>
@@ -634,7 +634,7 @@
 
                     <form
                         class="mt-6 space-y-6"
-                        @submit.prevent="submitEdit"
+                        @submit.prevent="submit"
                     >
                         <div class="grid grid-cols-2 items-center gap-8">
                             <div class="flex flex-col space-y-2">
@@ -666,12 +666,12 @@
                             </label>
                             <div class="flex justify-between gap-4 sm:gap-8 items-center">
                                 <InputTime
-                                    v-model="editFormData.timeSlot.startAt"
+                                    v-model="editFormData.timeSlot.start_at"
                                     input-class="rounded-full border border-gray-300 focus:border-primary"
                                 />
                                 <p>à</p>
                                 <InputTime
-                                    v-model="editFormData.timeSlot.endAt"
+                                    v-model="editFormData.timeSlot.end_at"
                                     input-class="rounded-full border border-gray-300 focus:border-primary"
                                 />
                             </div>
@@ -781,8 +781,7 @@
                     <Button
                         type="submit"
                         class="bg-primary hover:bg-primary/90 text-white px-8"
-                        :in-progress="editInProgress"
-                        @click="submitEdit"
+                        @click="submit"
                     >
                         Enregistrer
                     </Button>
@@ -826,7 +825,7 @@ const props = defineProps({
     },
 });
 
-const { loading, updateReplacement } = useReplacements();
+const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
@@ -987,7 +986,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
     if (isSubmitted.value) {
-        await submit();
+        await submitSearch();
     }
     else {
         await fetchInitialData(newPage, perPage.value);
@@ -998,7 +997,7 @@ const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     page.value = 1;
     if (isSubmitted.value) {
-        await submit();
+        await submitSearch();
     }
     else {
         await fetchInitialData(1, value);
@@ -1055,7 +1054,7 @@ const handleBlur = (event) => {
     inputEl.dispatchEvent(enterEvent);
 };
 
-const submit = async () => {
+const submitSearch = async () => {
     isSubmitted.value = true;
 
     const hasSearchCriteria = formData.selectedDays.length > 0
@@ -1126,7 +1125,7 @@ watch(
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
-            submit();
+            submitSearch();
         }
     },
     { deep: true },
@@ -1150,8 +1149,12 @@ const handleCloseReplacement = async (replacement) => {
 };
 
 const editDialogOpen = ref(false);
-const editInProgress = ref(false);
 const editFormData = reactive({
+    id: null,
+    nurseId: user.value.nurse.id,
+    replacedBy: null,
+    visibility: '',
+    type: '',
     startDate: '',
     endDate: '',
     patientCount: null,
@@ -1159,9 +1162,10 @@ const editFormData = reactive({
     cities: [],
     careTypes: [],
     timeSlot: {
-        startAt: '',
-        endAt: '',
+        start_at: '',
+        end_at: '',
     },
+    status: '',
     comment: '',
 });
 
@@ -1177,8 +1181,13 @@ const openEditDialog = (replacement: Replacement) => {
         return time.split(':').slice(0, 2).join(':');
     };
 
+    editFormData.id = replacement.id;
+    editFormData.replacedBy = replacement.replaced_by ? replacement.replaced_by : null;
+    editFormData.visibility = replacement.visibility;
+    editFormData.status = replacement.status;
+    editFormData.type = replacement.type;
     editFormData.startDate = formatDateToInput(replacement.start_date);
-    editFormData.endDate = replacement.end_date ? formatDateToInput(replacement.end_date) : '';
+    editFormData.endDate = formatDateToInput(replacement.end_date);
     editFormData.patientCount = replacement.patient_count;
     editFormData.zipCodes = Array.isArray(replacement.zip_codes)
         ? replacement.zip_codes
@@ -1193,8 +1202,8 @@ const openEditDialog = (replacement: Replacement) => {
             ? JSON.parse(replacement.timeSlot)
             : replacement.timeSlot
         : {};
-    editFormData.timeSlot.startAt = formatTimeToInput(timeSlot.start_at || '');
-    editFormData.timeSlot.endAt = formatTimeToInput(timeSlot.end_at || '');
+    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at || '');
+    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at || '');
 
     editFormData.comment = replacement.comment || '';
     editDialogOpen.value = true;
@@ -1218,16 +1227,18 @@ const getSelectedCareTypesText = (selectedIds) => {
         .join(', ');
 };
 
-const submitEdit = async () => {
-    editInProgress.value = true;
-    setTimeout(() => {
-        editInProgress.value = false;
-        editDialogOpen.value = false;
-        $toast({
-            description: 'Remplacement mis à jour',
-        });
-    }, 1000);
-};
+const { submit } = useSubmit(async () => {
+    await updateAgainReplacement(editFormData);
+}, {
+    onSuccess: () => {
+        setTimeout(() => {
+            editDialogOpen.value = false;
+            $toast({
+                description: 'Remplacement mis à jour',
+            });
+        }, 2000);
+    },
+});
 
 definePageMeta({
     layout: 'dashboard',
