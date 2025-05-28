@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div>
         <div class="flex mt-6">
@@ -10,7 +11,7 @@
                                     <h5 class="text-white text-xs">
                                         Jours
                                     </h5>
-                                    <Select>
+                                    <Select v-model="formData.selectedDays">
                                         <SelectTrigger
                                             class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
@@ -324,22 +325,52 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell
-                                    class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4"
-                                >
-                                    <Button
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                    >
-                                        <EyeIcon class="h-6 mt-1" />
-                                    </Button>
-                                    <Button
-                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        @click="closeReplacementDialog = true"
-                                    >
-                                        <XMarkIcon class="h-6 mt-1" />
-                                    </Button>
+                                <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                    <template v-if="props.type === 'me'">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                                <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent class="w-48">
+                                                <DropdownMenuItem as-child>
+                                                    <NuxtLink
+                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                        class="flex items-center space-x-2 text-sm"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Voir</span>
+                                                    </NuxtLink>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem class="flex items-center space-x-2 text-sm">
+                                                    <PencilSquareIcon class="h-4 w-4" />
+                                                    <span>Modifier</span>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="closeReplacementDialog = true"
+                                                >
+                                                    <XMarkIcon class="h-4 w-4" />
+                                                    <span>Fermer</span>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </template>
+                                    <template v-else>
+                                        <Button
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                        >
+                                            <EyeIcon class="h-6 mt-1" />
+                                        </Button>
+                                        <Button
+                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                            @click="closeReplacementDialog = true"
+                                        >
+                                            <XMarkIcon class="h-6 mt-1" />
+                                        </Button>
+                                    </template>
 
                                     <Dialog v-model:open="closeReplacementDialog">
                                         <DialogContent class="sm:max-w-lg overflow-y-auto">
@@ -486,23 +517,53 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell
-                                    class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4"
-                                >
+                                <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
                                     <div class="flex flex-col items-center justify-center space-y-2">
-                                        <Button
-                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            @click="closeReplacementDialog = true"
-                                        >
-                                            <XMarkIcon class="h-6 mt-1" />
-                                        </Button>
-                                        <Button
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                        >
-                                            <EyeIcon class="h-6 mt-1" />
-                                        </Button>
+                                        <template v-if="props.type === 'me'">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem as-child>
+                                                        <NuxtLink
+                                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                        >
+                                                            <EyeIcon class="h-4 w-4" />
+                                                            <span>Voir</span>
+                                                        </NuxtLink>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem class="flex items-center space-x-2 text-sm">
+                                                        <PencilSquareIcon class="h-4 w-4" />
+                                                        <span>Modifier</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="closeReplacementDialog = true"
+                                                    >
+                                                        <XMarkIcon class="h-4 w-4" />
+                                                        <span>Fermer</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </template>
+                                        <template v-else>
+                                            <Button
+                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                @click="closeReplacementDialog = true"
+                                            >
+                                                <XMarkIcon class="h-6 mt-1" />
+                                            </Button>
+                                            <Button
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                            >
+                                                <EyeIcon class="h-6 mt-1" />
+                                            </Button>
+                                        </template>
                                     </div>
 
                                     <Dialog v-model:open="closeReplacementDialog">
@@ -557,8 +618,8 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { toRaw } from 'vue';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';

@@ -5,11 +5,11 @@
                 v-model="search"
                 placeholder="joe@gmail.com"
                 class="w-full"
-                @update:modelValue="handleSearch"
+                @update:model-value="handleSearch"
                 @keydown.enter.prevent="handleEnter"
             >
                 <template #icon>
-                    <i class="i-mdi:account-search-outline"></i>
+                    <i class="i-mdi:account-search-outline" />
                 </template>
             </InputIcon>
 
@@ -20,15 +20,18 @@
                 <li
                     v-for="user in filteredResults"
                     :key="user.id"
-                    @click="selectUser(user)"
                     class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    @click="selectUser(user)"
                 >
                     {{ user.firstname || 'nom indéfini' }} {{ user.lastname || '' }} - {{ user.email }}
                 </li>
             </ul>
         </div>
 
-        <div v-if="selected.length" class="mt-4">
+        <div
+            v-if="selected.length"
+            class="mt-4"
+        >
             <ul class="flex flex-wrap gap-2 text-sm">
                 <li
                     v-for="user in selected"
@@ -36,7 +39,10 @@
                     class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded"
                 >
                     {{ user.email }}
-                    <button @click="removeUser(user)" class="text-red-600 hover:text-red-800 ml-1">
+                    <button
+                        class="text-red-600 hover:text-red-800 ml-1"
+                        @click="removeUser(user)"
+                    >
                         &times;
                     </button>
                 </li>
@@ -75,7 +81,7 @@ async function handleSearch(value) {
 }
 
 const filteredResults = computed(() => {
-    return results.value.filter(user => {
+    return results.value.filter((user) => {
         return !selected.value.some(sel => sel.user_id === user.id?.toString() || sel.email === user.email);
     });
 });

@@ -12,8 +12,8 @@
                     <div class="flex justify-center">
                         <button
                             title="Nouveau message"
-                            @click="showModal = true"
                             class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
+                            @click="showModal = true"
                         >
                             Nouveau message
                         </button>
@@ -35,7 +35,10 @@
                         class="relative border rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer mb-2"
                         @click="selectedMail = mailItem"
                     >
-                        <div class="text-sm text-gray-500 mb-1 truncate" :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')">
+                        <div
+                            class="text-sm text-gray-500 mb-1 truncate"
+                            :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')"
+                        >
                             À :
                             <span
                                 v-for="(recipient, idx) in parseRecipients(mailItem.recipients)"
@@ -63,8 +66,8 @@
                     <div class="flex justify-center mb-2 px-4">
                         <button
                             title="Nouveau message"
-                            @click="showModal = true"
                             class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
+                            @click="showModal = true"
                         >
                             Nouveau message
                         </button>
@@ -78,7 +81,10 @@
                 Détail du message
             </h2>
 
-            <div class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]" v-if="selectedMail">
+            <div
+                v-if="selectedMail"
+                class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]"
+            >
                 <div class="space-y-3">
                     <div>
                         <span class="font-semibold text-gray-700">Destinataires :</span>
@@ -104,10 +110,25 @@
                     <span class="font-semibold text-gray-700">Pièces jointes :</span>
 
                     <div class="mt-4 border rounded-lg divide-y">
-                        <div v-for="(file, idx) in parseAttachments(selectedMail.attachement)" :key="idx" class="flex items-center p-3 hover:bg-gray-50">
+                        <div
+                            v-for="(file, idx) in parseAttachments(selectedMail.attachement)"
+                            :key="idx"
+                            class="flex items-center p-3 hover:bg-gray-50"
+                        >
                             <div class="mr-3 text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                    />
                                 </svg>
                             </div>
 
@@ -120,9 +141,25 @@
                                 </p>
                             </div>
 
-                            <a :href="file" target="_blank" class="ml-2 p-2 rounded-full hover:bg-gray-200 text-gray-600 hover:text-gray-800" title="Télécharger">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            <a
+                                :href="file"
+                                target="_blank"
+                                class="ml-2 p-2 rounded-full hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                                title="Télécharger"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
                                 </svg>
                             </a>
                         </div>
@@ -134,18 +171,24 @@
                 </div>
             </div>
 
-            <div class="p-6 text-gray-500 italic" v-else>
+            <div
+                v-else
+                class="p-6 text-gray-500 italic"
+            >
                 Cliquez sur un e-mail à gauche pour voir les détails.
             </div>
         </div>
     </div>
 
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div
+        v-if="showModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+    >
         <div class="bg-white p-6 rounded-lg w-full max-w-xl relative">
             <button
-                @click="showModal = false"
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                 aria-label="Fermer"
+                @click="showModal = false"
             >
                 <XMarkIcon class="h-5 w-5" />
             </button>
@@ -182,26 +225,33 @@
                         ref="fileInput"
                         type="file"
                         multiple
-                        @change="handleFileSelection"
                         class="hidden"
-                    />
+                        @change="handleFileSelection"
+                    >
                     <button
                         type="button"
-                        @click="fileInput?.click()"
                         class="flex items-center gap-2 text-primary hover:underline"
+                        @click="fileInput?.click()"
                     >
                         <PaperClipIcon class="w-5 h-5" />
                         <span>Joindre des fichiers</span>
                     </button>
                 </div>
 
-                <div v-if="selectedFiles.length" class="mb-4 flex flex-wrap gap-2">
-                    <div v-for="(file, index) in selectedFiles" :key="file.name + index" class="flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
+                <div
+                    v-if="selectedFiles.length"
+                    class="mb-4 flex flex-wrap gap-2"
+                >
+                    <div
+                        v-for="(file, index) in selectedFiles"
+                        :key="file.name + index"
+                        class="flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm"
+                    >
                         📎 <span class="mx-1 truncate max-w-[200px]">{{ file.name }}</span>
                         <button
                             type="button"
-                            @click="removeFile(index)"
                             class="text-red-500 hover:text-red-700"
+                            @click="removeFile(index)"
                         >
                             ×
                         </button>
@@ -209,7 +259,11 @@
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <button type="button" @click="showModal = false" class="px-4 py-2 rounded border text-gray-600 hover:bg-gray-100">
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded border text-gray-600 hover:bg-gray-100"
+                        @click="showModal = false"
+                    >
                         Annuler
                     </button>
                     <Button

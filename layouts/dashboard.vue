@@ -71,8 +71,14 @@
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <div v-if="isAdmin" class="pr-4">
-                        <NuxtLink to="/dashboard/admin/mails" class="inline-block">
+                    <div
+                        v-if="isAdmin"
+                        class="pr-4"
+                    >
+                        <NuxtLink
+                            to="/dashboard/admin/mails"
+                            class="inline-block"
+                        >
                             <EnvelopeIcon class="w-6 text-primary hover:text-primary/80 transition-colors duration-150" />
                         </NuxtLink>
                     </div>
