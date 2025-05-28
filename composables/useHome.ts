@@ -1,43 +1,33 @@
-import { useNuxtApp } from '#app';
-
-interface HomeText {
-    id?: number;
-    title: string;
-    description: string;
-    image?: string | File;
-    active: boolean;
-}
 export const useHome = () => {
     const { $apifetch } = useNuxtApp();
 
-    async function store(home: HomeText) {
-        return await $apifetch('/api/home', {
+    async function create(title: string, description: string, image: File) {
+        return await $apifetch('/api/admin/home', {
             method: 'POST',
-            body: home,
+            body: {
+                title: title,
+                description: description,
+                image: image,
+            },
         });
     }
 
-    async function getCollection(page = 1, perPage = 25) {
-        return await $apifetch(`/api/home?page=${page}&perPage=${perPage}`);
-    }
+    async function getSpecifiedHome(filter: 'active' | 'notActive' | null = null) {
+        const params: Record<string, string> = {};
+        if (filter !== null) {
+            params.filter = filter;
+        }
 
-    async function get(id: number) {
-        return await $apifetch(`/api/home/${id}`);
-    }
+        return await $apifetch('/api/admin/home', { params });
+    };
 
-    async function update(home: HomeText) {
-        return await $apifetch(`/api/home/${home.id}`, { method: 'PUT' });
-    }
-
-    async function destroy(id: number) {
-        return await $apifetch(`/api/home/${id}`, { method: 'DELETE' });
+    async function get(home: number) {
+        return await $apifetch(`/api/admin/home/${home}`);
     }
 
     return {
-        store,
-        getCollection,
+        create,
         get,
-        update,
-        destroy,
+        getSpecifiedHome,
     };
 };

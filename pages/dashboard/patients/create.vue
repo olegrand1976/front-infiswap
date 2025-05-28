@@ -458,7 +458,7 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import * as yup from 'yup';
 
-import { CalendarDaysIcon, PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { InputTime } from '@/components/ui/input-time';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { createPatient } from '~/composables/usePatients';
@@ -677,7 +677,6 @@ const updatePatientCareTypes = () => {
     formData.value.patient_care_type = Array.from(careTypeSet).map(careTypeId => ({ careTypeId }));
 };
 
-const firstErrorField = ref(null);
 const { submit, inProgress } = useSubmit(async () => {
     try {
         // await schema.validate(formData.value, { abortEarly: false });

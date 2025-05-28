@@ -11,6 +11,7 @@ export const useAuth = () => {
     const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
     const user = useUser();
     const users = useState<Pagination<User> | null>('users', () => null);
+    const count = useState<number>('userCount', () => 0);
     const isLoggedIn = computed(() => !!user.value && !!user.value.email_verified_at);
 
     const isAdmin = computed((): boolean => {
@@ -236,6 +237,7 @@ export const useAuth = () => {
             },
         }).then((response) => {
             users.value = response.users;
+            count.value = response.count;
         });
     }
 
@@ -335,6 +337,7 @@ export const useAuth = () => {
     return {
         user,
         users,
+        count,
         hasChangedAvatar,
         create,
         update,

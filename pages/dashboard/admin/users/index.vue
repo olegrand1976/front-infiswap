@@ -1,6 +1,9 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Des utilisateurs">
+        <DashboardAdminPageHeader
+            title="Des utilisateurs"
+            :count="count"
+        >
             <template #action>
                 <UsersCreateUserButton />
             </template>
@@ -65,7 +68,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
+const { users, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -80,7 +83,7 @@ await getUsers(page.value, perPage.value, option.value);
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value, option.value);
+    await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
 };
 
 const handlePerPageChange = async (value: number) => {
@@ -127,20 +130,20 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'full_name',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('firstname'),
             }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
         accessorKey: 'email',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('email'),
             }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -176,20 +179,20 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'identifier_number',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('identifier_number'),
             }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
     {
         accessorKey: 'phone_number',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('phone_number'),
             }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -198,10 +201,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'street_address',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('street_address'),
             }, () => ['Rue', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -210,10 +213,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'city',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('city'),
             }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -222,10 +225,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'zip_code',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('zip_code'),
             }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -234,10 +237,10 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'created_at',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('created_at'),
             }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
@@ -280,6 +283,35 @@ const columns: ColumnDef<User>[] = [
     },
 
 ];
+
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const toggleSort = () => {
+    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
+const setSort = (columnKey: string) => {
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
+    else {
+        sort.by = columnKey;
+        sort.order = 'DESC';
+    }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await getUsers(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by });
+    },
+    { deep: true },
+);
 
 const handleEdit = (user: User) => {
     navigateTo(`/dashboard/admin/users/${user.id}`);

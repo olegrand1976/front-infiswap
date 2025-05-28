@@ -16,16 +16,49 @@
                     @update:per-page="handlePerPageChange"
                 />
             </div>
+
+            <Dialog v-model:open="dialogOpen">
+                <DialogContent class="max-h-[30rem] overflow-y-scroll overflow-x-hidden">
+                    <DialogHeader>
+                        <DialogTitle>
+                            <template v-if="selectedNurses.length === 1">
+                                Personne notifiée ({{ selectedNurses.length }})
+                            </template>
+                            <template v-else>
+                                Personnes notifiées ({{ selectedNurses.length }})
+                            </template>
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div class="mt-4">
+                        <ul class="space-y-2">
+                            <li
+                                v-for="nurse in selectedNurses"
+                                :key="nurse"
+                                class="flex justify-between items-center"
+                            >
+                                <span>
+                                    {{ nurse.full_name }}
+                                </span>
+                                <span>
+                                    {{ nurse.zip_code }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ArrowUpDown } from 'lucide-vue-next';
+import { EyeIcon } from '@heroicons/vue/24/outline';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { NuxtLink } from '#components';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
@@ -44,6 +77,9 @@ const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, e
 const perPage = ref(PERPAGE);
 const page = ref(1);
 await getReplacementsForAdmin(page.value, perPage.value);
+
+const dialogOpen = ref(false);
+const selectedNurses = ref<string[]>([]);
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
@@ -343,9 +379,22 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            return h('div', {
-                class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
-            }, (row.original.matching_nurses || []).map(nurse => nurse.full_name).join(', '));
+            const nurses = (row.original.matching_nurses || []).map(nurse => nurse);
+            const displayText = nurses.map(nurse => nurse.full_name).join(', ');
+
+            return h('div', { class: 'flex items-center' }, [
+                h('div', {
+                    class: 'ml-2 capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
+                }, displayText),
+                nurses.length > 0 && h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    onClick: () => {
+                        selectedNurses.value = nurses;
+                        dialogOpen.value = true;
+                    },
+                }, () => h(EyeIcon, { class: 'h-4 w-4' })),
+            ]);
         },
     },
     {
