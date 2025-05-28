@@ -316,7 +316,7 @@ const formattedRoles = computed(() => {
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                 <InputTagManager
                     v-model="form.settings.replacement.zip_codes"
-                    placeholder="6565,4561,1237"
+                    placeholder="1099"
                     class="pt-3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     :is-mobile="false"
                     :comma-validation="false"
