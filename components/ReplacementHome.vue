@@ -296,7 +296,8 @@ import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useReplacements } from '~/composables/useReplacements';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 
-const { loading, replacements, getAccordingReplacements } = useReplacements();
+const { loading, getAccordingReplacements } = useReplacements();
+const replacements: any = useReplacements().replacements;
 
 onMounted(() => {
     getAccordingReplacements();

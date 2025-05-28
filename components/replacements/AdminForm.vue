@@ -66,13 +66,22 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     timeSlot: typeof replacement?.timeSlot === 'string'
         ? (() => {
                 try {
-                    return JSON.parse(replacement.timeSlot);
+                    const parsed = JSON.parse(replacement.timeSlot);
+                    return {
+                        startAt: parsed.start_at || parsed.startAt || '',
+                        endAt: parsed.end_at || parsed.endAt || '',
+                    };
                 }
                 catch {
-                    return { start_at: '', end_at: '' };
+                    return { startAt: '', endAt: '' };
                 }
             })()
-        : replacement?.timeSlot ?? { start_at: '', end_at: '' },
+        : replacement?.timeSlot
+            ? {
+                    startAt: replacement.timeSlot.start_at || '',
+                    endAt: replacement.timeSlot.end_at || '',
+                }
+            : { startAt: '', endAt: '' },
     details: replacement?.details ?? [],
     nurseOwnerFullName: replacement?.nurse_owner_full_name ?? '',
     nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
@@ -84,16 +93,16 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     responseCount: replacement?.response_count ?? null,
 });
 
-const form = reactive(getInitialValue());
+const form = reactive(getInitialValue() as any);
 const { $toast } = useNuxtApp();
 
 const { submit, inProgress } = useSubmit(async () => {
     if (form.details.length > 0) {
         if (form.details[0].start_at) {
-            form.timeSlot.start_at = form.details[0].start_at;
+            form.timeSlot.startAt = form.details[0].start_at;
         }
         if (form.details[0].end_at) {
-            form.timeSlot.end_at = form.details[0].end_at;
+            form.timeSlot.endAt = form.details[0].end_at;
         }
     }
     if (isEditMode.value && props.replacement?.id) {
@@ -331,7 +340,7 @@ const showAllNurses = () => {
                             />
                             <InputTime
                                 v-else
-                                v-model="form.timeSlot.start_at"
+                                v-model="form.timeSlot.startAt"
                                 input-class="rounded-lg"
                             />
                         </div>
@@ -344,7 +353,7 @@ const showAllNurses = () => {
                             />
                             <InputTime
                                 v-else
-                                v-model="form.timeSlot.end_at"
+                                v-model="form.timeSlot.endAt"
                                 input-class="rounded-lg"
                             />
                         </div>
