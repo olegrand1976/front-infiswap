@@ -5,7 +5,7 @@
             <HomeSearchNurseContainer />
         </div>
         <div
-            v-if="replacements"
+            v-if="replacements.length > 0"
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
             <div class="flex items-center justify-between w-full text-primary">
