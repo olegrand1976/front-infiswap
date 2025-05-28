@@ -17,7 +17,8 @@
                         class="mr-2 h-4"
                     />
                 </div>
-                <div class="ml-auto">
+                <!-- <div class="ml-auto"> -->
+                <div class="ml-auto flex flex-row-reverse items-center space-x-reverse space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">
                             <div>
@@ -70,6 +71,11 @@
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <div v-if="isAdmin" class="pr-4">
+                        <NuxtLink to="/dashboard/admin/mails" class="inline-block">
+                            <EnvelopeIcon class="w-6 text-primary hover:text-primary/80 transition-colors duration-150" />
+                        </NuxtLink>
+                    </div>
                 </div>
             </header>
             <div
@@ -82,7 +88,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
