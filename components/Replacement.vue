@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div>
         <div class="flex mt-6">
@@ -11,7 +10,7 @@
                                     <h5 class="text-white text-xs">
                                         Jours
                                     </h5>
-                                    <Select v-model="formData.selectedDays">
+                                    <Select>
                                         <SelectTrigger
                                             class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full flex space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
                                             position="right"
@@ -341,7 +340,10 @@
                                                         <span>Voir</span>
                                                     </NuxtLink>
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem class="flex items-center space-x-2 text-sm">
+                                                <DropdownMenuItem
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="openEditDialog(replacement)"
+                                                >
                                                     <PencilSquareIcon class="h-4 w-4" />
                                                     <span>Modifier</span>
                                                 </DropdownMenuItem>
@@ -534,7 +536,10 @@
                                                             <span>Voir</span>
                                                         </NuxtLink>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem class="flex items-center space-x-2 text-sm">
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="openEditDialog(replacement)"
+                                                    >
                                                         <PencilSquareIcon class="h-4 w-4" />
                                                         <span>Modifier</span>
                                                     </DropdownMenuItem>
@@ -614,6 +619,176 @@
                 />
             </div>
         </div>
+
+        <Dialog v-model:open="editDialogOpen">
+            <DialogContent class="sm:max-w-[40rem] h-[70vh] sm:h-[60vh] flex flex-col bg-white rounded-lg shadow-xl p-0 pb-16">
+                <div class="flex-1 overflow-y-auto p-6">
+                    <DialogHeader>
+                        <DialogTitle class="text-xl font-semibold text-primary">
+                            Modifier le remplacement
+                        </DialogTitle>
+                        <DialogDescription class="mt-2 text-gray-600">
+                            Modifiez les détails du remplacement ci-dessous.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <form
+                        class="mt-6 space-y-6"
+                        @submit.prevent="submitEdit"
+                    >
+                        <div class="grid grid-cols-2 items-center gap-8">
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Date de début
+                                </label>
+                                <Input
+                                    v-model="editFormData.startDate"
+                                    type="date"
+                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                />
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Date de fin
+                                </label>
+                                <Input
+                                    v-model="editFormData.endDate"
+                                    type="date"
+                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="text-primary font-semibold">
+                                Créneau horaire
+                            </label>
+                            <div class="flex justify-between gap-4 sm:gap-8 items-center">
+                                <InputTime
+                                    v-model="editFormData.timeSlot.startAt"
+                                    input-class="rounded-full border border-gray-300 focus:border-primary"
+                                />
+                                <p>à</p>
+                                <InputTime
+                                    v-model="editFormData.timeSlot.endAt"
+                                    input-class="rounded-full border border-gray-300 focus:border-primary"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-8 items-center">
+                            <div class="flex flex-col space-y-2 w-[21rem] sm:w-auto">
+                                <label class="text-primary font-semibold">
+                                    Nombre de patients par jour
+                                </label>
+                                <InputIcon
+                                    v-model="editFormData.patientCount"
+                                    placeholder="Entrer un nombre"
+                                    class="border border-gray-300 rounded-full focus:border-primary"
+                                />
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Type de soins
+                                </label>
+                                <Select
+                                    v-model="editFormData.careTypes"
+                                    multiple
+                                >
+                                    <SelectTrigger
+                                        class="w-[21rem] sm:w-full bg-white rounded-full text-nowrap border border-gray-300 focus:border-primary"
+                                        position="right"
+                                    >
+                                        <SelectValue class="truncate w-[200rem]">
+                                            <template v-if="getSelectedCareTypesText(editFormData.careTypes)">
+                                                {{ getSelectedCareTypesText(editFormData.careTypes) }}
+                                            </template>
+                                            <template v-else>
+                                                <span class="text-black/60">
+                                                    Sélectionner
+                                                </span>
+                                            </template>
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent class="border-none bg-white shadow-lg">
+                                        <SelectGroup class="w-32">
+                                            <div
+                                                v-for="careType in careTypes"
+                                                :key="careType.id"
+                                                class="flex items-center space-x-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                @click="handleCareTypeClick(editFormData, careType.id)"
+                                            >
+                                                <Checkbox
+                                                    :checked="editFormData.careTypes.includes(careType.id)"
+                                                    class="mr-2"
+                                                />
+                                                <label class="text-xs text-nowrap cursor-pointer">
+                                                    {{ careType.name }}
+                                                </label>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-8 items-center">
+                            <InputTagManager
+                                v-model="editFormData.zipCodes"
+                                label="Codes postaux"
+                                placeholder="6565, 4561, 1237"
+                                :is-mobile="isMobileView"
+                                :comma-validation="false"
+                                :count="4"
+                                @keydown.enter.prevent
+                            />
+
+                            <InputTagManager
+                                v-model="editFormData.cities"
+                                label="Villes"
+                                placeholder="Anvers, Bruges, Gand"
+                                :is-mobile="isMobileView"
+                                :comma-validation="true"
+                                :no-space-validation="true"
+                                @keydown.enter.prevent
+                            />
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="text-primary font-semibold">
+                                Commentaire
+                            </label>
+                            <Textarea
+                                v-model="editFormData.comment"
+                                placeholder="Écrivez un commentaire"
+                                rows="6"
+                                class="w-full border border-gray-400 focus:border-primary rounded-lg"
+                            />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="fixed w-full bottom-0 bg-white border-t border-gray-100 p-4 flex justify-end space-x-4">
+                    <Button
+                        variant="secondary"
+                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                        @click="editDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        type="submit"
+                        class="bg-primary hover:bg-primary/90 text-white px-8"
+                        :in-progress="editInProgress"
+                        @click="submitEdit"
+                    >
+                        Enregistrer
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -626,6 +801,15 @@ import { cn } from '@/lib/utils';
 import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { InputTime } from '@/components/ui/input-time';
+import InputTagManager from '@/components/InputTagManager.vue';
+import { useCareTypes } from '@/composables/useCareTypes';
 
 const { $toast } = useNuxtApp();
 
@@ -644,6 +828,7 @@ const props = defineProps({
 
 const { loading, updateReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
+const { careTypes, fetchCareTypes } = useCareTypes();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -654,7 +839,13 @@ const pagination = ref({
     last_page: 1,
 });
 
+const isMobileView = ref(false);
+
 onMounted(async () => {
+    if (import.meta.client) {
+        isMobileView.value = window.innerWidth <= 1024;
+    }
+    await fetchCareTypes();
     await fetchInitialData(page.value, perPage.value);
 });
 
@@ -956,6 +1147,86 @@ const handleCloseReplacement = async (replacement) => {
         pagination.value.total -= 1;
         closeReplacementDialog.value = false;
     }
+};
+
+const editDialogOpen = ref(false);
+const editInProgress = ref(false);
+const editFormData = reactive({
+    startDate: '',
+    endDate: '',
+    patientCount: null,
+    zipCodes: [],
+    cities: [],
+    careTypes: [],
+    timeSlot: {
+        startAt: '',
+        endAt: '',
+    },
+    comment: '',
+});
+
+const openEditDialog = (replacement: Replacement) => {
+    const formatDateToInput = (isoDate: string) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        return date.toISOString().split('T')[0];
+    };
+
+    const formatTimeToInput = (time: string) => {
+        if (!time) return '';
+        return time.split(':').slice(0, 2).join(':');
+    };
+
+    editFormData.startDate = formatDateToInput(replacement.start_date);
+    editFormData.endDate = replacement.end_date ? formatDateToInput(replacement.end_date) : '';
+    editFormData.patientCount = replacement.patient_count;
+    editFormData.zipCodes = Array.isArray(replacement.zip_codes)
+        ? replacement.zip_codes
+        : JSON.parse(replacement.zip_codes || '[]');
+    editFormData.cities = Array.isArray(replacement.cities)
+        ? replacement.cities
+        : JSON.parse(replacement.cities || '[]');
+    editFormData.careTypes = replacement.care_types?.map(ct => ct.id) || [];
+
+    const timeSlot = replacement.timeSlot
+        ? typeof replacement.timeSlot === 'string'
+            ? JSON.parse(replacement.timeSlot)
+            : replacement.timeSlot
+        : {};
+    editFormData.timeSlot.startAt = formatTimeToInput(timeSlot.start_at || '');
+    editFormData.timeSlot.endAt = formatTimeToInput(timeSlot.end_at || '');
+
+    editFormData.comment = replacement.comment || '';
+    editDialogOpen.value = true;
+};
+
+const handleCareTypeClick = (formData, careTypeId) => {
+    const index = formData.careTypes.indexOf(careTypeId);
+    if (index === -1) {
+        formData.careTypes.push(careTypeId);
+    }
+    else {
+        formData.careTypes.splice(index, 1);
+    }
+    formData.careTypes = [...formData.careTypes];
+};
+
+const getSelectedCareTypesText = (selectedIds) => {
+    return careTypes.value
+        .filter(ct => selectedIds.includes(ct.id))
+        .map(ct => ct.name)
+        .join(', ');
+};
+
+const submitEdit = async () => {
+    editInProgress.value = true;
+    setTimeout(() => {
+        editInProgress.value = false;
+        editDialogOpen.value = false;
+        $toast({
+            description: 'Remplacement mis à jour',
+        });
+    }, 1000);
 };
 
 definePageMeta({
