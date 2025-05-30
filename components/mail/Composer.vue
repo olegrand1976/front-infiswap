@@ -259,13 +259,13 @@
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <button
+                    <Button
                         type="button"
-                        class="px-4 py-2 rounded border text-gray-600 hover:bg-gray-100"
+                        class="px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100"
                         @click="showModal = false"
                     >
                         Annuler
-                    </button>
+                    </Button>
                     <Button
                         type="submit"
                         class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
