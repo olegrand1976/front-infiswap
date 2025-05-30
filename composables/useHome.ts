@@ -2,9 +2,10 @@ import type { Pagination } from '~/lib/types';
 
 export const useHome = () => {
     const { $apifetch } = useNuxtApp();
+    const prefix = '/api/admin/homes';
     const homes = useState<Pagination<HomeType>>('homeData', () => null);
     async function create(title: string, description: string, image: File) {
-        return await $apifetch('/api/admin/home', {
+        return await $apifetch(prefix, {
             method: 'POST',
             body: {
                 title: title,
@@ -17,7 +18,7 @@ export const useHome = () => {
     async function getSpecifiedHome(
         options = {},
     ) {
-        const response = await $apifetch('/api/admin/home', {
+        const response = await $apifetch(prefix, {
             ...options,
         });
 
@@ -26,13 +27,21 @@ export const useHome = () => {
     }
 
     async function get(home: number) {
-        return await $apifetch(`/api/admin/home/${home}`);
+        return await $apifetch(`${prefix}/${home}`);
+    }
+
+    async function edit(id: number, options = {}) {
+        return await $apifetch(`${prefix}/${id}`, {
+            method: 'PUT',
+            body: { ...options },
+        });
     }
 
     return {
         homes,
         create,
         get,
+        edit,
         getSpecifiedHome,
     };
 };
