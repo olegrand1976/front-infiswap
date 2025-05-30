@@ -87,19 +87,19 @@
                                 <CheckCircleIcon class="size-8" /> <span>Accepté</span>
                             </div>
                             <div
-                                v-else-if="list.status==='canceled'"
+                                v-else-if="list.status==='refused'"
                                 class="flex mx-auto gap-2 w-1/2 text-primary items-center font-bold"
                             >
                                 <XMarkIcon class="size-7" /> <span>Refusé</span>
                             </div>
                             <div
-                                v-if="!hasConfirmed() && list.status !== 'canceled'"
+                                v-if="!hasConfirmed() && list.status !== 'refused'"
                                 class="flex justify-center gap-4 w-full mt-2"
                             >
                                 <Button
                                     class="w-1/2 hover:bg-primary/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
-                                    @click="updateStatus(list.id, 'canceled')"
+                                    @click="updateStatus(list.id, 'refused')"
                                 >
                                     Refuser
                                 </Button>
