@@ -50,7 +50,7 @@
                                     v-model="credentials.identifier"
                                     :icon="UserIcon"
                                     type="text"
-                                    placeholder="INAMI ou email"
+                                    :placeholder="identifierLabel"
                                     class="text-sm w-full"
                                 />
                             </div>
@@ -217,6 +217,7 @@ import Button from '~/components/ui/button/Button.vue';
 const router = useRouter();
 const { login } = useAuth();
 const { $toast } = useNuxtApp();
+const { identifierLabel } = useCountry();
 
 const credentials = reactive({
     identifier: null,
