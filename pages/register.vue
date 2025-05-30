@@ -322,7 +322,7 @@
                             v-model="formData.identifierNumber"
                             :icon="IdentificationIcon"
                             size="md"
-                            placeholder="Numéro INAMI"
+                            :placeholder="identifierLabel"
                         />
                     </div>
 
@@ -605,15 +605,7 @@ const selectedReferral = computed({
     },
 });
 
-const getDefaultCountry = () => {
-    const url = useRequestURL();
-    const host = url.hostname;
-
-    if (host.endsWith('.fr')) return 'France';
-    if (host.endsWith('.be')) return 'Belgique';
-
-    return 'Belgique';
-};
+const { country } = useCountry();
 
 const formData = reactive({
     lastname: '',
@@ -631,13 +623,19 @@ const formData = reactive({
         city: '',
         zipCode: '',
         country: countries[0].value,
-        workingAt: getDefaultCountry(),
+        workingAt: country.value,
         additionnalInformation: '',
     },
     referralSource: '',
     zipCodesArray: [],
     citiesArray: [],
 });
+
+const identifierLabel = computed(() =>
+    formData.address.workingAt === 'France'
+        ? 'Numéro RPPS'
+        : 'Numéro INAMI',
+);
 
 const route = useRoute();
 const { register } = useAuth();

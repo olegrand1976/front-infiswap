@@ -212,7 +212,7 @@
                     class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
-                        Numéro INAMI
+                        Numéro {{ identifierLabel }}
                     </h5>
                     <p class="ps-4">
                         {{ selectedNurse.respondedBy.identifier_number }}
@@ -283,6 +283,8 @@ const { listResponse, getReplacementResponses } = useListResponse(user.value.nur
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
 const selectedNurse = ref(null);
+
+const { identifierLabel } = useCountry();
 
 useHead({
     title: 'Mes réponses reçues',

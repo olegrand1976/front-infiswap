@@ -155,7 +155,7 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                                                Numéro INAMI
+                                                Numéro {{ identifierLabel }}
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.identifierNumber"
@@ -299,7 +299,7 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <span class="font-bold">N°</span>
-                                        <span>Numéro INAMI</span>
+                                        <span>{{ identifierLabel }}</span>
                                     </label>
                                 </div>
                                 <p
@@ -1089,6 +1089,8 @@ const { createPreferences, createNotifPreferences } = useReports();
 
 const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);
+
+const { identifierLabel } = useCountry();
 
 const formSetting = ref(setting.language);
 const formPassword = reactive({
