@@ -1228,16 +1228,14 @@ const getSelectedCareTypesText = (selectedIds) => {
 };
 
 const { submit } = useSubmit(async () => {
-    await updateAgainReplacement(editFormData);
-}, {
-    onSuccess: () => {
-        setTimeout(() => {
-            editDialogOpen.value = false;
-            $toast({
-                description: 'Remplacement mis à jour',
-            });
-        }, 2000);
-    },
+    const response = await updateAgainReplacement(editFormData);
+    if (response) {
+        editDialogOpen.value = false;
+        $toast({
+            description: 'Remplacement mis à jour',
+        });
+        await refreshReplacements(page.value);
+    }
 });
 
 definePageMeta({
