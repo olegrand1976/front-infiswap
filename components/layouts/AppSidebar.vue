@@ -165,7 +165,7 @@ const closeSidebar = () => {
 interface NavigationItem {
     label: string;
     route: string;
-    icon: FunctionalComponent;
+    icon: Component | FunctionalComponent | VNode;
     isActive?: boolean;
     children?: NavigationItem[];
 }
