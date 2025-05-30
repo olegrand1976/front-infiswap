@@ -141,7 +141,7 @@
 
                     <Button
                         class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
-                        @click="submit"
+                        @click="submitSearch"
                     >
                         <MagnifyingGlassIcon class="w-6" />
                         <span class="ml-2 text-xs md:text-sm">Rechercher</span>
@@ -324,22 +324,55 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell
-                                    class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4"
-                                >
-                                    <Button
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                    >
-                                        <EyeIcon class="h-6 mt-1" />
-                                    </Button>
-                                    <Button
-                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                        @click="closeReplacementDialog = true"
-                                    >
-                                        <XMarkIcon class="h-6 mt-1" />
-                                    </Button>
+                                <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                    <template v-if="props.type === 'me'">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                                <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent class="w-48">
+                                                <DropdownMenuItem as-child>
+                                                    <NuxtLink
+                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                        class="flex items-center space-x-2 text-sm"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Voir</span>
+                                                    </NuxtLink>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="openEditDialog(replacement)"
+                                                >
+                                                    <PencilSquareIcon class="h-4 w-4" />
+                                                    <span>Modifier</span>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="closeReplacementDialog = true"
+                                                >
+                                                    <XMarkIcon class="h-4 w-4" />
+                                                    <span>Fermer</span>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </template>
+                                    <template v-else>
+                                        <Button
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                        >
+                                            <EyeIcon class="h-6 mt-1" />
+                                        </Button>
+                                        <Button
+                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                            @click="closeReplacementDialog = true"
+                                        >
+                                            <XMarkIcon class="h-6 mt-1" />
+                                        </Button>
+                                    </template>
 
                                     <Dialog v-model:open="closeReplacementDialog">
                                         <DialogContent class="sm:max-w-lg overflow-y-auto">
@@ -486,23 +519,56 @@
                                     </div>
                                 </TableCell>
 
-                                <TableCell
-                                    class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4"
-                                >
+                                <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
                                     <div class="flex flex-col items-center justify-center space-y-2">
-                                        <Button
-                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            @click="closeReplacementDialog = true"
-                                        >
-                                            <XMarkIcon class="h-6 mt-1" />
-                                        </Button>
-                                        <Button
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                        >
-                                            <EyeIcon class="h-6 mt-1" />
-                                        </Button>
+                                        <template v-if="props.type === 'me'">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem as-child>
+                                                        <NuxtLink
+                                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                        >
+                                                            <EyeIcon class="h-4 w-4" />
+                                                            <span>Voir</span>
+                                                        </NuxtLink>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="openEditDialog(replacement)"
+                                                    >
+                                                        <PencilSquareIcon class="h-4 w-4" />
+                                                        <span>Modifier</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="closeReplacementDialog = true"
+                                                    >
+                                                        <XMarkIcon class="h-4 w-4" />
+                                                        <span>Fermer</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </template>
+                                        <template v-else>
+                                            <Button
+                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                @click="closeReplacementDialog = true"
+                                            >
+                                                <XMarkIcon class="h-6 mt-1" />
+                                            </Button>
+                                            <Button
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                            >
+                                                <EyeIcon class="h-6 mt-1" />
+                                            </Button>
+                                        </template>
                                     </div>
 
                                     <Dialog v-model:open="closeReplacementDialog">
@@ -553,18 +619,196 @@
                 />
             </div>
         </div>
+
+        <Dialog v-model:open="editDialogOpen">
+            <DialogContent class="sm:max-w-[40rem] h-[70vh] sm:h-[60vh] flex flex-col bg-white rounded-lg shadow-xl p-0 pb-16">
+                <div class="flex-1 overflow-y-auto p-6">
+                    <DialogHeader>
+                        <DialogTitle class="text-xl font-semibold text-primary">
+                            Modifier le remplacement
+                        </DialogTitle>
+                        <DialogDescription class="mt-2 text-gray-600">
+                            Modifiez les détails du remplacement ci-dessous.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <form
+                        class="mt-6 space-y-6"
+                        @submit.prevent="submit"
+                    >
+                        <div class="grid grid-cols-2 items-center gap-8">
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Date de début
+                                </label>
+                                <Input
+                                    v-model="editFormData.startDate"
+                                    type="date"
+                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                />
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Date de fin
+                                </label>
+                                <Input
+                                    v-model="editFormData.endDate"
+                                    type="date"
+                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="text-primary font-semibold">
+                                Créneau horaire
+                            </label>
+                            <div class="flex justify-between gap-4 sm:gap-8 items-center">
+                                <InputTime
+                                    v-model="editFormData.timeSlot.start_at"
+                                    input-class="rounded-full border border-gray-300 focus:border-primary"
+                                />
+                                <p>à</p>
+                                <InputTime
+                                    v-model="editFormData.timeSlot.end_at"
+                                    input-class="rounded-full border border-gray-300 focus:border-primary"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-8 items-center">
+                            <div class="flex flex-col space-y-2 w-[21rem] sm:w-auto">
+                                <label class="text-primary font-semibold">
+                                    Nombre de patients par jour
+                                </label>
+                                <InputIcon
+                                    v-model="editFormData.patientCount"
+                                    placeholder="Entrer un nombre"
+                                    class="border border-gray-300 rounded-full focus:border-primary"
+                                />
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <label class="text-primary font-semibold">
+                                    Type de soins
+                                </label>
+                                <Select
+                                    v-model="editFormData.careTypes"
+                                    multiple
+                                >
+                                    <SelectTrigger
+                                        class="w-[21rem] sm:w-full bg-white rounded-full text-nowrap border border-gray-300 focus:border-primary"
+                                        position="right"
+                                    >
+                                        <SelectValue class="truncate w-[200rem]">
+                                            <template v-if="getSelectedCareTypesText(editFormData.careTypes)">
+                                                {{ getSelectedCareTypesText(editFormData.careTypes) }}
+                                            </template>
+                                            <template v-else>
+                                                <span class="text-black/60">
+                                                    Sélectionner
+                                                </span>
+                                            </template>
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent class="border-none bg-white shadow-lg">
+                                        <SelectGroup class="w-32">
+                                            <div
+                                                v-for="careType in careTypes"
+                                                :key="careType.id"
+                                                class="flex items-center space-x-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                @click="handleCareTypeClick(editFormData, careType.id)"
+                                            >
+                                                <Checkbox
+                                                    :checked="editFormData.careTypes.includes(careType.id)"
+                                                    class="mr-2"
+                                                />
+                                                <label class="text-xs text-nowrap cursor-pointer">
+                                                    {{ careType.name }}
+                                                </label>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-8 items-center">
+                            <InputTagManager
+                                v-model="editFormData.zipCodes"
+                                label="Codes postaux"
+                                placeholder="6565, 4561, 1237"
+                                :is-mobile="isMobileView"
+                                :comma-validation="false"
+                                :count="4"
+                                @keydown.enter.prevent
+                            />
+
+                            <InputTagManager
+                                v-model="editFormData.cities"
+                                label="Villes"
+                                placeholder="Anvers, Bruges, Gand"
+                                :is-mobile="isMobileView"
+                                :comma-validation="true"
+                                :no-space-validation="true"
+                                @keydown.enter.prevent
+                            />
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <label class="text-primary font-semibold">
+                                Commentaire
+                            </label>
+                            <Textarea
+                                v-model="editFormData.comment"
+                                placeholder="Écrivez un commentaire"
+                                rows="6"
+                                class="w-full border border-gray-400 focus:border-primary rounded-lg"
+                            />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="fixed w-full bottom-0 bg-white border-t border-gray-100 p-4 flex justify-end space-x-4">
+                    <Button
+                        variant="secondary"
+                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                        @click="editDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        type="submit"
+                        class="bg-primary hover:bg-primary/90 text-white px-8"
+                        @click="submit"
+                    >
+                        Enregistrer
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { toRaw } from 'vue';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
 import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { InputTime } from '@/components/ui/input-time';
+import InputTagManager from '@/components/InputTagManager.vue';
+import { useCareTypes } from '@/composables/useCareTypes';
 
 const { $toast } = useNuxtApp();
 
@@ -581,8 +825,9 @@ const props = defineProps({
     },
 });
 
-const { loading, updateReplacement } = useReplacements();
+const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
+const { careTypes, fetchCareTypes } = useCareTypes();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -593,7 +838,13 @@ const pagination = ref({
     last_page: 1,
 });
 
+const isMobileView = ref(false);
+
 onMounted(async () => {
+    if (import.meta.client) {
+        isMobileView.value = window.innerWidth <= 1024;
+    }
+    await fetchCareTypes();
     await fetchInitialData(page.value, perPage.value);
 });
 
@@ -735,7 +986,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
     if (isSubmitted.value) {
-        await submit();
+        await submitSearch();
     }
     else {
         await fetchInitialData(newPage, perPage.value);
@@ -746,7 +997,7 @@ const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     page.value = 1;
     if (isSubmitted.value) {
-        await submit();
+        await submitSearch();
     }
     else {
         await fetchInitialData(1, value);
@@ -803,7 +1054,7 @@ const handleBlur = (event) => {
     inputEl.dispatchEvent(enterEvent);
 };
 
-const submit = async () => {
+const submitSearch = async () => {
     isSubmitted.value = true;
 
     const hasSearchCriteria = formData.selectedDays.length > 0
@@ -874,7 +1125,7 @@ watch(
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
-            submit();
+            submitSearch();
         }
     },
     { deep: true },
@@ -896,6 +1147,98 @@ const handleCloseReplacement = async (replacement) => {
         closeReplacementDialog.value = false;
     }
 };
+
+const editDialogOpen = ref(false);
+const editFormData = reactive({
+    id: null,
+    nurseId: user.value.nurse.id,
+    replacedBy: null,
+    visibility: '',
+    type: '',
+    startDate: '',
+    endDate: '',
+    patientCount: null,
+    zipCodes: [],
+    cities: [],
+    careTypes: [],
+    timeSlot: {
+        start_at: '',
+        end_at: '',
+    },
+    status: '',
+    comment: '',
+});
+
+const openEditDialog = (replacement: Replacement) => {
+    const formatDateToInput = (isoDate: string) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        return date.toISOString().split('T')[0];
+    };
+
+    const formatTimeToInput = (time: string) => {
+        if (!time) return '';
+        return time.split(':').slice(0, 2).join(':');
+    };
+
+    editFormData.id = replacement.id;
+    editFormData.replacedBy = replacement.replaced_by ? replacement.replaced_by : null;
+    editFormData.visibility = replacement.visibility;
+    editFormData.status = replacement.status;
+    editFormData.type = replacement.type;
+    editFormData.startDate = formatDateToInput(replacement.start_date);
+    editFormData.endDate = formatDateToInput(replacement.end_date);
+    editFormData.patientCount = replacement.patient_count;
+    editFormData.zipCodes = Array.isArray(replacement.zip_codes)
+        ? replacement.zip_codes
+        : JSON.parse(replacement.zip_codes || '[]');
+    editFormData.cities = Array.isArray(replacement.cities)
+        ? replacement.cities
+        : JSON.parse(replacement.cities || '[]');
+    editFormData.careTypes = replacement.care_types?.map(ct => ct.id) || [];
+
+    const timeSlot = replacement.timeSlot
+        ? typeof replacement.timeSlot === 'string'
+            ? JSON.parse(replacement.timeSlot)
+            : replacement.timeSlot
+        : {};
+    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at || '');
+    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at || '');
+
+    editFormData.comment = replacement.comment || '';
+    editDialogOpen.value = true;
+};
+
+const handleCareTypeClick = (formData, careTypeId) => {
+    const index = formData.careTypes.indexOf(careTypeId);
+    if (index === -1) {
+        formData.careTypes.push(careTypeId);
+    }
+    else {
+        formData.careTypes.splice(index, 1);
+    }
+    formData.careTypes = [...formData.careTypes];
+};
+
+const getSelectedCareTypesText = (selectedIds) => {
+    return careTypes.value
+        .filter(ct => selectedIds.includes(ct.id))
+        .map(ct => ct.name)
+        .join(', ');
+};
+
+const { submit } = useSubmit(async () => {
+    await updateAgainReplacement(editFormData);
+}, {
+    onSuccess: () => {
+        setTimeout(() => {
+            editDialogOpen.value = false;
+            $toast({
+                description: 'Remplacement mis à jour',
+            });
+        }, 2000);
+    },
+});
 
 definePageMeta({
     layout: 'dashboard',
