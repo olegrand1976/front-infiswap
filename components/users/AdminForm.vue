@@ -30,18 +30,20 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
         additionalInformation: user?.profile?.additional_info || null,
     },
     // settings: user?.settings || null,
-    settings: user?.settings ? JSON.parse(user.settings) : {
-        language: 'fr',
-        replacement: {
-            cities: [],
-            zip_codes: [],
-            days: [],
-        },
-        notification: {
-            new_replacement: true,
-            replacement_accepted: true,
-        },
-    },
+    settings: user?.settings
+        ? JSON.parse(user.settings)
+        : {
+                language: 'fr',
+                replacement: {
+                    cities: [],
+                    zip_codes: [],
+                    days: [],
+                },
+                notification: {
+                    new_replacement: true,
+                    replacement_accepted: true,
+                },
+            },
 });
 
 const form = reactive(getInitialValue());

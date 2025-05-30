@@ -12,7 +12,7 @@
                 :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
                 alt="Photo de profil"
                 class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14"
-            />
+            >
             <UserCircleIcon
                 v-else
                 class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14"
@@ -58,7 +58,7 @@
                 <Separator class="w-full h-1 bg-gray-200 my-3" />
             </div>
         </div>
-        <div class="bg-primary h-4 w-full rounded-b-xl"></div>
+        <div class="bg-primary h-4 w-full rounded-b-xl" />
     </div>
 </template>
 
