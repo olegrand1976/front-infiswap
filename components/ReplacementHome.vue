@@ -52,7 +52,7 @@
                         </div>
                         <div v-else>
                             <TableRow
-                                v-for="replacement in replacements"
+                                v-for="replacement in props.replacements"
                                 :key="replacement.id"
                                 class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                             >
@@ -207,7 +207,7 @@
                         </div>
                         <div v-else>
                             <TableRow
-                                v-for="replacement in replacements"
+                                v-for="replacement in props.replacements"
                                 :key="replacement.id"
                                 class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                             >
@@ -293,14 +293,24 @@
 
 <script lang="ts" setup>
 import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
-import { useReplacements } from '~/composables/useReplacements';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import type { Replacement } from '~/lib/types';
 
-const { loading, replacements, getAccordingReplacements } = useReplacements();
-
-onMounted(() => {
-    getAccordingReplacements();
+const rawProps = defineProps({
+    replacements: {
+        type: Array,
+        required: true,
+    },
+    loading: {
+        type: Boolean,
+        required: true,
+    },
 });
+
+const props = rawProps as {
+    replacements: Replacement[];
+    loading: boolean;
+};
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);

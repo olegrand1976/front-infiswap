@@ -29,6 +29,19 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
         zipCode: user?.profile?.zip_code || null,
         additionalInformation: user?.profile?.additional_info || null,
     },
+    // settings: user?.settings || null,
+    settings: user?.settings ? JSON.parse(user.settings) : {
+        language: 'fr',
+        replacement: {
+            cities: [],
+            zip_codes: [],
+            days: [],
+        },
+        notification: {
+            new_replacement: true,
+            replacement_accepted: true,
+        },
+    },
 });
 
 const form = reactive(getInitialValue());
@@ -288,6 +301,28 @@ const formattedRoles = computed(() => {
                         label="Complément d'adresse"
                     />
                 </div>
+            </div>
+        </div>
+        <Separator class="my-4 lg:my-10" />
+        <div class="grid grid-cols-3 gap-4 lg:gap-8">
+            <div class="p-4 hidden lg:block">
+                <h1 class="font-semibold text-gray-600">
+                    Préférence
+                </h1>
+                <p class="mt-2 text-md text-gray-500">
+                    Les informations sur les codes postaux de préférence
+                </p>
+            </div>
+            <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
+                <InputTagManager
+                    v-model="form.settings.replacement.zip_codes"
+                    placeholder="1099"
+                    class="pt-3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    :is-mobile="false"
+                    :comma-validation="false"
+                    label="Codes postaux"
+                    @keydown.enter.prevent
+                />
             </div>
         </div>
         <Separator class="my-4 lg:my-10" />

@@ -236,6 +236,26 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        accessorKey: 'settings',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Préférences', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            try {
+                const settings = JSON.parse(row.getValue('settings'));
+                // Récupère tous les codes postaux et les joint avec une virgule
+                const zipCodes = settings?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
+                return h('div', { class: 'text-center capitalize truncate whitespace-nowrap overflow-hidden' }, zipCodes);
+            }
+            catch (e) {
+                return h('div', { class: 'text-center' }, 'Erreur de format');
+            }
+        },
+    },
+    {
         accessorKey: 'created_at',
         header: () => {
             return h(Button, {

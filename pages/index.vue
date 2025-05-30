@@ -5,7 +5,7 @@
             <HomeSearchNurseContainer />
         </div>
         <div
-            v-if="replacements"
+            v-if="replacements.length > 0"
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
             <div class="flex items-center justify-between w-full text-primary">
@@ -27,7 +27,8 @@
             </div>
             <div class="w-full">
                 <ReplacementHome
-                    :get-data="getAccordingReplacements"
+                    :replacements="replacements"
+                    :loading="loading"
                 />
                 <div class="w-full flex justify-center">
                     <NuxtLink
@@ -70,10 +71,14 @@ import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
 
-const { replacements, getAccordingReplacements } = useReplacements();
 const { isAdmin } = useAuth();
+const { loading, getAccordingReplacements } = useReplacements();
+const replacements = ref([]);
 
-getAccordingReplacements();
+onMounted(async () => {
+    const data = await getAccordingReplacements();
+    replacements.value = data;
+});
 
 useHead({
     title: 'Accueil',
