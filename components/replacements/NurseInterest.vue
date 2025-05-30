@@ -47,8 +47,8 @@
                         </td>
                         <td class="px-4 py-2 border-b">
                             <button
-                                @click="openModal(item.repondedBy)"
                                 class="text-blue-600 hover:underline"
+                                @click="openModal(item.repondedBy)"
                             >
                                 Voir détail
                             </button>
@@ -66,8 +66,8 @@
                 class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 w-[95%] sm:w-auto max-w-sm relative"
             >
                 <button
-                    @click="closeModal"
                     class="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+                    @click="closeModal"
                 >
                     &times;
                 </button>
