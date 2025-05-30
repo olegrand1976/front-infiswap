@@ -47,9 +47,9 @@ export const useHome = () => {
 };
 
 export type HomeType = {
-    id: string;
-    title: string;
-    description: string;
-    active: boolean | number;
-    image: string | File;
+    id?: string;
+    title?: string;
+    description?: string;
+    active?: boolean | number;
+    image?: string | File;
 };
