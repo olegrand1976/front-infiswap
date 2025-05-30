@@ -13,14 +13,14 @@
                 <InputIcon
                     v-model="option.name"
                     rounded="md"
-                    placeholder="Filter par Nom ou Prénom"
+                    placeholder="Filtrer par Nom ou Prénom"
                     class="max-w-sm"
                     @input="filterUsers()"
                 />
                 <InputIcon
                     v-model="option.zip"
                     rounded="md"
-                    placeholder="Filter par C.P"
+                    placeholder="Filtrer par C.P"
                     class="max-w-sm"
                     type="number"
                     @input="filterUsers()"
