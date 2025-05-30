@@ -1,6 +1,9 @@
+import type { FetchOptions } from 'ofetch';
+import type { Pagination } from '~/lib/types';
+
 export const useHome = () => {
     const { $apifetch } = useNuxtApp();
-
+    const homes = useState<Pagination<HomeType>>('homeData', () => null);
     async function create(title: string, description: string, image: File) {
         return await $apifetch('/api/admin/home', {
             method: 'POST',
@@ -12,22 +15,33 @@ export const useHome = () => {
         });
     }
 
-    async function getSpecifiedHome(filter: 'active' | 'notActive' | null = null) {
-        const params: Record<string, string> = {};
-        if (filter !== null) {
-            params.filter = filter;
-        }
+    async function getSpecifiedHome(
+        options = {},
+    ) {
+        const response = await $apifetch('/api/admin/home', {
+            ...options,
+        });
 
-        return await $apifetch('/api/admin/home', { params });
-    };
+        homes.value = response;
+        return response;
+    }
 
     async function get(home: number) {
         return await $apifetch(`/api/admin/home/${home}`);
     }
 
     return {
+        homes,
         create,
         get,
         getSpecifiedHome,
     };
+};
+
+export type HomeType = {
+    id: string;
+    title: string;
+    description: string;
+    active: boolean | number;
+    image: string | File;
 };
