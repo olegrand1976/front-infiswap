@@ -102,14 +102,20 @@ const columns: ColumnDef<HomeType>[] = [
                 class: 'w-full text-center',
             }, () => ['Status', h(ArrowsUpDownIcon, { class: 'text-center' })]);
         },
-        cell: ({ row }) =>
-            h(Switch, {
+        cell: ({ row }) => {
+            const toggle = (value: boolean) => {
+                const index = homes.value.data.findIndex(item => item.id === row.original.id);
+                if (index !== -1) {
+                    homes.value.data[index].active = value ? 1 : 0;
+                }
+            };
+
+            return h(Switch, {
                 'class': 'mx-auto',
-                'modelValue': row.getValue('active') === 1,
-                'onUpdate:modelValue': (value: boolean | number) => {
-                    row.original.active = value ? 1 : 0;
-                },
-            }),
+                'checked': row.original.active === 1,
+                'onUpdate:checked': toggle,
+            });
+        },
     },
     {
         accessorKey: 'created_at',
