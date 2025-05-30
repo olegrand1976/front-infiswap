@@ -1,4 +1,3 @@
-import type { FetchOptions } from 'ofetch';
 import type { Pagination } from '~/lib/types';
 
 export const useHome = () => {
