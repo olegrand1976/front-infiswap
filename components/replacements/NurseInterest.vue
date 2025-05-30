@@ -37,23 +37,42 @@
                             {{ item.repondedBy.phone_number }}
                         </td>
                         <td
-                            :class="cn('px-4 py-2 border-b', {
-                                'font-bold text-success': item.status === 'confirmed',
+                            :class="cn('px-4 py-2 border-b font-semibold', {
+                                'text-yellow-500': item.status === 'pending',
+                                'text-green-600': item.status === 'confirmed',
+                                'text-red-600': item.status === 'canceled',
                             })"
                         >
                             {{ traduireStatut(item.status) }}
                         </td>
                         <td class="px-4 py-2 border-b">
-                            <NuxtLink
-                                :to="`/dashboard/admin/users/${item.repondedBy.id}`"
+                            <button
+                                @click="openModal(item.repondedBy)"
                                 class="text-blue-600 hover:underline"
                             >
                                 Voir détail
-                            </NuxtLink>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div
+            v-if="showModal"
+            class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 w-[95%] sm:w-auto max-w-sm relative"
+            >
+                <button
+                    @click="closeModal"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+                >
+                    &times;
+                </button>
+                <UsersCard :user="selectedUser" />
+            </div>
         </div>
     </div>
 </template>
@@ -80,4 +99,17 @@ const traduireStatut = (statut: string) => {
             return statut;
     }
 };
+
+const showModal = ref(false);
+const selectedUser = ref(null);
+
+function openModal(user) {
+    selectedUser.value = user;
+    showModal.value = true;
+}
+
+function closeModal() {
+    showModal.value = false;
+    selectedUser.value = null;
+}
 </script>

@@ -45,41 +45,10 @@
                     <div
                         class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-gray-100/50 shadow-xl rounded-lg text-gray-900"
                     >
-                        <div class="rounded-t-lg h-32 overflow-hidden bg-white">
-                            <LayoutsLogo classe="object-cover object-top w-full" />
+                        <div class="px-4 pt-4">
+                            <UsersCard :user="list.repondedBy" />
                         </div>
-                        <div class="mx-auto grid place-content-center w-32 h-32 relative -mt-16 border-4 border-primary rounded-full overflow-hidden">
-                            <img
-                                v-if="list.repondedBy.profil_url"
-                                :src="useRuntimeConfig().public.API_URL + '/storage/' + list.repondedBy.profil_url"
-                                class="rounded-full border-2 border-success"
-                            >
-                            <UserCircleIcon v-else />
-                        </div>
-                        <div class="text-center mt-4">
-                            <h2 class="font-semibold">
-                                {{ getFullName(list.repondedBy) }}
-                            </h2>
-                        </div>
-
-                        <ul class="py-4 mt-2 text-gray-700 text-center">
-                            <li class="flex gap-1 h-6 justify-center items-center">
-                                <MapPinIcon class="size-5" />
-                                <span>
-                                    {{ list.repondedBy.profile.zip_code ?? '---' }}
-                                </span>
-                            </li>
-                            <li class="flex mt-2 h-6 gap-1 justify-center items-center">
-                                <PhoneIcon
-                                    v-show="list.status ==='confirmed'"
-                                    class="size-4"
-                                />
-                                <div v-show="list.status === 'confirmed'">
-                                    {{ list.repondedBy.phone_number ? formatPhoneNumber(list.repondedBy.phone_number) : '---' }}
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="p-4 border-t mx-8 mt-2">
+                        <div class="p-4 mx-8 mt-2">
                             <div
                                 v-if="list.status==='confirmed'"
                                 class="flex justify-center items-center gap-2 mx-auto w-1/2 text-success"
@@ -126,10 +95,8 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import { CheckCircleIcon, UserCircleIcon, PhoneIcon, MapPinIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { CheckCircleIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
-import { formatPhoneNumber, getFullName } from '~/lib/utils';
-import { useRuntimeConfig } from '#app';
 
 const { changeStatus } = changeStatusReplacement();
 

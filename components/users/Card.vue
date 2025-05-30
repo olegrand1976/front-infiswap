@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300">
+    <div class="bg-white rounded-xl max-w-sm w-full overflow-hidden transition-all duration-300">
         <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
             <LayoutsAppImage
                 :src="'logo_white.png'"
