@@ -227,7 +227,7 @@ export type ReplacementResponse = {
     id: number;
     replacement_id: number;
     reponded_by: number;
-    status: 'pending' | 'confirmed' | 'canceled';
+    status: 'pending' | 'confirmed' | 'canceled' | 'refused';
     reason?: string;
     comment?: string;
     created_at: string;

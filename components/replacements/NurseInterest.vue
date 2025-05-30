@@ -74,6 +74,8 @@ const traduireStatut = (statut: string) => {
             return 'Accepté';
         case 'canceled':
             return 'Annulé';
+        case 'refused':
+            return 'Refusé';
         default:
             return statut;
     }
