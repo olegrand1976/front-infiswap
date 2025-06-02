@@ -15,7 +15,7 @@
                     rounded="md"
                     placeholder="Filtrer par Nom ou Prénom"
                     class="max-w-sm"
-                    @input="filterUsers()"
+                    @input="debouncedFilterUsers"
                 />
                 <InputIcon
                     v-model="option.zip"
@@ -23,7 +23,7 @@
                     placeholder="Filtrer par C.P"
                     class="max-w-sm"
                     type="number"
-                    @input="filterUsers()"
+                    @input="debouncedFilterUsers"
                 />
                 <Button
                     class="rounded-md"
@@ -78,6 +78,23 @@ const initialFilter = {
 };
 const option = ref({ ...initialFilter });
 
+const debounce = (func, delay) => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
+
+const filterUsers = async () => {
+    const currentFilter = { ...option.value };
+    await getUsers(page.value, perPage.value, currentFilter);
+};
+
+const debouncedFilterUsers = debounce(filterUsers, 100);
+
 await getUsers(page.value, perPage.value, option.value);
 
 const dataUsers = computed(() => users.value?.data ?? []);
@@ -91,10 +108,6 @@ const handlePerPageChange = async (value: number) => {
     await getUsers(page.value, value, option.value);
 };
 
-const filterUsers = async () => {
-    await getUsers(page.value, perPage.value, { ...option.value });
-};
-
 const resetFilter = async () => {
     const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
     if (isSame) {
@@ -102,8 +115,8 @@ const resetFilter = async () => {
     }
 
     option.value = { ...initialFilter };
-
-    await getUsers();
+    page.value = 1;
+    await getUsers(page.value, perPage.value, option.value);
 };
 
 const columns: ColumnDef<User>[] = [
@@ -246,7 +259,6 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             try {
                 const settings = JSON.parse(row.getValue('settings'));
-                // Récupère tous les codes postaux et les joint avec une virgule
                 const zipCodes = settings?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
                 return h('div', { class: 'text-center capitalize truncate whitespace-nowrap overflow-hidden' }, zipCodes);
             }
@@ -301,7 +313,6 @@ const columns: ColumnDef<User>[] = [
             ]);
         },
     },
-
 ];
 
 const sort = reactive({
