@@ -342,7 +342,7 @@ const columns: ColumnDef<Replacement>[] = [
                 cities = extractPostalDataFromReplacement(row.original)?.cities?.join(', ') || '';
             }
 
-            return h('div', { class: 'capitalize truncate max-w-[200px] whitespace-nowrap overflow-hidden' }, cities);
+            return h('div', { class: 'capitalize truncate max-w-[120px] lg:max-w-[150px] whitespace-nowrap overflow-hidden' }, cities);
         },
     },
     {
