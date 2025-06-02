@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen flex flex-col lg:flex-row p-1 space-y-4 lg:space-y-0 lg:space-x-4">
-        <div class="md:w-1/3 w-full bg-white rounded-lg shadow flex flex-col">
+        <div class="lg:w-1/3 w-full bg-white rounded-lg shadow flex flex-col">
             <div class="flex items-center justify-between bg-primary rounded-t-lg py-3 px-4">
                 <h2 class="font-semibold text-white text-center flex-1">
                     Historique des e-mails envoyés
@@ -13,32 +13,26 @@
                         <button
                             title="Nouveau message"
                             class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
-                            @click="showModal = true"
+                            @click="showNewMailModal = true"
                         >
                             Nouveau message
                         </button>
                     </div>
                 </div>
-                <div
-                    v-if="!mail"
-                >
+
+                <div v-if="!mail">
                     <div class="text-center text-gray-500 italic mt-8">
                         Vos mails seront affichés ici.
                     </div>
                 </div>
-                <div
-                    v-else
-                >
+                <div v-else>
                     <div
                         v-for="mailItem in mail"
                         :key="mailItem.id"
                         class="relative border rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer mb-2"
-                        @click="selectedMail = mailItem"
+                        @click="selectMail(mailItem)"
                     >
-                        <div
-                            class="text-sm text-gray-500 mb-1 truncate"
-                            :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')"
-                        >
+                        <div class="text-sm text-gray-500 mb-1 truncate" :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')">
                             À :
                             <span
                                 v-for="(recipient, idx) in parseRecipients(mailItem.recipients)"
@@ -62,12 +56,13 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="sticky hidden lg:block bottom-6 pt-4">
                     <div class="flex justify-center mb-2 px-4">
                         <button
                             title="Nouveau message"
                             class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
-                            @click="showModal = true"
+                            @click="showNewMailModal = true"
                         >
                             Nouveau message
                         </button>
@@ -76,15 +71,12 @@
             </div>
         </div>
 
-        <div class="md:w-2/3 w-full bg-white rounded-lg shadow flex flex-col">
+        <div class="lg:w-2/3 w-full bg-white rounded-lg shadow flex-col hidden lg:flex">
             <h2 class="font-semibold bg-primary text-white text-center py-3 rounded-t-lg">
                 Détail du message
             </h2>
 
-            <div
-                v-if="selectedMail"
-                class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]"
-            >
+            <div v-if="selectedMail" class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]">
                 <div class="space-y-3">
                     <div>
                         <span class="font-semibold text-gray-700">Destinataires :</span>
@@ -171,24 +163,18 @@
                 </div>
             </div>
 
-            <div
-                v-else
-                class="p-6 text-gray-500 italic"
-            >
+            <div v-else class="p-6 text-gray-500 italic">
                 Cliquez sur un e-mail à gauche pour voir les détails.
             </div>
         </div>
     </div>
 
-    <div
-        v-if="showModal"
-        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-    >
-        <div class="bg-white p-6 rounded-lg w-full max-w-xl relative">
+    <div v-if="showNewMailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4">
             <button
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                 aria-label="Fermer"
-                @click="showModal = false"
+                @click="showNewMailModal = false"
             >
                 <XMarkIcon class="h-5 w-5" />
             </button>
@@ -262,7 +248,7 @@
                     <Button
                         type="button"
                         class="px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100"
-                        @click="showModal = false"
+                        @click="showNewMailModal = false"
                     >
                         Annuler
                     </Button>
@@ -277,6 +263,106 @@
             </form>
         </div>
     </div>
+
+    <div v-if="showMailDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center lg:hidden">
+        <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4 max-h-[90vh] overflow-y-auto">
+            <button
+                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                aria-label="Fermer"
+                @click="showMailDetailModal = false"
+            >
+                <XMarkIcon class="h-5 w-5" />
+            </button>
+            <h3 class="text-lg font-semibold mb-4">
+                Détail du message
+            </h3>
+
+            <div v-if="selectedMail" class="space-y-4">
+                <div>
+                    <span class="font-semibold text-gray-700">Destinataires :</span>
+                    <span class="ml-2 text-gray-600">
+                        {{ parseRecipients(selectedMail.recipients).map(r => r.email).join(', ') }}
+                    </span>
+                </div>
+
+                <div class="py-2 border-b border-gray-200">
+                    <span class="font-semibold text-gray-700">Objet :</span>
+                    <span class="ml-2 font-medium text-gray-900">{{ selectedMail.object }}</span>
+                </div>
+
+                <div class="mt-2">
+                    <span class="font-semibold text-gray-700">Contenu :</span>
+                    <div class="mt-2 p-2 text-gray-800 leading-relaxed whitespace-pre-line">
+                        {{ selectedMail.content }}
+                    </div>
+                </div>
+
+                <div v-if="parseAttachments(selectedMail.attachement).length">
+                    <span class="font-semibold text-gray-700">Pièces jointes :</span>
+
+                    <div class="mt-4 border rounded-lg divide-y">
+                        <div
+                            v-for="(file, idx) in parseAttachments(selectedMail.attachement)"
+                            :key="idx"
+                            class="flex items-center p-3 hover:bg-gray-50"
+                        >
+                            <div class="mr-3 text-gray-500">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    {{ file.split('/').pop() }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    fichier
+                                </p>
+                            </div>
+
+                            <a
+                                :href="file"
+                                target="_blank"
+                                class="ml-2 p-2 rounded-full hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                                title="Télécharger"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-sm text-gray-400">
+                    <span class="font-semibold">Date :</span> {{ formatDate(selectedMail.created_at) }}
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -289,6 +375,9 @@ await getMailSend();
 
 const selectedMail = ref(null);
 const { $toast } = useNuxtApp();
+
+const showNewMailModal = ref(false);
+const showMailDetailModal = ref(false);
 
 function parseRecipients(recipients: string) {
     try {
@@ -323,8 +412,6 @@ function formatDate(dateStr: string) {
     });
 }
 
-const showModal = ref(false);
-
 const newMail = ref({
     object: '',
     recipients: '',
@@ -348,6 +435,13 @@ function handleFileSelection(event: Event) {
 function removeFile(index: number) {
     selectedFiles.value.splice(index, 1);
     newMail.value.files = selectedFiles.value;
+}
+
+function selectMail(mailItem: any) {
+    selectedMail.value = mailItem;
+    if (window.innerWidth < 1024) {
+        showMailDetailModal.value = true;
+    }
 }
 
 const { submit, inProgress } = useSubmit(
@@ -375,7 +469,7 @@ const { submit, inProgress } = useSubmit(
 
             selectedMail.value = mail.value[mail.value.length - 1];
 
-            showModal.value = false;
+            showNewMailModal.value = false;
 
             newMail.value = {
                 object: '',
