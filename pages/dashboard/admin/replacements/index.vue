@@ -282,7 +282,7 @@ const columns: ColumnDef<Replacement>[] = [
                 zipCodes = extractPostalDataFromReplacement(row.original)?.zip_codes?.join(', ') || '';
             }
 
-            return h('div', { class: 'capitalize truncate max-w-[200px] whitespace-nowrap overflow-hidden' }, zipCodes);
+            return h('div', { class: 'capitalize truncate max-w-[120px] lg:max-w-[150px] whitespace-nowrap overflow-hidden' }, zipCodes);
         },
     },
     {
