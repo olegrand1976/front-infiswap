@@ -86,6 +86,8 @@ export interface UserSettings {
 export interface Nurse {
     id: number;
     user_id: string;
+    full_name: string;
+    zip_code: string;
     user: User;
 }
 

@@ -33,7 +33,7 @@
                         <ul class="space-y-2">
                             <li
                                 v-for="nurse in selectedNurses"
-                                :key="nurse"
+                                :key="nurse.id"
                                 class="flex justify-between items-center"
                             >
                                 <span>
@@ -61,7 +61,7 @@ import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
-import type { Replacement } from '~/lib/types';
+import type { Replacement, Nurse } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
@@ -79,7 +79,7 @@ const page = ref(1);
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const dialogOpen = ref(false);
-const selectedNurses = ref<string[]>([]);
+const selectedNurses = ref<Nurse[]>([]);
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
