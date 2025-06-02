@@ -350,7 +350,7 @@
                                 class="grid grid-cols-[40%_60%] gap-4"
                             >
                                 <div class="font-semibold">
-                                    Code Postale
+                                    Code Postal
                                 </div>
                                 <div>{{ patient.profile.zip_code }}</div>
                             </div>

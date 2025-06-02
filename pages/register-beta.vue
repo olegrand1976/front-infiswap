@@ -76,7 +76,7 @@
                         <InputIcon
                             v-model="credentials.zipCode"
                             :icon="MapIcon"
-                            placeholder="Code postale"
+                            placeholder="Code postal"
                             size="md"
                             icon-class="h-5"
                             :errors="validationErrors.zipCode"

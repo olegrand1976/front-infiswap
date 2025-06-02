@@ -293,7 +293,7 @@ const formattedRoles = computed(() => {
                     <InputIcon
                         v-model="form.address.zipCode"
                         rounded="md"
-                        label="Code postale"
+                        label="Code postal"
                     />
                 </div>
                 <div>
