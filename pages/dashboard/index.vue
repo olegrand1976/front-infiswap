@@ -10,6 +10,40 @@
                 :title="report.title"
                 :items="report.items"
             />
+
+            <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <h2 class="text-lg font-semibold p-6">
+                        Évolution des inscriptions
+                    </h2>
+                    <BarChart
+                        :data="registrationChartData"
+                        index="name"
+                        :categories="['count']"
+                        :x-formatter="xRegistrationFormatter"
+                        :y-formatter="yFormatter"
+                        :show-all-x-ticks="true"
+                        :colors="['hsl(var(--tertiary))']"
+                        class="w-full"
+                    />
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <h2 class="text-lg font-semibold p-6">
+                        Évolution des remplacements
+                    </h2>
+                    <BarChart
+                        :data="replacementChartData"
+                        index="name"
+                        :categories="['count']"
+                        :x-formatter="xReplacementFormatter"
+                        :y-formatter="yFormatter"
+                        :show-all-x-ticks="true"
+                        :colors="['hsl(var(--tertiary))']"
+                        class="w-full"
+                    />
+                </div>
+            </section>
         </div>
         <div v-else>
             <DashboardNurseInformation
@@ -37,6 +71,32 @@ definePageMeta({
 });
 
 await getReports();
+
+const registrationChartData = computed(() => {
+    return reports.value?.registration_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const replacementChartData = computed(() => {
+    return reports.value?.replacement_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const xRegistrationFormatter = (tick: number) => {
+    return registrationChartData.value[tick]?.name || '';
+};
+
+const xReplacementFormatter = (tick: number) => {
+    return replacementChartData.value[tick]?.name || '';
+};
+
+const yFormatter = (tick: number) => {
+    return tick.toString();
+};
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];
