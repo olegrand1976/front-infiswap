@@ -100,7 +100,12 @@ const columns: ColumnDef<HomeType>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['Description', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const fullDescription = row.getValue('description');
+            let fullDescription = row.getValue('description');
+
+            if (typeof fullDescription === 'string') {
+                fullDescription = fullDescription.replace(/\\r\\n|\\n/g, '\n');
+            }
+
             const shortDescription = fullDescription.length > 50
                 ? fullDescription.slice(0, 50) + '...'
                 : fullDescription;
@@ -120,7 +125,9 @@ const columns: ColumnDef<HomeType>[] = [
                         showDialog.value && h(DialogContent, {}, {
                             default: () => [
                                 h('h3', { class: 'font-semibold mb-2' }, 'Description complète'),
-                                h('p', { class: 'text-sm text-gray-700 whitespace-pre-wrap' }, selectedDescription.value),
+                                h('p', {
+                                    class: 'text-sm text-gray-700 whitespace-pre-wrap',
+                                }, fullDescription),
                             ],
                         }),
                     ],
@@ -181,9 +188,9 @@ const columns: ColumnDef<HomeType>[] = [
                     onClick: () => handleEdit(home),
                 },
                 {
-                    label: 'Supprimer',
-                    confirm: true,
-                    // onClick: () => handleDelete(replacement),
+                    // label: 'Supprimer',
+                    // confirm: true,
+                    // onClick: () => handleDelete(home),
                 },
             ];
 

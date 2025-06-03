@@ -22,7 +22,7 @@
 
                 <div class="h-40 rounded-lg border-2 border-gray-300">
                     <Textarea
-                        v-model="form.description"
+                        v-model="cleanedDescription"
                         rounded="md"
                         label="Description"
                         placeholder="Description"
@@ -130,6 +130,19 @@ const resetForm = () => {
         fileInput.value.value = '';
     }
 };
+
+const cleanedDescription = computed({
+    get() {
+        return form.description
+            ?.replace(/\\r\\n|\\n|\\r/g, '\n')
+            .replace(/^"|"$/g, '')
+            || '';
+    },
+    set(val: string) {
+        const escaped = val.replace(/\n/g, '\\r\\n');
+        form.description = `"${escaped}"`;
+    },
+});
 
 const { submit, inProgress } = useSubmit(async () => {
     try {

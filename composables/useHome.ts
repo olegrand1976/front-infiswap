@@ -16,7 +16,7 @@ export const useHome = () => {
             formData.append('image', image);
         }
 
-        const method = homeData.id ? 'PUT' : 'POST';
+        const method = 'POST';
         const url = homeData.id ? `${prefix}/${homeData.id}` : prefix;
 
         return await $apifetch(url, {
