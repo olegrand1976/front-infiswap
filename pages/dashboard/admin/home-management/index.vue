@@ -4,7 +4,10 @@
             title="Gestion d'accueil"
         >
             <template #action>
-                <Button class="rounded">
+                <Button
+                    class="rounded"
+                    href="/dashboard/admin/home-management/create"
+                >
                     <PlusCircleIcon />
                     <span class="hidden md:inline-block">
                         Nouveau
@@ -37,6 +40,7 @@ import Button from '~/components/ui/button/Button.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
 import { PERPAGE } from '~/lib/constants';
+import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 
 const { homes, getSpecifiedHome, edit } = useHome();
 
@@ -132,6 +136,30 @@ const columns: ColumnDef<HomeType>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
+        },
+    },
+    {
+        id: 'actions',
+        header: 'Actions',
+        enableHiding: false,
+        cell: ({ row }) => {
+            const actions = [
+                {
+                    label: 'Modifier',
+                    // onClick: () => handleEdit(replacement),
+                },
+                {
+                    label: 'Supprimer',
+                    confirm: true,
+                    // onClick: () => handleDelete(replacement),
+                },
+            ];
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(DropdownMenuAction, {
+                    actions: actions,
+                }),
+            ]);
         },
     },
 ];
