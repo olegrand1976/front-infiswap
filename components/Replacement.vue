@@ -211,13 +211,10 @@
                                 class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null },
-                                    )]"
+                                    v-if="isUrgentReplacement(replacement)"
+                                    :class="[cn('-ml-[-2] bg-primary text-white text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md')]"
                                 >
-                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
+                                    URGENT
                                 </div>
 
                                 <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
@@ -451,13 +448,10 @@
                                 class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
-                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null },
-                                    )]"
+                                    v-if="isUrgentReplacement(replacement)"
+                                    :class="[cn('-ml-[-2]  text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md')]"
                                 >
-                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
+                                    URGENT
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
