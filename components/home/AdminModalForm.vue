@@ -61,6 +61,10 @@
                     />
                     <p v-if="home?.image" class="mt-2 text-sm text-gray-500">
                         Image actuelle : {{ home.image }}
+                        <img
+                            class="w-48 h-48 object-cover object-center"
+                            :src="useRuntimeConfig().public.API_URL + '/storage/' + home?.image"
+                        >
                     </p>
                 </div>
             </div>
@@ -82,6 +86,7 @@
 
 <script setup lang="ts">
 import type { HomeType } from '~/lib/types';
+import { useRuntimeConfig } from '#app';
 
 const props = defineProps({
     home: {
