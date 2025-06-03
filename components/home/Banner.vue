@@ -99,10 +99,6 @@
             <div v-else class="flex flex-col lg:flex-row gap-6 items-center bg-red-100 rounded-2xl p-6 max-w-7xl mx-auto">
                 <div class="relative h-60 lg:h-72 flex-shrink-0 w-full lg:w-1/3 rounded-xl overflow-hidden">
                     <LayoutsAppImage
-                        src="/home/message_home_background.png"
-                        class="w-full h-full object-cover"
-                    />
-                    <LayoutsAppImage
                         src="/home/mail-image.png"
                         class="absolute w-32 lg:w-36 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
