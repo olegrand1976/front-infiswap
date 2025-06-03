@@ -3,14 +3,18 @@ import { Check } from 'lucide-vue-next';
 import {
     SelectItem,
     SelectItemIndicator,
-    type SelectItemProps,
+    type SelectItemProps as OriginalSelectItemProps,
     SelectItemText,
     useForwardProps,
 } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 
-const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>();
+type ExtendedSelectItemProps = Omit<OriginalSelectItemProps, 'value'> & {
+    value: string | number | boolean;
+};
+
+const props = defineProps<ExtendedSelectItemProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
     const { class: _, ...delegated } = props;
