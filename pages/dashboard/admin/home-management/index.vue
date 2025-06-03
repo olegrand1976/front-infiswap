@@ -187,11 +187,11 @@ const columns: ColumnDef<HomeType>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(home),
                 },
-                {
-                    // label: 'Supprimer',
-                    // confirm: true,
-                    // onClick: () => handleDelete(home),
-                },
+                // {
+                //     label: 'Supprimer',
+                //     confirm: true,
+                //     onClick: () => handleDelete(home),
+                // },
             ];
 
             return h('div', { class: 'flex justify-center' }, [
@@ -206,4 +206,9 @@ const columns: ColumnDef<HomeType>[] = [
 const handleEdit = (home: HomeType) => {
     navigateTo(`/dashboard/admin/home-management/${home.id}`);
 };
+
+// const handleDelete = async (home: HomeType) => {
+//     await forceDelete(home.id);
+//     await getSpecifiedHome();
+// };
 </script>

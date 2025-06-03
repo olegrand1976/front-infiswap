@@ -79,8 +79,8 @@
                 </p>
             </div>
         </div>
-        <div class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto p-4">
-            <div v-if="activeHomes?.length < 0" class="w-full">
+        <div class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto">
+            <div v-if="activeHomes?.length > 0" class="w-full px-6">
                 <Carousel>
                     <CarouselContent class="flex gap-6 px-4">
                         <CarouselItem
@@ -104,7 +104,7 @@
                     />
                 </div>
                 <div class="text-start lg:w-2/3 px-4">
-                    <p class="font-bold text-2xl mb-4">
+                    <p class="font-bold mb-4">
                         🎉 Ça y est, InfiSwap est en ligne ! 🩺
                     </p>
                     <p class="mb-4 text-gray-700 leading-relaxed">
@@ -117,7 +117,7 @@
                         🚀 Ce n’est que le début : d’autres fonctionnalités arrivent très bientôt pour enrichir encore votre expérience.
                     </p>
                     <p class="mb-4 text-gray-700 leading-relaxed">
-                        🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous !
+                        🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous!
                     </p>
                 </div>
             </div>
