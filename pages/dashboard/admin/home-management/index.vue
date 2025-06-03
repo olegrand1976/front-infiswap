@@ -34,13 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowsUpDownIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
+import { ArrowsUpDownIcon, PlusCircleIcon, EyeIcon } from '@heroicons/vue/24/solid';
 import type { ColumnDef } from '@tanstack/vue-table';
 import Button from '~/components/ui/button/Button.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
 import { PERPAGE } from '~/lib/constants';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import type { HomeType } from '~/lib/types';
 
 const { homes, getSpecifiedHome, edit } = useHome();
 
@@ -66,6 +68,9 @@ const handlePerPageChange = async (perPage: number) => {
     return await getSpecifiedHome({ perPage: perPage });
 };
 
+const selectedDescription = ref('');
+const showDialog = ref(false);
+
 const columns: ColumnDef<HomeType>[] = [
     {
         id: 'select',
@@ -89,13 +94,39 @@ const columns: ColumnDef<HomeType>[] = [
     },
     {
         accessorKey: 'description',
-        header: ({ column }) => {
-            return h(Button, {
+        header: ({ column }) =>
+            h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Description', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Description', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+        cell: ({ row }) => {
+            const fullDescription = row.getValue('description');
+            const shortDescription = fullDescription.length > 50
+                ? fullDescription.slice(0, 50) + '...'
+                : fullDescription;
+
+            return h('div', { class: 'flex items-center justify-between gap-2' }, [
+                h('span', shortDescription),
+                h(Dialog, {}, {
+                    default: () => [
+                        h(DialogTrigger, {
+                            onClick: () => {
+                                selectedDescription.value = fullDescription;
+                                showDialog.value = true;
+                            },
+                            class: 'text-gray-600 hover:text-black cursor-pointer',
+                        }, () => [h(EyeIcon, { class: 'w-4 h-4' })]),
+
+                        showDialog.value && h(DialogContent, {}, {
+                            default: () => [
+                                h('h3', { class: 'font-semibold mb-2' }, 'Description complète'),
+                                h('p', { class: 'text-sm text-gray-700 whitespace-pre-wrap' }, selectedDescription.value),
+                            ],
+                        }),
+                    ],
+                }),
+            ]);
         },
-        cell: ({ row }) => h('div', { class: '' }, row.getValue('description')),
     },
     {
         accessorKey: 'active',
@@ -143,10 +174,11 @@ const columns: ColumnDef<HomeType>[] = [
         header: 'Actions',
         enableHiding: false,
         cell: ({ row }) => {
+            const home = row.original;
             const actions = [
                 {
                     label: 'Modifier',
-                    // onClick: () => handleEdit(replacement),
+                    onClick: () => handleEdit(home),
                 },
                 {
                     label: 'Supprimer',
@@ -163,4 +195,8 @@ const columns: ColumnDef<HomeType>[] = [
         },
     },
 ];
+
+const handleEdit = (home: HomeType) => {
+    navigateTo(`/dashboard/admin/home-management/${home.id}`);
+};
 </script>

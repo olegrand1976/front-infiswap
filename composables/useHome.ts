@@ -1,4 +1,4 @@
-import type { Pagination } from '~/lib/types';
+import type { Pagination, HomeType } from '~/lib/types';
 
 export const useHome = () => {
     const { $apifetch } = useNuxtApp();
@@ -35,18 +35,18 @@ export const useHome = () => {
         return await $apifetch(`${prefix}/${home}`);
     }
 
+    async function edit(id: number, options = {}) {
+        return await $apifetch(`${prefix}/${id}`, {
+            method: 'PUT',
+            body: { ...options },
+        });
+    }
+
     return {
         homes,
         createOrUpdate,
         get,
+        edit,
         getSpecifiedHome,
     };
-};
-
-export type HomeType = {
-    id?: string;
-    title?: string;
-    description?: string;
-    active?: boolean | number;
-    image?: string | File;
 };

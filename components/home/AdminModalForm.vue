@@ -5,7 +5,7 @@
         <div class="grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
                 <h1 class="font-semibold text-gray-600">
-                    Page d'accueil
+                    {{ home?.id ? 'Modification' : 'Nouvelle' }} page d'accueil
                 </h1>
                 <p class="mt-2 text-md text-gray-500">
                     Les informations à compléter
@@ -59,6 +59,9 @@
                               file:bg-gray-50 file:text-gray-700
                               hover:file:bg-gray-100"
                     />
+                    <p v-if="home?.image" class="mt-2 text-sm text-gray-500">
+                        Image actuelle : {{ home.image }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -71,41 +74,85 @@
                 class="rounded-md w-52"
                 :in-progress="inProgress"
             >
-                Enregistrer
+                {{ home?.id ? 'Mettre à jour' : 'Créer' }}
             </Button>
         </div>
     </form>
 </template>
 
 <script setup lang="ts">
-const form = reactive({
-    id: undefined,
-    title: '',
-    description: '',
-    active: 1,
+import type { HomeType } from '~/lib/types';
+
+const props = defineProps({
+    home: {
+        type: Object as PropType<HomeType>,
+        default: () => ({
+            id: undefined,
+            title: '',
+            description: '',
+            active: 1,
+            image: null,
+        }),
+    },
 });
 
-const resetForm = () => {
-    form.id = undefined;
-    form.title = '';
-    form.description = '';
-    form.active = 1;
-    imageFile.value = null;
-};
+const { $toast } = useNuxtApp();
+const { createOrUpdate } = useHome();
+
+const isEditMode = computed(() => !!props.home.id);
+
+const form = reactive({ ...props.home });
+watch(() => props.home, (newVal) => {
+    Object.assign(form, newVal);
+}, { deep: true });
 
 const imageFile = ref<File | null>(null);
-const emit = defineEmits(['submit']);
+const fileInput = ref<HTMLInputElement | null>(null);
 
 const onFileChange = (e: Event) => {
     const input = e.target as HTMLInputElement;
     imageFile.value = input.files?.[0] || null;
 };
 
-const { submit, inProgress } = useSubmit(async () => {
-    emit('submit', {
-        home: { ...form },
-        image: imageFile.value,
+const resetForm = () => {
+    Object.assign(form, {
+        title: '',
+        description: '',
+        active: 1,
     });
-    resetForm();
+    imageFile.value = null;
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
+};
+
+const { submit, inProgress } = useSubmit(async () => {
+    try {
+        const response = await createOrUpdate(form, imageFile.value);
+
+        $toast({
+            title: 'Succès !',
+            description: isEditMode.value
+                ? 'Contenu mis à jour avec succès'
+                : 'Contenu créé avec succès',
+        });
+
+        if (!isEditMode.value) {
+            resetForm();
+        }
+        else {
+            Object.assign(form, response);
+        }
+    }
+    catch (err) {
+        if (err.data?.errors) {
+            const firstError = Object.values(err.data.errors)[0][0];
+            $toast({
+                description: firstError,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
+    }
 });
 </script>
