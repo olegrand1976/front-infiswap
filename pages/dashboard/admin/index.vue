@@ -1,8 +1,6 @@
 <template>
     <div class="mb-4">
-        <div
-            class="space-y-8 mb-4"
-        >
+        <div class="space-y-8 mb-4">
             <DashboardStatCardAdminGroup
                 v-for="(report, index) in adminReports"
                 :key="index"
@@ -10,12 +8,47 @@
                 :items="report.items"
             />
         </div>
+
+        <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold p-6">
+                    Évolution des inscriptions
+                </h2>
+                <BarChart
+                    :data="registrationChartData"
+                    index="name"
+                    :categories="['count']"
+                    :x-formatter="xRegistrationFormatter"
+                    :y-formatter="yFormatter"
+                    :show-all-x-ticks="true"
+                    :colors="['hsl(var(--tertiary))']"
+                    class="w-full"
+                />
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold p-6">
+                    Évolution des remplacements
+                </h2>
+                <BarChart
+                    :data="replacementChartData"
+                    index="name"
+                    :categories="['count']"
+                    :x-formatter="xReplacementFormatter"
+                    :y-formatter="yFormatter"
+                    :show-all-x-ticks="true"
+                    :colors="['hsl(var(--tertiary))']"
+                    class="w-full"
+                />
+            </div>
+        </section>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { UserGroupIcon, MapPinIcon, ArrowPathIcon, PaperAirplaneIcon, HeartIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
+import { BarChart } from '@/components/ui/chart-bar';
 import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
@@ -29,26 +62,52 @@ definePageMeta({
 
 await getReports();
 
-const adminReports = [
+const registrationChartData = computed(() => {
+    return reports.value?.registration_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const replacementChartData = computed(() => {
+    return reports.value?.replacement_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const xRegistrationFormatter = (tick: number) => {
+    return registrationChartData.value[tick]?.name || '';
+};
+
+const xReplacementFormatter = (tick: number) => {
+    return replacementChartData.value[tick]?.name || '';
+};
+
+const yFormatter = (tick: number) => {
+    return tick.toString();
+};
+
+const adminReports = computed(() => [
     {
         title: 'Utilisateur(s)',
         items: [
             {
-                value: reports.value.registration_statistics.today + reports.value.registration_statistics.yesterday,
+                value: reports.value?.registration_statistics?.today + reports.value?.registration_statistics?.yesterday || 0,
                 label: `Ce jour `,
                 colorClass: 'bg-indigo-600',
                 icon: UserGroupIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.registration_statistics.this_month + reports.value.registration_statistics.last_month,
+                value: reports.value?.registration_statistics?.this_month + reports.value?.registration_statistics?.last_month || 0,
                 label: 'Ce mois / Mois glissant',
                 colorClass: 'bg-orange-700',
                 icon: UserGroupIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.registration_statistics.total,
+                value: reports.value?.registration_statistics?.total || 0,
                 label: 'Total ',
                 colorClass: 'bg-pink-600',
                 icon: UserGroupIcon,
@@ -60,21 +119,21 @@ const adminReports = [
         title: 'Patient(s)',
         items: [
             {
-                value: reports.value.patient_by_nurse_statistics.today + reports.value.patient_by_nurse_statistics.yesterday,
+                value: reports.value?.patient_by_nurse_statistics?.today + reports.value?.patient_by_nurse_statistics?.yesterday || 0,
                 label: `Ce jour `,
                 colorClass: 'bg-indigo-600',
                 icon: HeartIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.patient_by_nurse_statistics.this_month + reports.value.patient_by_nurse_statistics.last_month,
+                value: reports.value?.patient_by_nurse_statistics?.this_month + reports.value?.patient_by_nurse_statistics?.last_month || 0,
                 label: 'Ce mois / Mois glissant',
                 colorClass: 'bg-orange-700',
                 icon: HeartIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.patient_by_nurse_statistics.total,
+                value: reports.value?.patient_by_nurse_statistics?.total || 0,
                 label: 'Total ',
                 colorClass: 'bg-pink-600',
                 icon: HeartIcon,
@@ -86,21 +145,21 @@ const adminReports = [
         title: 'Tournée(s)',
         items: [
             {
-                value: reports.value.tour_statistics.today + reports.value.tour_statistics.yesterday,
+                value: reports.value?.tour_statistics?.today + reports.value?.tour_statistics?.yesterday || 0,
                 label: `Ce jour `,
                 colorClass: 'bg-indigo-600',
                 icon: MapPinIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.tour_statistics.this_month + reports.value.tour_statistics.last_month,
+                value: reports.value?.tour_statistics?.this_month + reports.value?.tour_statistics?.last_month || 0,
                 label: 'Ce mois / Mois glissant',
                 colorClass: 'bg-orange-700',
                 icon: MapPinIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.tour_statistics.total,
+                value: reports.value?.tour_statistics?.total || 0,
                 label: 'Total ',
                 colorClass: 'bg-pink-600',
                 icon: MapPinIcon,
@@ -112,21 +171,21 @@ const adminReports = [
         title: 'Remplacement(s) acceptée(s)',
         items: [
             {
-                value: reports.value.accepted_replacement_statistics.today + reports.value.accepted_replacement_statistics.yesterday,
+                value: reports.value?.accepted_replacement_statistics?.today + reports.value?.accepted_replacement_statistics?.yesterday || 0,
                 label: `Ce jour `,
                 colorClass: 'bg-indigo-600',
                 icon: ArrowPathIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.accepted_replacement_statistics.this_month + reports.value.accepted_replacement_statistics.last_month,
+                value: reports.value?.accepted_replacement_statistics?.this_month + reports.value?.accepted_replacement_statistics?.last_month || 0,
                 label: 'Ce mois / Mois glissant',
                 colorClass: 'bg-orange-700',
                 icon: ArrowPathIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.accepted_replacement_statistics.total,
+                value: reports.value?.accepted_replacement_statistics?.total || 0,
                 label: 'Total ',
                 colorClass: 'bg-pink-600',
                 icon: ArrowPathIcon,
@@ -138,21 +197,21 @@ const adminReports = [
         title: 'Réponse(s) remplacement(s)',
         items: [
             {
-                value: reports.value.replacement_response_statistics.today + reports.value.replacement_response_statistics.yesterday,
+                value: reports.value?.replacement_response_statistics?.today + reports.value?.replacement_response_statistics?.yesterday || 0,
                 label: `Ce jour `,
                 colorClass: 'bg-indigo-600',
                 icon: PaperAirplaneIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.replacement_response_statistics.this_month + reports.value.replacement_response_statistics.last_month,
+                value: reports.value?.replacement_response_statistics?.this_month + reports.value?.replacement_response_statistics?.last_month || 0,
                 label: 'Ce mois / Mois glissant',
                 colorClass: 'bg-orange-700',
                 icon: PaperAirplaneIcon,
                 containerClass: 'string',
             },
             {
-                value: reports.value.replacement_response_statistics.total,
+                value: reports.value?.replacement_response_statistics?.total || 0,
                 label: 'Total ',
                 colorClass: 'bg-pink-600',
                 icon: PaperAirplaneIcon,
@@ -160,7 +219,7 @@ const adminReports = [
             },
         ],
     },
-];
+]);
 </script>
 
 <style scoped>
