@@ -112,12 +112,26 @@
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>
-            <!-- <SidebarGroup
-                v-if="isFuture(user.trial_ends_at)"
-                class="text-sm rounded-xl pb-6 text-center"
-            >
-                Expiration de l’essai : {{ formatToDMY(user.trial_ends_at) }}
-            </SidebarGroup> -->
+            <SidebarGroup class="hover:cursor-pointer">
+                <NuxtLink
+                    to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
+                    target="_blanl"
+                    class="text-center flex flex-col gap-1"
+                >
+                    <div class="flex justify-center text-yellow-400">
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                    </div>
+                    <p class="text-sm font-bold">Évaluez-nous sur</p>
+                    <LayoutsAppImage
+                        src="/google-brand-color.svg"
+                        class="w-32 mx-auto"
+                    />
+                </NuxtLink>
+            </SidebarGroup>
             <SidebarGroup>
                 <Button
                     class="w-full rounded flex space-x-2 items-center justify-arround"
@@ -145,6 +159,7 @@ import {
     Cog8ToothIcon,
     HeartIcon,
 } from '@heroicons/vue/24/outline';
+import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
