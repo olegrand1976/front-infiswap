@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto">
-            <div v-if="activeHomes?.length > 0" class="w-full px-14 overflow-x-hidden">
+            <div v-if="activeHomes?.length > 0" class="w-full overflow-x-hidden">
                 <Carousel>
                     <CarouselContent class="flex gap-6 px-0">
                         <CarouselItem
@@ -91,8 +91,8 @@
                             <LazyHomeMessageCard :home="home" />
                         </CarouselItem>
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious class="absolute left-2 sm:left-0 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10" />
+                    <CarouselNext class="absolute right-2 sm:right-0 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10" />
                 </Carousel>
             </div>
 
