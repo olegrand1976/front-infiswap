@@ -105,12 +105,12 @@
                         <button
                             v-for="(home, index) in activeHomes"
                             :key="index"
-                            @click="scrollToSlide(index)"
                             class="h-2.5 w-2.5 rounded-full transition-colors"
                             :class="{
                                 'bg-primary': index === currentSlide,
                                 'bg-gray-300': index !== currentSlide,
                             }"
+                            @click="scrollToSlide(index)"
                         />
                     </div>
                 </Carousel>

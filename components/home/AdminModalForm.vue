@@ -1,5 +1,8 @@
 <template>
-    <form @submit.prevent="submit" enctype="multipart/form-data">
+    <form
+        enctype="multipart/form-data"
+        @submit.prevent="submit"
+    >
         <Separator class="my-4 lg:my-10" />
 
         <div class="grid grid-cols-3 gap-4 lg:gap-8">
@@ -30,8 +33,14 @@
                     />
                 </div>
 
-                <Select v-model="form.active" label="Statut">
-                    <SelectTrigger position="right" class="rounded-md">
+                <Select
+                    v-model="form.active"
+                    label="Statut"
+                >
+                    <SelectTrigger
+                        position="right"
+                        class="rounded-md"
+                    >
                         <SelectValue placeholder="Sélectionner..." />
                     </SelectTrigger>
                     <SelectContent class="border border-none">
@@ -50,7 +59,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
                     <input
                         type="file"
-                        @change="onFileChange"
                         accept="image/*"
                         class="block w-full text-sm text-gray-500
                               file:mr-4 file:py-2 file:px-4
@@ -58,8 +66,12 @@
                               file:text-sm file:font-semibold
                               file:bg-gray-50 file:text-gray-700
                               hover:file:bg-gray-100"
-                    />
-                    <p v-if="home?.image" class="mt-2 text-sm text-gray-500">
+                        @change="onFileChange"
+                    >
+                    <p
+                        v-if="home?.image"
+                        class="mt-2 text-sm text-gray-500"
+                    >
                         Image actuelle : {{ home.image }}
                         <img
                             class="w-48 h-48 object-cover object-center"

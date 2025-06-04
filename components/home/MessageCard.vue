@@ -34,7 +34,7 @@ const cleanedDescription = computed(() => {
                 :src="`${useRuntimeConfig().public.API_URL}/storage/${props.home.image}`"
                 class="absolute w-32 lg:w-40 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-contain"
                 alt="Message image"
-            />
+            >
             <LayoutsAppImage
                 v-else
                 src="/home/mail-image.png"
