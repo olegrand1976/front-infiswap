@@ -87,7 +87,7 @@
                 <Carousel>
                     <CarouselContent
                         ref="carouselContentRef"
-                        class="flex gap-6 px-0 transition-transform duration-500 ease-in-out"
+                        class="flex gap-6 px-0 transition-transform duration-500 ease-in-out overflow-x-auto scroll-smooth snap-x snap-mandatory"
                     >
                         <CarouselItem
                             v-for="(home) in activeHomes"
