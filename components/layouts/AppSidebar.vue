@@ -276,6 +276,11 @@ const adminNavigationItems: NavigationItem[] = [
         route: '/dashboard/admin/home-management',
         icon: WrenchScrewdriverIcon,
     },
+    {
+        label: 'Suivi utilisateurs',
+        route: '/dashboard/admin/users/crm',
+        icon: UsersIcon,
+    },
 ];
 
 const navigationItems = computed(() => {
