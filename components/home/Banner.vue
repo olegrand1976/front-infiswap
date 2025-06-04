@@ -79,47 +79,75 @@
                 </p>
             </div>
         </div>
-        <div class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto">
-            <div v-if="activeHomes?.length > 0" class="w-full overflow-x-hidden">
+        <div
+            v-if="activeHomes?.length > 0"
+            class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto"
+        >
+            <div class="w-full overflow-x-hidden relative shadow-lg rounded-2xl">
                 <Carousel>
-                    <CarouselContent class="flex gap-6 px-0">
+                    <CarouselContent
+                        ref="carouselContentRef"
+                        class="flex gap-6 px-0 transition-transform duration-500 ease-in-out overflow-x-auto scroll-smooth snap-x snap-mandatory"
+                    >
                         <CarouselItem
-                            v-for="home in activeHomes"
+                            v-for="(home) in activeHomes"
                             :key="home.id"
-                            class="w-full md:w-[90%] lg:w-[85%] flex-shrink-0 rounded-2xl overflow-hidden bg-white"
+                            class="carousel-item min-h-[400px] lg:min-h-[600px] w-full flex-shrink-0 rounded-2xl overflow-hidden bg-white snap-start"
                         >
                             <LazyHomeMessageCard :home="home" />
                         </CarouselItem>
                     </CarouselContent>
-                    <CarouselPrevious class="absolute left-2 sm:left-0 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10" />
-                    <CarouselNext class="absolute right-2 sm:right-0 top-1/2 -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10" />
+
+                    <div
+                        v-if="activeHomes.length > 1"
+                        class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10"
+                    >
+                        <button
+                            v-for="(home, index) in activeHomes"
+                            :key="index"
+                            @click="scrollToSlide(index)"
+                            class="h-2.5 w-2.5 rounded-full transition-colors"
+                            :class="{
+                                'bg-primary': index === currentSlide,
+                                'bg-gray-300': index !== currentSlide,
+                            }"
+                        />
+                    </div>
                 </Carousel>
             </div>
-
-            <div v-else class="flex flex-col lg:flex-row gap-6 items-center bg-red-100 rounded-2xl p-6 max-w-7xl mx-auto">
-                <div class="relative h-60 lg:h-72 flex-shrink-0 w-full lg:w-1/3 rounded-xl overflow-hidden">
-                    <LayoutsAppImage
-                        src="/home/mail-image.png"
-                        class="absolute w-32 lg:w-36 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    />
-                </div>
-                <div class="text-start lg:w-2/3 px-4">
-                    <p class="font-bold mb-4">
-                        🎉 Ça y est, InfiSwap est en ligne ! 🩺
-                    </p>
-                    <p class="mb-4 text-gray-700 leading-relaxed">
-                        Après plusieurs semaines de travail intense, de tests et de collaboration avec des infirmier(ère)s de terrain, nous avons le plaisir de vous annoncer l’ouverture officielle de notre plateforme.
-                    </p>
-                    <p class="mb-4 text-gray-700 leading-relaxed">
-                        Notre objectif : vous offrir un outil simple, fluide et pensé pour répondre à vos besoins concrets — que vous cherchiez un remplacement, un complément d’activité ou une solution pour mieux organiser votre tournée.
-                    </p>
-                    <p class="mb-4 text-gray-700 leading-relaxed">
-                        🚀 Ce n’est que le début : d’autres fonctionnalités arrivent très bientôt pour enrichir encore votre expérience.
-                    </p>
-                    <p class="mb-4 text-gray-700 leading-relaxed">
-                        🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous!
-                    </p>
-                </div>
+        </div>
+        <div
+            v-else
+            class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
+        >
+            <div
+                class="relative h-60 col-span-3 lg:col-span-1 lg:h-full w-full bg-red-200"
+            >
+                <LayoutsAppImage
+                    src="/home/message_home_background.png"
+                    class="w-full h-full"
+                />
+                <LayoutsAppImage
+                    src="/home/mail-image.png"
+                    class="absolute w-32 lg:w-36 top-1/2 bottom-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                />
+            </div>
+            <div class="p-4 lg:p-8 col-span-3 lg:col-span-2 text-start lg:text-start">
+                <p class="font-bold mb-4">
+                    🎉 Ça y est, InfiSwap est en ligne ! 🩺
+                </p>
+                <p class="mb-4">
+                    Après plusieurs semaines de travail intense, de tests et de collaboration avec des infirmier(ère)s de terrain, nous avons le plaisir de vous annoncer l’ouverture officielle de notre plateforme.
+                </p>
+                <p class="mb-4">
+                    Notre objectif : vous offrir un outil simple, fluide et pensé pour répondre à vos besoins concrets — que vous cherchiez un remplacement, un complément d’activité ou une solution pour mieux organiser votre tournée.
+                </p>
+                <p class="mb-4">
+                    🚀 Ce n’est que le début : d’autres fonctionnalités arrivent très bientôt pour enrichir encore votre expérience.
+                </p>
+                <p class="mb-4">
+                    🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous !
+                </p>
             </div>
         </div>
         <div class="flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
@@ -142,12 +170,12 @@ import {
     Carousel,
     CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from '@/components/ui/carousel';
 
 const { getSpecifiedHome } = useHome();
 const activeHomes = ref([]);
+const currentSlide = ref(0);
+const carouselContentRef = ref(null);
 
 onMounted(async () => {
     const response = await getSpecifiedHome({
@@ -159,9 +187,17 @@ onMounted(async () => {
     activeHomes.value = response?.data || [];
 });
 
-// function cleanDescription(text: string) {
-//     return text?.replace(/^"|"$/g, '').split(/\\r\\n|\\n|\\r/g).filter(p => p.trim() !== '') || [];
-// }
+function scrollToSlide(index: number) {
+    currentSlide.value = index;
+    const container = carouselContentRef.value?.$el || carouselContentRef.value;
+    if (!container) return;
+
+    const slides = container.querySelectorAll('.carousel-item');
+    const targetSlide = slides[index];
+    if (targetSlide) {
+        targetSlide.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+}
 const user = useUser();
 </script>
 
