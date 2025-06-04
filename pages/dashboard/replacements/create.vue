@@ -154,6 +154,37 @@
                         class="w-full border border-gray-400 focus-within:border-primary"
                     />
                 </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label class="text-primary font-semibold">
+                        Pour le remplacement, j'accepte uniquement :
+                    </label>
+                    <Select v-model="formData.preferedGender">
+                        <SelectTrigger
+                            class="w-full bg-white rounded-full text-nowrap border border-gray-300"
+                        >
+                            <SelectValue placeholder="Sélectionner">
+                                <span v-if="formData.preferedGender === 'M'">Homme</span>
+                                <span v-else-if="formData.preferedGender === 'F'">Femme</span>
+                                <span v-else>Tous</span>
+                            </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectItem value="M">
+                                Homme
+                            </SelectItem>
+                            <SelectItem value="F">
+                                Femme
+                            </SelectItem>
+                            <SelectItem value="all">
+                                Tous
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <p class="text-xs text-black/60 mt-2">
+                        Pour plus de réussite dans vos recherches, privilégiez "Tous".
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -204,6 +235,7 @@ const formData = reactive({
     comment: '',
     zipCodesInput: '',
     citiesInput: '',
+    preferedGender: 'all',
 });
 
 const startDateInput = computed({
@@ -271,6 +303,7 @@ const resetForm = () => {
     formData.comment = '';
     formData.zipCodesInput = '';
     formData.citiesInput = '';
+    formData.preferedGender = 'all';
 };
 
 const { submit, inProgress } = useSubmit(async () => {
