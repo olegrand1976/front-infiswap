@@ -4,46 +4,51 @@
             v-if="isAdmin"
             class="space-y-8 mb-4"
         >
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="font-semibold">
+                        Évolution des inscriptions
+                    </h2>
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <BarChart
+                            :data="registrationChartData"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xRegistrationFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--tertiary))']"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="font-semibold">
+                        Évolution des remplacements
+                    </h2>
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <BarChart
+                            :data="replacementChartData"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xReplacementFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--tertiary))']"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+            </section>
+
             <DashboardStatCardAdminGroup
                 v-for="(report, index) in adminReports"
                 :key="index"
                 :title="report.title"
                 :items="report.items"
+                class="mt-8"
             />
-
-            <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-lg shadow-sm">
-                    <h2 class="text-lg font-semibold p-6">
-                        Évolution des inscriptions
-                    </h2>
-                    <BarChart
-                        :data="registrationChartData"
-                        index="name"
-                        :categories="['count']"
-                        :x-formatter="xRegistrationFormatter"
-                        :y-formatter="yFormatter"
-                        :show-all-x-ticks="true"
-                        :colors="['hsl(var(--tertiary))']"
-                        class="w-full"
-                    />
-                </div>
-
-                <div class="bg-white rounded-lg shadow-sm">
-                    <h2 class="text-lg font-semibold p-6">
-                        Évolution des remplacements
-                    </h2>
-                    <BarChart
-                        :data="replacementChartData"
-                        index="name"
-                        :categories="['count']"
-                        :x-formatter="xReplacementFormatter"
-                        :y-formatter="yFormatter"
-                        :show-all-x-ticks="true"
-                        :colors="['hsl(var(--tertiary))']"
-                        class="w-full"
-                    />
-                </div>
-            </section>
         </div>
         <div v-else>
             <DashboardNurseInformation
@@ -57,6 +62,7 @@
 <script lang="ts" setup>
 import { UserGroupIcon, MapPinIcon, ArrowPathIcon, PaperAirplaneIcon, HeartIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
+import { BarChart } from '@/components/ui/chart-bar';
 import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
