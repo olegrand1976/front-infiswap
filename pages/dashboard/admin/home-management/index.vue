@@ -44,7 +44,7 @@ import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.v
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { HomeType } from '~/lib/types';
 
-const { homes, getSpecifiedHome, edit } = useHome();
+const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
 
 await getSpecifiedHome();
 
@@ -100,7 +100,7 @@ const columns: ColumnDef<HomeType>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['Description', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            let fullDescription = row.getValue('description');
+            let fullDescription = row.getValue('description') as string;
 
             if (typeof fullDescription === 'string') {
                 fullDescription = fullDescription.replace(/\\r\\n|\\n/g, '\n');
@@ -187,11 +187,11 @@ const columns: ColumnDef<HomeType>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(home),
                 },
-                // {
-                //     label: 'Supprimer',
-                //     confirm: true,
-                //     onClick: () => handleDelete(home),
-                // },
+                {
+                    label: 'Supprimer',
+                    confirm: true,
+                    onClick: () => handleDelete(home),
+                },
             ];
 
             return h('div', { class: 'flex justify-center' }, [
@@ -207,8 +207,8 @@ const handleEdit = (home: HomeType) => {
     navigateTo(`/dashboard/admin/home-management/${home.id}`);
 };
 
-// const handleDelete = async (home: HomeType) => {
-//     await forceDelete(home.id);
-//     await getSpecifiedHome();
-// };
+const handleDelete = async (home: HomeType) => {
+    await forceDelete(home.id);
+    await getSpecifiedHome();
+};
 </script>

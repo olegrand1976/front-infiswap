@@ -86,7 +86,7 @@
                         <CarouselItem
                             v-for="home in activeHomes"
                             :key="home.id"
-                            class="min-w-[320px] max-w-md lg:max-w-lg rounded-2xl shadow-lg overflow-hidden bg-white"
+                            class="min-w-[350px] max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-white"
                         >
                             <LazyHomeMessageCard :home="home" />
                         </CarouselItem>

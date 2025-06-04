@@ -17,12 +17,12 @@ const cleanedDescription = computed(() => {
     return props.home.description
         ?.replace(/^"|"$/g, '')
         .split(/\\r\\n|\\n|\\r/g)
-        .filter((p) => p.trim() !== '') || [];
+        .filter((p: string) => p.trim() !== '') || [];
 });
 </script>
 
 <template>
-    <div class="h-full w-full flex rounded-2xl overflow-hidden bg-white">
+    <div class="h-full w-full flex rounded-2xl overflow-hidden bg-white min-h-[350px]">
         <div class="relative w-1/3 h-full bg-blue-100">
             <LayoutsAppImage
                 src="/home/message_home_background.png"
@@ -34,7 +34,6 @@ const cleanedDescription = computed(() => {
                 class="absolute w-32 lg:w-40 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-contain"
                 alt="Message image"
             />
-
             <LayoutsAppImage
                 v-else
                 src="/home/mail-image.png"

@@ -4,6 +4,7 @@ export const useHome = () => {
     const { $apifetch } = useNuxtApp();
     const prefix = '/api/admin/homes';
     const homes = useState<Pagination<HomeType>>('homeData', () => null);
+    const { $toast } = useNuxtApp();
 
     async function createOrUpdate(homeData: HomeType, image?: File) {
         const formData = new FormData();
@@ -36,10 +37,26 @@ export const useHome = () => {
     }
 
     async function edit(id: number, options = {}) {
-        return await $apifetch(`${prefix}/${id}`, {
+        return await $apifetch(`${prefix}/update/${id}`, {
             method: 'PUT',
             body: { ...options },
         });
+    }
+
+    async function forceDelete(home: number) {
+        await $apifetch(`${prefix}/${home}`, {
+            method: 'DELETE',
+        }).then(() => {
+            $toast({
+                description: 'Suppression réussie.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la suppression.',
+                });
+            });
     }
 
     return {
@@ -48,5 +65,6 @@ export const useHome = () => {
         get,
         edit,
         getSpecifiedHome,
+        forceDelete,
     };
 };

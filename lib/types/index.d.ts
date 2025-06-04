@@ -238,7 +238,7 @@ export type ReplacementResponse = {
 };
 
 export type HomeType = {
-    id?: string;
+    id?: number;
     title?: string;
     description?: string;
     active?: boolean | number;
