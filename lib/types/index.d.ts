@@ -238,3 +238,11 @@ export type ReplacementResponse = {
     respondedBy: User;
     repondedBy: User;
 };
+
+export type HomeType = {
+    id?: number;
+    title?: string;
+    description?: string;
+    active?: boolean | number;
+    image?: string | File;
+};

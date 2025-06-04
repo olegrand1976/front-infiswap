@@ -158,6 +158,7 @@ import {
     UsersIcon,
     Cog8ToothIcon,
     HeartIcon,
+    WrenchScrewdriverIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -179,7 +180,7 @@ const closeSidebar = () => {
 interface NavigationItem {
     label: string;
     route: string;
-    icon: FunctionalComponent;
+    icon: Component | FunctionalComponent | VNode;
     isActive?: boolean;
     children?: NavigationItem[];
 }
@@ -269,6 +270,11 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Patients',
         route: '/dashboard/admin/patients',
         icon: HeartIcon,
+    },
+    {
+        label: 'Accueil',
+        route: '/dashboard/admin/home-management',
+        icon: WrenchScrewdriverIcon,
     },
 ];
 
