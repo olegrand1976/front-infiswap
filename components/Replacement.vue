@@ -211,13 +211,13 @@
                                 class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
+                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
                                     :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                                { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
                                     )]"
                                 >
-                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
+                                    {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                 </div>
 
                                 <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
@@ -366,7 +366,7 @@
                                             <EyeIcon class="h-6 mt-1" />
                                         </Button>
                                         <Button
-                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                             @click="closeReplacementDialog = true"
                                         >
@@ -451,13 +451,13 @@
                                 class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                             >
                                 <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null"
+                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
                                     :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null },
+                                                { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
                                     )]"
                                 >
-                                    {{ replacement.replaced_by !== null ? 'FERMÉ' : 'URGENT' }}
+                                    {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
