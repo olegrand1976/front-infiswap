@@ -267,14 +267,14 @@ const adminNavigationItems: NavigationItem[] = [
         icon: UserGroupIcon,
     },
     {
-        label: 'Patients',
-        route: '/dashboard/admin/patients',
-        icon: HeartIcon,
-    },
-    {
         label: 'Accueil',
         route: '/dashboard/admin/home-management',
         icon: WrenchScrewdriverIcon,
+    },
+    {
+        label: 'Patients',
+        route: '/dashboard/admin/patients',
+        icon: HeartIcon,
     },
 ];
 
