@@ -22,7 +22,7 @@
                         </h2>
                         <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-16 2xl:gap-32">
                             <div class="flex flex-col space-y-2">
-                                <label class="font-semibold text-primary text-center">
+                                <label class="font-semibold text-primary text-sm text-center">
                                     Date de début
                                 </label>
                                 <Input
@@ -33,7 +33,7 @@
                             </div>
 
                             <div class="flex flex-col space-y-2">
-                                <label class="font-semibold text-primary text-center">
+                                <label class="font-semibold text-primary text-sm text-center">
                                     Date de fin
                                 </label>
                                 <Input
@@ -44,29 +44,28 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="mt-8">
-                    <label class="text-primary sm:flex sm:justify-center sm:items-center font-semibold">
-                        Créneau horaire
-                    </label>
-                    <div class="mt-2 flex sm:justify-center space-x-5 sm:space-x-8 items-center">
-                        <InputTime
-                            v-model="formData.timeSlot.startAt"
-                            class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                            input-class="rounded-full"
-                        />
-                        <p>à</p>
-                        <InputTime
-                            v-model="formData.timeSlot.endAt"
-                            class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                            input-class="rounded-full"
-                        />
+                    <div class="mt-6">
+                        <label class="text-primary sm:flex sm:justify-center sm:items-center font-semibold">
+                            Créneau horaire
+                        </label>
+                        <div class="mt-2 flex sm:justify-center space-x-5 sm:space-x-8 items-center">
+                            <InputTime
+                                v-model="formData.timeSlot.startAt"
+                                class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                input-class="rounded-full"
+                            />
+                            <p>à</p>
+                            <InputTime
+                                v-model="formData.timeSlot.endAt"
+                                class="w-20 sm:w-48 lg:w-20 2xl:w-48"
+                                input-class="rounded-full"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-col space-y-8 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
+            <div class="flex flex-col space-y-4 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
                         Nombre de patients par jour
@@ -145,19 +144,7 @@
 
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
-                        Commentaire
-                    </label>
-                    <Textarea
-                        v-model="formData.comment"
-                        placeholder="Écrivez un commentaire"
-                        rows="11"
-                        class="w-full border border-gray-400 focus-within:border-primary"
-                    />
-                </div>
-
-                <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold">
-                        Pour le remplacement, j'accepte uniquement :
+                        Pour le remplacement, j'accepte uniquement (sexe):
                     </label>
                     <Select v-model="formData.preferedGender">
                         <SelectTrigger
@@ -181,9 +168,21 @@
                             </SelectItem>
                         </SelectContent>
                     </Select>
-                    <p class="text-xs text-black/60 mt-2">
-                        Pour plus de réussite dans vos recherches, privilégiez "Tous".
+                    <p class="text-xs text-slate-500 ml-1">
+                        Pour plus de réussite dans vos recherches, privilégiez "<span class="font-bold text-primary">Tous</span>".
                     </p>
+                </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label class="text-primary font-semibold">
+                        Description
+                    </label>
+                    <Textarea
+                        v-model="formData.comment"
+                        placeholder="Décrivez en quelques mots votre demande de remplacement..."
+                        rows="11"
+                        class="w-full border border-gray-400 focus-within:border-primary"
+                    />
                 </div>
             </div>
         </section>
