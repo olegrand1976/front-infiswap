@@ -34,6 +34,19 @@
             </div>
             <div class="text-left text-sm text-gray-500 space-y-2 px-6">
                 <p class="flex items-center gap-2 text-primary">
+                    <LayoutsAppImage
+                        src="/icons/gender.png"
+                        class="h-5"
+                    />
+                    {{
+                        user.gender === 'F'
+                            ? 'Femme'
+                            : user.gender === 'M'
+                                ? 'Homme'
+                                : user.gender
+                    }}
+                </p>
+                <p class="flex items-center gap-2 text-primary">
                     <EnvelopeIcon class="w-5 h-5" />
                     {{ user.email }}
                 </p>
