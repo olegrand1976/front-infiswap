@@ -80,13 +80,13 @@
             </div>
         </div>
         <div class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto">
-            <div v-if="activeHomes?.length > 0" class="w-full px-6">
+            <div v-if="activeHomes?.length > 0" class="w-full px-14 overflow-x-hidden">
                 <Carousel>
-                    <CarouselContent class="flex gap-6 px-4">
+                    <CarouselContent class="flex gap-6 px-0">
                         <CarouselItem
                             v-for="home in activeHomes"
                             :key="home.id"
-                            class="min-w-[350px] max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-white"
+                            class="w-full md:w-[90%] lg:w-[85%] flex-shrink-0 rounded-2xl overflow-hidden bg-white"
                         >
                             <LazyHomeMessageCard :home="home" />
                         </CarouselItem>
