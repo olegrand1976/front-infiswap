@@ -22,8 +22,9 @@ const cleanedDescription = computed(() => {
 </script>
 
 <template>
-    <div class="h-full w-full flex rounded-2xl overflow-hidden bg-white min-h-[350px]">
-        <div class="relative w-1/3 h-full bg-blue-100">
+    <div class="h-full w-full flex flex-col lg:flex-row rounded-2xl overflow-hidden bg-white min-h-[350px]">
+        <!-- Partie image -->
+        <div class="relative w-full lg:w-1/3 h-60 lg:h-full bg-blue-100">
             <LayoutsAppImage
                 src="/home/message_home_background.png"
                 class="w-full h-full object-cover"
@@ -41,7 +42,8 @@ const cleanedDescription = computed(() => {
             />
         </div>
 
-        <div class="w-2/3 h-full flex flex-col justify-center p-6 lg:p-12 text-start overflow-y-auto">
+        <!-- Partie texte -->
+        <div class="w-full lg:w-2/3 h-full flex flex-col justify-center p-6 lg:p-12 text-start overflow-y-auto">
             <p class="font-bold mb-4">
                 {{ props.home.title }}
             </p>
