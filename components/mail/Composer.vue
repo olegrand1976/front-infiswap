@@ -32,7 +32,10 @@
                         class="relative border rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer mb-2"
                         @click="selectMail(mailItem)"
                     >
-                        <div class="text-sm text-gray-500 mb-1 truncate" :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')">
+                        <div
+                            class="text-sm text-gray-500 mb-1 truncate"
+                            :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')"
+                        >
                             À :
                             <span
                                 v-for="(recipient, idx) in parseRecipients(mailItem.recipients)"
@@ -76,7 +79,10 @@
                 Détail du message
             </h2>
 
-            <div v-if="selectedMail" class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]">
+            <div
+                v-if="selectedMail"
+                class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]"
+            >
                 <div class="space-y-3">
                     <div>
                         <span class="font-semibold text-gray-700">Destinataires :</span>
@@ -163,13 +169,19 @@
                 </div>
             </div>
 
-            <div v-else class="p-6 text-gray-500 italic">
+            <div
+                v-else
+                class="p-6 text-gray-500 italic"
+            >
                 Cliquez sur un e-mail à gauche pour voir les détails.
             </div>
         </div>
     </div>
 
-    <div v-if="showNewMailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div
+        v-if="showNewMailModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+    >
         <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4">
             <button
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -264,7 +276,10 @@
         </div>
     </div>
 
-    <div v-if="showMailDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center lg:hidden">
+    <div
+        v-if="showMailDetailModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center lg:hidden"
+    >
         <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4 max-h-[90vh] overflow-y-auto">
             <button
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -277,7 +292,10 @@
                 Détail du message
             </h3>
 
-            <div v-if="selectedMail" class="space-y-4">
+            <div
+                v-if="selectedMail"
+                class="space-y-4"
+            >
                 <div>
                     <span class="font-semibold text-gray-700">Destinataires :</span>
                     <span class="ml-2 text-gray-600">
