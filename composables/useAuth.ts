@@ -334,6 +334,14 @@ export const useAuth = () => {
             router.push('/dashboard');
         });
     }
+
+    async function edit(id: number, options = {}) {
+        return await $apifetch(`/api/users/${user}`, {
+            method: 'PUT',
+            body: { ...options },
+        });
+    }
+
     return {
         user,
         users,
@@ -369,5 +377,6 @@ export const useAuth = () => {
         generatePassword,
         getRoles,
         switchRole,
+        edit,
     };
 };
