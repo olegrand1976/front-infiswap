@@ -1708,13 +1708,13 @@ definePageMeta({
 });
 </script>
 
-  <style>
-  .no-scrollbar {
+<style>
+.no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
+}
 
-  .no-scrollbar::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-  </style>
+}
+</style>
