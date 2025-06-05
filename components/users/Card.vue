@@ -182,10 +182,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import {
-    IdentificationIcon,
     UserCircleIcon,
-    EnvelopeIcon,
-    PhoneIcon,
     InboxArrowDownIcon,
     BuildingOffice2Icon,
     CheckCircleIcon,
@@ -194,6 +191,9 @@ import {
     DocumentCheckIcon,
     ArrowPathRoundedSquareIcon,
     UserGroupIcon,
+    EnvelopeIcon,
+    PhoneIcon,
+    IdentificationIcon,
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
