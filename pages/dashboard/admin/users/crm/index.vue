@@ -5,33 +5,68 @@
         <DashboardAdminPageContent>
             <div class="p-4 flex gap-3 items-center">
                 <InputIcon
+                    v-model="option.zip"
                     rounded="md"
                     placeholder="Code postal"
                     class="max-w-sm"
                     type="number"
+                    @input="debouncedFilterUsers"
                 />
                 <InputIcon
+                    v-model="option.city"
                     rounded="md"
                     placeholder="Ville"
                     class="max-w-sm"
+                    @input="debouncedFilterUsers"
                 />
-                <InputIcon
-                    rounded="md"
-                    placeholder="Biotrax"
-                    class="max-w-sm"
-                />
-                <InputIcon
-                    rounded="md"
-                    placeholder="Assurances"
-                    class="max-w-sm"
-                />
-                <InputIcon
-                    rounded="md"
-                    placeholder="Sites"
-                    class="max-w-sm"
-                />
+                <Select v-model="option.biotrax" @update:modelValue="debouncedFilterUsers">
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Biotrax</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="1">
+                                <span class="ml-2">Oui</span>
+                            </SelectItem>
+                            <SelectItem :value="0">
+                                <span class="ml-2">Non</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Select v-model="option.insurance" @update:modelValue="debouncedFilterUsers">
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Assurance</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="1">
+                                <span class="ml-2">Oui</span>
+                            </SelectItem>
+                            <SelectItem :value="0">
+                                <span class="ml-2">Non</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Select v-model="option.site" @update:modelValue="debouncedFilterUsers">
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Site</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="1">
+                                <span class="ml-2">Oui</span>
+                            </SelectItem>
+                            <SelectItem :value="0">
+                                <span class="ml-2">Non</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
                 <Button
                     class="rounded-md"
+                    @click="resetFilter"
                 >
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
@@ -41,6 +76,11 @@
                 :data="dataUsers"
                 :columns="columns"
             />
+            <Dialog v-model:open="showModal">
+                <DialogContent>
+                    <UsersCard :user="user" />
+                </DialogContent>
+            </Dialog>
             <div>
                 <CustomPagination
                     :default-page="page"
@@ -56,6 +96,7 @@
 
 <script setup lang="ts">
 import type { ColumnDef } from '@tanstack/vue-table';
+import { EyeIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import type { User } from '~/lib/types';
@@ -63,6 +104,14 @@ import { InputIcon } from '~/components/ui/input-with-icon';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+
+const showModal = ref(false);
+
+const openModal = (selectedUser) => {
+    user.value = selectedUser;
+    showModal.value = true;
+};
 
 useHead({ title: 'Suivi utilisateurs' });
 
@@ -73,13 +122,35 @@ definePageMeta({
 
 const { users, getUsers, edit } = useAuth();
 
+const user = ref(null);
+
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
-    name: null,
     zip: null,
+    city: null,
+    biotrax: null,
+    insurance: null,
+    site: null,
 };
 const option = ref({ ...initialFilter });
+
+const debounce = (func, delay) => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
+
+const filterUsers = async () => {
+    const currentFilter = { ...option.value };
+    await getUsers(page.value, perPage.value, currentFilter);
+};
+
+const debouncedFilterUsers = debounce(filterUsers, 100);
 
 await getUsers(page.value, perPage.value, option.value);
 
@@ -92,6 +163,17 @@ const refreshUsers = async (page: number) => {
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     await getUsers(page.value, value, option.value);
+};
+
+const resetFilter = async () => {
+    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    if (isSame) {
+        return;
+    }
+
+    option.value = { ...initialFilter };
+    page.value = 1;
+    await getUsers(page.value, perPage.value, option.value);
 };
 
 const columns: ColumnDef<User>[] = [
@@ -166,7 +248,7 @@ const columns: ColumnDef<User>[] = [
                     dataUsers.value[index].biotrax = value ? 1 : 0;
                 }
 
-                await edit(Number(row.original.id), { active: dataUsers.value[index].biotrax == 1 });
+                await edit(Number(row.original.id), { biotrax: dataUsers.value[index].biotrax == 1 });
             };
 
             return h('div', { class: 'flex justify-center' }, [
@@ -194,7 +276,7 @@ const columns: ColumnDef<User>[] = [
                     dataUsers.value[index].insurance = value ? 1 : 0;
                 }
 
-                await edit(Number(row.original.id), { active: dataUsers.value[index].insurance == 1 });
+                await edit(Number(row.original.id), { insurance: dataUsers.value[index].insurance == 1 });
             };
 
             return h('div', { class: 'flex justify-center' }, [
@@ -222,7 +304,7 @@ const columns: ColumnDef<User>[] = [
                     dataUsers.value[index].site = value ? 1 : 0;
                 }
 
-                await edit(Number(row.original.id), { active: dataUsers.value[index].site == 1 });
+                await edit(Number(row.original.id), { site: dataUsers.value[index].site == 1 });
             };
 
             return h('div', { class: 'flex justify-center' }, [
@@ -250,7 +332,7 @@ const columns: ColumnDef<User>[] = [
                     dataUsers.value[index].ambassador = value ? 1 : 0;
                 }
 
-                await edit(Number(row.original.id), { active: dataUsers.value[index].ambassador == 1 });
+                await edit(Number(row.original.id), { ambassador: dataUsers.value[index].ambassador == 1 });
             };
 
             return h('div', { class: 'flex justify-center' }, [
@@ -295,10 +377,15 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('action'),
-            }, () => ['Action', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Action', h(ArrowsUpDownIcon)]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('action')));
+            return h('div', { class: 'text-center' }, [
+                h(EyeIcon, {
+                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
+                    onClick: () => openModal(row.original),
+                }),
+            ]);
         },
     },
 ];

@@ -28,7 +28,94 @@
             </p>
         </div>
 
-        <div class="px-6">
+        <div v-if="isAdmin" class="px-6 text-left text-sm text-gray-700 mb-8">
+            <div class="flex gap-4 mb-4 border-b border-gray-300">
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'information' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'information'"
+                >
+                    Informations
+                </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'activite' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'activite'"
+                >
+                    Activité
+                </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'contact' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'contact'"
+                >
+                    Contact
+                </button>
+            </div>
+
+            <div v-if="activeTab === 'activite'" class="space-y-1">
+                <p>- Remplacements créés : 12</p>
+                <p>- Remplacements acceptés : 8</p>
+                <p>- Positionnements : 20</p>
+                <p>- Positionnements acceptés : 14</p>
+                <p>- Infirmiers parrainés : 3</p>
+            </div>
+
+            <div v-else-if="activeTab === 'information'" class="space-y-3">
+                <p class="flex items-center gap-2 text-primary">
+                    <EnvelopeIcon class="w-5 h-5" />
+                    {{ user.email }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <PhoneIcon class="w-5 h-5 text-primary" />
+                    {{ user.phone_number }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                    {{ user.city }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                    {{ user.zip_code }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <IdentificationIcon class="w-5 h-5 text-primary" />
+                    {{ user.identifier_number }}
+                </p>
+            </div>
+
+            <div v-else-if="activeTab === 'contact'" class="space-y-3">
+                <p>Date du contact : {{ new Date().toLocaleDateString('fr-FR') }}</p>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" :checked="user.biotrax" disabled />
+                    <label>Biotrax</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" :checked="user.insurance" disabled />
+                    <label>Assurances</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" :checked="user.site" disabled />
+                    <label>Site</label>
+                </div>
+
+                <!-- <div class="mt-3">
+                    <label class="block font-medium mb-1">Commentaire</label>
+                    <textarea
+                        class="w-full p-2 border rounded-md"
+                        rows="3"
+                        placeholder="Ajouter un commentaire..."
+                    ></textarea>
+                </div> -->
+            </div>
+        </div>
+        <div
+            v-else
+            class="px-6"
+        >
             <div class="my-4">
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
@@ -76,6 +163,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import {
     IdentificationIcon,
     UserCircleIcon,
@@ -86,6 +174,9 @@ import {
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
+
+const { isAdmin } = useAuth();
+const activeTab = ref('information');
 
 defineProps<{
     user: User;

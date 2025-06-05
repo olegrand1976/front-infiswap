@@ -336,7 +336,7 @@ export const useAuth = () => {
     }
 
     async function edit(id: number, options = {}) {
-        return await $apifetch(`/api/users/${user}`, {
+        return await $apifetch(`/api/users/${id}/activate`, {
             method: 'PUT',
             body: { ...options },
         });
