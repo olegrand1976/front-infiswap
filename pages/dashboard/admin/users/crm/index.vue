@@ -19,7 +19,10 @@
                     class="max-w-sm"
                     @input="debouncedFilterUsers"
                 />
-                <Select v-model="option.biotrax" @update:modelValue="debouncedFilterUsers">
+                <Select
+                    v-model="option.biotrax"
+                    @update:model-value="debouncedFilterUsers"
+                >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Biotrax</span>
                         <strong class="ml-4">
@@ -39,7 +42,10 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select v-model="option.insurance" @update:modelValue="debouncedFilterUsers">
+                <Select
+                    v-model="option.insurance"
+                    @update:model-value="debouncedFilterUsers"
+                >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Assurance</span>
                         <strong class="ml-4">
@@ -59,7 +65,10 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select v-model="option.site" @update:modelValue="debouncedFilterUsers">
+                <Select
+                    v-model="option.site"
+                    @update:model-value="debouncedFilterUsers"
+                >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Site</span>
                         <strong class="ml-4">
