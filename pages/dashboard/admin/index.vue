@@ -3,9 +3,9 @@
         <div class="space-y-8 mb-4">
             <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h2 class="font-semibold">
+                    <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                         Évolution des inscriptions
-                    </h2>
+                    </p>
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <BarChart
                             :data="registrationChartData"
@@ -14,16 +14,16 @@
                             :x-formatter="xRegistrationFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['hsl(var(--success))']"
                             class="w-full"
                         />
                     </div>
                 </div>
 
                 <div>
-                    <h2 class="font-semibold">
+                    <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                         Évolution des remplacements
-                    </h2>
+                    </p>
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <BarChart
                             :data="replacementChartData"
