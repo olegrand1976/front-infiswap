@@ -28,7 +28,10 @@
             </p>
         </div>
 
-        <div v-if="isAdmin" class="px-6 text-left text-sm text-gray-700 mb-8">
+        <div
+            v-if="isAdmin"
+            class="px-6 text-left text-sm text-gray-700 mb-8"
+        >
             <div class="flex gap-4 mb-4 border-b border-gray-300">
                 <button
                     class="pb-2 border-b-2"
@@ -39,29 +42,57 @@
                 </button>
                 <button
                     class="pb-2 border-b-2"
-                    :class="activeTab === 'activite' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="activeTab = 'activite'"
-                >
-                    Activité
-                </button>
-                <button
-                    class="pb-2 border-b-2"
                     :class="activeTab === 'contact' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
                     @click="activeTab = 'contact'"
                 >
                     Contact
                 </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'activite' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'activite'"
+                >
+                    Activité
+                </button>
             </div>
 
-            <div v-if="activeTab === 'activite'" class="space-y-1">
-                <p>- Remplacements créés : 12</p>
-                <p>- Remplacements acceptés : 8</p>
-                <p>- Positionnements : 20</p>
-                <p>- Positionnements acceptés : 14</p>
-                <p>- Infirmiers parrainés : 3</p>
+            <div
+                v-if="activeTab === 'activite'"
+                class="space-y-3"
+            >
+                <div class="flex items-center gap-2">
+                    <DocumentPlusIcon class="w-5 h-5 text-primary" />
+                    <p>Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span></p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <DocumentCheckIcon class="w-5 h-5 text-primary" />
+                    <p>Remplacements acceptés : <span class="font-semibold">{{ activityData.replacements_accepted }}</span></p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <ArrowPathRoundedSquareIcon class="w-5 h-5 text-primary" />
+                    <p>Positionnements : <span class="font-semibold">{{ activityData.placements_made }}</span></p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <CheckCircleIcon class="w-5 h-5 text-primary" />
+                    <p>Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span></p>
+                </div>
+
+                <div
+                    v-if="user.ambassador === 1"
+                    class="flex items-center gap-2"
+                >
+                    <UserGroupIcon class="w-5 h-5 text-primary" />
+                    <p>Infirmiers parrainés : <span class="font-semibold">--</span></p>
+                </div>
             </div>
 
-            <div v-else-if="activeTab === 'information'" class="space-y-3">
+            <div
+                v-else-if="activeTab === 'information'"
+                class="space-y-3"
+            >
                 <p class="flex items-center gap-2 text-primary">
                     <EnvelopeIcon class="w-5 h-5" />
                     {{ user.email }}
@@ -80,36 +111,47 @@
                 </p>
                 <p class="flex items-center gap-2">
                     <IdentificationIcon class="w-5 h-5 text-primary" />
-                    {{ user.identifier_number }}
+                    {{ new Date(user.created_at).toLocaleDateString('fr-FR') }}
                 </p>
             </div>
 
-            <div v-else-if="activeTab === 'contact'" class="space-y-3">
+            <div
+                v-else-if="activeTab === 'contact'"
+                class="space-y-3"
+            >
                 <p>Date du contact : {{ new Date().toLocaleDateString('fr-FR') }}</p>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" :checked="user.biotrax" disabled />
+                    <component
+                        :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
+                        :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
+                    />
                     <label>Biotrax</label>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" :checked="user.insurance" disabled />
+                    <component
+                        :is="user.insurance ? CheckCircleIcon : XCircleIcon"
+                        :class="user.insurance ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
+                    />
                     <label>Assurances</label>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" :checked="user.site" disabled />
+                    <component
+                        :is="user.site ? CheckCircleIcon : XCircleIcon"
+                        :class="user.site ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
+                    />
                     <label>Site</label>
                 </div>
 
-                <!-- <div class="mt-3">
-                    <label class="block font-medium mb-1">Commentaire</label>
-                    <textarea
-                        class="w-full p-2 border rounded-md"
-                        rows="3"
-                        placeholder="Ajouter un commentaire..."
-                    ></textarea>
-                </div> -->
+                <div class="flex items-center gap-2">
+                    <component
+                        :is="user.ambassador ? CheckCircleIcon : XCircleIcon"
+                        :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
+                    />
+                    <label>Ambassadeur</label>
+                </div>
             </div>
         </div>
         <div
@@ -171,6 +213,12 @@ import {
     PhoneIcon,
     InboxArrowDownIcon,
     BuildingOffice2Icon,
+    CheckCircleIcon,
+    XCircleIcon,
+    DocumentPlusIcon,
+    DocumentCheckIcon,
+    ArrowPathRoundedSquareIcon,
+    UserGroupIcon,
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
@@ -178,7 +226,23 @@ import { useRuntimeConfig } from '#app';
 const { isAdmin } = useAuth();
 const activeTab = ref('information');
 
-defineProps<{
+const props = defineProps<{
     user: User;
 }>();
+
+const { activityUser } = useReplacements();
+const activityData = ref(null);
+
+async function loadActivity() {
+    if (!props.user || !props.user.id) return;
+    try {
+        const result = await activityUser(props.user.id);
+        activityData.value = result.activity;
+    }
+    catch (e) {
+        console.error('Erreur chargement activité utilisateur', e);
+    }
+}
+
+loadActivity();
 </script>

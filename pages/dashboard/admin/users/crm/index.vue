@@ -22,6 +22,11 @@
                 <Select v-model="option.biotrax" @update:modelValue="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Biotrax</span>
+                        <strong class="ml-4">
+                            {{
+                                option.biotrax === 1 ? 'oui' : option.biotrax === 0 ? 'non' : 'tous'
+                            }}
+                        </strong>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -37,6 +42,11 @@
                 <Select v-model="option.insurance" @update:modelValue="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Assurance</span>
+                        <strong class="ml-4">
+                            {{
+                                option.insurance === 1 ? 'oui' : option.insurance === 0 ? 'non' : 'tous'
+                            }}
+                        </strong>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -52,6 +62,11 @@
                 <Select v-model="option.site" @update:modelValue="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Site</span>
+                        <strong class="ml-4">
+                            {{
+                                option.site === 1 ? 'oui' : option.site === 0 ? 'non' : 'tous'
+                            }}
+                        </strong>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -76,8 +91,11 @@
                 :data="dataUsers"
                 :columns="columns"
             />
-            <Dialog v-model:open="showModal">
-                <DialogContent>
+            <Dialog
+                v-model:open="showModal"
+                class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+            >
+                <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-2">
                     <UsersCard :user="user" />
                 </DialogContent>
             </Dialog>
