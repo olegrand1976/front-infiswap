@@ -80,6 +80,44 @@
             </div>
         </div>
         <div
+            v-if="activeHomes?.length > 0"
+            class="col-span-6 lg:col-span-3 w-full max-w-7xl mx-auto"
+        >
+            <div class="w-full overflow-x-hidden relative shadow-lg rounded-2xl">
+                <Carousel>
+                    <CarouselContent
+                        ref="carouselContentRef"
+                        class="flex gap-6 px-0 transition-transform duration-500 ease-in-out overflow-x-auto scroll-smooth snap-x snap-mandatory"
+                    >
+                        <CarouselItem
+                            v-for="(home) in activeHomes"
+                            :key="home.id"
+                            class="carousel-item min-h-[400px] lg:min-h-[600px] w-full flex-shrink-0 rounded-2xl overflow-hidden bg-white snap-start"
+                        >
+                            <LazyHomeMessageCard :home="home" />
+                        </CarouselItem>
+                    </CarouselContent>
+
+                    <div
+                        v-if="activeHomes.length > 1"
+                        class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10"
+                    >
+                        <button
+                            v-for="(home, index) in activeHomes"
+                            :key="index"
+                            class="h-2.5 w-2.5 rounded-full transition-colors"
+                            :class="{
+                                'bg-primary': index === currentSlide,
+                                'bg-gray-300': index !== currentSlide,
+                            }"
+                            @click="scrollToSlide(index)"
+                        />
+                    </div>
+                </Carousel>
+            </div>
+        </div>
+        <div
+            v-else
             class="col-span-6 lg:col-span-3 grid grid-cols-3 items-center shadow-lg rounded-lg overflow-hidden"
         >
             <div
@@ -128,7 +166,38 @@
 
 <script setup lang="ts">
 import { BellAlertIcon } from '@heroicons/vue/24/solid';
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+} from '@/components/ui/carousel';
 
+const { getSpecifiedHome } = useHome();
+const activeHomes = ref([]);
+const currentSlide = ref(0);
+const carouselContentRef = ref(null);
+
+onMounted(async () => {
+    const response = await getSpecifiedHome({
+        params: {
+            filter: 'active',
+        },
+    });
+
+    activeHomes.value = response?.data || [];
+});
+
+function scrollToSlide(index: number) {
+    currentSlide.value = index;
+    const container = carouselContentRef.value?.$el || carouselContentRef.value;
+    if (!container) return;
+
+    const slides = container.querySelectorAll('.carousel-item');
+    const targetSlide = slides[index];
+    if (targetSlide) {
+        targetSlide.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+}
 const user = useUser();
 </script>
 

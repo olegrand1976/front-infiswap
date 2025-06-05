@@ -4,11 +4,50 @@
             v-if="isAdmin"
             class="space-y-8 mb-4"
         >
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                        Évolution des inscriptions
+                    </p>
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <BarChart
+                            :data="registrationChartData"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xRegistrationFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--success))']"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                        Évolution des remplacements
+                    </p>
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <BarChart
+                            :data="replacementChartData"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xReplacementFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--tertiary))']"
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+            </section>
+
             <DashboardStatCardAdminGroup
                 v-for="(report, index) in adminReports"
                 :key="index"
                 :title="report.title"
                 :items="report.items"
+                class="mt-8"
             />
         </div>
         <div v-else>
@@ -23,6 +62,7 @@
 <script lang="ts" setup>
 import { UserGroupIcon, MapPinIcon, ArrowPathIcon, PaperAirplaneIcon, HeartIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
+import { BarChart } from '@/components/ui/chart-bar';
 import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
@@ -37,6 +77,32 @@ definePageMeta({
 });
 
 await getReports();
+
+const registrationChartData = computed(() => {
+    return reports.value?.registration_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const replacementChartData = computed(() => {
+    return reports.value?.replacement_statistics?.weeks?.map(week => ({
+        name: `Semaine ${week.week}`,
+        count: Number(week.count) || 0,
+    })) || [];
+});
+
+const xRegistrationFormatter = (tick: number) => {
+    return registrationChartData.value[tick]?.name || '';
+};
+
+const xReplacementFormatter = (tick: number) => {
+    return replacementChartData.value[tick]?.name || '';
+};
+
+const yFormatter = (tick: number) => {
+    return tick.toString();
+};
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];
