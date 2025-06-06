@@ -1,17 +1,68 @@
 <template>
-    <div class="mb-4">
-        <div
-            v-if="isAdmin"
-            class="space-y-8 mb-4"
-        >
-            <DashboardAdminDashboard />
-        </div>
-        <div v-else>
-            <DashboardNurseInformation
-                :reports="reports.replacement"
-                :tours="reports.tours"
-            />
-        </div>
+    <div>
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-12">
+            <div>
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des inscriptions
+                </p>
+                <div class="mt-3 bg-white rounded-sm shadow-md">
+                    <BarChart
+                        :data="registrationChartData"
+                        index="name"
+                        :categories="['count']"
+                        :x-formatter="xRegistrationFormatter"
+                        :y-formatter="yFormatter"
+                        :show-all-x-ticks="true"
+                        :colors="['hsl(var(--success))']"
+                        class="w-full"
+                    />
+                </div>
+            </div>
+
+            <div>
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des remplacements
+                </p>
+                <div class="mt-3 bg-white rounded-sm shadow-md">
+                    <BarChart
+                        :data="replacementChartData"
+                        index="name"
+                        :categories="['count']"
+                        :x-formatter="xReplacementFormatter"
+                        :y-formatter="yFormatter"
+                        :show-all-x-ticks="true"
+                        :colors="['hsl(var(--tertiary))']"
+                        class="w-full"
+                    />
+                </div>
+            </div>
+
+            <div>
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des remplacements acceptés
+                </p>
+                <div class="mt-3 bg-white rounded-sm shadow-md">
+                    <BarChart
+                        :data="acceptedReplacementChartData"
+                        index="name"
+                        :categories="['count']"
+                        :x-formatter="xAcceptedRemplacementFormater"
+                        :y-formatter="yFormatter"
+                        :show-all-x-ticks="true"
+                        :colors="['hsl(var(--primary))']"
+                        class="w-full"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <DashboardStatCardAdminGroup
+            v-for="(report, index) in adminReports"
+            :key="index"
+            :title="report.title"
+            :items="report.items"
+            class="mt-8"
+        />
     </div>
 </template>
 
