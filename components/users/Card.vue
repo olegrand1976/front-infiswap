@@ -32,6 +32,10 @@
                     <InboxArrowDownIcon class="w-5 h-5 text-primary" />
                     {{ user.zip_code }}
                 </p>
+                <p class="flex items-center gap-2">
+                    <PhoneIcon class="w-5 h-5 text-primary" />
+                    {{ user.phone_number }}
+                </p>
             </div>
             <div class="pb-10">
                 <Separator class="w-full h-1 bg-gray-200 my-3" />
