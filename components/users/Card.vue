@@ -50,6 +50,7 @@ import {
     UserCircleIcon,
     InboxArrowDownIcon,
     BuildingOffice2Icon,
+    PhoneIcon,
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
