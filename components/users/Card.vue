@@ -169,6 +169,14 @@
                         {{ user.email || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
+                        <LayoutsAppImage src="/icons/gender.png" class="h-5" />
+                        {{
+                            user.gender === 'F' ? 'Femme'
+                            : user.gender === 'M' ? 'Homme'
+                                : user.gender || 'Non renseigné'
+                        }}
+                    </p>
+                    <p class="flex items-center gap-2">
                         <PhoneIcon class="w-5 h-5 text-primary" />
                         {{ user.phone_number || 'Non renseigné' }}
                     </p>
