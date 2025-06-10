@@ -163,18 +163,43 @@
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
             <div class="text-left text-sm text-gray-500 space-y-2 px-6">
-                <p class="flex items-center gap-2">
-                    <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                    {{ user.city }}
-                </p>
-                <p class="flex items-center gap-2">
-                    <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                    {{ user.zip_code }}
-                </p>
-                <p class="flex items-center gap-2">
-                    <PhoneIcon class="w-5 h-5 text-primary" />
-                    {{ user.phone_number }}
-                </p>
+                <template v-if="showFullInfo">
+                    <p class="flex items-center gap-2 text-primary">
+                        <EnvelopeIcon class="w-5 h-5" />
+                        {{ user.email }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <PhoneIcon class="w-5 h-5 text-primary" />
+                        {{ user.phone_number }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                        {{ user.city }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                        {{ user.zip_code }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <IdentificationIcon class="w-5 h-5 text-primary" />
+                        {{ user.identifier_number }}
+                    </p>
+                </template>
+
+                <template v-else>
+                    <p class="flex items-center gap-2">
+                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                        {{ user.city }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                        {{ user.zip_code }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <PhoneIcon class="w-5 h-5 text-primary" />
+                        {{ user.phone_number }}
+                    </p>
+                </template>
             </div>
             <div class="pb-10">
                 <Separator class="w-full h-1 bg-gray-200 my-3" />
@@ -206,9 +231,12 @@ import { useRuntimeConfig } from '#app';
 const { isAdmin } = useAuth();
 const activeTab = ref('information');
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     user: User;
-}>();
+    showFullInfo?: boolean;
+}>(), {
+    showFullInfo: false,
+});
 
 const { activityUser } = useReplacements();
 const activityData = ref(null);

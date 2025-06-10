@@ -46,7 +46,10 @@
                         class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-gray-100/50 shadow-xl rounded-lg text-gray-900"
                     >
                         <div class="px-4 pt-4">
-                            <UsersCard :user="list.repondedBy" />
+                            <UsersCard
+                                :user="list.repondedBy"
+                                :showFullInfo="list.status === 'confirmed'"
+                            />
                         </div>
                         <div class="p-4 mx-8 mt-2">
                             <div
