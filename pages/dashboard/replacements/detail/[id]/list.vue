@@ -51,7 +51,7 @@
                                 :showFullInfo="list.status === 'confirmed'"
                             />
                         </div>
-                        <div class="p-4 mx-8 mt-2">
+                        <div class="p-4 mx-8 mt-2 w-[300px]">
                             <div
                                 v-if="list.status==='confirmed'"
                                 class="flex justify-center items-center gap-2 mx-auto w-1/2 text-success"
