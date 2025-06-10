@@ -276,6 +276,11 @@ const adminNavigationItems: NavigationItem[] = [
         route: '/dashboard/admin/patients',
         icon: HeartIcon,
     },
+    {
+        label: 'Suivi utilisateurs',
+        route: '/dashboard/admin/users/crm',
+        icon: UsersIcon,
+    },
 ];
 
 const navigationItems = computed(() => {

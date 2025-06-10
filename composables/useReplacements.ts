@@ -182,6 +182,10 @@ export const useReplacements = () => {
         return await $apifetch(`/api/replacements/${id}`);
     }
 
+    async function activityUser(id: number) {
+        return await $apifetch(`/api/replacements/${id}/activity`);
+    }
+
     async function forceDelete(replacement: number) {
         await $apifetch(`/api/replacements/${replacement}`, {
             method: 'DELETE',
@@ -216,6 +220,7 @@ export const useReplacements = () => {
         sendUrgentReplacement,
         showReplacement,
         forceDelete,
+        activityUser,
     };
 };
 
