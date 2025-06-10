@@ -10,11 +10,14 @@ const props = withDefaults(defineProps<{
     index: string;
     items: BulletLegendItemInterface[];
     customTooltip?: Component;
+    legendLabels?: string[];
+    categories?: string[];
 }>(), {
     colors: () => [],
+    legendLabels: () => [],
+    categories: () => [],
 });
 
-// Use weakmap to store reference to each datapoint for Tooltip
 const wm = new WeakMap();
 function template(d: any) {
     if (wm.has(d)) {
@@ -22,12 +25,19 @@ function template(d: any) {
     }
     else {
         const componentDiv = document.createElement('div');
-        const omittedData = Object.entries(omit(d, [props.index])).map(([key, value]) => {
-            const legendReference = props.items.find(i => i.name === key);
+        const omittedData = Object.entries(omit(d, [props.index])).map(([key, value], idx) => {
+            const label = props.legendLabels?.[idx] || props.items.find(i => i.name === key)?.name || key;
+            const legendReference = props.items.find(i => i.name === (props.legendLabels?.[idx] || key)) || {
+                name: label,
+                color: props.colors[idx] || 'transparent',
+            };
             return { ...legendReference, value };
         });
         const TooltipComponent = props.customTooltip ?? ChartTooltip;
-        createApp(TooltipComponent, { title: d[props.index].toString(), data: omittedData }).mount(componentDiv);
+        createApp(TooltipComponent, {
+            title: d[props.index]?.toString() || 'Unknown',
+            data: omittedData,
+        }).mount(componentDiv);
         wm.set(d, componentDiv.innerHTML);
         return componentDiv.innerHTML;
     }
