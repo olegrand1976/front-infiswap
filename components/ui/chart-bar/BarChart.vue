@@ -102,6 +102,9 @@ const hasData = computed(() => {
                 :items="legendItems"
                 :custom-tooltip="customTooltip"
                 :index="index"
+                :legend-labels="legendLabels"
+                :categories="categories"
+                :data="data"
             />
 
             <component
