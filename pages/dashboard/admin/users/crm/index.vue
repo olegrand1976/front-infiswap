@@ -3,12 +3,12 @@
         <DashboardAdminPageHeader title="Suivi utilisateurs - CRM" />
 
         <DashboardAdminPageContent>
-            <div class="p-4 flex gap-3 items-center">
+            <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
                 <InputIcon
                     v-model="option.zip"
                     rounded="md"
                     placeholder="Code postal"
-                    class="max-w-sm"
+                    class="w-[250px]"
                     type="number"
                     @input="debouncedFilterUsers"
                 />
@@ -16,7 +16,7 @@
                     v-model="option.city"
                     rounded="md"
                     placeholder="Ville"
-                    class="max-w-sm"
+                    class="w-[250px]"
                     @input="debouncedFilterUsers"
                 />
                 <Select
