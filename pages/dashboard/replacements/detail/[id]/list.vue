@@ -48,7 +48,7 @@
                         <div class="px-4 pt-4">
                             <UsersCard
                                 :user="list.repondedBy"
-                                :showFullInfo="list.status === 'confirmed'"
+                                :show-full-info="list.status === 'confirmed'"
                             />
                         </div>
                         <div class="p-4 mx-8 mt-2 w-[300px]">

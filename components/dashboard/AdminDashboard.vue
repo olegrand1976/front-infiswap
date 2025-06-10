@@ -13,7 +13,7 @@
                         :x-formatter="xRegistrationFormatter"
                         :y-formatter="yFormatter"
                         :show-all-x-ticks="true"
-                        :colors="['hsl(var(--success))']"
+                        :colors="['hsl(var(--tertiary))']"
                         :legend-labels="registrationChartData.legendLabels"
                         class="w-full"
                     />
@@ -32,7 +32,7 @@
                         :x-formatter="xReplacementFormatter"
                         :y-formatter="yFormatter"
                         :show-all-x-ticks="true"
-                        :colors="['hsl(var(--tertiary))', 'hsl(var(--primary))']"
+                        :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
                         :legend-labels="replacementChartData.legendLabels"
                         class="w-full"
                     />
@@ -74,8 +74,10 @@ const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
 });
 const replacementChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés']);
+    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
+
+console.log(registrationChartData.value);
 
 const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
 const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
