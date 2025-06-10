@@ -1,27 +1,18 @@
 <template>
     <div class="bg-white rounded-xl max-w-sm w-full overflow-hidden transition-all duration-300">
         <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
-            <LayoutsAppImage
-                :src="'logo_white.png'"
-                alt="logo-InfiSwap"
-                class="w-48 hover:cursor-pointer mb-8"
-                format="png"
-            />
-            <img
-                v-if="user.profil_url"
-                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
-                alt="Photo de profil"
-                class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14"
-            >
-            <UserCircleIcon
-                v-else
-                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14"
-            />
+            <LayoutsAppImage :src="'logo_white.png'" alt="logo-InfiSwap" class="w-48 hover:cursor-pointer mb-8"
+                format="png" />
+            <img v-if="user.profil_url" :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
+                alt="Photo de profil" class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14">
+            <UserCircleIcon v-else
+                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14" />
         </div>
 
         <div class="pt-20 px-6 text-center">
             <h1 class="text-2xl text-gray-800 dark:text-white mb-1">
-                <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{ user.lastname }}</span>
+                <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
+                    user.lastname }}</span>
             </h1>
             <p class="text-gray-500 font-semibold mb-4">
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
@@ -169,6 +160,10 @@
                 <p class="flex items-center gap-2">
                     <InboxArrowDownIcon class="w-5 h-5 text-primary" />
                     {{ user.zip_code }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <PhoneIcon class="w-5 h-5 text-primary" />
+                    {{ user.phone_number }}
                 </p>
             </div>
             <div class="pb-10">
