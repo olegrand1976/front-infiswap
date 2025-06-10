@@ -118,7 +118,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="[Array/groupsByProvince.length ? 'w-1/2' : 'w-full']"
+                                            :class="[groupsByProvince.length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
                                             @blur="handleBlur"
@@ -1258,6 +1258,8 @@ const props = defineProps({
     },
 });
 
+type ProvinceGroups = Record<Replacement[]>;
+
 const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
@@ -1352,10 +1354,10 @@ const filteredReplacements = computed(() => {
     );
 });
 
-const groupsByProvince = computed(() => {
-    const groups = {};
+const groupsByProvince = computed<ProvinceGroups>(() => {
+    const groups: ProvinceGroups = {};
 
-    filteredReplacements.value.forEach((replacement) => {
+    filteredReplacements.value.forEach((replacement: Replacement) => {
         const province = replacement.province || 'Inconnue';
         if (!groups[province]) {
             groups[province] = [];
