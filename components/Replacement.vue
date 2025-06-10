@@ -118,7 +118,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'w-full']"
+                                            :class="[Array/groupsByProvince.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="City38"
                                             @blur="handleBlur"
@@ -138,7 +138,6 @@
                         <ArrowPathIcon class="w-6" />
                         <span class="ml-2 block lg:hidden text-xs md:text-sm">Réinitialiser</span>
                     </Button>
-
                     <Button
                         class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
                         @click="submitSearch"
@@ -152,111 +151,375 @@
 
         <div class="grid my-8">
             <div class="hidden lg:block">
-                <Table>
-                    <TableHeader class="w-full">
-                        <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                            <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
-                                Jour
-                            </TableHead>
-                            <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
-                                <div class="text-center">
-                                    Matin
+                <template v-if="props.isGridView && Object.keys(groupsByProvince).length > 0">
+                    <div
+                        v-for="(group, province) in groupsByProvince"
+                        :key="province"
+                        class="mb-8"
+                    >
+                        <h2 class="font-semibold text-black/70 mb-4">
+                            {{ province }} ({{ group.length }})
+                        </h2>
+                        <Table>
+                            <TableHeader class="w-full">
+                                <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                    <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                        Jour
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
+                                        <div class="text-center">
+                                            Matin
+                                        </div>
+                                        <div class="text-center">
+                                            Midi
+                                        </div>
+                                        <div class="text-center">
+                                            Soir
+                                        </div>
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Codes postaux
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Ville(s)
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Types de soins
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Action
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody class="rounded-b-lg">
+                                <div v-if="loading && loadingSearch">
+                                    <TableRow
+                                        v-for="(_, index) in Array.from({ length: 10 })"
+                                        :key="index"
+                                        class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                                    >
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    </TableRow>
                                 </div>
-                                <div class="text-center">
-                                    Midi
+                                <div v-else-if="group.length === 0">
+                                    <p class="text-center text-gray-500 py-8">
+                                        Aucun résultat n'est trouvé
+                                    </p>
                                 </div>
-                                <div class="text-center">
-                                    Soir
+                                <div v-else>
+                                    <TableRow
+                                        v-for="replacement in group"
+                                        :key="replacement.id"
+                                        class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                    >
+                                        <div
+                                            v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                        { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                        { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                            )]"
+                                        >
+                                            {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(replacement.start_date) }}</span>
+                                            </div>
+                                            <span class="flex items-center">au</span>
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(replacement.end_date) }}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
+                                            <div>
+                                                <span v-if="hasShift(replacement, 'morning')">
+                                                    <CheckCircleIcon class="h-6 text-green-500" />
+                                                </span>
+                                                <span v-else />
+                                            </div>
+                                            <div>
+                                                <span v-if="hasShift(replacement, 'afternoon')">
+                                                    <CheckCircleIcon class="h-6 text-green-500" />
+                                                </span>
+                                                <span v-else />
+                                            </div>
+                                            <div>
+                                                <span v-if="hasShift(replacement, 'evening')">
+                                                    <CheckCircleIcon class="h-6 text-green-500" />
+                                                </span>
+                                                <span v-else />
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-[#F1F2F7] text-xs">
+                                            <div class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden">
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                                <span
+                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                    :key="index"
+                                                                    :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                                >
+                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                </span>
+                                                            </p>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <span
+                                                                v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                :key="index"
+                                                                :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                            >
+                                                                {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            </span>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-[#F1F2F7] text-xs">
+                                            <div class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden">
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                                <span
+                                                                    v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                    :key="index"
+                                                                    :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
+                                                                >
+                                                                    {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                                </span>
+                                                            </p>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <span
+                                                                v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                :key="index"
+                                                                :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
+                                                            >
+                                                                {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                            </span>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="bg-gray-100 text-xs pt-5">
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <template v-if="props.type === 'me'">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger>
+                                                        <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent class="w-48">
+                                                        <DropdownMenuItem as-child>
+                                                            <NuxtLink
+                                                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                class="flex items-center space-x-2 text-sm"
+                                                            >
+                                                                <EyeIcon class="h-4 w-4" />
+                                                                <span>Voir</span>
+                                                            </NuxtLink>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            class="flex items-center space-x-2 text-sm"
+                                                            @click="openEditDialog(replacement)"
+                                                        >
+                                                            <PencilSquareIcon class="h-4 w-4" />
+                                                            <span>Modifier</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                            @click="closeReplacementDialog = true"
+                                                        >
+                                                            <XMarkIcon class="h-4 w-4" />
+                                                            <span>Fermer</span>
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </template>
+                                            <template v-else>
+                                                <Button
+                                                    class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                >
+                                                    <EyeIcon class="h-6 mt-1" />
+                                                </Button>
+                                                <Button
+                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
+                                                    class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                                    @click="closeReplacementDialog = true"
+                                                >
+                                                    <XMarkIcon class="h-6 mt-1" />
+                                                </Button>
+                                            </template>
+                                            <Dialog v-model:open="closeReplacementDialog">
+                                                <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                                    <DialogHeader>
+                                                        <DialogTitle>Fermer le remplacement</DialogTitle>
+                                                        <DialogDescription class="mt-3 mb-6">
+                                                            Etes-vous sur de vouloir fermer ce remplacement ?
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                        <Button
+                                                            variant="secondary"
+                                                            class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                            @click="closeReplacementDialog = false"
+                                                        >
+                                                            Non
+                                                        </Button>
+                                                        <Button
+                                                            variant="default"
+                                                            class="px-8"
+                                                            @click="handleCloseReplacement(replacement)"
+                                                        >
+                                                            Oui
+                                                        </Button>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </TableCell>
+                                        <span class="bg-white h-[0.01em]" />
+                                    </TableRow>
                                 </div>
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Codes postaux
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Ville(s)
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Types de soins
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Action
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody class="rounded-b-lg">
-                        <div v-if="loading && loadingSearch">
-                            <TableRow
-                                v-for="(_, index) in Array.from({ length: 10 })"
-                                :key="index"
-                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
-                            >
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                            </TableBody>
+                        </Table>
+                    </div>
+                </template>
+                <template v-else>
+                    <Table>
+                        <TableHeader class="w-full">
+                            <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                    Jour
+                                </TableHead>
+                                <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
+                                    <div class="text-center">
+                                        Matin
+                                    </div>
+                                    <div class="text-center">
+                                        Midi
+                                    </div>
+                                    <div class="text-center">
+                                        Soir
+                                    </div>
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Codes postaux
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Ville(s)
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Types de soins
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Action
+                                </TableHead>
                             </TableRow>
-                        </div>
-                        <div v-else-if="filteredReplacements.length === 0">
-                            <p class="text-center text-gray-500 py-8">
-                                Aucun résultat n'est trouvé
-                            </p>
-                        </div>
-                        <div v-else>
-                            <TableRow
-                                v-for="replacement in filteredReplacements"
-                                :key="replacement.id"
-                                class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
-                            >
-                                <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
-                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
-                                    )]"
+                        </TableHeader>
+                        <TableBody class="rounded-b-lg">
+                            <div v-if="loading && loadingSearch">
+                                <TableRow
+                                    v-for="(_, index) in Array.from({ length: 10 })"
+                                    :key="index"
+                                    class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
                                 >
-                                    {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                </div>
-
-                                <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
-                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                </TableRow>
+                            </div>
+                            <div v-else-if="filteredReplacements.length === 0">
+                                <p class="text-center text-gray-500 py-8">
+                                    Aucun résultat n'est trouvé
+                                </p>
+                            </div>
+                            <div v-else>
+                                <TableRow
+                                    v-for="replacement in filteredReplacements"
+                                    :key="replacement.id"
+                                    class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                >
+                                    <div
+                                        v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                        :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                    { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                    { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                        )]"
+                                    >
+                                        {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                     </div>
-                                    <span class="flex items-center">au</span>
-                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.end_date) }}</span>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
-                                    <div>
-                                        <span v-if="hasShift(replacement, 'morning')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
-                                        </span>
-                                        <span v-else />
-                                    </div>
-                                    <div>
-                                        <span v-if="hasShift(replacement, 'afternoon')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
-                                        </span>
-                                        <span v-else />
-                                    </div>
-                                    <div>
-                                        <span v-if="hasShift(replacement, 'evening')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
-                                        </span>
-                                        <span v-else />
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="bg-[#F1F2F7] text-xs">
-                                    <div class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden">
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger>
-                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
+                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                        <span class="flex items-center">au</span>
+                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.end_date) }}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
+                                        <div>
+                                            <span v-if="hasShift(replacement, 'morning')">
+                                                <CheckCircleIcon class="h-6 text-green-500" />
+                                            </span>
+                                            <span v-else />
+                                        </div>
+                                        <div>
+                                            <span v-if="hasShift(replacement, 'afternoon')">
+                                                <CheckCircleIcon class="h-6 text-green-500" />
+                                            </span>
+                                            <span v-else />
+                                        </div>
+                                        <div>
+                                            <span v-if="hasShift(replacement, 'evening')">
+                                                <CheckCircleIcon class="h-6 text-green-500" />
+                                            </span>
+                                            <span v-else />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="bg-[#F1F2F7] text-xs">
+                                        <div class="flex bg-[#E4E7F4] truncate h-10 rounded mt-3 items-center overflow-hidden">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                            <span
+                                                                v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                :key="index"
+                                                                :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                            >
+                                                                {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            </span>
+                                                        </p>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
                                                         <span
                                                             v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
                                                             :key="index"
@@ -264,28 +527,27 @@
                                                         >
                                                             {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
                                                         </span>
-                                                    </p>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <span
-                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
-                                                        :key="index"
-                                                        :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
-                                                    >
-                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
-                                                    </span>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="bg-[#F1F2F7] text-xs">
-                                    <div class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden">
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger>
-                                                    <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="bg-[#F1F2F7] text-xs">
+                                        <div class="flex bg-[#E4E7F4] truncate w-full h-10 rounded mt-3 items-center overflow-hidden">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
+                                                            <span
+                                                                v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                :key="index"
+                                                                :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
+                                                            >
+                                                                {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                            </span>
+                                                        </p>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
                                                         <span
                                                             v-for="(city, index) in JSON.parse(replacement.cities)"
                                                             :key="index"
@@ -293,234 +555,26 @@
                                                         >
                                                             {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
                                                         </span>
-                                                    </p>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <span
-                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
-                                                        :key="index"
-                                                        :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
-                                                    >
-                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
-                                                    </span>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="bg-gray-100 text-xs pt-5">
-                                    <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger>
-                                                    {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
-                                    <template v-if="props.type === 'me'">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger>
-                                                <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent class="w-48">
-                                                <DropdownMenuItem as-child>
-                                                    <NuxtLink
-                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                                        class="flex items-center space-x-2 text-sm"
-                                                    >
-                                                        <EyeIcon class="h-4 w-4" />
-                                                        <span>Voir</span>
-                                                    </NuxtLink>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    class="flex items-center space-x-2 text-sm"
-                                                    @click="openEditDialog(replacement)"
-                                                >
-                                                    <PencilSquareIcon class="h-4 w-4" />
-                                                    <span>Modifier</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                                    class="flex items-center space-x-2 text-sm"
-                                                    @click="closeReplacementDialog = true"
-                                                >
-                                                    <XMarkIcon class="h-4 w-4" />
-                                                    <span>Fermer</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </template>
-                                    <template v-else>
-                                        <Button
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                        >
-                                            <EyeIcon class="h-6 mt-1" />
-                                        </Button>
-                                        <Button
-                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                            @click="closeReplacementDialog = true"
-                                        >
-                                            <XMarkIcon class="h-6 mt-1" />
-                                        </Button>
-                                    </template>
-
-                                    <Dialog v-model:open="closeReplacementDialog">
-                                        <DialogContent class="sm:max-w-lg overflow-y-auto">
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Fermer le remplacement
-                                                </DialogTitle>
-                                                <DialogDescription class="mt-3 mb-6">
-                                                    Etes-vous sur de vouloir fermer ce remplacement ?
-                                                </DialogDescription>
-                                            </DialogHeader>
-
-                                            <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
-                                                <Button
-                                                    variant="secondary"
-                                                    class="bg-gray-200 hover:bg-gray-300 px-8"
-                                                    @click="closeReplacementDialog = false"
-                                                >
-                                                    Non
-                                                </Button>
-                                                <Button
-                                                    variant="default"
-                                                    class="px-8"
-                                                    @click="handleCloseReplacement(replacement)"
-                                                >
-                                                    Oui
-                                                </Button>
-                                            </div>
-                                        </DialogContent>
-                                    </Dialog>
-                                </TableCell>
-                                <span class="bg-white h-[0.01em]" />
-                            </TableRow>
-                        </div>
-                    </TableBody>
-                </Table>
-            </div>
-
-            <div class="lg:hidden">
-                <Table>
-                    <TableHeader class="w-full">
-                        <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
-                            <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
-                                Date
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Localité
-                            </TableHead>
-                            <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                Action
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody class="rounded-b-lg">
-                        <div v-if="loading && loadingSearch">
-                            <TableRow
-                                v-for="(_, index) in Array.from({ length: 10 })"
-                                :key="index"
-                                class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden h-16"
-                            >
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                            </TableRow>
-                        </div>
-                        <div v-else-if="filteredReplacements.length === 0">
-                            <p class="text-center text-gray-500 py-8">
-                                Aucun résultat n'est trouvé
-                            </p>
-                        </div>
-                        <div v-else>
-                            <TableRow
-                                v-for="replacement in filteredReplacements"
-                                :key="replacement.id"
-                                class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
-                            >
-                                <div
-                                    v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
-                                    :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
-                                    )]"
-                                >
-                                    {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                </div>
-
-                                <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                    <template v-if="replacement.start_date !== replacement.end_date">
-                                        <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
-                                            <span>{{ formatDate(replacement.start_date) }}</span>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
                                         </div>
-                                        <span class="text-xs mb-1">au</span>
-                                        <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                            <span>{{ formatDate(replacement.end_date) }}</span>
+                                    </TableCell>
+                                    <TableCell class="bg-gray-100 text-xs pt-5">
+                                        <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
                                         </div>
-                                    </template>
-                                    <template v-else>
-                                        <div
-                                            class="flex h-full w-full justify-center items-center"
-                                            style="min-height: 3rem;"
-                                        >
-                                            <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
-                                        </div>
-                                    </template>
-                                </TableCell>
-
-                                <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
-                                    <div class="bg-[#E4E7F4] rounded p-2">
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger class="block w-full text-start">
-                                                    <div class="flex flex-col space-y-1">
-                                                        <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
-                                                            :key="index"
-                                                            :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
-                                                        >
-                                                            {{ zipCode }}
-                                                        </span>
-
-                                                        <span
-                                                            v-if="JSON.parse(replacement.zip_codes).length > 3"
-                                                            class="text-xs text-gray-500"
-                                                        >
-                                                            ...
-                                                        </span>
-                                                    </div>
-                                                </TooltipTrigger>
-
-                                                <TooltipContent class="text-sm max-w-[200px]">
-                                                    <div class="flex flex-wrap gap-1">
-                                                        <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
-                                                            :key="'tooltip-' + index"
-                                                            :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
-                                                        >
-                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
-                                                        </span>
-                                                    </div>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
-                                    <div class="flex flex-col items-center justify-center space-y-2">
+                                    </TableCell>
+                                    <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                         <template v-if="props.type === 'me'">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
@@ -556,56 +610,436 @@
                                         </template>
                                         <template v-else>
                                             <Button
-                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
-                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                                @click="closeReplacementDialog = true"
-                                            >
-                                                <XMarkIcon class="h-6 mt-1" />
-                                            </Button>
-                                            <Button
-                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                 :href="`/dashboard/replacements/detail/${replacement.id}`"
                                             >
                                                 <EyeIcon class="h-6 mt-1" />
                                             </Button>
+                                            <Button
+                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
+                                                class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
+                                                @click="closeReplacementDialog = true"
+                                            >
+                                                <XMarkIcon class="h-6 mt-1" />
+                                            </Button>
                                         </template>
-                                    </div>
+                                        <Dialog v-model:open="closeReplacementDialog">
+                                            <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                                <DialogHeader>
+                                                    <DialogTitle>Fermer le remplacement</DialogTitle>
+                                                    <DialogDescription class="mt-3 mb-6">
+                                                        Etes-vous sur de vouloir fermer ce remplacement ?
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                    <Button
+                                                        variant="secondary"
+                                                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                        @click="closeReplacementDialog = false"
+                                                    >
+                                                        Non
+                                                    </Button>
+                                                    <Button
+                                                        variant="default"
+                                                        class="px-8"
+                                                        @click="handleCloseReplacement(replacement)"
+                                                    >
+                                                        Oui
+                                                    </Button>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </TableCell>
+                                    <span class="bg-white h-[0.01em]" />
+                                </TableRow>
+                            </div>
+                        </TableBody>
+                    </Table>
+                </template>
+            </div>
 
-                                    <Dialog v-model:open="closeReplacementDialog">
-                                        <DialogContent class="sm:max-w-lg overflow-y-auto">
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Fermer le remplacement
-                                                </DialogTitle>
-                                                <DialogDescription class="mt-3 mb-6">
-                                                    Etes-vous sur de vouloir fermer ce remplacement ?
-                                                </DialogDescription>
-                                            </DialogHeader>
-
-                                            <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
-                                                <Button
-                                                    variant="secondary"
-                                                    class="bg-gray-200 hover:bg-gray-300 px-8"
-                                                    @click="closeReplacementDialog = false"
+            <div class="lg:hidden">
+                <template v-if="props.isGridView && Object.keys(groupsByProvince).length > 0">
+                    <div
+                        v-for="(group, province) in groupsByProvince"
+                        :key="province"
+                        class="mb-8"
+                    >
+                        <h2 class="font-semibold text-black/70 mb-4">
+                            {{ province }} ({{ group.length }})
+                        </h2>
+                        <Table>
+                            <TableHeader class="w-full">
+                                <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                    <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                        Date
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Localité
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        Action
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody class="rounded-b-lg">
+                                <div v-if="loading && loadingSearch">
+                                    <TableRow
+                                        v-for="(_, index) in Array.from({ length: 10 })"
+                                        :key="index"
+                                        class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden h-16"
+                                    >
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    </TableRow>
+                                </div>
+                                <div v-else-if="group.length === 0">
+                                    <p class="text-center text-gray-500 py-8">
+                                        Aucun résultat n'est trouvé
+                                    </p>
+                                </div>
+                                <div v-else>
+                                    <TableRow
+                                        v-for="replacement in group"
+                                        :key="replacement.id"
+                                        class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
+                                    >
+                                        <div
+                                            v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                        { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                        { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                            )]"
+                                        >
+                                            {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
+                                            <template v-if="replacement.start_date !== replacement.end_date">
+                                                <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
+                                                    <span>{{ formatDate(replacement.start_date) }}</span>
+                                                </div>
+                                                <span class="text-xs mb-1">au</span>
+                                                <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                    <span>{{ formatDate(replacement.end_date) }}</span>
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <div
+                                                    class="flex h-full w-full justify-center items-center"
+                                                    style="min-height: 3rem;"
                                                 >
-                                                    Non
-                                                </Button>
-                                                <Button
-                                                    variant="default"
-                                                    class="px-8"
-                                                    @click="handleCloseReplacement(replacement)"
-                                                >
-                                                    Oui
-                                                </Button>
+                                                    <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                                </div>
+                                            </template>
+                                        </TableCell>
+                                        <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                            <div class="bg-[#E4E7F4] rounded p-2">
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger class="block w-full text-start">
+                                                            <div class="flex flex-col space-y-1">
+                                                                <span
+                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
+                                                                    :key="index"
+                                                                    :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                                >
+                                                                    {{ zipCode }}
+                                                                </span>
+                                                                <span
+                                                                    v-if="JSON.parse(replacement.zip_codes).length > 3"
+                                                                    class="text-xs text-gray-500"
+                                                                >
+                                                                    ...
+                                                                </span>
+                                                            </div>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent class="text-sm max-w-[200px]">
+                                                            <div class="flex flex-wrap gap-1">
+                                                                <span
+                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                    :key="'tooltip-' + index"
+                                                                    :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                                >
+                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                </span>
+                                                            </div>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
                                             </div>
-                                        </DialogContent>
-                                    </Dialog>
-                                </TableCell>
-                                <span class="bg-white h-[0.01em]" />
+                                        </TableCell>
+                                        <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <div class="flex flex-col items-center justify-center space-y-2">
+                                                <template v-if="props.type === 'me'">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger>
+                                                            <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent class="w-48">
+                                                            <DropdownMenuItem as-child>
+                                                                <NuxtLink
+                                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                    class="flex items-center space-x-2 text-sm"
+                                                                >
+                                                                    <EyeIcon class="h-4 w-4" />
+                                                                    <span>Voir</span>
+                                                                </NuxtLink>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                class="flex items-center space-x-2 text-sm"
+                                                                @click="openEditDialog(replacement)"
+                                                            >
+                                                                <PencilSquareIcon class="h-4 w-4" />
+                                                                <span>Modifier</span>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                                class="flex items-center space-x-2 text-sm"
+                                                                @click="closeReplacementDialog = true"
+                                                            >
+                                                                <XMarkIcon class="h-4 w-4" />
+                                                                <span>Fermer</span>
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </template>
+                                                <template v-else>
+                                                    <Button
+                                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                        @click="closeReplacementDialog = true"
+                                                    >
+                                                        <XMarkIcon class="h-6 mt-1" />
+                                                    </Button>
+                                                    <Button
+                                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                    >
+                                                        <EyeIcon class="h-6 mt-1" />
+                                                    </Button>
+                                                </template>
+                                            </div>
+                                            <Dialog v-model:open="closeReplacementDialog">
+                                                <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                                    <DialogHeader>
+                                                        <DialogTitle>Fermer le remplacement</DialogTitle>
+                                                        <DialogDescription class="mt-3 mb-6">
+                                                            Etes-vous sur de vouloir fermer ce remplacement ?
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                        <Button
+                                                            variant="secondary"
+                                                            class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                            @click="closeReplacementDialog = false"
+                                                        >
+                                                            Non
+                                                        </Button>
+                                                        <Button
+                                                            variant="default"
+                                                            class="px-8"
+                                                            @click="handleCloseReplacement(replacement)"
+                                                        >
+                                                            Oui
+                                                        </Button>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </TableCell>
+                                        <span class="bg-white h-[0.01em]" />
+                                    </TableRow>
+                                </div>
+                            </TableBody>
+                        </Table>
+                    </div>
+                </template>
+                <template v-else>
+                    <Table>
+                        <TableHeader class="w-full">
+                            <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
+                                    Date
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Localité
+                                </TableHead>
+                                <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Action
+                                </TableHead>
                             </TableRow>
-                        </div>
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody class="rounded-b-lg">
+                            <div v-if="loading && loadingSearch">
+                                <TableRow
+                                    v-for="(_, index) in Array.from({ length: 10 })"
+                                    :key="index"
+                                    class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden h-16"
+                                >
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                </TableRow>
+                            </div>
+                            <div v-else-if="filteredReplacements.length === 0">
+                                <p class="text-center text-gray-500 py-8">
+                                    Aucun résultat n'est trouvé
+                                </p>
+                            </div>
+                            <div v-else>
+                                <TableRow
+                                    v-for="replacement in filteredReplacements"
+                                    :key="replacement.id"
+                                    class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
+                                >
+                                    <div
+                                        v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                        :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                    { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
+                                                    { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                        )]"
+                                    >
+                                        {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                    </div>
+                                    <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
+                                        <template v-if="replacement.start_date !== replacement.end_date">
+                                            <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(replacement.start_date) }}</span>
+                                            </div>
+                                            <span class="text-xs mb-1">au</span>
+                                            <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(replacement.end_date) }}</span>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <div
+                                                class="flex h-full w-full justify-center items-center"
+                                                style="min-height: 3rem;"
+                                            >
+                                                <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                            </div>
+                                        </template>
+                                    </TableCell>
+                                    <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                        <div class="bg-[#E4E7F4] rounded p-2">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger class="block w-full text-start">
+                                                        <div class="flex flex-col space-y-1">
+                                                            <span
+                                                                v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
+                                                                :key="index"
+                                                                :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                            >
+                                                                {{ zipCode }}
+                                                            </span>
+                                                            <span
+                                                                v-if="JSON.parse(replacement.zip_codes).length > 3"
+                                                                class="text-xs text-gray-500"
+                                                            >
+                                                                ...
+                                                            </span>
+                                                        </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent class="text-sm max-w-[200px]">
+                                                        <div class="flex flex-wrap gap-1">
+                                                            <span
+                                                                v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                :key="'tooltip-' + index"
+                                                                :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
+                                                            >
+                                                                {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            </span>
+                                                        </div>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                        <div class="flex flex-col items-center justify-center space-y-2">
+                                            <template v-if="props.type === 'me'">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger>
+                                                        <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent class="w-48">
+                                                        <DropdownMenuItem as-child>
+                                                            <NuxtLink
+                                                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                class="flex items-center space-x-2 text-sm"
+                                                            >
+                                                                <EyeIcon class="h-4 w-4" />
+                                                                <span>Voir</span>
+                                                            </NuxtLink>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            class="flex items-center space-x-2 text-sm"
+                                                            @click="openEditDialog(replacement)"
+                                                        >
+                                                            <PencilSquareIcon class="h-4 w-4" />
+                                                            <span>Modifier</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                            @click="closeReplacementDialog = true"
+                                                        >
+                                                            <XMarkIcon class="h-4 w-4" />
+                                                            <span>Fermer</span>
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </template>
+                                            <template v-else>
+                                                <Button
+                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                    class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                    @click="closeReplacementDialog = true"
+                                                >
+                                                    <XMarkIcon class="h-6 mt-1" />
+                                                </Button>
+                                                <Button
+                                                    class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                >
+                                                    <EyeIcon class="h-6 mt-1" />
+                                                </Button>
+                                            </template>
+                                        </div>
+                                        <Dialog v-model:open="closeReplacementDialog">
+                                            <DialogContent class="sm:max-w-lg overflow-y-auto">
+                                                <DialogHeader>
+                                                    <DialogTitle>Fermer le remplacement</DialogTitle>
+                                                    <DialogDescription class="mt-3 mb-6">
+                                                        Etes-vous sur de vouloir fermer ce remplacement ?
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                                                    <Button
+                                                        variant="secondary"
+                                                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                                                        @click="closeReplacementDialog = false"
+                                                    >
+                                                        Non
+                                                    </Button>
+                                                    <Button
+                                                        variant="default"
+                                                        class="px-8"
+                                                        @click="handleCloseReplacement(replacement)"
+                                                    >
+                                                        Oui
+                                                    </Button>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </TableCell>
+                                    <span class="bg-white h-[0.01em]" />
+                                </TableRow>
+                            </div>
+                        </TableBody>
+                    </Table>
+                </template>
             </div>
 
             <div class="mt-4">
@@ -631,7 +1065,6 @@
                             Modifiez les détails du remplacement ci-dessous.
                         </DialogDescription>
                     </DialogHeader>
-
                     <form
                         class="mt-6 space-y-6"
                         @submit.prevent="submit"
@@ -647,7 +1080,6 @@
                                     class="rounded-full w-full outline-gray-300 focus:border-primary"
                                 />
                             </div>
-
                             <div class="flex flex-col space-y-2">
                                 <label class="text-primary font-semibold">
                                     Date de fin
@@ -659,7 +1091,6 @@
                                 />
                             </div>
                         </div>
-
                         <div class="flex flex-col space-y-2">
                             <label class="text-primary font-semibold">
                                 Créneau horaire
@@ -676,7 +1107,6 @@
                                 />
                             </div>
                         </div>
-
                         <div class="grid sm:grid-cols-2 gap-8 items-center">
                             <div class="flex flex-col space-y-2 w-[21rem] sm:w-auto">
                                 <label class="text-primary font-semibold">
@@ -688,7 +1118,6 @@
                                     class="border border-gray-300 rounded-full focus:border-primary"
                                 />
                             </div>
-
                             <div class="flex flex-col space-y-2">
                                 <label class="text-primary font-semibold">
                                     Type de soins
@@ -733,7 +1162,6 @@
                                 </Select>
                             </div>
                         </div>
-
                         <div class="grid sm:grid-cols-2 gap-8 items-center">
                             <InputTagManager
                                 v-model="editFormData.zipCodes"
@@ -744,7 +1172,6 @@
                                 :count="4"
                                 @keydown.enter.prevent
                             />
-
                             <InputTagManager
                                 v-model="editFormData.cities"
                                 label="Villes"
@@ -755,7 +1182,6 @@
                                 @keydown.enter.prevent
                             />
                         </div>
-
                         <div class="flex flex-col space-y-2">
                             <label class="text-primary font-semibold">
                                 Commentaire
@@ -769,7 +1195,6 @@
                         </div>
                     </form>
                 </div>
-
                 <div class="fixed w-full bottom-0 bg-white border-t border-gray-100 p-4 flex justify-end space-x-4">
                     <Button
                         variant="secondary"
@@ -793,6 +1218,7 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { toRaw } from 'vue';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
@@ -822,6 +1248,11 @@ const props = defineProps({
         type: String,
         required: false,
         default: 'all',
+    },
+    isGridView: {
+        type: Boolean,
+        required: false,
+        default: true,
     },
 });
 
@@ -853,9 +1284,7 @@ const settings = ref({});
 try {
     settings.value = JSON.parse(user.value.settings);
 }
-catch (e) {
-    console.error('Error parsing user settings:', e);
-}
+catch (e) {}
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -907,10 +1336,35 @@ const isUrgentReplacement = (replacement) => {
     return !replacement.time_slot && replacement.details.length > 0;
 };
 
+const initialReplacements = ref({
+    replacements: {
+        data: [],
+        current_page: 1,
+        per_page: 10,
+        total: 0,
+        last_page: 1,
+    },
+});
+const currentReplacements = ref([]);
+
 const filteredReplacements = computed(() => {
-    return currentReplacements.value.filter(
+    return toRaw(currentReplacements.value).filter(
         replacement => props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement),
     );
+});
+
+const groupsByProvince = computed(() => {
+    const groups = {};
+
+    toRaw(filteredReplacements.value).forEach((replacement) => {
+        const province = replacement.province || 'Inconnue';
+        if (!groups[province]) {
+            groups[province] = [];
+        }
+        groups[province].push(replacement);
+    });
+
+    return props.isGridView ? groups : {};
 });
 
 const replacement = ref<Replacement | undefined>();
@@ -953,34 +1407,28 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const initialReplacements = ref({
-    replacements: {
-        data: [],
-        current_page: 1,
-        per_page: 10,
-        total: 0,
-        last_page: 1,
-    },
-});
-const currentReplacements = ref([]);
-
 const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
-    const response = await fetchReplacements({
-        postalCode: [],
-        cities: [],
-        selectedDays: [],
-        type: props.type,
-        page,
-        perPage,
-    });
-    initialReplacements.value = response;
-    currentReplacements.value = response.replacements.data;
-    pagination.value = {
-        current_page: response.replacements.current_page,
-        per_page: response.replacements.per_page,
-        total: response.replacements.total,
-        last_page: response.replacements.last_page,
-    };
+    try {
+        const response = await fetchReplacements({
+            postalCode: [],
+            cities: [],
+            selectedDays: [],
+            type: props.type,
+            page,
+            perPage,
+        });
+        initialReplacements.value = response;
+        currentReplacements.value = [...response.replacements.data];
+        pagination.value = {
+            current_page: response.replacements.current_page,
+            per_page: response.replacements.per_page,
+            total: response.replacements.total,
+            last_page: response.replacements.last_page,
+        };
+    }
+    catch (error) {
+        console.error(error);
+    }
 };
 
 const refreshReplacements = async (newPage: number) => {
@@ -1062,22 +1510,27 @@ const submitSearch = async () => {
         || formData.cityTags.length > 0;
 
     if (hasSearchCriteria) {
-        const response = await fetchReplacements({
-            selectedDays: Array.from(formData.selectedDays),
-            postalCode: toRaw(formData.postalCodeTags),
-            cities: toRaw(formData.cityTags),
-            type: toRaw(formData.type),
-            page: page.value,
-            perPage: perPage.value,
-        });
+        try {
+            const response = await fetchReplacements({
+                selectedDays: toRaw(formData.selectedDays),
+                postalCode: toRaw(formData.postalCodeTags),
+                cities: toRaw(formData.cityTags),
+                type: toRaw(formData.type),
+                page: page.value,
+                perPage: perPage.value,
+            });
 
-        currentReplacements.value = response.replacements.data;
-        pagination.value = {
-            current_page: response.replacements.current_page,
-            per_page: response.replacements.per_page,
-            total: response.replacements.total,
-            last_page: response.replacements.last_page,
-        };
+            currentReplacements.value = [...response.replacements.data];
+            pagination.value = {
+                current_page: response.replacements.current_page,
+                per_page: response.replacements.per_page,
+                total: response.replacements.total,
+                last_page: response.replacements.last_page,
+            };
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
     else {
         await fetchInitialData(page.value, perPage.value);
@@ -1089,6 +1542,8 @@ const reinitializeFilter = () => {
     formData.cityTags = [];
     formData.selectedDays = [];
     page.value = 1;
+    isSubmitted.value = false;
+    fetchInitialData(page.value, perPage.value);
 };
 
 watch(() => formData.postalCodeTags, () => {
@@ -1115,7 +1570,7 @@ watch(
             && newCities.length === 0
             && newDays.length === 0
         ) {
-            currentReplacements.value = initialReplacements.value.replacements.data;
+            currentReplacements.value = [...initialReplacements.value.replacements.data];
             pagination.value = {
                 current_page: initialReplacements.value.replacements.current_page,
                 per_page: initialReplacements.value.replacements.per_page,
@@ -1135,16 +1590,19 @@ const closeReplacementDialog = ref(false);
 
 const handleCloseReplacement = async (replacement) => {
     replacement.status = 'closed';
-    const response = await updateReplacement(replacement);
-
-    if (response) {
-        $toast({
-            description: response.message,
-        });
-
-        currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
-        pagination.value.total -= 1;
-        closeReplacementDialog.value = false;
+    try {
+        const response = await updateReplacement(replacement);
+        if (response) {
+            $toast({
+                description: response.message,
+            });
+            currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
+            pagination.value.total -= 1;
+            closeReplacementDialog.value = false;
+        }
+    }
+    catch (error) {
+        console.error(error);
     }
 };
 
@@ -1228,13 +1686,18 @@ const getSelectedCareTypesText = (selectedIds) => {
 };
 
 const { submit } = useSubmit(async () => {
-    const response = await updateAgainReplacement(editFormData);
-    if (response) {
-        editDialogOpen.value = false;
-        $toast({
-            description: 'Remplacement mis à jour',
-        });
-        await refreshReplacements(page.value);
+    try {
+        const response = await updateAgainReplacement(editFormData);
+        if (response) {
+            editDialogOpen.value = false;
+            $toast({
+                description: 'Remplacement mis à jour',
+            });
+            await refreshReplacements(page.value);
+        }
+    }
+    catch (error) {
+        console.error(error);
     }
 });
 
