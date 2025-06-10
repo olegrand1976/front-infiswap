@@ -21,7 +21,8 @@
 
         <div class="pt-20 px-6 text-center">
             <h1 class="text-2xl text-gray-800 dark:text-white mb-1">
-                <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{ user.lastname }}</span>
+                <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
+                    user.lastname }}</span>
             </h1>
             <p class="text-gray-500 font-semibold mb-4">
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
@@ -169,6 +170,10 @@
                 <p class="flex items-center gap-2">
                     <InboxArrowDownIcon class="w-5 h-5 text-primary" />
                     {{ user.zip_code }}
+                </p>
+                <p class="flex items-center gap-2">
+                    <PhoneIcon class="w-5 h-5 text-primary" />
+                    {{ user.phone_number }}
                 </p>
             </div>
             <div class="pb-10">
