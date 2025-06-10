@@ -1,12 +1,22 @@
 <template>
     <div class="bg-white rounded-xl max-w-sm w-full overflow-hidden transition-all duration-300">
         <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
-            <LayoutsAppImage :src="'logo_white.png'" alt="logo-InfiSwap" class="w-48 hover:cursor-pointer mb-8"
-                format="png" />
-            <img v-if="user.profil_url" :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
-                alt="Photo de profil" class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14">
-            <UserCircleIcon v-else
-                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14" />
+            <LayoutsAppImage
+                :src="'logo_white.png'"
+                alt="logo-InfiSwap"
+                class="w-48 hover:cursor-pointer mb-8"
+                format="png"
+            />
+            <img
+                v-if="user.profil_url"
+                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
+                alt="Photo de profil"
+                class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14"
+            >
+            <UserCircleIcon
+                v-else
+                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14"
+            />
         </div>
 
         <div class="pt-20 px-6 text-center">
