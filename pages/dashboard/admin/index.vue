@@ -8,13 +8,14 @@
                     </p>
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <BarChart
-                            :data="registrationChartData"
+                            :data="registrationChartData.data"
                             index="name"
                             :categories="['count']"
                             :x-formatter="xRegistrationFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
                             :colors="['hsl(var(--success))']"
+                            :legend-labels="registrationChartData.legendLabels"
                             class="w-full"
                         />
                     </div>
@@ -26,13 +27,14 @@
                     </p>
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <BarChart
-                            :data="replacementChartData"
+                            :data="replacementChartData.data"
                             index="name"
-                            :categories="['count']"
+                            :categories="['count', 'accepted']"
                             :x-formatter="xReplacementFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['hsl(var(--tertiary))', 'hsl(var(--primary))']"
+                            :legend-labels="replacementChartData.legendLabels"
                             class="w-full"
                         />
                     </div>
@@ -58,6 +60,8 @@ import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
 
+const { mapWeeklyStatistics, createXFormatter, yFormatter } = useChart();
+
 useHead({ title: 'Tableau de bord' });
 
 definePageMeta({
@@ -68,30 +72,14 @@ definePageMeta({
 await getReports();
 
 const registrationChartData = computed(() => {
-    return reports.value?.registration_statistics?.weeks?.map(week => ({
-        name: `Semaine ${week.week}`,
-        count: Number(week.count) || 0,
-    })) || [];
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
 });
-
 const replacementChartData = computed(() => {
-    return reports.value?.replacement_statistics?.weeks?.map(week => ({
-        name: `Semaine ${week.week}`,
-        count: Number(week.count) || 0,
-    })) || [];
+    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés']);
 });
 
-const xRegistrationFormatter = (tick: number) => {
-    return registrationChartData.value[tick]?.name || '';
-};
-
-const xReplacementFormatter = (tick: number) => {
-    return replacementChartData.value[tick]?.name || '';
-};
-
-const yFormatter = (tick: number) => {
-    return tick.toString();
-};
+const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
+const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
 const adminReports = computed(() => [
     {

@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
     xTickRotation?: number;
     yTickTextSize?: number;
     showAllXTicks?: boolean;
+    legendLabels?: string[];
 }>(), {
     type: 'grouped',
     margin: () => ({ top: 10, bottom: 40, left: 0, right: 20 }),
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
     xTickRotation: 0,
     yTickTextSize: 12,
     showAllXTicks: false,
+    legendLabels: () => ['Nombre'],
 });
 
 const emits = defineEmits<{
@@ -44,7 +46,7 @@ type Data = typeof props.data[number];
 const index = computed(() => props.index as KeyOfT);
 const colors = computed(() => props.colors?.length ? props.colors : defaultColors(props.categories.length));
 const legendItems = ref<BulletLegendItemInterface[]>(props.categories.map((category, i) => ({
-    name: 'Nombre',
+    name: props.legendLabels[i] || 'Nombre',
     color: colors.value[i],
     inactive: false,
 })));
@@ -56,6 +58,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
 }
 
 const xTicks = computed(() => {
+    if (!props.data?.length || !Array.isArray(props.data)) return [];
     if (props.showAllXTicks) {
         return Array.from({ length: props.data.length }, (_, i) => i);
     }
@@ -65,6 +68,18 @@ const xTicks = computed(() => {
 
 const VisBarComponent = computed(() => props.type === 'grouped' ? VisGroupedBar : VisStackedBar);
 const selectorsBar = computed(() => props.type === 'grouped' ? GroupedBar.selectors.bar : StackedBar.selectors.bar);
+
+const xTickFormat = computed(() => {
+    return (tick: number) => {
+        const label = props.xFormatter ? props.xFormatter(tick) : props.data[tick][index] ?? `Index ${tick}`;
+        return label;
+    };
+});
+
+const hasData = computed(() => {
+    const valid = Array.isArray(props.data) && props.data.length > 0 && props.data.every(item => item && typeof item === 'object' && 'name' in item);
+    return valid;
+});
 </script>
 
 <template>
@@ -76,6 +91,7 @@ const selectorsBar = computed(() => props.type === 'grouped' ? GroupedBar.select
         />
 
         <VisXYContainer
+            v-if="hasData"
             :data="data"
             :style="{ height: isMounted ? '100%' : 'auto' }"
             :margin="margin"
@@ -91,15 +107,15 @@ const selectorsBar = computed(() => props.type === 'grouped' ? GroupedBar.select
             <component
                 :is="VisBarComponent"
                 :x="(d: Data, i: number) => i"
-                :y="categories.map(category => (d: Data) => d[category])"
+                :y="categories.map(category => (d: Data) => d[category] ?? 0)"
                 :color="colors"
                 :rounded-corners="roundedCorners"
                 :bar-padding="0.1"
                 :attributes="{
                     [selectorsBar]: {
                         opacity: (d: Data, i: number) => {
-                            const pos = i % categories.length
-                            return legendItems[pos]?.inactive ? filterOpacity : 1
+                            const pos = i % categories.length;
+                            return legendItems[pos]?.inactive ? filterOpacity : 1;
                         },
                     },
                 }"
@@ -108,16 +124,15 @@ const selectorsBar = computed(() => props.type === 'grouped' ? GroupedBar.select
             <VisAxis
                 v-if="showXAxis"
                 type="x"
-                :ticks="showAllXTicks ? xTicks : undefined"
-                :tick-format="xFormatter ?? ((v: number) => data[v]?.[index])"
+                :ticks="xTicks"
+                :tick-format="xTickFormat"
                 :grid-line="false"
                 :tick-line="true"
                 :tick-text-angle="xTickRotation"
-                :tick-step="xTickStep"
                 :tick-text-font-size="`${xTickTextSize}px`"
                 tick-text-color="var(--axis-text-color, #333)"
                 :domain-line="true"
-                tick-margin="10"
+                tick-margin="15"
                 label="Période"
                 :label-margin="30"
                 label-position="center"

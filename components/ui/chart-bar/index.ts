@@ -10,7 +10,7 @@ export interface BaseChartProps<T extends Record<string, any>> {
    */
     data: T[];
     /**
-   * Select the categories from your data. Used to populate the legend and toolip.
+   * Select the categories from your data. Used to populate the legend and tooltip.
    */
     categories: KeyOf<T>[];
     /**
@@ -68,4 +68,9 @@ export interface BaseChartProps<T extends Record<string, any>> {
    * @default false
    */
     showAllXTicks?: boolean;
+    /**
+   * Custom labels for the legend
+   * @default ['Nombre']
+   */
+    legendLabels?: string[];
 }

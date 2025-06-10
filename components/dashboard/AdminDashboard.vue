@@ -1,19 +1,20 @@
 <template>
     <div>
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-12">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12">
             <div>
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions
                 </p>
                 <div class="mt-3 bg-white rounded-sm shadow-md">
                     <BarChart
-                        :data="registrationChartData"
+                        :data="registrationChartData.data"
                         index="name"
                         :categories="['count']"
                         :x-formatter="xRegistrationFormatter"
                         :y-formatter="yFormatter"
                         :show-all-x-ticks="true"
                         :colors="['hsl(var(--success))']"
+                        :legend-labels="registrationChartData.legendLabels"
                         class="w-full"
                     />
                 </div>
@@ -25,31 +26,14 @@
                 </p>
                 <div class="mt-3 bg-white rounded-sm shadow-md">
                     <BarChart
-                        :data="replacementChartData"
+                        :data="replacementChartData.data"
                         index="name"
-                        :categories="['count']"
+                        :categories="['count', 'accepted']"
                         :x-formatter="xReplacementFormatter"
                         :y-formatter="yFormatter"
                         :show-all-x-ticks="true"
-                        :colors="['hsl(var(--tertiary))']"
-                        class="w-full"
-                    />
-                </div>
-            </div>
-
-            <div>
-                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                    Évolution des remplacements acceptés
-                </p>
-                <div class="mt-3 bg-white rounded-sm shadow-md">
-                    <BarChart
-                        :data="acceptedReplacementChartData"
-                        index="name"
-                        :categories="['count']"
-                        :x-formatter="xAcceptedRemplacementFormater"
-                        :y-formatter="yFormatter"
-                        :show-all-x-ticks="true"
-                        :colors="['hsl(var(--primary))']"
+                        :colors="['hsl(var(--tertiary))', 'hsl(var(--primary))']"
+                        :legend-labels="replacementChartData.legendLabels"
                         class="w-full"
                     />
                 </div>
@@ -87,19 +71,14 @@ definePageMeta({
 await getReports();
 
 const registrationChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks);
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
 });
-const xRegistrationFormatter = createXFormatter(registrationChartData);
-
 const replacementChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks);
+    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés']);
 });
-const xReplacementFormatter = createXFormatter(replacementChartData);
 
-const acceptedReplacementChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.accepted_replacement_statistics?.weeks);
-});
-const xAcceptedRemplacementFormater = createXFormatter(acceptedReplacementChartData);
+const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
+const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];

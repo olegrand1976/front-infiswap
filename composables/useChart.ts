@@ -1,17 +1,25 @@
 export const useChart = () => {
-    function mapWeeklyStatistics(statistics, labelPrefix = 'Semaine') {
-        return statistics?.map(week => ({
-            name: `${labelPrefix} ${week.week}`,
-            count: Number(week.count) || 0,
-        })) || [];
+    function mapWeeklyStatistics(statistics, labelPrefix = 'Semaine', legendLabels = ['Nombre']) {
+        return {
+            data: statistics?.map(week => ({
+                name: `${labelPrefix} ${week.week}`,
+                count: Number(week.count) || 0,
+            })) || [],
+            legendLabels,
+        };
     }
 
-    function createXFormatter(dataRef: Ref<{ name: string }[]>) {
-        return (tick: number) => dataRef.value[tick]?.name || '';
-    }
+    const createXFormatter = (dataRef: Ref<{ name: string }[]>) => {
+        const reactiveData = computed(() => dataRef.value);
+        return (tick: number) => {
+            const data = reactiveData.value;
+            const label = data[tick]?.name || '';
+            return label;
+        };
+    };
 
     const yFormatter = (tick: number) => {
-        return tick.toString();
+        return Number.isFinite(tick) ? tick.toString() : '';
     };
 
     return {
