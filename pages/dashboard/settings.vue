@@ -201,6 +201,30 @@
                                             </Select>
                                         </div>
 
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Catégorie professionnel
+                                            </p>
+                                            <Select v-model="formPersonalInfo.professionalCategory">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formPersonalInfo.professionalCategory" />
+                                                </SelectTrigger>
+                                                <SelectContent class="border-none">
+                                                    <template
+                                                        v-for="[key, value] in Object.entries(professionalCategory)"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="key">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
                                         <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
                                             <Button
                                                 variant="secondary"
@@ -347,6 +371,23 @@
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
                                     {{ formattedGender || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <UserGroupIcon class="text-white w-5" />
+                                        <span>Catégorie professionnel</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ formattedCategory || ' - ' }}
                                 </p>
                             </div>
                         </div>
@@ -1058,6 +1099,7 @@ import {
     PencilSquareIcon,
     BuildingOfficeIcon,
     EnvelopeOpenIcon,
+    UserGroupIcon,
 } from '@heroicons/vue/24/solid';
 
 import { useRouter } from 'vue-router';
@@ -1118,6 +1160,17 @@ const formattedGender = computed(() => {
     }
 });
 
+const formattedCategory = computed(() => {
+    switch (user.value.professional_category) {
+        case 'salaried':
+            return 'Salarié(e)';
+        case 'independent':
+            return 'Indépendant(e)';
+        default:
+            return '';
+    }
+});
+
 const formattedCountry = computed(() => {
     if (user.value.profile && user.value.profile.country && user.value.profile?.country == 'be') {
         return 'Belgique';
@@ -1157,6 +1210,7 @@ const formPersonalInfo = reactive({
     identifierNumber: user.value.identifier_number,
     phoneNumber: user.value.phone_number,
     gender: user.value.gender,
+    professionalCategory: user.value.professional_category,
 });
 
 const formAddress = reactive({
@@ -1179,6 +1233,7 @@ const updateInfoUser = async () => {
         user.value.identifier_number = formPersonalInfo.identifierNumber;
         user.value.phone_number = formPersonalInfo.phoneNumber;
         user.value.gender = formPersonalInfo.gender;
+        user.value.professional_category = formPersonalInfo.professionalCategory;
 
         $toast({
             description: 'Mise à jour effectué avec succès',
@@ -1514,6 +1569,11 @@ const genders = {
 const countries = {
     be: 'Belgique',
     fr: 'France',
+};
+
+const professionalCategory = {
+    salaried: 'Salarié(e)',
+    independent: 'Indépendant(e)',
 };
 
 const profileFile = ref(null);

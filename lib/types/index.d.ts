@@ -52,6 +52,7 @@ export type User = {
     insurance?: boolean | number;
     site?: boolean | number;
     ambassador?: boolean | number;
+    professional_category?: string | null;
 };
 
 type RolePivot = {

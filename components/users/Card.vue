@@ -26,6 +26,9 @@
             </h1>
             <p class="text-gray-500 font-semibold mb-4">
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
+                <template v-if="user.professional_category">
+                    - {{ translatedCategory }}
+                </template>
             </p>
         </div>
 
@@ -262,6 +265,22 @@ async function loadActivity() {
         console.error('Erreur chargement activité utilisateur', e);
     }
 }
+
+const translatedCategory = computed(() => {
+    if (!props.user.professional_category) return '';
+
+    const isFemale = props.user.gender === 'F';
+
+    if (props.user.professional_category === 'salaried') {
+        return isFemale ? 'Salariée' : 'Salarié';
+    }
+
+    if (props.user.professional_category === 'independent') {
+        return isFemale ? 'Indépendante' : 'Indépendant';
+    }
+
+    return props.user.professional_category;
+});
 
 loadActivity();
 </script>
