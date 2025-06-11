@@ -317,6 +317,15 @@
                         </Select>
                     </div>
 
+                    <div class="col-span-1 lg:col-span-2">
+                        <InputIcon
+                            v-model="formData.identifierNumber"
+                            :icon="IdentificationIcon"
+                            size="md"
+                            placeholder="Numéro INAMI"
+                        />
+                    </div>
+
                     <div class="col-span-2 lg:mt-[1.55rem]">
                         <InputIcon
                             v-model="formData.identifierNumber"
