@@ -63,6 +63,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { PERPAGE } from '~/lib/constants';
 import type { Replacement, Nurse } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
+import { formatPhoneNumber } from '~/lib/utils';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });
@@ -169,72 +170,6 @@ const columns: ColumnDef<Replacement>[] = [
             return h('div', {}, timeText);
         },
     },
-    {
-        id: 'patients',
-        header: ({ column }) => {
-            return h(
-                Button,
-                {
-                    variant: 'ghost',
-                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                },
-                () => ['Patients', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
-            );
-        },
-        accessorFn: (row) => {
-            const patients = row.patient_count;
-
-            if (patients && typeof patients === 'string') {
-                try {
-                    const parsed = JSON.parse(patients);
-                    return Array.isArray(parsed) ? parsed.length : 0;
-                }
-                catch (e) {
-                    console.error(e);
-                    return 0;
-                }
-            }
-            else if (!patients) {
-                const extracted = extractPostalDataFromReplacement(row);
-                return extracted?.patients?.length || 0;
-            }
-
-            return patients;
-        },
-        sortingFn: 'basic',
-        cell: ({ row }) => {
-            let patients = row.original.patient_count;
-
-            if (patients && typeof patients === 'string') {
-                try {
-                    const parsed = JSON.parse(patients);
-                    patients = Array.isArray(parsed) ? parsed.length : patients;
-                }
-                catch (e) {
-                    console.error(e);
-                }
-            }
-            else if (!patients) {
-                patients = extractPostalDataFromReplacement(row.original)?.patients?.length || 0;
-            }
-
-            return h('div', { class: 'capitalize text-center w-full' }, patients);
-        },
-    },
-    // {
-    //     accessorKey: 'status',
-    //     header: ({ column }) => {
-    //         return h(Button, {
-    //             variant: 'ghost',
-    //             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-    //         }, () => ['Status', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
-    //     },
-    //     cell: ({ row }) => {
-    //         const status = row.original.status;
-
-    //         return h(ReplacementStatus, { status: status });
-    //     },
-    // },
     {
         id: 'zip_codes',
         header: ({ column }) => {
@@ -356,6 +291,28 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.nurse_owner_full_name);
         },
+    },
+    {
+        accessorKey: 'nurse_owner_phone_number',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => [
+                'Téléphone',
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
+            ]);
+        },
+        cell: ({ row }: { row: { getValue: (key: string) => string | null } }) => {
+            const phone: string | null = row.getValue('nurse_owner_phone_number');
+            return h('div', { class: 'text-center' }, formatPhoneNumber(phone));
+        },
+        filterFn: (row, columnId, filterValue) => {
+            const value = (row.getValue(columnId) as string | null)?.replace(/\D/g, '') ?? '';
+            const search = (filterValue as string)?.replace(/\D/g, '') ?? '';
+            return value.includes(search);
+        },
+        sortingFn: 'alphanumeric',
     },
     {
         accessorKey: 'substitute_nurse',
