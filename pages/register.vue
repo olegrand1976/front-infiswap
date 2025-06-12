@@ -317,7 +317,42 @@
                         </Select>
                     </div>
 
-                    <div class="col-span-2 lg:mt-[1.55rem]">
+                    <div class="col-span-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Catégorie professionnel
+                        </label>
+                        <Select v-model="formData.professionalCategory">
+                            <SelectTrigger
+                                class="flex justify-between items-center rounded-full border border-gray-300 mt-1"
+                                position="right"
+                            >
+                                <UserGroupIcon class="text-primary w-10 h-10" />
+                                <SelectValue
+                                    placeholder="Catégorie"
+                                    class="ml-3 block w-full"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none w-full">
+                                <SelectGroup>
+                                    <div
+                                        v-for="category in professionalCategory"
+                                        :key="category.value"
+                                        class="flex justify-center items-center -ms-3 w-full"
+                                    >
+                                        <SelectItem :value="category.value">
+                                            <div class="flex w-full">
+                                                <div class="sm:text-xs xl:text-sm">
+                                                    {{ category.label }}
+                                                </div>
+                                            </div>
+                                        </SelectItem>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="col-span-2 lg:col-span-2">
                         <InputIcon
                             v-model="formData.identifierNumber"
                             :icon="IdentificationIcon"
@@ -483,6 +518,7 @@ import {
     MapPinIcon,
     InboxArrowDownIcon,
     QuestionMarkCircleIcon,
+    UserGroupIcon,
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
@@ -596,6 +632,17 @@ const referral_source = [
     },
 ];
 
+const professionalCategory = [
+    {
+        label: 'Indépendant(e)',
+        value: 'salaried',
+    },
+    {
+        label: 'Salarié(e)',
+        value: 'independent',
+    },
+];
+
 const selectedReferral = computed({
     get() {
         return formData.referralSource.startsWith('other:') ? 'other:' : formData.referralSource;
@@ -629,6 +676,7 @@ const formData = reactive({
     referralSource: '',
     zipCodesArray: [],
     citiesArray: [],
+    professionalCategory: '',
 });
 
 const identifierLabel = computed(() =>

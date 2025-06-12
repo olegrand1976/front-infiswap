@@ -44,6 +44,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
                     replacement_accepted: true,
                 },
             },
+    professionalCategory: user?.professional_category || null,
 });
 
 const form = reactive(getInitialValue());
@@ -99,6 +100,19 @@ const genders = [
         value: 'X',
         label: 'X',
         name: 'neutre',
+    },
+];
+
+const categoryPro = [
+    {
+        value: 'salaried',
+        label: 'Salarié(e)',
+        name: 'salarié(e)',
+    },
+    {
+        value: 'independent',
+        label: 'Indépendant(e)',
+        name: 'indépendant(e)',
     },
 ];
 
@@ -237,6 +251,30 @@ const formattedRoles = computed(() => {
                                     :value="lang.value"
                                 >
                                     <span class="text-sm">{{ lang.label }}</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <Select
+                        v-model="form.professionalCategory"
+                        label="Catégorie professionnel"
+                    >
+                        <SelectTrigger
+                            position="right"
+                            class="rounded-md"
+                        >
+                            <SelectValue placeholder="Séléctionner..." />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="(category, index) in categoryPro"
+                                    :key="index"
+                                    :value="category.value"
+                                >
+                                    <span class="text-sm">{{ category.label }}</span>
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
