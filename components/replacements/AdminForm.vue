@@ -1,217 +1,3 @@
-<script setup lang="ts">
-import { EyeIcon } from '@heroicons/vue/24/solid';
-import type { Replacement } from '~/lib/types';
-import { useRuntimeConfig } from '#app';
-
-const props = defineProps<{
-    replacement?: Replacement | null;
-}>();
-
-const { careTypes, fetchCareTypes } = useCareTypes();
-const { updateAgainReplacement } = useReplacements();
-const isEditMode = computed(() => !!props.replacement);
-const formatDate = (dateString: string | null) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${year}-${month}-${day}`;
-};
-
-const transformCareInformations = (careInfo: string | object) => {
-    try {
-        const parsed = typeof careInfo === 'string' ? JSON.parse(careInfo) : careInfo;
-        return Array.isArray(parsed)
-            ? parsed.map(info => info?.id ?? info)
-            : [];
-    }
-    catch {
-        return [];
-    }
-};
-
-const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
-    id: replacement?.id ?? null,
-    nurseId: replacement?.nurse_id ?? null,
-    replacedBy: replacement?.replaced_by ?? null,
-    experienceYears: replacement?.experience_years ?? null,
-    startDate: formatDate(replacement?.start_date ?? null),
-    endDate: formatDate(replacement?.end_date ?? null),
-    visibility: replacement?.visibility ?? 'public',
-    status: replacement?.status ?? 'open',
-    type: replacement?.type ?? 'classic',
-    patientCount: replacement?.patient_count ?? null,
-    zipCodes: typeof replacement?.zip_codes === 'string'
-        ? (() => {
-                try {
-                    return JSON.parse(replacement.zip_codes);
-                }
-                catch {
-                    return [];
-                }
-            })()
-        : replacement?.zip_codes ?? [],
-    cities: typeof replacement?.cities === 'string'
-        ? (() => {
-                try {
-                    return JSON.parse(replacement.cities);
-                }
-                catch {
-                    return [];
-                }
-            })()
-        : replacement?.cities ?? [],
-    careTypes: transformCareInformations(replacement?.care_types),
-    timeSlot: typeof replacement?.timeSlot === 'string'
-        ? (() => {
-                try {
-                    const parsed = JSON.parse(replacement.timeSlot);
-                    return {
-                        startAt: parsed.start_at || parsed.startAt || '',
-                        endAt: parsed.end_at || parsed.endAt || '',
-                    };
-                }
-                catch {
-                    return { startAt: '', endAt: '' };
-                }
-            })()
-        : replacement?.timeSlot
-            ? {
-                    startAt: replacement.timeSlot.start_at || '',
-                    endAt: replacement.timeSlot.end_at || '',
-                }
-            : { startAt: '', endAt: '' },
-    details: replacement?.details ?? [],
-    nurseOwnerFullName: replacement?.nurse_owner_full_name ?? '',
-    nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
-    nurseOwnerPhoneNumber: replacement?.nurse_owner_phone_number ?? '',
-    nurseOwnerProfilUrl: replacement?.nurse_owner_profil_url ?? '',
-    matchingNurses: replacement?.matching_nurses ?? '',
-    substituteNurse: replacement?.substitute_nurse ?? '',
-    candidate: replacement?.candidate ?? false,
-    responseCount: replacement?.response_count ?? null,
-});
-
-const form = reactive(getInitialValue() as any);
-const { $toast } = useNuxtApp();
-
-const { submit, inProgress } = useSubmit(async () => {
-    if (form.details.length > 0) {
-        if (form.details[0].start_at) {
-            form.timeSlot.startAt = form.details[0].start_at;
-        }
-        if (form.details[0].end_at) {
-            form.timeSlot.endAt = form.details[0].end_at;
-        }
-    }
-    if (isEditMode.value && props.replacement?.id) {
-        await updateAgainReplacement(form);
-        return;
-    }
-}, {
-    onSuccess: () => {
-        $toast({
-            description: isEditMode.value ? 'Remplacement mis à jour avec succès' : 'Remplacement créé avec succès',
-        });
-    },
-});
-
-const handleCareTypeClick = (careTypesArray, careTypes) => {
-    const index = careTypesArray.indexOf(careTypes);
-    if (index === -1) {
-        careTypesArray.push(careTypes);
-    }
-    else {
-        careTypesArray.splice(index, 1);
-    }
-    form.careTypes = [...careTypesArray];
-};
-
-const getSelectedCareTypesText = (selectedIds) => {
-    return careTypes.value
-        .filter(ct => selectedIds.includes(ct.id))
-        .map(ct => ct.name)
-        .join(', ');
-};
-
-function resetForm(replacement?: Replacement | null) {
-    Object.assign(form, getInitialValue(replacement));
-}
-
-const type = [
-    {
-        value: 'classic',
-        label: 'Classique',
-        name: 'Classique',
-    },
-    {
-        value: 'immediate',
-        label: 'Urgent',
-        name: 'Urgent',
-    },
-];
-
-const status = [
-    {
-        value: 'open',
-        label: 'Ouvert',
-        name: 'Ouvert',
-    },
-    {
-        value: 'closed',
-        label: 'Fermé',
-        name: 'Fermé',
-    },
-];
-
-const visibility = [
-    {
-        value: 'public',
-        label: 'Publique',
-        name: 'Publique',
-    },
-    {
-        value: 'group',
-        label: 'Groupe',
-        name: 'Groupe',
-    },
-    {
-        value: 'friends',
-        label: 'Amis',
-        name: 'Amis',
-    },
-];
-
-watch(
-    () => props.replacement,
-    (newReplacement) => {
-        resetForm(newReplacement);
-    },
-    { immediate: true },
-);
-fetchCareTypes();
-
-const showAll = ref(false);
-const limit = 5;
-
-const visibleNurses = computed(() => {
-    return showAll.value ? form.matchingNurses : form.matchingNurses.slice(0, limit);
-});
-
-const shouldShowMoreButton = computed(() => {
-    return form.matchingNurses.length > limit && !showAll.value;
-});
-
-const remainingNursesCount = computed(() => {
-    return form.matchingNurses.length - limit;
-});
-
-const showAllNurses = () => {
-    showAll.value = true;
-};
-</script>
-
 <template>
     <form @submit.prevent="submit">
         <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
@@ -270,6 +56,18 @@ const showAllNurses = () => {
                             />
                         </NuxtLink>
                     </p>
+                    <div
+                        v-if="replacement && isAdmin"
+                        class="text-center mt-4"
+                    >
+                        <Button
+                            class="w-full max-w-sm rounded"
+                            @click.prevent="handleOpenReleaseConfirmation"
+                        >
+                            <ArrowPathIcon class="mr-2" />
+                            <span>Libérer le remplacement</span>
+                        </Button>
+                    </div>
                 </div>
 
                 <div
@@ -529,5 +327,257 @@ const showAllNurses = () => {
                 {{ props.replacement ? 'Sauvegarder' : 'Créer un remplacement' }}
             </Button>
         </div>
+
+        <AlertDialog :open="openReleaseModal">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Libérer le remplacement</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Cela définira toutes les réponses liées à ce remplacement comme étant en attente. Cette action est irréversible.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel @click.prevent="handleCloseReleaseConfirmation">
+                        Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        class="rounded"
+                        @click.prevent="handleRelease(replacement)"
+                    >
+                        Valider
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </form>
 </template>
+
+<script setup lang="ts">
+import { ArrowPathIcon, EyeIcon } from '@heroicons/vue/24/solid';
+import type { Replacement } from '~/lib/types';
+import { useRuntimeConfig } from '#app';
+
+const props = defineProps<{
+    replacement?: Replacement | null;
+}>();
+
+const { isAdmin } = useAuth();
+const { careTypes, fetchCareTypes } = useCareTypes();
+const { updateAgainReplacement, release } = useReplacements();
+const isEditMode = computed(() => !!props.replacement);
+const formatDate = (dateString: string | null) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+};
+
+const openReleaseModal = ref(false);
+
+function handleOpenReleaseConfirmation() {
+    openReleaseModal.value = true;
+}
+function handleCloseReleaseConfirmation() {
+    openReleaseModal.value = false;
+}
+
+async function handleRelease(replacement: Replacement) {
+    return await release(replacement.id).then(() => {
+        handleCloseReleaseConfirmation();
+    });
+}
+
+const transformCareInformations = (careInfo: string | object) => {
+    try {
+        const parsed = typeof careInfo === 'string' ? JSON.parse(careInfo) : careInfo;
+        return Array.isArray(parsed)
+            ? parsed.map(info => info?.id ?? info)
+            : [];
+    }
+    catch {
+        return [];
+    }
+};
+
+const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
+    id: replacement?.id ?? null,
+    nurseId: replacement?.nurse_id ?? null,
+    replacedBy: replacement?.replaced_by ?? null,
+    experienceYears: replacement?.experience_years ?? null,
+    startDate: formatDate(replacement?.start_date ?? null),
+    endDate: formatDate(replacement?.end_date ?? null),
+    visibility: replacement?.visibility ?? 'public',
+    status: replacement?.status ?? 'open',
+    type: replacement?.type ?? 'classic',
+    patientCount: replacement?.patient_count ?? null,
+    zipCodes: typeof replacement?.zip_codes === 'string'
+        ? (() => {
+                try {
+                    return JSON.parse(replacement.zip_codes);
+                }
+                catch {
+                    return [];
+                }
+            })()
+        : replacement?.zip_codes ?? [],
+    cities: typeof replacement?.cities === 'string'
+        ? (() => {
+                try {
+                    return JSON.parse(replacement.cities);
+                }
+                catch {
+                    return [];
+                }
+            })()
+        : replacement?.cities ?? [],
+    careTypes: transformCareInformations(replacement?.care_types),
+    timeSlot: typeof replacement?.timeSlot === 'string'
+        ? (() => {
+                try {
+                    const parsed = JSON.parse(replacement.timeSlot);
+                    return {
+                        startAt: parsed.start_at || parsed.startAt || '',
+                        endAt: parsed.end_at || parsed.endAt || '',
+                    };
+                }
+                catch {
+                    return { startAt: '', endAt: '' };
+                }
+            })()
+        : replacement?.timeSlot
+            ? {
+                    startAt: replacement.timeSlot.start_at || '',
+                    endAt: replacement.timeSlot.end_at || '',
+                }
+            : { startAt: '', endAt: '' },
+    details: replacement?.details ?? [],
+    nurseOwnerFullName: replacement?.nurse_owner_full_name ?? '',
+    nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
+    nurseOwnerPhoneNumber: replacement?.nurse_owner_phone_number ?? '',
+    nurseOwnerProfilUrl: replacement?.nurse_owner_profil_url ?? '',
+    matchingNurses: replacement?.matching_nurses ?? '',
+    substituteNurse: replacement?.substitute_nurse ?? '',
+    candidate: replacement?.candidate ?? false,
+    responseCount: replacement?.response_count ?? null,
+});
+
+const form = reactive(getInitialValue() as any);
+const { $toast } = useNuxtApp();
+
+const { submit, inProgress } = useSubmit(async () => {
+    if (form.details.length > 0) {
+        if (form.details[0].start_at) {
+            form.timeSlot.startAt = form.details[0].start_at;
+        }
+        if (form.details[0].end_at) {
+            form.timeSlot.endAt = form.details[0].end_at;
+        }
+    }
+    if (isEditMode.value && props.replacement?.id) {
+        await updateAgainReplacement(form);
+        return;
+    }
+}, {
+    onSuccess: () => {
+        $toast({
+            description: isEditMode.value ? 'Remplacement mis à jour avec succès' : 'Remplacement créé avec succès',
+        });
+    },
+});
+
+const handleCareTypeClick = (careTypesArray, careTypes) => {
+    const index = careTypesArray.indexOf(careTypes);
+    if (index === -1) {
+        careTypesArray.push(careTypes);
+    }
+    else {
+        careTypesArray.splice(index, 1);
+    }
+    form.careTypes = [...careTypesArray];
+};
+
+const getSelectedCareTypesText = (selectedIds) => {
+    return careTypes.value
+        .filter(ct => selectedIds.includes(ct.id))
+        .map(ct => ct.name)
+        .join(', ');
+};
+
+function resetForm(replacement?: Replacement | null) {
+    Object.assign(form, getInitialValue(replacement));
+}
+
+const type = [
+    {
+        value: 'classic',
+        label: 'Classique',
+        name: 'Classique',
+    },
+    {
+        value: 'immediate',
+        label: 'Urgent',
+        name: 'Urgent',
+    },
+];
+
+const status = [
+    {
+        value: 'open',
+        label: 'Ouvert',
+        name: 'Ouvert',
+    },
+    {
+        value: 'closed',
+        label: 'Fermé',
+        name: 'Fermé',
+    },
+];
+
+const visibility = [
+    {
+        value: 'public',
+        label: 'Publique',
+        name: 'Publique',
+    },
+    {
+        value: 'group',
+        label: 'Groupe',
+        name: 'Groupe',
+    },
+    {
+        value: 'friends',
+        label: 'Amis',
+        name: 'Amis',
+    },
+];
+
+watch(
+    () => props.replacement,
+    (newReplacement) => {
+        resetForm(newReplacement);
+    },
+    { immediate: true },
+);
+fetchCareTypes();
+
+const showAll = ref(false);
+const limit = 5;
+
+const visibleNurses = computed(() => {
+    return showAll.value ? form.matchingNurses : form.matchingNurses.slice(0, limit);
+});
+
+const shouldShowMoreButton = computed(() => {
+    return form.matchingNurses.length > limit && !showAll.value;
+});
+
+const remainingNursesCount = computed(() => {
+    return form.matchingNurses.length - limit;
+});
+
+const showAllNurses = () => {
+    showAll.value = true;
+};
+</script>

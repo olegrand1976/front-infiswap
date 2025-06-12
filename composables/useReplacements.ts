@@ -202,6 +202,22 @@ export const useReplacements = () => {
             });
     }
 
+    async function release(replacement: number) {
+        await $apifetch(`/api/replacements/${replacement}/release`, {
+            method: 'PUT',
+        }).then(() => {
+            $toast({
+                description: 'Remplacement libéré avec succès.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la libération.',
+                });
+            });
+    }
+
     return {
         error,
         loading,
@@ -221,6 +237,7 @@ export const useReplacements = () => {
         showReplacement,
         forceDelete,
         activityUser,
+        release,
     };
 };
 
