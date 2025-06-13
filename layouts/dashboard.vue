@@ -82,6 +82,79 @@
                             <EnvelopeIcon class="w-6 text-primary hover:text-primary/80 transition-colors duration-150" />
                         </NuxtLink>
                     </div>
+                    <div
+                        v-else-if="!isAdmin"
+                        class="relative inline-block pr-4"
+                    >
+                        <DropdownMenu>
+                            <DropdownMenuTrigger as-child>
+                                <div
+                                    class="relative"
+                                    @click="handleSeen()"
+                                >
+                                    <BellAlertIcon class="w-6 h-6 text-gray-500" />
+
+                                    <span
+                                        v-if="showSpan"
+                                        class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2
+                                            bg-red-500 text-white text-xs font-bold
+                                            rounded-full h-4 w-4 flex items-center justify-center
+                                            pointer-events-none"
+                                    >
+                                        1
+                                    </span>
+                                </div>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent
+                                v-if="showNotifUI"
+                                class="w-56 origin-top-left mr-[11rem]"
+                                :style="{
+                                    position: 'absolute',
+                                    left: '0',
+                                    transform: 'translateX(-20px)',
+                                }"
+                            >
+                                <DropdownMenuItem
+                                    class="text-left pl-4 hover:bg-gray-50"
+                                    @click="showDialog = true"
+                                >
+                                    Désactiver les notifications
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <Dialog
+                            v-if="showNotifUI"
+                            v-model:open="showDialog"
+                        >
+                            <DialogContent class="sm:max-w-md">
+                                <DialogHeader class="text-left">
+                                    <DialogTitle class="text-left">
+                                        Désactiver les notifications
+                                    </DialogTitle>
+                                    <DialogDescription class="text-left mt-2">
+                                        En désactivant cette option, vous ne serez plus informé des nouveaux remplacements dans votre quartier par e-mail.
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                <div class="mt-4 flex justify-end gap-2">
+                                    <DialogClose as-child>
+                                        <Button class="px-4 py-2 text-sm text-gray-700 rounded bg-white border hover:bg-white">
+                                            Annuler
+                                        </Button>
+                                    </DialogClose>
+
+                                    <Button
+                                        class="px-4 py-2 text-white text-sm rounded hover:bg-primary/90"
+                                        @click="handleDisable"
+                                    >
+                                        Valider
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
             </header>
             <div
@@ -94,7 +167,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, EnvelopeIcon, BellAlertIcon } from '@heroicons/vue/24/solid';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
@@ -103,10 +176,66 @@ import { getRole } from '~/lib/utils';
 const { isAdmin, hasChangedAvatar } = useAuth();
 const roles = ref<AccountType[]>();
 const user = useState<User>('user');
-
+const { createNotifPreferences } = useReports();
+const { $toast } = useNuxtApp();
 const { logout, getRoles, switchRole } = useAuth();
+
+const showDialog = ref(false);
+const showSpan = ref(false);
+const showNotifUI = ref(true);
+
+const parsedSettings = computed(() => {
+    try {
+        return user.value.settings ? JSON.parse(user.value.settings) : {};
+    }
+    catch (error) {
+        console.error('Erreur de parsing user.settings :', error);
+        return {};
+    }
+});
 
 onMounted(async () => {
     roles.value = await getRoles();
+    const notif = parsedSettings.value?.notification || {};
+    showNotifUI.value = notif.new_replacement === true;
+    showSpan.value = notif.seen_disable_notification !== true;
 });
+
+const handleSeen = async () => {
+    try {
+        const formData = {
+            key: 'notification',
+            value: {
+                seen_disable_notification: true,
+            },
+        };
+        await createNotifPreferences(formData);
+        showSpan.value = false;
+    }
+    catch (error) {
+        console.error('Erreur lors de la mise à jour de seen :', error);
+    }
+};
+
+const handleDisable = async () => {
+    try {
+        const formData = reactive({
+            key: 'notification',
+            value: {
+                new_replacement: false,
+            },
+        });
+
+        await createNotifPreferences(formData);
+        $toast({
+            title: 'Succès',
+            description: 'Notification désactivé avec succès.',
+        });
+        showDialog.value = false;
+        showNotifUI.value = false;
+    }
+    catch (error) {
+        console.error('Erreur lors de la désactivation des notifications :', error);
+    }
+};
 </script>
