@@ -216,33 +216,21 @@ const nurseNavigationItems: NavigationItem[] = [
         route: '/dashboard/replacements/responses',
         icon: UsersIcon,
     },
-    // {
-    //     label: 'Mes patients',
-    //     route: '/dashboard/patients',
-    //     icon: UserGroupIcon,
-    //     children: [
-    //         {
-    //             label: 'Listes',
-    //             route: '/dashboard/patients',
-    //             icon: ClipboardDocumentListIcon,
-    //         },
-    //         {
-    //             label: 'Nouveau',
-    //             route: '/dashboard/patients/create',
-    //             icon: UserPlusIcon,
-    //         },
-    //         // {
-    //         //     label: 'De ma région',
-    //         //     route: '/dashboard/patients/myregion',
-    //         //     icon: MapPinIcon,
-    //         // },
-    //     ],
-    // },
-    // {
-    //     label: 'Tournées',
-    //     route: '/dashboard/tours',
-    //     icon: MapIcon,
-    // },
+    {
+        label: 'Partenaires',
+        route: '/dashboard/partners',
+        icon: UserGroupIcon,
+        children: [
+            {
+                label: 'Rechercher',
+                route: '/dashboard/partners',
+            },
+            {
+                label: 'Réponses',
+                route: '/dashboard/partners/response',
+            },
+        ],
+    },
     {
         label: 'Paramètres',
         route: '/dashboard/settings',
