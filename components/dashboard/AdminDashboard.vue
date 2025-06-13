@@ -50,7 +50,7 @@
                         :categories="['inscrits']"
                         :y-formatter="yFormatter"
                         :rounded-corners="4"
-                        :colors="['blue']"
+                        :colors="['hsl(var(--primary))']"
                         class="pb-8 w-full"
                     />
                 </div>
