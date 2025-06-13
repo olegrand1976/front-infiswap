@@ -6,25 +6,6 @@
             </h1>
 
             <div class="flex justify-end gap-x-4 sm:gap-x-8 items-center">
-                <div
-                    class="flex items-center space-x-4 cursor-pointer"
-                    @click="toggleIcon"
-                >
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <component
-                                    :is="currentIcon"
-                                    class="w-6 hover:text-primary"
-                                />
-                                <TooltipContent>
-                                    <p>{{ isGridView ? 'Organiser par défaut' : 'Organiser par province' }}</p>
-                                </TooltipContent>
-                            </TooltipTrigger>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
-
                 <Select v-model="selectedFilter">
                     <SelectTrigger
                         class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
@@ -48,6 +29,25 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
+
+                <div
+                    class="flex items-center space-x-4 cursor-pointer"
+                    @click="toggleIcon"
+                >
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <component
+                                    :is="currentIcon"
+                                    class="w-6 hover:text-primary"
+                                />
+                                <TooltipContent>
+                                    <p>{{ isGridView ? 'Organiser par défaut' : 'Organiser par province' }}</p>
+                                </TooltipContent>
+                            </TooltipTrigger>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
             </div>
         </div>
 
@@ -71,7 +71,7 @@ const replacementFilters = {
 
 const selectedFilter = ref('all');
 const filterCookie = useCookie('selectedFilter');
-const isGridView = ref(false);
+const isGridView = ref(true);
 
 const currentIcon = computed(() => (isGridView.value ? QueueListIcon : Squares2X2Icon));
 
