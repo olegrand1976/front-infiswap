@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-info fixed top-0 w-full z-50 h-10 text-white flex items-center">
+    <header class="bg-primary_tech fixed top-0 w-full z-50 h-10 text-white flex items-center">
         <div class="container mx-auto flex justify-between items-center px-4">
             <p class="flex items-center gap-2">
                 <MapPinIcon class="w-5 h-5" />
