@@ -51,7 +51,7 @@
                         :y-formatter="yFormatter"
                         :rounded-corners="4"
                         :colors="['blue']"
-                        class="pb-8"
+                        class="pb-8 w-full"
                     />
                 </div>
             </div>
