@@ -84,7 +84,7 @@
                     </div>
                     <div
                         v-else-if="!isAdmin"
-                        class="relative inline-block"
+                        class="relative inline-block pr-4"
                     >
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
@@ -134,7 +134,7 @@
                                         Désactiver les notifications
                                     </DialogTitle>
                                     <DialogDescription class="text-left mt-2">
-                                        Vous êtes sur le point de désactiver vos notifications par mail.
+                                        En désactivant cette option, vous ne serez plus informé des nouveaux remplacements dans votre quartier par e-mail.
                                     </DialogDescription>
                                 </DialogHeader>
 
@@ -198,7 +198,7 @@ onMounted(async () => {
     roles.value = await getRoles();
     const notif = parsedSettings.value?.notification || {};
     showNotifUI.value = notif.new_replacement === true;
-    showSpan.value = notif.seen !== true;
+    showSpan.value = notif.seen_disable_notification !== true;
 });
 
 const handleSeen = async () => {
@@ -206,7 +206,7 @@ const handleSeen = async () => {
         const formData = {
             key: 'notification',
             value: {
-                seen: true,
+                seen_disable_notification: true,
             },
         };
         await createNotifPreferences(formData);
