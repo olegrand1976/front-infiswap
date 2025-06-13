@@ -1,12 +1,12 @@
 <template>
     <div class="bg-white flex flex-col font-light">
         <header class="hidden sm:block">
-            <LayoutsHeader />
+            <LayoutsNurseHeader />
         </header>
         <header class="sm:hidden">
-            <LayoutsHeaderMobile />
+            <LayoutsNurseHeaderMobile />
         </header>
-        <main class="flex-1 md:mt-20">
+        <main class="flex-1 mt-20 lg:mt-[8rem]">
             <NuxtPage />
         </main>
         <footer>

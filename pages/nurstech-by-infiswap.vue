@@ -1,6 +1,9 @@
 <template>
     <div>
-        <p>NurseTech</p>
+        <NurseBanner />
+        <NurseValuation />
+        <NurseWebsiteCreation />
+        <NurseProcess />
     </div>
 </template>
 

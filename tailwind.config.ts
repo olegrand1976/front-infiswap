@@ -76,6 +76,10 @@ module.exports = {
                 tertiary: {
                     DEFAULT: 'hsl(var(--tertiary))',
                 },
+                info: {
+                    DEFAULT: 'hsl(var(--info))',
+                    foreground: 'hsl(var(--info-foreground))',
+                },
                 chart: {
                     1: 'hsl(var(--chart-1))',
                     2: 'hsl(var(--chart-2))',
