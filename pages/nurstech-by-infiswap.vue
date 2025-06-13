@@ -1,10 +1,14 @@
 <template>
     <div>
-        <NurseBanner />
-        <NurseValuation />
-        <NurseWebsiteCreation />
-        <NurseProcess />
-        <NurseSpecialOffer />
+        <NursetechBanner />
+        <NursetechValuation />
+        <NursetechWebsiteCreation />
+        <NursetechTarget />
+        <NursetechProcess />
+        <NursetechSpecialOffer />
+        <NursetechInformationForm />
+        <NursetechCommunity />
+        <NursetechPartners />
     </div>
 </template>
 
