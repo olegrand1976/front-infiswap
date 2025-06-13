@@ -152,7 +152,7 @@
         <ClientOnly>
             <div class="grid my-8">
                 <div class="hidden lg:block">
-                    <template v-if="props.isGridView && Object.keys(groupsByProvince).length > 0">
+                    <template v-if="props.groupByProvince && Object.keys(groupsByProvince).length > 0">
                         <div
                             v-for="(group, province) in groupsByProvince"
                             :key="province"
@@ -263,21 +263,21 @@
                                                             <TooltipTrigger>
                                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
-                                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes as string).length - 1 ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
                                                             <TooltipContent>
                                                                 <span
-                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes as string).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -295,17 +295,17 @@
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                     >
-                                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                                        {{ city }}{{ index < JSON.parse(replacement.cities as string).length - 1 ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
                                                             <TooltipContent>
                                                                 <span
-                                                                    v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                    v-for="(city, index) in JSON.parse(replacement.cities as string)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                 >
-                                                                    {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                                    {{ city }}{{ index < JSON.parse(replacement.cities as string).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -660,7 +660,7 @@
                 </div>
 
                 <div class="lg:hidden">
-                    <template v-if="props.isGridView && Object.keys(groupsByProvince).length > 0">
+                    <template v-if="props.groupByProvince && Object.keys(groupsByProvince).length > 0">
                         <div
                             v-for="(group, province) in groupsByProvince"
                             :key="province"
@@ -741,14 +741,14 @@
                                                             <TooltipTrigger class="block w-full text-start">
                                                                 <div class="flex flex-col space-y-1">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string).slice(0, 3)"
                                                                         :key="index"
                                                                         :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
                                                                         {{ zipCode }}
                                                                     </span>
                                                                     <span
-                                                                        v-if="JSON.parse(replacement.zip_codes).length > 3"
+                                                                        v-if="JSON.parse(replacement.zip_codes as string).length > 3"
                                                                         class="text-xs text-gray-500"
                                                                     >
                                                                         ...
@@ -758,7 +758,7 @@
                                                             <TooltipContent class="text-sm max-w-[200px]">
                                                                 <div class="flex flex-wrap gap-1">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
                                                                         :key="'tooltip-' + index"
                                                                         :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
@@ -1251,14 +1251,14 @@ const props = defineProps({
         required: false,
         default: 'all',
     },
-    isGridView: {
+    groupByProvince: {
         type: Boolean,
-        required: false,
+        required: true,
         default: true,
     },
 });
 
-type ProvinceGroups = Record<Replacement[]>;
+type ProvinceGroups = Record<string, Replacement[]>;
 
 const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
@@ -1365,7 +1365,7 @@ const groupsByProvince = computed<ProvinceGroups>(() => {
         groups[province].push(replacement);
     });
 
-    return props.isGridView ? groups : {};
+    return props.groupByProvince ? groups : {};
 });
 
 const replacement = ref<Replacement | undefined>();
