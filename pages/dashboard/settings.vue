@@ -1107,7 +1107,6 @@ import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import InputPreferences from '@/components/InputPreferences.vue';
-import { useReports } from '~/composables/useReports';
 import { useAuth } from '~/composables/useAuth';
 import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
@@ -1127,7 +1126,7 @@ const {
     deleteAccount,
     deleteAvatar,
 } = useAuth();
-const { createPreferences, createNotifPreferences } = useReports();
+const { createPreferences, createNotifPreferences } = useAuth();
 
 const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);

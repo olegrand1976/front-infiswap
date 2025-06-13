@@ -342,6 +342,26 @@ export const useAuth = () => {
         });
     }
 
+    const createPreferences = async (formData) => {
+        await $apifetch('/api/users/settings', { method: 'POST', body: formData }).then(() => {
+            $toast({
+                description: 'Succès',
+            });
+        }).catch(() => {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur est survenue lors de l\'enregistrement',
+            });
+        });
+    };
+
+    async function createNotifPreferences(formData) {
+        return await $apifetch(`/api/users/settings/notification`, {
+            method: 'post',
+            body: formData,
+        });
+    };
+
     return {
         user,
         users,
@@ -378,5 +398,7 @@ export const useAuth = () => {
         getRoles,
         switchRole,
         edit,
+        createPreferences,
+        createNotifPreferences,
     };
 };

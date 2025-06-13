@@ -157,14 +157,14 @@ import {
     TagsInputItemText,
 } from '@/components/ui/tags-input';
 
-import { useReports } from '~/composables/useReports';
+import { useAuth } from '~/composables/useAuth';
 
 const props = defineProps<{
     initialZipCodes: string[];
     initialCities: string[];
 }>();
 
-const { createPreferences } = useReports();
+const { createPreferences } = useAuth();
 
 const isZipCodeFocused = ref(false);
 const isCityFocused = ref(false);
