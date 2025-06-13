@@ -20,8 +20,8 @@
                 class="w-full h-full"
             />
 
-            <div class="absolute inset-0 flex items-center justify-center gap-6 px-8 pb-[5rem] z-30 ml-[22rem]">
-                <div class="flex flex-col text-right mt-[14rem]">
+            <div class="absolute inset-0 flex items-center justify-center pb-[5rem] z-30 ml-[32rem]">
+                <div class="flex flex-col text-right mt-[14rem] items-center justify-center">
                     <span class="text-7xl font-medium text-primary leading-[4.5rem]">Pour</span>
                     <span class="text-4xl text-primary">infirmière</span>
                     <span class="text-7xl font-medium text-primary leading-[4.5rem]">Infiswap</span>
@@ -29,7 +29,7 @@
 
                 <LayoutsAppImage
                     src="home/happy_nurse_in_pink.png"
-                    class="w-96 h-auto"
+                    class="w-[22rem] h-auto -ml-[5rem]"
                 />
             </div>
         </div>

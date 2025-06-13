@@ -4,6 +4,7 @@
         <NurseValuation />
         <NurseWebsiteCreation />
         <NurseProcess />
+        <NurseSpecialOffer />
     </div>
 </template>
 
