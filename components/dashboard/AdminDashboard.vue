@@ -52,6 +52,7 @@
                         :rounded-corners="4"
                         :colors="['hsl(var(--primary))']"
                         class="pb-8 w-full"
+                        :legend-labels="{ inscrits: 'Inscrits' }"
                     />
                 </div>
             </div>
@@ -95,8 +96,6 @@ const userByProvince = computed(() => {
         inscrits: item.total,
     }));
 });
-
-console.log(userByProvince.value);
 
 const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
