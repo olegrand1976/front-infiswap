@@ -38,6 +38,21 @@
                     />
                 </div>
             </div>
+            <div>
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des inscriptions par provinces
+                </p>
+                <div class="mt-3 bg-white rounded-sm shadow-md">
+                    <BarChart
+                        index="province"
+                        :data="userByProvince"
+                        :categories="['total']"
+                        :y-formatter="yFormatter"
+                        :colors="['primary']"
+                        :rounded-corners="4"
+                    />
+                </div>
+            </div>
         </section>
 
         <DashboardStatCardAdminGroup
@@ -69,6 +84,8 @@ definePageMeta({
 });
 
 await getReports();
+
+const userByProvince = computed(() => reports.value?.registration_statistics?.group_by_province ?? []);
 
 const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
