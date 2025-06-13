@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
             <div>
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions
@@ -38,18 +38,20 @@
                     />
                 </div>
             </div>
-            <div>
+
+            <div class="col-span-1 lg:col-span-2">
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                    Évolution des inscriptions par provinces
+                    Évolution des inscriptions par province
                 </p>
-                <div class="mt-3 bg-white rounded-sm shadow-md">
-                    <BarChart
+                <div class="mt-3 bg-white rounded-sm shadow-md p-4">
+                    <LineChart
                         index="name"
                         :data="userByProvince"
-                        :categories="['total']"
+                        :categories="['inscrits']"
                         :y-formatter="yFormatter"
-                        :colors="['primary']"
                         :rounded-corners="4"
+                        :colors="['blue']"
+                        class="pb-8"
                     />
                 </div>
             </div>
@@ -88,10 +90,9 @@ await getReports();
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
 
-    return userByProvinces.map((item: {province: string;total: number }) => ({
+    return userByProvinces.map((item: { province: string;total: number }) => ({
         name: item.province,
-        province: item.province,
-        total: item.total,
+        inscrits: item.total,
     }));
 });
 
