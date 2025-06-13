@@ -44,7 +44,7 @@
                 </p>
                 <div class="mt-3 bg-white rounded-sm shadow-md">
                     <BarChart
-                        index="province"
+                        index="name"
                         :data="userByProvince"
                         :categories="['total']"
                         :y-formatter="yFormatter"
@@ -85,19 +85,30 @@ definePageMeta({
 
 await getReports();
 
-const userByProvince = computed(() => reports.value?.registration_statistics?.group_by_province ?? []);
+const userByProvince = computed(() => {
+    const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
+
+    return userByProvinces.map((item: {province: string;total: number }) => ({
+        name: item.province,
+        province: item.province,
+        total: item.total,
+    }));
+});
+
+console.log(userByProvince.value);
 
 const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
 });
+
 const replacementChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
 
-console.log(registrationChartData.value);
-
 const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
 const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
+
+console.log(xRegistrationFormatter);
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];
