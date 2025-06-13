@@ -89,7 +89,7 @@
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
                                 <div
-                                    class="relative"
+                                    class="relative cursor-pointer"
                                     @click="handleSeen()"
                                 >
                                     <BellAlertIcon class="w-6 h-6 text-gray-500" />
@@ -131,10 +131,10 @@
                             <DialogContent class="sm:max-w-md">
                                 <DialogHeader class="text-left">
                                     <DialogTitle class="text-left">
-                                        Désactiver les notifications
+                                        Désactivation des notifications
                                     </DialogTitle>
                                     <DialogDescription class="text-left mt-2">
-                                        En désactivant cette option, vous ne serez plus informé des nouveaux remplacements dans votre quartier par e-mail.
+                                        En désactivant cette option, vous ne recevrez plus de notifications concernant les nouveaux remplacements dans votre quartier.
                                     </DialogDescription>
                                 </DialogHeader>
 
