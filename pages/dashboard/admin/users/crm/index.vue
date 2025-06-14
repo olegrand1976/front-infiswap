@@ -266,7 +266,7 @@ const columns: ColumnDef<User>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'w-full text-center',
-            }, () => ['Biotrax', h(ArrowsUpDownIcon, { class: 'text-center' })]);
+            }, () => ['Infiswap', h(ArrowsUpDownIcon, { class: 'text-center' })]);
         },
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
@@ -294,7 +294,7 @@ const columns: ColumnDef<User>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'w-full text-center',
-            }, () => ['Assurances', h(ArrowsUpDownIcon, { class: 'text-center' })]);
+            }, () => ['NursAssur', h(ArrowsUpDownIcon, { class: 'text-center' })]);
         },
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
@@ -322,7 +322,7 @@ const columns: ColumnDef<User>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'w-full text-center',
-            }, () => ['Site', h(ArrowsUpDownIcon, { class: 'text-center' })]);
+            }, () => ['NursTech', h(ArrowsUpDownIcon, { class: 'text-center' })]);
         },
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
@@ -350,7 +350,7 @@ const columns: ColumnDef<User>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'w-full text-center',
-            }, () => ['Ambassadeur', h(ArrowsUpDownIcon, { class: 'text-center' })]);
+            }, () => ['Tournée', h(ArrowsUpDownIcon, { class: 'text-center' })]);
         },
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
