@@ -261,13 +261,8 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'biotrax',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                class: 'w-full text-center',
-            }, () => ['Biotrax', h(ArrowsUpDownIcon, { class: 'text-center' })]);
-        },
+        header: 'Infiswap',
+        enableSorting: false,
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
@@ -289,13 +284,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'insurance',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                class: 'w-full text-center',
-            }, () => ['Assurances', h(ArrowsUpDownIcon, { class: 'text-center' })]);
-        },
+        header: 'NursAssur',
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
@@ -314,16 +303,11 @@ const columns: ColumnDef<User>[] = [
                 }),
             ]);
         },
+        enableSorting: false,
     },
     {
         accessorKey: 'site',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                class: 'w-full text-center',
-            }, () => ['Site', h(ArrowsUpDownIcon, { class: 'text-center' })]);
-        },
+        header: 'NursTech',
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
@@ -342,16 +326,11 @@ const columns: ColumnDef<User>[] = [
                 }),
             ]);
         },
+        enableSorting: false,
     },
     {
         accessorKey: 'ambassador',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                class: 'w-full text-center',
-            }, () => ['Ambassadeur', h(ArrowsUpDownIcon, { class: 'text-center' })]);
-        },
+        header: 'Tournée',
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);

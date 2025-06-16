@@ -130,7 +130,7 @@
                         :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
                         :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
-                    <label>Biotrax</label>
+                    <label>InfiSwap</label>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -138,7 +138,7 @@
                         :is="user.insurance ? CheckCircleIcon : XCircleIcon"
                         :class="user.insurance ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
-                    <label>Assurances</label>
+                    <label>NursAssur</label>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -146,7 +146,7 @@
                         :is="user.site ? CheckCircleIcon : XCircleIcon"
                         :class="user.site ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
-                    <label>Site</label>
+                    <label>NursTech</label>
                 </div>
 
                 <div class="flex items-center gap-2">

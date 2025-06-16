@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { type BulletLegendItemInterface, CurveType } from '@unovis/ts';
-import { Axis, Line } from '@unovis/ts';
+import { type BulletLegendItemInterface, CurveType, Axis, Line } from '@unovis/ts';
 import { VisAxis, VisLine, VisXYContainer } from '@unovis/vue';
 import { useMounted } from '@vueuse/core';
 import { type Component, computed, ref } from 'vue';
@@ -17,6 +16,10 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
    * Type of curve
    */
     curveType?: CurveType;
+    /**
+   * Mapping clé -> label personnalisé pour la légende
+   */
+    legendLabels?: Record<string, string>;
 }>(), {
     curveType: CurveType.MonotoneX,
     filterOpacity: 0.2,
@@ -39,7 +42,7 @@ const index = computed(() => props.index as KeyOfT);
 const colors = computed(() => props.colors?.length ? props.colors : defaultColors(props.categories.length));
 
 const legendItems = ref<BulletLegendItemInterface[]>(props.categories.map((category, i) => ({
-    name: category,
+    name: props.legendLabels?.[category] ?? category, // 💡 label personnalisé si fourni
     color: colors.value[i],
     inactive: false,
 })));
@@ -83,7 +86,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
                     :color="colors[i]"
                     :attributes="{
                         [Line.selectors.line]: {
-                            opacity: legendItems.find(item => item.name === category)?.inactive ? filterOpacity : 1,
+                            opacity: legendItems.find(item => item.name === (legendLabels?.[category] ?? category))?.inactive ? filterOpacity : 1,
                         },
                     }"
                 />

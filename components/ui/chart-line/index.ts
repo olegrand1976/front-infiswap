@@ -63,4 +63,8 @@ export interface BaseChartProps<T extends Record<string, any>> {
    * @default true
    */
     showGridLine?: boolean;
+    /**
+    * Optional mapping of data keys to custom legend labels.
+     */
+    legendLabels?: Record<string, string>;
 }
