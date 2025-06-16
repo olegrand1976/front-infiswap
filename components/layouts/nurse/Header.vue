@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-primary_tech fixed top-0 w-full z-50 h-10 text-white flex items-center">
+    <header class="bg-primarytech fixed top-0 w-full z-50 h-10 text-white flex items-center">
         <div class="container mx-auto flex justify-between items-center px-4">
             <p class="flex items-center gap-2">
                 <MapPinIcon class="w-5 h-5" />
@@ -46,13 +46,6 @@
                     href="/login"
                 >
                     Connexion
-                </Button>
-                <Button
-                    v-if="!isLoggedIn"
-                    class="font-semibold text-base"
-                    href="/register"
-                >
-                    Inscription
                 </Button>
                 <Button
                     v-if="isLoggedIn"

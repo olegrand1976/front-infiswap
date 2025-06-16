@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <div class="bg-primary_tech">
+        <div class="bg-primarytech">
             <div class="flex lg:container flex-col md:flex-row justify-center items-center pt-8 md:py-12 px-4">
                 <div class="flex flex-col w-full max-w-2xl justify-center items-center">
                     <div class="flex flex-col w-full space-y-4 py-8 md:py-0 text-center">
@@ -23,17 +23,17 @@
                             @submit.prevent="subscribeNewsletter"
                         >
                             <div class="flex flex-row justify-start items-center">
-                                <Mail class="text-primary_tech w-4 h-4 ms-3" />
+                                <Mail class="text-primarytech w-4 h-4 ms-3" />
                                 <Input
                                     v-model="email"
                                     placeholder="Email"
-                                    class="w-full text-primary_tech text-sm"
+                                    class="w-full text-primarytech text-sm"
                                 />
                             </div>
                             <Button
                                 :disabled="isLoading"
                                 variant="secondary"
-                                class="text-white h-8 bg-primary_tech"
+                                class="text-white h-8 bg-primarytech"
                                 type="submit"
                             >
                                 {{ isLoading ? "Envoi..." : "Enregistrer" }}
@@ -74,7 +74,7 @@
                                 </p>
                                 <div class="flex flex-col items-center gap-4">
                                     <Button
-                                        class="bg-primary_tech hover:bg-primary_tech/90 text-white font-semibold py-2 px-4 rounded-full w-full transition w-[300px]"
+                                        class="bg-primarytech hover:bg-primarytech/90 text-white font-semibold py-2 px-4 rounded-full w-full transition w-[300px]"
                                         href="/register"
                                     >
                                         Inscription
@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        <div class="bg-primary_tech text-white py-4 md:px-0 px-8 lg:-mt-6">
+        <div class="bg-primarytech text-white py-4 md:px-0 px-8 lg:-mt-6">
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
@@ -103,7 +103,7 @@
             </p>
         </div>
 
-        <div class="container py-4 w-full text-center text-primary_tech">
+        <div class="container py-4 w-full text-center text-primarytech">
             <NuxtLink
                 to="https://www.ll-it-sc.be"
                 target="_blank"
