@@ -58,6 +58,13 @@
                 >
                     Activité
                 </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'comment' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'comment'"
+                >
+                    Commentaire
+                </button>
             </div>
 
             <div
@@ -157,6 +164,19 @@
                     <label>Ambassadeur</label>
                 </div>
             </div>
+
+            <div v-else-if="activeTab === 'comment'" class="space-y-3">
+                <div class="relative">
+                    <Textarea
+                        v-model="comment"
+                        @keydown.enter.exact.prevent="submitComment"
+                        class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
+                    ></Textarea>
+                    <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
+                        Appuyez sur Entrée pour valider votre commentaire
+                    </p>
+                </div>
+            </div>
         </div>
         <div
             v-else
@@ -242,7 +262,8 @@ import {
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 
-const { isAdmin } = useAuth();
+const { $toast } = useNuxtApp();
+const { isAdmin, updateField } = useAuth();
 const activeTab = ref('information');
 
 const props = withDefaults(defineProps<{
@@ -281,6 +302,23 @@ const translatedCategory = computed(() => {
 
     return props.user.professional_category;
 });
+
+const comment = ref(props.user.comment_crm ?? '');
+
+const submitComment = async () => {
+    const value = comment.value;
+
+    try {
+        await updateField(Number(props.user.id), { comment_crm: value });
+        setTimeout(() => {
+            $toast({ description: 'Commentaire mises à jour avec succès' });
+            window.location.reload();
+        }, 1500);
+    }
+    catch (err) {
+        console.error('Erreur API:', err);
+    }
+};
 
 loadActivity();
 </script>

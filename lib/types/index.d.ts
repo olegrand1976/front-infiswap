@@ -53,6 +53,7 @@ export type User = {
     site?: boolean | number;
     ambassador?: boolean | number;
     professional_category?: string | null;
+    comment_crm?: string | null;
 };
 
 type RolePivot = {

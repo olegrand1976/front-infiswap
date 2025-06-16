@@ -351,11 +351,26 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        accessorKey: 'comment_crm',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('comment_crm'),
+            }, () => ['Commentaire', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', {
+                class: 'truncate max-w-[200px] text-left',
+                title: row.getValue('comment_crm'),
+            }, row.getValue('comment_crm'));
+        },
+    },
+    {
         accessorKey: 'last_contact',
         header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => setSort('last_contact'),
+                // onClick: () => setSort('last_contact'),
             }, () => ['Date', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: () => {
