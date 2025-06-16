@@ -1,22 +1,16 @@
 <template>
     <div>
         <div class="flex items-center justify-between w-full">
-            <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] sm:px-9 rounded-lg">
-                Chercher <strong>un partenaire</strong>
+            <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+                Rechercher <span class="ml-1 font-semibold">un partenaire</span>
             </h1>
-
-            <Button
-                @click="createPartnerDialog"
-            >
-                Demander une collaboration
-            </Button>
         </div>
 
         <form class="mt-8 grid grid-cols-7 items-center gap-6 w-full">
             <div class="col-span-1 2xl:col-span-2">
                 <Select>
                     <SelectTrigger
-                        class="w-64 2xl:w-full"
+                        class="w-[15.5rem] 2xl:w-full"
                         position="right"
                     >
                         <SelectValue
@@ -198,16 +192,6 @@
                 </TableBody>
             </Table>
         </div>
-
-        <Dialog v-model:open="createPartnerDialog">
-            <DialogContent class="sm:max-w-[40rem] h-[70vh] pb-16">
-                <DialogHeader>
-                    <DialogTitle class="text-xl font-semibold text-primary">
-                        Demander une collaboration
-                    </DialogTitle>
-                </DialogHeader>
-            </DialogContent>
-        </Dialog>
     </div>
 </template>
 
@@ -218,8 +202,6 @@ const durations = {
     short: 'Court terme',
     long: 'Long terme',
 };
-
-const createPartnerDialog = ref(false);
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -260,10 +242,6 @@ watch(() => searchFormData.postalCodeTags, () => {
 });
 
 watch(() => searchFormData.cityTags, () => {
-    if (isSubmitted.value) isSubmitted.value = false;
-});
-
-watch(() => searchFormData.selectedDays, () => {
     if (isSubmitted.value) isSubmitted.value = false;
 });
 
