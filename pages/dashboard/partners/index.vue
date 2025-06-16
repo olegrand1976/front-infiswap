@@ -236,7 +236,20 @@
                                     </TableCell>
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
-                                            <EllipsisHorizontalIcon class="w-6" />
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="handleShowProfile(partnership.user)"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Voir le profil</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -351,7 +364,20 @@
                                     </TableCell>
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
-                                            <EllipsisHorizontalIcon class="w-6" />
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="handleShowProfile(partnership.user)"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Voir le profil</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -366,6 +392,7 @@
 
                     <div class="mt-4">
                         <CustomPagination
+                            v-if="filteredAvailablePartners.length > 5"
                             :default-page="page"
                             :per-page="perPage"
                             :total="filteredAvailablePartners.length"
@@ -376,17 +403,39 @@
                 </div>
             </TabsContent>
         </Tabs>
+
+        <Dialog v-model:open="profileDialog">
+            <DialogContent class="sm:max-w-lg overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle>Profil de l'infirmier</DialogTitle>
+                </DialogHeader>
+                <div
+                    v-if="selectedUser"
+                    class="mt-4 flex justify-center items-center mx-auto"
+                >
+                    <UsersCard
+                        class="max-w-lg"
+                        :user="selectedUser"
+                        :show-full-info="true"
+                    />
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, ArrowPathIcon, EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, ArrowPathIcon, EllipsisHorizontalIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
+import type { User } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';
 
+const selectedUser = ref<User | null>(null);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
@@ -394,6 +443,13 @@ const activeTab = ref('in_search');
 const durations = {
     short: 'Court terme',
     long: 'Long terme',
+};
+
+const profileDialog = ref(false);
+
+const handleShowProfile = (user: User) => {
+    selectedUser.value = user;
+    profileDialog.value = true;
 };
 
 const { fetchDemandPartners, demandPartners, loading } = usePartners();
