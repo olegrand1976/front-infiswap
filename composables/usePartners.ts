@@ -32,6 +32,7 @@ export const usePartners = () => {
         postalCode = [],
         cities = [],
         duration = '',
+        type = '',
         page = 1,
         perPage = PERPAGE,
     } = {}) => {
@@ -41,6 +42,7 @@ export const usePartners = () => {
             zip_code: postalCode.length ? postalCode : undefined,
             city: cities.length ? cities : undefined,
             duration: duration || undefined,
+            type: type || undefined,
             page,
             perPage: Number(perPage),
         };
@@ -54,7 +56,7 @@ export const usePartners = () => {
             data: response.partnerships.data || [],
             current_page: response.partnerships.current_page || 1,
             per_page: Number(response.partnerships.per_page) || PERPAGE,
-            total: response.total || 0,
+            total: response.partnerships.total || 0,
             last_page: response.partnerships.last_page || 1,
             first_page_url: response.partnerships.first_page_url || '',
             last_page_url: response.partnerships.last_page_url || '',
