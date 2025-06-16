@@ -123,7 +123,7 @@
                 v-else-if="activeTab === 'contact'"
                 class="space-y-3"
             >
-                <p>Date du contact : {{ new Date().toLocaleDateString('fr-FR') }}</p>
+                <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
 
                 <div class="flex items-center gap-2">
                     <component

@@ -24,7 +24,7 @@
                     @update:model-value="debouncedFilterUsers"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>Biotrax</span>
+                        <span>Infiswap</span>
                         <strong class="ml-4">
                             {{
                                 option.biotrax === 1 ? 'oui' : option.biotrax === 0 ? 'non' : 'tous'
@@ -47,7 +47,7 @@
                     @update:model-value="debouncedFilterUsers"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>Assurance</span>
+                        <span>Nursassur</span>
                         <strong class="ml-4">
                             {{
                                 option.insurance === 1 ? 'oui' : option.insurance === 0 ? 'non' : 'tous'
@@ -70,7 +70,7 @@
                     @update:model-value="debouncedFilterUsers"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>Site</span>
+                        <span>NursTech</span>
                         <strong class="ml-4">
                             {{
                                 option.site === 1 ? 'oui' : option.site === 0 ? 'non' : 'tous'
@@ -356,7 +356,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('last_contact'),
-            }, () => ['Date dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Date', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: () => {
             const today = new Date();
