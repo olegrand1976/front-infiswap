@@ -220,6 +220,14 @@ export type Replacement = {
     candidate?: boolean;
 };
 
+export type UserPartner = {
+    id: number;
+    user: User;
+    type: string;
+    duration: string;
+    description: string | null;
+};
+
 export type ReplacementDetail = {
     id: number;
     parent_id: number;
