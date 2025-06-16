@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
             <div>
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions
@@ -38,6 +38,23 @@
                     />
                 </div>
             </div>
+
+            <div class="col-span-1 lg:col-span-2">
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des inscriptions par province
+                </p>
+                <div class="mt-3 bg-white rounded-sm shadow-md p-4">
+                    <LineChart
+                        index="name"
+                        :data="userByProvince"
+                        :categories="['inscrits']"
+                        :y-formatter="yFormatter"
+                        :rounded-corners="4"
+                        :colors="['hsl(var(--primary))']"
+                        class="pb-8 w-full"
+                    />
+                </div>
+            </div>
         </section>
 
         <DashboardStatCardAdminGroup
@@ -70,17 +87,29 @@ definePageMeta({
 
 await getReports();
 
+const userByProvince = computed(() => {
+    const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
+
+    return userByProvinces.map((item: { province: string;total: number }) => ({
+        name: item.province,
+        inscrits: item.total,
+    }));
+});
+
+console.log(userByProvince.value);
+
 const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks, 'Semaine', ['Total']);
 });
+
 const replacementChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
 
-console.log(registrationChartData.value);
-
 const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
 const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
+
+console.log(xRegistrationFormatter);
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];

@@ -42,7 +42,7 @@
                                     class="w-6 hover:text-primary"
                                 />
                                 <TooltipContent>
-                                    <p>{{ isGridView ? 'Organiser par défaut' : 'Organiser par province' }}</p>
+                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par province' }}</p>
                                 </TooltipContent>
                             </TooltipTrigger>
                         </Tooltip>
@@ -54,7 +54,7 @@
         <Replacement
             type="me"
             :filter-type="selectedFilter"
-            :is-grid-view="isGridView"
+            :group-by-province="groupByProvince"
         />
     </div>
 </template>
@@ -73,12 +73,12 @@ const replacementFilters = {
 
 const selectedFilter = ref('all');
 const filterCookie = useCookie('selectedFilter');
-const isGridView = ref(true);
+const groupByProvince = ref(false);
 
-const currentIcon = computed(() => (isGridView.value ? QueueListIcon : Squares2X2Icon));
+const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
 
 const toggleIcon = () => {
-    isGridView.value = !isGridView.value;
+    groupByProvince.value = !groupByProvince.value;
 };
 
 onMounted(() => {

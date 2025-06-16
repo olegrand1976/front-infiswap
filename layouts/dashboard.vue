@@ -131,10 +131,10 @@
                             <DialogContent class="sm:max-w-md">
                                 <DialogHeader class="text-left">
                                     <DialogTitle class="text-left">
-                                        Désactivation des notifications
+                                        Désactiver les notifications
                                     </DialogTitle>
                                     <DialogDescription class="text-left mt-2">
-                                        En désactivant cette option, vous ne recevrez plus de notifications concernant les nouveaux remplacements dans votre quartier.
+                                        En désactivant cette option, vous ne serez plus informé des nouveaux remplacements dans votre quartier par e-mail.
                                     </DialogDescription>
                                 </DialogHeader>
 
@@ -176,9 +176,8 @@ import { getRole } from '~/lib/utils';
 const { isAdmin, hasChangedAvatar } = useAuth();
 const roles = ref<AccountType[]>();
 const user = useState<User>('user');
-const { createNotifPreferences } = useReports();
 const { $toast } = useNuxtApp();
-const { logout, getRoles, switchRole } = useAuth();
+const { logout, getRoles, switchRole, createNotifPreferences } = useAuth();
 
 const showDialog = ref(false);
 const showSpan = ref(false);
