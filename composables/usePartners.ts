@@ -86,7 +86,7 @@ export const usePartners = () => {
     };
 
     const fetchResponses = async () => {
-        const response = await $apifetch(`/api/partners/receive`, { method: 'GET' });
+        const response = await $apifetch(`/api/partners/responses/receive`, { method: 'GET' });
         demandResponses.value = response;
     };
 
