@@ -71,10 +71,18 @@ export const usePartners = () => {
         loading.value = false;
     };
 
+    const sendResponse = async (formData) => {
+        return await $apifetch('/api/partners/responses/send', {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     return {
         demandPartners,
         loading,
         create,
         fetchDemandPartners,
+        sendResponse,
     };
 };
