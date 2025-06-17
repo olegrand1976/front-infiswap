@@ -20,6 +20,7 @@ export const usePartners = () => {
         to: 0,
         links: [],
     }));
+    const demandPartner = useState<UserPartner>('demandPartner', () => null);
 
     const create = async (formData) => {
         return await $apifetch('/api/partners/create', {
@@ -71,6 +72,11 @@ export const usePartners = () => {
         loading.value = false;
     };
 
+    const detailDemandPartner = async (userPartnerId) => {
+        const response = await $apifetch(`/api/partners/${userPartnerId}`, { method: 'GET' });
+        demandPartner.value = response.partnership;
+    };
+
     const sendResponse = async (formData) => {
         return await $apifetch('/api/partners/responses/send', {
             method: 'POST',
@@ -79,10 +85,12 @@ export const usePartners = () => {
     };
 
     return {
+        demandPartner,
         demandPartners,
         loading,
         create,
         fetchDemandPartners,
+        detailDemandPartner,
         sendResponse,
     };
 };

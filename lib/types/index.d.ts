@@ -227,6 +227,7 @@ export type UserPartner = {
     user: User;
     type: string;
     duration: string;
+    has_responded: boolean;
     description: string | null;
 };
 

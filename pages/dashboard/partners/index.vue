@@ -241,15 +241,26 @@
                                                     <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem as-child>
+                                                        <NuxtLink
+                                                            :href="`/dashboard/partners/${partnership.id}`"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                        >
+                                                            <EyeIcon class="h-4 w-4" />
+                                                            <span>Détail</span>
+                                                        </NuxtLink>
+                                                    </DropdownMenuItem>
+
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm"
                                                         @click="handleShowProfile(partnership.user)"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <UserIcon class="h-4 w-4" />
                                                         <span>Voir le profil</span>
                                                     </DropdownMenuItem>
 
                                                     <DropdownMenuItem
+                                                        v-if="!partnership.has_responded"
                                                         class="flex items-center space-x-2 text-sm"
                                                         @click="handleMakeResponse(partnership)"
                                                     >
@@ -377,15 +388,26 @@
                                                     <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem as-child>
+                                                        <NuxtLink
+                                                            :href="`/dashboard/partners/${partnership.id}`"
+                                                            class="flex items-center space-x-2 text-sm"
+                                                        >
+                                                            <EyeIcon class="h-4 w-4" />
+                                                            <span>Détail</span>
+                                                        </NuxtLink>
+                                                    </DropdownMenuItem>
+
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm"
                                                         @click="handleShowProfile(partnership.user)"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <UserIcon class="h-4 w-4" />
                                                         <span>Voir le profil</span>
                                                     </DropdownMenuItem>
 
                                                     <DropdownMenuItem
+                                                        v-if="!partnership.has_responded"
                                                         class="flex items-center space-x-2 text-sm"
                                                         @click="handleMakeResponse(partnership)"
                                                     >
@@ -439,7 +461,9 @@
         </Dialog>
 
         <Dialog v-model:open="responseDialog">
-            <DialogContent class="sm:max-w-xl overflow-y-auto">
+            <DialogContent
+                class="sm:max-w-xl overflow-y-auto"
+            >
                 <form @submit.prevent="submit">
                     <div class="flex flex-col space-y-3">
                         <label class="font-semibold text-primary">
@@ -485,7 +509,15 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, ArrowPathIcon, EllipsisHorizontalIcon, EyeIcon, HandRaisedIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
+import {
+    MagnifyingGlassIcon,
+    ArrowPathIcon,
+    EllipsisHorizontalIcon,
+    EyeIcon,
+    HandRaisedIcon,
+    InformationCircleIcon,
+    UserIcon,
+} from '@heroicons/vue/24/outline';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -500,6 +532,8 @@ const selectedPartnership = ref<UserPartner | null>(null);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
+
+const { $toast } = useNuxtApp();
 
 const durations = {
     short: 'Court terme',
@@ -528,7 +562,7 @@ const handleMakeResponse = (partnership: UserPartner) => {
     responseDialog.value = true;
 };
 
-const { fetchDemandPartners, demandPartners, loading } = usePartners();
+const { fetchDemandPartners, demandPartners, sendResponse, loading } = usePartners();
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -649,18 +683,23 @@ const reinitializeFilter = async () => {
     });
 };
 
+let response = null;
+
 const { submit, inProgress } = useSubmit(async () => {
     formData.userPartnerId = selectedPartnership.value.id;
     formData.userInterestedId = selectedPartnership.value.user.id;
+
+    response = await sendResponse(formData);
 }, {
     onSuccess: () => {
         $toast({
-            description: 'Demande de collaboration effectuée',
+            description: response.message,
         });
-        resetForm();
-        setTimeout(() => {
-            router.push('/dashboard/partners');
-        }, 2000);
+        const partnership = demandPartners.value.data.find(p => p.id === formData.userPartnerId);
+        if (partnership) {
+            partnership.has_responded = true;
+        }
+        responseDialog.value = false;
     },
 });
 
