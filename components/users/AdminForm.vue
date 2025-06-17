@@ -231,6 +231,9 @@ const formattedRoles = computed(() => {
                         rounded="md"
                         label="Date de naissance"
                     />
+                    <p class="text-xs text-gray-500 mt-1">
+                        ex : 1990-01-01 ou 01-01-1990 ou 1990/01/01 ou 01/01/1990
+                    </p>
                 </div>
                 <div>
                     <Select
