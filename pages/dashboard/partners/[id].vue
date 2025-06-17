@@ -137,7 +137,7 @@ const goBack = () => {
 const { $toast } = useNuxtApp();
 
 onMounted(async () => {
-    await detailDemandPartner(id);
+    await detailDemandPartner(Number(id));
 });
 
 const durations = {

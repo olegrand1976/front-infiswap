@@ -41,10 +41,17 @@
 </template>
 
 <script lang="ts" setup>
+import { usePartners } from '@/composables/usePartners';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+const { fetchResponses } = usePartners();
 
 useHead({
     title: 'Historique des réponses',
+});
+
+onMounted(async () => {
+    await fetchResponses();
 });
 
 definePageMeta({
