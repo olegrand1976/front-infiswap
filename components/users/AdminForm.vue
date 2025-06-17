@@ -50,6 +50,30 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
 const form = reactive(getInitialValue());
 const { $toast } = useNuxtApp();
 const { submit, inProgress } = useSubmit(async () => {
+    const normalizedDateOfBirth = (() => {
+        if (!form.dateOfBirth) return null;
+
+        const cleaned = form.dateOfBirth.replace(/[\/\s]/g, '-');
+        const parts = cleaned.split('-');
+
+        if (parts.length !== 3) return null;
+
+        let year, month, day;
+
+        if (parts[0].length === 4) {
+            [year, month, day] = parts;
+        }
+        else {
+            [day, month, year] = parts;
+        }
+
+        if (!year || !month || !day) return null;
+
+        return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    })();
+
+    form.dateOfBirth = normalizedDateOfBirth;
+
     if (isEditMode.value && props.user?.id) {
         const updatedUser = await update(props.user.id, form);
         resetForm(updatedUser);
@@ -232,7 +256,7 @@ const formattedRoles = computed(() => {
                         label="Date de naissance"
                     />
                     <p class="text-xs text-gray-500 mt-1">
-                        ex : 1990-01-01 ou 01-01-1990 ou 1990/01/01 ou 01/01/1990
+                        ex : 01 01 1990 ou 01-01-1990 ou 01/01/1990
                     </p>
                 </div>
                 <div>
