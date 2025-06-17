@@ -362,6 +362,13 @@ export const useAuth = () => {
         });
     };
 
+    async function updateField(id: number, options = {}) {
+        return await $apifetch(`/api/users/${id}/update-user-field`, {
+            method: 'PUT',
+            body: { ...options },
+        });
+    };
+
     return {
         user,
         users,
@@ -400,5 +407,6 @@ export const useAuth = () => {
         edit,
         createPreferences,
         createNotifPreferences,
+        updateField,
     };
 };
