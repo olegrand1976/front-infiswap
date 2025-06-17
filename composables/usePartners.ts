@@ -90,6 +90,13 @@ export const usePartners = () => {
         demandResponses.value = response;
     };
 
+    const updateStatusResponse = async (userPartnerResponse) => {
+        return await $apifetch(`/api/partners/responses/${userPartnerResponse.id}/status`, {
+            method: 'PUT',
+            body: JSON.stringify({ status: userPartnerResponse.status }),
+        });
+    };
+
     return {
         demandPartner,
         demandPartners,
@@ -100,5 +107,6 @@ export const usePartners = () => {
         detailDemandPartner,
         sendResponse,
         fetchResponses,
+        updateStatusResponse,
     };
 };
