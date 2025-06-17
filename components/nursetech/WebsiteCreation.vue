@@ -1,11 +1,11 @@
 <template>
     <section class="container mx-auto px-4 py-10">
-        <div class="flex flex-col md:flex-row items-center bg-primary rounded-[2em]">
-            <div class="md:w-1/2 w-full text-white px-12">
+        <div class="flex flex-col md:flex-row items-center bg-primary rounded-[2em] relative overflow-hidden">
+            <div class="md:w-1/2 w-full text-white px-12 z-10">
                 <h2 class="text-6xl mb-4">
-                    Création <br/>
-                    de site web <br/>
-                    professionnel <br/>
+                    Création <br />
+                    de site web <br />
+                    professionnel <br />
                     <span class="font-bold">
                         <span
                             class="font-semibold"
@@ -17,18 +17,41 @@
                     </span>
                 </h2>
                 <p class="text-sm mb-4">
-                    Une <span class="font-bold">présence digitale</span> sur <span class="font-bold">mesure</span>, <br/>
-                    <span class="font-bold">adaptée</span> à la <span class="font-bold">réalité</span> des <span class="font-bold">soignantes indépendantes.</span>
+                    Une <span class="font-bold">présence digitale</span> sur
+                    <span class="font-bold">mesure</span>, <br />
+                    <span class="font-bold">adaptée</span> à la
+                    <span class="font-bold">réalité</span> des
+                    <span class="font-bold">soignantes indépendantes.</span>
                 </p>
             </div>
 
-            <div class="md:w-1/2 w-full">
+            <div class="md:w-1/2 w-full relative z-10">
                 <LayoutsAppImage
                     src="/home/monitor_with_laptop.png"
                     alt="Image de communication"
                     class="w-full h-auto object-contain"
                 />
+                <LayoutsAppImage
+                    src="/home/two_settings.png"
+                    alt="Image décorative"
+                    class="absolute bottom-0 right-0 w-48 md:w-40 animate-spin-slow pointer-events-none"
+                />
             </div>
         </div>
     </section>
 </template>
+
+<style scoped>
+@keyframes spin-slow {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+}
+
+.animate-spin-slow {
+animation: spin-slow 20s linear infinite;
+}
+</style>
