@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-white py-12">
+    <div class="bg-white mb-10">
         <div class="container">
-            <div>
+            <div class="mt-4">
                 <h1 class="text-[#cc0033] font-semibold text-xl lg:text-2xl">
                     Formulaire d'information rapide ici,
                 </h1>
