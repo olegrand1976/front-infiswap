@@ -17,7 +17,6 @@
                     class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 bg-gray-100 p-2 lg:p-4 rounded"
                 >
                     <div
-                        v-if="response?.responses?.length != 0"
                         class="rounded-md col-span-3 lg:col-span-1"
                     >
                         <div class="flex justify-between items-center">
