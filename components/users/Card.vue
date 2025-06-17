@@ -165,13 +165,16 @@
                 </div>
             </div>
 
-            <div v-else-if="activeTab === 'comment'" class="space-y-3">
+            <div
+                v-else-if="activeTab === 'comment'"
+                class="space-y-3"
+            >
                 <div class="relative">
                     <Textarea
                         v-model="comment"
-                        @keydown.enter.exact.prevent="submitComment"
                         class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
-                    ></Textarea>
+                        @keydown.enter.exact.prevent="submitComment"
+                    />
                     <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire
                     </p>
