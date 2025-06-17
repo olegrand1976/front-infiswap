@@ -168,6 +168,7 @@ export type CareType = {
     id: number;
     name: string;
     duration?: number;
+    price?: number;
 };
 export type Pagination<T> = {
     current_page: number;
