@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
             <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
                 Rechercher <span class="ml-1 font-semibold">un partenaire</span>
@@ -7,13 +7,13 @@
         </div>
 
         <form
-            class="mt-8 grid grid-cols-7 items-center gap-6 w-full"
+            class="mt-8 grid grid-cols-1 md:grid-cols-7 items-center gap-6 w-full"
             @submit.prevent="search"
         >
             <div class="col-span-1 2xl:col-span-2">
                 <Select v-model="searchFormData.duration">
                     <SelectTrigger
-                        class="w-[15.5rem] 2xl:w-full"
+                        class="w-[88vw] mr-24 md:w-40 xl:w-[15.5rem] 2xl:w-full"
                         position="right"
                     >
                         <SelectValue
@@ -36,7 +36,7 @@
             </div>
 
             <div
-                class="ml-28 2xl:ml-0 col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
+                class="md:ml-[3.5rem] xl:ml-28 2xl:ml-0 col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
                 title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
             >
                 <h5 class="text-white text-xs">
@@ -73,7 +73,7 @@
             </div>
 
             <div
-                class="ml-24 2xl:ml-0 col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
+                class="md:ml-8 xl:ml-24 2xl:ml-0 col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
                 title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
             >
                 <h5 class="text-white text-xs">
@@ -109,13 +109,13 @@
                 </TagsInput>
             </div>
 
-            <div class="ml-20 2xl:ml-0 col-span-1 flex items-center gap-3 2xl:gap-6 w-full">
+            <div class="md:ml-2 xl:ml-20 2xl:ml-0 col-span-1 flex justify-between md:justify-start items-center xl:gap-3 2xl:gap-6 w-full">
                 <Button
                     class="bg-primary flex items-center justify-center text-sm h-11 px-4"
                     @click="reinitializeFilter"
                 >
                     <ArrowPathIcon class="w-6" />
-                    <span class="ml-2 block lg:hidden text-sm">Réinitialiser</span>
+                    <span class="ml-2 block md:hidden text-sm">Réinitialiser</span>
                 </Button>
                 <Button
                     type="submit"
@@ -135,13 +135,13 @@
             <TabsList class="w-full">
                 <TabsTrigger
                     value="in_search"
-                    class="w-48"
+                    class="w-full md:w-48"
                 >
                     À la recherche
                 </TabsTrigger>
                 <TabsTrigger
                     value="available"
-                    class="w-48"
+                    class="w-full md:w-48"
                 >
                     Disponible
                 </TabsTrigger>
@@ -151,14 +151,14 @@
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
-                            <TableRow class="grid grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                            <TableRow class="grid grid-cols-3 md:grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
                                 <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
                                     Nom
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
                                     Ville
                                 </TableHead>
                                 <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -175,12 +175,12 @@
                                 <TableRow
                                     v-for="(_, index) in Array.from({ length: 10 })"
                                     :key="index"
-                                    class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
+                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
                                 >
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
@@ -188,10 +188,10 @@
                                 <TableRow
                                     v-for="partnership in filteredInSearchPartners"
                                     :key="partnership.id"
-                                    class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
+                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                                 >
                                     <TableCell class="flex items-center bg-[#F1F2F7] text-xs">
-                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                        <div class="hidden h-10 rounded bg-[#E4E7F4] px-3 md:flex items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <template v-if="!partnership.user.profile.profil_url">
                                                 <LayoutsAppImage
                                                     src="/icons/user-circle.png"
@@ -208,8 +208,11 @@
                                                 {{ partnership.user.full_name }}
                                             </span>
                                         </div>
+                                        <div class="flex justify-center md:hidden h-10 rounded bg-[#E4E7F4] px-3 items-center gap-3 text-wrap text-center w-full">
+                                            {{ partnership.user.full_name }}
+                                        </div>
                                     </TableCell>
-                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.postalCodeTags.includes(partnership.user.zip_code) })]"
@@ -218,7 +221,7 @@
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.cityTags.includes(partnership.user.city) })]"
@@ -298,17 +301,17 @@
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
-                            <TableRow class="grid grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                            <TableRow class="grid grid-cols-3 md:grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
                                 <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
                                     Nom
                                 </TableHead>
                                 <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
                                     Ville
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
                                     Durée
                                 </TableHead>
                                 <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -322,12 +325,12 @@
                                 <TableRow
                                     v-for="(_, index) in Array.from({ length: 10 })"
                                     :key="index"
-                                    class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
+                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
                                 >
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block  h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
@@ -335,10 +338,10 @@
                                 <TableRow
                                     v-for="partnership in filteredAvailablePartners"
                                     :key="partnership.id"
-                                    class="grid grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
+                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                                 >
                                     <TableCell class="flex items-center bg-[#F1F2F7] text-xs">
-                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                        <div class="hidden h-10 rounded bg-[#E4E7F4] px-3 md:flex items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <template v-if="!partnership.user.profile.profil_url">
                                                 <LayoutsAppImage
                                                     src="/icons/user-circle.png"
@@ -355,8 +358,11 @@
                                                 {{ partnership.user.full_name }}
                                             </span>
                                         </div>
+                                        <div class="flex justify-center md:hidden h-10 rounded bg-[#E4E7F4] px-3 items-center gap-3 text-wrap text-center w-full">
+                                            {{ partnership.user.full_name }}
+                                        </div>
                                     </TableCell>
-                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.postalCodeTags.includes(partnership.user.zip_code) })]"
@@ -365,7 +371,7 @@
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.cityTags.includes(partnership.user.city) })]"

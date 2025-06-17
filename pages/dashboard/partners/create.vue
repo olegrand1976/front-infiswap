@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="flex items-center justify-between w-full">
-            <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <h1 class="flex lg:ml-20 w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg 2xl:ml-0">
                 Demander <span class="ml-1 font-semibold">une collaboration</span>
             </h1>
         </div>
 
         <form
-            class="mt-20 flex flex-col mx-auto shadow p-8 rounded-lg w-[65%] 2xl:w-[50%]"
+            class="mt-4 w-full bg-gray-50 flex flex-col mx-auto shadow p-8 rounded-lg sm:mt-8 sm:bg-white sm:w-[80%] lg:mt-20 lg:w-[65%] 2xl:w-[50%]"
             @submit.prevent="submit"
         >
             <div class="flex flex-col space-y-3">
@@ -97,8 +97,9 @@
 <script lang="ts" setup>
 import { InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { usePartners } from '@/composables/usePartners';
+import type { User } from '~/lib/types';
 
-const user = useState('user');
+const user = useState<User>('user');
 const { create } = usePartners();
 const router = useRouter();
 

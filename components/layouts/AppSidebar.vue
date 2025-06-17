@@ -236,7 +236,7 @@ const nurseNavigationItems: NavigationItem[] = [
                 icon: PlusIcon,
             },
             {
-                label: 'Réponses reçues',
+                label: 'Réponses',
                 route: '/dashboard/partners/responses',
                 icon: ChatBubbleLeftEllipsisIcon,
             },
