@@ -486,20 +486,11 @@
 
                     <div class="my-8">
                         <Button
-                            v-if="user.gender == 'M'"
                             type="submit"
                             class="flex justify-center mx-auto items-center w-64"
                             :in-progress="inProgress"
                         >
-                            Je suis interessé
-                        </Button>
-                        <Button
-                            v-else
-                            type="submit"
-                            class="flex justify-center mx-auto items-center w-64"
-                            :in-progress="inProgress"
-                        >
-                            Je suis interessée
+                            Enregistrer
                         </Button>
                     </div>
                 </form>
@@ -546,8 +537,6 @@ const formData = reactive({
     status: 'pending',
     description: '',
 });
-
-const user = useState<User>('user');
 
 const profileDialog = ref(false);
 const responseDialog = ref(false);
