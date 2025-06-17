@@ -257,14 +257,9 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Préférences', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            try {
-                const settings = JSON.parse(row.getValue('settings'));
-                const zipCodes = settings?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
-                return h('div', { class: 'text-center capitalize truncate whitespace-nowrap overflow-hidden' }, zipCodes);
-            }
-            catch (e) {
-                return h('div', { class: 'text-center' }, 'Erreur de format');
-            }
+            const settings = JSON.parse(row.getValue('settings'));
+            const zipCodes = settings?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
+            return h('div', { class: 'text-center capitalize truncate whitespace-nowrap overflow-hidden' }, zipCodes);
         },
     },
     {

@@ -53,6 +53,7 @@ export type User = {
     site?: boolean | number;
     ambassador?: boolean | number;
     professional_category?: string | null;
+    comment_crm?: string | null;
 };
 
 type RolePivot = {
@@ -167,6 +168,7 @@ export type CareType = {
     id: number;
     name: string;
     duration?: number;
+    price?: number;
 };
 export type Pagination<T> = {
     current_page: number;

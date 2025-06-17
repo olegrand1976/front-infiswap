@@ -162,6 +162,7 @@ import {
     HeartIcon,
     WrenchScrewdriverIcon,
     ChatBubbleLeftEllipsisIcon,
+    ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -278,6 +279,11 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Suivi utilisateurs',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
+    },
+    {
+        label: 'Type de soins',
+        route: '/dashboard/admin/care-types',
+        icon: ShieldCheckIcon,
     },
 ];
 
