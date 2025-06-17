@@ -66,7 +66,7 @@
 
             <div class="mt-8 flex flex-col space-y-3">
                 <label class="font-semibold text-primary">
-                    * Ajouter une description
+                    * Ajouter une description (optionnel)
                 </label>
                 <Textarea
                     v-model="formData.description"

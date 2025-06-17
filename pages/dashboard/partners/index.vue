@@ -248,6 +248,14 @@
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Voir le profil</span>
                                                     </DropdownMenuItem>
+
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="handleMakeResponse(partnership)"
+                                                    >
+                                                        <HandRaisedIcon class="h-4 w-4" />
+                                                        <span>S'intéresser</span>
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
@@ -376,6 +384,14 @@
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Voir le profil</span>
                                                     </DropdownMenuItem>
+
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm"
+                                                        @click="handleMakeResponse(partnership)"
+                                                    >
+                                                        <HandRaisedIcon class="h-4 w-4" />
+                                                        <span>S'intéresser</span>
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
@@ -421,21 +437,66 @@
                 </div>
             </DialogContent>
         </Dialog>
+
+        <Dialog v-model:open="responseDialog">
+            <DialogContent class="sm:max-w-xl overflow-y-auto">
+                <form @submit.prevent="submit">
+                    <div class="flex flex-col space-y-3">
+                        <label class="font-semibold text-primary">
+                            * Ajouter une description (optionnel)
+                        </label>
+                        <Textarea
+                            v-model="formData.description"
+                            placeholder="Écrivez ici"
+                            :rows="6"
+                            class="border border-gray-300 focus:border-primary focus:ring-primary"
+                        />
+                    </div>
+
+                    <div class="mt-8 flex gap-3 text-gray-700">
+                        <InformationCircleIcon class="w-8" />
+                        <p class="text-sm">
+                            En vous proposant comme candidat pour cette demande, vous témoignez de votre volonté de collaborer et de former un binôme avec la personne qui a posté cette demande.
+                        </p>
+                    </div>
+
+                    <div class="my-8">
+                        <Button
+                            v-if="user.gender == 'M'"
+                            type="submit"
+                            class="flex justify-center mx-auto items-center w-64"
+                            :in-progress="inProgress"
+                        >
+                            Je suis interessé
+                        </Button>
+                        <Button
+                            v-else
+                            type="submit"
+                            class="flex justify-center mx-auto items-center w-64"
+                            :in-progress="inProgress"
+                        >
+                            Je suis interessée
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, ArrowPathIcon, EllipsisHorizontalIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, ArrowPathIcon, EllipsisHorizontalIcon, EyeIcon, HandRaisedIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
-import type { User } from '~/lib/types';
+import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';
 
 const selectedUser = ref<User | null>(null);
+const selectedPartnership = ref<UserPartner | null>(null);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
@@ -445,11 +506,26 @@ const durations = {
     long: 'Long terme',
 };
 
+const formData = reactive({
+    userPartnerId: null,
+    userInterestedId: null,
+    status: 'pending',
+    description: '',
+});
+
+const user = useState<User>('user');
+
 const profileDialog = ref(false);
+const responseDialog = ref(false);
 
 const handleShowProfile = (user: User) => {
     selectedUser.value = user;
     profileDialog.value = true;
+};
+
+const handleMakeResponse = (partnership: UserPartner) => {
+    selectedPartnership.value = partnership;
+    responseDialog.value = true;
 };
 
 const { fetchDemandPartners, demandPartners, loading } = usePartners();
@@ -572,6 +648,21 @@ const reinitializeFilter = async () => {
         type: searchFormData.type,
     });
 };
+
+const { submit, inProgress } = useSubmit(async () => {
+    formData.userPartnerId = selectedPartnership.value.id;
+    formData.userInterestedId = selectedPartnership.value.user.id;
+}, {
+    onSuccess: () => {
+        $toast({
+            description: 'Demande de collaboration effectuée',
+        });
+        resetForm();
+        setTimeout(() => {
+            router.push('/dashboard/partners');
+        }, 2000);
+    },
+});
 
 useHead({
     title: 'Chercher un partenaire',

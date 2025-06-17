@@ -161,6 +161,7 @@ import {
     Cog8ToothIcon,
     HeartIcon,
     WrenchScrewdriverIcon,
+    ChatBubbleLeftEllipsisIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -232,6 +233,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 label: 'Demander',
                 route: '/dashboard/partners/create',
                 icon: PlusIcon,
+            },
+            {
+                label: 'Réponses reçues',
+                route: '/dashboard/partners/responses',
+                icon: ChatBubbleLeftEllipsisIcon,
             },
         ],
     },
