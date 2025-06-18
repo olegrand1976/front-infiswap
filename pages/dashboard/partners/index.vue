@@ -2,7 +2,7 @@
     <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
             <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-                Rechercher <span class="ml-1 font-semibold">un partenaire</span>
+                Rechercher <span class="ml-1 font-semibold">un binôme</span>
             </h1>
         </div>
 

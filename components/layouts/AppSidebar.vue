@@ -221,7 +221,7 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: UsersIcon,
     },
     {
-        label: 'Partenaires',
+        label: 'Binômes',
         route: '/dashboard/partners',
         icon: UserGroupIcon,
         children: [
