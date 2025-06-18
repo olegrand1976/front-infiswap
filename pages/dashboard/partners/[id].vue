@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <Button
             class="text-sm w-24 sm:w-auto"
             @click="goBack"
@@ -7,8 +7,8 @@
             <span class="text-xs">Retour</span>
         </Button>
 
-        <section className="mt-8 flex justify-center mx-auto 2xl:gap-32">
-            <div class="w-96">
+        <section class="mt-12 md:mt-8 flex flex-col md:flex-row justify-center mx-auto gap-16 2xl:gap-32">
+            <div class="md:w-96">
                 <UsersCard
                     class="max-w-lg"
                     :user="demandPartner.user"
@@ -16,7 +16,7 @@
                 />
             </div>
 
-            <div class="flex flex-col space-y-16 bg-gray-200 shadow rounded-md w-96">
+            <div class="flex flex-col space-y-16 bg-gray-200 shadow rounded-md md:w-96">
                 <div class="flex flex-col space-y-3 text-center">
                     <label class="font-semibold bg-primary py-2 text-white">
                         Type de demande
@@ -43,34 +43,34 @@
                         Description
                     </label>
                     <p>
-                        {{ demandPartner.description }}
+                        {{ demandPartner.description || 'Aucune description' }}
                     </p>
                 </div>
             </div>
         </section>
 
         <div
-            v-if="!demandPartner.has_responded"
-            class="mt-24"
+            v-if="demandPartner && !demandPartner.has_responded"
+            class="mt-16 md:mt-24"
         >
             <Button
-                v-if="user.gender == 'M'"
-                class="flex justify-center items-center mx-auto w-96"
+                v-if="user?.gender == 'M'"
+                class="flex justify-center items-center mx-auto w-64 md:w-96"
                 @click="responseDialog = true"
             >
                 Je suis intéressé
             </Button>
             <Button
                 v-else
-                class="flex justify-center items-center mx-auto w-96"
+                class="flex justify-center items-center mx-auto w-64 md:w-96"
                 @click="responseDialog = true"
             >
                 Je suis intéressée
             </Button>
         </div>
         <div
-            v-else
-            class="mt-24 text-success flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100 w-96"
+            v-else-if="demandPartner"
+            class="mt-16 md:mt-24 text-success flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100 w-64 md:w-96"
         >
             <CheckBadgeIcon class="w-8" />
             <p class="font-semibold">
@@ -79,9 +79,7 @@
         </div>
 
         <Dialog v-model:open="responseDialog">
-            <DialogContent
-                class="sm:max-w-xl overflow-y-auto"
-            >
+            <DialogContent class="sm:max-w-xl overflow-y-auto">
                 <form @submit.prevent="submit">
                     <div class="flex flex-col space-y-3">
                         <label class="font-semibold text-primary">
@@ -118,27 +116,17 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
+import { CheckBadgeIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { usePartners } from '@/composables/usePartners';
 import type { User } from '~/lib/types';
-
-const { detailDemandPartner, demandPartner, sendResponse } = usePartners();
 
 const route = useRoute();
 const id = route.params.id;
 const user = useState<User>('user');
 const responseDialog = ref(false);
-let response = null;
-
-const goBack = () => {
-    window.history.back();
-};
-
 const { $toast } = useNuxtApp();
 
-onMounted(async () => {
-    await detailDemandPartner(Number(id));
-});
+const { detailDemandPartner, demandPartner, sendResponse } = usePartners();
 
 const durations = {
     short: 'court terme',
@@ -146,23 +134,33 @@ const durations = {
 };
 
 const formData = reactive({
-    userPartnerId: null,
-    userInterestedId: null,
-    status: 'pending',
-    description: '',
+    userPartnerId: null as number | null,
+    userInterestedId: null as number | null,
+    status: 'pending' as string,
+    description: '' as string,
 });
+
+await detailDemandPartner(Number(id));
+
+const goBack = () => {
+    window.history.back();
+};
 
 const { submit, inProgress } = useSubmit(async () => {
     formData.userPartnerId = demandPartner.value.id;
     formData.userInterestedId = demandPartner.value.user.id;
 
-    response = await sendResponse(formData);
+    const response = await sendResponse(formData);
+    return response;
 }, {
-    onSuccess: () => {
+    onSuccess: (response) => {
         $toast({
             description: response.message,
         });
         responseDialog.value = false;
+        if (demandPartner.value) {
+            demandPartner.value.has_responded = true;
+        }
     },
 });
 

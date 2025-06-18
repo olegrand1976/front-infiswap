@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
             <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
                 Liste des <span class="ml-1 font-semibold">intéressées par votre demande</span>
@@ -49,7 +49,7 @@
                                     {{ group.user_partner.description || 'Aucune description' }}
                                 </p>
                             </div>
-                            <div class="grid grid-cols-3 2xl:grid-cols-4 gap-12 mt-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-12 mt-8">
                                 <div
                                     v-for="response in group.responses"
                                     :key="response.id"
@@ -79,7 +79,7 @@
                                     </div>
                                     <div
                                         v-else
-                                        class="w-full mt-8 text-success flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100"
+                                        :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
                                     >
                                         <CheckBadgeIcon class="w-8" />
                                         <p class="font-semibold">
@@ -125,7 +125,7 @@
                                     Créée le {{ formatDate(group.user_partner.created_at) }}
                                 </p>
                             </div>
-                            <div class="grid grid-cols-3 2xl:grid-cols-4 gap-12 mt-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-12 mt-8">
                                 <div
                                     v-for="response in group.responses"
                                     :key="response.id"
@@ -182,7 +182,7 @@
 import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
-import type { UserPartner } from '~/lib/types';
+import { cn } from '@/lib/utils';
 
 const { fetchResponses, demandResponses, updateStatusResponse, loading } = usePartners();
 

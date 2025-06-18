@@ -145,6 +145,12 @@
                 >
                     Disponible
                 </TabsTrigger>
+                <TabsTrigger
+                    value="my_requests"
+                    class="w-full md:w-48"
+                >
+                    Mes demandes
+                </TabsTrigger>
             </TabsList>
 
             <TabsContent value="in_search">
@@ -244,14 +250,12 @@
                                                     <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
-                                                    <DropdownMenuItem as-child>
-                                                        <NuxtLink
-                                                            :href="`/dashboard/partners/${partnership.id}`"
-                                                            class="flex items-center space-x-2 text-sm"
-                                                        >
-                                                            <EyeIcon class="h-4 w-4" />
-                                                            <span>Détail</span>
-                                                        </NuxtLink>
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm cursor-pointer"
+                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Détail</span>
                                                     </DropdownMenuItem>
 
                                                     <DropdownMenuItem
@@ -330,7 +334,7 @@
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="hidden md:block  h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
@@ -394,14 +398,12 @@
                                                     <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
-                                                    <DropdownMenuItem as-child>
-                                                        <NuxtLink
-                                                            :href="`/dashboard/partners/${partnership.id}`"
-                                                            class="flex items-center space-x-2 text-sm"
-                                                        >
-                                                            <EyeIcon class="h-4 w-4" />
-                                                            <span>Détail</span>
-                                                        </NuxtLink>
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm cursor-pointer"
+                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Détail</span>
                                                     </DropdownMenuItem>
 
                                                     <DropdownMenuItem
@@ -446,62 +448,200 @@
                     </div>
                 </div>
             </TabsContent>
-        </Tabs>
 
-        <Dialog v-model:open="profileDialog">
-            <DialogContent class="sm:max-w-lg overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Profil de l'infirmier</DialogTitle>
-                </DialogHeader>
-                <div
-                    v-if="selectedUser"
-                    class="mt-4 flex justify-center items-center mx-auto"
-                >
-                    <UsersCard
-                        class="max-w-lg"
-                        :user="selectedUser"
-                        :show-full-info="true"
-                    />
-                </div>
-            </DialogContent>
-        </Dialog>
+            <TabsContent value="my_requests">
+                <div class="grid my-8">
+                    <Table>
+                        <TableHeader class="w-full">
+                            <TableRow class="grid grid-cols-3 md:grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Nom
+                                </TableHead>
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                    Code postal
+                                </TableHead>
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                    Ville
+                                </TableHead>
+                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                    Type de demande
+                                </TableHead>
+                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Durée
+                                </TableHead>
+                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    Actions
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
 
-        <Dialog v-model:open="responseDialog">
-            <DialogContent
-                class="sm:max-w-xl overflow-y-auto"
-            >
-                <form @submit.prevent="submit">
-                    <div class="flex flex-col space-y-3">
-                        <label class="font-semibold text-primary">
-                            * Ajouter une description (optionnel)
-                        </label>
-                        <Textarea
-                            v-model="formData.description"
-                            placeholder="Écrivez ici"
-                            :rows="6"
-                            class="border border-gray-300 focus:border-primary focus:ring-primary"
+                        <TableBody class="rounded-b-lg">
+                            <div v-if="loading">
+                                <TableRow
+                                    v-for="(_, index) in Array.from({ length: 10 })"
+                                    :key="index"
+                                    class="grid grid-cols-3 md:grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                                >
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                </TableRow>
+                            </div>
+                            <div v-else-if="filteredMyRequests.length !== 0">
+                                <TableRow
+                                    v-for="partnership in filteredMyRequests"
+                                    :key="partnership.id"
+                                    class="grid grid-cols-3 md:grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                >
+                                    <TableCell class="flex items-center bg-[#F1F2F7] text-xs">
+                                        <div class="hidden h-10 rounded bg-[#E4E7F4] px-3 md:flex items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <template v-if="!partnership.user.profile.profil_url">
+                                                <LayoutsAppImage
+                                                    src="/icons/user-circle.png"
+                                                    class="opacity-50 w-6"
+                                                />
+                                            </template>
+                                            <template v-else>
+                                                <img
+                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + partnership.user.profile.profil_url"
+                                                    class="w-6 h-6 rounded-full"
+                                                >
+                                            </template>
+                                            <span>
+                                                {{ partnership.user.full_name }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-center md:hidden h-10 rounded bg-[#E4E7F4] px-3 items-center gap-3 text-wrap text-center w-full">
+                                            {{ partnership.user.full_name }}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <span>
+                                                {{ partnership.user.zip_code }}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <span>
+                                                {{ partnership.user.city }}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <span>
+                                                {{ partnership.type === 'in_search' ? 'À la recherche' : 'Disponible' }}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <span>
+                                                {{ durations[partnership.duration] }}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
+                                        <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent class="w-48">
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm cursor-pointer"
+                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                    >
+                                                        <EyeIcon class="h-4 w-4" />
+                                                        <span>Détail</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            </div>
+                            <div v-else>
+                                <p class="text-center text-gray-500 py-8">
+                                    Aucun résultat n'est trouvé
+                                </p>
+                            </div>
+                        </TableBody>
+                    </Table>
+
+                    <div class="mt-4">
+                        <CustomPagination
+                            v-if="filteredMyRequests.length > 5"
+                            :default-page="page"
+                            :per-page="perPage"
+                            :total="filteredMyRequests.length"
+                            @update:page="changePage"
+                            @update:per-page="changePerPage"
                         />
                     </div>
+                </div>
+            </TabsContent>
 
-                    <div class="mt-8 flex gap-3 text-gray-700">
-                        <InformationCircleIcon class="w-8" />
-                        <p class="text-sm">
-                            En vous proposant comme candidat pour cette demande, vous témoignez de votre volonté de collaborer et de former un binôme avec la personne qui a posté cette demande.
-                        </p>
+            <Dialog v-model:open="profileDialog">
+                <DialogContent class="sm:max-w-lg overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Profil de l'infirmier</DialogTitle>
+                    </DialogHeader>
+                    <div
+                        v-if="selectedUser"
+                        class="mt-4 flex justify-center items-center mx-auto"
+                    >
+                        <UsersCard
+                            class="max-w-lg"
+                            :user="selectedUser"
+                            :show-full-info="true"
+                        />
                     </div>
+                </DialogContent>
+            </Dialog>
 
-                    <div class="my-8">
-                        <Button
-                            type="submit"
-                            class="flex justify-center mx-auto items-center w-64"
-                            :in-progress="inProgress"
-                        >
-                            Enregistrer
-                        </Button>
-                    </div>
-                </form>
-            </DialogContent>
-        </Dialog>
+            <Dialog v-model:open="responseDialog">
+                <DialogContent
+                    class="sm:max-w-xl overflow-y-auto"
+                >
+                    <form @submit.prevent="submit">
+                        <div class="flex flex-col space-y-3">
+                            <label class="font-semibold text-primary">
+                                * Ajouter une description (optionnel)
+                            </label>
+                            <Textarea
+                                v-model="formData.description"
+                                placeholder="Écrivez ici"
+                                :rows="6"
+                                class="border border-gray-300 focus:border-primary focus:ring-primary"
+                            />
+                        </div>
+
+                        <div class="mt-8 flex gap-3 text-gray-700">
+                            <InformationCircleIcon class="w-8" />
+                            <p class="text-sm">
+                                En vous proposant comme candidat pour cette demande, vous témoignez de votre volonté de collaborer et de former un binôme avec la personne qui a posté cette demande.
+                            </p>
+                        </div>
+
+                        <div class="my-8">
+                            <Button
+                                type="submit"
+                                class="flex justify-center mx-auto items-center w-64"
+                                :in-progress="inProgress"
+                            >
+                                Enregistrer
+                            </Button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+        </Tabs>
     </div>
 </template>
 
@@ -522,8 +662,9 @@ import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
 import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
-import { useRuntimeConfig } from '#app';
+import { useRuntimeConfig, navigateTo } from '#app';
 
+const user = useState<User>('user');
 const selectedUser = ref<User | null>(null);
 const selectedPartnership = ref<UserPartner | null>(null);
 const perPage = ref(PERPAGE);
@@ -572,11 +713,19 @@ const searchFormData = reactive({
 const isSubmitted = ref(false);
 
 const filteredInSearchPartners = computed(() => {
-    return demandPartners.value.data.filter(partnership => partnership.type === 'in_search');
+    return demandPartners.value.data.filter(
+        partnership => partnership.type === 'in_search' && partnership.user.id !== user.value?.id,
+    );
 });
 
 const filteredAvailablePartners = computed(() => {
-    return demandPartners.value.data.filter(partnership => partnership.type === 'available');
+    return demandPartners.value.data.filter(
+        partnership => partnership.type === 'available' && partnership.user.id !== user.value?.id,
+    );
+});
+
+const filteredMyRequests = computed(() => {
+    return demandPartners.value.data.filter(partnership => partnership.user.id === user.value?.id);
 });
 
 const handleBlur = (event) => {
@@ -602,7 +751,7 @@ const addTag = (inputRef, tagArrayRef, transformFn = val => val) => {
 
 const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
-    searchFormData.type = newTab;
+    searchFormData.type = newTab === 'my_requests' ? '' : newTab;
     page.value = 1;
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
@@ -668,7 +817,7 @@ const reinitializeFilter = async () => {
     searchFormData.duration = '';
     searchFormData.postalCodeTags = [];
     searchFormData.cityTags = [];
-    searchFormData.type = activeTab.value;
+    searchFormData.type = activeTab.value === 'my_requests' ? '' : activeTab.value;
     isSubmitted.value = false;
     page.value = 1;
     await fetchDemandPartners({
