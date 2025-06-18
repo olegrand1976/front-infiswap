@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full h-[650px] overflow-hidden">
+    <div class="relative w-full h-[400px] lg:h-[650px] overflow-hidden">
         <div class="absolute inset-0 z-0">
             <LayoutsAppImage
                 src="home/desktop.png"
@@ -14,7 +14,7 @@
             />
         </div>
 
-        <div class="absolute -right-10 top-[4rem] h-[700px] w-[1200px] z-20">
+        <div class="hidden lg:block absolute -right-10 top-[4rem] h-[700px] w-[1200px] z-20">
             <LayoutsAppImage
                 src="white_triangle.png"
                 class="w-full h-full"

@@ -1,15 +1,15 @@
 <template>
     <section class="container mx-auto px-4 py-10">
-        <div class="flex flex-col md:flex-row">
-            <div class="md:w-1/2 w-full">
+        <div class="flex flex-col lg:flex-row">
+            <div class="lg:w-1/2 w-full">
                 <LayoutsAppImage
                     src="/home/hand_on_a_leaf.png"
                     alt="Image"
-                    class="w-[700px] h-[500px]"
+                    class="w-full h-[320px] lg:w-[700px] lg:h-[500px]"
                 />
             </div>
 
-            <div class="md:w-1/2 w-full p-6 pl-10">
+            <div class="lg:w-1/2 w-full p-6 pl-10">
                 <p class="text-lg font-bold text-primary mb-6">
                     Infirmier·ère libéral·e ?
                 </p>

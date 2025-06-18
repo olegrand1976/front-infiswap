@@ -1,8 +1,8 @@
 <template>
-    <section class="container mx-auto px-4 py-10">
+    <section class="container mx-auto px-4 lg:py-10">
         <div class="flex flex-col md:flex-row items-center bg-primary rounded-[2em] relative overflow-hidden">
-            <div class="md:w-1/2 w-full text-white px-12 z-10">
-                <h2 class="text-6xl mb-4">
+            <div class="md:w-1/2 w-full text-white px-12 z-10 py-4 lg:py-0">
+                <h2 class="text-4xl lg:text-6xl mb-4">
                     Création <br />
                     de site web <br />
                     professionnel <br />
@@ -29,12 +29,12 @@
                 <LayoutsAppImage
                     src="/home/monitor_with_laptop.png"
                     alt="Image de communication"
-                    class="w-full h-auto object-contain"
+                    class="w-full h-auto object-contain md:pr-4 lg:pr-0"
                 />
                 <LayoutsAppImage
                     src="/home/two_settings.png"
                     alt="Image décorative"
-                    class="absolute bottom-0 right-0 w-48 md:w-40 animate-spin-slow pointer-events-none"
+                    class="hidden lg:block absolute bottom-4 right-4 w-48 animate-spin-slow pointer-events-none"
                 />
             </div>
         </div>

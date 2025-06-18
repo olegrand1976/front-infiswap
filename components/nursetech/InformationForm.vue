@@ -11,7 +11,7 @@
             </div>
             <div class="bg-white rounded-[30px] shadow-xl flex flex-col md:flex-row w-full overflow-hidden relative mt-6">
                 <div class="w-full md:w-3/4 p-8 space-y-6 z-10">
-                    <form class="space-y-4 w-[700px]">
+                    <form class="space-y-4 w-full lg:w-[650px]">
                         <input type="text" placeholder="Name *" class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4" />
                         <input type="email" placeholder="Email" class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary" />
                         <input type="text" placeholder="Phone number *" class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary" />
@@ -25,7 +25,7 @@
                             <label for="remember">Enregistrer mon nom, mon email et mon site dans le navigateur pour mes prochains commentaires.</label>
                         </div>
 
-                        <div class="border border-gray-300 rounded px-6 py-4 w-[500px]">
+                        <div class="border border-gray-300 rounded px-6 py-4 w-[450px]">
                             <input type="checkbox" id="captcha" />
                             <label for="captcha" class="ml-2 text-sm">I’m not a robot</label>
                         </div>
@@ -42,11 +42,11 @@
 
                 <div class="hidden md:block w-1/4 bg-primary relative z-0"></div>
 
-                <div class="absolute inset-y-0 left-3/4 transform -translate-x-1/2 flex items-center justify-center z-20">
+                <div class="hidden lg:block absolute inset-y-0 left-3/4 transform -translate-x-1/2 flex items-center justify-center z-20">
                     <LayoutsAppImage
                         src="/home/rocket.png"
                         alt="Rocket"
-                        class="w-[400px] h-[400px] object-contain"
+                        class="mt-10 w-[400px] h-[400px] object-contain"
                     />
                 </div>
             </div>
