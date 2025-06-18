@@ -45,7 +45,7 @@ export const usePartners = () => {
             city: cities.length ? cities : undefined,
             duration: duration || undefined,
             type: type || undefined,
-            page,
+            page: Number(page),
             perPage: Number(perPage),
         };
 
@@ -69,6 +69,7 @@ export const usePartners = () => {
             to: response.partnerships.to || 0,
             links: response.partnerships.links || [],
         };
+
         loading.value = false;
     };
 

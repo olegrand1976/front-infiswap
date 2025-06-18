@@ -290,7 +290,7 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="demandPartners.data.length > 5"
+                            v-if="demandPartners.data.length > 0"
                             :default-page="page"
                             :per-page="perPage"
                             :total="demandPartners.total"
@@ -438,7 +438,7 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="demandPartners.data.length > 5"
+                            v-if="demandPartners.data.length > 0"
                             :default-page="page"
                             :per-page="perPage"
                             :total="demandPartners.total"
@@ -576,7 +576,7 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="demandPartners.data.length > 5"
+                            v-if="demandPartners.data.length > 0"
                             :default-page="page"
                             :per-page="perPage"
                             :total="demandPartners.total"
