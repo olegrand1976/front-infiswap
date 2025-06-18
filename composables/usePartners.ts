@@ -69,7 +69,6 @@ export const usePartners = () => {
             to: response.partnerships.to || 0,
             links: response.partnerships.links || [],
         };
-
         loading.value = false;
     };
 

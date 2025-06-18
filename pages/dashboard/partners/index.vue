@@ -190,9 +190,9 @@
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
-                            <div v-else-if="filteredInSearchPartners.length !== 0">
+                            <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
-                                    v-for="partnership in filteredInSearchPartners"
+                                    v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
                                     class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                                 >
@@ -290,10 +290,10 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="filteredInSearchPartners.length > 5"
+                            v-if="demandPartners.data.length > 5"
                             :default-page="page"
                             :per-page="perPage"
-                            :total="filteredInSearchPartners.length"
+                            :total="demandPartners.total"
                             @update:page="changePage"
                             @update:per-page="changePerPage"
                         />
@@ -338,9 +338,9 @@
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
-                            <div v-else-if="filteredAvailablePartners.length !== 0">
+                            <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
-                                    v-for="partnership in filteredAvailablePartners"
+                                    v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
                                     class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
                                 >
@@ -438,10 +438,10 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="filteredAvailablePartners.length > 5"
+                            v-if="demandPartners.data.length > 5"
                             :default-page="page"
                             :per-page="perPage"
-                            :total="filteredAvailablePartners.length"
+                            :total="demandPartners.total"
                             @update:page="changePage"
                             @update:per-page="changePerPage"
                         />
@@ -490,9 +490,9 @@
                                     <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
-                            <div v-else-if="filteredMyRequests.length !== 0">
+                            <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
-                                    v-for="partnership in filteredMyRequests"
+                                    v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
                                     class="grid grid-cols-3 md:grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                                 >
@@ -576,10 +576,10 @@
 
                     <div class="mt-4">
                         <CustomPagination
-                            v-if="filteredMyRequests.length > 5"
+                            v-if="demandPartners.data.length > 5"
                             :default-page="page"
                             :per-page="perPage"
-                            :total="filteredMyRequests.length"
+                            :total="demandPartners.total"
                             @update:page="changePage"
                             @update:per-page="changePerPage"
                         />
@@ -664,7 +664,6 @@ import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig, navigateTo } from '#app';
 
-const user = useState<User>('user');
 const selectedUser = ref<User | null>(null);
 const selectedPartnership = ref<UserPartner | null>(null);
 const perPage = ref(PERPAGE);
@@ -707,26 +706,10 @@ const searchFormData = reactive({
     duration: '',
     postalCodeTags: [],
     cityTags: [],
-    type: 'in_search',
+    type: activeTab.value,
 });
 
 const isSubmitted = ref(false);
-
-const filteredInSearchPartners = computed(() => {
-    return demandPartners.value.data.filter(
-        partnership => partnership.type === 'in_search' && partnership.user.id !== user.value?.id,
-    );
-});
-
-const filteredAvailablePartners = computed(() => {
-    return demandPartners.value.data.filter(
-        partnership => partnership.type === 'available' && partnership.user.id !== user.value?.id,
-    );
-});
-
-const filteredMyRequests = computed(() => {
-    return demandPartners.value.data.filter(partnership => partnership.user.id === user.value?.id);
-});
 
 const handleBlur = (event) => {
     const inputEl = event.target;
@@ -751,7 +734,7 @@ const addTag = (inputRef, tagArrayRef, transformFn = val => val) => {
 
 const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
-    searchFormData.type = newTab === 'my_requests' ? '' : newTab;
+    searchFormData.type = newTab;
     page.value = 1;
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
@@ -765,6 +748,7 @@ const handleTabChange = async (newTab: string) => {
 
 const search = async () => {
     page.value = 1;
+    isSubmitted.value = true;
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
@@ -773,7 +757,6 @@ const search = async () => {
         page: page.value,
         perPage: perPage.value,
     });
-    isSubmitted.value = true;
 };
 
 const changePage = async (newPage: number) => {
@@ -803,9 +786,12 @@ const changePerPage = async (newPerPage: number) => {
 
 onMounted(async () => {
     await fetchDemandPartners({
+        postalCode: searchFormData.postalCodeTags,
+        cities: searchFormData.cityTags,
+        duration: searchFormData.duration,
+        type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
-        type: searchFormData.type,
     });
 });
 
@@ -817,13 +803,16 @@ const reinitializeFilter = async () => {
     searchFormData.duration = '';
     searchFormData.postalCodeTags = [];
     searchFormData.cityTags = [];
-    searchFormData.type = activeTab.value === 'my_requests' ? '' : activeTab.value;
+    searchFormData.type = activeTab.value;
     isSubmitted.value = false;
     page.value = 1;
     await fetchDemandPartners({
+        postalCode: searchFormData.postalCodeTags,
+        cities: searchFormData.cityTags,
+        duration: searchFormData.duration,
+        type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
-        type: searchFormData.type,
     });
 };
 
