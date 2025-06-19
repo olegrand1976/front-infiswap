@@ -64,6 +64,7 @@ import { PERPAGE } from '~/lib/constants';
 import type { Replacement, Nurse } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
+import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });
@@ -100,8 +101,7 @@ const columns: ColumnDef<Replacement>[] = [
             style: 'white-space: nowrap;',
         }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const period = formatToDMY(row.original.start_date) + ' - ' + formatToDMY(row.original.end_date);
-            return h('div', { style: 'white-space: nowrap; min-width: 200px;' }, period);
+            return h(ReplacementPeriod, { style: 'white-space: nowrap; min-width: 200px;', replacement: row.original });
         },
     },
     {
