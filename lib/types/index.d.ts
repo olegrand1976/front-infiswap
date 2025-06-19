@@ -220,6 +220,14 @@ export type Replacement = {
     response_count: number;
     substitute_nurse?: string;
     candidate?: boolean;
+    periods?: ReplacementPeriod[];
+};
+
+export type ReplacementPeriod = {
+    id: number;
+    replacement_id: number;
+    start_date: string;
+    end_date: string;
 };
 
 export type ReplacementDetail = {
