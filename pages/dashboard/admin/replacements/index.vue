@@ -121,20 +121,26 @@ async function loadUsersFromNurses(nurses: Nurse[]) {
     loadingUsers.value = true;
     dialogOpen.value = true;
 
-    const plainNurses = Array.isArray(nurses)
-        ? nurses
-        : JSON.parse(JSON.stringify(nurses));
-
-    const userPromises = plainNurses
-        .map(n => {
-            const id = n.user_id ?? n.id;
-            return id ? $apifetch<{ user: User }>(`/api/users/${id}`) : null;
-        })
-        .filter(p => p !== null) as Promise<{ user: User }>[];
-
     try {
-        const responses = await Promise.all(userPromises);
-        selectedNurses.value = responses.map(res => res.user);
+        const plainNurses = Array.isArray(nurses)
+            ? nurses
+            : JSON.parse(JSON.stringify(nurses));
+
+        const userIdPromises = plainNurses.map((n: Nurse) =>
+            $apifetch<{ nurse: Nurse }>(`/api/nurses/${n.id}`)
+                .then(res => res.nurse?.user_id)
+                .catch(() => null),
+        );
+
+        const userIds = await Promise.all(userIdPromises);
+
+        const userPromises = userIds
+            .filter(id => !!id)
+            .map(id => $apifetch<{ user: User }>(`/api/users/${id}`));
+
+        const userResponses = await Promise.all(userPromises);
+
+        selectedNurses.value = userResponses.map(r => r.user);
     }
     catch (err) {
         console.error('Erreur lors du chargement des users :', err);
