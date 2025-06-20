@@ -491,7 +491,7 @@ const confirmRelaunch = async () => {
     if (!selectedReplacement.value) return;
 
     await relaunchMail(selectedReplacement.value);
-    toast({
+    $toast({
         description: 'Mail renvoyé avec succès à tous',
     });
     await getReplacementsForAdmin();
