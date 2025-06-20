@@ -53,7 +53,7 @@
                     <DialogHeader>
                         <DialogTitle>Confirmation</DialogTitle>
                         <DialogDescription class="mt-2">
-                            Voulez-vous vraiment re-notifier les infirmières de la region concerné par email ?
+                            Êtes-vous sûr de vouloir notifier à nouveau par email les infirmières de la région du remplacement ?
                         </DialogDescription>
                     </DialogHeader>
                     <div class="flex space-x-8 justify-end items-center">
