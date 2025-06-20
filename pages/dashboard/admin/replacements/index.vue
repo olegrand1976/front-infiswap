@@ -47,6 +47,28 @@
                     </div>
                 </DialogContent>
             </Dialog>
+
+            <Dialog v-model:open="isDialogOpen">
+                <DialogContent class="h-[28vh]">
+                    <DialogHeader>
+                        <DialogTitle>Confirmation</DialogTitle>
+                        <DialogDescription class="mt-2">
+                            Voulez-vous vraiment relancer tous les infirmiers par mail ?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div class="flex space-x-8 justify-end items-center">
+                        <Button
+                            variant="secondary"
+                            @click="closeDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button @click="confirmRelaunch">
+                            Oui, relancer
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -424,7 +446,8 @@ const columns: ColumnDef<Replacement>[] = [
                 },
                 {
                     label: 'Relance',
-                    onClick: () => handleRelaunch(replacement),
+                    // onClick: () => handleRelaunch(replacement),
+                    onClick: () => openConfirmDialog(replacement),
                 },
                 {
                     label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
@@ -451,13 +474,29 @@ const columns: ColumnDef<Replacement>[] = [
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);
 };
+const isDialogOpen = ref(false);
+const selectedReplacement = ref<Replacement | null>(null);
 
-const handleRelaunch = async (replacement: Replacement) => {
-    await relaunchMail(replacement);
-    $toast({
+const openConfirmDialog = (replacement: Replacement) => {
+    selectedReplacement.value = replacement;
+    isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+    isDialogOpen.value = false;
+    selectedReplacement.value = null;
+};
+
+const confirmRelaunch = async () => {
+    if (!selectedReplacement.value) return;
+
+    await relaunchMail(selectedReplacement.value);
+    toast({
         description: 'Mail renvoyé avec succès à tous',
     });
     await getReplacementsForAdmin();
+
+    closeDialog();
 };
 
 const handleClosed = async (replacement: Replacement) => {
