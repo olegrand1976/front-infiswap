@@ -79,6 +79,7 @@ const page = ref(1);
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const dialogOpen = ref(false);
+const { $toast } = useNuxtApp();
 const selectedNurses = ref<Nurse[]>([]);
 
 const refreshReplacement = async (page: number) => {
@@ -453,6 +454,9 @@ const handleEdit = (replacement: Replacement) => {
 
 const handleRelaunch = async (replacement: Replacement) => {
     await relaunchMail(replacement);
+    $toast({
+        description: 'Mail renvoyé avec succès à tous',
+    });
     await getReplacementsForAdmin();
 };
 
