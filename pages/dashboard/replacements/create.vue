@@ -62,10 +62,17 @@
                                 />
                             </div>
                         </div>
-                        <PlusIcon
-                            class="w-5 h-5 mt-4 mx-auto text-primary flex items-center cursor-pointer"
+                        <div
+                            class="mt-4 mx-auto text-primary flex space-x-2 items-center cursor-pointer"
                             @click="addPeriod"
-                        />
+                        >
+                            <PlusIcon
+                                class="w-5 h-5"
+                            />
+                            <span>
+                                Nouvelle période
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
