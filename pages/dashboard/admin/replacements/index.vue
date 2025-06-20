@@ -47,6 +47,28 @@
                     </div>
                 </DialogContent>
             </Dialog>
+
+            <Dialog v-model:open="isDialogOpen">
+                <DialogContent class="h-[28vh]">
+                    <DialogHeader>
+                        <DialogTitle>Confirmation</DialogTitle>
+                        <DialogDescription class="mt-2">
+                            Voulez-vous vraiment relancer tous les infirmiers par mail ?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div class="flex space-x-8 justify-end items-center">
+                        <Button
+                            variant="secondary"
+                            @click="closeDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button @click="confirmRelaunch">
+                            Oui, relancer
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -74,13 +96,14 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
+const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement, relaunchMail } = useReplacements();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const dialogOpen = ref(false);
+const { $toast } = useNuxtApp();
 const selectedNurses = ref<Nurse[]>([]);
 
 const refreshReplacement = async (page: number) => {
@@ -423,6 +446,11 @@ const columns: ColumnDef<Replacement>[] = [
                     onClick: () => handleEdit(replacement),
                 },
                 {
+                    label: 'Relance',
+                    // onClick: () => handleRelaunch(replacement),
+                    onClick: () => openConfirmDialog(replacement),
+                },
+                {
                     label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
                     onClick: () => replacement.status === 'closed'
                         ? handleOpen(replacement)
@@ -446,6 +474,30 @@ const columns: ColumnDef<Replacement>[] = [
 
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);
+};
+const isDialogOpen = ref(false);
+const selectedReplacement = ref<Replacement | null>(null);
+
+const openConfirmDialog = (replacement: Replacement) => {
+    selectedReplacement.value = replacement;
+    isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+    isDialogOpen.value = false;
+    selectedReplacement.value = null;
+};
+
+const confirmRelaunch = async () => {
+    if (!selectedReplacement.value) return;
+
+    await relaunchMail(selectedReplacement.value);
+    $toast({
+        description: 'Mail renvoyé avec succès à tous',
+    });
+    await getReplacementsForAdmin();
+
+    closeDialog();
 };
 
 const handleClosed = async (replacement: Replacement) => {
