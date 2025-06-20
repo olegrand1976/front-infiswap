@@ -64,7 +64,6 @@ import { PERPAGE } from '~/lib/constants';
 import type { Replacement, Nurse } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
-// import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 useHead({ title: 'Remplacements' });
 
@@ -73,7 +72,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
+const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement, relaunchMail } = useReplacements();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -423,6 +422,10 @@ const columns: ColumnDef<Replacement>[] = [
                     onClick: () => handleEdit(replacement),
                 },
                 {
+                    label: 'Relance',
+                    onClick: () => handleRelaunch(replacement),
+                },
+                {
                     label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
                     onClick: () => replacement.status === 'closed'
                         ? handleOpen(replacement)
@@ -446,6 +449,11 @@ const columns: ColumnDef<Replacement>[] = [
 
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);
+};
+
+const handleRelaunch = async (replacement: Replacement) => {
+    await relaunchMail(replacement);
+    await getReplacementsForAdmin();
 };
 
 const handleClosed = async (replacement: Replacement) => {

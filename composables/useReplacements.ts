@@ -171,6 +171,13 @@ export const useReplacements = () => {
         });
     };
 
+    const relaunchMail = async (formData) => {
+        return await $apifetch(`/api/replacements/${formData.id}`, {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     const updateAgainReplacement = async (formData) => {
         return await $apifetch(`/api/replacements/update-again/${formData.id}`, {
             method: 'PUT',
@@ -238,6 +245,7 @@ export const useReplacements = () => {
         forceDelete,
         activityUser,
         release,
+        relaunchMail,
     };
 };
 
