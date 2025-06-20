@@ -2,6 +2,7 @@
     <div>
         <DashboardAdminPageHeader title="Mis à jour utilisateur" />
         <DashboardAdminPageContent class="bg-gray-100">
+            <UsersName />
             <UsersAdminForm :user="user" />
         </DashboardAdminPageContent>
     </div>
