@@ -49,21 +49,22 @@
             </Dialog>
 
             <Dialog v-model:open="isDialogOpen">
-                <DialogContent class="h-[28vh]">
+                <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Confirmation</DialogTitle>
                         <DialogDescription class="mt-2">
-                            Voulez-vous vraiment relancer tous les infirmiers par mail ?
+                            Voulez-vous vraiment re-notifier les infirmières de la region concerné par email ?
                         </DialogDescription>
                     </DialogHeader>
                     <div class="flex space-x-8 justify-end items-center">
                         <Button
                             variant="secondary"
                             @click="closeDialog"
+                            class="rounded"
                         >
                             Annuler
                         </Button>
-                        <Button @click="confirmRelaunch">
+                        <Button @click="confirmRelaunch" class="rounded">
                             Oui, relancer
                         </Button>
                     </div>
