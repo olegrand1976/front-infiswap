@@ -59,12 +59,15 @@
                     <div class="flex space-x-8 justify-end items-center">
                         <Button
                             variant="secondary"
-                            @click="closeDialog"
                             class="rounded"
+                            @click="closeDialog"
                         >
                             Annuler
                         </Button>
-                        <Button @click="confirmRelaunch" class="rounded">
+                        <Button
+                            class="rounded"
+                            @click="confirmRelaunch"
+                        >
                             Oui, relancer
                         </Button>
                     </div>
