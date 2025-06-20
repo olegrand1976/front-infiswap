@@ -244,16 +244,12 @@
                                                             <span>{{ formatDate(period.end_date) }}</span>
                                                         </div>
                                                     </div>
-                                                    <Button
-                                                        v-if="replacement.periods.length > 2"
-                                                        size="xs"
-                                                        class="px-2 py-1"
+                                                    <div
+                                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                                         @click="handleShowPeriods(replacement.periods)"
                                                     >
-                                                        <span class="text-xs">
-                                                            Voir tout
-                                                        </span>
-                                                    </Button>
+                                                        Voir tout
+                                                    </div>
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
@@ -520,16 +516,12 @@
                                                         <span>{{ formatDate(period.end_date) }}</span>
                                                     </div>
                                                 </div>
-                                                <Button
-                                                    v-if="replacement.periods.length > 2"
-                                                    size="xs"
-                                                    class="px-2 py-1"
+                                                <div
+                                                    class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                                     @click="handleShowPeriods(replacement.periods)"
                                                 >
-                                                    <span class="text-xs">
-                                                        Voir tout
-                                                    </span>
-                                                </Button>
+                                                    Voir tout
+                                                </div>
                                             </template>
                                             <template v-else>
                                                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
@@ -786,16 +778,12 @@
                                                             <span>{{ formatDate(period.end_date) }}</span>
                                                         </div>
                                                     </div>
-                                                    <Button
-                                                        v-if="replacement.periods.length > 2"
-                                                        size="xs"
-                                                        class="px-2 py-1"
+                                                    <div
+                                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                                         @click="handleShowPeriods(replacement.periods)"
                                                     >
-                                                        <span class="text-xs">
-                                                            Voir tout
-                                                        </span>
-                                                    </Button>
+                                                        Voir tout
+                                                    </div>
                                                 </template>
                                                 <template v-else-if="replacement.start_date !== replacement.end_date && replacement.start_date != null && replacement.end_date != null">
                                                     <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
@@ -998,16 +986,12 @@
                                                         <span>{{ formatDate(period.end_date) }}</span>
                                                     </div>
                                                 </div>
-                                                <Button
-                                                    v-if="replacement.periods.length > 2"
-                                                    size="xs"
-                                                    class="px-2 py-1"
+                                                <div
+                                                    class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                                     @click="handleShowPeriods(replacement.periods)"
                                                 >
-                                                    <span class="text-xs">
-                                                        Voir tout
-                                                    </span>
-                                                </Button>
+                                                    Voir tout
+                                                </div>
                                             </template>
                                             <template v-else-if="replacement.start_date !== replacement.end_date">
                                                 <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
@@ -1325,11 +1309,11 @@
         <Dialog v-model:open="periodDialog">
             <DialogContent class="max-w-md">
                 <DialogHeader>
-                    <DialogTitle class="text-xl font-semibold text-primary">
+                    <DialogTitle class="text-base font-semibold text-primary">
                         Période de remplacement
                     </DialogTitle>
                 </DialogHeader>
-                <div class="mt-3 grid grid-cols-2 items-center font-semibold text-gray-700">
+                <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
                     <h5>
                         Date de début
                     </h5>
@@ -1342,7 +1326,7 @@
                     :key="period.id"
                     class="mt-1"
                 >
-                    <div class="grid grid-cols-2 items-center">
+                    <div class="text-sm grid grid-cols-2 items-center">
                         <span>
                             {{ formatDate(period.start_date) }}
                         </span>
