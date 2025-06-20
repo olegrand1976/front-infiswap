@@ -54,6 +54,28 @@
                     </div>
                 </DialogContent>
             </Dialog>
+
+            <Dialog v-model:open="isDialogOpen">
+                <DialogContent class="h-[28vh]">
+                    <DialogHeader>
+                        <DialogTitle>Confirmation</DialogTitle>
+                        <DialogDescription class="mt-2">
+                            Voulez-vous vraiment relancer tous les infirmiers par mail ?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div class="flex space-x-8 justify-end items-center">
+                        <Button
+                            variant="secondary"
+                            @click="closeDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button @click="confirmRelaunch">
+                            Oui, relancer
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -71,6 +93,7 @@ import { PERPAGE } from '~/lib/constants';
 import type { Replacement, Nurse, User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
+import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 import UsersName from '@/components/users/Name.vue';
@@ -82,12 +105,14 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
+const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement, relaunchMail } = useReplacements();
+
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const { $apifetch } = useNuxtApp();
 await getReplacementsForAdmin(page.value, perPage.value);
 
+const { $toast } = useNuxtApp();
 const dialogOpen = ref(false);
 const selectedNurses = ref<User[]>([]);
 const loadingUsers = ref(false);
@@ -137,8 +162,7 @@ const columns: ColumnDef<Replacement>[] = [
             style: 'white-space: nowrap;',
         }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const period = formatToDMY(row.original.start_date) + ' - ' + formatToDMY(row.original.end_date);
-            return h('div', { style: 'white-space: nowrap; min-width: 200px;' }, period);
+            return h(ReplacementPeriod, { style: 'white-space: nowrap; min-width: 200px;', replacement: row.original });
         },
     },
     {
@@ -465,6 +489,11 @@ const columns: ColumnDef<Replacement>[] = [
                     onClick: () => handleEdit(replacement),
                 },
                 {
+                    label: 'Relance',
+                    // onClick: () => handleRelaunch(replacement),
+                    onClick: () => openConfirmDialog(replacement),
+                },
+                {
                     label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
                     onClick: () => replacement.status === 'closed'
                         ? handleOpen(replacement)
@@ -488,6 +517,30 @@ const columns: ColumnDef<Replacement>[] = [
 
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);
+};
+const isDialogOpen = ref(false);
+const selectedReplacement = ref<Replacement | null>(null);
+
+const openConfirmDialog = (replacement: Replacement) => {
+    selectedReplacement.value = replacement;
+    isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+    isDialogOpen.value = false;
+    selectedReplacement.value = null;
+};
+
+const confirmRelaunch = async () => {
+    if (!selectedReplacement.value) return;
+
+    await relaunchMail(selectedReplacement.value);
+    $toast({
+        description: 'Mail renvoyé avec succès à tous',
+    });
+    await getReplacementsForAdmin();
+
+    closeDialog();
 };
 
 const handleClosed = async (replacement: Replacement) => {

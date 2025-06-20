@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
             <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] sm:px-9 rounded-lg">
-                Rechercher <strong>un remplacement</strong>
+                Chercher <strong>un remplacement</strong>
             </h1>
 
             <div class="flex justify-end gap-x-4 sm:gap-x-8 items-center">

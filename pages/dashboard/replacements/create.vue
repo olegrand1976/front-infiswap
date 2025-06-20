@@ -1,71 +1,124 @@
 <template>
-    <form @submit.prevent="submit">
-        <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <form
+        class="lg:ml-20 xl:ml-0"
+        @submit.prevent="submit"
+    >
+        <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24">
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow pb-8">
-                    <h2 class="text-white font-medium text-center bg-primary py-4 rounded-t-lg">
-                        Sélectionner la période de remplacement
+                    <h2 class="text-white font-medium text-center bg-primary lg:px-2 px-0 py-4 rounded-t-lg">
+                        Sélectionner les périodes de remplacement
                     </h2>
-                    <RangeCalendar
-                        v-model="value"
+
+                    <MultiRangeCalendar
+                        v-model="calendarValue"
                         class="flex flex-col justify-center md:block p-4 rounded-b-lg mb-6"
+                        @update:model-value="handleCalendarUpdate"
                     />
-                    <div class="mb-6 relative -mt-4 text-center text-black/50">
+
+                    <div class="mb-10 relative -mt-1 text-center text-black/50">
                         <hr class="border-b border-gray-200 mx-8">
                         <p class="absolute -top-5 left-[45%] text-center bg-white p-3 text-black/60">
                             OU
                         </p>
                     </div>
+
                     <div class="flex flex-col space-y-4 justify-center items-center mx-auto">
                         <h2 class="text-center font-semibold text-black/70">
-                            Saisir manuellement la date
+                            Saisir manuellement les périodes
                         </h2>
-                        <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-16 2xl:gap-32">
-                            <div class="flex flex-col space-y-2">
-                                <label class="font-semibold text-primary text-sm text-center">
-                                    Date de début
-                                </label>
-                                <Input
-                                    v-model="startDateInput"
-                                    type="date"
-                                    class="outline-gray-200 rounded-full"
-                                />
-                            </div>
-
-                            <div class="flex flex-col space-y-2">
-                                <label class="font-semibold text-primary text-sm text-center">
-                                    Date de fin
-                                </label>
-                                <Input
-                                    v-model="endDateInput"
-                                    type="date"
-                                    class="outline-gray-200 rounded-full"
+                        <div class="flex flex-col space-y-4 w-full px-4">
+                            <div
+                                v-for="(period, index) in formData.periods"
+                                :key="index"
+                                class="flex flex-col sm:flex-row lg:flex-col xl:flex-row justify-center relative gap-6 xl:gap-12 2xl:gap-20 items-center"
+                            >
+                                <div class="flex flex-col space-y-2">
+                                    <label class="font-semibold text-primary text-sm text-center">
+                                        Date de début
+                                    </label>
+                                    <input
+                                        v-model="period.start_date"
+                                        type="date"
+                                        class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
+                                        @change="handleManualDateUpdate(index)"
+                                    >
+                                </div>
+                                <div class="flex flex-col space-y-2">
+                                    <label class="font-semibold text-primary text-sm text-center">
+                                        Date de fin
+                                    </label>
+                                    <input
+                                        v-model="period.end_date"
+                                        type="date"
+                                        class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
+                                        @change="handleManualDateUpdate(index)"
+                                    >
+                                </div>
+                                <XMarkIcon
+                                    v-if="formData.periods.length > 1"
+                                    class="w-5 h-5 mt-2 md:mt-6 lg:top-4 xl:-top-8 2xl:top-4 right-4 text-primary absolute cursor-pointer"
+                                    @click="removePeriod(index)"
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-6">
-                        <label class="text-primary sm:flex sm:justify-center sm:items-center font-semibold">
-                            Créneau horaire
-                        </label>
-                        <div class="mt-2 flex sm:justify-center space-x-5 sm:space-x-8 items-center">
-                            <InputTime
-                                v-model="formData.timeSlot.startAt"
-                                class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                input-class="rounded-full"
+                        <div
+                            class="mt-4 mx-auto text-primary flex space-x-2 items-center cursor-pointer"
+                            @click="addPeriod"
+                        >
+                            <PlusIcon
+                                class="w-5 h-5"
                             />
-                            <p>à</p>
-                            <InputTime
-                                v-model="formData.timeSlot.endAt"
-                                class="w-20 sm:w-48 lg:w-20 2xl:w-48"
-                                input-class="rounded-full"
-                            />
+                            <span>
+                                Nouvelle période
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col space-y-4 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
+                <div>
+                    <label class="text-primary font-semibold">
+                        Créneau horaire
+                    </label>
+                    <div class="mt-2 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center">
+                        <label class="font-medium text-gray-700">
+                            Matin :
+                        </label>
+                        <div class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center">
+                            <p>De</p>
+                            <InputTime
+                                v-model="formData.timeSlot.morning.startAt"
+                                input-class="rounded-full"
+                            />
+                            <p>à</p>
+                            <InputTime
+                                v-model="formData.timeSlot.morning.endAt"
+                                input-class="rounded-full"
+                            />
+                        </div>
+                    </div>
+                    <div class="mt-4 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center">
+                        <label class="font-medium text-gray-700">
+                            Soir :
+                        </label>
+                        <div class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center">
+                            <p>De</p>
+                            <InputTime
+                                v-model="formData.timeSlot.evening.startAt"
+                                class="w-full"
+                                input-class="rounded-full"
+                            />
+                            <p>à</p>
+                            <InputTime
+                                v-model="formData.timeSlot.evening.endAt"
+                                class="w-full"
+                                input-class="rounded-full"
+                            />
+                        </div>
+                    </div>
+                </div>
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
                         Nombre de patients par jour
@@ -80,7 +133,7 @@
                     v-model="formData.zipCodes"
                     label="Codes postaux"
                     placeholder="6565,4561,1237"
-                    :is-mobile="isMobileView"
+                    :is-mobile="isMobile"
                     :comma-validation="false"
                     :count="4"
                     @keydown.enter.prevent
@@ -90,7 +143,7 @@
                     v-model="formData.cities"
                     label="Villes"
                     placeholder="Anvers, Bruges, Gand"
-                    :is-mobile="isMobileView"
+                    :is-mobile="isMobile"
                     class="mt-4"
                     :comma-validation="true"
                     :no-space-validation="true"
@@ -120,13 +173,12 @@
                                 </template>
                             </SelectValue>
                         </SelectTrigger>
-
                         <SelectContent class="border border-none">
                             <SelectGroup class="w-32">
                                 <div
                                     v-for="careType in careTypes"
                                     :key="careType.id"
-                                    class="flex items-center space-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                    class="flex items-center space-x-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
                                     @click="handleCareTypeClick(formData, careType.id)"
                                 >
                                     <Checkbox
@@ -149,7 +201,7 @@
                     <Textarea
                         v-model="formData.comment"
                         placeholder="Décrivez en quelques mots votre demande de remplacement..."
-                        rows="15"
+                        rows="8"
                         class="w-full border border-gray-400 focus-within:border-primary"
                     />
                 </div>
@@ -167,121 +219,160 @@
 </template>
 
 <script lang="ts" setup>
-import { getLocalTimeZone, today, parseDate } from '@internationalized/date';
-import type { DateRange } from 'reka-ui';
+import { XMarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
-import { formatRange } from '~/lib/utils';
+import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
-
-const start = today(getLocalTimeZone());
-const end = null;
-
 const { $toast } = useNuxtApp();
 
-const value = ref({
-    start,
-    end,
-}) as Ref<DateRange>;
+const isMobile = ref(false);
+onMounted(() => {
+    if (import.meta.client) {
+        isMobile.value = window.innerWidth <= 1024;
+    }
+});
+
+await fetchCareTypes();
 
 const formData = reactive({
-    startDate: formatRange(value.value).start,
-    endDate: null,
-    patientCount: null,
-    zipCodes: [],
-    cities: [],
-    careTypes: [],
+    periods: [
+        {
+            start_date: null as string | null,
+            end_date: null as string | null,
+        },
+    ],
+    patientCount: null as number | null,
+    zipCodes: [] as string[],
+    cities: [] as string[],
+    careTypes: [] as number[],
     timeSlot: {
-        startAt: '',
-        endAt: '',
+        morning: {
+            startAt: '',
+            endAt: '',
+        },
+        evening: {
+            startAt: '',
+            endAt: '',
+        },
     },
     comment: '',
     zipCodesInput: '',
     citiesInput: '',
 });
 
-const startDateInput = computed({
-    get: () => value.value.start ? value.value.start.toString() : '',
-    set: (date: string) => {
-        if (date) {
-            value.value.start = parseDate(date);
-            formData.startDate = formatRange(value.value).start;
-        }
-    },
-});
+const calendarValue = ref<{ start: string | null; end: string | null }[]>([
+    { start: null, end: null },
+]);
 
-const endDateInput = computed({
-    get: () => value.value.end ? value.value.end.toString() : '',
-    set: (date: string) => {
-        if (date) {
-            value.value.end = parseDate(date);
-            formData.endDate = formatRange(value.value).end;
-        }
-        else {
-            value.value.end = null;
-            formData.endDate = null;
-        }
+watch(
+    () => formData.periods,
+    () => {
+        calendarValue.value = formData.periods.map(period => ({
+            start: period.start_date || null,
+            end: period.end_date || null,
+        }));
     },
-});
+    { deep: true },
+);
 
-const handleCareTypeClick = (timeSlot, careTypes) => {
-    const index = timeSlot.careTypes.indexOf(careTypes);
-    if (index === -1) {
-        timeSlot.careTypes.push(careTypes);
+const handleCalendarUpdate = (ranges: { start: string | null; end: string | null }[]) => {
+    if (!Array.isArray(ranges)) {
+        console.error('Expected ranges to be an array:', ranges);
+        return;
+    }
+    if (formData.periods.length === 1 && !formData.periods[0].start_date && !formData.periods[0].end_date) {
+        formData.periods[0] = {
+            start_date: ranges[0]?.start || null,
+            end_date: ranges[0]?.end || null,
+        };
     }
     else {
-        timeSlot.careTypes.splice(index, 1);
+        formData.periods = ranges.map(range => ({
+            start_date: range.start || null,
+            end_date: range.end || null,
+        }));
     }
-    timeSlot.careTypes = [...timeSlot.careTypes];
 };
 
-const getSelectedCareTypesText = (selectedIds) => {
+const handleManualDateUpdate = (index: number) => {
+    const period = formData.periods[index];
+    if (period.start_date && period.end_date) {
+        const startDate = new Date(period.start_date);
+        const endDate = new Date(period.end_date);
+        if (startDate > endDate) {
+            formData.periods[index] = {
+                start_date: period.end_date,
+                end_date: period.start_date,
+            };
+        }
+    }
+    calendarValue.value = formData.periods.map(period => ({
+        start: period.start_date || null,
+        end: period.end_date || null,
+    }));
+};
+
+const addPeriod = () => {
+    formData.periods.push({
+        start_date: null,
+        end_date: null,
+    });
+    calendarValue.value.push({ start: null, end: null });
+};
+
+const removePeriod = (index: number) => {
+    formData.periods.splice(index, 1);
+    calendarValue.value.splice(index, 1);
+};
+
+const handleCareTypeClick = (formData, careTypeId) => {
+    const index = formData.careTypes.indexOf(careTypeId);
+    if (index === -1) {
+        formData.careTypes.push(careTypeId);
+    }
+    else {
+        formData.careTypes.splice(index, 1);
+    }
+    formData.careTypes = [...formData.careTypes];
+};
+
+const getSelectedCareTypesText = (selectedIds: number[]): string => {
     return careTypes.value
         .filter(ct => selectedIds.includes(ct.id))
         .map(ct => ct.name)
         .join(', ');
 };
 
-const isMobileView = ref(false);
-
-onMounted(() => {
-    if (import.meta.client) {
-        isMobileView.value = window.innerWidth <= 1024;
-    }
-});
-
-await fetchCareTypes();
-
 const resetForm = () => {
-    value.value = { start: today(getLocalTimeZone()), end: null };
-    formData.startDate = formatRange(value.value).start;
-    formData.endDate = null;
+    formData.periods = [{
+        start_date: null,
+        end_date: null,
+    }];
+    calendarValue.value = [{ start: null, end: null }];
     formData.patientCount = null;
     formData.zipCodes = [];
     formData.cities = [];
     formData.careTypes = [];
-    formData.timeSlot.startAt = '';
-    formData.timeSlot.endAt = '';
+    formData.timeSlot.morning.startAt = null;
+    formData.timeSlot.morning.endAt = null;
+    formData.timeSlot.evening.startAt = null;
+    formData.timeSlot.evening.endAt = null;
     formData.comment = '';
     formData.zipCodesInput = '';
     formData.citiesInput = '';
 };
 
 const { submit, inProgress } = useSubmit(async () => {
-    const formatted = formatRange(value.value);
-    formData.startDate = formatted.start;
-    formData.endDate = formatted.end;
     await submitReplacement(formData);
 }, {
     onSuccess: () => {
-        $toast({
-            description: 'Création effectuée',
-        });
+        $toast({ description: 'Création effectuée' });
         resetForm();
         setTimeout(() => {
             router.push('/dashboard/replacements/me');
