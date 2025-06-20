@@ -369,6 +369,21 @@ export const useAuth = () => {
         });
     };
 
+    async function fetchUserFromNurseId(nurseId: number): Promise<User | null> {
+        try {
+            const nurse = await $apifetch(`/api/nurses/${nurseId}`);
+            const userId = nurse?.user?.id;
+            if (!userId) return null;
+
+            const user = await $apifetch(`/api/users/${userId}`);
+            return user as User;
+        }
+        catch (error) {
+            console.error('Erreur fetchUserFromNurseId:', error);
+            return null;
+        }
+    }
+
     return {
         user,
         users,
@@ -408,5 +423,6 @@ export const useAuth = () => {
         createPreferences,
         createNotifPreferences,
         updateField,
+        fetchUserFromNurseId,
     };
 };

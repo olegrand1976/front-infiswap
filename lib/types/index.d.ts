@@ -212,6 +212,7 @@ export type Replacement = {
     };
     comment?: string;
     details: ReplacementDetail[];
+    nurse_owner: User;
     nurse_owner_full_name: string;
     nurse_owner_email: string;
     nurse_owner_phone_number: string;
@@ -219,6 +220,7 @@ export type Replacement = {
     matching_nurses: string;
     response_count: number;
     substitute_nurse?: string;
+    substitute_user?: User;
     candidate?: boolean;
     periods?: ReplacementPeriod[];
 };
