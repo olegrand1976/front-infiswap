@@ -218,6 +218,10 @@ export const useReplacements = () => {
             });
     }
 
+    function isClosed(replacement: Replacement) {
+        return replacement.replaced_by !== null || replacement.status == 'closed';
+    }
+
     return {
         error,
         loading,
@@ -238,6 +242,7 @@ export const useReplacements = () => {
         forceDelete,
         activityUser,
         release,
+        isClosed,
     };
 };
 
