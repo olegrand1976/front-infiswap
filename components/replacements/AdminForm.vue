@@ -600,7 +600,7 @@ const shouldShowMoreButton = computed(() => {
 });
 
 const remainingUsersCount = computed(() => {
-    return matchingUsers.value.length - limit;
+    return Math.max(matchingUsers.value.length - limit, 0);
 });
 
 loadMatchingUsers();
