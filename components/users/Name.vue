@@ -5,7 +5,7 @@
                 class="cursor-pointer"
                 @click="showForm = !showForm"
             >
-                {{ user.full_name }}
+                {{ user?.full_name ?? '' }}
             </span>
         </h1>
 
