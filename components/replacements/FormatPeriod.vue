@@ -10,6 +10,7 @@
             <span>{{ formatDate(period.end_date) }}</span>
         </div>
         <div
+            v-show="replacement.periods.length > 1"
             class="mt-1 text-center text-xs font-semibold text-primary cursor-pointer"
             @click="handleShowPeriods(replacement.periods)"
         >
