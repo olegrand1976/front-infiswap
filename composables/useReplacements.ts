@@ -75,12 +75,6 @@ export const useReplacements = () => {
         }
     };
 
-    // const getReplacementsForAdmin = async () => {
-    //     return await $apifetch('api/admin/replacements').then((response) => {
-    //         replacements.value = response.replacements;
-    //     });
-    // };
-
     async function getReplacementsForAdmin(page = 1, perPage = 15, options = {}) {
         return await $apifetch('api/admin/replacements', {
             params: {
