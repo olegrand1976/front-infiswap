@@ -32,8 +32,8 @@
                     :key="index"
                     class="grid grid-cols-2 mt-1 text-sm"
                 >
-                    <span>{{ formatTime(slot.start_at) }}</span>
-                    <span>{{ formatTime(slot.end_at) }}</span>
+                    <span v-show="slot.start_at">{{ formatTime(slot.start_at) }}</span>
+                    <span v-show="slot.end_at">{{ formatTime(slot.end_at) }}</span>
                 </div>
             </DialogContent>
         </Dialog>
