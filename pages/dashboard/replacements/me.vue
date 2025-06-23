@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
             <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] sm:px-9 rounded-lg">
                 Mes <strong>remplacements</strong>

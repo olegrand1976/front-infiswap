@@ -227,14 +227,39 @@
                                             >
                                                 {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
-                                            <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
-                                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.start_date) }}</span>
-                                                </div>
-                                                <span class="flex items-center">au</span>
-                                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.end_date) }}</span>
-                                                </div>
+                                            <TableCell
+                                                :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacement.periods.length > 0 })]"
+                                            >
+                                                <template v-if="replacement.periods.length > 0">
+                                                    <div
+                                                        v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                        :key="index"
+                                                        class="flex items-center"
+                                                    >
+                                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                            <span>{{ formatDate(period.start_date) }}</span>
+                                                        </div>
+                                                        <span class="flex items-center">au</span>
+                                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                            <span>{{ formatDate(period.end_date) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                                        @click="handleShowPeriods(replacement.periods)"
+                                                    >
+                                                        Voir tout
+                                                    </div>
+                                                </template>
+                                                <template v-else>
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                                    </div>
+                                                    <span class="flex items-center">au</span>
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(replacement.end_date) }}</span>
+                                                    </div>
+                                                </template>
                                             </TableCell>
                                             <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                                 <div>
@@ -476,14 +501,37 @@
                                         >
                                             {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
-                                        <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
-                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                <span>{{ formatDate(replacement.start_date) }}</span>
-                                            </div>
-                                            <span class="flex items-center">au</span>
-                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                <span>{{ formatDate(replacement.end_date) }}</span>
-                                            </div>
+                                        <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacement.periods.length > 0 })]">
+                                            <template v-if="replacement.periods.length > 0">
+                                                <div
+                                                    v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                    :key="index"
+                                                    class="flex items-center mb-2"
+                                                >
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(period.start_date) }}</span>
+                                                    </div>
+                                                    <span class="flex items-center">au</span>
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(period.end_date) }}</span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                                    @click="handleShowPeriods(replacement.periods)"
+                                                >
+                                                    Voir tout
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                    <span>{{ formatDate(replacement.start_date) }}</span>
+                                                </div>
+                                                <span class="flex items-center">au</span>
+                                                <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                    <span>{{ formatDate(replacement.end_date) }}</span>
+                                                </div>
+                                            </template>
                                         </TableCell>
                                         <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                             <div>
@@ -716,7 +764,28 @@
                                                 {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                                <template v-if="replacement.start_date !== replacement.end_date">
+                                                <template v-if="replacement.periods.length > 0">
+                                                    <div
+                                                        v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                        :key="index"
+                                                        class="flex items-center mb-2 space-x-2"
+                                                    >
+                                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                            <span>{{ formatDate(period.start_date) }}</span>
+                                                        </div>
+                                                        <span class="flex items-center">au</span>
+                                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                            <span>{{ formatDate(period.end_date) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                                        @click="handleShowPeriods(replacement.periods)"
+                                                    >
+                                                        Voir tout
+                                                    </div>
+                                                </template>
+                                                <template v-else-if="replacement.start_date !== replacement.end_date && replacement.start_date != null && replacement.end_date != null">
                                                     <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
                                                         <span>{{ formatDate(replacement.start_date) }}</span>
                                                     </div>
@@ -903,7 +972,28 @@
                                             {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                            <template v-if="replacement.start_date !== replacement.end_date">
+                                            <template v-if="replacement.periods.length > 0 && replacement.start_date == null && replacement.end_date == null">
+                                                <div
+                                                    v-for="(period, index) in replacement.periods.slice(0, 1)"
+                                                    :key="index"
+                                                    class="flex flex-col items-center mb-2"
+                                                >
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(period.start_date) }}</span>
+                                                    </div>
+                                                    <span class="flex items-center">au</span>
+                                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                        <span>{{ formatDate(period.end_date) }}</span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                                    @click="handleShowPeriods(replacement.periods)"
+                                                >
+                                                    Voir tout
+                                                </div>
+                                            </template>
+                                            <template v-else-if="replacement.start_date !== replacement.end_date">
                                                 <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
                                                     <span>{{ formatDate(replacement.start_date) }}</span>
                                                 </div>
@@ -1215,6 +1305,38 @@
                 </div>
             </DialogContent>
         </Dialog>
+
+        <Dialog v-model:open="periodDialog">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle class="text-base font-semibold text-primary">
+                        Période de remplacement
+                    </DialogTitle>
+                </DialogHeader>
+                <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
+                    <h5>
+                        Date de début
+                    </h5>
+                    <h5>
+                        Date de fin
+                    </h5>
+                </div>
+                <div
+                    v-for="period in selectedPeriods"
+                    :key="period.id"
+                    class="mt-1"
+                >
+                    <div class="text-sm grid grid-cols-2 items-center">
+                        <span>
+                            {{ formatDate(period.start_date) }}
+                        </span>
+                        <span>
+                            {{ formatDate(period.end_date) }}
+                        </span>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -1289,6 +1411,13 @@ settings.value = JSON.parse(user.value.settings);
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
+const selectedPeriods = ref([]);
+const periodDialog = ref(false);
+
+const handleShowPeriods = (periods) => {
+    selectedPeriods.value = periods;
+    periodDialog.value = true;
+};
 
 const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -1309,18 +1438,30 @@ const hasShift = (replacement, period) => {
     const timeSlotRaw = replacement.time_slot || replacement.timeSlot;
     if (timeSlotRaw) {
         const timeSlot = typeof timeSlotRaw === 'string' ? JSON.parse(timeSlotRaw) : timeSlotRaw;
-        if (timeSlot.start_at) {
+
+        if (timeSlot.start_at && timeSlot.end_at) {
             const startAt = normalizeTime(timeSlot.start_at);
             const endAt = normalizeTime(timeSlot.end_at);
 
             const timeSlotPeriods = getPeriodsFromTimeSlot(startAt, endAt);
             timeSlotPeriods.forEach(p => periods.add(p));
         }
+        else {
+            Object.entries(timeSlot).forEach(([key, value]) => {
+                if (typeof value === 'object' && value !== null && 'start_at' in value && 'end_at' in value) {
+                    const startAt = normalizeTime(value.start_at);
+                    const endAt = normalizeTime(value.end_at);
+
+                    const namedPeriods = getPeriodsFromTimeSlot(startAt, endAt);
+                    namedPeriods.forEach(p => periods.add(p));
+                }
+            });
+        }
     }
 
     if (replacement.details && Array.isArray(replacement.details)) {
         replacement.details.forEach((detail) => {
-            if (detail.start_at) {
+            if (detail.start_at && detail.end_at) {
                 const startAt = normalizeTime(detail.start_at);
                 const endAt = normalizeTime(detail.end_at);
 
@@ -1358,7 +1499,7 @@ const groupsByProvince = computed<ProvinceGroups>(() => {
     const groups: ProvinceGroups = {};
 
     filteredReplacements.value.forEach((replacement: Replacement) => {
-        const province = replacement.province || 'Inconnue';
+        const province = replacement.province || 'Autres';
         if (!groups[province]) {
             groups[province] = [];
         }

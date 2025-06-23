@@ -6,46 +6,59 @@
                 class="rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center"
             >
                 <Button
-                    class="text-sm w-24 sm:w-auto"
+                    class="text-sm w-auto"
                     @click="goBack"
                 >
                     <span class="text-xs">Retour</span>
                 </Button>
 
-                <div class="mt-20 sm:mt-auto flex flex-col space-y-6 sm:space-y-0 sm:flex-row w-full sm:w-auto sm:items-center sm:space-x-8">
+                <div class="mt-20 sm:mt-0 flex flex-col space-y-6 sm:space-y-0 sm:flex-row w-full sm:w-auto sm:items-center sm:space-x-8">
                     <h4 class="font-semibold text-sm sm:text-primary sm:ml-4 xl:ml-0">
                         Période
                     </h4>
-                    <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
-                        <span class="text-xs text-white ms-3">Début</span>
-                        <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
-                            <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                            <Input
-                                v-model="startDate"
-                                variant="transparent"
-                                class="text-xs font-bold text-primary w-24"
-                                disabled
-                            />
-                        </div>
+                    <div v-if="periods && periods.length > 0">
+                        <Button
+                            class="text-sm w-40 sm:w-auto bg-primary text-white"
+                            @click="periodDialog = true"
+                        >
+                            <span class="text-xs">Voir les périodes</span>
+                        </Button>
                     </div>
-                    <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
-                        <span class="text-xs text-white ms-3">Fin</span>
-                        <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
-                            <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                            <Input
-                                v-model="endDate"
-                                variant="transparent"
-                                class="text-xs font-bold text-primary w-24"
-                                disabled
-                            />
+                    <div
+                        v-else
+                        class="flex flex-col sm:flex-row sm:space-x-5 space-y-4 sm:space-y-0"
+                    >
+                        <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
+                            <span class="text-xs text-white ms-3">Début</span>
+                            <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
+                                <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                                <Input
+                                    v-model="startDate"
+                                    variant="transparent"
+                                    class="text-xs font-semibold text-primary w-24"
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
+                            <span class="text-xs text-white ms-3">Fin</span>
+                            <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
+                                <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                                <Input
+                                    v-model="endDate"
+                                    variant="transparent"
+                                    class="text-xs font-semibold text-primary w-24"
+                                    disabled
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div
-                v-if="user?.nurse && replacement.nurse_id === user.nurse.id"
-                class="mt-12 sm:mt-0 w-full lg:w-[45%] sm:h-12 px-3 rounded bg-gray-100 flex justify-between items-center gap-2"
+                v-if="user?.nurse && replacement.nurse_id === user.nurse_id"
+                class="mt-12 sm:mt-0 w-full sm:h-12 px-3 flex justify-between sm:items-center gap-2"
             >
                 <div class="flex items-center text-center space-x-3 bg-primary h-10 border-2 border-primary rounded-full w-72">
                     <div>
@@ -55,39 +68,75 @@
                         >Intéressée</span>
                         <span
                             v-else
-                            class="text-sm font-bold text-white text-nowrap ml-3"
+                            class="text-sm font-semibold text-white text-nowrap ml-3"
                         >Intéressées</span>
                     </div>
                     <div class="bg-white h-full flex items-center justify-center shadow w-72 rounded-full">
-                        <span
+                        <div
                             class="font-bold text-primary"
                         >
                             {{ replacement.response_count ?? 0 }}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <Button
+                        :href="`/dashboard/replacements/detail/${replacement.id}/list`"
+                    >
+                        <span class="text-sm font-semibold">voir liste</span>
+                    </Button>
+                </div>
+            </div>
+        </div>
+
+        <Dialog v-model:open="periodDialog">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle class="text-xl font-semibold text-primary">
+                        Période de remplacement
+                    </DialogTitle>
+                </DialogHeader>
+                <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
+                    <h5>
+                        Date de début
+                    </h5>
+                    <h5>
+                        Date de fin
+                    </h5>
+                </div>
+                <div
+                    v-for="period in periods"
+                    :key="period.id"
+                    class="mt-1"
+                >
+                    <div class="grid grid-cols-2 items-center text-sm">
+                        <span>
+                            {{ formatDate(period.start_date) }}
+                        </span>
+                        <span>
+                            {{ formatDate(period.end_date) }}
                         </span>
                     </div>
                 </div>
-                <Button
-                    :href="`/dashboard/replacements/detail/${replacement.id}/list`"
-                >
-                    <span class="text-sm font-bold">voir liste</span>
-                </Button>
-            </div>
-        </div>
+            </DialogContent>
+        </Dialog>
 
         <section
             v-if="groupedDetails.length > 0"
             class="mt-8 sm:mt-6 2xl:mt-12 mb-8 h-auto flex flex-col items-center space-y-8"
         >
             <div
-                v-for="(group, index) in groupedDetails"
-                :key="index"
+                v-for="group in groupedDetails"
+                :key="group.date"
             >
                 <div class="bg-gray-100 sm:w-[28rem] lg:w-[32rem] 2xl:w-[40rem] space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
                     <div>
                         <div class="h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
-                                {{ group.date }}
+                                <p class="w-full truncate overflow-ellipsis pr-2">
+                                    {{ group.date }}
+                                </p>
                             </h4>
                         </div>
                         <div class="rounded text-sm bg-gray-100 border border-gray-300 h-10 flex justify-center items-center my-4">
@@ -218,7 +267,7 @@ import {
     CheckCircleIcon,
     NoSymbolIcon,
 } from '@heroicons/vue/24/solid';
-import { useRoute } from 'vue-router';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { getFullName } from '~/lib/utils';
 
@@ -230,6 +279,10 @@ const respondedBy = computed(() => user.value?.nurse_id || null);
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
 const { isDisabled } = sendResponse();
+
+const periodDialog = ref(false);
+
+const periods = computed(() => replacement.value.periods || []);
 
 const formData = reactive({
     replacementId: replacementId,
@@ -249,7 +302,41 @@ const goBack = () => {
 const groupedDetails = computed(() => {
     const grouped = {};
 
-    if (replacement.value.details?.length > 0) {
+    if (replacement.value.periods && replacement.value.periods.length > 0) {
+        const periodRanges = replacement.value.periods.map(
+            period => `${formatDate(period.start_date)}-${formatDate(period.end_date)}`,
+        ).join(', ');
+        const groupKey = 'classic';
+
+        grouped[groupKey] = {
+            date: periodRanges,
+            times: new Set(),
+            patients: new Set(),
+            careTypes: new Set(),
+            zipCodes: new Set(),
+            cities: new Set(),
+        };
+
+        if (replacement.value.timeSlot) {
+            const timeSlot = JSON.parse(replacement.value.timeSlot);
+            if (timeSlot.morning && timeSlot.evening) {
+                if (timeSlot.morning.start_at && timeSlot.morning.end_at) {
+                    grouped[groupKey].times.add(`${formatTime(timeSlot.morning.start_at)}-${formatTime(timeSlot.morning.end_at)}`);
+                }
+                if (timeSlot.evening.start_at && timeSlot.evening.end_at) {
+                    grouped[groupKey].times.add(`${formatTime(timeSlot.evening.start_at)}-${formatTime(timeSlot.evening.end_at)}`);
+                }
+            }
+            else if (timeSlot.start_at && timeSlot.end_at) {
+                grouped[groupKey].times.add(`${formatTime(timeSlot.start_at)}-${formatTime(timeSlot.end_at)}`);
+            }
+        }
+
+        replacement.value.care_types.forEach(care => grouped[groupKey].careTypes.add(care.name));
+        JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[groupKey].zipCodes.add(zipCode));
+        JSON.parse(replacement.value.cities).forEach(city => grouped[groupKey].cities.add(city));
+    }
+    else if (replacement.value.details?.length > 0) {
         replacement.value.details.forEach((detail) => {
             if (!grouped[detail.date]) {
                 grouped[detail.date] = {
@@ -262,7 +349,7 @@ const groupedDetails = computed(() => {
                 };
             }
 
-            grouped[detail.date].times.add(`${formatTime(detail.start_at)} - ${formatTime(detail.end_at)}`);
+            grouped[detail.date].times.add(`${formatTime(detail.start_at)}-${formatTime(detail.end_at)}`);
             replacement.value.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
             JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[detail.date].zipCodes.add(zipCode));
             JSON.parse(replacement.value.cities).forEach(city => grouped[detail.date].cities.add(city));
@@ -276,12 +363,28 @@ const groupedDetails = computed(() => {
         const date = formatDate(replacement.value.start_date);
         grouped[date] = {
             date: date,
-            times: new Set([`${formatTime(timeSlot.start_at)} - ${formatTime(timeSlot.end_at)}`]),
+            times: new Set(),
             patients: new Set(),
-            careTypes: new Set(replacement.value.care_types.map(care => care.name)),
-            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
-            cities: new Set(JSON.parse(replacement.value.cities)),
+            careTypes: new Set(),
+            zipCodes: new Set(),
+            cities: new Set(),
         };
+
+        if (timeSlot.morning && timeSlot.evening) {
+            if (timeSlot.morning.start_at && timeSlot.morning.end_at) {
+                grouped[date].times.add(`${formatTime(timeSlot.morning.start_at)} - ${formatTime(timeSlot.morning.end_at)}`);
+            }
+            if (timeSlot.evening.start_at && timeSlot.evening.end_at) {
+                grouped[date].times.add(`${formatTime(timeSlot.evening.start_at)} - ${formatTime(timeSlot.evening.end_at)}`);
+            }
+        }
+        else if (timeSlot.start_at && timeSlot.end_at) {
+            grouped[date].times.add(`${formatTime(timeSlot.start_at)}-${formatTime(timeSlot.end_at)}`);
+        }
+
+        replacement.value.care_types.forEach(care => grouped[date].careTypes.add(care.name));
+        JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[date].zipCodes.add(zipCode));
+        JSON.parse(replacement.value.cities).forEach(city => grouped[date].cities.add(city));
     }
     else {
         const date = formatDate(replacement.value.start_date);
@@ -289,10 +392,14 @@ const groupedDetails = computed(() => {
             date: date,
             times: new Set(),
             patients: new Set(),
-            careTypes: new Set(replacement.value.care_types.map(care => care.name)),
-            zipCodes: new Set(JSON.parse(replacement.value.zip_codes)),
-            cities: new Set(JSON.parse(replacement.value.cities)),
+            careTypes: new Set(),
+            zipCodes: new Set(),
+            cities: new Set(),
         };
+
+        replacement.value.care_types.forEach(care => grouped[date].careTypes.add(care.name));
+        JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[date].zipCodes.add(zipCode));
+        JSON.parse(replacement.value.cities).forEach(city => grouped[date].cities.add(city));
     }
 
     return Object.values(grouped).map(group => ({
@@ -320,6 +427,7 @@ const {
 );
 
 const formatDate = (isoString) => {
+    if (!isoString) return '';
     const date = new Date(isoString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
