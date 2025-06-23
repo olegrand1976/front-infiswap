@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex mt-6">
+        <div class="flex mt-8">
             <Form class="grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
                     <FormField name="days">
@@ -506,7 +506,7 @@
                                                 <div
                                                     v-for="(period, index) in replacement.periods.slice(0, 2)"
                                                     :key="index"
-                                                    class="flex items-center mb-2"
+                                                    class="flex flex-col items-center mb-2"
                                                 >
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                         <span>{{ formatDate(period.start_date) }}</span>
@@ -768,7 +768,7 @@
                                                     <div
                                                         v-for="(period, index) in replacement.periods.slice(0, 2)"
                                                         :key="index"
-                                                        class="flex items-center mb-2 space-x-2"
+                                                        class="flex flex-col items-center mb-2 space-x-2"
                                                     >
                                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                             <span>{{ formatDate(period.start_date) }}</span>
@@ -1343,11 +1343,11 @@
             v-model:open="filterRegionDialog"
             class="pb-8 sm:pb-0"
         >
-            <DialogContent class="max-h-[70vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-xl">
+            <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Choisissez une région</DialogTitle>
+                    <DialogTitle>Choisissez une province</DialogTitle>
                     <DialogDescription>
-                        Cochez une ou plusieurs régions pour filtrer les remplacements.
+                        Cochez une ou plusieurs provinces pour filtrer les remplacements.
                     </DialogDescription>
                 </DialogHeader>
                 <div class="grid sm:grid-cols-2 gap-4 py-4">
@@ -1431,6 +1431,11 @@ const props = defineProps({
         type: Boolean,
         required: true,
         default: true,
+    },
+    filteredProvinces: {
+        type: Array,
+        required: false,
+        default: () => [],
     },
 });
 
@@ -1650,6 +1655,17 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
         console.error(error);
     }
 };
+
+watch(
+    () => props.filteredProvinces,
+    (newProvinces, oldProvinces) => {
+        if (newProvinces !== oldProvinces) {
+            selectedRegions.value = [...newProvinces as string[]];
+            fetchInitialData(page.value, perPage.value);
+        }
+    },
+    { deep: true },
+);
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
