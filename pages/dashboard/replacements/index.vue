@@ -8,7 +8,7 @@
             <div class="flex justify-end gap-x-4 sm:gap-x-8 items-center">
                 <Select v-model="selectedFilter">
                     <SelectTrigger
-                        class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
+                        class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
                         position="right"
                     >
                         <SelectValue
@@ -42,7 +42,7 @@
                                     class="w-6 hover:text-primary"
                                 />
                                 <TooltipContent>
-                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par province' }}</p>
+                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par région' }}</p>
                                 </TooltipContent>
                             </TooltipTrigger>
                         </Tooltip>
@@ -54,6 +54,7 @@
         <Replacement
             :filter-type="selectedFilter"
             :group-by-province="groupByProvince"
+            :selected-regions="selectedRegions"
         />
     </div>
 </template>
@@ -90,7 +91,7 @@ watch(selectedFilter, (newFilter) => {
 });
 
 useHead({
-    title: 'Rechercher un remplacement',
+    title: 'Chercher un remplacement',
 });
 
 definePageMeta({

@@ -280,6 +280,7 @@ export const useSearchReplacements = () => {
         cities = [],
         selectedDays = [],
         type = '',
+        provinces = [],
         page = 1,
         perPage = PERPAGE,
     } = {}) {
@@ -291,6 +292,7 @@ export const useSearchReplacements = () => {
             cities: cities,
             days: selectedDays,
             type: type,
+            provinces: provinces,
             page,
             perPage,
         };
