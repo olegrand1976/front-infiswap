@@ -1345,7 +1345,7 @@
         >
             <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Choisissez une province</DialogTitle>
+                    <DialogTitle>Zone géographique (province)</DialogTitle>
                     <DialogDescription>
                         Cochez une ou plusieurs provinces pour filtrer les remplacements.
                     </DialogDescription>
