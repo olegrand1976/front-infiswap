@@ -42,7 +42,7 @@
 
 <script lang="ts" setup>
 const props = defineProps<{
-    replacement: any
+    replacement: any;
 }>();
 
 const dialogOpen = ref(false);
