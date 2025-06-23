@@ -166,7 +166,7 @@ export const useReplacements = () => {
     };
 
     const relaunchMail = async (formData) => {
-        return await $apifetch(`/api/replacements/${formData.id}`, {
+        return await $apifetch(`/api/replacements/${formData.id}/relaunch-creator`, {
             method: 'POST',
             body: formData,
         });
