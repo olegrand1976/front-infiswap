@@ -55,7 +55,7 @@
                 </DialogContent>
             </Dialog>
 
-            <Dialog v-model:open="isDialogOpen">
+            <!-- <Dialog v-model:open="isDialogOpen">
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Confirmation</DialogTitle>
@@ -76,6 +76,62 @@
                             @click="confirmRelaunch"
                         >
                             Oui, relancer
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog> -->
+            <Dialog v-model:open="isDialogOpen">
+                <DialogContent class="rounded-xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
+                    <DialogHeader>
+                        <DialogTitle class="text-xl font-semibold text-gray-800 dark:text-white">
+                            Relancer une notification
+                        </DialogTitle>
+                        <DialogDescription class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                            Choisissez qui doit recevoir une relance par email.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div
+                            class="cursor-pointer border rounded-lg p-5 hover:shadow-lg transition-all duration-200 border-blue-400"
+                        >
+                            <h3 class="text-lg font-bold text-blue-600">Relancer le créateur</h3>
+                            <p class="text-sm text-gray-700 mt-2 dark:text-gray-300">
+                                Envoie un email de rappel uniquement au créateur de ce remplacement.
+                            </p>
+                        </div>
+
+                        <div
+                            class="cursor-pointer border rounded-lg p-5 hover:shadow-lg transition-all duration-200 border-purple-400"
+                        >
+                            <h3 class="text-lg font-bold text-purple-600">Relancer les infirmiers</h3>
+                            <p class="text-sm text-gray-700 mt-2 dark:text-gray-300">
+                                Notifie par email tous les infirmiers de la région associés à ce remplacement.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 border-t pt-4">
+                        <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Historique des relances</h4>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 list-disc list-inside">
+                            <li>Relance envoyée au créateur le 12 juin 2025</li>
+                            <li>Relance régionale le 10 juin 2025</li>
+                            <li>Création du remplacement le 08 juin 2025</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex justify-end mt-6 space-x-4">
+                        <Button
+                            variant="ghost"
+                            class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+                            @click="closeDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2"
+                        >
+                            Confirmer
                         </Button>
                     </div>
                 </DialogContent>
