@@ -22,26 +22,33 @@
                     <DialogHeader>
                         <DialogTitle>
                             <template v-if="selectedNurses.length === 1">
-                                Personne notifiée ({{ selectedNurses.length }})
+                                Personne notifiée (1)
                             </template>
                             <template v-else>
                                 Personnes notifiées ({{ selectedNurses.length }})
                             </template>
                         </DialogTitle>
                     </DialogHeader>
-                    <div class="mt-4">
+
+                    <div
+                        v-if="loadingUsers"
+                        class="mt-4 text-center text-gray-500 italic"
+                    >
+                        Chargement des notifiées...
+                    </div>
+
+                    <div
+                        v-else
+                        class="mt-4"
+                    >
                         <ul class="space-y-2">
                             <li
-                                v-for="nurse in selectedNurses"
-                                :key="nurse.id"
+                                v-for="user in selectedNurses"
+                                :key="user.id"
                                 class="flex justify-between items-center"
                             >
-                                <span>
-                                    {{ nurse.full_name }}
-                                </span>
-                                <span>
-                                    {{ nurse.zip_code }}
-                                </span>
+                                <UsersName :user="user" />
+                                <span>{{ user.zip_code ?? '—' }}</span>
                             </li>
                         </ul>
                     </div>
@@ -59,12 +66,15 @@
                     <div class="flex space-x-8 justify-end items-center">
                         <Button
                             variant="secondary"
-                            @click="closeDialog"
                             class="rounded"
+                            @click="closeDialog"
                         >
                             Annuler
                         </Button>
-                        <Button @click="confirmRelaunch" class="rounded">
+                        <Button
+                            class="rounded"
+                            @click="confirmRelaunch"
+                        >
                             Oui, relancer
                         </Button>
                     </div>
@@ -84,11 +94,13 @@ import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
-import type { Replacement, Nurse } from '~/lib/types';
+import type { Replacement, Nurse, User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
+
+import UsersName from '@/components/users/Name.vue';
 
 useHead({ title: 'Remplacements' });
 
@@ -101,11 +113,46 @@ const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, e
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
+const { $apifetch } = useNuxtApp();
 await getReplacementsForAdmin(page.value, perPage.value);
 
-const dialogOpen = ref(false);
 const { $toast } = useNuxtApp();
-const selectedNurses = ref<Nurse[]>([]);
+const dialogOpen = ref(false);
+const selectedNurses = ref<User[]>([]);
+const loadingUsers = ref(false);
+
+async function loadUsersFromNurses(nurses: Nurse[]) {
+    loadingUsers.value = true;
+    dialogOpen.value = true;
+
+    try {
+        const plainNurses = Array.isArray(nurses)
+            ? nurses
+            : JSON.parse(JSON.stringify(nurses));
+
+        const userIdPromises = plainNurses.map((n: Nurse) =>
+            $apifetch<{ nurse: Nurse }>(`/api/nurses/${n.id}`)
+                .then(res => res.nurse?.user_id)
+                .catch(() => null),
+        );
+
+        const userIds = await Promise.all(userIdPromises);
+
+        const userPromises = userIds
+            .filter(id => !!id)
+            .map(id => $apifetch<{ user: User }>(`/api/users/${id}`));
+
+        const userResponses = await Promise.all(userPromises);
+
+        selectedNurses.value = userResponses.map(r => r.user);
+    }
+    catch (err) {
+        console.error('Erreur lors du chargement des users :', err);
+    }
+    finally {
+        loadingUsers.value = false;
+    }
+}
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
@@ -305,15 +352,16 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorKey: 'nurse_owner_full_name',
-        header: ({ column }) => {
-            return h(Button, {
+        accessorKey: 'nurse_owner',
+        header: ({ column }) =>
+            h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Créateur', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
-        },
+            }, () => ['Créateur', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+
         cell: ({ row }) => {
-            return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.nurse_owner_full_name);
+            const user = row.original.nurse_owner;
+            return h(UsersName, { user });
         },
     },
     {
@@ -339,15 +387,22 @@ const columns: ColumnDef<Replacement>[] = [
         sortingFn: 'alphanumeric',
     },
     {
-        accessorKey: 'substitute_nurse',
+        accessorKey: 'substitute_user',
         header: ({ column }) => {
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
+
         cell: ({ row }) => {
-            return h('div', { class: 'capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden' }, row.original.substitute_nurse);
+            const user = row.original.substitute_user;
+
+            if (!user) {
+                return h('span', { class: 'italic text-gray-400' }, ' ');
+            }
+
+            return h(UsersName, { user });
         },
     },
     {
@@ -360,8 +415,8 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
-            const nurses = (row.original.matching_nurses || []).map(nurse => nurse);
-            const displayText = nurses.map(nurse => nurse.full_name).join(', ');
+            const nurses = row.original.matching_nurses || [];
+            const displayText = nurses.map(n => n.full_name).join(', ');
 
             return h('div', { class: 'flex items-center' }, [
                 h('div', {
@@ -370,10 +425,7 @@ const columns: ColumnDef<Replacement>[] = [
                 nurses.length > 0 && h(Button, {
                     variant: 'ghost',
                     size: 'sm',
-                    onClick: () => {
-                        selectedNurses.value = nurses;
-                        dialogOpen.value = true;
-                    },
+                    onClick: () => loadUsersFromNurses(nurses),
                 }, () => h(EyeIcon, { class: 'h-4 w-4' })),
             ]);
         },

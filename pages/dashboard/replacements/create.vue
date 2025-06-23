@@ -27,13 +27,13 @@
                         <h2 class="text-center font-semibold text-black/70">
                             Saisir manuellement les périodes
                         </h2>
-                        <div class="flex flex-col space-y-4 w-full px-4">
+                        <div class="flex flex-col space-y-4 w-full px-4 gap-6">
                             <div
                                 v-for="(period, index) in formData.periods"
                                 :key="index"
-                                class="flex flex-col sm:flex-row lg:flex-col xl:flex-row justify-center relative gap-6 xl:gap-12 2xl:gap-20 items-center"
+                                class="flex flex-col sm:flex-row lg:flex-col xl:flex-row justify-center relative gap-4 xl:gap-12 2xl:gap-20 items-center"
                             >
-                                <div class="flex flex-col space-y-2">
+                                <div class="flex flex-col space-y-1">
                                     <label class="font-semibold text-primary text-sm text-center">
                                         Date de début
                                     </label>
@@ -44,7 +44,7 @@
                                         @change="handleManualDateUpdate(index)"
                                     >
                                 </div>
-                                <div class="flex flex-col space-y-2">
+                                <div class="flex flex-col space-y-1">
                                     <label class="font-semibold text-primary text-sm text-center">
                                         Date de fin
                                     </label>
@@ -57,22 +57,23 @@
                                 </div>
                                 <XMarkIcon
                                     v-if="formData.periods.length > 1"
-                                    class="w-5 h-5 mt-2 md:mt-6 lg:top-4 xl:-top-8 2xl:top-4 right-4 text-primary absolute cursor-pointer"
+                                    class="w-5 h-5 mt-2 md:mt-6 lg:top-4 xl:-top-8 2xl:top-2 right-0 text-primary absolute cursor-pointer"
                                     @click="removePeriod(index)"
                                 />
                             </div>
                         </div>
-                        <div
-                            class="mt-4 mx-auto text-primary flex space-x-2 items-center cursor-pointer"
+                        <Button
+                            class="mt-4 mx-auto rounded-full flex space-x-1 items-center cursor-pointer"
+                            size="sm"
                             @click="addPeriod"
                         >
                             <PlusIcon
                                 class="w-5 h-5"
                             />
                             <span>
-                                Nouvelle période
+                                Ajouter période
                             </span>
-                        </div>
+                        </Button>
                     </div>
                 </div>
             </div>
