@@ -1,22 +1,12 @@
 <template>
     <div class="bg-white rounded-xl max-w-sm w-full overflow-hidden transition-all duration-300">
         <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
-            <LayoutsAppImage
-                :src="'logo_white.png'"
-                alt="logo-InfiSwap"
-                class="w-48 hover:cursor-pointer mb-8"
-                format="png"
-            />
-            <img
-                v-if="user.profil_url"
-                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
-                alt="Photo de profil"
-                class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14"
-            >
-            <UserCircleIcon
-                v-else
-                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14"
-            />
+            <LayoutsAppImage :src="'logo_white.png'" alt="logo-InfiSwap" class="w-48 hover:cursor-pointer mb-8"
+                format="png" />
+            <img v-if="user.profil_url" :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
+                alt="Photo de profil" class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14">
+            <UserCircleIcon v-else
+                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14" />
         </div>
 
         <div class="pt-20 px-6 text-center">
@@ -32,53 +22,41 @@
             </p>
         </div>
 
-        <div
-            v-if="isAdmin"
-            class="px-6 text-left text-sm text-gray-700 mb-8"
-        >
+        <div v-if="isAdmin" class="px-6 text-left text-sm text-gray-700 mb-8">
             <div class="flex gap-4 mb-4 border-b border-gray-300">
-                <button
-                    class="pb-2 border-b-2"
+                <button class="pb-2 border-b-2"
                     :class="activeTab === 'information' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="activeTab = 'information'"
-                >
+                    @click="activeTab = 'information'">
                     Informations
                 </button>
-                <button
-                    class="pb-2 border-b-2"
+                <button class="pb-2 border-b-2"
                     :class="activeTab === 'contact' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="activeTab = 'contact'"
-                >
+                    @click="activeTab = 'contact'">
                     Contact
                 </button>
-                <button
-                    class="pb-2 border-b-2"
+                <button class="pb-2 border-b-2"
                     :class="activeTab === 'activite' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="activeTab = 'activite'"
-                >
+                    @click="activeTab = 'activite'">
                     Activité
                 </button>
-                <button
-                    class="pb-2 border-b-2"
+                <button class="pb-2 border-b-2"
                     :class="activeTab === 'comment' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="activeTab = 'comment'"
-                >
+                    @click="activeTab = 'comment'">
                     Commentaire
                 </button>
             </div>
 
-            <div
-                v-if="activeTab === 'activite'"
-                class="space-y-3"
-            >
+            <div v-if="activeTab === 'activite'" class="space-y-3">
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
-                    <p>Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span></p>
+                    <p>Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span>
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <DocumentCheckIcon class="w-5 h-5 text-primary" />
-                    <p>Remplacements acceptés : <span class="font-semibold">{{ activityData.replacements_accepted }}</span></p>
+                    <p>Remplacements acceptés : <span class="font-semibold">{{ activityData.replacements_accepted
+                            }}</span></p>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -88,22 +66,17 @@
 
                 <div class="flex items-center gap-2">
                     <CheckCircleIcon class="w-5 h-5 text-primary" />
-                    <p>Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span></p>
+                    <p>Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted
+                            }}</span></p>
                 </div>
 
-                <div
-                    v-if="user.ambassador === 1"
-                    class="flex items-center gap-2"
-                >
+                <div v-if="user.ambassador === 1" class="flex items-center gap-2">
                     <UserGroupIcon class="w-5 h-5 text-primary" />
                     <p>Infirmiers parrainés : <span class="font-semibold">--</span></p>
                 </div>
             </div>
 
-            <div
-                v-else-if="activeTab === 'information'"
-                class="space-y-3"
-            >
+            <div v-else-if="activeTab === 'information'" class="space-y-3">
                 <p class="flex items-center gap-2 text-primary">
                     <EnvelopeIcon class="w-5 h-5" />
                     {{ user.email }}
@@ -126,65 +99,46 @@
                 </p>
             </div>
 
-            <div
-                v-else-if="activeTab === 'contact'"
-                class="space-y-3"
-            >
+            <div v-else-if="activeTab === 'contact'" class="space-y-3">
                 <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
 
-                <div class="flex items-center gap-2">
-                    <component
-                        :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
-                        :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
+                {# <div class="flex items-center gap-2">
+                    <component :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
+                        :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'" />
                     <label>InfiSwap</label>
-                </div>
+                </div> #}
 
                 <div class="flex items-center gap-2">
-                    <component
-                        :is="user.insurance ? CheckCircleIcon : XCircleIcon"
-                        :class="user.insurance ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
+                    <component :is="user.insurance ? CheckCircleIcon : XCircleIcon"
+                        :class="user.insurance ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'" />
                     <label>NursAssur</label>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <component
-                        :is="user.site ? CheckCircleIcon : XCircleIcon"
-                        :class="user.site ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
+                    <component :is="user.site ? CheckCircleIcon : XCircleIcon"
+                        :class="user.site ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'" />
                     <label>NursTech</label>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <component
-                        :is="user.ambassador ? CheckCircleIcon : XCircleIcon"
-                        :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
+                    <component :is="user.ambassador ? CheckCircleIcon : XCircleIcon"
+                        :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'" />
                     <label>Ambassadeur</label>
                 </div>
             </div>
 
-            <div
-                v-else-if="activeTab === 'comment'"
-                class="space-y-3"
-            >
+            <div v-else-if="activeTab === 'comment'" class="space-y-3">
                 <div class="relative">
-                    <Textarea
-                        v-model="comment"
+                    <Textarea v-model="comment"
                         class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
-                        @keydown.enter.exact.prevent="submitComment"
-                    />
+                        @keydown.enter.exact.prevent="submitComment" />
                     <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire
                     </p>
                 </div>
             </div>
         </div>
-        <div
-            v-else
-            class="px-6"
-        >
+        <div v-else class="px-6">
             <div class="my-4">
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
@@ -195,14 +149,11 @@
                         {{ user.email || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
-                        <LayoutsAppImage
-                            src="/icons/gender.png"
-                            class="h-5"
-                        />
+                        <LayoutsAppImage src="/icons/gender.png" class="h-5" />
                         {{
                             user.gender === 'F' ? 'Femme'
-                            : user.gender === 'M' ? 'Homme'
-                                : user.gender || 'Non renseigné'
+                                : user.gender === 'M' ? 'Homme'
+                                    : user.gender || 'Non renseigné'
                         }}
                     </p>
                     <p class="flex items-center gap-2">
