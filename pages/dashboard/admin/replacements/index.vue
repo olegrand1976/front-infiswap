@@ -98,6 +98,7 @@ import type { Replacement, Nurse, User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
+import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 import UsersName from '@/components/users/Name.vue';
@@ -176,69 +177,14 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        id: 'time_slot',
-        header: ({ column }) => {
-            return h(
-                Button,
-                {
-                    variant: 'ghost',
-                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                },
-                () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
-            );
-        },
-        accessorFn: (row) => {
-            let slot = null;
-            if (typeof row.timeSlot === 'string') {
-                try {
-                    slot = JSON.parse(row.timeSlot);
-                }
-                catch (e) {
-                    console.error(e);
-                    slot = null;
-                }
-            }
-            else if (typeof row.timeSlot === 'object' && row.timeSlot !== null) {
-                slot = row.timeSlot;
-            }
-            if (!slot && row.details?.length > 0) {
-                slot = {
-                    start_at: row.details[0].start_at,
-                    end_at: row.details[0].end_at,
-                };
-            }
-
-            return slot?.start_at || '';
-        },
-        sortingFn: 'alphanumeric',
+        accessorKey: 'time_slot',
+        header: ({ column }) => h(Button, {
+            variant: 'ghost',
+            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            style: 'white-space: nowrap;',
+        }, () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            let slot = null;
-            if (typeof row.original.timeSlot === 'string') {
-                try {
-                    slot = JSON.parse(row.original.timeSlot);
-                }
-                catch (e) {
-                    console.error(e);
-                    slot = null;
-                }
-            }
-            else if (typeof row.original.timeSlot === 'object' && row.original.timeSlot !== null) {
-                slot = row.original.timeSlot;
-            }
-            if (!slot && row.original.details?.length > 0) {
-                slot = {
-                    start_at: row.original.details[0].start_at,
-                    end_at: row.original.details[0].end_at,
-                };
-            }
-
-            const formatTime = time => (time ? time.slice(0, 5) : '-');
-            const start = formatTime(slot?.start_at);
-            const end = formatTime(slot?.end_at);
-
-            const timeText = start === end ? start : `${start} - ${end}`;
-
-            return h('div', {}, timeText);
+            return h(FormatTimePeriod, { style: 'white-space: nowrap; min-width: 200px;', replacement: row.original });
         },
     },
     {
@@ -411,8 +357,7 @@ const columns: ColumnDef<Replacement>[] = [
         header: ({ column }) => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Notifiés', h({ class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
             const nurses = row.original.matching_nurses || [];

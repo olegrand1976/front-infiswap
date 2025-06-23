@@ -105,53 +105,144 @@
             </div>
 
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
-                <div class="flex flex-col gap-1 w-full">
+                <template v-if="form.type === 'classic' && form.periods.length > 0">
                     <p class="text-gray-500 text-sm font-medium">
-                        Date de début
+                        Périodes
                     </p>
-                    <InputIcon
-                        v-model="form.startDate"
-                        type="date"
-                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
-                    />
+                    <div
+                        v-for="(period, index) in form.periods"
+                        :key="index"
+                        class="mb-2"
+                    >
+                        <div class="flex items-center gap-2">
+                            <InputIcon
+                                v-model="period.start_date"
+                                type="date"
+                                class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                            />
+                            <span class="mx-2">au</span>
+                            <InputIcon
+                                v-model="period.end_date"
+                                type="date"
+                                class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                            />
+                            <button
+                                type="button"
+                                @click="form.periods.splice(index, 1)"
+                            >
+                                🗑
+                            </button>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        class="text-xs text-primary underline"
+                        @click="form.periods.push({ start_date: '', end_date: '' })"
+                    >
+                        + Ajouter une période
+                    </button>
+                </template>
+                <template v-else>
+                    <div class="flex flex-col gap-1 w-full">
+                        <p class="text-gray-500 text-sm font-medium">
+                            Date de début
+                        </p>
+                        <InputIcon
+                            v-model="form.startDate"
+                            type="date"
+                            class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full">
+                        <p class="text-gray-500 text-sm font-medium">
+                            Date de fin
+                        </p>
+                        <InputIcon
+                            v-model="form.endDate"
+                            type="date"
+                            class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                        />
+                    </div>
+                </template>
+
+                <div v-if="form.type === 'classic'">
+                    <div class="grid grid-cols-2 gap-4">
+                        <template v-if="form.timeSlot.morning || form.timeSlot.evening">
+                            <div>
+                                <span>Matin - Heure de début</span>
+                                <InputTime
+                                    v-model="form.timeSlot.morning.startAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <span>Matin - Heure de fin</span>
+                                <InputTime
+                                    v-model="form.timeSlot.morning.endAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <span>Soir - Heure de début</span>
+                                <InputTime
+                                    v-model="form.timeSlot.evening.startAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <span>Soir - Heure de fin</span>
+                                <InputTime
+                                    v-model="form.timeSlot.evening.endAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div>
+                                <span>Heure de début</span>
+                                <InputTime
+                                    v-if="form.details.length > 0 && form.details[0].start_at"
+                                    v-model="form.details[0].start_at"
+                                    input-class="rounded-lg"
+                                />
+                                <InputTime
+                                    v-else
+                                    v-model="form.timeSlot.startAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <span>Heure de fin</span>
+                                <InputTime
+                                    v-if="form.details.length > 0 && form.details[0].end_at"
+                                    v-model="form.details[0].end_at"
+                                    input-class="rounded-lg"
+                                />
+                                <InputTime
+                                    v-else
+                                    v-model="form.timeSlot.endAt"
+                                    input-class="rounded-lg"
+                                />
+                            </div>
+                        </template>
+                    </div>
                 </div>
 
-                <div class="flex flex-col gap-1 w-full">
-                    <p class="text-gray-500 text-sm font-medium">
-                        Date de fin
-                    </p>
-                    <InputIcon
-                        v-model="form.endDate"
-                        type="date"
-                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
-                    />
-                </div>
-
-                <div>
+                <div v-else>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <span class="block text-sm font-medium text-gray-700 mb-1">Heure de début</span>
+                            <span>Heure de début</span>
                             <InputTime
                                 v-if="form.details.length > 0 && form.details[0].start_at"
                                 v-model="form.details[0].start_at"
                                 input-class="rounded-lg"
                             />
-                            <InputTime
-                                v-else
-                                v-model="form.timeSlot.startAt"
-                                input-class="rounded-lg"
-                            />
                         </div>
                         <div>
-                            <span class="block text-sm font-medium text-gray-700 mb-1">Heure de fin</span>
+                            <span>Heure de fin</span>
                             <InputTime
                                 v-if="form.details.length > 0 && form.details[0].end_at"
                                 v-model="form.details[0].end_at"
-                                input-class="rounded-lg"
-                            />
-                            <InputTime
-                                v-else
-                                v-model="form.timeSlot.endAt"
                                 input-class="rounded-lg"
                             />
                         </div>
@@ -434,25 +525,6 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
             })()
         : replacement?.cities ?? [],
     careTypes: transformCareInformations(replacement?.care_types),
-    timeSlot: typeof replacement?.timeSlot === 'string'
-        ? (() => {
-                try {
-                    const parsed = JSON.parse(replacement.timeSlot);
-                    return {
-                        startAt: parsed.start_at || parsed.startAt || '',
-                        endAt: parsed.end_at || parsed.endAt || '',
-                    };
-                }
-                catch {
-                    return { startAt: '', endAt: '' };
-                }
-            })()
-        : replacement?.timeSlot
-            ? {
-                    startAt: replacement.timeSlot.start_at || '',
-                    endAt: replacement.timeSlot.end_at || '',
-                }
-            : { startAt: '', endAt: '' },
     details: replacement?.details ?? [],
     nurseOwnerFullName: replacement?.nurse_owner_full_name ?? '',
     nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
@@ -462,6 +534,40 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     substituteNurse: replacement?.substitute_nurse ?? '',
     candidate: replacement?.candidate ?? false,
     responseCount: replacement?.response_count ?? null,
+    periods: replacement?.periods ?? [],
+    timeSlot: (() => {
+        try {
+            if (typeof replacement?.timeSlot === 'string') {
+                const slot = JSON.parse(replacement.timeSlot);
+
+                const hasMorning = !!slot?.morning?.start_at || !!slot?.morning?.end_at;
+                const hasEvening = !!slot?.evening?.start_at || !!slot?.evening?.end_at;
+
+                if (hasMorning || hasEvening) {
+                    return {
+                        morning: {
+                            startAt: slot?.morning?.start_at ?? '',
+                            endAt: slot?.morning?.end_at ?? '',
+                        },
+                        evening: {
+                            startAt: slot?.evening?.start_at ?? '',
+                            endAt: slot?.evening?.end_at ?? '',
+                        },
+                    };
+                }
+
+                return {
+                    startAt: slot?.start_at ?? replacement?.details?.[0]?.start_at ?? '',
+                    endAt: slot?.end_at ?? replacement?.details?.[0]?.end_at ?? '',
+                };
+            }
+
+            return replacement?.timeSlot ?? {};
+        }
+        catch {
+            return {};
+        }
+    })(),
 });
 
 const form = reactive(getInitialValue() as any);
