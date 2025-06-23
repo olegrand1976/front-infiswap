@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
         '@nuxt/image',
+        process.env.NODE_ENV === 'production' ? 'nuxt-meta-pixel' : null,
     ].filter(Boolean),
     plugins: [
     ],
@@ -59,6 +60,12 @@ export default defineNuxtConfig({
         public: {
             API_URL: process.env.API_URL,
             FRONT_END_URL: process.env.FRONT_END_URL,
+            metapixel: {
+                default: {
+                    id: '1687858552113266',
+                    pageView: '**',
+                },
+            },
         },
     },
 
