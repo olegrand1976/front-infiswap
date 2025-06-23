@@ -1,5 +1,3 @@
-// composables/useOpenai.ts
-
 import OpenAI from 'openai';
 
 export const useOpenai = () => {
@@ -10,20 +8,14 @@ export const useOpenai = () => {
     });
 
     async function ask(prompt: string, role: 'developer' | 'user' | 'assistant' = 'developer') {
-        // const response = await client.responses.create({
-        //     model: 'gpt-4o-mini',
-        //     input: [
-        //         {
-        //             role: role,
-        //             content: prompt,
-        //         },
-        //     ],
-        // });
-
         const response = await client.responses.create({
-            model: 'gpt-4',
-            instructions: 'You are a coding assistant that talks like a pirate',
-            input: 'Are semicolons optional in JavaScript?',
+            model: 'gpt-4o-mini',
+            input: [
+                {
+                    role: role,
+                    content: prompt,
+                },
+            ],
         });
 
         return response;
