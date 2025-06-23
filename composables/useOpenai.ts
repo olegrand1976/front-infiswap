@@ -9,7 +9,7 @@ export const useOpenai = () => {
         dangerouslyAllowBrowser: true,
     });
 
-    async function ask(prompt: string, role: 'developer' | 'user' | 'assistant') {
+    async function ask(prompt: string, role: 'developer' | 'user' | 'assistant' = 'developer') {
         const response = await client.responses.create({
             model: 'gpt-4o',
             input: [
