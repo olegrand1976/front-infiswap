@@ -38,7 +38,7 @@
                                         Date de début
                                     </label>
                                     <input
-                                        v-model="period.start_date"
+                                        v-model="period.startDate"
                                         type="date"
                                         class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
                                         @change="handleManualDateUpdate(index)"
@@ -49,7 +49,7 @@
                                         Date de fin
                                     </label>
                                     <input
-                                        v-model="period.end_date"
+                                        v-model="period.endDate"
                                         type="date"
                                         class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
                                         @change="handleManualDateUpdate(index)"
@@ -244,8 +244,8 @@ await fetchCareTypes();
 const formData = reactive({
     periods: [
         {
-            start_date: null as string | null,
-            end_date: null as string | null,
+            startDate: '',
+            endDate: '',
         },
     ],
     patientCount: null as number | null,
@@ -275,8 +275,8 @@ watch(
     () => formData.periods,
     () => {
         calendarValue.value = formData.periods.map(period => ({
-            start: period.start_date || null,
-            end: period.end_date || null,
+            start: period.startDate || null,
+            end: period.endDate || null,
         }));
     },
     { deep: true },
@@ -287,42 +287,42 @@ const handleCalendarUpdate = (ranges: { start: string | null; end: string | null
         console.error('Expected ranges to be an array:', ranges);
         return;
     }
-    if (formData.periods.length === 1 && !formData.periods[0].start_date && !formData.periods[0].end_date) {
+    if (formData.periods.length === 1 && !formData.periods[0].startDate && !formData.periods[0].endDate) {
         formData.periods[0] = {
-            start_date: ranges[0]?.start || null,
-            end_date: ranges[0]?.end || null,
+            startDate: ranges[0]?.start || null,
+            endDate: ranges[0]?.end || null,
         };
     }
     else {
         formData.periods = ranges.map(range => ({
-            start_date: range.start || null,
-            end_date: range.end || null,
+            startDate: range.start || null,
+            endDate: range.end || null,
         }));
     }
 };
 
 const handleManualDateUpdate = (index: number) => {
     const period = formData.periods[index];
-    if (period.start_date && period.end_date) {
-        const startDate = new Date(period.start_date);
-        const endDate = new Date(period.end_date);
+    if (period.startDate && period.endDate) {
+        const startDate = new Date(period.startDate);
+        const endDate = new Date(period.endDate);
         if (startDate > endDate) {
             formData.periods[index] = {
-                start_date: period.end_date,
-                end_date: period.start_date,
+                startDate: period.endDate,
+                endDate: period.startDate,
             };
         }
     }
     calendarValue.value = formData.periods.map(period => ({
-        start: period.start_date || null,
-        end: period.end_date || null,
+        start: period.startDate || null,
+        end: period.endDate || null,
     }));
 };
 
 const addPeriod = () => {
     formData.periods.push({
-        start_date: null,
-        end_date: null,
+        startDate: null,
+        endDate: null,
     });
     calendarValue.value.push({ start: null, end: null });
 };
@@ -352,8 +352,8 @@ const getSelectedCareTypesText = (selectedIds: number[]): string => {
 
 const resetForm = () => {
     formData.periods = [{
-        start_date: null,
-        end_date: null,
+        startDate: null,
+        endDate: null,
     }];
     calendarValue.value = [{ start: null, end: null }];
     formData.patientCount = null;
