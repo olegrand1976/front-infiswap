@@ -386,39 +386,39 @@ const columns: ColumnDef<Replacement>[] = [
         },
         sortingFn: 'alphanumeric',
     },
-    // {
-    //     accessorKey: 'substitute_user',
-    //     header: ({ column }) => {
-    //         return h(
-    //             Button,
-    //             {
-    //                 variant: 'ghost',
-    //                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-    //             },
-    //             () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
-    //         );
-    //     },
+    {
+        accessorKey: 'substitute_user',
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                },
+                () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+            );
+        },
 
-    //     cell: ({ row }) => {
-    //         const user = row.original.substitute_user;
+        cell: ({ row }) => {
+            const user = row.original.substitute_user;
 
-    //         if (!user) {
-    //             return h('span', { class: 'italic text-gray-400' }, ' ');
-    //         }
+            if (!user) {
+                return h('span', { class: 'italic text-gray-400' }, ' ');
+            }
 
-    //         return h(UsersName, { user });
-    //     },
+            return h(UsersName, { user });
+        },
 
-    //     sortingFn: (rowA, rowB, columnId) => {
-    //         const userA = rowA.getValue(columnId) as { firstname?: string; lastname?: string } | null;
-    //         const userB = rowB.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+        sortingFn: (rowA, rowB, columnId) => {
+            const userA = rowA.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+            const userB = rowB.getValue(columnId) as { firstname?: string; lastname?: string } | null;
 
-    //         const nameA = userA ? `${userA.firstname ?? ''} ${userA.lastname ?? ''}`.toLowerCase() : '';
-    //         const nameB = userB ? `${userB.firstname ?? ''} ${userB.lastname ?? ''}`.toLowerCase() : '';
+            const nameA = userA ? `${userA.firstname ?? ''} ${userA.lastname ?? ''}`.toLowerCase() : '';
+            const nameB = userB ? `${userB.firstname ?? ''} ${userB.lastname ?? ''}`.toLowerCase() : '';
 
-    //         return nameA.localeCompare(nameB);
-    //     },
-    // },
+            return nameA.localeCompare(nameB);
+        },
+    },
     {
         accessorFn: row => (row.matching_nurses || []).map(nurse => nurse.full_name).join(', '),
         id: 'matching_nurses',
