@@ -12,7 +12,7 @@
                 <UsersCard
                     class="max-w-lg"
                     :user="demandPartner.user"
-                    :show-full-info="true"
+                    :show-full-info="false"
                 />
             </div>
 
