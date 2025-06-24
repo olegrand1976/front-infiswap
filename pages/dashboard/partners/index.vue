@@ -200,27 +200,10 @@
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
-                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                        @click="handleShowDetail(partnership)"
                                                     >
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Détail</span>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem
-                                                        class="flex items-center space-x-2 text-sm"
-                                                        @click="handleShowProfile(partnership.user)"
-                                                    >
-                                                        <UserIcon class="h-4 w-4" />
-                                                        <span>Voir le profil</span>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem
-                                                        v-if="!partnership.has_responded"
-                                                        class="flex items-center space-x-2 text-sm"
-                                                        @click="handleMakeResponse(partnership)"
-                                                    >
-                                                        <HandRaisedIcon class="h-4 w-4" />
-                                                        <span>S'intéresser</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -322,27 +305,10 @@
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
-                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                        @click="handleShowDetail(partnership)"
                                                     >
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Détail</span>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem
-                                                        class="flex items-center space-x-2 text-sm"
-                                                        @click="handleShowProfile(partnership.user)"
-                                                    >
-                                                        <UserIcon class="h-4 w-4" />
-                                                        <span>Voir le profil</span>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem
-                                                        v-if="!partnership.has_responded"
-                                                        class="flex items-center space-x-2 text-sm"
-                                                        @click="handleMakeResponse(partnership)"
-                                                    >
-                                                        <HandRaisedIcon class="h-4 w-4" />
-                                                        <span>S'intéresser</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -451,7 +417,7 @@
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
-                                                        @click="navigateTo(`/dashboard/partners/${partnership.id}`)"
+                                                        @click="handleShowDetail(partnership)"
                                                     >
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Détail</span>
@@ -483,20 +449,59 @@
                 </div>
             </TabsContent>
 
-            <Dialog v-model:open="profileDialog">
-                <DialogContent class="sm:max-w-lg overflow-y-auto">
+            <Dialog v-model:open="detailDialog">
+                <DialogContent class="sm:max-w-lg h-[50vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Profil de l'infirmier</DialogTitle>
+                        <DialogTitle>Détail</DialogTitle>
                     </DialogHeader>
+
                     <div
-                        v-if="selectedUser"
-                        class="mt-4 flex justify-center items-center mx-auto"
+                        v-if="selectedPartnership"
+                        class="mt-4 flex justify-center items-center mx-auto w-80"
                     >
                         <UsersCard
-                            class="max-w-lg"
-                            :user="selectedUser"
-                            :show-full-info="true"
+                            :user="selectedPartnership.user"
+                            :minimal-info="true"
                         />
+                    </div>
+
+                    <div class="mt-4 flex flex-col space-y-2 px-8 sm:px-16">
+                        <label class="font-semibold text-primary">
+                            Type de demande
+                        </label>
+                        <p v-if="selectedPartnership.type == 'in_search'">
+                            À la recherche d'une collaboration
+                        </p>
+                        <p v-else>
+                            Disponible pour une collaboration
+                        </p>
+                    </div>
+
+                    <div class="mt-4 flex flex-col space-y-2 px-8 sm:px-16">
+                        <label class="font-semibold text-primary">
+                            Description
+                        </label>
+                        <p>
+                            {{ selectedPartnership.description }}
+                        </p>
+                    </div>
+
+                    <div v-if="!selectedPartnership.has_responded && selectedPartnership.user.id != user.id">
+                        <Button
+                            class="my-6 flex justify-center items-center mx-auto w-80"
+                            @click="handleMakeResponse"
+                        >
+                            S'intéresser
+                        </Button>
+                    </div>
+                    <div
+                        v-else-if="selectedPartnership.has_responded"
+                        class="my-6 text-success flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100 w-80"
+                    >
+                        <CheckBadgeIcon class="w-8" />
+                        <p class="font-semibold">
+                            Réponse envoyée
+                        </p>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -547,9 +552,8 @@ import {
     ArrowPathIcon,
     EllipsisHorizontalIcon,
     EyeIcon,
-    HandRaisedIcon,
+    CheckBadgeIcon,
     InformationCircleIcon,
-    UserIcon,
 } from '@heroicons/vue/24/outline';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -558,13 +562,12 @@ import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
 import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
-import { navigateTo } from '#app';
 
-const selectedUser = ref<User | null>(null);
 const selectedPartnership = ref<UserPartner | null>(null);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
+const user = useState<User>('user');
 
 const { $toast } = useNuxtApp();
 
@@ -575,16 +578,16 @@ const formData = reactive({
     description: '',
 });
 
-const profileDialog = ref(false);
+const detailDialog = ref(false);
 const responseDialog = ref(false);
 
-const handleShowProfile = (user: User) => {
-    selectedUser.value = user;
-    profileDialog.value = true;
+const handleShowDetail = (partnership: UserPartner) => {
+    selectedPartnership.value = partnership;
+    detailDialog.value = true;
 };
 
-const handleMakeResponse = (partnership: UserPartner) => {
-    selectedPartnership.value = partnership;
+const handleMakeResponse = () => {
+    detailDialog.value = false;
     responseDialog.value = true;
 };
 

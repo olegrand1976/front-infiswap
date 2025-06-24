@@ -58,7 +58,7 @@
                                     <UsersCard
                                         class="max-w-lg mx-auto"
                                         :user="response.interested_user"
-                                        :show-full-info="true"
+                                        :show-full-info="false"
                                     />
                                     <div
                                         v-if="response.status === 'pending'"
@@ -79,7 +79,7 @@
                                     </div>
                                     <div
                                         v-else
-                                        :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
+                                        :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
                                     >
                                         <CheckBadgeIcon class="w-8" />
                                         <p class="font-semibold">
@@ -134,7 +134,7 @@
                                     <UsersCard
                                         class="max-w-lg mx-auto"
                                         :user="response.interested_user"
-                                        :show-full-info="true"
+                                        :show-full-info="false"
                                     />
                                     <div
                                         v-if="response.status === 'pending'"
@@ -155,7 +155,7 @@
                                     </div>
                                     <div
                                         v-else
-                                        class="w-full mt-4 text-success flex justify-center mx-auto gap-3 items-center rounded-full py-4 px-3 bg-gray-100"
+                                        :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
                                     >
                                         <CheckBadgeIcon class="w-8" />
                                         <p class="font-semibold">
