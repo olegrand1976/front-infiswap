@@ -165,20 +165,6 @@ export const useReplacements = () => {
         });
     };
 
-    const relaunchMailToCreator = async (formData) => {
-        return await $apifetch(`/api/replacements/${formData.id}/relaunch-creator`, {
-            method: 'POST',
-            body: formData,
-        });
-    };
-
-    const relaunchMailToRegion = async (formData) => {
-        return await $apifetch(`/api/replacements/${formData.id}/relaunch-interested`, {
-            method: 'POST',
-            body: formData,
-        });
-    };
-
     const updateAgainReplacement = async (formData) => {
         return await $apifetch(`/api/replacements/update-again/${formData.id}`, {
             method: 'PUT',
@@ -251,8 +237,6 @@ export const useReplacements = () => {
         activityUser,
         release,
         isClosed,
-        relaunchMailToCreator,
-        relaunchMailToRegion,
     };
 };
 

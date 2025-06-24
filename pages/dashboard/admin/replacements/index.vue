@@ -66,46 +66,40 @@
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <div
-                            @click="selectedOption = 'creator'"
+                    <div class="flex flex-col md:flex-row gap-4 mt-6">
+                        <button
+                            type="button"
                             :class="[
-                                'cursor-pointer rounded-xl p-5 border transition-all duration-200',
+                                'w-full md:w-auto px-4 py-3 rounded-lg border text-left focus:outline-none focus:ring-2 transition',
                                 selectedOption === 'creator'
-                                    ? 'border-primary bg-primary/20 dark:bg-gray-800 shadow'
-                                    : 'border-gray-300 hover:shadow-sm']"
+                                    ? 'border-primary bg-primary/10 text-primary ring-primary'
+                                    : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300']"
+                            @click="selectedOption = 'creator'"
                         >
-                            <h3 :class="[
-                                'font-bold transition-all duration-200',
-                                selectedOption === 'creator'
-                                    ? 'text-primary'
-                                    : 'text-gray-700 dark:text-gray-300']">
+                            <h3 class="font-bold">
                                 Relancer le créateur
                             </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            <p class="text-sm mt-1">
                                 Envoie un email uniquement au créateur de ce remplacement.
                             </p>
-                        </div>
+                        </button>
 
-                        <div
-                            @click="selectedOption = 'region'"
+                        <button
+                            type="button"
                             :class="[
-                                'cursor-pointer rounded-xl p-5 border transition-all duration-200',
+                                'w-full md:w-auto px-4 py-3 rounded-lg border text-left focus:outline-none focus:ring-2 transition',
                                 selectedOption === 'region'
-                                    ? 'border-primary bg-primary/20 dark:bg-gray-800 shadow'
-                                    : 'border-gray-300 hover:shadow-sm']"
+                                    ? 'border-primary bg-primary/10 text-primary ring-primary'
+                                    : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300']"
+                            @click="selectedOption = 'region'"
                         >
-                            <h3 :class="[
-                                'font-bold transition-all duration-200',
-                                selectedOption === 'region'
-                                    ? 'text-primary'
-                                    : 'text-gray-700 dark:text-gray-300']">
+                            <h3 class="font-bold">
                                 Relancer les infirmiers
                             </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            <p class="text-sm mt-1">
                                 Notifie tous les infirmiers de la région associés à ce remplacement.
                             </p>
-                        </div>
+                        </button>
                     </div>
 
                     <div
@@ -118,15 +112,32 @@
                                 {{ selectedOption === 'creator' ? 'Créateur' : 'Infirmiers' }}
                             </span>
                         </h4>
-                        <ul class="space-y-2 list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
-                            <li
-                                v-for="item in getHistory(selectedOption)"
-                                :key="item"
-                                class="ml-4"
-                            >
-                                {{ item }}
-                            </li>
-                        </ul>
+                        <div v-if="getFilteredHistory.length > 0">
+                            <ul class="space-y-2 list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
+                                <li
+                                    v-for="item in getFilteredHistory"
+                                    :key="item.id"
+                                    class="ml-4"
+                                >
+                                    Relance envoyée le {{ formatDate(item.relaunched_at) }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div
+                            v-else
+                            class="text-sm italic text-gray-500 dark:text-gray-400 ml-4"
+                        >
+                            Aucune relance n’a encore été effectuée pour ce remplacement.
+                        </div>
+
+                        <button
+                            v-if="!showAll && relaunchHistory.filter(h => h.type === selectedOption).length > 1"
+                            class="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                            @click="showAll = true"
+                        >
+                            Voir plus
+                        </button>
                     </div>
 
                     <div class="flex justify-end mt-8 space-x-3">
@@ -166,7 +177,6 @@ import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.v
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
-// import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 import UsersName from '@/components/users/Name.vue';
 
@@ -178,7 +188,7 @@ definePageMeta({
 });
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
-const { relaunchMailToCreator, relaunchMailToRegion } = useRelaunch();
+const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -189,7 +199,7 @@ const { $toast } = useNuxtApp();
 const dialogOpen = ref(false);
 const selectedNurses = ref<User[]>([]);
 const loadingUsers = ref(false);
- 
+
 async function loadUsersFromNurses(nurses: Nurse[]) {
     loadingUsers.value = true;
     dialogOpen.value = true;
@@ -639,33 +649,46 @@ const handleEdit = (replacement: Replacement) => {
 };
 
 const isDialogOpen = ref(false);
-const selectedReplacement = ref<Replacement | null>(null);
+const selectedReplacement = ref(null);
 const selectedOption = ref<'creator' | 'region'>('creator');
+const relaunchHistory = ref([]);
+const showAll = ref(false);
 
-const historyCreator = ref([
-    'Relance envoyée au créateur le 12 juin 2025',
-    'Relance envoyée au créateur le 5 juin 2025',
-]);
-const historyRegion = ref([
-    'Relance régionale le 10 juin 2025',
-    'Relance régionale le 2 juin 2025',
-]);
-
-const getHistory = (option: 'creator' | 'region') => {
-    return option === 'creator' ? historyCreator.value : historyRegion.value;
-};
-
-const openConfirmDialog = (replacement: Replacement) => {
+const openConfirmDialog = async (replacement) => {
     selectedReplacement.value = replacement;
     selectedOption.value = 'creator';
+    showAll.value = false;
     isDialogOpen.value = true;
+
+    const response = await fetchRelaunchHistory(replacement.id);
+
+    if (response?.data) {
+        relaunchHistory.value = response.data;
+    }
+    else {
+        relaunchHistory.value = [];
+    }
 };
 
 const closeDialog = () => {
     isDialogOpen.value = false;
     selectedReplacement.value = null;
     selectedOption.value = 'creator';
+    relaunchHistory.value = [];
+    showAll.value = false;
 };
+
+const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleString();
+};
+
+const getFilteredHistory = computed(() => {
+    const filtered = relaunchHistory.value.filter(
+        (item) => item.type === selectedOption.value,
+    );
+    return showAll.value ? filtered : filtered.slice(0, 1);
+});
 
 const confirmRelaunch = async () => {
     if (!selectedReplacement.value || !selectedOption.value) return;

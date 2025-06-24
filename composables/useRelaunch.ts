@@ -15,8 +15,13 @@ export const useRelaunch = () => {
         });
     };
 
+    const fetchRelaunchHistory = async (replacementId) => {
+        return await $apifetch(`/api/relaunch-managers/${replacementId}`);
+    };
+
     return {
         relaunchMailToCreator,
         relaunchMailToRegion,
+        fetchRelaunchHistory,
     };
 };
