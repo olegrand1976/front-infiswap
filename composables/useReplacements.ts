@@ -75,12 +75,6 @@ export const useReplacements = () => {
         }
     };
 
-    // const getReplacementsForAdmin = async () => {
-    //     return await $apifetch('api/admin/replacements').then((response) => {
-    //         replacements.value = response.replacements;
-    //     });
-    // };
-
     async function getReplacementsForAdmin(page = 1, perPage = 15, options = {}) {
         return await $apifetch('api/admin/replacements', {
             params: {
@@ -280,6 +274,7 @@ export const useSearchReplacements = () => {
         cities = [],
         selectedDays = [],
         type = '',
+        provinces = [],
         page = 1,
         perPage = PERPAGE,
     } = {}) {
@@ -291,6 +286,7 @@ export const useSearchReplacements = () => {
             cities: cities,
             days: selectedDays,
             type: type,
+            provinces: provinces,
             page,
             perPage,
         };

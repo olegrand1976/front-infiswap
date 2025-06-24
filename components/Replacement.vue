@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex mt-6">
+        <div class="flex mt-8">
             <Form class="grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
                     <FormField name="days">
@@ -76,7 +76,7 @@
                                             v-model="postalCodeInput"
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="8793"
+                                            placeholder="1000"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(postalCodeInput, formData.postalCodeTags)"
                                         />
@@ -120,7 +120,7 @@
                                             v-model="cityInput"
                                             :class="[groupsByProvince.length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="City38"
+                                            placeholder="Bruxelles"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(cityInput, formData.cityTags)"
                                         />
@@ -506,7 +506,7 @@
                                                 <div
                                                     v-for="(period, index) in replacement.periods.slice(0, 2)"
                                                     :key="index"
-                                                    class="flex items-center mb-2"
+                                                    class="flex flex-col items-center mb-2"
                                                 >
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                         <span>{{ formatDate(period.start_date) }}</span>
@@ -768,7 +768,7 @@
                                                     <div
                                                         v-for="(period, index) in replacement.periods.slice(0, 2)"
                                                         :key="index"
-                                                        class="flex items-center mb-2 space-x-2"
+                                                        class="flex flex-col items-center mb-2 space-x-2"
                                                     >
                                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                             <span>{{ formatDate(period.start_date) }}</span>
@@ -1337,6 +1337,60 @@
                 </div>
             </DialogContent>
         </Dialog>
+
+        <Dialog
+            v-if="props.type !== 'me'"
+            v-model:open="filterRegionDialog"
+            class="pb-8 sm:pb-0"
+        >
+            <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Zone géographique (province)</DialogTitle>
+                    <DialogDescription>
+                        Cochez une ou plusieurs provinces pour filtrer les remplacements.
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="grid sm:grid-cols-2 gap-4 py-4">
+                    <div
+                        v-for="region in regions"
+                        :key="region"
+                        class="flex items-center"
+                    >
+                        <label
+                            :for="region"
+                            class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
+                            :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
+                        >
+                            <Checkbox
+                                :id="region"
+                                :checked="selectedRegions.includes(region)"
+                                :value="region"
+                                class="group-hover:border-white"
+                                @update:checked="updateRegionSelection(region, $event)"
+                            />
+                            <span class="ml-1">
+                                {{ region }}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
+                    <Button
+                        variant="secondary"
+                        class="w-full sm:w-auto"
+                        @click="cancelSelection"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        class="w-full sm:w-auto"
+                        @click="validateSelection"
+                    >
+                        Valider
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -1347,7 +1401,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
-import { selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
+import { regions, selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1378,6 +1432,11 @@ const props = defineProps({
         required: true,
         default: true,
     },
+    filteredProvinces: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 });
 
 type ProvinceGroups = Record<string, Replacement[]>;
@@ -1386,6 +1445,7 @@ const { loading, updateReplacement, updateAgainReplacement } = useReplacements()
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
+const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const pagination = ref({
@@ -1394,6 +1454,7 @@ const pagination = ref({
     total: 0,
     last_page: 1,
 });
+const filterRegionDialog = ref(true);
 
 const isMobileView = ref(false);
 
@@ -1447,7 +1508,7 @@ const hasShift = (replacement, period) => {
             timeSlotPeriods.forEach(p => periods.add(p));
         }
         else {
-            Object.entries(timeSlot).forEach(([key, value]) => {
+            Object.entries(timeSlot).forEach(([value]) => {
                 if (typeof value === 'object' && value !== null && 'start_at' in value && 'end_at' in value) {
                     const startAt = normalizeTime(value.start_at);
                     const endAt = normalizeTime(value.end_at);
@@ -1526,6 +1587,27 @@ const formData = reactive({
     type: props.type,
 });
 
+const updateRegionSelection = (region: string, checked: boolean) => {
+    if (checked) {
+        if (!selectedRegions.value.includes(region)) {
+            selectedRegions.value = [...selectedRegions.value, region];
+        }
+    }
+    else {
+        selectedRegions.value = selectedRegions.value.filter(r => r !== region);
+    }
+};
+
+const validateSelection = async () => {
+    filterRegionDialog.value = false;
+    await fetchInitialData(page.value, perPage.value);
+};
+
+const cancelSelection = () => {
+    selectedRegions.value = [];
+    filterRegionDialog.value = false;
+};
+
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays = {
     monday: 'Lundi',
@@ -1556,6 +1638,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             cities: [],
             selectedDays: [],
             type: props.type,
+            provinces: selectedRegions.value,
             page,
             perPage,
         });
@@ -1572,6 +1655,17 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
         console.error(error);
     }
 };
+
+watch(
+    () => props.filteredProvinces,
+    (newProvinces, oldProvinces) => {
+        if (newProvinces !== oldProvinces) {
+            selectedRegions.value = [...newProvinces as string[]];
+            fetchInitialData(page.value, perPage.value);
+        }
+    },
+    { deep: true },
+);
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;

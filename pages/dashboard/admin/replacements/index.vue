@@ -98,6 +98,7 @@ import type { Replacement, Nurse, User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
+import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
 // import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 import UsersName from '@/components/users/Name.vue';
@@ -171,74 +172,73 @@ const columns: ColumnDef<Replacement>[] = [
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             style: 'white-space: nowrap;',
         }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+
         cell: ({ row }) => {
-            return h(ReplacementPeriod, { style: 'white-space: nowrap; min-width: 200px;', replacement: row.original });
+            return h(ReplacementPeriod, {
+                style: 'white-space: nowrap; min-width: 200px;',
+                replacement: row.original,
+            });
+        },
+
+        sortingFn: (rowA, rowB) => {
+            const a = rowA.original;
+            const b = rowB.original;
+
+            const getDate = (rep: any): string => {
+                if (Array.isArray(rep.periods) && rep.periods.length > 0) {
+                    return rep.periods[0]?.start_date ?? '';
+                }
+                return rep.start_date ?? '';
+            };
+
+            const dateA = getDate(a);
+            const dateB = getDate(b);
+
+            const timeA = dateA ? new Date(dateA).getTime() : 0;
+            const timeB = dateB ? new Date(dateB).getTime() : 0;
+
+            return timeA - timeB;
         },
     },
     {
-        id: 'time_slot',
-        header: ({ column }) => {
-            return h(
-                Button,
-                {
-                    variant: 'ghost',
-                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                },
-                () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
-            );
-        },
-        accessorFn: (row) => {
-            let slot = null;
-            if (typeof row.timeSlot === 'string') {
-                try {
-                    slot = JSON.parse(row.timeSlot);
-                }
-                catch (e) {
-                    console.error(e);
-                    slot = null;
-                }
-            }
-            else if (typeof row.timeSlot === 'object' && row.timeSlot !== null) {
-                slot = row.timeSlot;
-            }
-            if (!slot && row.details?.length > 0) {
-                slot = {
-                    start_at: row.details[0].start_at,
-                    end_at: row.details[0].end_at,
-                };
-            }
+        accessorKey: 'time_slot',
+        header: ({ column }) => h(Button, {
+            variant: 'ghost',
+            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            style: 'white-space: nowrap;',
+        }, () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
 
-            return slot?.start_at || '';
-        },
-        sortingFn: 'alphanumeric',
         cell: ({ row }) => {
-            let slot = null;
-            if (typeof row.original.timeSlot === 'string') {
+            return h(FormatTimePeriod, {
+                style: 'white-space: nowrap; min-width: 200px;',
+                replacement: row.original,
+            });
+        },
+
+        sortingFn: (rowA, rowB) => {
+            const repA = rowA.original;
+            const repB = rowB.original;
+
+            const getFirstStartTime = (rep: any): string => {
                 try {
-                    slot = JSON.parse(row.original.timeSlot);
+                    let ts = rep.timeSlot;
+                    if (typeof ts === 'string') ts = JSON.parse(ts);
+
+                    if (ts?.start_at) return ts.start_at;
+                    if (ts?.morning?.start_at) return ts.morning.start_at;
+                    if (rep.details?.[0]?.start_at) return rep.details[0].start_at;
                 }
-                catch (e) {
-                    console.error(e);
-                    slot = null;
+                catch {
+                    return '';
                 }
-            }
-            else if (typeof row.original.timeSlot === 'object' && row.original.timeSlot !== null) {
-                slot = row.original.timeSlot;
-            }
-            if (!slot && row.original.details?.length > 0) {
-                slot = {
-                    start_at: row.original.details[0].start_at,
-                    end_at: row.original.details[0].end_at,
-                };
-            }
 
-            const formatTime = time => (time ? time.slice(0, 5) : '-');
-            const start = formatTime(slot?.start_at);
-            const end = formatTime(slot?.end_at);
+                return '';
+            };
 
-            const timeText = start === end ? start : `${start} - ${end}`;
+            const timeA = getFirstStartTime(repA) ?? '';
+            const timeB = getFirstStartTime(repB) ?? '';
 
-            return h('div', {}, timeText);
+            return timeA.localeCompare(timeB);
         },
     },
     {
@@ -389,10 +389,14 @@ const columns: ColumnDef<Replacement>[] = [
     {
         accessorKey: 'substitute_user',
         header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                },
+                () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+            );
         },
 
         cell: ({ row }) => {
@@ -404,15 +408,24 @@ const columns: ColumnDef<Replacement>[] = [
 
             return h(UsersName, { user });
         },
+
+        sortingFn: (rowA, rowB, columnId) => {
+            const userA = rowA.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+            const userB = rowB.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+
+            const nameA = userA ? `${userA.firstname ?? ''} ${userA.lastname ?? ''}`.toLowerCase() : '';
+            const nameB = userB ? `${userB.firstname ?? ''} ${userB.lastname ?? ''}`.toLowerCase() : '';
+
+            return nameA.localeCompare(nameB);
+        },
     },
     {
         accessorFn: row => (row.matching_nurses || []).map(nurse => nurse.full_name).join(', '),
         id: 'matching_nurses',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Notifiés', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Notifiés', h({ class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
             const nurses = row.original.matching_nurses || [];
@@ -456,10 +469,10 @@ const columns: ColumnDef<Replacement>[] = [
     },
     {
         accessorKey: 'type',
-        header: ({ column }) => {
+        header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                onClick: () => setSort('type'),
             }, () => ['Type', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]);
         },
         cell: ({ row }) => {
@@ -524,6 +537,35 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
 ];
+
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const toggleSort = () => {
+    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
+const setSort = (columnKey: string) => {
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
+    else {
+        sort.by = columnKey;
+        sort.order = 'DESC';
+    }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await getReplacementsForAdmin(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by });
+    },
+    { deep: true },
+);
 
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);

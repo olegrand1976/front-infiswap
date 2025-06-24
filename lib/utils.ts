@@ -172,3 +172,18 @@ export function formatRange(range: { start: { day: number | null; month: number 
         end: formatCalendarDate(range.end),
     };
 }
+
+export const regions = [
+    'Bruxelles-Capitale',
+    'Brabant wallon',
+    'Brabant flamand',
+    'Anvers',
+    'Brabant flamand - Overijse',
+    'Limbourg',
+    'Liège',
+    'Namur',
+    'Hainaut',
+    'Luxembourg',
+    'Flandre-Occidentale',
+    'Flandre-Orientale',
+];
