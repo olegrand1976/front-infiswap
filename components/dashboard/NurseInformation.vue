@@ -241,156 +241,31 @@
             </div>
         </section>
 
-        <section class="grid grid-cols-1 xl:grid-cols-[45%_53%] gap-4">
-            <div class="flex flex-col space-y-4">
-                <div class="bg-gray-100 h-72 sm:h-full rounded p-4 mb-4">
-                    <h3 class="text-primary">
-                        Mes préférences
-                    </h3>
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="bg-gray-100 h-72 sm:h-full rounded p-4 mb-4">
+                <h3 class="text-primary">
+                    Mes préférences
+                </h3>
+                <div class="mt-8">
                     <InputPreferences
                         :initial-zip-codes="zipCodes"
                         :initial-cities="cities"
                     />
                 </div>
-
-                <div class="bg-gray-100 rounded-b-lg relative mt-24">
-                    <h3 class="text-white bg-primary p-3 rounded-t-lg">
-                        Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
-                    </h3>
-                    <div class="p-4">
-                        <LineChart
-                            :data="formattedData"
-                            index="month"
-                            :categories="['annonces']"
-                            :colors="['hsl(var(--primary))']"
-                            :y-formatter="(tick) => `${tick}`"
-                        />
-                    </div>
-                </div>
             </div>
 
-            <div class="sm:bg-gray-100 sm:rounded sm:p-4 mt-4 sm:mt-0">
-                <h3 class="text-primary font-bold sm:font-normal">
-                    Tournée du jour
+            <div class="bg-gray-100 rounded-b-lg relative">
+                <h3 class="text-white bg-primary p-3 rounded-t-lg">
+                    Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                 </h3>
-                <p class="mt-4">
-                    Liste patient du jour
-                </p>
-
-                <div class="my-3">
-                    <template v-if="tours.length > 0">
-                        <div
-                            v-for="tour in tours"
-                            :key="tour.id"
-                            class="bg-white rounded-lg shadow-md p-4 mb-4"
-                        >
-                            <div class="flex justify-between items-center mb-3">
-                                <div class="flex items-center">
-                                    <!-- <div class="flex-shrink-0">
-                                        <img
-                                            :src="$config.public.API_URL + tour.profile.profil_url"
-                                            alt="image"
-                                            class="w-16 h-16 rounded-full object-cover border-2"
-                                        >
-                                    </div> -->
-
-                                    <span class="font-bold text-lg">{{ tour.firstname }} {{ tour.lastname }}</span>
-                                </div>
-                                <div
-                                    v-for="(visitTime, idx) in tour.visit_times"
-                                    :key="idx"
-                                >
-                                    <button
-                                        class="w-8 h-8 flex items-center justify-center bg-gray-400 text-white rounded-full"
-                                        @click="openDialog(tour.id, visitTime.id)"
-                                    >
-                                        ✖
-                                    </button>
-                                </div>
-
-                                <Dialog v-model:open="isDialogOpen">
-                                    <DialogContent class="h-[28vh]">
-                                        <DialogHeader>
-                                            <DialogTitle>Confirmer la suppression</DialogTitle>
-                                            <DialogDescription>
-                                                Êtes-vous sûr de vouloir supprimer ce patient ?
-                                            </DialogDescription>
-                                        </DialogHeader>
-
-                                        <div class="flex space-x-8 justify-end items-center">
-                                            <Button
-                                                variant="secondary"
-                                                @click="closeDialog"
-                                            >
-                                                Annuler
-                                            </Button>
-                                            <Button @click="submitDelete()">
-                                                Oui
-                                            </Button>
-                                        </div>
-                                    </DialogContent>
-                                </Dialog>
-                            </div>
-
-                            <div class="flex gap-2">
-                                <div class="flex-1">
-                                    <div class="bg-gray-200 text-black font-semibold text-center py-2 rounded-md">
-                                        Code postaux
-                                    </div>
-                                    <div class="mt-2 text-center bg-white p-2 rounded-md border">
-                                        {{ tour.profile.zip_code }}
-                                    </div>
-                                </div>
-
-                                <div class="flex-1">
-                                    <div class="bg-gray-200 text-black font-semibold text-center py-2 rounded-md">
-                                        Ville
-                                    </div>
-                                    <div class="mt-2 text-center bg-white p-2 rounded-md border">
-                                        {{ tour.profile.city }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-200 text-black font-semibold text-center py-2 mt-4 rounded-md">
-                                Types de soins à pratiquer
-                            </div>
-
-                            <div v-if="tour?.visit_times?.length">
-                                <div
-                                    v-for="(visitTimes, idx1) in tour.visit_times"
-                                    :key="'vt-' + idx1"
-                                >
-                                    <div
-                                        v-for="(visit, idx2) in visitTimes.visits"
-                                        :key="'v-' + idx2"
-                                    >
-                                        <div v-if="visit.care_types && visit.care_types.length">
-                                            <div
-                                                v-for="(careType, idx3) in visit.care_types"
-                                                :key="'ct-' + idx3"
-                                                class="bg-white p-2 rounded-md border mt-2"
-                                            >
-                                                <span>{{ careType }}</span>
-                                            </div>
-                                        </div>
-                                        <div
-                                            v-else
-                                            class="text-gray-500"
-                                        >
-                                            Aucun soin spécifié
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-
-                    <template v-else>
-                        <p class="text-center text-black/70 mt-6">
-                            Aucune tournée à afficher pour le moment
-                        </p>
-                    </template>
+                <div class="p-4">
+                    <LineChart
+                        :data="formattedData"
+                        index="month"
+                        :categories="['annonces']"
+                        :colors="['hsl(var(--primary))']"
+                        :y-formatter="(tick) => `${tick}`"
+                    />
                 </div>
             </div>
         </section>
@@ -408,8 +283,6 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-
-import { Button } from '@/components/ui/button';
 
 type MonthlyReport = {
     month: string;
@@ -460,38 +333,6 @@ const months = [
 const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
-
-const isDialogOpen = ref(false);
-const patientToDelete = ref<{ patientId: number; visitId: number } | null>(null);
-
-const openDialog = (patientId: number, visitId: number) => {
-    patientToDelete.value = { patientId, visitId };
-    isDialogOpen.value = true;
-};
-
-const closeDialog = () => {
-    isDialogOpen.value = false;
-    patientToDelete.value = null;
-};
-
-const submitDelete = async () => {
-    if (!patientToDelete.value) return;
-
-    const { patientId, visitId } = patientToDelete.value;
-
-    try {
-        await deleteTour(patientId, visitId).catch((error) => {
-            console.error('Erreur API, rollback:', error);
-            // tours.value = currentTours;
-        });
-    }
-    catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-    }
-    finally {
-        closeDialog();
-    }
-};
 </script>
 
 <style scoped>
