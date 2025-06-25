@@ -5,6 +5,13 @@
         <DashboardAdminPageContent>
             <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
                 <InputIcon
+                    v-model="option.name"
+                    rounded="md"
+                    placeholder="Filtrer par Nom ou Prénom"
+                    class="w-[250px]"
+                    @input="debouncedFilterUsers"
+                />
+                <InputIcon
                     v-model="option.zip"
                     rounded="md"
                     placeholder="Code postal"
@@ -154,6 +161,7 @@ const user = ref(null);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
+    name: null,
     zip: null,
     city: null,
     biotrax: null,
