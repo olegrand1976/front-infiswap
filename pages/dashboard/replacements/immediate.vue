@@ -64,6 +64,7 @@
                                 :is-mobile="true"
                                 :comma-validation="false"
                                 @keydown.enter.prevent
+                                @item-added="onZipCodeAdded"
                             />
                         </div>
 
@@ -79,6 +80,7 @@
                                 :comma-validation="true"
                                 :no-space-validation="true"
                                 @keydown.enter.prevent
+                                @item-added="onCityAdded"
                             />
                         </div>
                     </div>
