@@ -4,25 +4,11 @@
 
         <DashboardAdminPageContent>
             <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
-                <InputIcon
-                    v-model="option.zip"
-                    rounded="md"
-                    placeholder="Code postal"
-                    class="w-[250px]"
-                    type="number"
-                    @input="debouncedFilterUsers"
-                />
-                <InputIcon
-                    v-model="option.city"
-                    rounded="md"
-                    placeholder="Ville"
-                    class="w-[250px]"
-                    @input="debouncedFilterUsers"
-                />
-                <Select
-                    v-model="option.biotrax"
-                    @update:model-value="debouncedFilterUsers"
-                >
+                <InputIcon v-model="option.zip" rounded="md" placeholder="Code postal" class="w-[250px]" type="number"
+                    @input="debouncedFilterUsers" />
+                <InputIcon v-model="option.city" rounded="md" placeholder="Ville" class="w-[250px]"
+                    @input="debouncedFilterUsers" />
+                {# <Select v-model="option.biotrax" @update:model-value="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Infiswap</span>
                         <strong class="ml-4">
@@ -41,11 +27,8 @@
                             </SelectItem>
                         </SelectGroup>
                     </SelectContent>
-                </Select>
-                <Select
-                    v-model="option.insurance"
-                    @update:model-value="debouncedFilterUsers"
-                >
+                </Select> #}
+                <Select v-model="option.insurance" @update:model-value="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Nursassur</span>
                         <strong class="ml-4">
@@ -65,10 +48,7 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select
-                    v-model="option.site"
-                    @update:model-value="debouncedFilterUsers"
-                >
+                <Select v-model="option.site" @update:model-value="debouncedFilterUsers">
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>NursTech</span>
                         <strong class="ml-4">
@@ -88,34 +68,21 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Button
-                    class="rounded-md"
-                    @click="resetFilter"
-                >
+                <Button class="rounded-md" @click="resetFilter">
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
-            <DataTable
-                :data="dataUsers"
-                :columns="columns"
-            />
-            <Dialog
-                v-model:open="showModal"
-                class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
-            >
+            <DataTable :data="dataUsers" :columns="columns" />
+            <Dialog v-model:open="showModal"
+                class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
                 <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-2">
                     <UsersCard :user="user" />
                 </DialogContent>
             </Dialog>
             <div>
-                <CustomPagination
-                    :default-page="page"
-                    :per-page="perPage"
-                    :total="users.total"
-                    @update:page="refreshUsers"
-                    @update:per-page="handlePerPageChange"
-                />
+                <CustomPagination :default-page="page" :per-page="perPage" :total="users.total"
+                    @update:page="refreshUsers" @update:per-page="handlePerPageChange" />
             </div>
         </DashboardAdminPageContent>
     </div>
@@ -156,7 +123,7 @@ const page = ref(1);
 const initialFilter = {
     zip: null,
     city: null,
-    biotrax: null,
+    /* biotrax: null, */
     insurance: null,
     site: null,
 };
@@ -259,7 +226,7 @@ const columns: ColumnDef<User>[] = [
             return h('div', { class: 'text-center' }, row.getValue('city'));
         },
     },
-    {
+    /* {
         accessorKey: 'biotrax',
         header: 'Infiswap',
         enableSorting: false,
@@ -281,7 +248,7 @@ const columns: ColumnDef<User>[] = [
                 }),
             ]);
         },
-    },
+    }, */
     {
         accessorKey: 'insurance',
         header: 'NursAssur',
@@ -435,7 +402,8 @@ watch(
     async (newVal) => {
         await getUsers(page.value, perPage.value, {
             sortOrder: newVal.order,
-            sortKey: newVal.by });
+            sortKey: newVal.by
+        });
     },
     { deep: true },
 );
