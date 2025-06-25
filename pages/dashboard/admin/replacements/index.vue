@@ -56,14 +56,91 @@
             </Dialog>
 
             <Dialog v-model:open="isDialogOpen">
-                <DialogContent>
+                <DialogContent class="rounded-2xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
                     <DialogHeader>
-                        <DialogTitle>Confirmation</DialogTitle>
-                        <DialogDescription class="mt-2">
-                            Êtes-vous sûr de vouloir notifier à nouveau par email les infirmières de la région du remplacement ?
+                        <DialogTitle class="text-xl font-medium text-gray-800 dark:text-white">
+                            Relancer une notification
+                        </DialogTitle>
+                        <DialogDescription class="text-sm text-gray-500 dark:text-gray-300 mt-1">
+                            Choisissez qui doit recevoir une relance par email.
                         </DialogDescription>
                     </DialogHeader>
-                    <div class="flex space-x-8 justify-end items-center">
+
+                    <div class="flex flex-col md:flex-row gap-4 mt-6">
+                        <button
+                            type="button"
+                            :class="[
+                                'w-full md:w-auto px-4 py-3 rounded-lg border text-left focus:outline-none focus:ring-2 transition',
+                                selectedOption === 'creator'
+                                    ? 'border-primary bg-primary/10 text-primary ring-primary'
+                                    : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300']"
+                            @click="selectedOption = 'creator'"
+                        >
+                            <h3 class="font-bold">
+                                Relancer le créateur
+                            </h3>
+                            <p class="text-sm mt-1">
+                                Envoie un email uniquement au créateur de ce remplacement.
+                            </p>
+                        </button>
+
+                        <button
+                            type="button"
+                            :class="[
+                                'w-full md:w-auto px-4 py-3 rounded-lg border text-left focus:outline-none focus:ring-2 transition',
+                                selectedOption === 'region'
+                                    ? 'border-primary bg-primary/10 text-primary ring-primary'
+                                    : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300']"
+                            @click="selectedOption = 'region'"
+                        >
+                            <h3 class="font-bold">
+                                Relancer les infirmiers
+                            </h3>
+                            <p class="text-sm mt-1">
+                                Notifie tous les infirmiers de la région associés à ce remplacement.
+                            </p>
+                        </button>
+                    </div>
+
+                    <div
+                        v-if="selectedOption"
+                        class="mt-8"
+                    >
+                        <h4 class="text-base font-semibold text-gray-700 dark:text-white mb-3 flex items-center gap-2">
+                            Historique des relances –
+                            <span class="ml-1 font-normal text-sm italic text-gray-500">
+                                {{ selectedOption === 'creator' ? 'Créateur' : 'Infirmiers' }}
+                            </span>
+                        </h4>
+                        <div v-if="getFilteredHistory.length > 0">
+                            <ul class="space-y-2 list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
+                                <li
+                                    v-for="item in getFilteredHistory"
+                                    :key="item.id"
+                                    class="ml-4"
+                                >
+                                    Relance envoyée le {{ formatDate(item.relaunched_at) }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div
+                            v-else
+                            class="text-sm italic text-gray-500 dark:text-gray-400 ml-4"
+                        >
+                            Aucune relance n’a encore été effectuée pour ce remplacement.
+                        </div>
+
+                        <button
+                            v-if="!showAll && relaunchHistory.filter(h => h.type === selectedOption).length > 1"
+                            class="text-sm text-blue-500 hover:underline mt-2 ml-4"
+                            @click="showAll = true"
+                        >
+                            Voir plus
+                        </button>
+                    </div>
+
+                    <div class="flex justify-end mt-8 space-x-3">
                         <Button
                             variant="secondary"
                             class="rounded"
@@ -73,9 +150,10 @@
                         </Button>
                         <Button
                             class="rounded"
+                            :disabled="!selectedOption"
                             @click="confirmRelaunch"
                         >
-                            Oui, relancer
+                            Confirmer
                         </Button>
                     </div>
                 </DialogContent>
@@ -99,7 +177,6 @@ import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.v
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
-// import ReplacementStatus from '~/components/dashboard/ReplacementStatus.vue';
 
 import UsersName from '@/components/users/Name.vue';
 
@@ -110,7 +187,8 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement, relaunchMail } = useReplacements();
+const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
+const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -513,7 +591,6 @@ const columns: ColumnDef<Replacement>[] = [
                 },
                 {
                     label: 'Relance',
-                    // onClick: () => handleRelaunch(replacement),
                     onClick: () => openConfirmDialog(replacement),
                 },
                 {
@@ -570,28 +647,71 @@ watch(
 const handleEdit = (replacement: Replacement) => {
     navigateTo(`/dashboard/admin/replacements/${replacement.id}`);
 };
-const isDialogOpen = ref(false);
-const selectedReplacement = ref<Replacement | null>(null);
 
-const openConfirmDialog = (replacement: Replacement) => {
+const isDialogOpen = ref(false);
+const selectedReplacement = ref(null);
+const selectedOption = ref<'creator' | 'region'>('creator');
+const relaunchHistory = ref([]);
+const showAll = ref(false);
+
+const openConfirmDialog = async (replacement) => {
     selectedReplacement.value = replacement;
+    selectedOption.value = 'creator';
+    showAll.value = false;
     isDialogOpen.value = true;
+
+    const response = await fetchRelaunchHistory(replacement.id);
+
+    if (response?.data) {
+        relaunchHistory.value = response.data;
+    }
+    else {
+        relaunchHistory.value = [];
+    }
 };
 
 const closeDialog = () => {
     isDialogOpen.value = false;
     selectedReplacement.value = null;
+    selectedOption.value = 'creator';
+    relaunchHistory.value = [];
+    showAll.value = false;
 };
 
+const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleString();
+};
+
+const getFilteredHistory = computed(() => {
+    const filtered = relaunchHistory.value.filter(
+        (item) => item.type === selectedOption.value,
+    );
+    return showAll.value ? filtered : filtered.slice(0, 1);
+});
+
 const confirmRelaunch = async () => {
-    if (!selectedReplacement.value) return;
+    if (!selectedReplacement.value || !selectedOption.value) return;
 
-    await relaunchMail(selectedReplacement.value);
+    if (selectedOption.value === 'creator') {
+        const response = await relaunchMailToCreator(selectedReplacement.value);
+        if (response.success === false) {
+            $toast({
+                description: 'Ce remplacement ne remplit pas les conditions pour un renvoi de mail.',
+                variant: 'destructive',
+            });
+            return;
+        }
+    }
+    else if (selectedOption.value === 'region') {
+        await relaunchMailToRegion(selectedReplacement.value);
+    }
+
     $toast({
-        description: 'Mail renvoyé avec succès à tous',
+        description: 'Mail renvoyé avec succès',
     });
-    await getReplacementsForAdmin();
 
+    await getReplacementsForAdmin();
     closeDialog();
 };
 
