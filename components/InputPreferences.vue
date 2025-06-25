@@ -116,7 +116,7 @@
                         </TagsInputItem>
                     </div>
                     <TagsInputInput
-                        class="-mt-1 sm:w-24 2xl:w-auto"
+                        class="-mt-1 sm:w-24 2xl:w-auto flex-1 min-w-[80px]"
                         placeholder="Bruxelles"
                         @input="isCityFocused = true"
                         @blur="handleBlur"
