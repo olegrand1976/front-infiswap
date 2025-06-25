@@ -71,6 +71,40 @@
                 v-if="activeTab === 'activite'"
                 class="space-y-3"
             >
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière post d'un remplacement"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Dernière post : <span class="font-semibold">{{ user.historic_activity?.last_post_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière acceptation d'un remplacement"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Acceptation : <span class="font-semibold">{{ user.historic_activity?.last_accept_posted_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière réponse à un remplacement posté"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Réponse : <span class="font-semibold">{{ user.historic_activity?.last_response_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière acceptation sur un remplacement posté"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Accept. réponse : <span class="font-semibold">{{ user.historic_activity?.last_accept_response_date ?? '—' }}</span></p>
+                </div>
+
+                <div class="border-t border-gray-300 w-full my-2"></div>
+
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
                     <p>Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span></p>
@@ -90,6 +124,8 @@
                     <CheckCircleIcon class="w-5 h-5 text-primary" />
                     <p>Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span></p>
                 </div>
+
+                <div class="border-t border-gray-300 w-full my-2"></div>
 
                 <div
                     v-if="user.ambassador === 1"
@@ -261,6 +297,7 @@ import {
     EnvelopeIcon,
     PhoneIcon,
     IdentificationIcon,
+    CalendarDaysIcon,
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';

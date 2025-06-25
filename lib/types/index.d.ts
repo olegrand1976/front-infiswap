@@ -54,6 +54,14 @@ export type User = {
     ambassador?: boolean | number;
     professional_category?: string | null;
     comment_crm?: string | null;
+    historic_activity?: UserActivity;
+};
+
+type UserActivity = {
+    last_post_date: string | null;
+    last_accept_posted_date: string | null;
+    last_response_date: string | null;
+    last_accept_response_date: string | null;
 };
 
 type RolePivot = {

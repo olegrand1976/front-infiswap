@@ -371,13 +371,149 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 // onClick: () => setSort('last_contact'),
-            }, () => ['Date', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Date de création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: () => {
             const today = new Date();
             const formattedDate = today.toLocaleDateString('fr-FR');
 
             return h('div', { class: 'text-center' }, formattedDate);
+        },
+    },
+    {
+        id: 'last_post_date',
+        accessorKey: 'activite.last_post_date',
+        header: ({ column }) =>
+            h(
+                'div',
+                {
+                    class: 'relative group w-max mx-auto cursor-default',
+                    title: 'Date de dernière post d\'un remplacement',
+                },
+                [
+                    h(
+                        Button,
+                        {
+                            variant: 'ghost',
+                            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                        },
+                        () => [
+                            'Dernière post',
+                            h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        ],
+                    ),
+                ],
+            ),
+        cell: ({ row }) => {
+            const date = row.original.historic_activity?.last_post_date;
+            return h('div', { class: 'text-center' }, date ?? ' ');
+        },
+        sortingFn: (rowA, rowB) => {
+            const a = new Date(rowA.original.historic_activity?.last_post_date ?? 0).getTime();
+            const b = new Date(rowB.original.historic_activity?.last_post_date ?? 0).getTime();
+            return a - b;
+        },
+    },
+    {
+        id: 'last_accept_posted_date',
+        accessorKey: 'activite.last_accept_posted_date',
+        header: ({ column }) =>
+            h(
+                'div',
+                {
+                    class: 'relative group w-max mx-auto cursor-default',
+                    title: 'Date de dernière acceptation d\'un remplacement',
+                },
+                [
+                    h(
+                        Button,
+                        {
+                            variant: 'ghost',
+                            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                        },
+                        () => [
+                            'Dernière acceptation',
+                            h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        ],
+                    ),
+                ],
+            ),
+        cell: ({ row }) => {
+            const date = row.original.historic_activity?.last_accept_posted_date;
+            return h('div', { class: 'text-center' }, date ?? ' ');
+        },
+        sortingFn: (rowA, rowB) => {
+            const a = new Date(rowA.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
+            const b = new Date(rowB.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
+            return a - b;
+        },
+    },
+    {
+        id: 'last_response_date',
+        accessorKey: 'activite.last_response_date',
+        header: ({ column }) =>
+            h(
+                'div',
+                {
+                    class: 'relative group w-max mx-auto cursor-default',
+                    title: 'Date de dernière réponse à un remplacement posté',
+                },
+                [
+                    h(
+                        Button,
+                        {
+                            variant: 'ghost',
+                            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                        },
+                        () => [
+                            'Dernière réponse',
+                            h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        ],
+                    ),
+                ],
+            ),
+        cell: ({ row }) => {
+            const date = row.original.historic_activity?.last_response_date;
+            return h('div', { class: 'text-center' }, date ?? ' ');
+        },
+        sortingFn: (rowA, rowB) => {
+            const a = new Date(rowA.original.historic_activity?.last_response_date ?? 0).getTime();
+            const b = new Date(rowB.original.historic_activity?.last_response_date ?? 0).getTime();
+            return a - b;
+        },
+    },
+    {
+        id: 'last_accept_response_date',
+        accessorKey: 'activite.last_accept_response_date',
+        header: ({ column }) =>
+            h(
+                'div',
+                {
+                    class: 'relative group w-max mx-auto cursor-default',
+                    title: 'Date de dernière acceptation sur un remplacement posté',
+                },
+                [
+                    h(
+                        Button,
+                        {
+                            variant: 'ghost',
+                            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                        },
+                        () => [
+                            'Acceptation réponse',
+                            h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        ],
+                    ),
+                ],
+            ),
+        cell: ({ row }) => {
+            const date = row.original.historic_activity?.last_accept_response_date;
+            return h('div', { class: 'text-center' }, date ?? ' ');
+        },
+        sortingFn: (rowA, rowB) => {
+            const a = new Date(rowA.original.historic_activity?.last_accept_response_date ?? 0).getTime();
+            const b = new Date(rowB.original.historic_activity?.last_accept_response_date ?? 0).getTime();
+            return a - b;
         },
     },
     {
