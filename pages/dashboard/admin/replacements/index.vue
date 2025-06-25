@@ -776,7 +776,7 @@ const formatDate = (dateStr) => {
 
 const getFilteredHistory = computed(() => {
     const filtered = relaunchHistory.value.filter(
-        (item) => item.type === selectedOption.value,
+        item => item.type === selectedOption.value,
     );
     return showAll.value ? filtered : filtered.slice(0, 1);
 });
