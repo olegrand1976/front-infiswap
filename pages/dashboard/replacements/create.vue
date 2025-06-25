@@ -150,6 +150,7 @@
                     :comma-validation="true"
                     :no-space-validation="true"
                     @keydown.enter.prevent
+                    @item-added="onCityAdded"
                 />
 
                 <div class="flex flex-col space-y-2">
@@ -228,7 +229,7 @@ import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 
-const { getCityFromPostalCode } = useOpenai();
+const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -270,10 +271,18 @@ const formData = reactive({
 });
 
 const onZipCodeAdded = async (zip: string) => {
-    const city = await getCityFromPostalCode(zip);
+    const city = await getCityFromZipCode(zip);
 
     if (!formData.cities.includes(city)) {
         formData.cities = [...formData.cities, city];
+    }
+};
+
+const onCityAdded = async (city: string) => {
+    const zipCode = await getZipCodeFromCity(city);
+
+    if (!formData.zipCodes.includes(city)) {
+        formData.zipCodes = [...formData.zipCodes, zipCode];
     }
 };
 

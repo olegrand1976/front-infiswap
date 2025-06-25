@@ -29,7 +29,7 @@ export const useOpenai = () => {
         return response;
     }
 
-    async function getCityFromPostalCode(zip: string): Promise<string | null> {
+    async function getCityFromZipCode(zip: string): Promise<string | null> {
         const prompt = `Donne-moi uniquement le nom de la ville correspondant au code postal ${zip} en Belgique, sans phrase ni ponctuation. Juste le nom de la ville.`;
 
         const response = await ask(prompt, 'developer');
@@ -41,7 +41,7 @@ export const useOpenai = () => {
         return content;
     }
 
-    async function getPostalCodeFromCity(city: string): Promise<string | null> {
+    async function getZipCodeFromCity(city: string): Promise<string | null> {
         const prompt = `Donne-moi uniquement le code postal de la ville ${city} en Belgique, sans phrase ni ponctuation. Juste le code postal.`;
 
         const response = await ask(prompt, 'developer');
@@ -53,22 +53,11 @@ export const useOpenai = () => {
         return content;
     }
 
-    const onZipCodeAdded = async (zip: string, data: string[]) => {
-        const city = await getCityFromPostalCode(zip);
-
-        if (!data.includes(city)) {
-            data.push(city);
-        }
-
-        return data;
-    };
-
     return {
         ask,
         choices,
-        getCityFromPostalCode,
-        getPostalCodeFromCity,
-        onZipCodeAdded,
+        getCityFromZipCode,
+        getZipCodeFromCity,
     };
 };
 
