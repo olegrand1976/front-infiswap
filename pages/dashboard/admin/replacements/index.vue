@@ -3,6 +3,60 @@
         <DashboardAdminPageHeader title="Des remplacements" />
 
         <DashboardAdminPageContent>
+            <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+                <InputIcon
+                    v-model="option.name"
+                    rounded="md"
+                    placeholder="Filtrer par Nom ou Prénom"
+                    class="w-[250px]"
+                    @input="debouncedFilterUsers"
+                />
+                <InputIcon
+                    v-model="option.zip"
+                    rounded="md"
+                    placeholder="Code postal"
+                    class="w-[250px]"
+                    type="number"
+                    @input="debouncedFilterUsers"
+                />
+                <InputIcon
+                    v-model="option.city"
+                    rounded="md"
+                    placeholder="Ville"
+                    class="w-[250px]"
+                    @input="debouncedFilterUsers"
+                />
+                <Select
+                    v-model="option.type"
+                    @update:model-value="debouncedFilterUsers"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Type</span>
+                        <strong class="ml-4">
+                            {{
+                                option.type === 'classic' ? 'classique' : option.type === 'immediate' ? 'urgente' : 'tous'
+                            }}
+                        </strong>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="'classic'">
+                                <span class="ml-2">Classqiue</span>
+                            </SelectItem>
+                            <SelectItem :value="'immediate'">
+                                <span class="ml-2">Urgente</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Button
+                    class="rounded-md"
+                    @click="resetFilter"
+                >
+                    <ArrowPathIcon class="md:mr-2" />
+                    <span class="hidden md:inline-block">Restaurer</span>
+                </Button>
+            </div>
             <DataTable
                 :data="replacements.data"
                 :columns="columns"
@@ -192,6 +246,43 @@ const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = us
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
+
+const initialFilter = {
+    name: null,
+    zip: null,
+    city: null,
+    type: null,
+};
+const option = ref({ ...initialFilter });
+
+const debounce = (func, delay) => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
+
+const filterUsers = async () => {
+    const currentFilter = { ...option.value };
+    await getReplacementsForAdmin(page.value, perPage.value, currentFilter);
+};
+
+const resetFilter = async () => {
+    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    if (isSame) {
+        return;
+    }
+
+    option.value = { ...initialFilter };
+    page.value = 1;
+    await getReplacementsForAdmin(page.value, perPage.value, option.value);
+};
+
+const debouncedFilterUsers = debounce(filterUsers, 100);
+
 const { $apifetch } = useNuxtApp();
 await getReplacementsForAdmin(page.value, perPage.value);
 
