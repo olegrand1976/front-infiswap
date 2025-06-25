@@ -95,6 +95,7 @@
                                     :is-mobile="false"
                                     :comma-validation="false"
                                     @keydown.enter.prevent
+                                    @item-added="onZipCodeAdded"
                                 />
                             </div>
                         </div>
@@ -111,6 +112,7 @@
                                     :comma-validation="true"
                                     :no-space-validation="true"
                                     @keydown.enter.prevent
+                                    @item-added="onCityAdded"
                                 />
                             </div>
                         </div>
@@ -188,6 +190,7 @@ definePageMeta({
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
+const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
 
 const formData = reactive({
     startTime: '',
@@ -199,6 +202,22 @@ const formData = reactive({
     zipCodesInput: '',
     citiesInput: '',
 });
+
+const onZipCodeAdded = async (zip: string) => {
+    const city = await getCityFromZipCode(zip);
+
+    if (!formData.cities.includes(city)) {
+        formData.cities = [...formData.cities, city];
+    }
+};
+
+const onCityAdded = async (city: string) => {
+    const zipCode = await getZipCodeFromCity(city);
+
+    if (!formData.zipCodes.includes(city)) {
+        formData.zipCodes = [...formData.zipCodes, zipCode];
+    }
+};
 
 const handleCareTypeClick = (timeSlot, careTypes) => {
     const index = timeSlot.careTypes.indexOf(careTypes);
