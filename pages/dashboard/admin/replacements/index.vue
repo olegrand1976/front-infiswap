@@ -142,10 +142,10 @@
                             type="button"
                             :class="[
                                 'w-full md:w-auto px-4 py-3 rounded-lg border text-left focus:outline-none focus:ring-2 transition',
-                                selectedOption === 'region'
+                                selectedOption === 'interested'
                                     ? 'border-primary bg-primary/10 text-primary ring-primary'
                                     : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300']"
-                            @click="selectedOption = 'region'"
+                            @click="selectedOption = 'interested'"
                         >
                             <h3 class="font-bold">
                                 Relancer les infirmiers
@@ -741,7 +741,7 @@ const handleEdit = (replacement: Replacement) => {
 
 const isDialogOpen = ref(false);
 const selectedReplacement = ref(null);
-const selectedOption = ref<'creator' | 'region'>('creator');
+const selectedOption = ref<'creator' | 'interested'>('creator');
 const relaunchHistory = ref([]);
 const showAll = ref(false);
 
@@ -794,7 +794,7 @@ const confirmRelaunch = async () => {
             return;
         }
     }
-    else if (selectedOption.value === 'region') {
+    else if (selectedOption.value === 'interested') {
         await relaunchMailToRegion(selectedReplacement.value);
     }
 
