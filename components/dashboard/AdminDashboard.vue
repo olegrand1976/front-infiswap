@@ -108,8 +108,6 @@ const replacementChartData = computed(() => {
 const xRegistrationFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
 const xReplacementFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
-console.log(xRegistrationFormatter);
-
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];
 
