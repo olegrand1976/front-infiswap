@@ -20,6 +20,7 @@ export type User = {
     email_verified_at?: string | null;
     settings?: string | null;
     remember_token?: string | null;
+    last_login_at?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
     stripe_id?: string | null;

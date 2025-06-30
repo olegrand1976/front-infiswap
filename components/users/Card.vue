@@ -176,13 +176,14 @@
             >
                 <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
 
-                {# <div class="flex items-center gap-2">
-                    <component
-                        :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
-                        :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
-                    <label>InfiSwap</label>
-                </div> #}
+                <p>Mode de contact : - - - </p>
+
+                <p>
+                    Date de dernière connexion :
+                    {{
+                        new Date(user.last_login_at ?? user.created_at).toLocaleDateString('fr-FR') + ' ' + new Date(user.last_login_at ?? user.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                    }}
+                </p>
 
                 <div class="flex items-center gap-2">
                     <component

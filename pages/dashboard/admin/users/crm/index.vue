@@ -26,29 +26,6 @@
                     class="w-[250px]"
                     @input="debouncedFilterUsers"
                 />
-                {# <Select
-                    v-model="option.biotrax"
-                    @update:model-value="debouncedFilterUsers"
-                >
-                    <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>Infiswap</span>
-                        <strong class="ml-4">
-                            {{
-                                option.biotrax === 1 ? 'oui' : option.biotrax === 0 ? 'non' : 'tous'
-                            }}
-                        </strong>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="1">
-                                <span class="ml-2">Oui</span>
-                            </SelectItem>
-                            <SelectItem :value="0">
-                                <span class="ml-2">Non</span>
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select> #}
                 <Select
                     v-model="option.insurance"
                     @update:model-value="debouncedFilterUsers"
@@ -267,29 +244,6 @@ const columns: ColumnDef<User>[] = [
             return h('div', { class: 'text-center' }, row.getValue('city'));
         },
     },
-    /* {
-        accessorKey: 'biotrax',
-        header: 'Infiswap',
-        enableSorting: false,
-        cell: ({ row }) => {
-            const toggle = async (value: boolean) => {
-                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    dataUsers.value[index].biotrax = value ? 1 : 0;
-                }
-
-                await edit(Number(row.original.id), { biotrax: dataUsers.value[index].biotrax == 1 });
-            };
-
-            return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    'class': 'mx-auto text-center',
-                    'checked': row.original.biotrax === 1,
-                    'onUpdate:checked': toggle,
-                }),
-            ]);
-        },
-    }, */
     {
         accessorKey: 'insurance',
         header: 'NursAssur',
@@ -379,11 +333,43 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 // onClick: () => setSort('last_contact'),
-            }, () => ['Date de création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: () => {
             const today = new Date();
             const formattedDate = today.toLocaleDateString('fr-FR');
+
+            return h('div', { class: 'text-center' }, formattedDate);
+        },
+    },
+    {
+        accessorKey: 'contacted_by',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+            }, () => ['Contacté par', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: () => {
+            return h('div', { class: 'text-center' }, ' ');
+        },
+    },
+    {
+        accessorKey: 'created_at',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('created_at'),
+            }, () => ['Date de création', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            const rawDate = row.original.created_at;
+            const dateObj = new Date(rawDate);
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const formattedDate = `${day}/${month}/${year}`;
 
             return h('div', { class: 'text-center' }, formattedDate);
         },
@@ -413,8 +399,28 @@ const columns: ColumnDef<User>[] = [
                 ],
             ),
         cell: ({ row }) => {
-            const date = row.original.historic_activity?.last_post_date;
-            return h('div', { class: 'text-center' }, date ?? ' ');
+            const rawDate = row.original.historic_activity?.last_post_date;
+
+            if (!rawDate) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const dateObj = new Date(rawDate);
+
+            if (isNaN(dateObj.getTime())) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+            const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return h('div', { class: 'text-center' }, formattedDate);
         },
         sortingFn: (rowA, rowB) => {
             const a = new Date(rowA.original.historic_activity?.last_post_date ?? 0).getTime();
@@ -447,8 +453,28 @@ const columns: ColumnDef<User>[] = [
                 ],
             ),
         cell: ({ row }) => {
-            const date = row.original.historic_activity?.last_accept_posted_date;
-            return h('div', { class: 'text-center' }, date ?? ' ');
+            const rawDate = row.original.historic_activity?.last_accept_posted_date;
+
+            if (!rawDate) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const dateObj = new Date(rawDate);
+
+            if (isNaN(dateObj.getTime())) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+            const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return h('div', { class: 'text-center' }, formattedDate);
         },
         sortingFn: (rowA, rowB) => {
             const a = new Date(rowA.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
@@ -481,8 +507,28 @@ const columns: ColumnDef<User>[] = [
                 ],
             ),
         cell: ({ row }) => {
-            const date = row.original.historic_activity?.last_response_date;
-            return h('div', { class: 'text-center' }, date ?? ' ');
+            const rawDate = row.original.historic_activity?.last_response_date;
+
+            if (!rawDate) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const dateObj = new Date(rawDate);
+
+            if (isNaN(dateObj.getTime())) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+            const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return h('div', { class: 'text-center' }, formattedDate);
         },
         sortingFn: (rowA, rowB) => {
             const a = new Date(rowA.original.historic_activity?.last_response_date ?? 0).getTime();
@@ -515,13 +561,66 @@ const columns: ColumnDef<User>[] = [
                 ],
             ),
         cell: ({ row }) => {
-            const date = row.original.historic_activity?.last_accept_response_date;
-            return h('div', { class: 'text-center' }, date ?? ' ');
+            const rawDate = row.original.historic_activity?.last_accept_response_date;
+
+            if (!rawDate) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const dateObj = new Date(rawDate);
+
+            if (isNaN(dateObj.getTime())) {
+                return h('div', { class: 'text-center' }, ' ');
+            }
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+            const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return h('div', { class: 'text-center' }, formattedDate);
         },
         sortingFn: (rowA, rowB) => {
             const a = new Date(rowA.original.historic_activity?.last_accept_response_date ?? 0).getTime();
             const b = new Date(rowB.original.historic_activity?.last_accept_response_date ?? 0).getTime();
             return a - b;
+        },
+    },
+    {
+        accessorKey: 'last_login_at',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('last_login_at'),
+            }, () => ['Dernière connexion', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            const rawDate = row.original.last_login_at;
+
+            if (!rawDate) {
+                return h('div', { class: 'text-center' }, '');
+            }
+
+            const dateObj = new Date(rawDate);
+
+            if (isNaN(dateObj.getTime())) {
+                return h('div', { class: 'text-center' }, '');
+            }
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+            const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return h('div', { class: 'text-center' }, formattedDate);
         },
     },
     {
