@@ -28,6 +28,7 @@ build:
       API_URL=${API_URL}
       FRONT_END_URL=${FRONT_END_URL}
       PORT=${PORT}
+      OPENAI_API_KEY=${OPENAI_API_KEY}
       EOF
     - cat .env # Afficher pour vérification (attention aux secrets)
   script:
