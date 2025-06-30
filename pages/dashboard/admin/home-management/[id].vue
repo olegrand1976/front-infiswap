@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import type { HomeType } from '~/lib/types';
 
-useHead({ title: 'Modification texte d\'accueil' });
+useHead({ title: 'Modification texte d\'Accueil' });
 
 const route = useRoute();
 const home = ref<HomeType>(null);
