@@ -128,8 +128,7 @@
                 <div class="flex items-center gap-2">
                     <CheckCircleIcon class="w-5 h-5 text-primary" />
                     <p>
-                        Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted
-                        }}</span>
+                        Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span>
                     </p>
                 </div>
 
@@ -174,9 +173,12 @@
                 v-else-if="activeTab === 'contact'"
                 class="space-y-3"
             >
-                <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
+                <p>
+                    Date de dernier contact :
+                    {{ user.contact_date ? new Date(user.contact_date).toLocaleDateString('fr-FR') : '- - -' }}
+                </p>
 
-                <p>Mode de contact : - - - </p>
+                <p>Mode de contact : {{ user.contact_method ?? '- - -' }}</p>
 
                 <p>
                     Date de dernière connexion :
@@ -207,6 +209,11 @@
                         :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>Ambassadeur</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <XCircleIcon class="text-gray-300 w-5 h-5" />
+                    <label>Tournée</label>
                 </div>
             </div>
 

@@ -56,6 +56,8 @@ export type User = {
     professional_category?: string | null;
     comment_crm?: string | null;
     historic_activity?: UserActivity;
+    contact_date?: string | null;
+    contact_method?: string | null;
 };
 
 type UserActivity = {

@@ -92,6 +92,72 @@
                     <UsersCard :user="user" />
                 </DialogContent>
             </Dialog>
+
+            <Dialog
+                v-model:open="contactDialogOpen"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            >
+                <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
+                    <DialogHeader>
+                        <DialogTitle class="text-lg font-semibold text-primary mb-4">
+                            Modifier le contact
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <form @submit.prevent="saveContact">
+                        <div class="mb-4">
+                            <label
+                                for="contactDate"
+                                class="block mb-1 text-sm font-medium text-gray-700"
+                            >
+                                Date de contact
+                            </label>
+                            <InputIcon
+                                id="contactDate"
+                                v-model="tempContactDate"
+                                type="date"
+                                class="w-full"
+                            />
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="block mb-1 text-sm font-medium text-gray-700">Mode de contact</span>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" value="mail" v-model="tempContactMethod" class="form-radio" />
+                                    <span class="ml-2">Mail</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" value="phone" v-model="tempContactMethod" class="form-radio" />
+                                    <span class="ml-2">Téléphone</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" value="visio" v-model="tempContactMethod" class="form-radio" />
+                                    <span class="ml-2">Visioconférence</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            <Button
+                                variant="secondary"
+                                class="px-4 py-2 rounded"
+                                type="button"
+                                @click="contactDialogOpen = false"
+                            >
+                                Annuler
+                            </Button>
+                            <Button
+                                type="submit"
+                                class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                            >
+                                Valider
+                            </Button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
             <div>
                 <CustomPagination
                     :default-page="page"
@@ -107,7 +173,7 @@
 
 <script setup lang="ts">
 import type { ColumnDef } from '@tanstack/vue-table';
-import { EyeIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, PencilIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import type { User } from '~/lib/types';
@@ -131,7 +197,32 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { users, getUsers, edit } = useAuth();
+const contactDialogOpen = ref(false);
+
+const tempContactDate = ref('');
+const tempContactMethod = ref('mail');
+const editingUserId = ref<number | null>(null);
+
+const { users, getUsers, edit, updateContact } = useAuth();
+
+function openContactDialog(user) {
+    editingUserId.value = user.id;
+    tempContactDate.value = user.contact_date ?? '';
+    tempContactMethod.value = user.contact_method ?? 'mail';
+    contactDialogOpen.value = true;
+}
+
+async function saveContact() {
+    if (!editingUserId.value) return;
+
+    await updateContact(editingUserId.value, {
+        contact_date: tempContactDate.value,
+        contact_method: tempContactMethod.value,
+    });
+
+    contactDialogOpen.value = false;
+    await getUsers();
+}
 
 const user = ref(null);
 
@@ -141,7 +232,6 @@ const initialFilter = {
     name: null,
     zip: null,
     city: null,
-    /* biotrax: null, */
     insurance: null,
     site: null,
 };
@@ -328,29 +418,59 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
-        accessorKey: 'last_contact',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                // onClick: () => setSort('last_contact'),
-            }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: () => {
-            const today = new Date();
-            const formattedDate = today.toLocaleDateString('fr-FR');
+        accessorKey: 'contact_date',
+        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_date') }, () => [
+            'Date de contact',
+            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+        ]),
+        cell: ({ row }) => {
+            const rawDate = row.original.contact_date;
+            let formattedDate = '';
 
-            return h('div', { class: 'text-center' }, formattedDate);
+            if (rawDate) {
+                const date = new Date(rawDate);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                formattedDate = `${day}/${month}/${year}`;
+            }
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                h('span', formattedDate),
+                h(PencilIcon, {
+                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                    onClick: () => {
+                        openContactDialog(row.original);
+                    },
+                }),
+            ]);
         },
     },
     {
-        accessorKey: 'contacted_by',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-            }, () => ['Contacté par', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: () => {
-            return h('div', { class: 'text-center' }, ' ');
+        accessorKey: 'contact_method',
+        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_method') }, () => [
+            'Contacté par',
+            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+        ]),
+        cell: ({ row }) => {
+            const method = row.original.contact_method;
+            const displayMethod = method === 'mail'
+                ? 'Mail'
+                : method === 'phone'
+                    ? 'Téléphone'
+                    : method === 'visio'
+                        ? 'Visioconférence'
+                        : '';
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                h('span', displayMethod),
+                h(PencilIcon, {
+                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                    onClick: () => {
+                        openContactDialog(row.original);
+                    },
+                }),
+            ]);
         },
     },
     {
