@@ -138,6 +138,7 @@
                     :comma-validation="false"
                     :count="4"
                     @keydown.enter.prevent
+                    @item-added="onZipCodeAdded"
                 />
 
                 <InputTagManager
@@ -149,6 +150,7 @@
                     :comma-validation="true"
                     :no-space-validation="true"
                     @keydown.enter.prevent
+                    @item-added="onCityAdded"
                 />
 
                 <div class="flex flex-col space-y-2">
@@ -227,6 +229,7 @@ import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 
+const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -266,6 +269,22 @@ const formData = reactive({
     zipCodesInput: '',
     citiesInput: '',
 });
+
+const onZipCodeAdded = async (zip: string) => {
+    const city = await getCityFromZipCode(zip);
+
+    if (!formData.cities.includes(city)) {
+        formData.cities = [...formData.cities, city];
+    }
+};
+
+const onCityAdded = async (city: string) => {
+    const zipCode = await getZipCodeFromCity(city);
+
+    if (!formData.zipCodes.includes(city)) {
+        formData.zipCodes = [...formData.zipCodes, zipCode];
+    }
+};
 
 const calendarValue = ref<{ start: string | null; end: string | null }[]>([
     { start: null, end: null },

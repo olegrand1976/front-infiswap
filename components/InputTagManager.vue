@@ -72,7 +72,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'item-added', 'item-removed']);
 
 const inputValue = ref('');
 const items = ref([...props.modelValue]);
@@ -89,12 +89,14 @@ const addItem = () => {
     if (value && !items.value.includes(value)) {
         items.value.push(value);
         emit('update:modelValue', items.value);
+        emit('item-added', value);
     }
     inputValue.value = '';
 };
 
 const removeItem = (index) => {
     items.value.splice(index, 1);
+    emit('item-removed', items.value[index]);
     emit('update:modelValue', items.value);
 };
 
