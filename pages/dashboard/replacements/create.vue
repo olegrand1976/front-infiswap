@@ -223,8 +223,8 @@
 
         <ProposalLocationModal
             v-model="proposalDialog"
-            :initial-zip-codes="zipCodes"
-            :initial-cities="cities"
+            :initial-zip-codes="formData.zipCodes"
+            :initial-cities="formData.cities"
             :is-preference-mode="false"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
@@ -247,18 +247,12 @@ import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
-import type { UserSettings, User } from '~/lib/types';
 
 const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
 const { $toast } = useNuxtApp();
-const user = useState<User>('user');
-
-const settings: UserSettings = JSON.parse(user.value.settings);
-const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
-const cities = ref<string[]>(settings.replacement?.cities ?? []);
 
 const isMobile = ref(false);
 onMounted(() => {
