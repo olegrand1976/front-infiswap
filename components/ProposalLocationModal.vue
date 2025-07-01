@@ -17,10 +17,16 @@
                         <h5 class="font-semibold text-center sm:text-start text-primary">
                             Codes postaux et villes suggérés
                         </h5>
-                        <div v-if="loading">
-                            <p class="mt-6 text-center text-gray-500">
-                                Chargement des suggestions...
+                        <div
+                            v-if="loading"
+                            class="flex justify-center items-center mt-6 space-x-2"
+                        >
+                            <p class="text-center text-gray-500">
+                                Chargement des suggestions
                             </p>
+                            <span class="animate-bounce text-gray-500">.</span>
+                            <span class="animate-bounce text-gray-500 delay-150">.</span>
+                            <span class="animate-bounce text-gray-500 delay-300">.</span>
                         </div>
                         <div
                             v-else-if="locationData.length != 0"
@@ -94,6 +100,7 @@ const user = useState<User>('user');
 const props = defineProps<{
     initialZipCodes: string[];
     initialCities: string[];
+    isPreferenceMode?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -125,38 +132,46 @@ const toggleLocation = (zipCode: string, city: string) => {
 };
 
 const handleCreatePreference = async () => {
-    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
-    const existingLocations = (settings.replacement?.zip_codes ?? []).map((zip, i) => [zip, settings.replacement?.cities[i] ?? '']);
+    const selectedZipCodes = tempSelectedLocations.value.map(([zip]) => zip);
+    const selectedCities = tempSelectedLocations.value.map(([, city]) => city);
 
-    const mergedLocations = [...existingLocations];
-    tempSelectedLocations.value.forEach(([zip, city]) => {
-        if (!mergedLocations.some(([z, c]) => z === zip && c === city)) {
-            mergedLocations.push([zip, city]);
+    const mergedZipCodes = [...new Set([...props.initialZipCodes, ...selectedZipCodes])];
+    const mergedCities = [...new Set([...props.initialCities, ...selectedCities])];
+
+    if (props.isPreferenceMode) {
+        const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+        const existingLocations = (settings.replacement?.zip_codes ?? []).map((zip, i) => [zip, settings.replacement?.cities[i] ?? '']);
+
+        const mergedLocations = [...existingLocations];
+        tempSelectedLocations.value.forEach(([zip, city]) => {
+            if (!mergedLocations.some(([z, c]) => z === zip && c === city)) {
+                mergedLocations.push([zip, city]);
+            }
+        });
+
+        const finalLocations = mergedLocations.filter(([zip, city]) =>
+            tempSelectedLocations.value.some(([z, c]) => z === zip && c === city)
+            || !locationData.value.some(([z, c]) => z === zip && c === city),
+        );
+
+        const formData = {
+            key: 'replacement',
+            value: {
+                zip_codes: finalLocations.map(([zip]) => zip),
+                cities: finalLocations.map(([, city]) => city),
+            },
+        };
+
+        try {
+            await createPreferences(formData);
         }
-    });
-
-    const finalLocations = mergedLocations.filter(([zip, city]) =>
-        tempSelectedLocations.value.some(([z, c]) => z === zip && c === city)
-        || !locationData.value.some(([z, c]) => z === zip && c === city),
-    );
-
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: finalLocations.map(([zip]) => zip),
-            cities: finalLocations.map(([, city]) => city),
-        },
-    };
-
-    try {
-        await createPreferences(formData);
-        emit('update:initialZipCodes', formData.value.zip_codes);
-        emit('update:initialCities', formData.value.cities);
-        openDialog.value = false;
+        catch (error) {
+            console.error('Failed to save preferences:', error);
+        }
     }
-    catch (error) {
-        console.error('Failed to save preferences:', error);
-    }
+    emit('update:initialZipCodes', mergedZipCodes);
+    emit('update:initialCities', mergedCities);
+    openDialog.value = false;
 };
 
 const cancel = () => {

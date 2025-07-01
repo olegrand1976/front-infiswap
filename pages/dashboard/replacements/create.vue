@@ -130,16 +130,26 @@
                     />
                 </div>
 
-                <InputTagManager
-                    v-model="formData.zipCodes"
-                    label="Codes postaux"
-                    placeholder="6565,4561,1237"
-                    :is-mobile="isMobile"
-                    :comma-validation="false"
-                    :count="4"
-                    @keydown.enter.prevent
-                    @item-added="onZipCodeAdded"
-                />
+                <div class="relative">
+                    <InputTagManager
+                        v-model="formData.zipCodes"
+                        label="Codes postaux"
+                        placeholder="6565,4561,1237"
+                        :is-mobile="isMobile"
+                        :comma-validation="false"
+                        :count="4"
+                        @keydown.enter.prevent
+                        @item-added="onZipCodeAdded"
+                    />
+
+                    <Button
+                        variant="inline"
+                        class="absolute -top-[1.2rem] right-0 font-bold text-primary text-xs mt-2"
+                        @click="proposalDialog = true"
+                    >
+                        Boost IA
+                    </Button>
+                </div>
 
                 <InputTagManager
                     v-model="formData.cities"
@@ -211,6 +221,15 @@
             </div>
         </section>
 
+        <ProposalLocationModal
+            v-model="proposalDialog"
+            :initial-zip-codes="zipCodes"
+            :initial-cities="cities"
+            :is-preference-mode="false"
+            @update:initial-zip-codes="updateZipCodes"
+            @update:initial-cities="updateCities"
+        />
+
         <Button
             class="flex items-center justify-center mx-auto mt-16 mb-8 2xl:mt-24 w-72"
             type="submit"
@@ -228,12 +247,18 @@ import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
+import type { UserSettings, User } from '~/lib/types';
 
 const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
 const { $toast } = useNuxtApp();
+const user = useState<User>('user');
+
+const settings: UserSettings = JSON.parse(user.value.settings);
+const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
+const cities = ref<string[]>(settings.replacement?.cities ?? []);
 
 const isMobile = ref(false);
 onMounted(() => {
@@ -270,6 +295,16 @@ const formData = reactive({
     citiesInput: '',
 });
 
+const proposalDialog = ref(false);
+
+const updateZipCodes = (newZipCodes: string[]) => {
+    formData.zipCodes = [...newZipCodes];
+};
+
+const updateCities = (newCities: string[]) => {
+    formData.cities = [...newCities];
+};
+
 const onZipCodeAdded = async (zip: string) => {
     const city = await getCityFromZipCode(zip);
 
@@ -281,7 +316,7 @@ const onZipCodeAdded = async (zip: string) => {
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
 
-    if (!formData.zipCodes.includes(city)) {
+    if (!formData.zipCodes.includes(zipCode)) {
         formData.zipCodes = [...formData.zipCodes, zipCode];
     }
 };

@@ -249,9 +249,9 @@
                     <Button
                         variant="inline"
                         class="font-bold text-xs mt-2"
-                        @click="preferenceDialog = true"
+                        @click="proposalDialog = true"
                     >
-                        Génerer via IA
+                        Boost IA
                     </Button>
                 </div>
                 <div class="sm:mt-10">
@@ -262,9 +262,10 @@
                 </div>
 
                 <ProposalLocationModal
-                    v-model="preferenceDialog"
+                    v-model="proposalDialog"
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
+                    :is-preference-mode="true"
                     @update:initial-zip-codes="zipCodes = $event"
                     @update:initial-cities="cities = $event"
                 />
@@ -318,7 +319,7 @@ const props = defineProps<{
 }>();
 
 const user = useUser();
-const preferenceDialog = ref(false);
+const proposalDialog = ref(false);
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
