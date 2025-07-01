@@ -73,12 +73,17 @@
             >
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
-                    <p>Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span></p>
+                    <p>
+                        Remplacements créés : <span class="font-semibold">{{ activityData.replacements_created }}</span>
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <DocumentCheckIcon class="w-5 h-5 text-primary" />
-                    <p>Remplacements acceptés : <span class="font-semibold">{{ activityData.replacements_accepted }}</span></p>
+                    <p>
+                        Remplacements acceptés : <span class="font-semibold">{{ activityData.replacements_accepted
+                        }}</span>
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -88,7 +93,10 @@
 
                 <div class="flex items-center gap-2">
                     <CheckCircleIcon class="w-5 h-5 text-primary" />
-                    <p>Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span></p>
+                    <p>
+                        Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted
+                        }}</span>
+                    </p>
                 </div>
 
                 <div
@@ -132,13 +140,13 @@
             >
                 <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
 
-                <div class="flex items-center gap-2">
+                {# <div class="flex items-center gap-2">
                     <component
                         :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
                         :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>InfiSwap</label>
-                </div>
+                </div> #}
 
                 <div class="flex items-center gap-2">
                     <component
