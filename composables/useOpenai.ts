@@ -53,11 +53,50 @@ export const useOpenai = () => {
         return content;
     }
 
+    async function getAdjacentZipCodesAndCities(
+        input: string,
+        excludeZipCodes: string[] = [],
+        excludeCities: string[] = [],
+    ): Promise<[string, string][]> {
+        const prompt = `Sur base du code postal ou de la ville "${input}" en Belgique, peux-tu me lister :
+- les villes liées directement à ce code postal ou cette ville,
+- ainsi que l'ensemble des villes et codes postaux limitrophes.
+
+Ne reprends pas les villes et codes postaux déjà présents dans cette liste :
+- Codes postaux à exclure : [${excludeZipCodes.join(', ') || 'aucun'}]
+- Villes à exclure : [${excludeCities.join(', ') || 'aucune'}]
+
+Tu me fourniras la réponse sous forme d'un JSON structuré ainsi : une liste d'éléments [CODE_POSTAL, VILLE], par exemple :
+[
+  ["1000", "Bruxelles"],
+  ["1050", "Ixelles"]
+]
+
+Ne donne aucune explication, seulement le JSON.`;
+
+        const response = await ask(prompt, 'developer');
+
+        const content = response.choices?.[0]?.message?.content?.trim();
+
+        try {
+            const json = content ? JSON.parse(content) : null;
+            if (json && Array.isArray(json) && json.every(item => Array.isArray(item) && item.length === 2)) {
+                return json as [string, string][];
+            }
+        }
+        catch (e) {
+            console.error('Erreur parsing JSON:', e, content);
+        }
+
+        return [];
+    }
+
     return {
         ask,
         choices,
         getCityFromZipCode,
         getZipCodeFromCity,
+        getAdjacentZipCodesAndCities,
     };
 };
 

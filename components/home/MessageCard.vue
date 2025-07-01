@@ -11,8 +11,6 @@ const props = defineProps<{
     };
 }>();
 
-console.log('home:', props.home);
-
 const cleanedDescription = computed(() => {
     return props.home.description
         ?.replace(/^"|"$/g, '')
