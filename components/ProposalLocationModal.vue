@@ -118,7 +118,8 @@ const isSelected = (zipCode: string, city: string) => {
 const toggleLocation = (zipCode: string, city: string) => {
     if (isSelected(zipCode, city)) {
         tempSelectedLocations.value = tempSelectedLocations.value.filter(([z, c]) => !(z === zipCode && c === city));
-    } else {
+    }
+    else {
         tempSelectedLocations.value.push([zipCode, city]);
     }
 };
@@ -134,9 +135,9 @@ const handleCreatePreference = async () => {
         }
     });
 
-    const finalLocations = mergedLocations.filter(([zip, city]) => 
-        tempSelectedLocations.value.some(([z, c]) => z === zip && c === city) || 
-        !locationData.value.some(([z, c]) => z === zip && c === city)
+    const finalLocations = mergedLocations.filter(([zip, city]) =>
+        tempSelectedLocations.value.some(([z, c]) => z === zip && c === city)
+        || !locationData.value.some(([z, c]) => z === zip && c === city),
     );
 
     const formData = {

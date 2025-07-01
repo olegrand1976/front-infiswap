@@ -265,8 +265,8 @@
                     v-model="preferenceDialog"
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
-                    @update:initialZipCodes="zipCodes = $event"
-                    @update:initialCities="cities = $event"
+                    @update:initial-zip-codes="zipCodes = $event"
+                    @update:initial-cities="cities = $event"
                 />
             </div>
 
