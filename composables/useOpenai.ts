@@ -1,6 +1,7 @@
 export const useOpenai = () => {
     const config = useRuntimeConfig();
     const choices = useState('openaiChoices', () => null);
+    const loading = useState('loading', () => false);
 
     async function ask(
         prompt: string,
@@ -58,6 +59,7 @@ export const useOpenai = () => {
         excludeZipCodes: string[] = [],
         excludeCities: string[] = [],
     ): Promise<[string, string][]> {
+        loading.value = true;
         const prompt = `Sur base du code postal ou de la ville "${input}" en Belgique, peux-tu me lister :
 - les villes liées directement à ce code postal ou cette ville,
 - ainsi que l'ensemble des villes et codes postaux limitrophes.
@@ -81,11 +83,13 @@ Ne donne aucune explication, seulement le JSON.`;
         try {
             const json = content ? JSON.parse(content) : null;
             if (json && Array.isArray(json) && json.every(item => Array.isArray(item) && item.length === 2)) {
+                loading.value = false;
                 return json as [string, string][];
             }
         }
         catch (e) {
             console.error('Erreur parsing JSON:', e, content);
+            loading.value = false;
         }
 
         return [];
@@ -94,6 +98,7 @@ Ne donne aucune explication, seulement le JSON.`;
     return {
         ask,
         choices,
+        loading,
         getCityFromZipCode,
         getZipCodeFromCity,
         getAdjacentZipCodesAndCities,

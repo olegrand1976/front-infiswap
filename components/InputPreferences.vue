@@ -156,7 +156,6 @@ import {
     TagsInputItemDelete,
     TagsInputItemText,
 } from '@/components/ui/tags-input';
-
 import { useAuth } from '~/composables/useAuth';
 
 const props = defineProps<{
@@ -169,8 +168,13 @@ const { createPreferences } = useAuth();
 const isZipCodeFocused = ref(false);
 const isCityFocused = ref(false);
 
-const zipCodes = ref<string[]>(props.initialZipCodes);
-const cities = ref<string[]>(props.initialCities);
+const zipCodes = ref<string[]>([...props.initialZipCodes]);
+const cities = ref<string[]>([...props.initialCities]);
+
+watch(() => [props.initialZipCodes, props.initialCities], ([newZipCodes, newCities]) => {
+    zipCodes.value = [...newZipCodes];
+    cities.value = [...newCities];
+}, { deep: true });
 
 const addPreference = async () => {
     isZipCodeFocused.value = false;

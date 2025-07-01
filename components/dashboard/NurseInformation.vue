@@ -223,7 +223,6 @@
             </div>
 
             <div class="bg-gray-100 rounded-b-lg">
-                <!-- <div class="bg-primary h-6 rounded-t-lg" /> -->
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
                         title="Demandes de remplacement"
@@ -242,16 +241,33 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 h-72 sm:h-full rounded p-4 mb-4">
-                <h3 class="text-primary">
-                    Mes préférences
-                </h3>
-                <div class="mt-8">
+            <div class="bg-gray-100 h-80 sm:h-full rounded p-4 mb-4">
+                <div class="text-primary flex justify-between items-center">
+                    <h2>
+                        Mes préférences
+                    </h2>
+                    <Button
+                        variant="inline"
+                        class="font-bold text-xs mt-2"
+                        @click="preferenceDialog = true"
+                    >
+                        Génerer via IA
+                    </Button>
+                </div>
+                <div class="sm:mt-10">
                     <InputPreferences
                         :initial-zip-codes="zipCodes"
                         :initial-cities="cities"
                     />
                 </div>
+
+                <ProposalLocationModal
+                    v-model="preferenceDialog"
+                    :initial-zip-codes="zipCodes"
+                    :initial-cities="cities"
+                    @update:initialZipCodes="zipCodes = $event"
+                    @update:initialCities="cities = $event"
+                />
             </div>
 
             <div class="bg-gray-100 rounded-b-lg relative">
@@ -302,6 +318,7 @@ const props = defineProps<{
 }>();
 
 const user = useUser();
+const preferenceDialog = ref(false);
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
