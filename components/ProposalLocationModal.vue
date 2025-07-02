@@ -21,7 +21,7 @@
                             v-if="loading"
                             class="flex ml-[20%] md:ml-[35%] items-center mt-12"
                         >
-                            <RollingLoader />
+                            <RollingLoader :loading="loading" />
                         </div>
                         <div
                             v-else-if="locationData.length != 0"
