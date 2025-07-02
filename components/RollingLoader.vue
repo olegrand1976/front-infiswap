@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { cn } from '~/lib/utils';
 
-type Variant = 'primary' | 'secondary' | 'success' | 'white' | 'dark';
+type Variant = 'primary' | 'secondary' | 'success' | 'white' | 'dark' | 'blue';
 
 const props = withDefaults(
     defineProps<{
