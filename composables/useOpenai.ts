@@ -31,7 +31,10 @@ export const useOpenai = () => {
     }
 
     async function getCityFromZipCode(zip: string): Promise<string | null> {
-        const prompt = `Donne-moi uniquement le nom de la ville correspondant au code postal ${zip} en Belgique, sans phrase ni ponctuation. Juste le nom de la ville.`;
+        const prompt = `Pour le code postal ${zip} en Belgique, donne-moi uniquement un tableau JSON listant toutes les villes et sections couvertes par ce code postal, pas seulement la ville principale. 
+        - Si une seule localité correspond, réponds sous forme ["NomVille"].
+        - Si plusieurs localités correspondent, réponds sous forme ["NomVille1", "NomVille2", ...].
+        - N'inclus aucun texte en dehors du tableau JSON.`;
 
         const response = await ask(prompt, 'developer');
 
