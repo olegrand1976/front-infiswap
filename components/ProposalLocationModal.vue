@@ -19,14 +19,9 @@
                         </h5>
                         <div
                             v-if="loading"
-                            class="flex justify-center items-center mt-6 space-x-2"
+                            class="flex ml-[20%] md:ml-[35%] items-center mt-12"
                         >
-                            <p class="text-center text-gray-500">
-                                Chargement des suggestions
-                            </p>
-                            <span class="animate-bounce text-gray-500">.</span>
-                            <span class="animate-bounce text-gray-500 delay-150">.</span>
-                            <span class="animate-bounce text-gray-500 delay-300">.</span>
+                            <RollingLoader />
                         </div>
                         <div
                             v-else-if="locationData.length != 0"
