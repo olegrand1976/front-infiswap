@@ -311,10 +311,12 @@ const openProposalDialog = (value: string) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const city = await getCityFromZipCode(zip);
-    if (city && !formData.cities.includes(city)) {
-        formData.cities = [...formData.cities, city];
-    }
+    const citiesFromZip = await getCityFromZipCode(zip);
+    if (!citiesFromZip) return;
+
+    const citiesSet = new Set(formData.cities);
+    citiesFromZip.forEach(city => citiesSet.add(city));
+    formData.cities = Array.from(citiesSet);
     openProposalDialog(zip);
 };
 

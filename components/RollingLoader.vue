@@ -1,5 +1,8 @@
 <template>
-    <span :class="cn('loader', colorClass)" />
+    <span
+        v-if="props.loading"
+        :class="cn('loader', colorClass)"
+    />
 </template>
 
 <script setup lang="ts">
@@ -7,9 +10,16 @@ import { cn } from '~/lib/utils';
 
 type Variant = 'primary' | 'secondary' | 'success' | 'white' | 'dark';
 
-const props = defineProps<{
-    variant?: Variant;
-}>();
+const props = withDefaults(
+    defineProps<{
+        variant?: Variant;
+        loading?: boolean;
+    }>(),
+    {
+        variant: 'primary',
+        loading: false,
+    },
+);
 
 const colorClass = computed(() => {
     switch (props.variant ?? 'primary') {

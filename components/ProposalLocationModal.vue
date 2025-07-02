@@ -91,31 +91,12 @@ const { createPreferences } = useAuth();
 const user = useUser();
 
 const props = defineProps<{
-    title: {
-        type: string;
-        default: '';
-    };
-    description: {
-        type: string;
-        default: '';
-    };
-    initialZipCodes: {
-        type: Array<string>;
-        default: () => [];
-    };
-    initialCities: {
-        type: Array<string>;
-        default: () => [];
-    };
-    newlyAddedValue: {
-        type: string;
-        default: '';
-    };
-    isPreferenceMode: {
-        type: boolean;
-        required: false;
-        default: false;
-    };
+    title: string;
+    description: string;
+    initialZipCodes: string[];
+    initialCities: string[];
+    newlyAddedValue: string;
+    isPreferenceMode: boolean;
 }>();
 
 const emit = defineEmits<{
