@@ -80,7 +80,7 @@
 
                     <ul class="divide-y divide-gray-100 text-sm">
                         <li
-                            v-for="(user) in visibleUsers"
+                            v-for="user in visibleUsers"
                             :key="user.id"
                             class="py-2 px-3 hover:bg-gray-50 transition-colors rounded-md"
                         >
@@ -445,14 +445,13 @@
 
 <script setup lang="ts">
 import { ArrowPathIcon, EyeIcon } from '@heroicons/vue/24/solid';
-import type { Replacement, User, Nurse } from '~/lib/types';
+import type { Replacement, User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 
 const props = defineProps<{
     replacement?: Replacement | null;
 }>();
 
-const { $apifetch } = useNuxtApp();
 const { isAdmin } = useAuth();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { updateAgainReplacement, release } = useReplacements();
@@ -673,26 +672,12 @@ const showAll = ref(false);
 const limit = 5;
 const matchingUsers = ref<User[]>([]);
 
-async function loadMatchingUsers() {
-    if (!form.matchingNurses || !Array.isArray(form.matchingNurses)) return;
-
-    const nurses = JSON.parse(JSON.stringify(form.matchingNurses));
-
-    const userIdPromises = nurses.map((n: Nurse) =>
-        $apifetch<{ nurse: Nurse }>(`/api/nurses/${n.id}`)
-            .then(res => res.nurse?.user_id)
-            .catch(() => null),
-    );
-
-    const userIds = await Promise.all(userIdPromises);
-
-    const userPromises = userIds
-        .filter(id => !!id)
-        .map(id => $apifetch<{ user: User }>(`/api/users/${id}`));
-
-    const userResponses = await Promise.all(userPromises);
-
-    matchingUsers.value = userResponses.map(r => r.user);
+function initializeMatchingUsers() {
+    if (!form.matchingNurses || !Array.isArray(form.matchingNurses)) {
+        matchingUsers.value = [];
+        return;
+    }
+    matchingUsers.value = JSON.parse(JSON.stringify(form.matchingNurses));
 }
 
 const visibleUsers = computed(() => {
@@ -709,9 +694,9 @@ const remainingUsersCount = computed(() => {
     return Math.max(matchingUsers.value.length - limit, 0);
 });
 
-loadMatchingUsers();
-
-const showAllNurses = () => {
+function showAllNurses() {
     showAll.value = true;
-};
+}
+
+initializeMatchingUsers();
 </script>

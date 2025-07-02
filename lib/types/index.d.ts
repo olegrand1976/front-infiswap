@@ -217,7 +217,7 @@ export type Replacement = {
     nurse_owner_email: string;
     nurse_owner_phone_number: string;
     nurse_owner_profil_url: string;
-    matching_nurses: string;
+    matching_nurses: User[];
     response_count: number;
     substitute_nurse?: string;
     substitute_user?: User;
