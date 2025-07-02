@@ -84,7 +84,7 @@
                             />
                         </div>
                     </div>
-                    <div class="hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                    <div class="hidden relative lg:grid lg:grid-cols-2 lg:gap-4">
                         <div class="flex items-start gap-2 h-full">
                             <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10">
                                 Codes postaux *
@@ -98,6 +98,7 @@
                                     :comma-validation="false"
                                     @keydown.enter.prevent
                                     @item-added="onZipCodeAdded"
+                                    @open-proposal="openProposalDialog"
                                 />
                             </div>
                         </div>
@@ -115,9 +116,30 @@
                                     :no-space-validation="true"
                                     @keydown.enter.prevent
                                     @item-added="onCityAdded"
+                                    @open-proposal="openProposalDialog"
                                 />
                             </div>
                         </div>
+
+                        <Button
+                            variant="inline"
+                            class="absolute -top-2 right-0 font-bold text-primary text-xs mt-2"
+                            @click="openProposalDialog('')"
+                        >
+                            Boost IA
+                        </Button>
+
+                        <ProposalLocationModal
+                            v-model="proposalDialog"
+                            v-model:newly-added-value="newlyAddedValue"
+                            title="Suggestions"
+                            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
+                            :initial-zip-codes="formData.zipCodes"
+                            :initial-cities="formData.cities"
+                            :is-preference-mode="false"
+                            @update:initial-zip-codes="updateZipCodes"
+                            @update:initial-cities="updateCities"
+                        />
                     </div>
 
                     <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
@@ -205,20 +227,36 @@ const formData = reactive({
     citiesInput: '',
 });
 
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
+
+const updateZipCodes = (newZipCodes: string[]) => {
+    formData.zipCodes = [...newZipCodes];
+};
+
+const updateCities = (newCities: string[]) => {
+    formData.cities = [...newCities];
+};
+
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
+};
+
 const onZipCodeAdded = async (zip: string) => {
     const city = await getCityFromZipCode(zip);
-
-    if (!formData.cities.includes(city)) {
+    if (city && !formData.cities.includes(city)) {
         formData.cities = [...formData.cities, city];
     }
+    openProposalDialog(zip);
 };
 
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
-
-    if (!formData.zipCodes.includes(city)) {
+    if (zipCode && !formData.zipCodes.includes(zipCode)) {
         formData.zipCodes = [...formData.zipCodes, zipCode];
     }
+    openProposalDialog(city);
 };
 
 const handleCareTypeClick = (timeSlot, careTypes) => {

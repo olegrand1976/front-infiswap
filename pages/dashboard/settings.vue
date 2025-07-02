@@ -837,7 +837,7 @@
 
                             <Button
                                 variant="inline"
-                                class="font-bold text-xs text-primary -mt-2"
+                                class="font-bold text-xs text-primary -mt-1 lg:-mt-2"
                                 @click="proposalDialog = true"
                             >
                                 Boost IA
