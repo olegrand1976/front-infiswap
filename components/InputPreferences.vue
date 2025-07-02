@@ -47,7 +47,7 @@
                             placeholder="8973"
                             @input="isZipCodeFocused = true"
                             @blur="handleBlur"
-                            @keyup.enter="() => addPreference()"
+                            @keyup.enter="() => addPreference('zipCode')"
                         />
                     </div>
 
@@ -55,7 +55,7 @@
                         <Button
                             type="button"
                             class="ml-2 shrink-0 text-white bg-primary px-3 py-1 rounded-full text-xs shadow"
-                            @click="addPreference"
+                            @click="addPreference('zipCode')"
                         >
                             Ajouter
                         </Button>
@@ -65,7 +65,7 @@
                             variant="ghost"
                             class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
                             title="Ajouter"
-                            @click="addPreference"
+                            @click="addPreference('zipCode')"
                         >
                             <PlusIcon class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
                         </Button>
@@ -102,7 +102,7 @@
                 <TagsInput
                     v-model="cities"
                     class="h-9 bg-transparent flex flex-nowrap xl:ml-[4.5rem] 2xl:ml-0 border sm:border-none border-primary rounded-full"
-                    @keyup.enter="addPreference"
+                    @keyup.enter="addPreference('city')"
                 >
                     <div class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
                         <TagsInputItem
@@ -120,13 +120,13 @@
                         placeholder="Bruxelles"
                         @input="isCityFocused = true"
                         @blur="handleBlur"
-                        @keyup.enter="() => addPreference()"
+                        @keyup.enter="() => addPreference('city')"
                     />
                     <div class="lg:hidden -mr-3">
                         <Button
                             type="button"
                             class="ml-2 shrink-0 text-white bg-primary px-3 py-1 rounded-full text-xs shadow"
-                            @click="addPreference"
+                            @click="addPreference('city')"
                         >
                             Ajouter
                         </Button>
@@ -136,7 +136,7 @@
                             variant="ghost"
                             class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
                             title="Ajouter"
-                            @click="addPreference"
+                            @click="addPreference('city')"
                         >
                             <PlusIcon class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
                         </Button>
@@ -165,8 +165,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
-    // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'update:initialCities', value: string[]): void;
+    (e: 'open-proposal', value: string): void;
 }>();
 
 const { createPreferences } = useAuth();
@@ -176,6 +176,7 @@ const isCityFocused = ref(false);
 
 const zipCodes = ref<string[]>([...props.initialZipCodes]);
 const cities = ref<string[]>([...props.initialCities]);
+const lastAddedValue = ref<string>('');
 
 watch(
     () => [props.initialZipCodes, props.initialCities],
@@ -186,12 +187,20 @@ watch(
     { deep: true },
 );
 
-const addPreference = async () => {
+const addPreference = async (type: 'zipCode' | 'city') => {
     isZipCodeFocused.value = false;
     isCityFocused.value = false;
 
     const validZipCodes = zipCodes.value.filter(zip => zip);
     const validCities = cities.value.filter(city => city);
+
+    let addedValue = '';
+    if (type === 'zipCode' && validZipCodes.length > props.initialZipCodes.length) {
+        addedValue = validZipCodes[validZipCodes.length - 1];
+    }
+    else if (type === 'city' && validCities.length > props.initialCities.length) {
+        addedValue = validCities[validCities.length - 1];
+    }
 
     const formData = {
         key: 'replacement',
@@ -206,6 +215,10 @@ const addPreference = async () => {
         await nextTick();
         emit('update:initialZipCodes', [...formData.value.zip_codes]);
         emit('update:initialCities', [...formData.value.cities]);
+        if (addedValue) {
+            lastAddedValue.value = addedValue;
+            emit('open-proposal', addedValue);
+        }
     }
     catch (error) {
         console.error('Failed to save preferences:', error);
@@ -279,7 +292,8 @@ const handleBlur = async (event) => {
         inputEl.dispatchEvent(enterEvent);
 
         await nextTick();
-        await addPreference();
+        const type = event.target.placeholder === '8973' ? 'zipCode' : 'city';
+        await addPreference(type);
     }
     else {
         isZipCodeFocused.value = false;

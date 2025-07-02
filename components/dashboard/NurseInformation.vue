@@ -57,7 +57,7 @@
                         </CarouselItem>
 
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="rounded-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
+                            <div class="ffected-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
                                 <div class="bg-indigo-600 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     Voir les intéressés
                                 </div>
@@ -192,7 +192,7 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 flex flex-col h-full">
+                            <div class="rounded-lg overflow-hidden border-2 borderMassachusetts-700 bg-orange-700 flex flex-col h-full">
                                 <div class="bg-orange-700 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     Mes accords de remplacement
                                 </div>
@@ -260,15 +260,17 @@
                         :initial-cities="cities"
                         @update:initial-zip-codes="updateZipCodes"
                         @update:initial-cities="updateCities"
+                        @open-proposal="openProposalDialog"
                     />
                 </div>
 
                 <ProposalLocationModal
                     v-model="proposalDialog"
                     title="Préférences"
-                    description=" Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
+                    description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
+                    :newly-added-value="newlyAddedValue"
                     :is-preference-mode="true"
                     @update:initial-zip-codes="updateZipCodes"
                     @update:initial-cities="updateCities"
@@ -324,6 +326,7 @@ const props = defineProps<{
 
 const user = useUser();
 const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -366,6 +369,11 @@ const updateZipCodes = async (newZipCodes: string[]) => {
 const updateCities = async (newCities: string[]) => {
     cities.value = newCities.filter(city => city);
     await nextTick();
+};
+
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
 };
 
 const previousMonth = ref('');
