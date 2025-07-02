@@ -33,8 +33,10 @@ const colorClass = computed(() => {
             return 'text-white';
         case 'dark':
             return 'text-black';
-        default:
+        case 'blue':
             return 'text-blue-500';
+        default:
+            return 'text-primary';
     }
 });
 </script>
