@@ -223,9 +223,10 @@
 
         <ProposalLocationModal
             v-model="proposalDialog"
+            title="Suggestions"
+            description=" Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
-            :is-preference-mode="false"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
         />

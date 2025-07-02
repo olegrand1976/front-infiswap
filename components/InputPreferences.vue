@@ -165,6 +165,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'update:initialCities', value: string[]): void;
 }>();
 

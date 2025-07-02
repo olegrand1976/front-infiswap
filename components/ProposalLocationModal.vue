@@ -6,9 +6,9 @@
         >
             <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Préférences</DialogTitle>
+                    <DialogTitle>{{ props.title }}</DialogTitle>
                     <DialogDescription>
-                        Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences.
+                        {{ props.description }}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -98,13 +98,32 @@ const { createPreferences } = useAuth();
 const user = useState<User>('user');
 
 const props = defineProps<{
-    initialZipCodes: string[];
-    initialCities: string[];
-    isPreferenceMode?: boolean;
+    title: {
+        type: string;
+        default: '';
+    };
+    description: {
+        type: string;
+        default: '';
+    };
+    initialZipCodes: {
+        type: Array;
+        default: () => [];
+    };
+    initialCities: {
+        type: Array;
+        default: () => [];
+    };
+    isPreferenceMode: {
+        type: boolean;
+        required: false;
+        default: false;
+    };
 }>();
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'update:initialCities', value: string[]): void;
 }>();
 
@@ -128,8 +147,6 @@ watch(
         tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
             zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
         );
-        console.log('Updated existingZipCodes:', existingZipCodes.value);
-        console.log('Updated existingCities:', existingCities.value);
     },
     { immediate: true, deep: true },
 );

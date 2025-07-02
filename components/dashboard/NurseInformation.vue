@@ -265,6 +265,8 @@
 
                 <ProposalLocationModal
                     v-model="proposalDialog"
+                    title="Préférences"
+                    description=" Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
                     :is-preference-mode="true"
