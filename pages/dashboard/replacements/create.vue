@@ -140,6 +140,7 @@
                         :count="4"
                         @keydown.enter.prevent
                         @item-added="onZipCodeAdded"
+                        @open-proposal="openProposalDialog"
                     />
 
                     <Button
@@ -161,6 +162,7 @@
                     :no-space-validation="true"
                     @keydown.enter.prevent
                     @item-added="onCityAdded"
+                    @open-proposal="openProposalDialog"
                 />
 
                 <div class="flex flex-col space-y-2">
@@ -224,9 +226,10 @@
         <ProposalLocationModal
             v-model="proposalDialog"
             title="Suggestions"
-            description=" Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
+            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
+            :newly-added-value="newlyAddedValue"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
         />
@@ -291,6 +294,7 @@ const formData = reactive({
 });
 
 const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
 
 const updateZipCodes = (newZipCodes: string[]) => {
     formData.zipCodes = [...newZipCodes];
@@ -300,20 +304,25 @@ const updateCities = (newCities: string[]) => {
     formData.cities = [...newCities];
 };
 
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
+};
+
 const onZipCodeAdded = async (zip: string) => {
     const city = await getCityFromZipCode(zip);
-
     if (!formData.cities.includes(city)) {
         formData.cities = [...formData.cities, city];
     }
+    openProposalDialog(zip);
 };
 
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
-
     if (!formData.zipCodes.includes(zipCode)) {
         formData.zipCodes = [...formData.zipCodes, zipCode];
     }
+    openProposalDialog(city);
 };
 
 const calendarValue = ref<{ start: string | null; end: string | null }[]>([

@@ -114,6 +114,10 @@ const props = defineProps<{
         type: Array;
         default: () => [];
     };
+    newlyAddedValue: {
+        type: string;
+        default: '';
+    };
     isPreferenceMode: {
         type: boolean;
         required: false;
@@ -149,6 +153,16 @@ watch(
         );
     },
     { immediate: true, deep: true },
+);
+
+watch(
+    () => props.newlyAddedValue,
+    async (newValue) => {
+        if (newValue) {
+            locationData.value = await getAdjacentZipCodesAndCities(newValue, props.initialZipCodes, props.initialCities);
+        }
+    },
+    { immediate: false },
 );
 
 const isSelected = (zipCode: string, city: string) => {

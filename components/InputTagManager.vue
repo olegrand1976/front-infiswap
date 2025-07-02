@@ -72,7 +72,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['update:modelValue', 'item-added', 'item-removed']);
+const emit = defineEmits(['update:modelValue', 'item-added', 'item-removed', 'open-proposal']);
 
 const inputValue = ref('');
 const items = ref([...props.modelValue]);
@@ -90,6 +90,7 @@ const addItem = () => {
         items.value.push(value);
         emit('update:modelValue', items.value);
         emit('item-added', value);
+        emit('open-proposal', value);
     }
     inputValue.value = '';
 };
@@ -136,7 +137,6 @@ const handleBlur = () => {
         addItem();
     }
 };
-// script
 </script>
 
 <style scoped>
