@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lg:ml-20 xl:ml-0">
         <div class="bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
             <h1 class="text-primary">
                 Paramètres
@@ -143,7 +143,7 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary w-full truncate sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Email
                                             </p>
                                             <Input
@@ -306,10 +306,10 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <EnvelopeIcon class="w-5" />
-                                        <span>Email</span>
+                                        <span class="truncate w-full">Email</span>
                                     </label>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                <p class="border w-full truncate border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
                                     {{ user.email }}
                                 </p>
                             </div>
@@ -829,14 +829,39 @@
                     </section>
 
                     <section class="mt-4 xl:mt-0 shadow rounded-lg p-6">
-                        <h3 class="flex items-center space-x-4">
-                            <WrenchScrewdriverIcon class="w-6 text-gray-400" />
-                            <span class="text-lg">Préférences</span>
-                        </h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="flex items-center space-x-4">
+                                <WrenchScrewdriverIcon class="w-6 text-gray-400" />
+                                <span class="text-lg">Préférences</span>
+                            </h3>
+
+                            <Button
+                                variant="inline"
+                                class="font-bold text-xs text-primary -mt-2"
+                                @click="proposalDialog = true"
+                            >
+                                Boost IA
+                            </Button>
+                        </div>
 
                         <InputPreferences
                             :initial-zip-codes="zipCodes"
                             :initial-cities="cities"
+                            @update:initial-zip-codes="updateZipCodes"
+                            @update:initial-cities="updateCities"
+                            @open-proposal="openProposalDialog"
+                        />
+
+                        <ProposalLocationModal
+                            v-model="proposalDialog"
+                            v-model:newly-added-value="newlyAddedValue"
+                            title="Préférences"
+                            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
+                            :initial-zip-codes="zipCodes"
+                            :initial-cities="cities"
+                            :is-preference-mode="true"
+                            @update:initial-zip-codes="updateZipCodes"
+                            @update:initial-cities="updateCities"
                         />
 
                         <div class="mt-12 lg:mt-4 space-y-3">
@@ -1130,6 +1155,13 @@ const { createPreferences, createNotifPreferences } = useAuth();
 
 const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
+
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
+};
 
 const { identifierLabel } = useCountry();
 
@@ -1451,9 +1483,34 @@ const disableAuth2Fa = async () => {
 
 const pinValue = ref<string[]>([]);
 
-const settings: UserSettings = JSON.parse(user.value.settings);
-const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
-const cities = ref<string[]>(settings.replacement?.cities ?? []);
+const zipCodes = ref<string[]>([]);
+const cities = ref<string[]>([]);
+
+const updateFromSettings = () => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    zipCodes.value = settings.replacement?.zip_codes?.filter(zip => zip) ?? [];
+    cities.value = settings.replacement?.cities?.filter(city => city) ?? [];
+};
+
+updateFromSettings();
+
+watch(
+    () => user.value.settings,
+    () => {
+        updateFromSettings();
+    },
+    { deep: true },
+);
+
+const updateZipCodes = async (newZipCodes: string[]) => {
+    zipCodes.value = newZipCodes.filter(zip => zip);
+    await nextTick();
+};
+
+const updateCities = async (newCities: string[]) => {
+    cities.value = newCities.filter(city => city);
+    await nextTick();
+};
 
 const handleVerifyCode = async () => {
     const formData = reactive({
