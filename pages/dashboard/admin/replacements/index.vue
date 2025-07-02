@@ -9,7 +9,7 @@
                     rounded="md"
                     placeholder="Filtrer par Nom ou Prénom"
                     class="w-[250px]"
-                    @input="debouncedFilterUsers"
+                    @input="debouncedFilterReplacements"
                 />
                 <InputIcon
                     v-model="option.zip"
@@ -17,18 +17,18 @@
                     placeholder="Code postal"
                     class="w-[250px]"
                     type="number"
-                    @input="debouncedFilterUsers"
+                    @input="debouncedFilterReplacements"
                 />
                 <InputIcon
                     v-model="option.city"
                     rounded="md"
                     placeholder="Ville"
                     class="w-[250px]"
-                    @input="debouncedFilterUsers"
+                    @input="debouncedFilterReplacements"
                 />
                 <Select
                     v-model="option.type"
-                    @update:model-value="debouncedFilterUsers"
+                    @update:model-value="debouncedFilterReplacements"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Type</span>
@@ -57,6 +57,20 @@
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
+            <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <button
+                    v-for="tab in provinceTabs"
+                    :key="tab.value"
+                    :class="[
+                        'px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors',
+                        (tab.value === '' && option.province === '') || (tab.value !== '' && option.province === tab.value)
+                            ? 'bg-primary text-white shadow-md'
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
+                    @click="setProvinceFilter(tab.value)"
+                >
+                    {{ tab.label }}
+                </button>
+            </div>
             <DataTable
                 :data="replacements.data"
                 :columns="columns"
@@ -75,20 +89,20 @@
                 <DialogContent class="max-h-[30rem] overflow-y-scroll overflow-x-hidden">
                     <DialogHeader>
                         <DialogTitle>
-                            <template v-if="selectedNurses.length === 1">
+                            <template v-if="selectedUsers.length === 1">
                                 Personne notifiée (1)
                             </template>
                             <template v-else>
-                                Personnes notifiées ({{ selectedNurses.length }})
+                                Personnes notifiées ({{ selectedUsers.length }})
                             </template>
                         </DialogTitle>
                     </DialogHeader>
 
                     <div
-                        v-if="loadingUsers"
+                        v-if="selectedUsers.length === 0"
                         class="mt-4 text-center text-gray-500 italic"
                     >
-                        Chargement des notifiées...
+                        Aucune personne notifiée.
                     </div>
 
                     <div
@@ -97,12 +111,12 @@
                     >
                         <ul class="space-y-2">
                             <li
-                                v-for="user in selectedNurses"
+                                v-for="user in selectedUsers"
                                 :key="user.id"
                                 class="flex justify-between items-center"
                             >
                                 <UsersName :user="user" />
-                                <span>{{ user.zip_code ?? '—' }}</span>
+                                <span>{{ user.profile?.zip_code ?? '—' }}</span>
                             </li>
                         </ul>
                     </div>
@@ -218,7 +232,7 @@
 
 <script setup lang="ts">
 import { ArrowUpDown } from 'lucide-vue-next';
-import { EyeIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -226,7 +240,7 @@ import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
-import type { Replacement, Nurse, User } from '~/lib/types';
+import type { Replacement, User } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
@@ -252,7 +266,9 @@ const initialFilter = {
     zip: null,
     city: null,
     type: null,
+    province: '',
 };
+
 const option = ref({ ...initialFilter });
 
 const debounce = (func, delay) => {
@@ -265,8 +281,34 @@ const debounce = (func, delay) => {
     };
 };
 
-const filterUsers = async () => {
-    const currentFilter = { ...option.value };
+const provinceTabs = [
+    { label: 'Toutes', value: '' },
+    { label: 'Bruxelles-Capitale', value: 'Bruxelles-Capitale' },
+    { label: 'Brabant Wallon', value: 'Brabant wallon' },
+    { label: 'Brabant Flamand', value: 'Brabant flamand' },
+    { label: 'Brabant flamand - Overijse', value: 'Brabant flamand - Overijse' },
+    { label: 'Anvers', value: 'Anvers' },
+    { label: 'Limbourg', value: 'Limbourg' },
+    { label: 'Liège', value: 'Liège' },
+    { label: 'Namur', value: 'Namur' },
+    { label: 'Hainaut', value: 'Hainaut' },
+    { label: 'Luxembourg', value: 'Luxembourg' },
+    { label: 'Flandre-Occidentale', value: 'Flandre-Occidentale' },
+    { label: 'Flandre-Orientale', value: 'Flandre-Orientale' },
+    { label: 'Autres', value: 'Autres' },
+];
+
+const setProvinceFilter = (province) => {
+    option.value.province = province;
+    page.value = 1;
+    filterReplacements();
+};
+
+const filterReplacements = async () => {
+    const currentFilter = {
+        ...option.value,
+        province: option.value.province || '',
+    };
     await getReplacementsForAdmin(page.value, perPage.value, currentFilter);
 };
 
@@ -281,47 +323,17 @@ const resetFilter = async () => {
     await getReplacementsForAdmin(page.value, perPage.value, option.value);
 };
 
-const debouncedFilterUsers = debounce(filterUsers, 100);
+const debouncedFilterReplacements = debounce(filterReplacements, 100);
 
-const { $apifetch } = useNuxtApp();
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const { $toast } = useNuxtApp();
 const dialogOpen = ref(false);
-const selectedNurses = ref<User[]>([]);
-const loadingUsers = ref(false);
+const selectedUsers = ref<User[]>([]);
 
-async function loadUsersFromNurses(nurses: Nurse[]) {
-    loadingUsers.value = true;
+function showUsersInDialog(users: User[]) {
+    selectedUsers.value = users;
     dialogOpen.value = true;
-
-    try {
-        const plainNurses = Array.isArray(nurses)
-            ? nurses
-            : JSON.parse(JSON.stringify(nurses));
-
-        const userIdPromises = plainNurses.map((n: Nurse) =>
-            $apifetch<{ nurse: Nurse }>(`/api/nurses/${n.id}`)
-                .then(res => res.nurse?.user_id)
-                .catch(() => null),
-        );
-
-        const userIds = await Promise.all(userIdPromises);
-
-        const userPromises = userIds
-            .filter(id => !!id)
-            .map(id => $apifetch<{ user: User }>(`/api/users/${id}`));
-
-        const userResponses = await Promise.all(userPromises);
-
-        selectedNurses.value = userResponses.map(r => r.user);
-    }
-    catch (err) {
-        console.error('Erreur lors du chargement des users :', err);
-    }
-    finally {
-        loadingUsers.value = false;
-    }
 }
 
 const refreshReplacement = async (page: number) => {
@@ -589,26 +601,23 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorFn: row => (row.matching_nurses || []).map(nurse => nurse.full_name).join(', '),
+        accessorFn: row => (row.matching_nurses || []).map(user => user.full_name).join(', '),
         id: 'matching_nurses',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-            }, () => ['Notifiés', h({ class: 'ml-2 h-4 w-4' })]);
-        },
+        header: () => h(Button, { variant: 'ghost' }, () => ['Notifiés']),
         cell: ({ row }) => {
-            const nurses = row.original.matching_nurses || [];
-            const displayText = nurses.map(n => n.full_name).join(', ');
+            const users = row.original.matching_nurses || [];
+            const displayText = users.map(u => u.full_name).join(', ');
 
             return h('div', { class: 'flex items-center' }, [
                 h('div', {
-                    class: 'ml-2 capitalize truncate max-w-[120px] whitespace-nowrap overflow-hidden',
+                    class: 'ml-2 capitalize truncate max-w-[180px] whitespace-nowrap overflow-hidden',
+                    title: displayText,
                 }, displayText),
-                nurses.length > 0 && h(Button, {
+                users.length > 0 && h(Button, {
                     variant: 'ghost',
                     size: 'sm',
-                    onClick: () => loadUsersFromNurses(nurses),
-                }, () => h(EyeIcon, { class: 'h-4 w-4' })),
+                    onClick: () => showUsersInDialog(users),
+                }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
             ]);
         },
     },
