@@ -94,7 +94,7 @@
                 >
                     <div
                         v-if="isCityFocused"
-                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2 bg-gray-50 shadow rounded-md"
+                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2"
                     >
                         <p>Appuyer sur Entrée pour valider</p>
                     </div>
@@ -163,6 +163,11 @@ const props = defineProps<{
     initialCities: string[];
 }>();
 
+const emit = defineEmits<{
+    (e: 'update:initialZipCodes', value: string[]): void;
+    (e: 'update:initialCities', value: string[]): void;
+}>();
+
 const { createPreferences } = useAuth();
 
 const isZipCodeFocused = ref(false);
@@ -171,59 +176,96 @@ const isCityFocused = ref(false);
 const zipCodes = ref<string[]>([...props.initialZipCodes]);
 const cities = ref<string[]>([...props.initialCities]);
 
-watch(() => [props.initialZipCodes, props.initialCities], ([newZipCodes, newCities]) => {
-    zipCodes.value = [...newZipCodes];
-    cities.value = [...newCities];
-}, { deep: true });
+watch(
+    () => [props.initialZipCodes, props.initialCities],
+    ([newZipCodes, newCities]) => {
+        zipCodes.value = [...newZipCodes].filter(zip => zip);
+        cities.value = [...newCities].filter(city => city);
+    },
+    { deep: true },
+);
 
 const addPreference = async () => {
     isZipCodeFocused.value = false;
     isCityFocused.value = false;
 
+    const validZipCodes = zipCodes.value.filter(zip => zip);
+    const validCities = cities.value.filter(city => city);
+
     const formData = {
         key: 'replacement',
         value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
+            zip_codes: validZipCodes,
+            cities: validCities,
         },
     };
 
-    await createPreferences(formData);
+    try {
+        await createPreferences(formData);
+        await nextTick();
+        emit('update:initialZipCodes', [...formData.value.zip_codes]);
+        emit('update:initialCities', [...formData.value.cities]);
+    }
+    catch (error) {
+        console.error('Failed to save preferences:', error);
+    }
 };
 
 const removeZipCode = async (zipCode: string) => {
     zipCodes.value = zipCodes.value.filter(code => code !== zipCode);
 
+    const validZipCodes = zipCodes.value.filter(zip => zip);
+    const validCities = cities.value.filter(city => city);
+
     const formData = {
         key: 'replacement',
         value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
+            zip_codes: validZipCodes,
+            cities: validCities,
         },
     };
 
-    await createPreferences(formData);
+    try {
+        await createPreferences(formData);
+        await nextTick();
+        emit('update:initialZipCodes', [...formData.value.zip_codes]);
+        emit('update:initialCities', [...formData.value.cities]);
+    }
+    catch (error) {
+        console.error('Failed to save preferences:', error);
+    }
 };
 
 const removeCity = async (city: string) => {
     cities.value = cities.value.filter(c => c !== city);
 
+    const validZipCodes = zipCodes.value.filter(zip => zip);
+    const validCities = cities.value.filter(city => city);
+
     const formData = {
         key: 'replacement',
         value: {
-            zip_codes: zipCodes.value,
-            cities: cities.value,
+            zip_codes: validZipCodes,
+            cities: validCities,
         },
     };
 
-    await createPreferences(formData);
+    try {
+        await createPreferences(formData);
+        await nextTick();
+        emit('update:initialZipCodes', [...formData.value.zip_codes]);
+        emit('update:initialCities', [...formData.value.cities]);
+    }
+    catch (error) {
+        console.error('Failed to save preferences:', error);
+    }
 };
 
-const handleBlur = (event) => {
+const handleBlur = async (event) => {
     const inputEl = event.target;
     const inputElement = event.target.value;
 
-    if (inputElement != '') {
+    if (inputElement) {
         const enterEvent = new KeyboardEvent('keydown', {
             key: 'Enter',
             code: 'Enter',
@@ -235,11 +277,8 @@ const handleBlur = (event) => {
 
         inputEl.dispatchEvent(enterEvent);
 
-        nextTick(() => {
-            setTimeout(() => {
-                addPreference();
-            }, 0);
-        });
+        await nextTick();
+        await addPreference();
     }
     else {
         isZipCodeFocused.value = false;

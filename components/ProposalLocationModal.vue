@@ -91,7 +91,7 @@ import { useOpenai } from '@/composables/useOpenai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '~/composables/useAuth';
-import type { User, UserSettings } from '~/lib/types';
+import type { User } from '~/lib/types';
 
 const { getAdjacentZipCodesAndCities, loading } = useOpenai();
 const { createPreferences } = useAuth();
@@ -115,16 +115,33 @@ const openDialog = computed({
 });
 
 const locationData = ref<[string, string][]>([]);
+const tempSelectedLocations = ref<[string, string][]>([]);
 
-const tempSelectedLocations = ref<[string, string][]>(props.initialZipCodes.map((zip, i) => [zip, props.initialCities[i]]));
+const existingZipCodes = ref<string[]>([]);
+const existingCities = ref<string[]>([]);
+
+watch(
+    () => [props.initialZipCodes, props.initialCities],
+    ([newZipCodes, newCities]) => {
+        existingZipCodes.value = [...newZipCodes].filter(zip => zip);
+        existingCities.value = [...newCities].filter(city => city);
+        tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
+            zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
+        );
+        console.log('Updated existingZipCodes:', existingZipCodes.value);
+        console.log('Updated existingCities:', existingCities.value);
+    },
+    { immediate: true, deep: true },
+);
 
 const isSelected = (zipCode: string, city: string) => {
     return tempSelectedLocations.value.some(([z, c]) => z === zipCode && c === city);
 };
 
 const toggleLocation = (zipCode: string, city: string) => {
+    if (!zipCode || !city) return;
     if (isSelected(zipCode, city)) {
-        tempSelectedLocations.value = tempSelectedLocations.value.filter(([z, c]) => !(z === zipCode && c === city));
+        tempSelectedLocations.value = tempSelectedLocations.value.filter(([z, c]) => z !== zipCode || c !== city);
     }
     else {
         tempSelectedLocations.value.push([zipCode, city]);
@@ -132,50 +149,42 @@ const toggleLocation = (zipCode: string, city: string) => {
 };
 
 const handleCreatePreference = async () => {
-    const selectedZipCodes = tempSelectedLocations.value.map(([zip]) => zip);
-    const selectedCities = tempSelectedLocations.value.map(([, city]) => city);
+    const inputZipCodes = [...props.initialZipCodes].filter(zip => zip);
+    const inputCities = [...props.initialCities].filter(city => city);
 
-    const mergedZipCodes = [...new Set([...props.initialZipCodes, ...selectedZipCodes])];
-    const mergedCities = [...new Set([...props.initialCities, ...selectedCities])];
+    const selectedZipCodes = tempSelectedLocations.value.map(([zip]) => zip).filter(zip => zip);
+    const selectedCities = tempSelectedLocations.value.map(([, city]) => city).filter(city => city);
 
-    if (props.isPreferenceMode) {
-        const settings: UserSettings = JSON.parse(user.value.settings || '{}');
-        const existingLocations = (settings.replacement?.zip_codes ?? []).map((zip, i) => [zip, settings.replacement?.cities[i] ?? '']);
+    const mergedZipCodes = [...new Set([...inputZipCodes, ...selectedZipCodes])];
+    const mergedCities = [...new Set([...inputCities, ...selectedCities])];
 
-        const mergedLocations = [...existingLocations];
-        tempSelectedLocations.value.forEach(([zip, city]) => {
-            if (!mergedLocations.some(([z, c]) => z === zip && c === city)) {
-                mergedLocations.push([zip, city]);
-            }
-        });
+    const formData = {
+        key: 'replacement',
+        value: {
+            zip_codes: mergedZipCodes,
+            cities: mergedCities,
+        },
+    };
 
-        const finalLocations = mergedLocations.filter(([zip, city]) =>
-            tempSelectedLocations.value.some(([z, c]) => z === zip && c === city)
-            || !locationData.value.some(([z, c]) => z === zip && c === city),
-        );
-
-        const formData = {
-            key: 'replacement',
-            value: {
-                zip_codes: finalLocations.map(([zip]) => zip),
-                cities: finalLocations.map(([, city]) => city),
-            },
-        };
-
-        try {
-            await createPreferences(formData);
-        }
-        catch (error) {
-            console.error('Failed to save preferences:', error);
-        }
+    try {
+        await createPreferences(formData);
+        existingZipCodes.value = mergedZipCodes;
+        existingCities.value = mergedCities;
+        await nextTick();
+        emit('update:initialZipCodes', [...formData.value.zip_codes]);
+        emit('update:initialCities', [...formData.value.cities]);
     }
-    emit('update:initialZipCodes', mergedZipCodes);
-    emit('update:initialCities', mergedCities);
+    catch (error) {
+        console.error('Failed to save preferences:', error);
+    }
+
     openDialog.value = false;
 };
 
 const cancel = () => {
-    tempSelectedLocations.value = props.initialZipCodes.map((zip, i) => [zip, props.initialCities[i]]);
+    tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
+        zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
+    );
     openDialog.value = false;
 };
 

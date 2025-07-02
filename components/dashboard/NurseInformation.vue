@@ -93,7 +93,7 @@
                                     </p>
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
+                                            <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements pour lesquels vous avez candidaté.</span>
                                         </li>
                                     </ul>
@@ -258,6 +258,8 @@
                     <InputPreferences
                         :initial-zip-codes="zipCodes"
                         :initial-cities="cities"
+                        @update:initial-zip-codes="updateZipCodes"
+                        @update:initial-cities="updateCities"
                     />
                 </div>
 
@@ -266,8 +268,8 @@
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
                     :is-preference-mode="true"
-                    @update:initial-zip-codes="zipCodes = $event"
-                    @update:initial-cities="cities = $event"
+                    @update:initial-zip-codes="updateZipCodes"
+                    @update:initial-cities="updateCities"
                 />
             </div>
 
@@ -335,19 +337,42 @@ const formattedData = computed(() => {
     }));
 });
 
-const settings: UserSettings = JSON.parse(user.value.settings);
-const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
-const cities = ref<string[]>(settings.replacement?.cities ?? []);
+const zipCodes = ref<string[]>([]);
+const cities = ref<string[]>([]);
+
+const updateFromSettings = () => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    zipCodes.value = settings.replacement?.zip_codes?.filter(zip => zip) ?? [];
+    cities.value = settings.replacement?.cities?.filter(city => city) ?? [];
+};
+
+updateFromSettings();
+
+watch(
+    () => user.value.settings,
+    () => {
+        updateFromSettings();
+    },
+    { deep: true },
+);
+
+const updateZipCodes = async (newZipCodes: string[]) => {
+    zipCodes.value = newZipCodes.filter(zip => zip);
+    await nextTick();
+};
+
+const updateCities = async (newCities: string[]) => {
+    cities.value = newCities.filter(city => city);
+    await nextTick();
+};
 
 const previousMonth = ref('');
 
 const currentDate = new Date();
-
 const months = [
     'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
 ];
-
 const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
@@ -355,10 +380,10 @@ previousMonth.value = months[previousMonthIndex];
 
 <style scoped>
 .carousel-container {
-  max-width: 100%;
-  overflow: hidden;
+    max-width: 100%;
+    overflow: hidden;
 }
 .relative {
-  padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 </style>
