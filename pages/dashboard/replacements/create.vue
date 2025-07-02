@@ -300,11 +300,12 @@ const updateCities = (newCities: string[]) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const city = await getCityFromZipCode(zip);
+    const citiesFromZip = await getCityFromZipCode(zip);
+    if (!citiesFromZip) return;
 
-    if (!formData.cities.includes(city)) {
-        formData.cities = [...formData.cities, city];
-    }
+    const citiesSet = new Set(formData.cities);
+    citiesFromZip.forEach(city => citiesSet.add(city));
+    formData.cities = Array.from(citiesSet);
 };
 
 const onCityAdded = async (city: string) => {

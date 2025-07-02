@@ -206,11 +206,21 @@ const formData = reactive({
 });
 
 const onZipCodeAdded = async (zip: string) => {
-    const city = await getCityFromZipCode(zip);
+    const response = await getCityFromZipCode(zip);
+    if (!response) return;
 
-    if (!formData.cities.includes(city)) {
-        formData.cities = [...formData.cities, city];
+    let citiesFromZip: string[];
+    try {
+        citiesFromZip = JSON.parse(response);
     }
+    catch (e) {
+        console.error('Erreur lors du parsing JSON des villes:', e);
+        return;
+    }
+
+    const citiesSet = new Set(formData.cities);
+    citiesFromZip.forEach(city => citiesSet.add(city));
+    formData.cities = Array.from(citiesSet);
 };
 
 const onCityAdded = async (city: string) => {
