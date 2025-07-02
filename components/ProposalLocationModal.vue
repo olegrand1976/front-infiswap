@@ -100,11 +100,11 @@ const props = defineProps<{
         default: '';
     };
     initialZipCodes: {
-        type: Array;
+        type: Array<string>;
         default: () => [];
     };
     initialCities: {
-        type: Array;
+        type: Array<string>;
         default: () => [];
     };
     newlyAddedValue: {
