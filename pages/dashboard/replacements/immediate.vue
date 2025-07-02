@@ -206,17 +206,8 @@ const formData = reactive({
 });
 
 const onZipCodeAdded = async (zip: string) => {
-    const response = await getCityFromZipCode(zip);
-    if (!response) return;
-
-    let citiesFromZip: string[];
-    try {
-        citiesFromZip = JSON.parse(response);
-    }
-    catch (e) {
-        console.error('Erreur lors du parsing JSON des villes:', e);
-        return;
-    }
+    const citiesFromZip = await getCityFromZipCode(zip);
+    if (!citiesFromZip) return;
 
     const citiesSet = new Set(formData.cities);
     citiesFromZip.forEach(city => citiesSet.add(city));
