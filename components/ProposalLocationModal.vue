@@ -90,12 +90,10 @@
 import { useOpenai } from '@/composables/useOpenai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useAuth } from '~/composables/useAuth';
-import type { User } from '~/lib/types';
 
 const { getAdjacentZipCodesAndCities, loading } = useOpenai();
 const { createPreferences } = useAuth();
-const user = useState<User>('user');
+const user = useUser();
 
 const props = defineProps<{
     title: {
@@ -129,6 +127,7 @@ const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
     // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'update:initialCities', value: string[]): void;
+    (e: 'update:newlyAddedValue', value: string): void;
 }>();
 
 const modelValue = defineModel<boolean>();
@@ -156,10 +155,13 @@ watch(
 );
 
 watch(
-    () => props.newlyAddedValue,
-    async (newValue) => {
-        if (newValue) {
-            locationData.value = await getAdjacentZipCodesAndCities(newValue, props.initialZipCodes, props.initialCities);
+    () => openDialog.value,
+    async (isOpen) => {
+        if (isOpen) {
+            const zipCode = props.newlyAddedValue || user.value.profile.zip_code || '';
+            if (zipCode) {
+                locationData.value = await getAdjacentZipCodesAndCities(zipCode, props.initialZipCodes, props.initialCities);
+            }
         }
     },
     { immediate: false },
@@ -189,26 +191,29 @@ const handleCreatePreference = async () => {
     const mergedZipCodes = [...new Set([...inputZipCodes, ...selectedZipCodes])];
     const mergedCities = [...new Set([...inputCities, ...selectedCities])];
 
-    const formData = {
-        key: 'replacement',
-        value: {
-            zip_codes: mergedZipCodes,
-            cities: mergedCities,
-        },
-    };
+    if (props.isPreferenceMode) {
+        const formData = {
+            key: 'replacement',
+            value: {
+                zip_codes: mergedZipCodes,
+                cities: mergedCities,
+            },
+        };
 
-    try {
-        await createPreferences(formData);
-        existingZipCodes.value = mergedZipCodes;
-        existingCities.value = mergedCities;
-        await nextTick();
-        emit('update:initialZipCodes', [...formData.value.zip_codes]);
-        emit('update:initialCities', [...formData.value.cities]);
-    }
-    catch (error) {
-        console.error('Failed to save preferences:', error);
+        try {
+            await createPreferences(formData);
+            existingZipCodes.value = mergedZipCodes;
+            existingCities.value = mergedCities;
+        }
+        catch (error) {
+            console.error('Failed to save preferences:', error);
+        }
     }
 
+    await nextTick();
+    emit('update:initialZipCodes', mergedZipCodes);
+    emit('update:initialCities', mergedCities);
+    emit('update:newlyAddedValue', '');
     openDialog.value = false;
 };
 
@@ -216,10 +221,7 @@ const cancel = () => {
     tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
         zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
     );
+    emit('update:newlyAddedValue', '');
     openDialog.value = false;
 };
-
-onMounted(async () => {
-    locationData.value = await getAdjacentZipCodesAndCities(user.value.profile.zip_code, props.initialZipCodes, props.initialCities);
-});
 </script>

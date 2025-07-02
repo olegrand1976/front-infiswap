@@ -146,7 +146,7 @@
                     <Button
                         variant="inline"
                         class="absolute -top-[1.2rem] right-0 font-bold text-primary text-xs mt-2"
-                        @click="proposalDialog = true"
+                        @click="openProposalDialog('')"
                     >
                         Boost IA
                     </Button>
@@ -225,11 +225,12 @@
 
         <ProposalLocationModal
             v-model="proposalDialog"
+            v-model:newly-added-value="newlyAddedValue"
             title="Suggestions"
             description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
-            :newly-added-value="newlyAddedValue"
+            :is-preference-mode="false"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
         />
@@ -311,7 +312,7 @@ const openProposalDialog = (value: string) => {
 
 const onZipCodeAdded = async (zip: string) => {
     const city = await getCityFromZipCode(zip);
-    if (!formData.cities.includes(city)) {
+    if (city && !formData.cities.includes(city)) {
         formData.cities = [...formData.cities, city];
     }
     openProposalDialog(zip);
@@ -319,7 +320,7 @@ const onZipCodeAdded = async (zip: string) => {
 
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
-    if (!formData.zipCodes.includes(zipCode)) {
+    if (zipCode && !formData.zipCodes.includes(zipCode)) {
         formData.zipCodes = [...formData.zipCodes, zipCode];
     }
     openProposalDialog(city);

@@ -57,7 +57,7 @@
                         </CarouselItem>
 
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="ffected-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
+                            <div class="rounded-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
                                 <div class="bg-indigo-600 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     Voir les intéressés
                                 </div>
@@ -192,7 +192,7 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 borderMassachusetts-700 bg-orange-700 flex flex-col h-full">
+                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 bg-orange-700 flex flex-col h-full">
                                 <div class="bg-orange-700 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     Mes accords de remplacement
                                 </div>
@@ -266,11 +266,11 @@
 
                 <ProposalLocationModal
                     v-model="proposalDialog"
+                    v-model:newly-added-value="newlyAddedValue"
                     title="Préférences"
                     description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
-                    :newly-added-value="newlyAddedValue"
                     :is-preference-mode="true"
                     @update:initial-zip-codes="updateZipCodes"
                     @update:initial-cities="updateCities"
