@@ -243,6 +243,15 @@ export type ReplacementPeriod = {
     end_date: string;
 };
 
+export type UserPartner = {
+    id: number;
+    user: User;
+    type: string;
+    duration: string;
+    has_responded: boolean;
+    description: string | null;
+};
+
 export type ReplacementDetail = {
     id: number;
     parent_id: number;

@@ -241,7 +241,17 @@
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
             <div class="text-left text-sm text-gray-500 space-y-2 px-6">
-                <template v-if="showFullInfo">
+                <template v-if="minimalInfo">
+                    <p class="flex items-center gap-2">
+                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
+                    </p>
+                </template>
+                <template v-else-if="showFullInfo">
                     <p class="flex items-center gap-2 text-primary">
                         <EnvelopeIcon class="w-5 h-5" />
                         {{ user.email || 'Non renseigné' }}
@@ -263,26 +273,25 @@
                     </p>
                     <p class="flex items-center gap-2">
                         <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || 'Non renseigné' }}
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || 'Non renseigné' }}
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <IdentificationIcon class="w-5 h-5 text-primary" />
                         {{ user.identifier_number || 'Non renseigné' }}
                     </p>
                 </template>
-
                 <template v-else>
                     <p class="flex items-center gap-2">
                         <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || 'Non renseigné' }}
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || 'Non renseigné' }}
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <PhoneIcon class="w-5 h-5 text-primary" />
@@ -325,8 +334,10 @@ const activeTab = ref('information');
 const props = withDefaults(defineProps<{
     user: User;
     showFullInfo?: boolean;
+    minimalInfo?: boolean;
 }>(), {
     showFullInfo: false,
+    minimalInfo: false,
 });
 
 const { activityUser } = useReplacements();
