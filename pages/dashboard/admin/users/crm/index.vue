@@ -124,15 +124,30 @@
                             <span class="block mb-1 text-sm font-medium text-gray-700">Mode de contact</span>
                             <div class="flex space-x-4">
                                 <label class="inline-flex items-center">
-                                    <input type="radio" value="mail" v-model="tempContactMethod" class="form-radio" />
+                                    <input
+                                        v-model="tempContactMethod"
+                                        type="radio"
+                                        value="mail"
+                                        class="form-radio"
+                                    >
                                     <span class="ml-2">Mail</span>
                                 </label>
                                 <label class="inline-flex items-center">
-                                    <input type="radio" value="phone" v-model="tempContactMethod" class="form-radio" />
+                                    <input
+                                        v-model="tempContactMethod"
+                                        type="radio"
+                                        value="phone"
+                                        class="form-radio"
+                                    >
                                     <span class="ml-2">Téléphone</span>
                                 </label>
                                 <label class="inline-flex items-center">
-                                    <input type="radio" value="visio" v-model="tempContactMethod" class="form-radio" />
+                                    <input
+                                        v-model="tempContactMethod"
+                                        type="radio"
+                                        value="visio"
+                                        class="form-radio"
+                                    >
                                     <span class="ml-2">Visioconférence</span>
                                 </label>
                             </div>

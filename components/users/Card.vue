@@ -103,7 +103,7 @@
                     <p>Accept. réponse : <span class="font-semibold">{{ user.historic_activity?.last_accept_response_date ?? '—' }}</span></p>
                 </div>
 
-                <div class="border-t border-gray-300 w-full my-2"></div>
+                <div class="border-t border-gray-300 w-full my-2" />
 
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
@@ -132,7 +132,7 @@
                     </p>
                 </div>
 
-                <div class="border-t border-gray-300 w-full my-2"></div>
+                <div class="border-t border-gray-300 w-full my-2" />
 
                 <div
                     v-if="user.ambassador === 1"
