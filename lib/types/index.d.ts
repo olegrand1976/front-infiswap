@@ -20,6 +20,7 @@ export type User = {
     email_verified_at?: string | null;
     settings?: string | null;
     remember_token?: string | null;
+    last_login_at?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
     stripe_id?: string | null;
@@ -54,6 +55,16 @@ export type User = {
     ambassador?: boolean | number;
     professional_category?: string | null;
     comment_crm?: string | null;
+    historic_activity?: UserActivity;
+    contact_date?: string | null;
+    contact_method?: string | null;
+};
+
+type UserActivity = {
+    last_post_date: string | null;
+    last_accept_posted_date: string | null;
+    last_response_date: string | null;
+    last_accept_response_date: string | null;
 };
 
 type RolePivot = {

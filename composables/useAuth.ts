@@ -384,6 +384,13 @@ export const useAuth = () => {
         }
     }
 
+    async function updateContact(id: number, payload: { contact_date: string; contact_method: string }) {
+        return await $apifetch(`/api/users/${id}/contact`, {
+            method: 'PUT',
+            body: payload,
+        });
+    }
+
     return {
         user,
         users,
@@ -424,5 +431,6 @@ export const useAuth = () => {
         createNotifPreferences,
         updateField,
         fetchUserFromNurseId,
+        updateContact,
     };
 };
