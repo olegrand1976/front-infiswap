@@ -41,7 +41,7 @@
                     <SelectContent>
                         <SelectGroup>
                             <SelectItem :value="'classic'">
-                                <span class="ml-2">Classqiue</span>
+                                <span class="ml-2">Classique</span>
                             </SelectItem>
                             <SelectItem :value="'immediate'">
                                 <span class="ml-2">Urgente</span>
