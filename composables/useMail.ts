@@ -54,6 +54,15 @@ export const useMail = () => {
         }
     };
 
+    const reportProblem = async (formData) => {
+        await $apifetch('/api/contact/problem', {
+            method: 'POST',
+            body: formData,
+        });
+
+        return true;
+    };
+
     return {
         error,
         loading,
@@ -61,5 +70,6 @@ export const useMail = () => {
         mail,
         getMailSend,
         sendMail,
+        reportProblem,
     };
 };
