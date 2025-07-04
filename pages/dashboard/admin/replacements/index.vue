@@ -85,44 +85,6 @@
                 />
             </div>
 
-            <Dialog v-model:open="dialogOpen">
-                <DialogContent class="max-h-[30rem] overflow-y-scroll overflow-x-hidden">
-                    <DialogHeader>
-                        <DialogTitle>
-                            <template v-if="selectedUsers.length === 1">
-                                Personne notifiée (1)
-                            </template>
-                            <template v-else>
-                                Personnes notifiées ({{ selectedUsers.length }})
-                            </template>
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <div
-                        v-if="selectedUsers.length === 0"
-                        class="mt-4 text-center text-gray-500 italic"
-                    >
-                        Aucune personne notifiée.
-                    </div>
-
-                    <div
-                        v-else
-                        class="mt-4"
-                    >
-                        <ul class="space-y-2">
-                            <li
-                                v-for="user in selectedUsers"
-                                :key="user.id"
-                                class="flex justify-between items-center"
-                            >
-                                <UsersName :user="user" />
-                                <span>{{ user.profile?.zip_code ?? '—' }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
             <Dialog v-model:open="isDialogOpen">
                 <DialogContent class="rounded-2xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
                     <DialogHeader>
@@ -240,7 +202,7 @@ import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
-import type { Replacement, User } from '~/lib/types';
+import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
@@ -328,13 +290,6 @@ const debouncedFilterReplacements = debounce(filterReplacements, 100);
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const { $toast } = useNuxtApp();
-const dialogOpen = ref(false);
-const selectedUsers = ref<User[]>([]);
-
-function showUsersInDialog(users: User[]) {
-    selectedUsers.value = users;
-    dialogOpen.value = true;
-}
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
@@ -607,6 +562,7 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             const users = row.original.matching_nurses || [];
             const displayText = users.map(u => u.full_name).join(', ');
+            const replacementId = row.original.id;
 
             return h('div', { class: 'flex items-center' }, [
                 h('div', {
@@ -616,7 +572,7 @@ const columns: ColumnDef<Replacement>[] = [
                 users.length > 0 && h(Button, {
                     variant: 'ghost',
                     size: 'sm',
-                    onClick: () => showUsersInDialog(users),
+                    onClick: () => navigateTo(`/dashboard/admin/replacements/notified/${replacementId}`),
                 }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
             ]);
         },
