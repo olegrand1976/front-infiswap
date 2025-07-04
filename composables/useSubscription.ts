@@ -128,6 +128,7 @@ export interface Plan {
 export interface Plans {
     monthly: Plan;
     yearly: Plan;
+    weekly: Plan;
 }
 
 export interface PaymentDetails {

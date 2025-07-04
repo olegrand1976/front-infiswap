@@ -32,15 +32,15 @@
                 <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
                     <div class="p-6">
                         <h1 class="text-xl text-center font-medium text-success capitalize lg:text-2xl dark:text-white">
-                            Discovery
+                            Hebdomadaire
                         </h1>
 
                         <p class="mt-4 text-gray-500 dark:text-gray-300">
-                            Testez toutes nos fonctionnalités premium sans carte bancaire. Profitez de <span class="font-bold text-primary">90 jours</span> pour découvrir comment notre service peut transformer vos opérations.
+                            Donnez un nouvel élan à votre activité grâce à notre abonnement hebdomadaire ! Profitez chaque semaine d’un accès exclusif pour optimiser et faciliter la gestion de vos remplacements, pour seulement {{ plans?.weekly.amount }} € par semaine.
                         </p>
 
                         <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
-                            0 €<span class="text-base font-medium">/mois</span>
+                            {{ plans?.weekly.amount }} €<span class="text-base font-medium">/semaine</span>
                         </h2>
 
                         <Button
@@ -177,8 +177,7 @@ const startingTrial = async () => {
         trialLoading.value = false;
     }
 };
+await getPlans();
 
-onMounted(async () => {
-    await getPlans();
-});
+console.log(plans.value);
 </script>

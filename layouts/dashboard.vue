@@ -181,7 +181,7 @@
                                             class="w-full border rounded p-2 text-sm focus:outline-primary"
                                             rows="3"
                                             placeholder="Expliquez brièvement le problème rencontré"
-                                        ></Textarea>
+                                        />
                                     </div>
 
                                     <div class="mt-4 flex justify-end gap-2">
