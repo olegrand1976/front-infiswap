@@ -86,43 +86,52 @@
                         v-else-if="!isAdmin"
                         class="relative inline-block pr-4"
                     >
-                        <DropdownMenu>
-                            <DropdownMenuTrigger as-child>
-                                <div
-                                    class="relative cursor-pointer"
-                                    @click="handleSeen()"
-                                >
-                                    <BellAlertIcon class="w-6 h-6 text-gray-500" />
-
-                                    <span
-                                        v-if="showSpan"
-                                        class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2
-                                            bg-red-500 text-white text-xs font-bold
-                                            rounded-full h-4 w-4 flex items-center justify-center
-                                            pointer-events-none"
-                                    >
-                                        1
-                                    </span>
-                                </div>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent
-                                v-if="showNotifUI"
-                                class="w-56 origin-top-left mr-[11rem]"
-                                :style="{
-                                    position: 'absolute',
-                                    left: '0',
-                                    transform: 'translateX(-20px)',
-                                }"
+                        <div class="flex space-x-4 flex-nowrap">
+                            <div
+                                class="cursor-pointer"
+                                title="Signaler un problème"
+                                @click="showReportModal = true"
                             >
-                                <DropdownMenuItem
-                                    class="text-left pl-4 hover:bg-gray-50"
-                                    @click="showDialog = true"
+                                <FaceFrownIcon class="w-6 h-6 text-gray-500" />
+                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                    <div
+                                        class="relative cursor-pointer"
+                                        @click="handleSeen()"
+                                    >
+                                        <BellAlertIcon class="w-6 h-6 text-gray-500" />
+
+                                        <span
+                                            v-if="showSpan"
+                                            class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2
+                                                bg-red-500 text-white text-xs font-bold
+                                                rounded-full h-4 w-4 flex items-center justify-center
+                                                pointer-events-none"
+                                        >
+                                            1
+                                        </span>
+                                    </div>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent
+                                    v-if="showNotifUI"
+                                    class="w-56 origin-top-left mr-[11rem]"
+                                    :style="{
+                                        position: 'absolute',
+                                        left: '0',
+                                        transform: 'translateX(-20px)',
+                                    }"
                                 >
-                                    Désactiver les notifications
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                    <DropdownMenuItem
+                                        class="text-left pl-4 hover:bg-gray-50"
+                                        @click="showDialog = true"
+                                    >
+                                        Désactiver les notifications
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
 
                         <Dialog
                             v-if="showNotifUI"
@@ -154,6 +163,44 @@
                                 </div>
                             </DialogContent>
                         </Dialog>
+
+                        <Dialog v-model:open="showReportModal">
+                            <DialogContent class="sm:max-w-md">
+                                <DialogHeader class="text-left">
+                                    <DialogTitle class="text-left">
+                                        Signaler un problème
+                                    </DialogTitle>
+                                    <DialogDescription class="text-left mt-2">
+                                        Souhaitez vous signaler un problème sur cette page :
+                                        <span class="font-mono text-xs">{{ currentPath }}</span>
+                                    </DialogDescription>
+
+                                    <div class="mt-4">
+                                        <Textarea
+                                            v-model="reportDescription"
+                                            class="w-full border rounded p-2 text-sm focus:outline-primary"
+                                            rows="3"
+                                            placeholder="Expliquez brièvement le problème rencontré"
+                                        ></Textarea>
+                                    </div>
+
+                                    <div class="mt-4 flex justify-end gap-2">
+                                        <DialogClose as-child>
+                                            <Button class="px-4 py-2 text-sm text-gray-700 rounded bg-white border hover:bg-white">
+                                                Annuler
+                                            </Button>
+                                        </DialogClose>
+
+                                        <Button
+                                            class="px-4 py-2 text-white text-sm rounded hover:bg-primary/90"
+                                            @click="submitReport"
+                                        >
+                                            Valider
+                                        </Button>
+                                    </div>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
             </header>
@@ -167,7 +214,8 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, EnvelopeIcon, BellAlertIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, EnvelopeIcon, BellAlertIcon, FaceFrownIcon } from '@heroicons/vue/24/solid';
+import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
@@ -178,10 +226,39 @@ const roles = ref<AccountType[]>();
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();
 const { logout, getRoles, switchRole, createNotifPreferences } = useAuth();
+const { reportProblem } = useMail();
 
 const showDialog = ref(false);
 const showSpan = ref(false);
 const showNotifUI = ref(true);
+
+const showReportModal = ref(false);
+const route = useRoute();
+const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
+const reportDescription = ref('');
+
+const submitReport = async () => {
+    try {
+        const payload = {
+            path: currentPath.value,
+            description: reportDescription.value.trim() !== '' ? reportDescription.value.trim() : null,
+        };
+        await reportProblem(payload);
+        $toast({
+            title: 'Succès',
+            description: 'Le problème a été signalé avec succès.',
+        });
+        showReportModal.value = false;
+    }
+    catch (error) {
+        console.error(error);
+        $toast({
+            title: 'Erreur',
+            description: 'Une erreur est survenue.',
+            variant: 'destructive',
+        });
+    }
+};
 
 const parsedSettings = computed(() => {
     try {
