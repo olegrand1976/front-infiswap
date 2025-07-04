@@ -1,6 +1,7 @@
 export const useOpenai = () => {
     const config = useRuntimeConfig();
     const choices = useState('openaiChoices', () => null);
+    const loading = useState('loading', () => false);
 
     async function ask(
         prompt: string,
@@ -29,16 +30,36 @@ export const useOpenai = () => {
         return response;
     }
 
-    async function getCityFromZipCode(zip: string): Promise<string | null> {
-        const prompt = `Donne-moi uniquement le nom de la ville correspondant au code postal ${zip} en Belgique, sans phrase ni ponctuation. Juste le nom de la ville.`;
+    async function getCityFromZipCode(zip: string): Promise<string[] | null> {
+        const prompt = `Pour le code postal ${zip} en Belgique, donne-moi uniquement un tableau JSON contenant toutes les localités officielles couvertes par ce code postal, y compris les sections, villages et hameaux associés selon les données officielles de bpost ou de l'administration belge.
+
+- Le tableau doit inclure toutes les localités officiellement rattachées, même si elles ne sont pas la ville principale.
+- Si une seule localité correspond, réponds sous forme ["NomLocalité"].
+- Si plusieurs localités correspondent, réponds sous forme ["NomLocalité1", "NomLocalité2", ...].
+- N’inclus aucun texte avant ou après le tableau JSON.
+- N’ajoute aucune localité qui n’est pas officiellement rattachée à ce code postal.
+- Utilise uniquement les noms exacts des localités selon les registres officiels.`;
 
         const response = await ask(prompt, 'developer');
 
         const content = response.choices?.[0]?.message?.content?.trim();
+        if (!content) return null;
 
-        if (!content || content.length > 100) return;
+        let parsed: unknown;
+        try {
+            parsed = JSON.parse(content);
+        }
+        catch (e) {
+            console.error(`Erreur lors du parsing JSON : ${e}`);
+            return null;
+        }
 
-        return content;
+        if (!Array.isArray(parsed) || parsed.some(v => typeof v !== 'string')) {
+            console.error(`Format JSON invalide : attendu un tableau de chaînes`);
+            return null;
+        }
+
+        return parsed as string[];
     }
 
     async function getZipCodeFromCity(city: string): Promise<string | null> {
@@ -58,6 +79,7 @@ export const useOpenai = () => {
         excludeZipCodes: string[] = [],
         excludeCities: string[] = [],
     ): Promise<[string, string][]> {
+        loading.value = true;
         const prompt = `Sur base du code postal ou de la ville "${input}" en Belgique, peux-tu me lister :
 - les villes liées directement à ce code postal ou cette ville,
 - ainsi que l'ensemble des villes et codes postaux limitrophes.
@@ -81,11 +103,13 @@ Ne donne aucune explication, seulement le JSON.`;
         try {
             const json = content ? JSON.parse(content) : null;
             if (json && Array.isArray(json) && json.every(item => Array.isArray(item) && item.length === 2)) {
+                loading.value = false;
                 return json as [string, string][];
             }
         }
         catch (e) {
             console.error('Erreur parsing JSON:', e, content);
+            loading.value = false;
         }
 
         return [];
@@ -94,6 +118,7 @@ Ne donne aucune explication, seulement le JSON.`;
     return {
         ask,
         choices,
+        loading,
         getCityFromZipCode,
         getZipCodeFromCity,
         getAdjacentZipCodesAndCities,

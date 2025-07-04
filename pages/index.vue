@@ -70,6 +70,7 @@ import { PlusCircleIcon, SparklesIcon } from '@heroicons/vue/24/solid';
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
+import RollingLoader from '~/components/RollingLoader.vue';
 
 const { isAdmin } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();

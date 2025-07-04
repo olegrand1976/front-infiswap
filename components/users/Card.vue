@@ -71,6 +71,40 @@
                 v-if="activeTab === 'activite'"
                 class="space-y-3"
             >
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière post d'un remplacement"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Dernière post : <span class="font-semibold">{{ user.historic_activity?.last_post_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière acceptation d'un remplacement"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Acceptation : <span class="font-semibold">{{ user.historic_activity?.last_accept_posted_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière réponse à un remplacement posté"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Réponse : <span class="font-semibold">{{ user.historic_activity?.last_response_date ?? '—' }}</span></p>
+                </div>
+
+                <div
+                    class="flex items-center gap-2 cursor-pointer"
+                    title="Date de dernière acceptation sur un remplacement posté"
+                >
+                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <p>Accept. réponse : <span class="font-semibold">{{ user.historic_activity?.last_accept_response_date ?? '—' }}</span></p>
+                </div>
+
+                <div class="border-t border-gray-300 w-full my-2" />
+
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
                     <p>
@@ -94,10 +128,11 @@
                 <div class="flex items-center gap-2">
                     <CheckCircleIcon class="w-5 h-5 text-primary" />
                     <p>
-                        Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted
-                        }}</span>
+                        Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span>
                     </p>
                 </div>
+
+                <div class="border-t border-gray-300 w-full my-2" />
 
                 <div
                     v-if="user.ambassador === 1"
@@ -138,15 +173,19 @@
                 v-else-if="activeTab === 'contact'"
                 class="space-y-3"
             >
-                <p>Date : {{ new Date().toLocaleDateString('fr-FR') }}</p>
+                <p>
+                    Date de dernier contact :
+                    {{ user.contact_date ? new Date(user.contact_date).toLocaleDateString('fr-FR') : '- - -' }}
+                </p>
 
-                {# <div class="flex items-center gap-2">
-                    <component
-                        :is="user.biotrax ? CheckCircleIcon : XCircleIcon"
-                        :class="user.biotrax ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
-                    />
-                    <label>InfiSwap</label>
-                </div> #}
+                <p>Mode de contact : {{ user.contact_method ?? '- - -' }}</p>
+
+                <p>
+                    Date de dernière connexion :
+                    {{
+                        new Date(user.last_login_at ?? user.created_at).toLocaleDateString('fr-FR') + ' ' + new Date(user.last_login_at ?? user.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                    }}
+                </p>
 
                 <div class="flex items-center gap-2">
                     <component
@@ -170,6 +209,11 @@
                         :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>Ambassadeur</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <XCircleIcon class="text-gray-300 w-5 h-5" />
+                    <label>Tournée</label>
                 </div>
             </div>
 
@@ -197,7 +241,17 @@
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
             <div class="text-left text-sm text-gray-500 space-y-2 px-6">
-                <template v-if="showFullInfo">
+                <template v-if="minimalInfo">
+                    <p class="flex items-center gap-2">
+                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
+                    </p>
+                </template>
+                <template v-else-if="showFullInfo">
                     <p class="flex items-center gap-2 text-primary">
                         <EnvelopeIcon class="w-5 h-5" />
                         {{ user.email || 'Non renseigné' }}
@@ -219,26 +273,25 @@
                     </p>
                     <p class="flex items-center gap-2">
                         <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || 'Non renseigné' }}
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || 'Non renseigné' }}
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <IdentificationIcon class="w-5 h-5 text-primary" />
                         {{ user.identifier_number || 'Non renseigné' }}
                     </p>
                 </template>
-
                 <template v-else>
                     <p class="flex items-center gap-2">
                         <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || 'Non renseigné' }}
+                        {{ user.city || user.profile.city || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || 'Non renseigné' }}
+                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
                     </p>
                     <p class="flex items-center gap-2">
                         <PhoneIcon class="w-5 h-5 text-primary" />
@@ -269,6 +322,7 @@ import {
     EnvelopeIcon,
     PhoneIcon,
     IdentificationIcon,
+    CalendarDaysIcon,
 } from '@heroicons/vue/24/solid';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
@@ -280,8 +334,10 @@ const activeTab = ref('information');
 const props = withDefaults(defineProps<{
     user: User;
     showFullInfo?: boolean;
+    minimalInfo?: boolean;
 }>(), {
     showFullInfo: false,
+    minimalInfo: false,
 });
 
 const { activityUser } = useReplacements();

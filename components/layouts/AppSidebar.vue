@@ -154,11 +154,14 @@ import {
     ChevronRightIcon,
     ListBulletIcon,
     PowerIcon,
+    PlusIcon,
     DocumentMagnifyingGlassIcon,
+    MagnifyingGlassIcon,
     UsersIcon,
     Cog8ToothIcon,
     HeartIcon,
     WrenchScrewdriverIcon,
+    ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
@@ -217,33 +220,28 @@ const nurseNavigationItems: NavigationItem[] = [
         route: '/dashboard/replacements/responses',
         icon: UsersIcon,
     },
-    // {
-    //     label: 'Mes patients',
-    //     route: '/dashboard/patients',
-    //     icon: UserGroupIcon,
-    //     children: [
-    //         {
-    //             label: 'Listes',
-    //             route: '/dashboard/patients',
-    //             icon: ClipboardDocumentListIcon,
-    //         },
-    //         {
-    //             label: 'Nouveau',
-    //             route: '/dashboard/patients/create',
-    //             icon: UserPlusIcon,
-    //         },
-    //         // {
-    //         //     label: 'De ma région',
-    //         //     route: '/dashboard/patients/myregion',
-    //         //     icon: MapPinIcon,
-    //         // },
-    //     ],
-    // },
-    // {
-    //     label: 'Tournées',
-    //     route: '/dashboard/tours',
-    //     icon: MapIcon,
-    // },
+    {
+        label: 'Binômes',
+        route: '/dashboard/partners',
+        icon: UserGroupIcon,
+        children: [
+            {
+                label: 'Rechercher',
+                route: '/dashboard/partners',
+                icon: MagnifyingGlassIcon,
+            },
+            {
+                label: 'Demander',
+                route: '/dashboard/partners/create',
+                icon: PlusIcon,
+            },
+            {
+                label: 'Réponses',
+                route: '/dashboard/partners/responses',
+                icon: ChatBubbleLeftEllipsisIcon,
+            },
+        ],
+    },
     {
         label: 'Paramètres',
         route: '/dashboard/settings',

@@ -93,7 +93,7 @@
                                     </p>
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
+                                            <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements pour lesquels vous avez candidaté.</span>
                                         </li>
                                     </ul>
@@ -192,7 +192,7 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 flex flex-col h-full">
+                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 bg-orange-700 flex flex-col h-full">
                                 <div class="bg-orange-700 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
                                     Mes accords de remplacement
                                 </div>
@@ -223,7 +223,6 @@
             </div>
 
             <div class="bg-gray-100 rounded-b-lg">
-                <!-- <div class="bg-primary h-6 rounded-t-lg" /> -->
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
                         title="Demandes de remplacement"
@@ -242,16 +241,40 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 h-72 sm:h-full rounded p-4 mb-4">
-                <h3 class="text-primary">
-                    Mes préférences
-                </h3>
-                <div class="mt-8">
+            <div class="bg-gray-100 h-80 sm:h-full rounded p-4 mb-4">
+                <div class="text-primary flex justify-between items-center">
+                    <h2>
+                        Mes préférences
+                    </h2>
+                    <Button
+                        variant="inline"
+                        class="font-bold text-xs mt-2"
+                        @click="proposalDialog = true"
+                    >
+                        Boost IA
+                    </Button>
+                </div>
+                <div class="sm:mt-10">
                     <InputPreferences
                         :initial-zip-codes="zipCodes"
                         :initial-cities="cities"
+                        @update:initial-zip-codes="updateZipCodes"
+                        @update:initial-cities="updateCities"
+                        @open-proposal="openProposalDialog"
                     />
                 </div>
+
+                <ProposalLocationModal
+                    v-model="proposalDialog"
+                    v-model:newly-added-value="newlyAddedValue"
+                    title="Préférences"
+                    description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
+                    :initial-zip-codes="zipCodes"
+                    :initial-cities="cities"
+                    :is-preference-mode="true"
+                    @update:initial-zip-codes="updateZipCodes"
+                    @update:initial-cities="updateCities"
+                />
             </div>
 
             <div class="bg-gray-100 rounded-b-lg relative">
@@ -302,6 +325,8 @@ const props = defineProps<{
 }>();
 
 const user = useUser();
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -317,19 +342,47 @@ const formattedData = computed(() => {
     }));
 });
 
-const settings: UserSettings = JSON.parse(user.value.settings);
-const zipCodes = ref<string[]>(settings.replacement?.zip_codes ?? []);
-const cities = ref<string[]>(settings.replacement?.cities ?? []);
+const zipCodes = ref<string[]>([]);
+const cities = ref<string[]>([]);
+
+const updateFromSettings = () => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    zipCodes.value = settings.replacement?.zip_codes?.filter(zip => zip) ?? [];
+    cities.value = settings.replacement?.cities?.filter(city => city) ?? [];
+};
+
+updateFromSettings();
+
+watch(
+    () => user.value.settings,
+    () => {
+        updateFromSettings();
+    },
+    { deep: true },
+);
+
+const updateZipCodes = async (newZipCodes: string[]) => {
+    zipCodes.value = newZipCodes.filter(zip => zip);
+    await nextTick();
+};
+
+const updateCities = async (newCities: string[]) => {
+    cities.value = newCities.filter(city => city);
+    await nextTick();
+};
+
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
+};
 
 const previousMonth = ref('');
 
 const currentDate = new Date();
-
 const months = [
     'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
 ];
-
 const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
@@ -337,10 +390,10 @@ previousMonth.value = months[previousMonthIndex];
 
 <style scoped>
 .carousel-container {
-  max-width: 100%;
-  overflow: hidden;
+    max-width: 100%;
+    overflow: hidden;
 }
 .relative {
-  padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 </style>

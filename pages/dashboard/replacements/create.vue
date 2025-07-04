@@ -130,16 +130,27 @@
                     />
                 </div>
 
-                <InputTagManager
-                    v-model="formData.zipCodes"
-                    label="Codes postaux"
-                    placeholder="6565,4561,1237"
-                    :is-mobile="isMobile"
-                    :comma-validation="false"
-                    :count="4"
-                    @keydown.enter.prevent
-                    @item-added="onZipCodeAdded"
-                />
+                <div class="relative">
+                    <InputTagManager
+                        v-model="formData.zipCodes"
+                        label="Codes postaux"
+                        placeholder="6565,4561,1237"
+                        :is-mobile="isMobile"
+                        :comma-validation="false"
+                        :count="4"
+                        @keydown.enter.prevent
+                        @item-added="onZipCodeAdded"
+                        @open-proposal="openProposalDialog"
+                    />
+
+                    <Button
+                        variant="inline"
+                        class="absolute -top-[1.2rem] right-0 font-bold text-primary text-xs mt-2"
+                        @click="openProposalDialog('')"
+                    >
+                        Boost IA
+                    </Button>
+                </div>
 
                 <InputTagManager
                     v-model="formData.cities"
@@ -151,6 +162,7 @@
                     :no-space-validation="true"
                     @keydown.enter.prevent
                     @item-added="onCityAdded"
+                    @open-proposal="openProposalDialog"
                 />
 
                 <div class="flex flex-col space-y-2">
@@ -211,6 +223,18 @@
             </div>
         </section>
 
+        <ProposalLocationModal
+            v-model="proposalDialog"
+            v-model:newly-added-value="newlyAddedValue"
+            title="Suggestions"
+            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
+            :initial-zip-codes="formData.zipCodes"
+            :initial-cities="formData.cities"
+            :is-preference-mode="false"
+            @update:initial-zip-codes="updateZipCodes"
+            @update:initial-cities="updateCities"
+        />
+
         <Button
             class="flex items-center justify-center mx-auto mt-16 mb-8 2xl:mt-24 w-72"
             type="submit"
@@ -270,20 +294,38 @@ const formData = reactive({
     citiesInput: '',
 });
 
-const onZipCodeAdded = async (zip: string) => {
-    const city = await getCityFromZipCode(zip);
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
 
-    if (!formData.cities.includes(city)) {
-        formData.cities = [...formData.cities, city];
-    }
+const updateZipCodes = (newZipCodes: string[]) => {
+    formData.zipCodes = [...newZipCodes];
+};
+
+const updateCities = (newCities: string[]) => {
+    formData.cities = [...newCities];
+};
+
+const openProposalDialog = (value: string) => {
+    newlyAddedValue.value = value;
+    proposalDialog.value = true;
+};
+
+const onZipCodeAdded = async (zip: string) => {
+    const citiesFromZip = await getCityFromZipCode(zip);
+    if (!citiesFromZip) return;
+
+    const citiesSet = new Set(formData.cities);
+    citiesFromZip.forEach(city => citiesSet.add(city));
+    formData.cities = Array.from(citiesSet);
+    openProposalDialog(zip);
 };
 
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
-
-    if (!formData.zipCodes.includes(city)) {
+    if (zipCode && !formData.zipCodes.includes(zipCode)) {
         formData.zipCodes = [...formData.zipCodes, zipCode];
     }
+    openProposalDialog(city);
 };
 
 const calendarValue = ref<{ start: string | null; end: string | null }[]>([
