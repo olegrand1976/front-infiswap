@@ -175,6 +175,15 @@
                                         <span class="font-mono text-xs">{{ currentPath }}</span>
                                     </DialogDescription>
 
+                                    <div class="mt-4">
+                                        <Textarea
+                                            v-model="reportDescription"
+                                            class="w-full border rounded p-2 text-sm focus:outline-primary"
+                                            rows="3"
+                                            placeholder="Expliquez brièvement le problème rencontré"
+                                        ></Textarea>
+                                    </div>
+
                                     <div class="mt-4 flex justify-end gap-2">
                                         <DialogClose as-child>
                                             <Button class="px-4 py-2 text-sm text-gray-700 rounded bg-white border hover:bg-white">
@@ -226,10 +235,14 @@ const showNotifUI = ref(true);
 const showReportModal = ref(false);
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
+const reportDescription = ref('');
 
 const submitReport = async () => {
     try {
-        const payload = { path: currentPath.value };
+        const payload = {
+            path: currentPath.value,
+            description: reportDescription.value.trim() !== '' ? reportDescription.value.trim() : null,
+        };
         await reportProblem(payload);
         $toast({
             title: 'Succès',
