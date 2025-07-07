@@ -133,7 +133,7 @@
                             v-model="proposalDialog"
                             v-model:newly-added-value="newlyAddedValue"
                             title="Suggestions"
-                            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos lieux cibles"
+                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
                             :initial-zip-codes="formData.zipCodes"
                             :initial-cities="formData.cities"
                             :is-preference-mode="false"
