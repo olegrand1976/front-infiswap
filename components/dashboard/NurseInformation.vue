@@ -230,16 +230,17 @@
                         </div>
                         <div class="text-center md:text-left">
                             <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300">
-                                NursTech Pro
+                                NursTech
                             </h3>
                             <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
                                 Boostez votre présence digitale avec notre offre NursTechet une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
                             </p>
-                            <NuxtLink to="/dashboard/replacements">
-                                <button class="px-5 py-1.5 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5">
-                                    Découvrir →
-                                </button>
-                            </NuxtLink>
+                            <button
+                                class="px-5 py-1.5 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5"
+                                @click="showNursTech = true"
+                            >
+                                Découvrir →
+                            </button>
                         </div>
                     </div>
 
@@ -249,20 +250,33 @@
                         </div>
                         <div class="text-center md:text-left">
                             <h3 class="text-xl font-semibold text-cyan-600 mb-3 transition-colors duration-300">
-                                NursAssur Concierge
+                                NursAssur
                             </h3>
                             <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
                                 Bénéficiez d'un conseil personnalisé avec notre service d'assurances NursAssur dédié aux professionnels de santé.
                             </p>
-                            <NuxtLink to="/dashboard/replacements">
-                                <button class="px-5 py-1.5 border border-cyan-600 text-cyan-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5">
-                                    En savoir plus →
-                                </button>
-                            </NuxtLink>
+                            <button
+                                class="px-5 py-1.5 border border-cyan-600 text-cyan-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5"
+                                @click="showNursAssur = true"
+                            >
+                                En savoir plus →
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <Dialog v-model:open="showNursTech">
+                <DialogContent class="max-w-sm text-center">
+                    <NurstechForm />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog v-model:open="showNursAssur">
+                <DialogContent class="max-w-sm text-center">
+                    <NursassurForm />
+                </DialogContent>
+            </Dialog>
 
             <!-- <div class="bg-gray-100 rounded-b-lg">
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
@@ -365,6 +379,9 @@ const props = defineProps<{
     reports: NurseReport;
     tours: Patient[];
 }>();
+
+const showNursTech = ref(false);
+const showNursAssur = ref(false);
 
 const user = useUser();
 const proposalDialog = ref(false);
