@@ -222,7 +222,49 @@
                 </Carousel>
             </div>
 
-            <div class="bg-gray-100 rounded-b-lg">
+            <div class="rounded-xl overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:shadow-md hover:border-blue-200 hover:-translate-y-1 shadow-lg">
+                        <div class="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                            <LayoutsNursTech class="w-40 text-blue-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300">
+                                NursTech Pro
+                            </h3>
+                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
+                                Boostez votre présence digitale avec notre offre NursTechet une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
+                            </p>
+                            <NuxtLink to="/dashboard/replacements">
+                                <button class="px-5 py-1.5 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5">
+                                    Découvrir →
+                                </button>
+                            </NuxtLink>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:shadow-md hover:border-cyan-200 hover:-translate-y-1 shadow-lg">
+                        <div class="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                            <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h3 class="text-xl font-semibold text-cyan-600 mb-3 transition-colors duration-300">
+                                NursAssur Concierge
+                            </h3>
+                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
+                                Bénéficiez d'un conseil personnalisé avec notre service d'assurances NursAssur dédié aux professionnels de santé.
+                            </p>
+                            <NuxtLink to="/dashboard/replacements">
+                                <button class="px-5 py-1.5 border border-cyan-600 text-cyan-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5">
+                                    En savoir plus →
+                                </button>
+                            </NuxtLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="bg-gray-100 rounded-b-lg">
                 <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                     <DashboardReportSection
                         title="Demandes de remplacement"
@@ -237,7 +279,7 @@
                         :count="reports.accepted"
                     />
                 </div>
-            </div>
+            </div> -->
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
