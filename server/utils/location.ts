@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import type { CountryCode } from '~/lib/types';
 
 type Entry = {
     postalCode: string;
@@ -8,7 +9,7 @@ type Entry = {
     longitude: number;
 };
 
-function loadPostalData(country: 'be' | 'fr' | 'us' = 'be'): string {
+function loadPostalData(country: CountryCode = 'be'): string {
     const filePath = path.resolve(process.cwd(), `server/data/${country.toUpperCase()}.txt`);
     return fs.readFileSync(filePath, 'utf-8');
 }
@@ -18,36 +19,83 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     const toRad = (deg: number) => deg * Math.PI / 180;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2
-        + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2))
-        * Math.sin(dLon / 2) ** 2;
+    const a
+    = Math.sin(dLat / 2) ** 2
+        + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function loadPostalEntries(country: 'be' | 'fr' | 'us' = 'be'): Entry[] {
-    const content = loadPostalData(country);
-    const lines = content.split('\n').filter(Boolean);
+const postalCache: Partial<Record<CountryCode, Entry[]>> = {};
 
-    return lines.map((line) => {
+function loadPostalEntries(country: CountryCode = 'be'): Entry[] {
+    if (postalCache[country]) {
+        return postalCache[country]!;
+    }
+
+    const filePath = path.resolve(process.cwd(), `server/data/${country.toUpperCase()}.txt`);
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    const lines = content
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0 && line.includes(';'));
+
+    const entries: Entry[] = [];
+
+    for (const line of lines) {
         const cols = line.split(';');
-        return {
+
+        if (cols.length < 11 || !cols[1] || !cols[2] || !cols[9] || !cols[10]) continue;
+
+        const lat = parseFloat(cols[9]);
+        const lon = parseFloat(cols[10]);
+
+        if (isNaN(lat) || isNaN(lon)) continue;
+
+        entries.push({
             postalCode: cols[1],
             city: cols[2],
-            latitude: parseFloat(cols[9]),
-            longitude: parseFloat(cols[10]),
-        };
-    });
+            latitude: lat,
+            longitude: lon,
+        });
+    }
+
+    postalCache[country] = entries;
+    return entries;
 }
 
-export function findNearbyCodes(basePostalCode: string, radiusKm = 5, country: 'be' | 'fr' | 'us' = 'be'): [string, string][] {
+export function findNearbyCodes(
+    basePostalCode: string,
+    radiusKm = 5,
+    country: CountryCode = 'be',
+): [string, string][] {
     const entries = loadPostalEntries(country);
     const source = entries.find(e => e.postalCode === basePostalCode);
-    if (!source) return [];
+
+    if (!source) {
+        console.error(`Code postal de référence non trouvé : ${basePostalCode}`);
+        return [];
+    }
 
     return entries
-        .filter(e =>
-            e.postalCode !== basePostalCode
-            && haversineDistance(source.latitude, source.longitude, e.latitude, e.longitude) <= radiusKm,
+        .filter(
+            e =>
+                e.postalCode !== basePostalCode
+                && haversineDistance(source.latitude, source.longitude, e.latitude, e.longitude) <= radiusKm,
         )
         .map(e => [e.postalCode, e.city]);
+}
+
+export function getCitiesFromPostalCode(
+    postalCode: string,
+    country: CountryCode = 'be',
+): string[] {
+    const entries = loadPostalEntries(country);
+
+    const cities = entries
+        .filter(e => e.postalCode === postalCode)
+        .map(e => e.city);
+
+    return Array.from(new Set(cities));
 }
