@@ -86,7 +86,8 @@ import { useOpenai } from '@/composables/useOpenai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const { getAdjacentZipCodesAndCities, loading } = useOpenai();
+// const { getAdjacentZipCodesAndCities, loading } = useOpenai();
+const { loading, getNearbyLocalities } = useLocation();
 const { createPreferences } = useAuth();
 const user = useUser();
 
@@ -136,7 +137,7 @@ watch(
         if (isOpen) {
             const zipCode = props.newlyAddedValue || user.value.profile.zip_code || '';
             if (zipCode) {
-                locationData.value = await getAdjacentZipCodesAndCities(zipCode, props.initialZipCodes, props.initialCities);
+                locationData.value = await getNearbyLocalities(zipCode, 5, 'be', props.initialZipCodes, props.initialCities);
             }
         }
     },
