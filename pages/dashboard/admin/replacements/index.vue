@@ -231,8 +231,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown } from 'lucide-vue-next';
-import { EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, ArrowPathIcon, ChevronUpDownIcon } from '@heroicons/vue/24/outline';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -352,7 +351,7 @@ const columns: ColumnDef<Replacement>[] = [
             variant: 'ghost',
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             style: 'white-space: nowrap;',
-        }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+        }, () => ['Période', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             return h(ReplacementPeriod, {
@@ -387,7 +386,7 @@ const columns: ColumnDef<Replacement>[] = [
             variant: 'ghost',
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             style: 'white-space: nowrap;',
-        }, () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+        }, () => ['Heures', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             return h(FormatTimePeriod, {
@@ -431,7 +430,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['C.P', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['C.P', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
         accessorFn: (row) => {
@@ -481,7 +480,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['Villes', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['Villes', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
         accessorFn: (row) => {
@@ -538,7 +537,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Créateur', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Créateur', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             const user = row.original.nurse_owner;
@@ -553,7 +552,7 @@ const columns: ColumnDef<Replacement>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => [
                 'Téléphone',
-                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
+                h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' }),
             ]);
         },
         cell: ({ row }: { row: { getValue: (key: string) => string | null } }) => {
@@ -576,7 +575,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['Remplaçant', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
 
@@ -628,7 +627,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressés', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+            }, () => ['Intéressés', h(ChevronUpDownIcon, { class: 'ml-2 h-2 w-2' })]),
         cell: ({ row }) => {
             const nurses = row.original.response_count ?? 0;
             const id = row.original.id;
@@ -651,7 +650,7 @@ const columns: ColumnDef<Replacement>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('type'),
-            }, () => ['Type', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]);
+            }, () => ['Type', h(ChevronUpDownIcon, { class: 'ml-2 h-2 w-2' })]);
         },
         cell: ({ row }) => {
             const type = row.original.type;
@@ -672,7 +671,7 @@ const columns: ColumnDef<Replacement>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Date', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Date', h(ChevronUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));
