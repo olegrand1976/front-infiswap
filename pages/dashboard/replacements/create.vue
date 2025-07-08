@@ -253,7 +253,8 @@ import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 
-const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
+const { getZipCodeFromCity } = useOpenai();
+const { getCitiesFomZipCode } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -311,7 +312,7 @@ const openProposalDialog = (value: string) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const citiesFromZip = await getCityFromZipCode(zip);
+    const citiesFromZip = await getCitiesFomZipCode(zip);
     if (!citiesFromZip) return;
 
     const citiesSet = new Set(formData.cities);
