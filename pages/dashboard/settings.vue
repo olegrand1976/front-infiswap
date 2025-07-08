@@ -856,7 +856,7 @@
                             v-model="proposalDialog"
                             v-model:newly-added-value="newlyAddedValue"
                             title="Préférences"
-                            description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
+                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences."
                             :initial-zip-codes="zipCodes"
                             :initial-cities="cities"
                             :is-preference-mode="true"
