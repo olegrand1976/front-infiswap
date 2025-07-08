@@ -234,6 +234,7 @@ export type Replacement = {
     substitute_user?: User;
     candidate?: boolean;
     periods?: ReplacementPeriod[];
+    province?: string;
 };
 
 export type ReplacementPeriod = {
