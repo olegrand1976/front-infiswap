@@ -1161,28 +1161,63 @@
                         class="mt-6 space-y-6"
                         @submit.prevent="submit"
                     >
-                        <div class="grid grid-cols-2 items-center gap-8">
-                            <div class="flex flex-col space-y-2">
-                                <label class="text-primary font-semibold">
-                                    Date de début
-                                </label>
-                                <Input
-                                    v-model="editFormData.startDate"
-                                    type="date"
-                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                />
+                        <template v-if="editFormData.periods.length > 0">
+                            <h4 class="text-black/80 font-semibold">
+                                Période de remplacement
+                            </h4>
+                            <div
+                                v-for="(period, index) in editFormData.periods"
+                                :key="period.id"
+                                class="mb-3"
+                            >
+                                <div class="grid grid-cols-2 items-center gap-8">
+                                    <div class="flex flex-col space-y-2">
+                                        <label class="text-primary font-semibold">
+                                            Date de début
+                                        </label>
+                                        <Input
+                                            v-model="editFormData.periods[index].startDate"
+                                            type="date"
+                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                        />
+                                    </div>
+                                    <div class="flex flex-col space-y-2">
+                                        <label class="text-primary font-semibold">
+                                            Date de fin
+                                        </label>
+                                        <Input
+                                            v-model="editFormData.periods[index].endDate"
+                                            type="date"
+                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex flex-col space-y-2">
-                                <label class="text-primary font-semibold">
-                                    Date de fin
-                                </label>
-                                <Input
-                                    v-model="editFormData.endDate"
-                                    type="date"
-                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                />
+                        </template>
+                        <template v-else>
+                            <div class="grid grid-cols-2 items-center gap-8">
+                                <div class="flex flex-col space-y-2">
+                                    <label class="text-primary font-semibold">
+                                        Date de début
+                                    </label>
+                                    <Input
+                                        v-model="editFormData.startDate"
+                                        type="date"
+                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                    />
+                                </div>
+                                <div class="flex flex-col space-y-2">
+                                    <label class="text-primary font-semibold">
+                                        Date de fin
+                                    </label>
+                                    <Input
+                                        v-model="editFormData.endDate"
+                                        type="date"
+                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </template>
                         <div class="flex flex-col space-y-2">
                             <label class="text-primary font-semibold">
                                 Créneau horaire
@@ -1849,6 +1884,7 @@ const editFormData = reactive({
     replacedBy: null,
     visibility: '',
     type: '',
+    periods: [],
     startDate: '',
     endDate: '',
     patientCount: null,
@@ -1890,6 +1926,16 @@ const openEditDialog = (replacement: Replacement) => {
         ? replacement.cities
         : JSON.parse(replacement.cities || '[]');
     editFormData.careTypes = replacement.care_types?.map(ct => ct.id) || [];
+
+    if (replacement.periods && replacement.periods.length > 0) {
+        editFormData.periods = replacement.periods.map(period => ({
+            startDate: formatDateToInput(period.start_date),
+            endDate: formatDateToInput(period.end_date),
+        }));
+    }
+    else {
+        editFormData.periods = [];
+    }
 
     const timeSlot = replacement.timeSlot
         ? typeof replacement.timeSlot === 'string'
