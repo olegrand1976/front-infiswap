@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronRight } from 'lucide-vue-next';
+import { ChevronRightIcon } from '@heroicons/vue/24/outline';
 import {
     DropdownMenuSubTrigger,
     type DropdownMenuSubTriggerProps,
@@ -28,6 +28,6 @@ const forwardedProps = useForwardProps(delegatedProps);
         )"
     >
         <slot />
-        <ChevronRight class="ml-auto h-4 w-4" />
+        <ChevronRightIcon class="ml-auto h-4 w-4" />
     </DropdownMenuSubTrigger>
 </template>
