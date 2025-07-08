@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { X } from 'lucide-vue-next';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { TagsInputItemDelete, type TagsInputItemDeleteProps, useForwardProps } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -21,7 +21,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         :class="cn('flex rounded bg-transparent mr-1', props.class)"
     >
         <slot>
-            <X class="w-4 h-4" />
+            <XMarkIcon class="w-4 h-4" />
         </slot>
     </TagsInputItemDelete>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { X } from 'lucide-vue-next';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
 import {
     DialogClose,
     DialogContent,
@@ -55,7 +55,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
             <DialogClose
                 class="absolute left-4 top-4 rounded-sm ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
             >
-                <X class="w-6 h-6 font-bold text-primary" />
+                <XMarkIcon class="w-6 h-6 font-bold text-primary" />
             </DialogClose>
         </DialogContent>
     </DialogPortal>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronsRight } from 'lucide-vue-next';
+import { ChevronDoubleRightIcon } from '@heroicons/vue/24/solid';
 import { PaginationLast, type PaginationLastProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ const delegatedProps = computed(() => {
             variant="outline"
         >
             <slot>
-                <ChevronsRight class="h-4 w-4" />
+                <ChevronDoubleRightIcon class="h-4 w-4" />
             </slot>
         </Button>
     </PaginationLast>
