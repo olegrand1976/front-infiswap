@@ -1,26 +1,35 @@
 <template>
-    <LayoutsAppImage
-        :src="'nurs_assur.png'"
-        alt="logo-NursAssur"
-        class="hover:cursor-pointer"
-        :class="classe"
-        format="png"
-        @click="navigateToHome"
-    />
+    <div>
+        <LayoutsAppImage
+            :src="'nurs_assur.png'"
+            alt="logo-NursAssur"
+            class="hover:cursor-pointer"
+            :class="classe"
+            format="png"
+            @click="handleClick"
+        />
+
+        <Dialog v-model:open="showNursAssur">
+            <DialogContent>
+                <NursassurForm @close="showNursAssur = false" />
+            </DialogContent>
+        </Dialog>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+import { ref, defineProps } from 'vue';
 
 defineProps<{
     classe?: string;
 }>();
 
 const { isLoggedIn } = useAuth();
+const showNursAssur = ref(false);
 
-function navigateToHome() {
+function handleClick() {
     if (isLoggedIn.value) {
-        navigateTo('/dashboard');
+        showNursAssur.value = true;
     }
     else {
         navigateTo('/');

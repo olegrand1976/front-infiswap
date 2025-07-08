@@ -1,77 +1,141 @@
 <template>
-    <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-xs hover:shadow-sm transition-shadow duration-300 max-w-md mx-auto">
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
-            <h2 class="text-xl font-semibold text-gray-800 text-center">
-                Demande de renseignements
-            </h2>
-            <p class="text-xs text-gray-500 text-center mt-1">
-                NursAssur Concierge
+    <div class="max-w-sm mx-auto mt-10">
+        <div class="flex justify-center mb-4">
+            <LayoutsNursAssur class="w-32" />
+        </div>
+
+        <h2 class="text-center text-lg font-medium text-gray-700 mb-6 leading-snug">
+            Bénéficiez d'un conseil personnalisé avec notre
+            <span class="text-cyan-500 font-semibold">service d'assurances</span>
+        </h2>
+
+        <div class="mb-4">
+            <p class="text-xs text-gray-600 mb-2 ml-2">
+                Que souhaitez-vous comme renseignements ?
+            </p>
+
+            <div
+                v-if="assurTypes.length > 0"
+                class="grid grid-cols-1 gap-2"
+            >
+                <label
+                    v-for="type in assurTypes"
+                    :key="type.id"
+                    class="flex items-center space-x-2 text-sm text-gray-700"
+                >
+                    <input
+                        v-model="form.types"
+                        type="checkbox"
+                        :value="type.id"
+                        class="accent-primary"
+                    />
+                    <span>{{ type.label }}</span>
+                </label>
+            </div>
+            <p
+                v-else
+                class="text-xs text-gray-500 mt-2 ml-2"
+            >
+                Chargement des types...
+            </p>
+
+            <p class="text-xs text-gray-500 mt-2 ml-2">
+                Types sélectionnés :
+                <span class="font-medium">{{ displayType }}</span>
             </p>
         </div>
 
-        <form
-            action="mailto:o.legrand@ll-it-sc.be?subject=NURSASSUR%20-%20CONTACT"
-            method="post"
-            enctype="text/plain"
-            class="p-6 space-y-5"
-        >
-            <div class="space-y-1">
-                <label
-                    for="sujet"
-                    class="block text-sm font-medium text-gray-700"
-                >
-                    Sujet souhaité :
-                </label>
-                <div class="relative">
-                    <select
-                        id="sujet"
-                        name="Sujet"
-                        class="w-full pl-3 pr-10 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none transition-all appearance-none bg-white"
-                    >
-                        <option class="hover:bg-blue-50">
-                            Véhicule
-                        </option>
-                        <option>Maison</option>
-                        <option>Assurances</option>
-                        <option>Professionnelles</option>
-                        <option>Épargne</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                        <svg
-                            class="h-4 w-4"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-4">
+            <Textarea
+                v-model="form.description"
+                placeholder="Votre message..."
+                rows="3"
+                class="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-primary transition"
+            />
+        </div>
 
-            <div class="space-y-1">
-                <label
-                    for="commentaire"
-                    class="block text-sm font-medium text-gray-700"
-                >
-                    Commentaire :
-                </label>
-                <textarea
-                    id="commentaire"
-                    name="Commentaire"
-                    rows="4"
-                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
-                    placeholder="Décrivez votre demande en détails..."
-                ></textarea>
-            </div>
+        <p class="text-center text-[0.6rem] text-gray-500 mb-4">
+            Ce formulaire vous permet de contacter directement les responsables afin de bénéficier de ce service personnalisé.
+        </p>
 
-            <div class="pt-2">
-                <button
-                    type="submit"
-                    class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow-xs hover:shadow-sm hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 active:scale-95"
-                >
-                    Envoyer la demande
-                </button>
-            </div>
-        </form>
+        <div class="flex flex-col sm:flex-row justify-end gap-3">
+            <button
+                class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
+                @click="cancel"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 hover:shadow transition"
+                @click="handleContact"
+            >
+                Nous contacter
+            </button>
+        </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useNuxtApp } from '#app';
+
+const { getAssurTypes, createAssurHistory } = useNursSupp();
+const { $toast } = useNuxtApp();
+const emit = defineEmits(['close']);
+
+const assurTypes = ref<{ id: number; label: string }[]>([]);
+
+const form = ref({
+    types: [] as number[],
+    description: '',
+});
+
+const displayType = computed(() => {
+    if (form.value.types.length === 0) {
+        return 'Aucun type sélectionné';
+    }
+    return form.value.types
+        .map(typeId => assurTypes.value.find(type => type.id === typeId)?.label || typeId)
+        .join(', ');
+});
+
+onMounted(async () => {
+    try {
+        assurTypes.value = await getAssurTypes();
+    }
+    catch (error) {
+        $toast({
+            description: 'Erreur lors du chargement des types d’assurances.', error,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+});
+
+const handleContact = async () => {
+    try {
+        await createAssurHistory({
+            description: form.value.description,
+            types: form.value.types,
+        });
+        $toast({
+            description: 'Votre demande a été transmise à NursAssur avec succès.',
+        });
+        form.value.types = [];
+        form.value.description = '';
+        emit('close');
+    }
+    catch (error) {
+        $toast({
+            description: error,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+};
+
+const cancel = () => {
+    emit('close');
+};
+</script>

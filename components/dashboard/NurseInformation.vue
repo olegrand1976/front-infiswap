@@ -108,8 +108,8 @@
                             </div>
                         </CarouselItem>
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious class="2xl:hidden" />
+                    <CarouselNext class="2xl:hidden" />
                 </Carousel>
             </div>
 
@@ -267,33 +267,16 @@
             </div>
 
             <Dialog v-model:open="showNursTech">
-                <DialogContent class="max-w-sm text-center">
-                    <NurstechForm />
+                <DialogContent>
+                    <NurstechForm @close="showNursTech = false" />
                 </DialogContent>
             </Dialog>
 
             <Dialog v-model:open="showNursAssur">
-                <DialogContent class="max-w-sm text-center">
-                    <NursassurForm />
+                <DialogContent>
+                    <NursassurForm @close="showNursAssur = false" />
                 </DialogContent>
             </Dialog>
-
-            <!-- <div class="bg-gray-100 rounded-b-lg">
-                <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-                    <DashboardReportSection
-                        title="Demandes de remplacement"
-                        :count="reports.me"
-                    />
-                    <DashboardReportSection
-                        title="Annonce(s) repondue(s)"
-                        :count="reports.total"
-                    />
-                    <DashboardReportSection
-                        title="Réponse(s) accepté(s)"
-                        :count="reports.accepted"
-                    />
-                </div>
-            </div> -->
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
