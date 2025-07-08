@@ -223,7 +223,7 @@
             </div>
 
             <div class="rounded-xl overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:shadow-md hover:border-blue-200 hover:-translate-y-1 shadow-lg">
                         <div class="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                             <LayoutsNursTech class="w-40 text-blue-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
