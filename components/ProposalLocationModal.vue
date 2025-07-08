@@ -82,11 +82,9 @@
 </template>
 
 <script setup lang="ts">
-import { useOpenai } from '@/composables/useOpenai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 
-// const { getAdjacentZipCodesAndCities, loading } = useOpenai();
 const { loading, getNearbyLocalities } = useLocation();
 const { createPreferences } = useAuth();
 const user = useUser();
