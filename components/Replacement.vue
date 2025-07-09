@@ -223,7 +223,7 @@
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -497,7 +497,7 @@
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -759,7 +759,7 @@
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -967,7 +967,7 @@
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -1162,7 +1162,7 @@
                         class="mt-6 space-y-6"
                         @submit.prevent="submit"
                     >
-                        <template v-if="editFormData.periods.length > 0">
+                        <template v-if="editFormData.periods[0].start_date != '' && editFormData.periods[0].end_date != ''">
                             <h4 class="text-black/80 font-semibold">
                                 Période de remplacement
                             </h4>
@@ -1959,9 +1959,6 @@ const openEditDialog = (replacement: Replacement) => {
             start_date: formatDateToInput(period.start_date),
             end_date: formatDateToInput(period.end_date),
         }));
-    }
-    else {
-        editFormData.periods = [{ start_date: '', end_date: '' }];
     }
 
     const timeSlot = replacement.timeSlot
