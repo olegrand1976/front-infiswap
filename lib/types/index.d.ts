@@ -259,7 +259,8 @@ export type ReplacementDetail = {
     parent_id: number;
     date: string;
     day: string;
-    start_at: string;
+    start_at?: string;
+    end_at?: string;
     patient: Patient;
     care_types: CareType[];
 };

@@ -1162,7 +1162,7 @@
                         class="mt-6 space-y-6"
                         @submit.prevent="submit"
                     >
-                        <template v-if="editFormData.periods[0].start_date != '' && editFormData.periods[0].end_date != ''">
+                        <template v-if="editFormData.periods.length > 0">
                             <h4 class="text-black/80 font-semibold">
                                 Période de remplacement
                             </h4>
@@ -1345,7 +1345,7 @@
                     <Button
                         variant="secondary"
                         class="bg-gray-200 hover:bg-gray-300 px-8"
-                        @click="editDialogOpen = false"
+                        @click="handleCloseEditDialog"
                     >
                         Annuler
                     </Button>
@@ -1904,12 +1904,7 @@ const editFormData = reactive({
     replacedBy: null,
     visibility: '',
     type: '',
-    periods: [
-        {
-            start_date: '',
-            end_date: '',
-        },
-    ],
+    periods: [],
     startDate: '',
     endDate: '',
     patientCount: null,
@@ -1923,6 +1918,24 @@ const editFormData = reactive({
     status: '',
     comment: '',
 });
+
+const resetEditFormData = () => {
+    editFormData.id = null;
+    editFormData.nurseId = user.value.nurse.id;
+    editFormData.replacedBy = null;
+    editFormData.visibility = '';
+    editFormData.type = '';
+    editFormData.periods = [];
+    editFormData.startDate = '';
+    editFormData.endDate = '';
+    editFormData.patientCount = null;
+    editFormData.zipCodes = [];
+    editFormData.cities = [];
+    editFormData.careTypes = [];
+    editFormData.timeSlot = { start_at: '', end_at: '' };
+    editFormData.status = '';
+    editFormData.comment = '';
+};
 
 const openEditDialog = (replacement: Replacement) => {
     const formatDateToInput = (isoDate: string) => {
@@ -1950,9 +1963,7 @@ const openEditDialog = (replacement: Replacement) => {
     editFormData.cities = Array.isArray(replacement.cities)
         ? replacement.cities
         : JSON.parse(replacement.cities || '[]');
-    editFormData.careTypes = Array.isArray(replacement.care_types)
-        ? replacement.care_types
-        : JSON.parse(replacement.care_types || '[]').map(ct => ct.id);
+    editFormData.careTypes = replacement.care_types?.map(ct => ct.id) || [];
 
     if (replacement.periods && replacement.periods.length > 0) {
         editFormData.periods = replacement.periods.map(period => ({
@@ -1963,11 +1974,16 @@ const openEditDialog = (replacement: Replacement) => {
 
     const timeSlot = replacement.timeSlot
         ? typeof replacement.timeSlot === 'string'
-            ? JSON.parse(replacement.timeSlot)
+            ? JSON.parse(replacement.timeSlot || '{}')
             : replacement.timeSlot
-        : {};
-    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at || '');
-    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at || '');
+        : replacement.details && replacement.details.length > 0
+            ? {
+                    start_at: replacement.details[replacement.details.length - 1].start_at,
+                    end_at: replacement.details[replacement.details.length - 1].end_at,
+                }
+            : {};
+    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at);
+    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at);
 
     editFormData.comment = replacement.comment || '';
     editDialogOpen.value = true;
@@ -1978,6 +1994,11 @@ const addPeriod = () => {
         start_date: '',
         end_date: '',
     });
+};
+
+const handleCloseEditDialog = () => {
+    resetEditFormData();
+    editDialogOpen.value = false;
 };
 
 const removePeriod = (index) => {
