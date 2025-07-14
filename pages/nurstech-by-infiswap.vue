@@ -1,14 +1,14 @@
 <template>
     <div>
-        <NurstechBanner />
-        <NurstechValuation />
-        <NurstechWebsiteCreation />
-        <NurstechTarget />
-        <NurstechProcess />
-        <NurstechSpecialOffer />
-        <NurstechInformationForm />
-        <NurstechCommunity />
-        <NurstechPartners />
+        <NurstechBanner id="banner" />
+        <NurstechValuation id="valuation" />
+        <NurstechWebsiteCreation id="website-creation" />
+        <NurstechTarget id="target" />
+        <NurstechProcess id="process" />
+        <NurstechSpecialOffer id="special-offer" />
+        <NurstechInformationForm id="information-form" />
+        <NurstechCommunity id="community" />
+        <NurstechPartners id="partners" />
     </div>
 </template>
 

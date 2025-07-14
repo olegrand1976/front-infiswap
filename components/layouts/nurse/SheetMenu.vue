@@ -40,14 +40,14 @@
                         <li
                             v-for="(item, index) in navigationItems"
                             :key="index"
+                            class="text-center cursor-pointer"
                             :class="{
-                                'text-primary font-semibold active-link': isActiveRoute(item.route),
-                                'hover:underline font-semibold hover:underline-offset-8': !isActiveRoute(item.route),
+                                'text-primary font-semibold active-link': isActive(item.targetId),
+                                'hover:text-primary/90 font-semibold text-dark animate duration-500': !isActive(item.targetId),
                             }"
+                            @click="handleNavigation(item.targetId)"
                         >
-                            <NuxtLink :to="item.route">
-                                {{ item.label }}
-                            </NuxtLink>
+                            {{ item.label }}
                         </li>
                     </ul>
                 </nav>
@@ -121,8 +121,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-
 import {
     PhoneIcon,
     MapPinIcon,
@@ -137,14 +135,55 @@ import {
 const { isLoggedIn } = useAuth();
 
 const navigationItems = [
-    { label: 'Qui sommes-nous?', route: '/nurstech-by-infiswap' },
-    { label: 'Nos Partenaires', route: '/' },
-    { label: 'Services', route: '/services' },
-    { label: 'Contact', route: '/contact' },
+    { label: 'Qui sommes-nous?', targetId: 'banner' },
+    { label: 'Nos Partenaires', targetId: 'partners' },
+    { label: 'Services', targetId: 'website-creation' },
+    { label: 'Contact', targetId: 'information-form' },
 ];
 
-const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+const activeSection = ref('');
+
+const handleNavigation = (targetId: string) => {
+    const element = document.getElementById(targetId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        activeSection.value = targetId;
+
+        const handleScroll = () => {
+            const rect = element.getBoundingClientRect();
+            if (Math.abs(rect.top) < 10) {
+                window.removeEventListener('scroll', handleScroll);
+            }
+            else {
+                activeSection.value = targetId;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+    }
+};
+
+const isActive = (targetId: string) => activeSection.value === targetId;
+
+onMounted(() => {
+    const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry: IntersectionObserverEntry) => {
+            if (entry.isIntersecting && entry.target.id) {
+                activeSection.value = entry.target.id;
+            }
+        });
+    }, {
+        threshold: 0.5,
+        rootMargin: '0px 0px -50% 0px',
+    });
+
+    navigationItems.forEach((item) => {
+        const element = document.getElementById(item.targetId);
+        if (element) {
+            observer.observe(element);
+        }
+    });
+});
 </script>
 
 <style scoped>
