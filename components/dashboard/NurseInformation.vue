@@ -223,14 +223,20 @@
             </div>
 
             <div class="rounded-xl overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:shadow-md hover:border-blue-200 hover:-translate-y-1 shadow-lg">
-                        <div class="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-                            <LayoutsNursTech class="w-40 text-blue-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-2">
+                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:border-blue-200 hover:-translate-y-1 shadow-md">
+                        <div class="flex-shrink-0">
+                            <LayoutsNursTech class="w-40 text-blue-600 opacity-90" />
                         </div>
                         <div class="text-center md:text-left">
-                            <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300">
+                            <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300 flex items-center gap-2">
                                 NursTech
+                                <NuxtLink
+                                    to="/dashboard/replacements/create"
+                                    title="Voir le site"
+                                >
+                                    <GlobeAltIcon class="text-blue-700/80 w-4 h-4" />
+                                </NuxtLink>
                             </h3>
                             <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
                                 Boostez votre présence digitale avec notre offre NursTechet une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
@@ -244,9 +250,9 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:shadow-md hover:border-cyan-200 hover:-translate-y-1 shadow-lg">
-                        <div class="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-                            <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:border-cyan-200 hover:-translate-y-1 shadow-md">
+                        <div class="flex-shrink-0">
+                            <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90" />
                         </div>
                         <div class="text-center md:text-left">
                             <h3 class="text-xl font-semibold text-cyan-600 mb-3 transition-colors duration-300">
@@ -335,6 +341,9 @@
 </template>
 
 <script setup lang="ts">
+import {
+    GlobeAltIcon,
+} from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import type { UserSettings, Patient } from '~/lib/types';
