@@ -13,7 +13,7 @@
         </div>
         <div class="z-20 relative flex justify-center">
             <LayoutsAppImage
-                src="/nurse_tech.png"
+                src="/nurs_tech.png"
                 class="w-[15rem]"
             />
         </div>

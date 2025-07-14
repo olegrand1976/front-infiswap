@@ -16,7 +16,7 @@
                         en main"
                     </span>
                 </h2>
-                <p class="text-sm mb-4">
+                <p class="mb-4">
                     Une <span class="font-bold">présence digitale</span> sur
                     <span class="font-bold">mesure</span>, <br />
                     <span class="font-bold">adaptée</span> à la

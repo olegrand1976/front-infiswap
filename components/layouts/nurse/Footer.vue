@@ -97,7 +97,7 @@
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
-                <NuxtLink>Site commercialisé par</NuxtLink>
+                <NuxtLink>Site commercialisé par </NuxtLink>
                 <NuxtLink>LL-IT Software & Computer</NuxtLink> :
                 <NuxtLink to="https://www.ll-it-sc.be">www.ll-it-sc.be</NuxtLink>
             </p>

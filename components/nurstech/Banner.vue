@@ -9,7 +9,7 @@
 
         <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <LayoutsAppImage
-                src="nurse_tech.png"
+                src="nurs_tech.png"
                 class="w-80 h-auto"
             />
         </div>

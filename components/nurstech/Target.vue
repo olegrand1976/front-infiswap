@@ -19,10 +19,10 @@
                     <h1 class="text-lg font-bold text-primary mb-2">
                         Pour qui ?
                     </h1>
-                    <p class="mb-3 text-sm">
+                    <p class="mb-3">
                         NURSTECH est conçu spécialement pour les infirmiers et infirmières libéraux qui souhaitent :
                     </p>
-                    <div class="space-y-1 pl-2 text-sm">
+                    <div class="space-y-1 pl-2">
                         <p>- Gagner du temps dans la prise de contact</p>
                         <p>- Augmenter leur visibilité locale</p>
                         <p>- Offrir une présentation claire et professionnelle de leur activité</p>

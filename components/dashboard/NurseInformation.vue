@@ -232,7 +232,7 @@
                             <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300 flex items-center gap-2">
                                 NursTech
                                 <NuxtLink
-                                    to="/dashboard/replacements/create"
+                                    to="/nurstech-by-infiswap"
                                     title="Voir le site"
                                 >
                                     <GlobeAltIcon class="text-blue-700/80 w-4 h-4" />

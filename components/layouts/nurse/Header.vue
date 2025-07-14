@@ -15,7 +15,7 @@
         <div class="hidden lg:flex justify-between items-center container">
             <div>
                 <LayoutsAppImage
-                    src="/nurse_tech.png"
+                    src="/nurs_tech.png"
                     alt="NurseTech"
                     class="h-10 lg:h-14"
                 />

@@ -10,19 +10,19 @@
             </div>
 
             <div class="lg:w-1/2 w-full p-6 pl-10">
-                <p class="text-lg font-bold text-primary mb-6">
+                <p class="text-lg font-bold text-primary mb-4">
                     Infirmier·ère libéral·e ?
                 </p>
-                <p class="text-sm mb-6">
+                <p class="mb-4">
                     Créez votre page web professionnelle avec <span class="font-bold">NURSTECH</span><br/>
                     Valorisez votre activité et attirez plus de patients à domicile grâce
                     à une page personnalisée, visible sur Infiswap.
                 </p>
 
-                <p class="text-lg font-semibold text-primary mb-6">
+                <p class="text-lg font-semibold text-primary mb-4">
                     Votre métier est essentiel. Votre présence en ligne aussi.
                 </p>
-                <p class="text-sm mb-6">
+                <p class="mb-4">
                     Avec NURSTECH, bénéficiez d’une page web claire, professionnelle
                     et optimisée pour que vos futurs patients vous trouvent facilement
                     et vous contactent rapidement.
@@ -30,7 +30,7 @@
                 <h2 class="text-lg font-bold text-primary mb-4">
                     Ce que vous gagnez :
                 </h2>
-                <ul class="space-y-2 text-sm">
+                <ul class="space-y-2">
                     <li class="flex items-start">
                         <span class="mr-2 text-green-600">✅</span>
                         Une page web professionnelle à votre image
