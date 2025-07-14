@@ -3,9 +3,9 @@
         <div class="flex flex-col md:flex-row items-center bg-primary rounded-[2em] relative overflow-hidden">
             <div class="md:w-1/2 w-full text-white px-12 z-10 py-4 lg:py-0">
                 <h2 class="text-4xl lg:text-6xl mb-4">
-                    Création <br />
-                    de site web <br />
-                    professionnel <br />
+                    Création <br>
+                    de site web <br>
+                    professionnel <br>
                     <span class="font-bold">
                         <span
                             class="font-semibold"
@@ -18,7 +18,7 @@
                 </h2>
                 <p class="mb-4">
                     Une <span class="font-bold">présence digitale</span> sur
-                    <span class="font-bold">mesure</span>, <br />
+                    <span class="font-bold">mesure</span>, <br>
                     <span class="font-bold">adaptée</span> à la
                     <span class="font-bold">réalité</span> des
                     <span class="font-bold">soignantes indépendantes.</span>

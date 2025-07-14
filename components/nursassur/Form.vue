@@ -28,7 +28,7 @@
                         type="checkbox"
                         :value="type.id"
                         class="accent-primary"
-                    />
+                    >
                     <span>{{ type.label }}</span>
                 </label>
             </div>

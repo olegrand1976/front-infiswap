@@ -69,7 +69,7 @@
                                     Prêt(e) à tout centraliser sur une seule plateforme ?
                                 </h2>
                                 <p class="text-gray-700 mb-6">
-                                    Rejoignez la communauté infiswap <br />
+                                    Rejoignez la communauté infiswap <br>
                                     et découvrez une nouvelle manière d'exercer.
                                 </p>
                                 <div class="flex flex-col items-center gap-4">
