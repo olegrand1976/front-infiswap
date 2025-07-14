@@ -1,6 +1,6 @@
 export type Gender = 'M' | 'F' | 'X';
 export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
-export type country = 'be' | 'fr' | 'us';
+export type CountryCode = 'be' | 'fr' | 'us';
 
 export type User = {
     id: number;
