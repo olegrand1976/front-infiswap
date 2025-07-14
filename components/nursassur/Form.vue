@@ -4,9 +4,9 @@
             <LayoutsNursAssur class="w-32" />
         </div>
 
-        <h2 class="text-center text-lg font-medium text-gray-700 mb-6 leading-snug">
+        <h2 class="text-center text-gray-600 mb-6 leading-snug">
             Bénéficiez d'un conseil personnalisé avec notre
-            <span class="text-cyan-500 font-semibold">service d'assurances</span>
+            <span class="text-primaryassur font-semibold">service d'assurances</span>
         </h2>
 
         <div class="mb-4">

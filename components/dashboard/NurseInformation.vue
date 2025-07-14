@@ -229,20 +229,21 @@
                             <LayoutsNursTech class="w-40 text-blue-600 opacity-90" />
                         </div>
                         <div class="text-center md:text-left">
-                            <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300 flex items-center gap-2">
-                                NursTech
+                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
+                                Boostez votre présence digitale avec notre offre
                                 <NuxtLink
                                     to="/nurstech-by-infiswap"
                                     title="Voir le site"
                                 >
-                                    <GlobeAltIcon class="text-blue-700/80 w-4 h-4" />
+                                    <span class="relative mr-2 align-baseline text-primarytech">
+                                        NursTech
+                                        <GlobeAltIcon class="absolute -top-1 -right-2.5 w-3 h-3" />
+                                    </span>
                                 </NuxtLink>
-                            </h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
-                                Boostez votre présence digitale avec notre offre NursTechet une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
+                                et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
                             </p>
                             <button
-                                class="px-5 py-1.5 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5"
+                                class="px-5 py-1.5 border border-primarytech text-primarytech rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5"
                                 @click="showNursTech = true"
                             >
                                 Découvrir →
@@ -255,14 +256,11 @@
                             <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90" />
                         </div>
                         <div class="text-center md:text-left">
-                            <h3 class="text-xl font-semibold text-cyan-600 mb-3 transition-colors duration-300">
-                                NursAssur
-                            </h3>
                             <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
                                 Bénéficiez d'un conseil personnalisé avec notre service d'assurances NursAssur dédié aux professionnels de santé.
                             </p>
                             <button
-                                class="px-5 py-1.5 border border-cyan-600 text-cyan-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5"
+                                class="px-5 py-1.5 border border-primaryassur text-primaryassur rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5"
                                 @click="showNursAssur = true"
                             >
                                 En savoir plus →

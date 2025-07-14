@@ -80,6 +80,10 @@ module.exports = {
                     DEFAULT: 'hsl(var(--primarytech))',
                     foreground: 'hsl(var(--primarytech-foreground))',
                 },
+                primaryassur: {
+                    DEFAULT: 'hsl(var(--primaryassur))',
+                    foreground: 'hsl(var(--primaryassur-foreground))',
+                },
                 chart: {
                     1: 'hsl(var(--chart-1))',
                     2: 'hsl(var(--chart-2))',

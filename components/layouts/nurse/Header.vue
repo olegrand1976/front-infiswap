@@ -7,18 +7,14 @@
             </p>
             <p class="flex items-center gap-2">
                 <EnvelopeIcon class="w-5 h-5" />
-                info@nursitech.be
+                infiswap.be
             </p>
         </div>
     </header>
     <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center px-4 shadow">
         <div class="hidden lg:flex justify-between items-center container">
             <div>
-                <LayoutsAppImage
-                    src="/nurse_tech.png"
-                    alt="NurseTech"
-                    class="h-10 lg:h-14"
-                />
+                <LayoutsNursTech class="w-20 text-blue-600 opacity-90" />
             </div>
 
             <nav class="flex">

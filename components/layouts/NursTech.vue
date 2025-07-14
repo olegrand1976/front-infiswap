@@ -32,7 +32,7 @@ function handleClick() {
         showNursTech.value = true;
     }
     else {
-        navigateTo('/');
+        navigateTo('/nurstech-by-infiswap');
     }
 }
 </script>

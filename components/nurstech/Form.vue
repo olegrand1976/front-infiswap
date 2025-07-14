@@ -4,7 +4,7 @@
             <LayoutsNursTech class="w-40" />
         </div>
 
-        <h2 class="text-center font-medium text-gray-700 mb-4 leading-snug">
+        <h2 class="text-center text-gray-600 mb-4 leading-snug">
             Votre espace digital personnel boosté par
             <span class="text-primary font-semibold text-lg">InfiSwap</span>
         </h2>
