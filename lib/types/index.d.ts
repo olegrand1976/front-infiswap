@@ -95,8 +95,10 @@ interface ReplacementPreference {
     zip_codes: string[];
     days: string[];
 }
+
 export interface UserSettings {
     language: string;
+    radius_km: string;
     replacement: ReplacementPreference;
     choice: string;
 }
