@@ -12,7 +12,7 @@
                 </SidebarHeader>
 
                 <SidebarGroupContent
-                    class="mt-2 mx-auto"
+                    class="mt-2 mx-auto h-full flex flex-col justify-between"
                     :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
@@ -110,6 +110,56 @@
                             </SidebarMenuItem>
                         </section>
                     </SidebarMenu>
+
+                    <Button
+                        variant="outline"
+                        class="flex justify-between items-center mx-auto"
+                        @click="referralDialog = true"
+                    >
+                        <LinkIcon class="w-6" />
+                        <span>
+                            Parrainer
+                        </span>
+                    </Button>
+
+                    <Dialog v-model:open="referralDialog">
+                        <DialogContent class="max-w-xl">
+                            <DialogHeader>
+                                <DialogTitle class="text-primary">
+                                    Parrainage
+                                </DialogTitle>
+                            </DialogHeader>
+                            <p>
+                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues !</span>
+                            </p>
+
+                            <p>
+                                Partagez votre code de parrainage avec d'autres personnes. Lorsqu’ils s’inscrivent grâce à votre code, vous recevez des avantages exclusifs.
+                            </p>
+
+                            <div class="my-6 flex items-center w-full">
+                                <div class="border py-[0.35rem] px-3 border-gray-300 rounded-full w-full">
+                                    {{ user.referral_code }}
+                                </div>
+                                <Button
+                                    class="flex justify-between items-center mx-auto"
+                                    @click="copyReferralCode"
+                                >
+                                    <DocumentDuplicateIcon
+                                        v-if="!isCopied"
+                                        class="w-6"
+                                    />
+                                    <CheckIcon
+                                        v-if="isCopied"
+                                        class="w-6"
+                                    />
+                                    <span>
+                                        {{ isCopied ? 'Copié' : 'Copier' }}
+                                    </span>
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
@@ -163,6 +213,9 @@ import {
     WrenchScrewdriverIcon,
     ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
+    LinkIcon,
+    DocumentDuplicateIcon,
+    CheckIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -174,8 +227,11 @@ defineProps({
     collapsed: Boolean,
 });
 
+const user = useUser();
 const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
+const referralDialog = ref(false);
+const isCopied = ref(false);
 const closeSidebar = () => {
     if (isMobile.value) {
         setOpenMobile(false);
@@ -293,6 +349,11 @@ const navigationItems = computed(() => {
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
+
+const copyReferralCode = async () => {
+    await navigator.clipboard.writeText(user.value.referral_code);
+    isCopied.value = true;
+};
 
 const { logout } = useAuth();
 </script>
