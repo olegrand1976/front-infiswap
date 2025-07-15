@@ -1,5 +1,8 @@
 <template>
-    <header class="bg-primarytech fixed top-0 w-full z-50 h-10 text-white flex items-center">
+    <header
+        class="fixed top-0 w-full z-50 h-10 text-white flex items-center"
+        :class="bgClass"
+    >
         <div class="container mx-auto flex justify-between items-center px-4">
             <p class="flex items-center gap-2">
                 <MapPinIcon class="w-5 h-5" />
@@ -15,7 +18,7 @@
         <div class="hidden lg:flex justify-between items-center container">
             <div>
                 <LayoutsAppImage
-                    src="/nurse_tech.png"
+                    src="/nurs_tech.png"
                     alt="NurseTech"
                     class="h-10 lg:h-14"
                 />
@@ -100,6 +103,14 @@
 <script lang="ts" setup>
 import { MapPinIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
+
+const props = defineProps<{
+    theme: string;
+}>();
+
+const bgClass = computed(() =>
+    props.theme === 'assur' ? 'bg-primaryassur' : 'bg-primarytech',
+);
 
 const { isLoggedIn } = useAuth();
 
