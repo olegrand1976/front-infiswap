@@ -4,13 +4,13 @@
             <LayoutsNurseHeader :theme="currentTheme" />
         </header>
         <header class="sm:hidden">
-            <LayoutsNurseHeaderMobile />
+            <LayoutsNurseHeaderMobile :theme="currentTheme" />
         </header>
         <main class="flex-1 mt-20 lg:mt-[8rem]">
             <NuxtPage />
         </main>
         <footer>
-            <LayoutsNurseFooter />
+            <LayoutsNurseFooter :theme="currentTheme" />
         </footer>
     </div>
 </template>

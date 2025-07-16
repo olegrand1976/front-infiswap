@@ -1,25 +1,25 @@
 <template>
-    <header
+    <section
         class="fixed top-0 w-full z-50 h-10 text-white flex items-center"
         :class="bgClass"
     >
-        <div class="container mx-auto flex justify-between items-center px-4">
+        <div class="container mx-auto flex justify-between text-sm items-center px-4">
             <p class="flex items-center gap-2">
                 <MapPinIcon class="w-5 h-5" />
                 Rue de la Résistance, 92/A 7131 Waudrez Belgium
             </p>
             <p class="flex items-center gap-2">
                 <EnvelopeIcon class="w-5 h-5" />
-                info@nursitech.be
+                infiswap.be
             </p>
         </div>
-    </header>
-    <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center px-4 shadow">
+    </section>
+    <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center shadow">
         <div class="hidden lg:flex justify-between items-center container">
             <div>
                 <LayoutsAppImage
-                    src="/nurs_tech.png"
-                    alt="NurseTech"
+                    :src="imgData.src"
+                    :alt="imgData.alt"
                     class="h-10 lg:h-14"
                 />
             </div>
@@ -32,7 +32,7 @@
                         class="text-center cursor-pointer"
                         :class="{
                             'text-primary font-semibold active-link': isActive(item.targetId),
-                            'hover:text-primary/90 font-semibold text-dark animate duration-500': !isActive(item.targetId),
+                            'hover:text-primary font-semibold text-dark animate duration-500': !isActive(item.targetId),
                         }"
                         @click="handleNavigation(item.targetId)"
                     >
@@ -111,6 +111,19 @@ const props = defineProps<{
 const bgClass = computed(() =>
     props.theme === 'assur' ? 'bg-primaryassur' : 'bg-primarytech',
 );
+
+const imgData = computed(() => {
+    if (props.theme === 'assur') {
+        return {
+            src: '/nurs_assur.png',
+            alt: 'NurseAssur',
+        };
+    }
+    return {
+        src: '/nurs_tech.png',
+        alt: 'NurseTech',
+    };
+});
 
 const { isLoggedIn } = useAuth();
 

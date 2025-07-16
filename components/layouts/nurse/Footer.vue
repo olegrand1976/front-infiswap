@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <div class="bg-primarytech">
+        <div :class="bgClass.main">
             <div class="flex lg:container flex-col md:flex-row justify-center items-center pt-8 md:py-12 px-4">
                 <div class="flex flex-col w-full max-w-2xl justify-center items-center">
                     <div class="flex flex-col w-full space-y-4 py-8 md:py-0 text-center">
@@ -23,17 +23,22 @@
                             @submit.prevent="subscribeNewsletter"
                         >
                             <div class="flex flex-row justify-start items-center">
-                                <EnvelopeIcon class="text-primarytech w-4 h-4 ms-3" />
+                                <EnvelopeIcon
+                                    class="w-4 h-4 ms-3"
+                                    :class="txtClass"
+                                />
                                 <Input
                                     v-model="email"
                                     placeholder="Email"
-                                    class="w-full text-primarytech text-sm"
+                                    class="w-full text-sm"
+                                    :class="txtClass"
                                 />
                             </div>
                             <Button
                                 :disabled="isLoading"
                                 variant="secondary"
-                                class="text-white h-8 bg-primarytech"
+                                class="text-white h-8"
+                                :class="bgClass.main"
                                 type="submit"
                             >
                                 {{ isLoading ? "Envoi..." : "Enregistrer" }}
@@ -45,27 +50,27 @@
         </div>
 
         <div class="relative">
-            <div class="flex flex-col md:flex-row gap-8 items-start">
-                <div class="w-full md:w-1/2 p-6 rounded-lg md:pl-0">
+            <div class="flex flex-col lg:flex-row lg:gap-8 items-start">
+                <div class="w-full lg:w-[45vw] xl:w-1/2 lg:p-6 rounded-lg md:pl-0">
                     <div class="relative hidden lg:block">
                         <LayoutsAppImage
                             src="/home/blue_graph.png"
                             alt="Graphique bleu"
-                            class="-mt-2 h-[24rem] w-full"
+                            class="-mt-2 h-[24rem] w-full object-cover"
                         />
                         <LayoutsAppImage
                             src="/home/nurse_with_phone.png"
                             alt="Infirmière avec téléphone"
-                            class="absolute -top-16 right-[-14rem] h-[16rem] md:h-[28rem] object-cover w-[80%] z-10"
+                            class="absolute -top-16 right-[-14rem] h-[16rem] lg:h-[28rem] object-cover max-w-[80%] z-10"
                         />
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/2 mb-4">
-                    <div class="container mx-auto px-4 lg:py-8 h-full">
+                <div class="w-full pl-0 lg:w-1/2 lg:pl-40 xl:pl-0 mb-4">
+                    <div class="container mx-auto px-4 py-8 h-full">
                         <div class="lg:p-6 flex flex-col items-center text-center h-full justify-center">
                             <div class="max-w-md mx-auto">
-                                <h2 class="text-3xl text-primary mb-4 font-bold">
+                                <h2 class="text-3xl text-primary mb-4 font-semibold">
                                     Prêt(e) à tout centraliser sur une seule plateforme ?
                                 </h2>
                                 <p class="text-gray-700 mb-6">
@@ -74,13 +79,14 @@
                                 </p>
                                 <div class="flex flex-col items-center gap-4">
                                     <Button
-                                        class="bg-primarytech hover:bg-primarytech/90 text-white font-semibold py-2 px-4 rounded-full w-full transition w-[300px]"
+                                        class=" text-white font-semibold py-2 px-4 rounded-full w-full transition"
+                                        :class="`${bgClass.main} ${bgClass.hover}`"
                                         href="/register"
                                     >
                                         Inscription
                                     </Button>
                                     <Button
-                                        class="font-semibold py-2 px-4 rounded-full w-full transition w-[300px]"
+                                        class="font-semibold py-2 px-4 rounded-full w-full transition"
                                         href="/contact"
                                     >
                                         Contact
@@ -93,7 +99,10 @@
             </div>
         </div>
 
-        <div class="bg-primarytech text-white py-4 md:px-0 px-8 lg:-mt-6">
+        <div
+            class="text-white py-4 md:px-0 px-8 lg:-mt-6"
+            :class="bgClass.main"
+        >
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
@@ -103,7 +112,10 @@
             </p>
         </div>
 
-        <div class="container py-4 w-full text-center text-primarytech">
+        <div
+            class="container py-4 w-full text-center"
+            :class="txtClass"
+        >
             <NuxtLink
                 to="https://www.ll-it-sc.be"
                 target="_blank"
@@ -122,6 +134,27 @@ import {
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();
+
+const props = defineProps<{
+    theme: string;
+}>();
+
+const bgClass = computed(() => {
+    if (props.theme === 'assur') {
+        return {
+            main: 'bg-primaryassur',
+            hover: 'hover:bg-primaryassur/90',
+        };
+    }
+    return {
+        main: 'bg-primarytech',
+        hover: 'hover:bg-primarytech/90',
+    };
+});
+
+const txtClass = computed(() =>
+    props.theme === 'assur' ? 'text-primaryassur' : 'text-primarytech',
+);
 </script>
 
 <style scoped>

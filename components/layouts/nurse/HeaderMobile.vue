@@ -13,9 +13,19 @@
         </div>
         <div class="z-20 relative flex justify-center">
             <LayoutsAppImage
-                src="/nurs_tech.png"
+                :src="imgLogo"
                 class="w-[15rem]"
             />
         </div>
     </div>
 </template>
+
+<script lang="ts" setup>
+const props = defineProps<{
+    theme: string;
+}>();
+
+const imgLogo = computed(() =>
+    props.theme === 'assur' ? '/nurs_assur.png' : '/nurs_tech.png',
+);
+</script>
