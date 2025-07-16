@@ -1,6 +1,7 @@
 <template>
     <div>
         <NursassurBanner id="banner" />
+        <NursassurOverview id="overview" />
     </div>
 </template>
 
