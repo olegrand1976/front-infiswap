@@ -1,6 +1,6 @@
 <template>
     <div>
-        .
+        <NursassurBanner id="banner" />
     </div>
 </template>
 
