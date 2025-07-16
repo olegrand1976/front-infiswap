@@ -364,6 +364,24 @@
                     <div class="col-span-2 lg:col-span-4">
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700">
+                                Quel rayon de recherche préférez-vous ?
+                            </label>
+
+                            <InputIcon
+                                v-model="formData.radiusKm"
+                                :icon="MapIcon"
+                                class="w-full"
+                                size="md"
+                                :placeholder="'5 km'"
+                            />
+
+                            <label class="text-[0.65rem]"> Ce rayon s’applique aux recherches de remplacement autour de vos codes postaux préférés.</label>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">
                                 Quels sont vos préférences pour une remplacement ?
                             </label>
 
@@ -519,6 +537,7 @@ import {
     InboxArrowDownIcon,
     QuestionMarkCircleIcon,
     UserGroupIcon,
+    MapIcon,
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
@@ -677,6 +696,7 @@ const formData = reactive({
     zipCodesArray: [],
     citiesArray: [],
     professionalCategory: '',
+    radiusKm: '',
 });
 
 const identifierLabel = computed(() =>

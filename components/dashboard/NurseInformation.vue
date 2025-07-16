@@ -284,7 +284,7 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 h-80 sm:h-full rounded p-4 mb-4">
+            <div class="bg-gray-100 sm:h-full h-80 rounded p-4 mb-4">
                 <div class="text-primary flex justify-between items-center">
                     <h2>
                         Mes préférences
@@ -318,6 +318,31 @@
                     @update:initial-zip-codes="updateZipCodes"
                     @update:initial-cities="updateCities"
                 />
+
+                <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-12 md:mt-4 overflow-hidden">
+                    <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
+                        <label class="text-primary sm:text-white">
+                            <span>Rayon de recherche</span>
+                        </label>
+                    </div>
+
+                    <div class="relative flex items-center">
+                        <InputIcon
+                            v-model="radiusInput"
+                            type="number"
+                            title="Appuyer sur l'icône pour valider"
+                            class="text-sm border border-gray-300 rounded-full h-8 indent-3 bg-transparent sm:border-none sm:rounded w-full pr-10"
+                            min="1"
+                        />
+
+                        <button
+                            class="absolute right-2 text-primary hover:text-green-600 transition"
+                            @click="onUpdateRadius"
+                        >
+                            <CheckIcon class="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-gray-100 rounded-b-lg relative">
@@ -341,6 +366,7 @@
 <script setup lang="ts">
 import {
     GlobeAltIcon,
+    CheckIcon,
 } from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
@@ -370,6 +396,8 @@ const props = defineProps<{
     tours: Patient[];
 }>();
 
+const { updateRadiusKm } = useAuth();
+
 const showNursTech = ref(false);
 const showNursAssur = ref(false);
 
@@ -390,6 +418,17 @@ const formattedData = computed(() => {
         annonces: item.count,
     }));
 });
+
+const radiusKm = computed(() => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    return settings.radius_km ?? '5';
+});
+
+const radiusInput = ref(Number(radiusKm.value));
+
+const onUpdateRadius = async () => {
+    await updateRadiusKm(radiusInput.value);
+};
 
 const zipCodes = ref<string[]>([]);
 const cities = ref<string[]>([]);
