@@ -3,6 +3,7 @@
         <NursassurBanner id="banner" />
         <NursassurOverview id="overview" />
         <NursassurTargetAudience id="target" />
+        <NursassurInterestedContent id="interested" />
         <NursassurQuoteForm id="quote" />
     </div>
 </template>
