@@ -1,5 +1,5 @@
 <template>
-    <div class="container my-24">
+    <div class="container my-20 lg:my-3232">
         <h2 class="text-2xl text-primary font-bold">
             Formulaire
         </h2>

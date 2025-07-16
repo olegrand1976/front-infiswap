@@ -2,6 +2,7 @@
     <div>
         <NursassurBanner id="banner" />
         <NursassurOverview id="overview" />
+        <NursassurTargetAudience id="target" />
         <NursassurQuoteForm id="quote" />
     </div>
 </template>

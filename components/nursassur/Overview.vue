@@ -1,5 +1,5 @@
 <template>
-    <div class="container my-12 lg:my-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <div class="container my-16 lg:my-32 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <LayoutsAppImage
             src="home/two_women_discussing.png"
             alt="Two women discussing"
@@ -14,7 +14,7 @@
                 Votre assurance professionnelle 100% adaptée à votre métier d'infirmier-ère. Avec NURSASSUR, bénéficiez d'une couverture complète, conçue pour les besoins spécifiques des infirmiers et infirmières libéraux. Gagnez en sérénité et concentrez-vous sur vos patients !
             </p>
 
-            <div class="mt-8">
+            <div class="mt-16 lg:mt-8">
                 <h3 class="text-2xl text-primary font-semibold">
                     Pourquoi choisir NURSASSUR ?
                 </h3>
