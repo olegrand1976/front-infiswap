@@ -1,7 +1,7 @@
 <template>
     <div class="container my-20 lg:my-32">
-        <h2 class="text-2xl font-semibold text-primary">
-            Je suis intéressé-e par les produits suivants:
+        <h2 class="text-center text-2xl font-semibold text-primary lg:text-start">
+            💡 Je suis intéressé-e par les produits suivants:
         </h2>
 
         <div class="mt-6 grid lg:grid-cols-2 gap-16 items-stretch h-full">
