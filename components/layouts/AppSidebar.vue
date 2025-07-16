@@ -12,7 +12,7 @@
                 </SidebarHeader>
 
                 <SidebarGroupContent
-                    class="mt-2 mx-auto"
+                    class="mt-2 mx-auto h-full flex flex-col justify-between"
                     :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
@@ -110,6 +110,41 @@
                             </SidebarMenuItem>
                         </section>
                     </SidebarMenu>
+
+                    <div class="flex justify-between items-center mx-auto">
+                        <Button
+                            variant="none"
+                            class="flex text-primary justify-between items-center mx-auto"
+                            @click="copyReferralCode"
+                        >
+                            <DocumentDuplicateIcon class="w-6" />
+                            <span>
+                                Parrainer
+                            </span>
+                        </Button>
+
+                        <QuestionMarkCircleIcon
+                            class="w-4 text-blue-500 cursor-pointer"
+                            @click="referralDialog = true"
+                        />
+                    </div>
+
+                    <Dialog v-model:open="referralDialog">
+                        <DialogContent class="max-w-xl">
+                            <DialogHeader>
+                                <DialogTitle class="text-primary">
+                                    Parrainage
+                                </DialogTitle>
+                            </DialogHeader>
+                            <p>
+                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues !</span>
+                            </p>
+
+                            <p>
+                                Partagez votre code de parrainage avec d'autres personnes. Lorsqu’ils s’inscrivent grâce à votre code, vous recevez des avantages exclusifs.
+                            </p>
+                        </DialogContent>
+                    </Dialog>
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
@@ -163,19 +198,26 @@ import {
     WrenchScrewdriverIcon,
     ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
+    QuestionMarkCircleIcon,
+    DocumentDuplicateIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
+import { useRuntimeConfig } from '#app';
 
 defineProps({
     collapsed: Boolean,
 });
 
+const config = useRuntimeConfig();
+const user = useUser();
+const { $toast } = useNuxtApp();
 const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
+const referralDialog = ref(false);
 const closeSidebar = () => {
     if (isMobile.value) {
         setOpenMobile(false);
@@ -293,6 +335,13 @@ const navigationItems = computed(() => {
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
+
+const copyReferralCode = async () => {
+    await navigator.clipboard.writeText(`${config.public.FRONT_END_URL}/register/?referral=${user.value.referral_code}`);
+    $toast({
+        description: 'Lien copié avec succès',
+    });
+};
 
 const { logout } = useAuth();
 </script>
