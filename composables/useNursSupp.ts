@@ -4,15 +4,15 @@ export const useNursSupp = () => {
     const { $apifetch } = useNuxtApp();
 
     const createHistory = (payload: { description: string }) =>
-        $apifetch('/api/nurs-tech-histories', {
+        $apifetch('/api/nurstech-histories', {
             method: 'POST',
             body: payload,
         });
 
-    const getAssurTypes = () => $apifetch('/api/nurs-assur/types');
+    const getAssurTypes = () => $apifetch('/api/nursassur/types');
 
     const createAssurHistory = (payload: { description: string; types: number[] }) =>
-        $apifetch('/api/nurs-assur/histories', {
+        $apifetch('/api/nursassur/histories', {
             method: 'POST',
             body: payload,
         });
