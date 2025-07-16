@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-sm mx-auto mt-10">
+    <div>
         <div class="flex justify-center mb-4">
             <LayoutsNursAssur class="w-32" />
         </div>
