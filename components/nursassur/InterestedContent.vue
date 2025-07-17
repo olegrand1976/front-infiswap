@@ -67,9 +67,7 @@ watch(
 const updateSelection = (item: string, checked: boolean) => {
     if (checked) {
         if (!selected.value.includes(item)) {
-            if (item != 'Autre (à préciser dans le formulaire)') {
-                selected.value.push(item);
-            }
+            selected.value.push(item);
         }
     }
     else {

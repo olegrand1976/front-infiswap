@@ -10,7 +10,7 @@
         />
         <NursassurQuoteForm
             id="quote"
-            :selected-items="selectedItems"
+            v-model:selected-items="selectedItems"
         />
     </div>
 </template>

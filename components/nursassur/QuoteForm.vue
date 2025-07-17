@@ -14,6 +14,7 @@
                         Nom
                     </label>
                     <input
+                        v-model="formData.name"
                         type="text"
                         class="w-full border border-gray-300 rounded-md text-sm py-3 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
                     >
@@ -24,6 +25,7 @@
                         Email
                     </label>
                     <input
+                        v-model="formData.email"
                         type="email"
                         class="w-full border border-gray-300 rounded-md text-sm py-3 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
                     >
@@ -34,6 +36,7 @@
                         Téléphone
                     </label>
                     <input
+                        v-model="formData.phone"
                         type="text"
                         class="w-full border border-gray-300 rounded-md text-sm py-3 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
                     >
@@ -44,6 +47,7 @@
                         Commentaire
                     </label>
                     <textarea
+                        v-model="formData.description"
                         rows="5"
                         class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary"
                     />
@@ -73,16 +77,56 @@
 </template>
 
 <script lang="ts" setup>
+import { useNursSupp } from '~/composables/useNursSupp';
+
+const { submitassurContact } = useNursSupp();
+const { $toast } = useNuxtApp();
+
 const props = defineProps<{
     selectedItems?: string[];
 }>();
+
+const emit = defineEmits<{
+    (e: 'update:selectedItems', value: string[]): void;
+}>();
+
+const formData = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    description: '',
+    interested_products: [],
+});
+
+const resetFormData = () => {
+    formData.name = '';
+    formData.email = '';
+    formData.phone = '';
+    formData.description = '';
+    formData.interested_products = [];
+
+    const selected = ref<string[]>(props.selectedItems ? [...props.selectedItems] : []);
+    selected.value = [];
+
+    emit('update:selectedItems', selected.value);
+};
 
 const {
     submit,
     inProgress,
 } = useSubmit(
     () => {
-        console.log(props.selectedItems);
+        formData.interested_products = props.selectedItems.filter(
+            item => item !== 'Autre (à préciser dans le formulaire)',
+        );
+
+        return submitassurContact(formData).then(() => {
+            $toast({
+                description: 'Demande de devis envoyé avec succès',
+            });
+
+            resetFormData();
+        });
     },
 );
 </script>
