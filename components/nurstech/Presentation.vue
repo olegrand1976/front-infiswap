@@ -5,26 +5,37 @@
                 <div class="flex-shrink-0">
                     <LayoutsNursTech class="w-40 text-blue-600 opacity-90" />
                 </div>
-                <div class="text-center md:text-left">
-                    <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
+                <div class="text-center md:text-left space-y-3">
+                    <p class="text-gray-600 text-sm leading-relaxed transition-colors duration-300 group-hover:text-gray-700">
                         Boostez votre présence digitale avec notre offre
                         <NuxtLink
                             to="/nurstech-by-infiswap"
                             title="Voir le site"
                         >
-                            <span class="relative mr-2 align-baseline text-primarytech">
+                            <span class="relative align-baseline text-primarytech font-semibold hover:underline">
                                 NursTech
-                                <GlobeAltIcon class="absolute -top-1 -right-2.5 w-3 h-3" />
+                                <GlobeAltIcon class="absolute -top-1 -right-2 w-3 h-3 text-primarytech" />
                             </span>
                         </NuxtLink>
                         et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
                     </p>
-                    <button
-                        class="px-5 py-1.5 border border-primarytech text-primarytech rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5"
-                        @click="showNursTech = true"
-                    >
-                        Découvrir →
-                    </button>
+
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                        <NuxtLink
+                            to="/nurstech-by-infiswap"
+                            title="Voir le site"
+                            class="px-4 py-1.5 border border-primarytech text-primarytech rounded-md text-sm font-medium transition duration-200 hover:bg-primarytech hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primarytech"
+                        >
+                            Découvrir →
+                        </NuxtLink>
+
+                        <button
+                            class="px-4 py-1.5 border border-primarytech text-primarytech rounded-md text-sm font-medium transition duration-200 hover:bg-primarytech hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primarytech"
+                            @click="showNursTech = true"
+                        >
+                            Nous contacter →
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -32,16 +43,36 @@
                 <div class="flex-shrink-0">
                     <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90" />
                 </div>
-                <div class="text-center md:text-left">
-                    <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
-                        Bénéficiez d'un conseil personnalisé avec notre service d'assurances NursAssur dédié aux professionnels de santé.
+                <div class="text-center md:text-left space-y-3">
+                    <p class="text-gray-600 text-sm leading-relaxed transition-colors duration-300 group-hover:text-gray-700">
+                        Bénéficiez d'un conseil personnalisé avec notre service d'assurances
+                        <NuxtLink
+                            to="/nursassur-by-infiswap"
+                            title="Voir le site"
+                        >
+                            <span class="relative align-baseline text-primaryassur font-semibold hover:underline">
+                                NursAssur
+                            </span>
+                        </NuxtLink>
+                        dédié aux professionnels de santé.
                     </p>
-                    <button
-                        class="px-5 py-1.5 border border-primaryassur text-primaryassur rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5"
-                        @click="showNursAssur = true"
-                    >
-                        En savoir plus →
-                    </button>
+
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                        <NuxtLink
+                            to="/nursassur-by-infiswap"
+                            title="Voir le site"
+                            class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
+                        >
+                            Découvrir →
+                        </NuxtLink>
+
+                        <button
+                            class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
+                            @click="showNursAssur = true"
+                        >
+                            Nous contacter →
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

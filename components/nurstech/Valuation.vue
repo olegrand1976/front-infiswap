@@ -5,7 +5,7 @@
                 <LayoutsAppImage
                     src="/home/hand_on_a_leaf.png"
                     alt="Image"
-                    class="w-full h-[320px] lg:w-[700px] lg:h-[500px]"
+                    class="w-full h-[320px] lg:w-[700px] lg:h-[550px]"
                 />
             </div>
 
