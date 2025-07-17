@@ -16,13 +16,13 @@
                     </TabsTrigger>
                     <TabsTrigger
                         value="nursassur"
-                        class="w-full md:w-48"
+                        class="w-full md:w-48 h-12"
                     >
                         Nursassur
                     </TabsTrigger>
                     <TabsTrigger
                         value="infiswap"
-                        class="w-full md:w-48"
+                        class="w-full md:w-48 h-12"
                     >
                         Infiswap
                     </TabsTrigger>
