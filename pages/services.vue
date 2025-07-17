@@ -261,41 +261,6 @@
 
         <div class="container">
             <div
-                class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
-            >
-                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3
-                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
-                    >
-                        Historique et suivi personnalisé
-                    </h3>
-                    <p class="hidden lg:block text-base">
-                        Suivez l’historique de vos missions et analysez vos performances
-                        pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
-                        vos interventions, pour toujours améliorer votre gestion de temps et
-                        vos compétences.
-                    </p>
-                </div>
-                <div
-                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
-                >
-                    <LayoutsAppImage
-                        src="/home/A group of young people.png"
-                        alt="ensemble des jeunes"
-                        class="w-full z-10"
-                    />
-                    <div
-                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
-                    >
-                        <h3 class="text-primary text-lg font-bold">
-                            Historique et suivi personnalisé
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div
                 class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6"
             >
                 <div class="relative">
@@ -334,6 +299,43 @@
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <div
+                class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
+            >
+                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
+                    <h3
+                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                    >
+                        Historique et suivi personnalisé
+                    </h3>
+                    <p class="hidden lg:block text-base">
+                        Suivez l’historique de vos missions et analysez vos performances
+                        pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
+                        vos interventions, pour toujours améliorer votre gestion de temps et
+                        vos compétences.
+                    </p>
+                </div>
+                <div
+                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
+                >
+                    <LayoutsAppImage
+                        src="/home/A group of young people.png"
+                        alt="ensemble des jeunes"
+                        class="w-full z-10"
+                    />
+                    <div
+                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
+                    >
+                        <h3 class="text-primary text-lg font-bold">
+                            Historique et suivi personnalisé
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
