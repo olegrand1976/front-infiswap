@@ -290,3 +290,12 @@ export type HomeType = {
     active?: boolean | number;
     image?: string | File;
 };
+
+export type Contact = {
+    id: number;
+    name: string;
+    email?: string;
+    phone?: string;
+    description?: string;
+    created_at?: string;
+};
