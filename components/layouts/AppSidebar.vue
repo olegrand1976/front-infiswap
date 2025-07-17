@@ -114,7 +114,7 @@
                     <div class="flex justify-between items-center mx-auto">
                         <CopyButton
                             variant="none"
-                            label="Parrainer"
+                            label="Inviter vos collègues"
                             class="text-primary"
                             :show-label="true"
                             :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
@@ -131,7 +131,7 @@
                         <DialogContent class="max-w-xl">
                             <DialogHeader>
                                 <DialogTitle class="text-primary">
-                                    Parrainage
+                                    Inviter vos collègues
                                 </DialogTitle>
                             </DialogHeader>
                             <p>
