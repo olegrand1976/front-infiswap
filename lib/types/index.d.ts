@@ -50,6 +50,8 @@ export type User = {
     status: 'active' | 'inactive' | 'suspended';
     created_at: string;
     updated_at: string;
+    affiliate_by?: number;
+    referral_code?: string;
     biotrax?: boolean | number;
     insurance?: boolean | number;
     site?: boolean | number;
@@ -95,8 +97,10 @@ interface ReplacementPreference {
     zip_codes: string[];
     days: string[];
 }
+
 export interface UserSettings {
     language: string;
+    radius_km: string;
     replacement: ReplacementPreference;
     choice: string;
 }

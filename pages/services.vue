@@ -64,6 +64,10 @@
         </div>
 
         <div class="container">
+            <NurstechPresentation />
+        </div>
+
+        <div class="container">
             <div
                 class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6"
             >

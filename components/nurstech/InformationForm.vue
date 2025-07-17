@@ -11,39 +11,56 @@
             </div>
             <div class="bg-white rounded-[30px] shadow-xl flex flex-col md:flex-row w-full overflow-hidden relative mt-6">
                 <div class="w-full md:w-3/4 p-8 space-y-6 z-10">
-                    <form class="space-y-4 w-full lg:w-[650px]">
-                        <input
-                            type="text"
-                            placeholder="Name *"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
-                        >
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        >
-                        <input
-                            type="text"
-                            placeholder="Phone number *"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        >
-                        <p class="text-primary text-sm mt-1 font-medium">
-                            Commentaire*
-                        </p>
-                        <textarea
-                            rows="4"
-                            class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        />
-
-                        <div class="flex items-center space-x-2 text-xs text-primary font-medium">
+                    <form
+                        class="space-y-4 w-full lg:w-[650px]"
+                        @submit.prevent="submit"
+                    >
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Nom *
+                            </p>
                             <input
-                                id="remember"
-                                type="checkbox"
+                                v-model="contact.name"
+                                type="text"
+                                placeholder="John Doe"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
                             >
-                            <label for="remember">Enregistrer mon nom, mon email et mon site dans le navigateur pour mes prochains commentaires.</label>
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Email *
+                            </p>
+                            <input
+                                v-model="contact.email"
+                                type="text"
+                                placeholder="johndoe@gmail.com"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            >
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Téléphone *
+                            </p>
+                            <input
+                                v-model="contact.phone"
+                                type="text"
+                                placeholder="02 374 00 00"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            >
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Description *
+                            </p>
+                            <textarea
+                                v-model="contact.description"
+                                rows="4"
+                                placeholder="votre message . . ."
+                                class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            />
                         </div>
 
-                        <div class="border border-gray-300 rounded px-6 py-4 w-[450px]">
+                        <!-- <div class="border border-gray-300 rounded px-6 py-4 w-[450px]">
                             <input
                                 id="captcha"
                                 type="checkbox"
@@ -52,11 +69,12 @@
                                 for="captcha"
                                 class="ml-2 text-sm"
                             >I’m not a robot</label>
-                        </div>
+                        </div> -->
 
                         <div class="w-full">
                             <Button
                                 type="submit"
+                                :in-progress="inProgress"
                                 class="bg-primary text-white px-6 py-3 rounded font-semibold text-sm w-full"
                             >
                                 CRÉER MA PAGE MAINTENANT
@@ -78,3 +96,43 @@
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+
+const { $toast } = useNuxtApp();
+const contact = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    description: '',
+    captcha: false,
+});
+
+const { submitContact } = useNursSupp();
+
+const { submit, inProgress } = useSubmit(async () => {
+    try {
+        await submitContact(contact);
+
+        $toast({
+            description: 'Votre demande de contact a été transmise à NursTech avec succès.',
+        });
+
+        setTimeout(() => {
+            contact.name = '';
+            contact.email = '';
+            contact.phone = '';
+            contact.description = '';
+            contact.captcha = false;
+        }, 1500);
+    }
+    catch (error) {
+        $toast({
+            description: error,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+});
+</script>

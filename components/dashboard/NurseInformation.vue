@@ -1,6 +1,8 @@
 <template>
     <div class="space-y-6">
         <section class="grid grid-cols-1 items-center gap-4">
+            <NurstechPresentation />
+
             <div class="hidden lg:block mx-8">
                 <Carousel :opts="{ slidesToScroll: 1, slidesToShow: 4 }">
                     <CarouselContent>
@@ -221,72 +223,10 @@
                     <CarouselNext />
                 </Carousel>
             </div>
-
-            <div class="rounded-xl overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-2">
-                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:border-blue-200 hover:-translate-y-1 shadow-md">
-                        <div class="flex-shrink-0">
-                            <LayoutsNursTech class="w-40 text-blue-600 opacity-90" />
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h3 class="text-xl font-semibold text-blue-700 mb-3 transition-colors duration-300 flex items-center gap-2">
-                                NursTech
-                                <NuxtLink
-                                    to="/nurstech-by-infiswap"
-                                    title="Voir le site"
-                                >
-                                    <GlobeAltIcon class="text-blue-700/80 w-4 h-4" />
-                                </NuxtLink>
-                            </h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
-                                Boostez votre présence digitale avec notre offre NursTechet une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
-                            </p>
-                            <button
-                                class="px-5 py-1.5 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:border-blue-600 transform hover:-translate-y-0.5"
-                                @click="showNursTech = true"
-                            >
-                                Découvrir →
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200 transition-all duration-300 group hover:border-cyan-200 hover:-translate-y-1 shadow-md">
-                        <div class="flex-shrink-0">
-                            <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90" />
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h3 class="text-xl font-semibold text-cyan-600 mb-3 transition-colors duration-300">
-                                NursAssur
-                            </h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed text-sm transition-colors duration-300 group-hover:text-gray-700">
-                                Bénéficiez d'un conseil personnalisé avec notre service d'assurances NursAssur dédié aux professionnels de santé.
-                            </p>
-                            <button
-                                class="px-5 py-1.5 border border-cyan-600 text-cyan-600 rounded-md font-medium text-sm transition-all duration-300 hover:bg-cyan-600 hover:text-white hover:shadow-sm hover:border-cyan-600 transform hover:-translate-y-0.5"
-                                @click="showNursAssur = true"
-                            >
-                                En savoir plus →
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <Dialog v-model:open="showNursTech">
-                <DialogContent>
-                    <NurstechForm @close="showNursTech = false" />
-                </DialogContent>
-            </Dialog>
-
-            <Dialog v-model:open="showNursAssur">
-                <DialogContent>
-                    <NursassurForm @close="showNursAssur = false" />
-                </DialogContent>
-            </Dialog>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 h-80 sm:h-full rounded p-4 mb-4">
+            <div class="bg-gray-100 sm:h-full h-80 rounded p-4 mb-4">
                 <div class="text-primary flex justify-between items-center">
                     <h2>
                         Mes préférences
@@ -320,6 +260,31 @@
                     @update:initial-zip-codes="updateZipCodes"
                     @update:initial-cities="updateCities"
                 />
+
+                <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-12 md:mt-4 overflow-hidden">
+                    <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
+                        <label class="text-primary sm:text-white">
+                            <span>Rayon de recherche</span>
+                        </label>
+                    </div>
+
+                    <div class="relative flex items-center">
+                        <InputIcon
+                            v-model="radiusInput"
+                            type="number"
+                            title="Appuyer sur l'icône pour valider"
+                            class="text-sm border border-gray-300 rounded-full h-8 indent-3 bg-transparent sm:border-none sm:rounded w-full pr-10"
+                            min="1"
+                        />
+
+                        <button
+                            class="absolute right-2 text-primary hover:text-green-600 transition"
+                            @click="onUpdateRadius"
+                        >
+                            <CheckIcon class="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-gray-100 rounded-b-lg relative">
@@ -342,7 +307,7 @@
 
 <script setup lang="ts">
 import {
-    GlobeAltIcon,
+    CheckIcon,
 } from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
@@ -372,9 +337,7 @@ const props = defineProps<{
     tours: Patient[];
 }>();
 
-const showNursTech = ref(false);
-const showNursAssur = ref(false);
-
+const { updateRadiusKm } = useAuth();
 const user = useUser();
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
@@ -392,6 +355,17 @@ const formattedData = computed(() => {
         annonces: item.count,
     }));
 });
+
+const radiusKm = computed(() => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    return settings.radius_km ?? '5';
+});
+
+const radiusInput = ref(Number(radiusKm.value));
+
+const onUpdateRadius = async () => {
+    await updateRadiusKm(radiusInput.value);
+};
 
 const zipCodes = ref<string[]>([]);
 const cities = ref<string[]>([]);

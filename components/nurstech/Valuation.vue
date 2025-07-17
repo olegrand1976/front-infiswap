@@ -14,7 +14,7 @@
                     Infirmier·ère libéral·e ?
                 </p>
                 <p class="mb-4">
-                    Créez votre page web professionnelle avec <span class="font-bold">NURSTECH</span><br>
+                    Créez votre page web professionnelle avec <span class="font-bold text-primary">NURS</span><span class="font-bold text-primarytech">TECH</span><br>
                     Valorisez votre activité et attirez plus de patients à domicile grâce
                     à une page personnalisée, visible sur Infiswap.
                 </p>
