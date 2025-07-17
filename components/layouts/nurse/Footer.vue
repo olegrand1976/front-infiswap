@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <div :class="bgClass.main">
+        <div :class="bgClass">
             <div class="flex lg:container flex-col md:flex-row justify-center items-center pt-8 md:py-12 px-4">
                 <div class="flex flex-col w-full max-w-2xl justify-center items-center">
                     <div class="flex flex-col w-full space-y-4 py-8 md:py-0 text-center">
@@ -38,7 +38,7 @@
                                 :disabled="isLoading"
                                 variant="secondary"
                                 class="text-white h-8"
-                                :class="bgClass.main"
+                                :class="bgClass"
                                 type="submit"
                             >
                                 {{ isLoading ? "Envoi..." : "Enregistrer" }}
@@ -80,7 +80,7 @@
                                 <div class="flex flex-col items-center gap-4">
                                     <Button
                                         class=" text-white font-semibold py-2 px-4 rounded-full w-full transition"
-                                        :class="`${bgClass.main} ${bgClass.hover}`"
+                                        :class="bgClass"
                                         href="/register"
                                     >
                                         Inscription
@@ -101,7 +101,7 @@
 
         <div
             class="text-white py-4 md:px-0 px-8 lg:-mt-6"
-            :class="bgClass.main"
+            :class="bgClass"
         >
             <p
                 class="text-center text-[0.6em] md:text-xs"
@@ -139,21 +139,12 @@ const props = defineProps<{
     theme: string;
 }>();
 
-const bgClass = computed(() => {
-    if (props.theme === 'assur') {
-        return {
-            main: 'bg-primaryassur',
-            hover: 'hover:bg-primaryassur/90',
-        };
-    }
-    return {
-        main: 'bg-primarytech',
-        hover: 'hover:bg-primarytech/90',
-    };
-});
-
 const txtClass = computed(() =>
     props.theme === 'assur' ? 'text-primaryassur' : 'text-primarytech',
+);
+
+const bgClass = computed(() =>
+    props.theme === 'assur' ? 'bg-primaryassur' : 'bg-primarytech',
 );
 </script>
 
