@@ -35,10 +35,29 @@ export const useNursSupp = () => {
         }
     };
 
+    const submitassurContact = async (contactData) => {
+        try {
+            const { data, error } = await $apifetch('/api/nursassur/contact', {
+                method: 'POST',
+                body: contactData,
+            });
+
+            if (error?.value) {
+                throw error.value?.data?.message || 'Une erreur est survenue.';
+            }
+
+            return data?.value || data;
+        }
+        catch (e) {
+            throw e?.data?.message || e?.message || 'Une erreur est survenue.';
+        }
+    };
+
     return {
         createHistory,
         getAssurTypes,
         createAssurHistory,
         submitContact,
+        submitassurContact,
     };
 };

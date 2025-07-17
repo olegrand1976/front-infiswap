@@ -2,6 +2,9 @@
     <div class="sm:mt-0 mt-16">
         <div class="flex flex-col">
             <HomeBanner />
+            <div class="container mt-12">
+                <NurstechPresentation />
+            </div>
             <HomeSearchNurseContainer />
         </div>
         <div

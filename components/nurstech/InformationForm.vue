@@ -15,32 +15,50 @@
                         class="space-y-4 w-full lg:w-[650px]"
                         @submit.prevent="submit"
                     >
-                        <input
-                            v-model="contact.name"
-                            type="text"
-                            placeholder="Nom *"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
-                        >
-                        <input
-                            v-model="contact.email"
-                            type="text"
-                            placeholder="Email"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        >
-                        <input
-                            v-model="contact.phone"
-                            type="text"
-                            placeholder="Téléphone *"
-                            class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        >
-                        <p class="text-primary text-sm mt-1 font-medium">
-                            Description *
-                        </p>
-                        <textarea
-                            v-model="contact.description"
-                            rows="4"
-                            class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary"
-                        />
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Nom *
+                            </p>
+                            <input
+                                v-model="contact.name"
+                                type="text"
+                                placeholder="John Doe"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            >
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Email *
+                            </p>
+                            <input
+                                v-model="contact.email"
+                                type="text"
+                                placeholder="johndoe@gmail.com"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            >
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Téléphone *
+                            </p>
+                            <input
+                                v-model="contact.phone"
+                                type="text"
+                                placeholder="02 374 00 00"
+                                class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            >
+                        </div>
+                        <div>
+                            <p class="text-primary text-sm mt-1 font-medium">
+                                Description *
+                            </p>
+                            <textarea
+                                v-model="contact.description"
+                                rows="4"
+                                placeholder="votre message . . ."
+                                class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                            />
+                        </div>
 
                         <!-- <div class="border border-gray-300 rounded px-6 py-4 w-[450px]">
                             <input
