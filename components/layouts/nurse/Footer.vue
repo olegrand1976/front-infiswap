@@ -79,8 +79,15 @@
                                 </p>
                                 <div class="flex flex-col items-center gap-4">
                                     <Button
-                                        class=" text-white font-semibold py-2 px-4 rounded-full w-full transition"
-                                        :class="bgClass"
+                                        v-if="props.theme == 'assur'"
+                                        class="bg-primaryassur hover:bg-primaryassur/90 text-white font-semibold py-2 px-4 rounded-full w-full transition"
+                                        href="/register"
+                                    >
+                                        Inscription
+                                    </Button>
+                                    <Button
+                                        v-else
+                                        class=" bg-primarytech hover:bg-primarytech/90  text-white font-semibold py-2 px-4 rounded-full w-full transition"
                                         href="/register"
                                     >
                                         Inscription
