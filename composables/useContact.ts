@@ -8,50 +8,62 @@ export const submitContact = async (formData) => {
     );
 };
 
-export function useContact(type = 'nurstech', perPage = 10) {
+export function useContact() {
     const contacts = ref([]);
     const loading = ref(false);
     const error = ref(null);
     const pagination = ref({});
     const { $apifetch } = useNuxtApp();
+    const count = useState<number>('careTypesCount', () => 0);
 
-    const fetchContacts = async (page = 1) => {
-        console.log('aiza ho aiza ato');
-        loading.value = true;
-        error.value = null;
-        try {
-            console.log('alorssss');
-            const { data } = await $apifetch(`/api/contact/admin`, {
-                params: { type: type.value, page, per_page: perPage }, // ✅ ici
-                key: `contacts-${type.value}-${page}`, // ✅ ici aussi
-            });
-            console.log('fa aona ary zany ', data);
-            console.log('fa aona ny azo ', Array.isArray(data.value?.data) ? data.value?.data : []);
-            contacts.value = Array.isArray(data.value?.data) ? data.value?.data : [];
-            pagination.value = {
-                current_page: data.value?.current_page,
-                last_page: data.value?.last_page,
-                total: data.value?.total,
-            };
-        }
-        catch (e) {
-            console.log('aiza ilay erreur ', e);
-            error.value = e;
-        }
-        finally {
-            loading.value = false;
-        }
-    };
+    // const fetchContacts = async (page: number = 1) => {
+    //     loading.value = true;
+    //     error.value = null;
+    //     try {
+    //         const { data } = await $apifetch(`/api/contact/admin`, {
+    //             params: {
+    //                 type: type.value,
+    //                 page: page,
+    //                 per_page: perPage,
+    //                 ...options,
+    //             },
+    //             key: `contacts-${type.value}-${page}`,
+    //         });
+    //         contacts.value = Array.isArray(data) ? data : [];
+    //         pagination.value = {
+    //             current_page: data?.current_page,
+    //             last_page: data?.last_page,
+    //             total: data?.total,
+    //         };
+    //     }
+    //     catch (e) {
+    //         error.value = e;
+    //     }
+    //     finally {
+    //         loading.value = false;
+    //     }
+    // };
 
-    watchEffect(() => {
-        fetchContacts();
-    });
+    async function getContacts(type: Ref<string> = ref('nurstech'), page = 1, perPage = 15, options = {}) {
+        return await $apifetch('api/admin/contacts', {
+            params: {
+                type: type.value,
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+            key: `contacts-${type.value}-${page}`,
+        }).then((response) => {
+            contacts.value = response.contacts;
+            count.value = response.count;
+        });
+    }
 
     return {
         contacts,
         loading,
         error,
         pagination,
-        fetchContacts,
+        getContacts,
     };
 }

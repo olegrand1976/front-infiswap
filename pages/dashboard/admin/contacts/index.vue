@@ -5,28 +5,49 @@
         <DashboardAdminPageContent>
             <Tabs v-model="selectedType">
                 <TabsList class="w-full">
-                    <TabsTrigger value="nurstech" class="w-full md:w-48">Nurstech</TabsTrigger>
-                    <TabsTrigger value="nursassur" class="w-full md:w-48">Nursassur</TabsTrigger>
-                    <TabsTrigger value="infiswap" class="w-full md:w-48">Infiswap</TabsTrigger>
+                    <TabsTrigger
+                        value="nurstech"
+                        class="w-full md:w-48"
+                    >
+                        Nurstech
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="nursassur"
+                        class="w-full md:w-48"
+                    >
+                        Nursassur
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="infiswap"
+                        class="w-full md:w-48"
+                    >
+                        Infiswap
+                    </TabsTrigger>
                 </TabsList>
             </Tabs>
 
-            <DataTable
-                v-if="!loading"
+            <!-- <DataTable
                 :data="contacts"
                 :columns="columns"
                 :pagination="pagination"
                 @page-change="fetchContacts"
             />
-            <p v-else>Chargement...</p>
-            <p v-if="error" class="text-red-500">
-                Erreur: {{ getErrorMessage(error) }}
-            </p>
+            <div>
+                <CustomPagination
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="count"
+                    @update:page="refresh"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div> -->
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
+import { PERPAGE } from '~/lib/constants';
+
 useHead({ title: 'Gestion des contacts' });
 
 definePageMeta({
@@ -34,45 +55,81 @@ definePageMeta({
     middleware: ['admin'],
 });
 
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const initialFilter = {
+    name: null,
+};
+const option = ref({ ...initialFilter });
+
+const { getContacts } = useContact();
 const selectedType = ref('nurstech');
-const { contacts, loading, error, pagination, fetchContacts } = useContact(selectedType);
 
-const columns = [
-    {
-        id: 'name',
-        accessorKey: 'name',
-        header: 'Nom',
-    },
-    {
-        id: 'email',
-        accessorKey: 'email',
-        header: 'Email',
-    },
-    {
-        id: 'phone',
-        accessorKey: 'phone',
-        header: 'Téléphone',
-    },
-    {
-        id: 'description',
-        accessorKey: 'description',
-        header: 'Description',
-    },
-    {
-        id: 'created_at',
-        accessorKey: 'created_at',
-        header: 'Date',
-    },
-];
+await getContacts(selectedType, page.value, perPage.value, option.value);
 
-function getErrorMessage(err) {
-    if (!err) return '';
-    if (typeof err === 'string') return err;
-    if (err.message) return err.message;
-    try {
-        return JSON.stringify(err);
-    } catch {
-        return 'Une erreur est survenue';
-    }
-}
+// const handlePerPageChange = async (value: number) => {
+//     perPage.value = value;
+//     await useContact(selectedType, page.value, value, option.value);
+// };
+
+// const refresh = async (page: number) => {
+//     await useContact(selectedType, page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+// };
+
+// const sort = reactive({
+//     order: 'DESC',
+//     by: null,
+// });
+
+// const toggleSort = () => {
+//     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+// };
+
+// const setSort = (columnKey: string) => {
+//     if (sort.by === columnKey) {
+//         toggleSort();
+//     }
+//     else {
+//         sort.by = columnKey;
+//         sort.order = 'DESC';
+//     }
+// };
+
+// watch(
+//     () => sort,
+//     async (newVal) => {
+//         await useContact(page.value, perPage.value, {
+//             sortOrder: newVal.order,
+//             sortKey: newVal.by });
+//     },
+//     { deep: true },
+// );
+
+// const columns = [
+//     {
+//         id: 'name',
+//         accessorKey: 'name',
+//         header: 'Nom',
+//     },
+//     {
+//         id: 'email',
+//         accessorKey: 'email',
+//         header: 'Email',
+//     },
+//     {
+//         id: 'phone',
+//         accessorKey: 'phone',
+//         header: 'Téléphone',
+//     },
+//     {
+//         id: 'description',
+//         accessorKey: 'description',
+//         header: 'Description',
+//     },
+//     {
+//         id: 'created_at',
+//         accessorKey: 'created_at',
+//         header: 'Date',
+//     },
+// ];
 </script>
