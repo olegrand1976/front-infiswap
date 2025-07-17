@@ -112,16 +112,14 @@
                     </SidebarMenu>
 
                     <div class="flex justify-between items-center mx-auto">
-                        <Button
+                        <CopyButton
                             variant="none"
-                            class="flex text-primary justify-between items-center mx-auto"
-                            @click="copyReferralCode"
-                        >
-                            <DocumentDuplicateIcon class="w-6" />
-                            <span>
-                                Parrainer
-                            </span>
-                        </Button>
+                            label="Parrainer"
+                            class="text-primary"
+                            :show-label="true"
+                            :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                            success-message="Lien copié avec succès"
+                        />
 
                         <QuestionMarkCircleIcon
                             class="w-4 text-blue-500 cursor-pointer"
@@ -137,12 +135,22 @@
                                 </DialogTitle>
                             </DialogHeader>
                             <p>
-                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues !</span>
+                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
                             </p>
 
-                            <p>
-                                Partagez votre code de parrainage avec d'autres personnes. Lorsqu’ils s’inscrivent grâce à votre code, vous recevez des avantages exclusifs.
-                            </p>
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="mt-4">
+                                    {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
+                                </p>
+
+                                <CopyButton
+                                    variant="none"
+                                    class="text-primary mt-3"
+                                    :show-label="false"
+                                    :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                                    success-message="Lien copié avec succès"
+                                />
+                            </div>
                         </DialogContent>
                     </Dialog>
                 </SidebarGroupContent>
@@ -199,7 +207,6 @@ import {
     ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
     QuestionMarkCircleIcon,
-    DocumentDuplicateIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -214,7 +221,6 @@ defineProps({
 
 const config = useRuntimeConfig();
 const user = useUser();
-const { $toast } = useNuxtApp();
 const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
 const referralDialog = ref(false);
@@ -335,13 +341,6 @@ const navigationItems = computed(() => {
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
-
-const copyReferralCode = async () => {
-    await navigator.clipboard.writeText(`${config.public.FRONT_END_URL}/register/?referral=${user.value.referral_code}`);
-    $toast({
-        description: 'Lien copié avec succès',
-    });
-};
 
 const { logout } = useAuth();
 </script>
