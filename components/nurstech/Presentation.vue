@@ -5,16 +5,16 @@
                 <div class="flex-shrink-0">
                     <LayoutsNursTech class="w-40 text-blue-600 opacity-90" />
                 </div>
-                <div class="text-center md:text-left space-y-3">
+                <div class="text-center md:text-left h-full flex flex-col justify-between gap-2">
                     <p class="text-gray-600 text-sm leading-relaxed transition-colors duration-300 group-hover:text-gray-700">
                         Boostez votre présence digitale avec notre offre
                         <NuxtLink
                             to="/nurstech-by-infiswap"
                             title="Voir le site"
                         >
-                            <span class="relative align-baseline text-primarytech font-semibold hover:underline">
+                            <span class="relative align-baseline text-primarytech font-semibold hover:underline pr-2">
                                 NursTech
-                                <GlobeAltIcon class="absolute -top-1 -right-2 w-3 h-3 text-primarytech" />
+                                <GlobeAltIcon class="absolute -top-0.5 -right-3 w-3 h-3" />
                             </span>
                         </NuxtLink>
                         et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
@@ -43,7 +43,7 @@
                 <div class="flex-shrink-0">
                     <LayoutsNursAssur class="w-40 text-indigo-600 opacity-90" />
                 </div>
-                <div class="text-center md:text-left space-y-3">
+                <div class="text-center md:text-left h-full flex flex-col justify-between gap-2">
                     <p class="text-gray-600 text-sm leading-relaxed transition-colors duration-300 group-hover:text-gray-700">
                         Bénéficiez d'un conseil personnalisé avec notre service d'assurances
                         <NuxtLink
@@ -52,9 +52,10 @@
                         >
                             <span class="relative align-baseline text-primaryassur font-semibold hover:underline">
                                 NursAssur
+                                <GlobeAltIcon class="absolute -top-0.5 -right-3 w-3 h-3" />
                             </span>
                         </NuxtLink>
-                        dédié aux professionnels de santé.
+                        <span class="pl-3">dédié aux professionnels de santé.</span>
                     </p>
 
                     <div class="flex flex-wrap justify-center md:justify-start gap-2">
