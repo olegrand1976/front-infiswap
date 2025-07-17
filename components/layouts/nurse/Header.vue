@@ -27,7 +27,7 @@
             <nav class="flex">
                 <ul class="flex gap-4 lg:text-sm md:text-[0.7em]">
                     <li
-                        v-for="(item, index) in navigationItems"
+                        v-for="(item, index) in navigationNurseItems"
                         :key="index"
                         class="text-center cursor-pointer"
                         :class="{
@@ -69,7 +69,7 @@
                         <LayoutsDropdownLang />
                     </div>
                     <div class="relative my-auto">
-                        <LayoutsSheetMenu />
+                        <LayoutsNurseSheetMenu :theme="theme" />
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@ const menuData = computed(() => {
 
 const { isLoggedIn } = useAuth();
 
-const navigationItems = [
+const navigationNurseItems = [
     { label: 'Qui sommes-nous?', targetId: menuData.value.whoAreWe },
     ...(props.theme !== 'assur' ? [{ label: 'Nos Partenaires', targetId: 'partners' }] : []),
     { label: 'Services', targetId: menuData.value.services },
@@ -186,7 +186,7 @@ onMounted(() => {
         rootMargin: '0px 0px -50% 0px',
     });
 
-    navigationItems.forEach((item) => {
+    navigationNurseItems.forEach((item) => {
         const element = document.getElementById(item.targetId);
         if (element) {
             observer.observe(element);

@@ -8,7 +8,7 @@
         </div>
         <div class="flex z-20 pt-2 relative space-x-3 justify-end items-center px-4">
             <div>
-                <LayoutsNurseSheetMenu />
+                <LayoutsNurseSheetMenu :theme="props.theme" />
             </div>
         </div>
         <div class="z-20 relative flex justify-center">
