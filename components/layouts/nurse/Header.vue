@@ -125,13 +125,28 @@ const imgData = computed(() => {
     };
 });
 
+const menuData = computed(() => {
+    if (props.theme === 'assur') {
+        return {
+            whoAreWe: 'overview',
+            services: 'target',
+            contact: 'quote',
+        };
+    }
+    return {
+        whoAreWe: 'banner',
+        services: 'website-creation',
+        contact: 'information-form',
+    };
+});
+
 const { isLoggedIn } = useAuth();
 
 const navigationItems = [
-    { label: 'Qui sommes-nous?', targetId: 'banner' },
-    { label: 'Nos Partenaires', targetId: 'partners' },
-    { label: 'Services', targetId: 'website-creation' },
-    { label: 'Contact', targetId: 'information-form' },
+    { label: 'Qui sommes-nous?', targetId: menuData.value.whoAreWe },
+    ...(props.theme !== 'assur' ? [{ label: 'Nos Partenaires', targetId: 'partners' }] : []),
+    { label: 'Services', targetId: menuData.value.services },
+    { label: 'Contact', targetId: menuData.value.contact },
 ];
 
 const route = useRoute();
