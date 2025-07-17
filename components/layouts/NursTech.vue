@@ -4,7 +4,7 @@
             :src="'nurs_tech.png'"
             alt="logo-NursTech"
             class="hover:cursor-pointer"
-            :class="classe"
+            :class="customClass"
             format="png"
             @click="navigateToNursTech"
         />
@@ -15,7 +15,7 @@
 import { defineProps } from 'vue';
 
 defineProps<{
-    classe?: string;
+    customClass?: string;
 }>();
 
 function navigateToNursTech() {

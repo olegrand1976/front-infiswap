@@ -4,7 +4,7 @@
             :src="'nurs_assur.png'"
             alt="logo-NursAssur"
             class="hover:cursor-pointer"
-            :class="classe"
+            :class="customClass"
             format="png"
             @click="navigateToNursAssur"
         />
@@ -15,7 +15,7 @@
 import { defineProps } from 'vue';
 
 defineProps<{
-    classe?: string;
+    customClass?: string;
 }>();
 
 function navigateToNursAssur() {
