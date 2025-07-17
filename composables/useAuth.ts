@@ -355,6 +355,33 @@ export const useAuth = () => {
         });
     };
 
+    const updateRadiusKm = async (newRadius: number) => {
+        const currentSettings = JSON.parse(user.value.settings || '{}');
+
+        currentSettings.replacement = currentSettings.replacement || {};
+        currentSettings.replacement.radius_km = newRadius;
+
+        const formData = {
+            key: 'radius_km',
+            value: JSON.stringify(newRadius),
+        };
+
+        try {
+            await createPreferences(formData);
+            user.value.settings = JSON.stringify(currentSettings);
+            $toast({
+                description: 'Rayon de recherche mis à jour avec succès',
+            });
+        }
+        catch (error) {
+            console.log(error);
+            $toast({
+                variant: 'destructive',
+                description: 'Erreur lors de la mise à jour du rayon de recherche',
+            });
+        }
+    };
+
     async function createNotifPreferences(formData) {
         return await $apifetch(`/api/users/settings/notification`, {
             method: 'post',
@@ -432,5 +459,6 @@ export const useAuth = () => {
         updateField,
         fetchUserFromNurseId,
         updateContact,
+        updateRadiusKm,
     };
 };

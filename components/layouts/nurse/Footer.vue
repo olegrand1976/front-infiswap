@@ -23,7 +23,7 @@
                             @submit.prevent="subscribeNewsletter"
                         >
                             <div class="flex flex-row justify-start items-center">
-                                <Mail class="text-primarytech w-4 h-4 ms-3" />
+                                <EnvelopeIcon class="text-primarytech w-4 h-4 ms-3" />
                                 <Input
                                     v-model="email"
                                     placeholder="Email"
@@ -117,8 +117,8 @@
 
 <script lang="ts" setup>
 import {
-    Mail,
-} from 'lucide-vue-next';
+    EnvelopeIcon,
+} from '@heroicons/vue/24/outline';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();
