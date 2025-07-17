@@ -8,14 +8,24 @@
         </div>
         <div class="flex z-20 pt-2 relative space-x-3 justify-end items-center px-4">
             <div>
-                <LayoutsNurseSheetMenu />
+                <LayoutsNurseSheetMenu :theme="props.theme" />
             </div>
         </div>
         <div class="z-20 relative flex justify-center">
             <LayoutsAppImage
-                src="/nurs_tech.png"
+                :src="imgLogo"
                 class="w-[15rem]"
             />
         </div>
     </div>
 </template>
+
+<script lang="ts" setup>
+const props = defineProps<{
+    theme: string;
+}>();
+
+const imgLogo = computed(() =>
+    props.theme === 'assur' ? '/nurs_assur.png' : '/nurs_tech.png',
+);
+</script>

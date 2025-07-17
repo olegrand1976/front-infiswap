@@ -1,6 +1,9 @@
 <template>
-    <header class="bg-primarytech fixed top-0 w-full z-50 h-10 text-white flex items-center">
-        <div class="container mx-auto flex justify-between items-center px-4">
+    <section
+        class="fixed top-0 w-full z-50 h-10 text-white flex items-center"
+        :class="bgClass"
+    >
+        <div class="container mx-auto flex justify-between text-sm items-center px-4">
             <p class="flex items-center gap-2">
                 <MapPinIcon class="w-5 h-5" />
                 Rue de la Résistance, 92/A 7131 Waudrez Belgium
@@ -10,22 +13,26 @@
                 infiswap.be
             </p>
         </div>
-    </header>
-    <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center px-4 shadow">
+    </section>
+    <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center shadow">
         <div class="hidden lg:flex justify-between items-center container">
             <div>
-                <LayoutsNursTech class="w-20 text-blue-600 opacity-90" />
+                <LayoutsAppImage
+                    :src="imgData.src"
+                    :alt="imgData.alt"
+                    class="h-10 lg:h-14"
+                />
             </div>
 
             <nav class="flex">
                 <ul class="flex gap-4 lg:text-sm md:text-[0.7em]">
                     <li
-                        v-for="(item, index) in navigationItems"
+                        v-for="(item, index) in navigationNurseItems"
                         :key="index"
                         class="text-center cursor-pointer"
                         :class="{
                             'text-primary font-semibold active-link': isActive(item.targetId),
-                            'hover:text-primary/90 font-semibold text-dark animate duration-500': !isActive(item.targetId),
+                            'hover:text-primary font-semibold text-dark animate duration-500': !isActive(item.targetId),
                         }"
                         @click="handleNavigation(item.targetId)"
                     >
@@ -62,7 +69,7 @@
                         <LayoutsDropdownLang />
                     </div>
                     <div class="relative my-auto">
-                        <LayoutsSheetMenu />
+                        <LayoutsNurseSheetMenu :theme="theme" />
                     </div>
                 </div>
             </div>
@@ -97,13 +104,49 @@
 import { MapPinIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 
+const props = defineProps<{
+    theme: string;
+}>();
+
+const bgClass = computed(() =>
+    props.theme === 'assur' ? 'bg-primaryassur' : 'bg-primarytech',
+);
+
+const imgData = computed(() => {
+    if (props.theme === 'assur') {
+        return {
+            src: '/nurs_assur.png',
+            alt: 'NurseAssur',
+        };
+    }
+    return {
+        src: '/nurs_tech.png',
+        alt: 'NurseTech',
+    };
+});
+
+const menuData = computed(() => {
+    if (props.theme === 'assur') {
+        return {
+            whoAreWe: 'overview',
+            services: 'target',
+            contact: 'quote',
+        };
+    }
+    return {
+        whoAreWe: 'banner',
+        services: 'website-creation',
+        contact: 'information-form',
+    };
+});
+
 const { isLoggedIn } = useAuth();
 
-const navigationItems = [
-    { label: 'Qui sommes-nous?', targetId: 'banner' },
-    { label: 'Nos Partenaires', targetId: 'partners' },
-    { label: 'Services', targetId: 'website-creation' },
-    { label: 'Contact', targetId: 'information-form' },
+const navigationNurseItems = [
+    { label: 'Qui sommes-nous?', targetId: menuData.value.whoAreWe },
+    ...(props.theme !== 'assur' ? [{ label: 'Nos Partenaires', targetId: 'partners' }] : []),
+    { label: 'Services', targetId: menuData.value.services },
+    { label: 'Contact', targetId: menuData.value.contact },
 ];
 
 const route = useRoute();
@@ -143,7 +186,7 @@ onMounted(() => {
         rootMargin: '0px 0px -50% 0px',
     });
 
-    navigationItems.forEach((item) => {
+    navigationNurseItems.forEach((item) => {
         const element = document.getElementById(item.targetId);
         if (element) {
             observer.observe(element);
