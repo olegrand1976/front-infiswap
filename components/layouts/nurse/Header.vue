@@ -10,7 +10,7 @@
             </p>
             <p class="flex items-center gap-2">
                 <EnvelopeIcon class="w-5 h-5" />
-                infiswap.be
+                info@infiswap.be
             </p>
         </div>
     </section>
