@@ -5,7 +5,10 @@
         </h2>
 
         <section class="mt-8 grid lg:grid-cols-4 bg-white shadow-xl rounded-3xl relative">
-            <form class="lg:col-span-3 lg:w-[80%] xl:w-[70%] space-y-6 py-6 px-6 sm:px-12">
+            <form
+                class="lg:col-span-3 lg:w-[80%] xl:w-[70%] space-y-6 py-6 px-6 sm:px-12"
+                @submit.prevent="submit"
+            >
                 <div class="space-y-2">
                     <label class="text-primary font-semibold">
                         Nom
@@ -46,17 +49,11 @@
                     />
                 </div>
 
-                <div class="flex gap-2 items-center">
-                    <Checkbox id="save" />
-                    <label
-                        for="save"
-                        class="text-primary font-medium text-xs xl:text-nowrap"
-                    >
-                        Enregistrer mon nom, mon e-mail et mon site dans le navigateur pour mon prochain commentaire
-                    </label>
-                </div>
-
-                <Button class="!mt-12 !mb-4 !rounded-md !w-full">
+                <Button
+                    class="!mt-12 !mb-4 !rounded-md !w-full"
+                    type="submit"
+                    :in-progress="inProgress"
+                >
                     CRÉER MON DEVIS NURSASSUR
                 </Button>
             </form>
@@ -76,4 +73,16 @@
 </template>
 
 <script lang="ts" setup>
+const props = defineProps<{
+    selectedItems?: string[];
+}>();
+
+const {
+    submit,
+    inProgress,
+} = useSubmit(
+    () => {
+        console.log(props.selectedItems);
+    },
+);
 </script>

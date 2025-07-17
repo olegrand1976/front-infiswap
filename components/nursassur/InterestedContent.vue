@@ -45,26 +45,37 @@
 </template>
 
 <script lang="ts" setup>
-const selectedItems = ref([]);
+const props = defineProps<{
+    items?: string[];
+    selectedItems?: string[];
+}>();
 
-const items = [
-    'Responsabilité civile professionnelle',
-    'Protection juridique professionnelle',
-    'Assurance véhicule professionnel',
-    'Assurance prévoyance (arrêt maladie, invalidité...)',
-    'Assurance hospitalisation adaptée',
-    'Crédit (personnel, société, hypothécaire) -> solution sur mesure',
-    'Autre (à préciser dans le formulaire)',
-];
+const emit = defineEmits<{
+    (e: 'update:selectedItems', value: string[]): void;
+}>();
+
+const selected = ref<string[]>(props.selectedItems ? [...props.selectedItems] : []);
+
+watch(
+    () => props.selectedItems,
+    (newVal) => {
+        selected.value = newVal ? [...newVal] : [];
+    },
+    { immediate: true },
+);
 
 const updateSelection = (item: string, checked: boolean) => {
     if (checked) {
-        if (!selectedItems.value.includes(item)) {
-            selectedItems.value = [...selectedItems.value, item];
+        if (!selected.value.includes(item)) {
+            if (item != 'Autre (à préciser dans le formulaire)') {
+                selected.value.push(item);
+            }
         }
     }
     else {
-        selectedItems.value = selectedItems.value.filter(r => r !== item);
+        selected.value = selected.value.filter(r => r !== item);
     }
+
+    emit('update:selectedItems', selected.value);
 };
 </script>
