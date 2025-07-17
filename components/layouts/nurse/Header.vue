@@ -4,14 +4,20 @@
         :class="bgClass"
     >
         <div class="container mx-auto flex justify-between text-sm items-center px-4">
-            <p class="flex items-center gap-2">
+            <p class="flex items-center">
                 <MapPinIcon class="w-5 h-5" />
                 Rue de la Résistance, 92/A 7131 Waudrez Belgium
             </p>
-            <p class="flex items-center gap-2">
-                <EnvelopeIcon class="w-5 h-5" />
-                info@infiswap.be
-            </p>
+            <div class="flex items-center gap-2">
+                <NuxtLink to="/">Revenir vers <span class="text-primary font-bold">infiswap.be</span></NuxtLink>
+                <a
+                    href="mailto:info@infiswap.be"
+                    class="ml-4 flex items-center gap-2"
+                >
+                    <EnvelopeIcon class="w-5 h-5" />
+                    info@infiswap.be
+                </a>
+            </div>
         </div>
     </section>
     <header class="bg-white fixed top-10 w-full z-40 h-20 hidden sm:flex justify-center items-center shadow">
@@ -101,7 +107,8 @@
 </template>
 
 <script lang="ts" setup>
-import { MapPinIcon, EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { MapPinIcon, EnvelopeIcon } from '@heroicons/vue/24/outline';
+
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{
