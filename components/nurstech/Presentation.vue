@@ -14,10 +14,10 @@
                         >
                             <span class="relative align-baseline text-primarytech font-semibold hover:underline pr-2">
                                 NursTech
-                                <GlobeAltIcon class="absolute -top-0.5 -right-3 w-3 h-3" />
+                                <GlobeAltIcon class="absolute -top-0.5 -right-1 w-3 h-3" />
                             </span>
                         </NuxtLink>
-                        et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".
+                        <span class="ml-2">et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".</span>
                     </p>
 
                     <div class="flex flex-wrap justify-center md:justify-start gap-2">
