@@ -67,8 +67,8 @@
                         </NuxtLink>
 
                         <button
-                            @click="showNursAssur = true"
                             class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
+                            @click="showNursAssur = true"
                         >
                             Nous contacter →
                         </button>
