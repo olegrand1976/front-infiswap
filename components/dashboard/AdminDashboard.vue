@@ -48,7 +48,7 @@
                     <div class="flex gap-3 items-center">
                         <input
                             id="be"
-                            v-model="selectedCountry"
+                            v-model="selectedCountryForProvince"
                             type="radio"
                             value="be"
                         >
@@ -63,7 +63,7 @@
                     <div class="flex gap-3 items-center">
                         <input
                             id="fr"
-                            v-model="selectedCountry"
+                            v-model="selectedCountryForProvince"
                             type="radio"
                             value="fr"
                         >
@@ -89,6 +89,57 @@
                     />
                 </div>
             </div>
+
+            <div class="col-span-1 lg:col-span-2">
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des inscriptions par zone de code postal
+                </p>
+
+                <div class="mt-4 flex gap-8 items-center">
+                    <div class="flex gap-3 items-center">
+                        <input
+                            id="be"
+                            v-model="selectedCountryForZipCode"
+                            type="radio"
+                            value="be"
+                        >
+                        <label
+                            for="be"
+                            class="font-medium text-sm"
+                        >
+                            Belgique
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3 items-center">
+                        <input
+                            id="fr"
+                            v-model="selectedCountryForZipCode"
+                            type="radio"
+                            value="fr"
+                        >
+                        <label
+                            for="fr"
+                            class="font-medium text-sm"
+                        >
+                            France
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-white rounded-sm shadow-md p-4">
+                    <AreaChart
+                        index="name"
+                        :data="userByZipCode"
+                        :categories="['inscrits']"
+                        :y-formatter="yFormatter"
+                        :rounded-corners="4"
+                        :colors="['hsl(var(--primary))']"
+                        class="pb-8 w-full"
+                        :legend-labels="{ inscrits: 'Inscrits' }"
+                    />
+                </div>
+            </div>
         </section>
 
         <DashboardStatCardAdminGroup
@@ -102,9 +153,10 @@
 </template>
 
 <script lang="ts" setup>
-import { UserGroupIcon, MapPinIcon, ArrowPathIcon, PaperAirplaneIcon, HeartIcon } from '@heroicons/vue/24/solid';
+import { UserGroupIcon, ArrowPathIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
 import { BarChart } from '@/components/ui/chart-bar';
+import { AreaChart } from '@/components/ui/chart-area';
 import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
@@ -119,17 +171,31 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 
-await getReports();
+onMounted(async () => {
+    await getReports();
+});
 
-const selectedCountry = ref('be');
+const selectedCountryForProvince = ref('be');
+const selectedCountryForZipCode = ref('be');
 
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
 
-    const countryData = userByProvinces.find(item => item.country === (selectedCountry.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+    const countryData = userByProvinces.find(item => item.country === (selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
 
     return countryData.map((item: { province: string; total: number }) => ({
         name: item.province,
+        inscrits: item.total,
+    }));
+});
+
+const userByZipCode = computed(() => {
+    const userByZipCodes = reports.value?.registration_statistics?.group_by_zip_code ?? [];
+
+    const countryData = userByZipCodes.find(item => item.country === (selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+
+    return countryData.map((item: { zip_code: string; total: number }) => ({
+        name: item.zip_code,
         inscrits: item.total,
     }));
 });
@@ -175,58 +241,58 @@ const adminReports = computed(() => {
                 },
             ],
         },
-        {
-            title: 'Patient(s)',
-            items: [
-                {
-                    value: reports.value.patient_by_nurse_statistics.today + reports.value.patient_by_nurse_statistics.yesterday,
-                    label: `Ce jour `,
-                    colorClass: 'bg-indigo-600',
-                    icon: HeartIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.patient_by_nurse_statistics.this_month + reports.value.patient_by_nurse_statistics.last_month,
-                    label: 'Ce mois / Mois glissant',
-                    colorClass: 'bg-orange-700',
-                    icon: HeartIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.patient_by_nurse_statistics.total,
-                    label: 'Total ',
-                    colorClass: 'bg-pink-600',
-                    icon: HeartIcon,
-                    containerClass: 'string',
-                },
-            ],
-        },
-        {
-            title: 'Tournée(s)',
-            items: [
-                {
-                    value: reports.value.tour_statistics.today + reports.value.tour_statistics.yesterday,
-                    label: `Ce jour `,
-                    colorClass: 'bg-indigo-600',
-                    icon: MapPinIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.tour_statistics.this_month + reports.value.tour_statistics.last_month,
-                    label: 'Ce mois / Mois glissant',
-                    colorClass: 'bg-orange-700',
-                    icon: MapPinIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.tour_statistics.total,
-                    label: 'Total ',
-                    colorClass: 'bg-pink-600',
-                    icon: MapPinIcon,
-                    containerClass: 'string',
-                },
-            ],
-        },
+        // {
+        //     title: 'Patient(s)',
+        //     items: [
+        //         {
+        //             value: reports.value.patient_by_nurse_statistics.today + reports.value.patient_by_nurse_statistics.yesterday,
+        //             label: `Ce jour `,
+        //             colorClass: 'bg-indigo-600',
+        //             icon: HeartIcon,
+        //             containerClass: 'string',
+        //         },
+        //         {
+        //             value: reports.value.patient_by_nurse_statistics.this_month + reports.value.patient_by_nurse_statistics.last_month,
+        //             label: 'Ce mois / Mois glissant',
+        //             colorClass: 'bg-orange-700',
+        //             icon: HeartIcon,
+        //             containerClass: 'string',
+        //         },
+        //         {
+        //             value: reports.value.patient_by_nurse_statistics.total,
+        //             label: 'Total ',
+        //             colorClass: 'bg-pink-600',
+        //             icon: HeartIcon,
+        //             containerClass: 'string',
+        //         },
+        //     ],
+        // },
+        // {
+        //     title: 'Tournée(s)',
+        //     items: [
+        //         {
+        //             value: reports.value.tour_statistics.today + reports.value.tour_statistics.yesterday,
+        //             label: `Ce jour `,
+        //             colorClass: 'bg-indigo-600',
+        //             icon: MapPinIcon,
+        //             containerClass: 'string',
+        //         },
+        //         {
+        //             value: reports.value.tour_statistics.this_month + reports.value.tour_statistics.last_month,
+        //             label: 'Ce mois / Mois glissant',
+        //             colorClass: 'bg-orange-700',
+        //             icon: MapPinIcon,
+        //             containerClass: 'string',
+        //         },
+        //         {
+        //             value: reports.value.tour_statistics.total,
+        //             label: 'Total ',
+        //             colorClass: 'bg-pink-600',
+        //             icon: MapPinIcon,
+        //             containerClass: 'string',
+        //         },
+        //     ],
+        // },
         {
             title: 'Remplacement(s) acceptée(s)',
             items: [
