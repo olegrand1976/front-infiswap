@@ -292,6 +292,11 @@ const nurseNavigationItems: NavigationItem[] = [
         ],
     },
     {
+        label: 'Mon groupement',
+        route: '/dashboard/group',
+        icon: UserGroupIcon,
+    },
+    {
         label: 'Paramètres',
         route: '/dashboard/settings',
         icon: Cog8ToothIcon,

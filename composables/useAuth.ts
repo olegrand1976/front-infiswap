@@ -18,6 +18,19 @@ export const useAuth = () => {
         return ['administrator', 'developer'].includes(user.value?.account_type ?? '');
     });
 
+    const isAdminGroup = (groupId: number): boolean => {
+        const pivotArray = toRaw(user.value.pivot);
+
+        if (Array.isArray(pivotArray)) {
+            const matchingPivot = pivotArray.find(p => p.group_id === groupId);
+            if (matchingPivot) {
+                return matchingPivot.role_id === 1;
+            }
+        }
+
+        return false;
+    };
+
     const hasChangedAvatar = computed(() => {
         return user.value?.profile?.profil_url;
     });
@@ -460,5 +473,6 @@ export const useAuth = () => {
         fetchUserFromNurseId,
         updateContact,
         updateRadiusKm,
+        isAdminGroup,
     };
 };

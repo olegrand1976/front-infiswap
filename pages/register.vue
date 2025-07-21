@@ -498,6 +498,34 @@
                         </div>
                     </div>
 
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="space-y-4">
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="representGroup"
+                                    class="mt-1 accent-red-600"
+                                    @update:checked="representGroup = $event"
+                                />
+                                <span class="text-sm ml-2">
+                                    Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
+                                </span>
+                            </label>
+
+                            <transition name="fade">
+                                <div
+                                    v-if="representGroup"
+                                    class="relative"
+                                >
+                                    <InputIcon
+                                        v-model="formData.groupName"
+                                        :icon="UserGroupIcon"
+                                        placeholder="Nom du groupement"
+                                    />
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
+
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
                         <Button
                             class="w-[50%]"
@@ -673,6 +701,8 @@ const selectedReferral = computed({
 
 const { country } = useCountry();
 
+const representGroup = ref(false);
+
 const formData = reactive({
     lastname: '',
     firstname: '',
@@ -697,6 +727,7 @@ const formData = reactive({
     citiesArray: [],
     professionalCategory: '',
     radiusKm: '',
+    groupName: '',
 });
 
 const identifierLabel = computed(() =>
