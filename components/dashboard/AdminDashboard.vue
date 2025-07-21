@@ -79,7 +79,7 @@
                         :categories="['inscrits']"
                         :y-formatter="yFormatter"
                         :rounded-corners="4"
-                        :colors="['hsl(var(--primary))']"
+                        :colors="chartLineColors"
                         class="pb-8 w-full"
                         :legend-labels="{ inscrits: 'Inscrits' }"
                     />
@@ -126,7 +126,7 @@
                         :categories="['inscrits']"
                         :y-formatter="yFormatter"
                         :rounded-corners="4"
-                        :colors="['hsl(var(--primary))']"
+                        :colors="chartAreaColors"
                         class="pb-8 w-full"
                         :legend-labels="{ inscrits: 'Inscrits' }"
                     />
@@ -190,6 +190,14 @@ const userByZipCode = computed(() => {
         name: item.zip_code,
         inscrits: item.total,
     }));
+});
+
+const chartLineColors = computed(() => {
+    return [selectedCountryForProvince.value === 'be' ? 'hsl(var(--primary))' : 'hsl(var(--success))'];
+});
+
+const chartAreaColors = computed(() => {
+    return [selectedCountryForZipCode.value === 'be' ? 'hsl(var(--primary))' : 'hsl(var(--success))'];
 });
 
 const registrationChartData = computed(() => {
