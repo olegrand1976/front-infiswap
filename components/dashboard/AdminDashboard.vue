@@ -43,7 +43,40 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions par province
                 </p>
-                <div class="mt-3 bg-white rounded-sm shadow-md p-4">
+
+                <div class="mt-4 flex gap-8 items-center">
+                    <div class="flex gap-3 items-center">
+                        <input
+                            id="be"
+                            v-model="selectedCountry"
+                            type="radio"
+                            value="be"
+                        >
+                        <label
+                            for="be"
+                            class="font-medium text-sm"
+                        >
+                            Belgique
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3 items-center">
+                        <input
+                            id="fr"
+                            v-model="selectedCountry"
+                            type="radio"
+                            value="fr"
+                        >
+                        <label
+                            for="fr"
+                            class="font-medium text-sm"
+                        >
+                            France
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-white rounded-sm shadow-md p-4">
                     <LineChart
                         index="name"
                         :data="userByProvince"
@@ -88,10 +121,14 @@ definePageMeta({
 
 await getReports();
 
+const selectedCountry = ref('be');
+
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
 
-    return userByProvinces.map((item: { province: string;total: number }) => ({
+    const countryData = userByProvinces.find(item => item.country === (selectedCountry.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+
+    return countryData.map((item: { province: string; total: number }) => ({
         name: item.province,
         inscrits: item.total,
     }));
