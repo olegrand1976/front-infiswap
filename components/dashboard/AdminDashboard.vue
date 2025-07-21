@@ -47,13 +47,11 @@
                 <div class="mt-4 flex gap-8 items-center">
                     <div class="flex gap-3 items-center">
                         <input
-                            id="be"
                             v-model="selectedCountryForProvince"
                             type="radio"
                             value="be"
                         >
                         <label
-                            for="be"
                             class="font-medium text-sm"
                         >
                             Belgique
@@ -62,13 +60,11 @@
 
                     <div class="flex gap-3 items-center">
                         <input
-                            id="fr"
                             v-model="selectedCountryForProvince"
                             type="radio"
                             value="fr"
                         >
                         <label
-                            for="fr"
                             class="font-medium text-sm"
                         >
                             France
@@ -98,13 +94,11 @@
                 <div class="mt-4 flex gap-8 items-center">
                     <div class="flex gap-3 items-center">
                         <input
-                            id="be"
                             v-model="selectedCountryForZipCode"
                             type="radio"
                             value="be"
                         >
                         <label
-                            for="be"
                             class="font-medium text-sm"
                         >
                             Belgique
@@ -113,13 +107,11 @@
 
                     <div class="flex gap-3 items-center">
                         <input
-                            id="fr"
                             v-model="selectedCountryForZipCode"
                             type="radio"
                             value="fr"
                         >
                         <label
-                            for="fr"
                             class="font-medium text-sm"
                         >
                             France
