@@ -81,7 +81,7 @@
                 <p class="mt-1 text-success text-xl font-bold">
                     0478.02.33.77
                 </p>
-                <div class="bg-success p-1 absolute -top-3 -left-3">
+                <div class="bg-success p-1 absolute -top-3 -left-3 animate-pulse">
                     <PhoneIcon class="w-4 text-white" />
                 </div>
             </div>
