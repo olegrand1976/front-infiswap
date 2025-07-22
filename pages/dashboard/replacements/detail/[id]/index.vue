@@ -222,10 +222,10 @@
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
             class="flex justify-center mt-12"
         >
-            <div class="flex flex-col items-center space-y-4">
+            <div class="flex flex-row items-center space-x-[8rem]">
                 <Form
                     v-if="replacement?.candidate == false"
-                    class="w-full flex justify-center"
+                    class="flex justify-center"
                     @submit="submit"
                 >
                     <Button
@@ -246,20 +246,20 @@
                     <CheckCircleIcon class="w-6 h-6" />
                     <span>Réponse envoyée</span>
                 </div>
-            </div>
-        </div>
 
-        <div
-            v-if="isAdminOfReplacementGroup"
-            class="flex justify-center mt-8"
-        >
-            <Button
-                size="lg"
-                class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
-                @click="openAssignModal"
-            >
-                Assigner un remplaçant
-            </Button>
+                <div
+                    v-if="isAdminOfReplacementGroup"
+                    class="flex justify-center"
+                >
+                    <Button
+                        size="lg"
+                        class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
+                        @click="openAssignModal"
+                    >
+                        Assigner un remplaçant
+                    </Button>
+                </div>
+            </div>
         </div>
 
         <Dialog

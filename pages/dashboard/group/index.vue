@@ -9,11 +9,12 @@
                 href="/dashboard/group/create"
             >
                 <PlusCircleIcon class="w-5 h-5" />
-                <span class="hidden md:inline-block">Nouveau</span>
+                <span class="hidden md:inline-block">Nouvel utilisateur</span>
             </Button>
         </div>
 
         <Tabs
+            v-if="groups.length > 0"
             v-model="selectedGroupId"
             class="mb-4 mt-2"
         >
@@ -63,6 +64,31 @@
                 />
             </TabsContent>
         </Tabs>
+        <div
+            v-else
+            class="mt-8 flex flex-col items-center justify-center text-center text-gray-500 space-y-4"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-12 w-12 text-gray-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M20 13V6a2 2 0 00-2-2h-4M4 6v7m16 0H4m16 0v7a2 2 0 01-2 2h-4M4 13v7a2 2 0 002 2h4"
+                />
+            </svg>
+            <p class="text-lg font-semibold">
+                Vous n'appartenez à aucun groupe pour le moment
+            </p>
+            <p class="max-w-sm text-sm text-gray-400">
+                Vous serez ajouté à un groupe lorsqu'un administrateur vous y invitera.
+            </p>
+        </div>
     </div>
 </template>
 
