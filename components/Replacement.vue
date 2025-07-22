@@ -290,7 +290,7 @@
                                                     <span v-else />
                                                 </div>
                                                 <div>
-                                                    <span v-if="hasShift(replacement, 'afternoon')">
+                                                    <span v-if="hasShift(replacementGroup, 'afternoon')">
                                                         <CheckCircleIcon class="h-6 text-green-500" />
                                                     </span>
                                                     <span v-else />
@@ -363,10 +363,10 @@
                                                     <TooltipProvider>
                                                         <Tooltip>
                                                             <TooltipTrigger>
-                                                                {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                                {{ getUniqueValues(replacementGroup.care_types, careType => careType.name).join(', ') }}
                                                             </TooltipTrigger>
                                                             <TooltipContent>
-                                                                {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                                {{ getUniqueValues(replacementGroup.care_types, careType => careType.name).join(', ') }}
                                                             </TooltipContent>
                                                         </Tooltip>
                                                     </TooltipProvider>
@@ -1650,7 +1650,7 @@ const normalizeTime = (time) => {
 const hasShift = (replacement, period) => {
     const periods = new Set();
 
-    const timeSlotRaw = replacement.time_slot || replacement.timeSlot;
+    const timeSlotRaw = replacement.timeSlot;
     if (timeSlotRaw) {
         const timeSlot = typeof timeSlotRaw === 'string' ? JSON.parse(timeSlotRaw) : timeSlotRaw;
 
