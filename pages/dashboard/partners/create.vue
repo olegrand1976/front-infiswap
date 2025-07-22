@@ -79,7 +79,7 @@
             <div class="mt-16 flex gap-2 text-gray-700">
                 <InformationCircleIcon class="w-8" />
                 <p class="text-sm">
-                    En soumettant cette demande, vous proposez de former un binôme professionnel. Celle-ci devra être acceptée avant d’être effective.
+                    Cette demande ne représente en aucun cas une engagement contractuel, InfiSwap permet le rapprochement entre infirmières recherchant une collaboration
                 </p>
             </div>
 
