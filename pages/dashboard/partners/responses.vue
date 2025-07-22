@@ -16,12 +16,6 @@
                     value="in_search"
                     class="w-48"
                 >
-                    À la recherche
-                </TabsTrigger>
-                <TabsTrigger
-                    value="available"
-                    class="w-48"
-                >
                     Disponible
                 </TabsTrigger>
             </TabsList>
@@ -43,7 +37,7 @@
                         >
                             <div class="bg-gray-100 p-4 rounded-lg">
                                 <h2 class="text-lg font-semibold">
-                                    Demande #{{ group.user_partner.id }} - {{ durations[group.user_partner.duration] }}
+                                    Demande #{{ group.user_partner.id }}
                                 </h2>
                                 <p class="text-sm mt-1">
                                     {{ group.user_partner.description || 'Aucune description' }}
@@ -99,7 +93,7 @@
                 </div>
             </TabsContent>
 
-            <TabsContent value="available">
+            <!-- <TabsContent value="available">
                 <div class="my-8">
                     <div
                         v-if="loading"
@@ -173,7 +167,7 @@
                         Aucune réponse trouvée
                     </div>
                 </div>
-            </TabsContent>
+            </TabsContent> -->
         </Tabs>
     </div>
 </template>
@@ -188,10 +182,10 @@ const { fetchResponses, demandResponses, updateStatusResponse, loading } = usePa
 
 const activeTab = ref('in_search');
 const selectedUserPartnerResponse = ref(null);
-const durations = {
-    short: 'Court terme',
-    long: 'Long terme',
-};
+// const durations = {
+//     short: 'Court terme',
+//     long: 'Long terme',
+// };
 
 const groupedInSearchResponses = computed(() => {
     if (!demandResponses.value?.responses) return [];
@@ -210,22 +204,22 @@ const groupedInSearchResponses = computed(() => {
     return Object.values(grouped);
 });
 
-const groupedAvailableResponses = computed(() => {
-    if (!demandResponses.value?.responses) return [];
-    const grouped = demandResponses.value.responses.reduce((acc, response) => {
-        if (response.user_partner.type !== 'available') return acc;
-        const key = response.user_partner_id;
-        if (!acc[key]) {
-            acc[key] = {
-                user_partner: response.user_partner,
-                responses: [],
-            };
-        }
-        acc[key].responses.push({ ...response, inProgress: false });
-        return acc;
-    }, {});
-    return Object.values(grouped);
-});
+// const groupedAvailableResponses = computed(() => {
+//     if (!demandResponses.value?.responses) return [];
+//     const grouped = demandResponses.value.responses.reduce((acc, response) => {
+//         if (response.user_partner.type !== 'available') return acc;
+//         const key = response.user_partner_id;
+//         if (!acc[key]) {
+//             acc[key] = {
+//                 user_partner: response.user_partner,
+//                 responses: [],
+//             };
+//         }
+//         acc[key].responses.push({ ...response, inProgress: false });
+//         return acc;
+//     }, {});
+//     return Object.values(grouped);
+// });
 
 const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
