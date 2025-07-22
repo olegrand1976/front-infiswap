@@ -51,11 +51,48 @@
             </div>
         </div>
 
-        <Replacement
-            type="me"
-            :filter-type="selectedFilter"
-            :group-by-province="groupByProvince"
-        />
+        <template v-if="groups.length > 0">
+            <Tabs
+                v-model="selectedType"
+                class="mb-4"
+            >
+                <TabsList class="w-full">
+                    <TabsTrigger
+                        value="me"
+                        class="w-full md:w-48 h-12"
+                    >
+                        Mes remplacements
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="groups"
+                        class="w-full md:w-48 h-12"
+                    >
+                        Mon groupe
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
+
+            <Replacement
+                v-if="selectedType === 'me'"
+                type="me"
+                :filter-type="selectedFilter"
+                :group-by-province="groupByProvince"
+            />
+
+            <Replacement
+                v-else-if="selectedType === 'groups'"
+                type="groups"
+                :filter-type="selectedFilter"
+                :group-by-province="groupByProvince"
+            />
+        </template>
+        <template v-else>
+            <Replacement
+                type="me"
+                :filter-type="selectedFilter"
+                :group-by-province="groupByProvince"
+            />
+        </template>
     </div>
 </template>
 
@@ -74,12 +111,15 @@ const replacementFilters = {
 const selectedFilter = ref('all');
 const filterCookie = useCookie('selectedFilter');
 const groupByProvince = ref(false);
+const { groups, myGroups } = useGroup();
 
 const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
 
 const toggleIcon = () => {
     groupByProvince.value = !groupByProvince.value;
 };
+
+const selectedType = ref('me');
 
 onMounted(() => {
     if (filterCookie.value) {
@@ -90,6 +130,8 @@ onMounted(() => {
 watch(selectedFilter, (newFilter) => {
     filterCookie.value = newFilter;
 });
+
+await myGroups();
 
 useHead({
     title: 'Mes remplacements',

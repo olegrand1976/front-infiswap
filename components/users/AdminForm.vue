@@ -6,7 +6,8 @@ const props = defineProps<{
     user?: User | null;
 }>();
 
-const { create, update, generatePassword } = useAuth();
+const { create, update, generatePassword, isAdmin, isAdminGroup } = useAuth();
+const { groups, myGroups } = useGroup();
 const isEditMode = computed(() => !!props.user);
 
 const getInitialValue = (user: User | null | undefined = props.user) => ({
@@ -47,6 +48,21 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     professionalCategory: user?.professional_category || null,
 });
 
+const adminGroups = computed(() => {
+    if (isAdmin.value) {
+        return groups.value;
+    }
+    else {
+        return groups.value.filter(group => isAdminGroup(group.id));
+    }
+});
+
+const isSubmitDisabled = computed(() => {
+    if (isAdmin.value) return false;
+    return adminGroups.value.length === 0;
+});
+
+await myGroups();
 const form = reactive(getInitialValue());
 const { $toast } = useNuxtApp();
 const { submit, inProgress } = useSubmit(async () => {
@@ -153,13 +169,20 @@ const languages = [
     },
 ];
 
-const accountOptions: AccountType[] = [
-    'administrator',
-    'developer',
-    'collaborator',
-    'sale_representative',
-    'nurse',
-];
+const accountOptions = computed<AccountType[]>(() => {
+    return isAdmin.value
+        ? [
+                'administrator',
+                'developer',
+                'collaborator',
+                'sale_representative',
+                'nurse',
+            ]
+        : [
+                'administrator',
+                'nurse',
+            ];
+});
 
 const toggleRole = (role: AccountType) => {
     const index = form.roles.indexOf(role);
@@ -438,12 +461,32 @@ const formattedRoles = computed(() => {
                     </Select>
                 </div>
                 <div>
-                    <InputIcon
+                    <Select
                         v-model="form.group"
-                        rounded="md"
-                        type="number"
                         label="Groupe"
-                    />
+                        :disabled="adminGroups.length === 0"
+                    >
+                        <SelectTrigger
+                            position="right"
+                            class="rounded-md"
+                        >
+                            <SelectValue
+                                placeholder="Sélectionner un groupe"
+                                class="text-sm whitespace-nowrap"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="group in adminGroups"
+                                    :key="group.id"
+                                    :value="group.id.toString()"
+                                >
+                                    <span class="text-sm whitespace-nowrap">{{ group.name }}</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </div>
@@ -453,6 +496,7 @@ const formattedRoles = computed(() => {
                 type="submit"
                 class="rounded-md w-52"
                 :in-progress="inProgress"
+                :disabled="isSubmitDisabled"
             >
                 {{ props.user ? 'Sauvegarder' : 'Créer un utilisateur' }}
             </Button>

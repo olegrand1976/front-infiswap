@@ -143,7 +143,7 @@
                                         Désactiver les notifications
                                     </DialogTitle>
                                     <DialogDescription class="text-left mt-2">
-                                        En désactivant cette option, vous ne serez plus informé des nouveaux remplacements dans votre quartier par e-mail.
+                                        En désactivant cette option, vous ne serez plus informé par e-mail des nouveaux remplacements dans votre quartier.
                                     </DialogDescription>
                                 </DialogHeader>
 
