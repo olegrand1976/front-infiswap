@@ -69,22 +69,23 @@
         <div
             class="fixed bottom-16 sm:bottom-0 sm:top-32 right-0 w-48 sm:w-64 z-50"
         >
-            <div
+            <a
+                href="tel:+32478023377"
                 :class="[
-                    'rounded-md text-center shadow bg-gray-50 px-2 sm:px-6 py-3 transition-transform duration-500 ease-in-out',
+                    'block rounded-l-md text-center shadow-lg bg-gray-50 p-2 transition-transform duration-500 ease-in-out',
                     showContact ? 'translate-x-0' : 'translate-x-[105%]',
                 ]"
             >
-                <h5 class="text-sm">
-                    Contactez-nous sur
+                <h5 class="text-sm mb-2 font-bold">
+                    Contactez-nous au
                 </h5>
                 <p class="mt-1 text-success text-xl font-bold">
                     0478.02.33.77
                 </p>
-                <div class="bg-success p-1 absolute -top-3 -left-3 animate-pulse">
+                <div class="bg-success p-1 absolute -top-2 -left-2 animate-pulse rounded-lg">
                     <PhoneIcon class="w-4 text-white" />
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </template>
