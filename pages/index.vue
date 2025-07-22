@@ -1,5 +1,5 @@
 <template>
-    <div class="sm:mt-0 mt-16">
+    <div class="sm:mt-0 mt-16 relative">
         <div class="flex flex-col">
             <HomeBanner />
             <div class="container mt-12">
@@ -8,7 +8,7 @@
             <HomeSearchNurseContainer />
         </div>
         <div
-            v-if="replacements.length > 0"
+            v-if="replacements?.length > 0"
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
             <div class="flex items-center justify-between w-full text-primary">
@@ -65,23 +65,58 @@
         <section>
             <HomeAppDownloadSection />
         </section>
+
+        <div
+            class="fixed bottom-16 sm:bottom-64 right-0 w-48 sm:w-64 z-50"
+        >
+            <div
+                :class="[
+                    'rounded-md text-center shadow bg-gray-50 px-2 sm:px-6 py-3 transition-transform duration-500 ease-in-out',
+                    showContact ? 'translate-x-0' : 'translate-x-full',
+                ]"
+            >
+                <h5 class="text-sm">
+                    Contactez-nous
+                </h5>
+                <p class="mt-1 text-primary text-xl font-bold">
+                    0478.02.33.77
+                </p>
+                <PhoneIcon class="w-6 top-0 left-0 text-primary absolute" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { PlusCircleIcon, SparklesIcon } from '@heroicons/vue/24/solid';
+import { PlusCircleIcon, SparklesIcon, PhoneIcon } from '@heroicons/vue/24/solid';
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
-import RollingLoader from '~/components/RollingLoader.vue';
 
 const { isAdmin } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();
 const replacements = ref([]);
 
+const showContact = ref(false);
+
 onMounted(async () => {
     const data = await getAccordingReplacements();
     replacements.value = data;
+});
+
+onMounted(() => {
+    const cycle = () => {
+        showContact.value = true;
+        setTimeout(() => {
+            showContact.value = false;
+        }, 5000);
+    };
+
+    cycle();
+
+    setInterval(() => {
+        cycle();
+    }, 10000);
 });
 
 useHead({
