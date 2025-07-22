@@ -51,11 +51,19 @@ const chartRef = useId();
 const index = computed(() => props.index as KeyOfT);
 const colors = computed(() => props.colors?.length ? props.colors : defaultColors(props.categories.length));
 
-const legendItems = ref<BulletLegendItemInterface[]>(props.categories.map((category, i) => ({
-    name: props.legendLabels?.[category] ?? category,
-    color: colors.value[i],
-    inactive: false,
-})));
+const legendItems = computed(() =>
+    props.categories.map((category, i) => ({
+        name: props.legendLabels?.[category] ?? category,
+        color: colors.value[i],
+        inactive: false,
+    })),
+);
+
+const internalLegendItems = ref<BulletLegendItemInterface[]>([]);
+
+watch(legendItems, (newItems) => {
+    internalLegendItems.value = [...newItems];
+}, { immediate: true });
 
 const isMounted = useMounted();
 
@@ -68,7 +76,8 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
     <div :class="cn('w-full h-[400px] flex flex-col items-end', $attrs.class ?? '')">
         <ChartLegend
             v-if="showLegend"
-            v-model:items="legendItems"
+            v-model:items="internalLegendItems"
+            :colors="colors"
             @legend-item-click="handleLegendItemClick"
         />
 
@@ -116,7 +125,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
             <ChartCrosshair
                 v-if="showTooltip"
                 :colors="colors"
-                :items="legendItems"
+                :items="internalLegendItems"
                 :index="index"
                 :custom-tooltip="customTooltip"
             />

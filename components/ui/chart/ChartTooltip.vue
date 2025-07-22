@@ -16,10 +16,9 @@ defineProps<{
         <CardHeader
             v-if="title"
             class="p-3 border-b"
+            :style="{ color: data[0].color }"
         >
-            <CardTitle>
-                {{ title }}
-            </CardTitle>
+            <CardTitle>{{ title }}</CardTitle>
         </CardHeader>
         <CardContent class="p-3 min-w-[180px] flex flex-col gap-1">
             <div
@@ -35,16 +34,23 @@ defineProps<{
                             viewBox="0 0 30 30"
                         >
                             <path
-                                d=" M 15 15 m -14, 0 a 14,14 0 1,1 28,0 a 14,14 0 1,1 -28,0"
+                                d="M 15 15 m -14, 0 a 14,14 0 1,1 28,0 a 14,14 0 1,1 -28,0"
                                 :stroke="item.color"
                                 :fill="item.color"
                                 stroke-width="1"
                             />
                         </svg>
                     </span>
-                    <span>{{ item.name }}</span>
+                    <span :style="{ color: item.color }">
+                        {{ item.name }}
+                    </span>
                 </div>
-                <span class="font-semibold ml-4">{{ item.value }}</span>
+                <span
+                    class="font-semibold ml-4"
+                    :style="{ color: item.color }"
+                >
+                    {{ item.value }}
+                </span>
             </div>
         </CardContent>
     </Card>
