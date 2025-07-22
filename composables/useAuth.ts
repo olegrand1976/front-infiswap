@@ -19,7 +19,7 @@ export const useAuth = () => {
     });
 
     const isAdminGroup = (groupId: number): boolean => {
-        const pivotArray = toRaw(user.value.pivot);
+        const pivotArray = toRaw(user.value.group_roles);
 
         if (Array.isArray(pivotArray)) {
             const matchingPivot = pivotArray.find(p => p.group_id === groupId);

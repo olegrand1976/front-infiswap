@@ -35,6 +35,23 @@ export function useGroup() {
         pagination.value = data.pagination ?? pagination.value;
     }
 
+    const fetchGroupMembers = async (groupIds: number[]) => {
+        if (groupIds.length === 0) return [];
+
+        try {
+            const response = await $apifetch('/api/groups/members', {
+                method: 'POST',
+                body: { groupIds },
+            });
+
+            return response.users || [];
+        }
+        catch (error) {
+            console.error('Erreur fetchGroupMembers:', error);
+            return [];
+        }
+    };
+
     return {
         groups,
         selectedGroup,
@@ -42,5 +59,6 @@ export function useGroup() {
         pagination,
         myGroups,
         fetchGroupDetails,
+        fetchGroupMembers,
     };
 }

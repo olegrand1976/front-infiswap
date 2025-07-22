@@ -164,7 +164,7 @@
                             </h2>
                             <Table>
                                 <TableHeader class="w-full">
-                                    <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                    <TableRow :class="['overflow-x-hidden gap-2 rounded-t-lg border-none', props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6']">
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
                                         </TableHead>
@@ -188,6 +188,18 @@
                                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                             Types de soins
                                         </TableHead>
+                                        <TableHead
+                                            v-if="props.type === 'groups'"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
+                                            Créateur
+                                        </TableHead>
+                                        <TableHead
+                                            v-if="props.type === 'groups'"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
+                                            Groupe
+                                        </TableHead>
                                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                             Action
                                         </TableHead>
@@ -198,8 +210,13 @@
                                         <TableRow
                                             v-for="(_, index) in Array.from({ length: 10 })"
                                             :key="index"
-                                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                                            :class="[
+                                                'grid gap-2 border border-none overflow-x-hidden h-16',
+                                                props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
+                                            ]"
                                         >
+                                            <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                            <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                             <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                             <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                             <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -217,7 +234,10 @@
                                         <TableRow
                                             v-for="replacementGroup in group"
                                             :key="replacementGroup.id"
-                                            class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                            :class="[
+                                                'gap-2 border border-none overflow-x-hidden relative',
+                                                props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
+                                            ]"
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
@@ -352,6 +372,22 @@
                                                     </TooltipProvider>
                                                 </div>
                                             </TableCell>
+                                            <TableCell
+                                                v-if="props.type === 'groups'"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ getCreatorInfo(replacementGroup, 'name') || '—' }}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                v-if="props.type === 'groups'"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ getCreatorInfo(replacementGroup, 'group') || '—' }}
+                                                </div>
+                                            </TableCell>
                                             <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
@@ -438,7 +474,7 @@
                     <template v-else>
                         <Table>
                             <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-6 overflow-x-hidden gap-2 rounded-t-lg border-none">
+                                <TableRow :class="['overflow-x-hidden gap-2 rounded-t-lg border-none', props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6']">
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
                                     </TableHead>
@@ -462,6 +498,18 @@
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                         Types de soins
                                     </TableHead>
+                                    <TableHead
+                                        v-if="props.type === 'groups'"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
+                                        Créateur
+                                    </TableHead>
+                                    <TableHead
+                                        v-if="props.type === 'groups'"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
+                                        Groupe
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                         Action
                                     </TableHead>
@@ -472,8 +520,13 @@
                                     <TableRow
                                         v-for="(_, index) in Array.from({ length: 10 })"
                                         :key="index"
-                                        class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden h-16"
+                                        :class="[
+                                            'grid gap-2 border border-none overflow-x-hidden h-16',
+                                            props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
+                                        ]"
                                     >
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                        <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -491,7 +544,10 @@
                                     <TableRow
                                         v-for="replacementGroup in filteredReplacements"
                                         :key="replacementGroup.id"
-                                        class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
+                                        :class="[
+                                            'gap-2 border border-none overflow-x-hidden relative',
+                                            props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
+                                        ]"
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
@@ -622,6 +678,22 @@
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell
+                                            v-if="props.type === 'groups'"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ getCreatorInfo(replacementGroup, 'name') || '—' }}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell
+                                            v-if="props.type === 'groups'"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ getCreatorInfo(replacementGroup, 'group') || '—' }}
                                             </div>
                                         </TableCell>
                                         <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
@@ -1523,6 +1595,34 @@ onMounted(async () => {
 const user = useState<User>('user');
 const settings = ref({});
 settings.value = JSON.parse(user.value.settings);
+
+const { fetchGroupMembers } = useGroup();
+const groupMembers = ref([]);
+
+onMounted(async () => {
+    if (props.type === 'groups') {
+        const groupIds = user.value.group_roles.map(g => g.group_id);
+        if (groupIds.length > 0) {
+            const result = await fetchGroupMembers(groupIds);
+            groupMembers.value = result ?? [];
+            const userIds = groupMembers.value.map(u => u.user_id);
+            currentReplacements.value = currentReplacements.value.filter(r => userIds.includes(r.user_id));
+        }
+    }
+});
+
+const getCreatorInfo = (replacementGroup, field = 'name') => {
+    if (props.type !== 'groups') return '';
+    const creator = groupMembers.value.find(member => member.nurse_id === replacementGroup.nurse_id);
+    if (!creator) return '';
+    if (field === 'name') {
+        return `${creator.firstname ?? ''} ${creator.lastname ?? ''}`.trim();
+    }
+    else if (field === 'group') {
+        return creator.group_name ?? '';
+    }
+    return '';
+};
 
 const postalCodeInput = ref('');
 const cityInput = ref('');

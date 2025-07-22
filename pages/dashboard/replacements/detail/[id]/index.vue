@@ -220,37 +220,84 @@
 
         <div
             v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
-            class="my-12"
+            class="flex justify-center mt-12"
         >
-            <div
-                v-if="replacement?.replaced_by !== null"
-                class="flex justify-center items-center gap-2 text-primary font-bold"
-            >
-                <NoSymbolIcon class="size-6" /> <span>Fermé</span>
-            </div>
-            <Form
-                v-else-if="replacement?.candidate == false"
-                @submit="submit"
-            >
-                <div class="flex justify-center items-center mt-10 bg-gray-100 h-12 rounded">
-                    <div>
-                        <Button
-                            type="submit"
-                            :disabled="isDisabled || inProgress"
-                            :in-progress="inProgress"
-                        >
-                            Je suis intéressé(e)
-                        </Button>
-                    </div>
+            <div class="flex flex-col items-center space-y-4">
+                <Form
+                    v-if="replacement?.candidate == false"
+                    class="w-full flex justify-center"
+                    @submit="submit"
+                >
+                    <Button
+                        type="submit"
+                        size="lg"
+                        class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
+                        :disabled="isDisabled || inProgress"
+                        :in-progress="inProgress"
+                    >
+                        Je suis intéressé(e)
+                    </Button>
+                </Form>
+
+                <div
+                    v-else
+                    class="flex items-center gap-2 text-success font-semibold"
+                >
+                    <CheckCircleIcon class="w-6 h-6" />
+                    <span>Réponse envoyée</span>
                 </div>
-            </Form>
-            <div
-                v-else
-                class="flex justify-center items-center gap-2 text-success"
-            >
-                <CheckCircleIcon class="size-6" /> <span>Réponse envoyée</span>
             </div>
         </div>
+
+        <div
+            v-if="isAdminOfReplacementGroup"
+            class="flex justify-center mt-8"
+        >
+            <Button
+                size="lg"
+                class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
+                @click="openAssignModal"
+            >
+                Assigner un remplaçant
+            </Button>
+        </div>
+
+        <Dialog
+            v-model:open="isAssignModalOpen"
+        >
+            <DialogContent class="bg-white p-6 rounded-xl max-w-md w-full shadow-xl">
+                <DialogHeader class="text-lg font-semibold mb-4">
+                    <DialogTitle>
+                        Assigner un remplaçant
+                    </DialogTitle>
+                </DialogHeader>
+                <p class="text-sm text-gray-500 mb-4">
+                    Cliquez sur un membre pour l'assigner comme remplaçant.
+                </p>
+                <ul class="space-y-2 max-h-80 overflow-y-auto">
+                    <li
+                        v-for="member in groupMembers"
+                        :key="member.id"
+                        class="flex justify-between items-center border rounded p-2 hover:bg-gray-50 cursor-pointer"
+                        @click="selectAndSubmitReplacement(member.nurse_id)"
+                    >
+                        <div class="flex items-center gap-2">
+                            <UserIcon class="size-5 text-primary" />
+                            <span>{{ member.firstname }} {{ member.lastname }}</span>
+                        </div>
+                        <ArrowRightIcon class="size-5 text-primary" />
+                    </li>
+                </ul>
+                <div class="flex justify-end mt-4">
+                    <Button
+                        variant="secondary"
+                        @click="isAssignModalOpen = false"
+                    >
+                        Fermer
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -260,7 +307,6 @@ import {
     ClockIcon,
     HomeIcon,
     CheckCircleIcon,
-    NoSymbolIcon,
 } from '@heroicons/vue/24/solid';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
@@ -269,11 +315,12 @@ import { getFullName } from '~/lib/utils';
 const user = useState('user');
 const route = useRoute();
 const replacementId = route.params.id;
-const respondedBy = computed(() => user.value?.nurse_id || null);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
 const { isDisabled } = sendResponse();
+const { isAdminGroup } = useAuth();
+const { fetchGroupMembers } = useGroup();
 
 const periodDialog = ref(false);
 
@@ -281,7 +328,6 @@ const periods = computed(() => replacement.value.periods || []);
 
 const formData = reactive({
     replacementId: replacementId,
-    respondedBy: respondedBy,
     comment: '',
 });
 
@@ -412,7 +458,12 @@ const {
     inProgress,
 } = useSubmit(
     async () => {
-        await sendResponse().submitResponse(formData);
+        const payload = {
+            ...formData,
+            respondedBy: user.value?.nurse_id ?? user.value?.nurse?.id ?? null,
+        };
+
+        await sendResponse().submitResponse(payload);
     },
     {
         onSuccess: () => {
@@ -445,6 +496,42 @@ const endDate = computed(() => {
 });
 
 await fetchReplacement();
+
+const isAdminOfReplacementGroup = computed(() => {
+    if (!replacement.value?.group_ids) return false;
+
+    return replacement.value.group_ids.some(groupId => isAdminGroup(groupId));
+});
+
+const groupMembers = ref([]);
+const isAssignModalOpen = ref(false);
+const selectedMemberId = ref(null);
+
+const openAssignModal = async () => {
+    if (!replacement.value?.group_ids) return;
+
+    const members = await fetchGroupMembers(replacement.value.group_ids);
+
+    const userNurseId = user.value?.nurse?.id ?? user.value?.nurse_id;
+    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId);
+
+    groupMembers.value = filteredMembers;
+
+    isAssignModalOpen.value = true;
+};
+
+const selectAndSubmitReplacement = async (nurseId) => {
+    selectedMemberId.value = nurseId;
+
+    const payload = {
+        ...formData,
+        respondedBy: nurseId,
+    };
+
+    await sendResponse().submitResponse(payload);
+    replacement.value.replaced_by = nurseId;
+    isAssignModalOpen.value = false;
+};
 
 useHead({
     title: 'Détail de remplacement',

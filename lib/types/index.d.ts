@@ -2,22 +2,12 @@ export type Gender = 'M' | 'F' | 'X';
 export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
 export type CountryCode = 'be' | 'fr' | 'us';
 
-type Pivot = {
-    group_id: number;
-    user_id: number;
-    role_id: number;
-    created_at?: string;
-    updated_at?: string;
-};
-
 type GroupRole = {
     group_id: number;
     group_name: string;
-    roles: {
-        role_id: number;
-        role_name: string;
-        created_at: string;
-    }[];
+    role_id: number;
+    role_name: string;
+    created_at: string;
 };
 
 export type User = {
@@ -79,7 +69,6 @@ export type User = {
     historic_activity?: UserActivity;
     contact_date?: string;
     contact_method?: string;
-    pivot?: Pivot;
     group_roles?: GroupRole[];
 };
 
@@ -260,6 +249,7 @@ export type Replacement = {
     candidate?: boolean;
     periods?: ReplacementPeriod[];
     province?: string;
+    group_ids?: number[];
 };
 
 export type ReplacementPeriod = {
