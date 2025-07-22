@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="mt-8 flex flex-col space-y-3">
+            <!-- <div class="mt-8 flex flex-col space-y-3">
                 <label class="font-semibold text-primary">
                     * Sélectionner la durée de la collaboration
                 </label>
@@ -62,7 +62,7 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-            </div>
+            </div> -->
 
             <div class="mt-8 flex flex-col space-y-3">
                 <label class="font-semibold text-primary">
@@ -105,15 +105,15 @@ const router = useRouter();
 
 const { $toast } = useNuxtApp();
 
-const durations = {
-    short: 'Court terme',
-    long: 'Long terme',
-};
+// const durations = {
+//     short: 'Court terme',
+//     long: 'Long terme',
+// };
 
 const formData = reactive({
     id: user.value.id,
     type: 'in_search',
-    duration: '',
+    duration: 'long',
     description: '',
 });
 

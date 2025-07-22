@@ -111,14 +111,14 @@
                     value="in_search"
                     class="w-full md:w-48"
                 >
-                    À la recherche
+                    Recherche
                 </TabsTrigger>
-                <TabsTrigger
+                <!-- <TabsTrigger
                     value="available"
                     class="w-full md:w-48"
                 >
                     Disponible
-                </TabsTrigger>
+                </TabsTrigger> -->
                 <TabsTrigger
                     value="my_requests"
                     class="w-full md:w-48"
@@ -232,7 +232,7 @@
                 </div>
             </TabsContent>
 
-            <TabsContent value="available">
+            <!-- <TabsContent value="available">
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
@@ -335,7 +335,7 @@
                         />
                     </div>
                 </div>
-            </TabsContent>
+            </TabsContent> -->
 
             <TabsContent value="my_requests">
                 <div class="grid my-8">
@@ -632,7 +632,7 @@ const handleTabChange = async (newTab: string) => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
@@ -644,7 +644,7 @@ const search = async () => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
@@ -655,7 +655,7 @@ const changePage = async (newPage: number) => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
@@ -667,7 +667,7 @@ const changePerPage = async (newPerPage: number) => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
@@ -677,7 +677,7 @@ onMounted(async () => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
@@ -696,7 +696,7 @@ const reinitializeFilter = async () => {
     await fetchDemandPartners({
         postalCode: searchFormData.postalCodeTags,
         cities: searchFormData.cityTags,
-        type: searchFormData.type,
+        // type: searchFormData.type,
         page: page.value,
         perPage: perPage.value,
     });
