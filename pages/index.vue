@@ -67,21 +67,23 @@
         </section>
 
         <div
-            class="fixed bottom-16 sm:bottom-64 right-0 w-48 sm:w-64 z-50"
+            class="fixed bottom-16 sm:bottom-0 sm:top-32 right-0 w-48 sm:w-64 z-50"
         >
             <div
                 :class="[
                     'rounded-md text-center shadow bg-gray-50 px-2 sm:px-6 py-3 transition-transform duration-500 ease-in-out',
-                    showContact ? 'translate-x-0' : 'translate-x-full',
+                    showContact ? 'translate-x-0' : 'translate-x-[105%]',
                 ]"
             >
                 <h5 class="text-sm">
-                    Contactez-nous
+                    Contactez-nous sur
                 </h5>
-                <p class="mt-1 text-primary text-xl font-bold">
+                <p class="mt-1 text-success text-xl font-bold">
                     0478.02.33.77
                 </p>
-                <PhoneIcon class="w-6 top-0 left-0 text-primary absolute" />
+                <div class="bg-success p-1 absolute -top-3 -left-3">
+                    <PhoneIcon class="w-4 text-white" />
+                </div>
             </div>
         </div>
     </div>
@@ -100,23 +102,10 @@ const replacements = ref([]);
 const showContact = ref(false);
 
 onMounted(async () => {
+    showContact.value = true;
+
     const data = await getAccordingReplacements();
     replacements.value = data;
-});
-
-onMounted(() => {
-    const cycle = () => {
-        showContact.value = true;
-        setTimeout(() => {
-            showContact.value = false;
-        }, 5000);
-    };
-
-    cycle();
-
-    setInterval(() => {
-        cycle();
-    }, 10000);
 });
 
 useHead({
