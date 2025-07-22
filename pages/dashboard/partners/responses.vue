@@ -190,7 +190,7 @@ const selectedUserPartnerResponse = ref(null);
 const groupedInSearchResponses = computed(() => {
     if (!demandResponses.value?.responses) return [];
     const grouped = demandResponses.value.responses.reduce((acc, response) => {
-        if (response.user_partner.type !== 'in_search') return acc;
+        // if (response.user_partner.type !== 'in_search') return acc;
         const key = response.user_partner_id;
         if (!acc[key]) {
             acc[key] = {

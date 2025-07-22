@@ -60,7 +60,7 @@
                 >
                     <div
                         :class="[Array.isArray(searchFormData.cityTags) && searchFormData.cityTags.length ? 'w-1/2' : 'hidden']"
-                        class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                        class="flex max-w-52 md:max-w-40 items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                     >
                         <TagsInputItem
                             v-for="item in searchFormData.cityTags"
