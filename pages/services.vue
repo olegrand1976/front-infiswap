@@ -137,7 +137,8 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+
+        <!-- <div class="container">
             <div
                 class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6"
             >
@@ -176,42 +177,88 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </div> -->
+
         <div class="container">
             <div
-                class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
+                class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6"
             >
-                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3
-                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
-                    >
-                        Historique et suivi personnalisé
-                    </h3>
-                    <p class="hidden lg:block text-base">
-                        Suivez l’historique de vos missions et analysez vos performances
-                        pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
-                        vos interventions, pour toujours améliorer votre gestion de temps et
-                        vos compétences.
-                    </p>
-                </div>
-                <div
-                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
-                >
+                <div class="relative">
                     <LayoutsAppImage
-                        src="/home/A group of young people.png"
-                        alt="ensemble des jeunes"
+                        src="home/monitor_with_laptop.png"
+                        alt="un infirmier with vielle homme"
                         class="w-full z-10"
                     />
                     <div
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
-                        <h3 class="text-primary text-lg font-bold">
-                            Historique et suivi personnalisé
-                        </h3>
+                        <LayoutsNursTech custom-class="h-8 mx-auto" />
+                    </div>
+                </div>
+
+                <div class="hidden lg:block">
+                    <div
+                        class="hidden lg:grid place-content-center mb-3"
+                    >
+                        <LayoutsNursTech />
+                    </div>
+                    <p class="hidden text-base">
+                        Avec NURSTECH, bénéficiez d’une page web claire, professionnelle et optimisée pour que vos futurs patients vous trouvent facilement et vous contactent rapidement.
+                    </p>
+
+                    <p class="mb-4">
+                        Créez votre page web professionnelle avec <span class="font-bold text-primary">NURS</span><span class="font-bold text-primarytech">TECH</span><br>
+                        Valorisez votre activité et attirez plus de patients à domicile grâce
+                        à une page personnalisée, visible sur Infiswap.
+                    </p>
+
+                    <p class="mb-4">
+                        Avec NURSTECH, bénéficiez d’une page web claire, professionnelle
+                        et optimisée pour que vos futurs patients vous trouvent facilement
+                        et vous contactent rapidement.
+                    </p>
+
+                    <Button href="/nurstech-by-infiswap">
+                        En savoir plus
+                    </Button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div
+                class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
+            >
+                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
+                    <div
+                        class="hidden lg:grid place-content-center"
+                    >
+                        <LayoutsNursAssur />
+                    </div>
+                    <p class="hidden lg:block text-base">
+                        Votre assurance professionnelle 100% adaptée à votre métier d'infirmier-ère. Avec NURSASSUR, bénéficiez d'une couverture complète, conçue pour les besoins spécifiques des infirmiers et infirmières libéraux. Gagnez en sérénité et concentrez-vous sur vos patients !
+                    </p>
+                    <Button href="/nursassur-by-infiswap">
+                        En savoir plus
+                    </Button>
+                </div>
+                <div
+                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
+                >
+                    <LayoutsAppImage
+                        src="home/two_women_discussing.png"
+                        alt="ensemble des jeunes"
+                        class="w-full z-10 rounded-3xl"
+                    />
+                    <div
+                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
+                    >
+                        <LayoutsNursAssur custom-class="h-8 mx-auto" />
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="container">
             <div
                 class="-mt-10 relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6"
@@ -252,6 +299,43 @@
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <div
+                class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
+            >
+                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
+                    <h3
+                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                    >
+                        Historique et suivi personnalisé
+                    </h3>
+                    <p class="hidden lg:block text-base">
+                        Suivez l’historique de vos missions et analysez vos performances
+                        pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
+                        vos interventions, pour toujours améliorer votre gestion de temps et
+                        vos compétences.
+                    </p>
+                </div>
+                <div
+                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
+                >
+                    <LayoutsAppImage
+                        src="/home/A group of young people.png"
+                        alt="ensemble des jeunes"
+                        class="w-full z-10"
+                    />
+                    <div
+                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
+                    >
+                        <h3 class="text-primary text-lg font-bold">
+                            Historique et suivi personnalisé
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"

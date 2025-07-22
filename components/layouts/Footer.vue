@@ -20,11 +20,11 @@
                             <span class="md:text-xs lg:text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
-                            <Mail class="text-primary w-4 h-4" />
+                            <EnvelopeIcon class="text-primary w-4 h-4" />
                             <span class="md:text-xs lg:text-sm">info@infiswap.be</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
-                            <Globe class="text-primary w-4 h-4" />
+                            <GlobeAltIcon class="text-primary w-4 h-4" />
                             <span class="md:text-xs lg:text-sm">www.infiswap.be</span>
                         </p>
                     </div>
@@ -47,7 +47,7 @@
                         @submit.prevent="subscribeNewsletter"
                     >
                         <div class="flex flex-row justify-start items-center">
-                            <Mail class="text-white w-4 h-4 ms-3" />
+                            <EnvelopeIcon class="text-white w-4 h-4 ms-3" />
                             <Input
                                 v-model="email"
                                 variant="transparent"
@@ -119,9 +119,9 @@
 import {
     PhoneIcon,
     MapPinIcon,
-    Mail,
-    Globe,
-} from 'lucide-vue-next';
+    EnvelopeIcon,
+    GlobeAltIcon,
+} from '@heroicons/vue/24/outline';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();

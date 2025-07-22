@@ -239,12 +239,7 @@
                             :disabled="isDisabled || inProgress"
                             :in-progress="inProgress"
                         >
-                            <span v-if="user.gender == 'M'">
-                                Je suis intéressé
-                            </span>
-                            <span v-if="user.gender == 'F'">
-                                Je suis intéressée
-                            </span>
+                            Je suis intéressé(e)
                         </Button>
                     </div>
                 </div>

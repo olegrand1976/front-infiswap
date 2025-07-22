@@ -19,9 +19,15 @@
                         </h5>
                         <div
                             v-if="loading"
-                            class="flex ml-[20%] md:ml-[35%] items-center mt-12"
+                            class="flex flex-col items-center mt-8"
                         >
-                            <RollingLoader :loading="loading" />
+                            <p class="text-center text-black/70 text-sm">
+                                La recherche peut prendre plusieurs secondes. Veuillez patienter...
+                            </p>
+                            <RollingLoader
+                                :loading="loading"
+                                class="mt-12 -ml-52 sm:-ml-44"
+                            />
                         </div>
                         <div
                             v-else-if="locationData.length != 0"
@@ -82,11 +88,10 @@
 </template>
 
 <script setup lang="ts">
-import { useOpenai } from '@/composables/useOpenai';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const { getAdjacentZipCodesAndCities, loading } = useOpenai();
+const { loading, getNearbyLocalities } = useLocation();
 const { createPreferences } = useAuth();
 const user = useUser();
 
@@ -136,7 +141,9 @@ watch(
         if (isOpen) {
             const zipCode = props.newlyAddedValue || user.value.profile.zip_code || '';
             if (zipCode) {
-                locationData.value = await getAdjacentZipCodesAndCities(zipCode, props.initialZipCodes, props.initialCities);
+                locationData.value = await getNearbyLocalities(zipCode, 5, 'be', props.initialZipCodes, props.initialCities);
+
+                tempSelectedLocations.value = [...locationData.value];
             }
         }
     },

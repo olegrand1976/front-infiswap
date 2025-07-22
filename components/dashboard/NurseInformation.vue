@@ -1,6 +1,8 @@
 <template>
     <div class="space-y-6">
         <section class="grid grid-cols-1 items-center gap-4">
+            <NurstechPresentation />
+
             <div class="hidden lg:block mx-8">
                 <Carousel :opts="{ slidesToScroll: 1, slidesToShow: 4 }">
                     <CarouselContent>
@@ -108,8 +110,8 @@
                             </div>
                         </CarouselItem>
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious class="2xl:hidden" />
+                    <CarouselNext class="2xl:hidden" />
                 </Carousel>
             </div>
 
@@ -221,27 +223,10 @@
                     <CarouselNext />
                 </Carousel>
             </div>
-
-            <div class="bg-gray-100 rounded-b-lg">
-                <div class="p-4 grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-                    <DashboardReportSection
-                        title="Demandes de remplacement"
-                        :count="reports.me"
-                    />
-                    <DashboardReportSection
-                        title="Annonce(s) repondue(s)"
-                        :count="reports.total"
-                    />
-                    <DashboardReportSection
-                        title="Réponse(s) accepté(s)"
-                        :count="reports.accepted"
-                    />
-                </div>
-            </div>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 h-80 sm:h-full rounded p-4 mb-4">
+            <div class="bg-gray-100 sm:h-full h-80 rounded p-4 mb-4">
                 <div class="text-primary flex justify-between items-center">
                     <h2>
                         Mes préférences
@@ -268,13 +253,38 @@
                     v-model="proposalDialog"
                     v-model:newly-added-value="newlyAddedValue"
                     title="Préférences"
-                    description="Cochez une ou plusieurs codes postaux/villes suggérés pour l'encodage de vos préférences."
+                    description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences"
                     :initial-zip-codes="zipCodes"
                     :initial-cities="cities"
                     :is-preference-mode="true"
                     @update:initial-zip-codes="updateZipCodes"
                     @update:initial-cities="updateCities"
                 />
+
+                <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-12 md:mt-4 overflow-hidden">
+                    <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
+                        <label class="text-primary sm:text-white">
+                            <span>Rayon de recherche</span>
+                        </label>
+                    </div>
+
+                    <div class="relative flex items-center">
+                        <InputIcon
+                            v-model="radiusInput"
+                            type="number"
+                            title="Appuyer sur l'icône pour valider"
+                            class="text-sm border border-gray-300 rounded-full h-8 indent-3 bg-transparent sm:border-none sm:rounded w-full pr-10"
+                            min="1"
+                        />
+
+                        <button
+                            class="absolute right-2 text-primary hover:text-green-600 transition"
+                            @click="onUpdateRadius"
+                        >
+                            <CheckIcon class="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-gray-100 rounded-b-lg relative">
@@ -296,6 +306,9 @@
 </template>
 
 <script setup lang="ts">
+import {
+    CheckIcon,
+} from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import type { UserSettings, Patient } from '~/lib/types';
@@ -324,6 +337,7 @@ const props = defineProps<{
     tours: Patient[];
 }>();
 
+const { updateRadiusKm } = useAuth();
 const user = useUser();
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
@@ -341,6 +355,17 @@ const formattedData = computed(() => {
         annonces: item.count,
     }));
 });
+
+const radiusKm = computed(() => {
+    const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+    return settings.radius_km ?? '5';
+});
+
+const radiusInput = ref(Number(radiusKm.value));
+
+const onUpdateRadius = async () => {
+    await updateRadiusKm(radiusInput.value);
+};
 
 const zipCodes = ref<string[]>([]);
 const cities = ref<string[]>([]);

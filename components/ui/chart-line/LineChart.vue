@@ -2,7 +2,7 @@
 import { type BulletLegendItemInterface, CurveType, Axis, Line } from '@unovis/ts';
 import { VisAxis, VisLine, VisXYContainer } from '@unovis/vue';
 import { useMounted } from '@vueuse/core';
-import { type Component, computed, ref } from 'vue';
+import { type Component, computed } from 'vue';
 import type { BaseChartProps } from '.';
 import { ChartCrosshair, ChartLegend, defaultColors } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
    */
     curveType?: CurveType;
     /**
-   * Mapping clé -> label personnalisé pour la légende
+   * Customized legends
    */
     legendLabels?: Record<string, string>;
 }>(), {
@@ -41,11 +41,13 @@ type Data = typeof props.data[number];
 const index = computed(() => props.index as KeyOfT);
 const colors = computed(() => props.colors?.length ? props.colors : defaultColors(props.categories.length));
 
-const legendItems = ref<BulletLegendItemInterface[]>(props.categories.map((category, i) => ({
-    name: props.legendLabels?.[category] ?? category, // 💡 label personnalisé si fourni
-    color: colors.value[i],
-    inactive: false,
-})));
+const legendItems = computed(() =>
+    props.categories.map((category, i) => ({
+        name: props.legendLabels?.[category] ?? category,
+        color: colors.value[i],
+        inactive: false,
+    })),
+);
 
 const isMounted = useMounted();
 

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div>
         <div class="flex mt-8">
@@ -118,7 +119,7 @@
                                         </div>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="[groupsByProvince.length > 0 ? 'w-1/2' : 'w-full']"
+                                            :class="[groupsByProvince && Object.keys(groupsByProvince).length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
                                             placeholder="Bruxelles"
                                             @blur="handleBlur"
@@ -214,25 +215,25 @@
                                     </div>
                                     <div v-else>
                                         <TableRow
-                                            v-for="replacement in group"
-                                            :key="replacement.id"
+                                            v-for="replacementGroup in group"
+                                            :key="replacementGroup.id"
                                             class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
                                             <TableCell
-                                                :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacement.periods.length > 0 })]"
+                                                :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
                                             >
-                                                <template v-if="replacement.periods.length > 0">
+                                                <template v-if="replacementGroup.periods.length > 0">
                                                     <div
-                                                        v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                        v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                         :key="index"
                                                         class="flex items-center"
                                                     >
@@ -246,24 +247,24 @@
                                                     </div>
                                                     <div
                                                         class="mt-1 text-xs font-semibold text-primary cursor-pointer"
-                                                        @click="handleShowPeriods(replacement.periods)"
+                                                        @click="handleShowPeriods(replacementGroup.periods)"
                                                     >
                                                         Voir tout
                                                     </div>
                                                 </template>
                                                 <template v-else>
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                                        <span>{{ formatDate(replacementGroup.start_date) }}</span>
                                                     </div>
                                                     <span class="flex items-center">au</span>
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                        <span>{{ formatDate(replacement.end_date) }}</span>
+                                                        <span>{{ formatDate(replacementGroup.end_date) }}</span>
                                                     </div>
                                                 </template>
                                             </TableCell>
                                             <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                                 <div>
-                                                    <span v-if="hasShift(replacement, 'morning')">
+                                                    <span v-if="hasShift(replacementGroup, 'morning')">
                                                         <CheckCircleIcon class="h-6 text-green-500" />
                                                     </span>
                                                     <span v-else />
@@ -275,7 +276,7 @@
                                                     <span v-else />
                                                 </div>
                                                 <div>
-                                                    <span v-if="hasShift(replacement, 'evening')">
+                                                    <span v-if="hasShift(replacementGroup, 'evening')">
                                                         <CheckCircleIcon class="h-6 text-green-500" />
                                                     </span>
                                                     <span v-else />
@@ -288,21 +289,21 @@
                                                             <TooltipTrigger>
                                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes as string)"
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
-                                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes as string).length - 1 ? ',' : '' }}
+                                                                        {{ zipCode }}{{ index < JSON.parse(replacementGroup.zip_codes as string).length - 1 ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
                                                             <TooltipContent>
                                                                 <span
-                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
+                                                                    v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes as string)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes as string).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < JSON.parse(replacementGroup.zip_codes as string).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -316,21 +317,21 @@
                                                             <TooltipTrigger>
                                                                 <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                                     <span
-                                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                        v-for="(city, index) in (typeof replacementGroup.cities === 'string' ? JSON.parse(replacementGroup.cities) : replacementGroup.cities)"
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                     >
-                                                                        {{ city }}{{ index < JSON.parse(replacement.cities as string).length - 1 ? ',' : '' }}
+                                                                        {{ city }}{{ index < JSON.parse(replacementGroup.cities as string).length - 1 ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
                                                             <TooltipContent>
                                                                 <span
-                                                                    v-for="(city, index) in JSON.parse(replacement.cities as string)"
+                                                                    v-for="(city, index) in JSON.parse(replacementGroup.cities as string)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                 >
-                                                                    {{ city }}{{ index < JSON.parse(replacement.cities as string).length - 1 ? ',' : '' }}
+                                                                    {{ city }}{{ index < JSON.parse(replacementGroup.cities as string).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -360,7 +361,7 @@
                                                         <DropdownMenuContent class="w-48">
                                                             <DropdownMenuItem as-child>
                                                                 <NuxtLink
-                                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                    :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                                     class="flex items-center space-x-2 text-sm"
                                                                 >
                                                                     <EyeIcon class="h-4 w-4" />
@@ -369,13 +370,13 @@
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="openEditDialog(replacement)"
+                                                                @click="openEditDialog(replacementGroup)"
                                                             >
                                                                 <PencilSquareIcon class="h-4 w-4" />
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -388,12 +389,12 @@
                                                 <template v-else>
                                                     <Button
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                        :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                     >
                                                         <EyeIcon class="h-6 mt-1" />
                                                     </Button>
                                                     <Button
-                                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
+                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -419,7 +420,7 @@
                                                             <Button
                                                                 variant="default"
                                                                 class="px-8"
-                                                                @click="handleCloseReplacement(replacement)"
+                                                                @click="handleCloseReplacement(replacementGroup)"
                                                             >
                                                                 Oui
                                                             </Button>
@@ -488,23 +489,23 @@
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacement in filteredReplacements"
-                                        :key="replacement.id"
+                                        v-for="replacementGroup in filteredReplacements"
+                                        :key="replacementGroup.id"
                                         class="grid grid-cols-6 gap-2 border border-none overflow-x-hidden relative"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
-                                        <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacement.periods.length > 0 })]">
-                                            <template v-if="replacement.periods.length > 0">
+                                        <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
+                                            <template v-if="replacementGroup.periods.length > 0">
                                                 <div
-                                                    v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                    v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                     :key="index"
                                                     class="flex flex-col items-center mb-2"
                                                 >
@@ -518,36 +519,36 @@
                                                 </div>
                                                 <div
                                                     class="mt-1 text-xs font-semibold text-primary cursor-pointer"
-                                                    @click="handleShowPeriods(replacement.periods)"
+                                                    @click="handleShowPeriods(replacementGroup.periods)"
                                                 >
                                                     Voir tout
                                                 </div>
                                             </template>
                                             <template v-else>
                                                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.start_date) }}</span>
+                                                    <span>{{ formatDate(replacementGroup.start_date) }}</span>
                                                 </div>
                                                 <span class="flex items-center">au</span>
                                                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.end_date) }}</span>
+                                                    <span>{{ formatDate(replacementGroup.end_date) }}</span>
                                                 </div>
                                             </template>
                                         </TableCell>
                                         <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                             <div>
-                                                <span v-if="hasShift(replacement, 'morning')">
+                                                <span v-if="hasShift(replacementGroup, 'morning')">
                                                     <CheckCircleIcon class="h-6 text-green-500" />
                                                 </span>
                                                 <span v-else />
                                             </div>
                                             <div>
-                                                <span v-if="hasShift(replacement, 'afternoon')">
+                                                <span v-if="hasShift(replacementGroup, 'afternoon')">
                                                     <CheckCircleIcon class="h-6 text-green-500" />
                                                 </span>
                                                 <span v-else />
                                             </div>
                                             <div>
-                                                <span v-if="hasShift(replacement, 'evening')">
+                                                <span v-if="hasShift(replacementGroup, 'evening')">
                                                     <CheckCircleIcon class="h-6 text-green-500" />
                                                 </span>
                                                 <span v-else />
@@ -560,21 +561,21 @@
                                                         <TooltipTrigger>
                                                             <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                                 <span
-                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                    v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < JSON.parse(String(replacementGroup.zip_codes)).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </p>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
                                                             <span
-                                                                v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes)"
                                                                 :key="index"
                                                                 :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                             >
-                                                                {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                {{ zipCode }}{{ index < JSON.parse(String(replacementGroup.zip_codes)).length - 1 ? ',' : '' }}
                                                             </span>
                                                         </TooltipContent>
                                                     </Tooltip>
@@ -588,21 +589,21 @@
                                                         <TooltipTrigger>
                                                             <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                                 <span
-                                                                    v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                    v-for="(city, index) in JSON.parse(replacementGroup.cities)"
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                 >
-                                                                    {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                                    {{ city }}{{ index < JSON.parse(replacementGroup.cities).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </p>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
                                                             <span
-                                                                v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                                v-for="(city, index) in JSON.parse(replacementGroup.cities)"
                                                                 :key="index"
                                                                 :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                             >
-                                                                {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                                {{ city }}{{ index < JSON.parse(replacementGroup.cities).length - 1 ? ',' : '' }}
                                                             </span>
                                                         </TooltipContent>
                                                     </Tooltip>
@@ -614,10 +615,10 @@
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger>
-                                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                            {{ getUniqueValues(replacementGroup.care_types, careType => careType.name).join(', ') }}
                                                         </TooltipTrigger>
                                                         <TooltipContent>
-                                                            {{ getUniqueValues(replacement.care_types, careType => careType.name).join(', ') }}
+                                                            {{ getUniqueValues(replacementGroup.care_types, careType => careType.name).join(', ') }}
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
@@ -632,7 +633,7 @@
                                                     <DropdownMenuContent class="w-48">
                                                         <DropdownMenuItem as-child>
                                                             <NuxtLink
-                                                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                                 class="flex items-center space-x-2 text-sm"
                                                             >
                                                                 <EyeIcon class="h-4 w-4" />
@@ -641,13 +642,13 @@
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             class="flex items-center space-x-2 text-sm"
-                                                            @click="openEditDialog(replacement)"
+                                                            @click="openEditDialog(replacementGroup)"
                                                         >
                                                             <PencilSquareIcon class="h-4 w-4" />
                                                             <span>Modifier</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
-                                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                             class="flex items-center space-x-2 text-sm"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -660,12 +661,12 @@
                                             <template v-else>
                                                 <Button
                                                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
-                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                    :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                 >
                                                     <EyeIcon class="h-6 mt-1" />
                                                 </Button>
                                                 <Button
-                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null && replacement.status == 'closed'"
+                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                     @click="closeReplacementDialog = true"
                                                 >
@@ -691,7 +692,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacement)"
+                                                            @click="handleCloseReplacement(replacementGroup)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -750,23 +751,23 @@
                                     </div>
                                     <div v-else>
                                         <TableRow
-                                            v-for="replacement in group"
-                                            :key="replacement.id"
+                                            v-for="replacementGroup in group"
+                                            :key="replacementGroup.id"
                                             class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                                <template v-if="replacement.periods.length > 0">
+                                                <template v-if="replacementGroup.periods.length > 0">
                                                     <div
-                                                        v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                                        v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                         :key="index"
                                                         class="flex flex-col items-center mb-2 space-x-2"
                                                     >
@@ -780,18 +781,18 @@
                                                     </div>
                                                     <div
                                                         class="mt-1 text-xs font-semibold text-primary cursor-pointer"
-                                                        @click="handleShowPeriods(replacement.periods)"
+                                                        @click="handleShowPeriods(replacementGroup.periods)"
                                                     >
                                                         Voir tout
                                                     </div>
                                                 </template>
-                                                <template v-else-if="replacement.start_date !== replacement.end_date && replacement.start_date != null && replacement.end_date != null">
+                                                <template v-else-if="replacementGroup.start_date !== replacementGroup.end_date && replacementGroup.start_date != null && replacementGroup.end_date != null">
                                                     <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
-                                                        <span>{{ formatDate(replacement.start_date) }}</span>
+                                                        <span>{{ formatDate(replacementGroup.start_date) }}</span>
                                                     </div>
                                                     <span class="text-xs mb-1">au</span>
                                                     <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                        <span>{{ formatDate(replacement.end_date) }}</span>
+                                                        <span>{{ formatDate(replacementGroup.end_date) }}</span>
                                                     </div>
                                                 </template>
                                                 <template v-else>
@@ -799,7 +800,7 @@
                                                         class="flex h-full w-full justify-center items-center"
                                                         style="min-height: 3rem;"
                                                     >
-                                                        <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                                        <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacementGroup.start_date) }}</span>
                                                     </div>
                                                 </template>
                                             </TableCell>
@@ -810,14 +811,14 @@
                                                             <TooltipTrigger class="block w-full text-start">
                                                                 <div class="flex flex-col space-y-1">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string).slice(0, 3)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes as string).slice(0, 3)"
                                                                         :key="index"
                                                                         :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
                                                                         {{ zipCode }}
                                                                     </span>
                                                                     <span
-                                                                        v-if="JSON.parse(replacement.zip_codes as string).length > 3"
+                                                                        v-if="JSON.parse(replacementGroup.zip_codes as string).length > 3"
                                                                         class="text-xs text-gray-500"
                                                                     >
                                                                         ...
@@ -827,11 +828,11 @@
                                                             <TooltipContent class="text-sm max-w-[200px]">
                                                                 <div class="flex flex-wrap gap-1">
                                                                     <span
-                                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes as string)"
+                                                                        v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes as string)"
                                                                         :key="'tooltip-' + index"
                                                                         :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
-                                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                        {{ zipCode }}{{ index < (typeof replacementGroup.zip_codes === 'string' ? JSON.parse(replacementGroup.zip_codes) : []).length - 1 ? ',' : '' }}
                                                                     </span>
                                                                 </div>
                                                             </TooltipContent>
@@ -849,7 +850,7 @@
                                                             <DropdownMenuContent class="w-48">
                                                                 <DropdownMenuItem as-child>
                                                                     <NuxtLink
-                                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                        :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                                         class="flex items-center space-x-2 text-sm"
                                                                     >
                                                                         <EyeIcon class="h-4 w-4" />
@@ -864,7 +865,7 @@
                                                                     <span>Modifier</span>
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
-                                                                    v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                                     class="flex items-center space-x-2 text-sm"
                                                                     @click="closeReplacementDialog = true"
                                                                 >
@@ -876,7 +877,7 @@
                                                     </template>
                                                     <template v-else>
                                                         <Button
-                                                            v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -884,7 +885,7 @@
                                                         </Button>
                                                         <Button
                                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                            :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                         >
                                                             <EyeIcon class="h-6 mt-1" />
                                                         </Button>
@@ -958,23 +959,23 @@
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacement in filteredReplacements"
-                                        :key="replacement.id"
+                                        v-for="replacementGroup in filteredReplacements"
+                                        :key="replacementGroup.id"
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacement) || replacement.replaced_by !== null || replacement.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacement.replaced_by !== null || replacement.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacement.replaced_by == null && replacement.status == 'open' },
+                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacement.replaced_by !== null || replacement.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                            <template v-if="replacement.periods.length > 0 && replacement.start_date == null && replacement.end_date == null">
+                                            <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
                                                 <div
-                                                    v-for="(period, index) in replacement.periods.slice(0, 1)"
+                                                    v-for="(period, index) in replacementGroup.periods.slice(0, 1)"
                                                     :key="index"
                                                     class="flex flex-col items-center mb-2"
                                                 >
@@ -988,18 +989,18 @@
                                                 </div>
                                                 <div
                                                     class="mt-1 text-xs font-semibold text-primary cursor-pointer"
-                                                    @click="handleShowPeriods(replacement.periods)"
+                                                    @click="handleShowPeriods(replacementGroup.periods)"
                                                 >
                                                     Voir tout
                                                 </div>
                                             </template>
-                                            <template v-else-if="replacement.start_date !== replacement.end_date">
+                                            <template v-else-if="replacementGroup.start_date !== replacementGroup.end_date">
                                                 <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.start_date) }}</span>
+                                                    <span>{{ formatDate(replacementGroup.start_date) }}</span>
                                                 </div>
                                                 <span class="text-xs mb-1">au</span>
                                                 <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                                    <span>{{ formatDate(replacement.end_date) }}</span>
+                                                    <span>{{ formatDate(replacementGroup.end_date) }}</span>
                                                 </div>
                                             </template>
                                             <template v-else>
@@ -1007,7 +1008,7 @@
                                                     class="flex h-full w-full justify-center items-center"
                                                     style="min-height: 3rem;"
                                                 >
-                                                    <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacement.start_date) }}</span>
+                                                    <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(replacementGroup.start_date) }}</span>
                                                 </div>
                                             </template>
                                         </TableCell>
@@ -1018,14 +1019,14 @@
                                                         <TooltipTrigger class="block w-full text-start">
                                                             <div class="flex flex-col space-y-1">
                                                                 <span
-                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes).slice(0, 3)"
+                                                                    v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes).slice(0, 3)"
                                                                     :key="index"
                                                                     :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
                                                                     {{ zipCode }}
                                                                 </span>
                                                                 <span
-                                                                    v-if="JSON.parse(replacement.zip_codes).length > 3"
+                                                                    v-if="JSON.parse(replacementGroup.zip_codes).length > 3"
                                                                     class="text-xs text-gray-500"
                                                                 >
                                                                     ...
@@ -1035,11 +1036,11 @@
                                                         <TooltipContent class="text-sm max-w-[200px]">
                                                             <div class="flex flex-wrap gap-1">
                                                                 <span
-                                                                    v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                                    v-for="(zipCode, index) in JSON.parse(replacementGroup.zip_codes)"
                                                                     :key="'tooltip-' + index"
                                                                     :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < JSON.parse(replacementGroup.zip_codes).length - 1 ? ',' : '' }}
                                                                 </span>
                                                             </div>
                                                         </TooltipContent>
@@ -1057,7 +1058,7 @@
                                                         <DropdownMenuContent class="w-48">
                                                             <DropdownMenuItem as-child>
                                                                 <NuxtLink
-                                                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                                    :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                                     class="flex items-center space-x-2 text-sm"
                                                                 >
                                                                     <EyeIcon class="h-4 w-4" />
@@ -1066,13 +1067,13 @@
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="openEditDialog(replacement)"
+                                                                @click="openEditDialog(replacementGroup)"
                                                             >
                                                                 <PencilSquareIcon class="h-4 w-4" />
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -1084,7 +1085,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <Button
-                                                        v-if="user.nurse.id == replacement.nurse_id && replacement.replaced_by == null"
+                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -1092,7 +1093,7 @@
                                                     </Button>
                                                     <Button
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                                        :href="`/dashboard/replacements/detail/${replacementGroup.id}`"
                                                     >
                                                         <EyeIcon class="h-6 mt-1" />
                                                     </Button>
@@ -1117,7 +1118,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacement)"
+                                                            @click="handleCloseReplacement(replacementGroup)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -1161,28 +1162,81 @@
                         class="mt-6 space-y-6"
                         @submit.prevent="submit"
                     >
-                        <div class="grid grid-cols-2 items-center gap-8">
-                            <div class="flex flex-col space-y-2">
-                                <label class="text-primary font-semibold">
-                                    Date de début
-                                </label>
-                                <Input
-                                    v-model="editFormData.startDate"
-                                    type="date"
-                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                />
+                        <template v-if="editFormData.periods.length > 0">
+                            <h4 class="text-black/80 font-semibold">
+                                Période de remplacement
+                            </h4>
+                            <div
+                                v-for="(period, index) in editFormData.periods"
+                                :key="index"
+                                class="mb-3"
+                            >
+                                <div class="grid grid-cols-2 items-center relative gap-8">
+                                    <div class="flex flex-col space-y-2">
+                                        <label class="text-primary font-semibold">
+                                            Date de début
+                                        </label>
+                                        <Input
+                                            v-model="editFormData.periods[index].start_date"
+                                            type="date"
+                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                        />
+                                    </div>
+                                    <div class="flex flex-col space-y-2">
+                                        <label class="text-primary font-semibold">
+                                            Date de fin
+                                        </label>
+                                        <Input
+                                            v-model="editFormData.periods[index].end_date"
+                                            type="date"
+                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                        />
+                                    </div>
+                                    <div
+                                        v-if="index > 0"
+                                        class="absolute right-0 top-0"
+                                    >
+                                        <XMarkIcon
+                                            class="w-5 text-primary cursor-pointer"
+                                            @click="removePeriod(index)"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex flex-col space-y-2">
-                                <label class="text-primary font-semibold">
-                                    Date de fin
-                                </label>
-                                <Input
-                                    v-model="editFormData.endDate"
-                                    type="date"
-                                    class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                />
+                            <div
+                                class="mt-6 cursor-pointer flex justify-center mx-auto items-center gap-3 text-primary"
+                                @click="addPeriod"
+                            >
+                                <PlusIcon class="w-4" />
+                                <p class="text-xs">
+                                    Ajouter une période
+                                </p>
                             </div>
-                        </div>
+                        </template>
+                        <template v-else>
+                            <div class="grid grid-cols-2 items-center gap-8">
+                                <div class="flex flex-col space-y-2">
+                                    <label class="text-primary font-semibold">
+                                        Date de début
+                                    </label>
+                                    <Input
+                                        v-model="editFormData.startDate"
+                                        type="date"
+                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                    />
+                                </div>
+                                <div class="flex flex-col space-y-2">
+                                    <label class="text-primary font-semibold">
+                                        Date de fin
+                                    </label>
+                                    <Input
+                                        v-model="editFormData.endDate"
+                                        type="date"
+                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
+                                    />
+                                </div>
+                            </div>
+                        </template>
                         <div class="flex flex-col space-y-2">
                             <label class="text-primary font-semibold">
                                 Créneau horaire
@@ -1291,7 +1345,7 @@
                     <Button
                         variant="secondary"
                         class="bg-gray-200 hover:bg-gray-300 px-8"
-                        @click="editDialogOpen = false"
+                        @click="handleCloseEditDialog"
                     >
                         Annuler
                     </Button>
@@ -1395,7 +1449,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { toRaw } from 'vue';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
@@ -1508,7 +1562,8 @@ const hasShift = (replacement, period) => {
             timeSlotPeriods.forEach(p => periods.add(p));
         }
         else {
-            Object.entries(timeSlot).forEach(([value]) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            Object.entries(timeSlot).forEach(([key, value]) => {
                 if (typeof value === 'object' && value !== null && 'start_at' in value && 'end_at' in value) {
                     const startAt = normalizeTime(value.start_at);
                     const endAt = normalizeTime(value.end_at);
@@ -1849,6 +1904,7 @@ const editFormData = reactive({
     replacedBy: null,
     visibility: '',
     type: '',
+    periods: [],
     startDate: '',
     endDate: '',
     patientCount: null,
@@ -1862,6 +1918,24 @@ const editFormData = reactive({
     status: '',
     comment: '',
 });
+
+const resetEditFormData = () => {
+    editFormData.id = null;
+    editFormData.nurseId = user.value.nurse.id;
+    editFormData.replacedBy = null;
+    editFormData.visibility = '';
+    editFormData.type = '';
+    editFormData.periods = [];
+    editFormData.startDate = '';
+    editFormData.endDate = '';
+    editFormData.patientCount = null;
+    editFormData.zipCodes = [];
+    editFormData.cities = [];
+    editFormData.careTypes = [];
+    editFormData.timeSlot = { start_at: '', end_at: '' };
+    editFormData.status = '';
+    editFormData.comment = '';
+};
 
 const openEditDialog = (replacement: Replacement) => {
     const formatDateToInput = (isoDate: string) => {
@@ -1891,16 +1965,46 @@ const openEditDialog = (replacement: Replacement) => {
         : JSON.parse(replacement.cities || '[]');
     editFormData.careTypes = replacement.care_types?.map(ct => ct.id) || [];
 
+    if (replacement.periods && replacement.periods.length > 0) {
+        editFormData.periods = replacement.periods.map(period => ({
+            start_date: formatDateToInput(period.start_date),
+            end_date: formatDateToInput(period.end_date),
+        }));
+    }
+
     const timeSlot = replacement.timeSlot
         ? typeof replacement.timeSlot === 'string'
-            ? JSON.parse(replacement.timeSlot)
+            ? JSON.parse(replacement.timeSlot || '{}')
             : replacement.timeSlot
-        : {};
-    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at || '');
-    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at || '');
+        : replacement.details && replacement.details.length > 0
+            ? {
+                    start_at: replacement.details[replacement.details.length - 1].start_at,
+                    end_at: replacement.details[replacement.details.length - 1].end_at,
+                }
+            : {};
+    editFormData.timeSlot.start_at = formatTimeToInput(timeSlot.start_at);
+    editFormData.timeSlot.end_at = formatTimeToInput(timeSlot.end_at);
 
     editFormData.comment = replacement.comment || '';
     editDialogOpen.value = true;
+};
+
+const addPeriod = () => {
+    editFormData.periods.push({
+        start_date: '',
+        end_date: '',
+    });
+};
+
+const handleCloseEditDialog = () => {
+    resetEditFormData();
+    editDialogOpen.value = false;
+};
+
+const removePeriod = (index) => {
+    if (index > 0) {
+        editFormData.periods.splice(index, 1);
+    }
 };
 
 const handleCareTypeClick = (formData, careTypeId) => {

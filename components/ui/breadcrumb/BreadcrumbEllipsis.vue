@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
-import { MoreHorizontal } from 'lucide-vue-next';
+import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ const props = defineProps<{
         :class="cn('flex h-9 w-9 items-center justify-center', props.class)"
     >
         <slot>
-            <MoreHorizontal class="h-4 w-4" />
+            <EllipsisHorizontalIcon class="h-4 w-4" />
         </slot>
         <span class="sr-only">More</span>
     </span>

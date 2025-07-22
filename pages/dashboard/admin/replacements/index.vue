@@ -85,44 +85,6 @@
                 />
             </div>
 
-            <Dialog v-model:open="dialogOpen">
-                <DialogContent class="max-h-[30rem] overflow-y-scroll overflow-x-hidden">
-                    <DialogHeader>
-                        <DialogTitle>
-                            <template v-if="selectedUsers.length === 1">
-                                Personne notifiée (1)
-                            </template>
-                            <template v-else>
-                                Personnes notifiées ({{ selectedUsers.length }})
-                            </template>
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <div
-                        v-if="selectedUsers.length === 0"
-                        class="mt-4 text-center text-gray-500 italic"
-                    >
-                        Aucune personne notifiée.
-                    </div>
-
-                    <div
-                        v-else
-                        class="mt-4"
-                    >
-                        <ul class="space-y-2">
-                            <li
-                                v-for="user in selectedUsers"
-                                :key="user.id"
-                                class="flex justify-between items-center"
-                            >
-                                <UsersName :user="user" />
-                                <span>{{ user.profile?.zip_code ?? '—' }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
             <Dialog v-model:open="isDialogOpen">
                 <DialogContent class="rounded-2xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
                     <DialogHeader>
@@ -231,8 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown } from 'lucide-vue-next';
-import { EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, ArrowPathIcon, ChevronUpDownIcon } from '@heroicons/vue/24/outline';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -240,7 +201,7 @@ import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { PERPAGE } from '~/lib/constants';
-import type { Replacement, User } from '~/lib/types';
+import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
@@ -328,13 +289,6 @@ const debouncedFilterReplacements = debounce(filterReplacements, 100);
 await getReplacementsForAdmin(page.value, perPage.value);
 
 const { $toast } = useNuxtApp();
-const dialogOpen = ref(false);
-const selectedUsers = ref<User[]>([]);
-
-function showUsersInDialog(users: User[]) {
-    selectedUsers.value = users;
-    dialogOpen.value = true;
-}
 
 const refreshReplacement = async (page: number) => {
     await getReplacementsForAdmin(page, perPage.value);
@@ -352,7 +306,7 @@ const columns: ColumnDef<Replacement>[] = [
             variant: 'ghost',
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             style: 'white-space: nowrap;',
-        }, () => ['Période', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+        }, () => ['Période', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             return h(ReplacementPeriod, {
@@ -387,7 +341,7 @@ const columns: ColumnDef<Replacement>[] = [
             variant: 'ghost',
             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             style: 'white-space: nowrap;',
-        }, () => ['Heures', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+        }, () => ['Heures', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             return h(FormatTimePeriod, {
@@ -431,7 +385,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['C.P', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['C.P', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
         accessorFn: (row) => {
@@ -481,7 +435,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['Villes', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['Villes', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
         accessorFn: (row) => {
@@ -538,7 +492,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Créateur', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Créateur', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
             const user = row.original.nurse_owner;
@@ -553,7 +507,7 @@ const columns: ColumnDef<Replacement>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => [
                 'Téléphone',
-                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
+                h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' }),
             ]);
         },
         cell: ({ row }: { row: { getValue: (key: string) => string | null } }) => {
@@ -576,7 +530,7 @@ const columns: ColumnDef<Replacement>[] = [
                     variant: 'ghost',
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 },
-                () => ['Remplaçant', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                () => ['Remplaçant', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })],
             );
         },
 
@@ -607,6 +561,7 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             const users = row.original.matching_nurses || [];
             const displayText = users.map(u => u.full_name).join(', ');
+            const replacementId = row.original.id;
 
             return h('div', { class: 'flex items-center' }, [
                 h('div', {
@@ -616,7 +571,7 @@ const columns: ColumnDef<Replacement>[] = [
                 users.length > 0 && h(Button, {
                     variant: 'ghost',
                     size: 'sm',
-                    onClick: () => showUsersInDialog(users),
+                    onClick: () => navigateTo(`/dashboard/admin/replacements/notified/${replacementId}`),
                 }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
             ]);
         },
@@ -628,7 +583,7 @@ const columns: ColumnDef<Replacement>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressés', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]),
+            }, () => ['Intéressés', h(ChevronUpDownIcon, { class: 'ml-2 h-2 w-2' })]),
         cell: ({ row }) => {
             const nurses = row.original.response_count ?? 0;
             const id = row.original.id;
@@ -651,7 +606,7 @@ const columns: ColumnDef<Replacement>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('type'),
-            }, () => ['Type', h(ArrowUpDown, { class: 'ml-2 h-2 w-2' })]);
+            }, () => ['Type', h(ChevronUpDownIcon, { class: 'ml-2 h-2 w-2' })]);
         },
         cell: ({ row }) => {
             const type = row.original.type;
@@ -672,7 +627,7 @@ const columns: ColumnDef<Replacement>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Date', h(ArrowUpDown, { class: '' })]);
+            }, () => ['Date', h(ChevronUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));

@@ -4,20 +4,6 @@
     >
         <div>
             <div class="flex flex-col justify-center items-center mb-8">
-                <!-- <div
-                    v-if="current?.plan?.name!=='Trial'"
-                    class="flex flex-col items-center xl:items-center xl:mx-8"
-                >
-                    <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
-                        Merci pour votre abonnement !
-                    </h1>
-                    <div class="mt-4">
-                        <span class="inline-block w-40 h-1 bg-success rounded-full" />
-                        <span class="inline-block w-3 h-1 mx-1 bg-success rounded-full" />
-                        <span class="inline-block w-1 h-1 bg-success rounded-full" />
-                    </div>
-                </div> -->
-
                 <div
                     class="flex-1 xl:mx-8"
                 >
@@ -47,7 +33,7 @@
                                     </p>
                                 </div>
 
-                                <!-- <h1
+                                <h1
                                     v-if="current?.plan?.description"
                                     class="text-xl font-medium text-success capitalize lg:text-2xl dark:text-white"
                                 >
@@ -56,12 +42,7 @@
 
                                 <p class="mt-4 max-w-sm text-gray-500 dark:text-gray-300">
                                     Nous vous remercions pour votre confiance et votre abonnement à notre service. Vous pouvez profiter dès maintenant de toutes les fonctionnalités que nous proposons.
-                                </p> -->
-
-                                <!-- <span>Vous êtes désormais abonnée à [Nom du service]</span> -->
-                                <!-- <h2 class="mt-4 text-2xl font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
-                                    20 €<span class="text-base font-medium">/mois</span>
-                                </h2> -->
+                                </p>
                             </div>
                         </div>
                     </div>

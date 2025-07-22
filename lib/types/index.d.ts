@@ -1,5 +1,6 @@
 export type Gender = 'M' | 'F' | 'X';
 export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
+export type CountryCode = 'be' | 'fr' | 'us';
 
 export type User = {
     id: number;
@@ -49,6 +50,8 @@ export type User = {
     status: 'active' | 'inactive' | 'suspended';
     created_at: string;
     updated_at: string;
+    affiliate_by?: number;
+    referral_code?: string;
     biotrax?: boolean | number;
     insurance?: boolean | number;
     site?: boolean | number;
@@ -56,8 +59,8 @@ export type User = {
     professional_category?: string | null;
     comment_crm?: string | null;
     historic_activity?: UserActivity;
-    contact_date?: string | null;
-    contact_method?: string | null;
+    contact_date?: string;
+    contact_method?: string;
 };
 
 type UserActivity = {
@@ -94,8 +97,10 @@ interface ReplacementPreference {
     zip_codes: string[];
     days: string[];
 }
+
 export interface UserSettings {
     language: string;
+    radius_km: string;
     replacement: ReplacementPreference;
     choice: string;
 }
@@ -234,6 +239,7 @@ export type Replacement = {
     substitute_user?: User;
     candidate?: boolean;
     periods?: ReplacementPeriod[];
+    province?: string;
 };
 
 export type ReplacementPeriod = {
@@ -257,7 +263,8 @@ export type ReplacementDetail = {
     parent_id: number;
     date: string;
     day: string;
-    start_at: string;
+    start_at?: string;
+    end_at?: string;
     patient: Patient;
     care_types: CareType[];
 };
@@ -282,4 +289,13 @@ export type HomeType = {
     description?: string;
     active?: boolean | number;
     image?: string | File;
+};
+
+export type Contact = {
+    id: number;
+    name: string;
+    email?: string;
+    phone?: string;
+    description?: string;
+    created_at?: string;
 };

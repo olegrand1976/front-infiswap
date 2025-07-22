@@ -12,7 +12,7 @@
                 </SidebarHeader>
 
                 <SidebarGroupContent
-                    class="mt-2 mx-auto"
+                    class="mt-2 mx-auto h-full flex flex-col justify-between"
                     :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
@@ -110,6 +110,49 @@
                             </SidebarMenuItem>
                         </section>
                     </SidebarMenu>
+
+                    <div class="flex justify-between items-center mx-auto">
+                        <CopyButton
+                            variant="none"
+                            label="Inviter vos collègues"
+                            class="text-primary"
+                            :show-label="true"
+                            :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                            success-message="Lien copié avec succès"
+                        />
+
+                        <QuestionMarkCircleIcon
+                            class="w-4 text-blue-500 cursor-pointer"
+                            @click="referralDialog = true"
+                        />
+                    </div>
+
+                    <Dialog v-model:open="referralDialog">
+                        <DialogContent class="max-w-xl">
+                            <DialogHeader>
+                                <DialogTitle class="text-primary">
+                                    Inviter vos collègues
+                                </DialogTitle>
+                            </DialogHeader>
+                            <p>
+                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                            </p>
+
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="mt-4">
+                                    {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
+                                </p>
+
+                                <CopyButton
+                                    variant="none"
+                                    class="text-primary mt-3"
+                                    :show-label="false"
+                                    :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                                    success-message="Lien copié avec succès"
+                                />
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
@@ -163,19 +206,25 @@ import {
     WrenchScrewdriverIcon,
     ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
+    InboxIcon,
+    QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
+import { useRuntimeConfig } from '#app';
 
 defineProps({
     collapsed: Boolean,
 });
 
+const config = useRuntimeConfig();
+const user = useUser();
 const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
+const referralDialog = ref(false);
 const closeSidebar = () => {
     if (isMobile.value) {
         setOpenMobile(false);
@@ -284,6 +333,11 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Type de soins',
         route: '/dashboard/admin/care-types',
         icon: ShieldCheckIcon,
+    },
+    {
+        label: 'Contacts',
+        route: '/dashboard/admin/contacts',
+        icon: InboxIcon,
     },
 ];
 

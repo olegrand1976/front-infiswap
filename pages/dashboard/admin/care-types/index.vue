@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <DashboardAdminPageHeader
-            title="Gestion des type de soin"
+            title="Gestion des types de soins"
         >
             <template #action>
                 <Button
