@@ -60,7 +60,7 @@
                 >
                     <div
                         :class="[Array.isArray(searchFormData.cityTags) && searchFormData.cityTags.length ? 'w-1/2' : 'hidden']"
-                        class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                        class="flex max-w-52 md:max-w-40 items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
                     >
                         <TagsInputItem
                             v-for="item in searchFormData.cityTags"
@@ -111,14 +111,14 @@
                     value="in_search"
                     class="w-full md:w-48"
                 >
-                    À la recherche
+                    Recherche
                 </TabsTrigger>
-                <TabsTrigger
+                <!-- <TabsTrigger
                     value="available"
                     class="w-full md:w-48"
                 >
                     Disponible
-                </TabsTrigger>
+                </TabsTrigger> -->
                 <TabsTrigger
                     value="my_requests"
                     class="w-full md:w-48"
@@ -232,7 +232,7 @@
                 </div>
             </TabsContent>
 
-            <TabsContent value="available">
+            <!-- <TabsContent value="available">
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
@@ -335,7 +335,7 @@
                         />
                     </div>
                 </div>
-            </TabsContent>
+            </TabsContent> -->
 
             <TabsContent value="my_requests">
                 <div class="grid my-8">
@@ -568,6 +568,7 @@ const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
 const user = useState<User>('user');
+const setting = JSON.parse(user.value.settings);
 
 const { $toast } = useNuxtApp();
 
@@ -597,12 +598,22 @@ const postalCodeInput = ref('');
 const cityInput = ref('');
 
 const searchFormData = reactive({
-    postalCodeTags: [],
-    cityTags: [],
+    postalCodeTags: setting?.replacement?.zip_codes,
+    cityTags: setting?.replacement?.cities,
     type: activeTab.value,
 });
 
 const isSubmitted = ref(false);
+
+const loadDemandPartners = async () => {
+    await fetchDemandPartners({
+        postalCode: searchFormData.postalCodeTags,
+        cities: searchFormData.cityTags,
+        // type: searchFormData.type,
+        page: page.value,
+        perPage: perPage.value,
+    });
+};
 
 const handleBlur = (event) => {
     const inputEl = event.target;
@@ -623,6 +634,7 @@ const addTag = (inputRef, tagArrayRef, transformFn = val => val) => {
         tagArrayRef.value.push(value);
         inputRef.value = '';
     }
+    isSubmitted.value = false;
 };
 
 const handleTabChange = async (newTab: string) => {
@@ -641,50 +653,36 @@ const handleTabChange = async (newTab: string) => {
 const search = async () => {
     page.value = 1;
     isSubmitted.value = true;
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await loadDemandPartners();
 };
 
 const changePage = async (newPage: number) => {
     page.value = newPage;
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await loadDemandPartners();
 };
 
 const changePerPage = async (newPerPage: number) => {
     perPage.value = newPerPage;
     page.value = 1;
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await loadDemandPartners();
 };
 
 onMounted(async () => {
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await loadDemandPartners();
 });
 
-const removeTag = (tagArrayRef, tagToRemove) => {
-    tagArrayRef.value = tagArrayRef.value.filter(tag => tag !== tagToRemove);
+const removeTag = async (tagArrayRef, tagToRemove) => {
+    const updatedTags = tagArrayRef.filter(tag => tag !== tagToRemove);
+
+    if (tagArrayRef === searchFormData.postalCodeTags) {
+        searchFormData.postalCodeTags = updatedTags;
+    }
+    else if (tagArrayRef === searchFormData.cityTags) {
+        searchFormData.cityTags = updatedTags;
+    }
+
+    isSubmitted.value = false;
+    await loadDemandPartners();
 };
 
 const reinitializeFilter = async () => {
@@ -693,13 +691,7 @@ const reinitializeFilter = async () => {
     searchFormData.type = activeTab.value;
     isSubmitted.value = false;
     page.value = 1;
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await loadDemandPartners();
 };
 
 let response = null;
