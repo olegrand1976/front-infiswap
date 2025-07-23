@@ -3,7 +3,7 @@
         <h1 class="py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             Les remplacements <strong>auxquels j'ai répondu</strong>
         </h1>
-        <template v-if="listApply == 0">
+        <template v-if="!listApply || listApply.length === 0">
             <p class="text-black/50 mt-16 text-center">
                 Aucune donnée à afficher pour le moment
             </p>
@@ -76,8 +76,9 @@
 
 <script lang="ts" setup>
 import { useListResponse } from '~/composables/useReplacements';
+import type { User } from '~/lib/types';
 
-const user = useState('user');
+const user = useState<User>('user');
 const { listApply, getReplacementApply } = useListResponse(user.value.nurse.id);
 
 await getReplacementApply();

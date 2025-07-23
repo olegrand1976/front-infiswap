@@ -109,7 +109,7 @@ const contact = reactive({
     captcha: false,
 });
 
-const { submitContact } = useNursSupp();
+const { submitContact } = useNursService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {

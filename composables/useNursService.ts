@@ -1,6 +1,6 @@
 import { useNuxtApp } from '#app';
 
-export const useNursSupp = () => {
+export const useNursService = () => {
     const { $apifetch } = useNuxtApp();
 
     const createHistory = (payload: { description: string }) =>
@@ -35,7 +35,7 @@ export const useNursSupp = () => {
         }
     };
 
-    const submitassurContact = async (contactData) => {
+    const submitAssurContact = async (contactData) => {
         try {
             const { data, error } = await $apifetch('/api/nursassur/contact', {
                 method: 'POST',
@@ -58,6 +58,6 @@ export const useNursSupp = () => {
         getAssurTypes,
         createAssurHistory,
         submitContact,
-        submitassurContact,
+        submitAssurContact,
     };
 };

@@ -149,7 +149,7 @@
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 
-const { getAssurTypes, createAssurHistory } = useNursSupp();
+const { getAssurTypes, createAssurHistory } = useNursService();
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
 
@@ -193,8 +193,9 @@ const handleContact = async () => {
         emit('close');
     }
     catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
         $toast({
-            description: error,
+            description: message,
             status: 'error',
             variant: 'destructive',
         });
@@ -209,11 +210,11 @@ const contact = reactive({
     captcha: false,
 });
 
-const { submitassurContact } = useNursSupp();
+const { submitAssurContact } = useNursService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        await submitassurContact(contact);
+        await submitAssurContact(contact);
 
         $toast({
             description: 'Votre demande de contact a été transmise à NursAssur avec succès.',
@@ -221,8 +222,9 @@ const { submit, inProgress } = useSubmit(async () => {
         emit('close');
     }
     catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
         $toast({
-            description: error,
+            description: message,
             status: 'error',
             variant: 'destructive',
         });

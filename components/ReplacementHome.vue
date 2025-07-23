@@ -63,14 +63,39 @@
                                     URGENT
                                 </div>
 
-                                <TableCell class="flex justify-center items-center bg-[#F1F2F7] xl:text-[0.75em] lg:text-[0.5em]">
-                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.start_date) }}</span>
-                                    </div>
-                                    <span class="flex items-center">au</span>
-                                    <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
-                                        <span>{{ formatDate(replacement.end_date) }}</span>
-                                    </div>
+                                <TableCell
+                                    :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacement.periods.length > 0 })]"
+                                >
+                                    <template v-if="replacement.periods.length > 0">
+                                        <div
+                                            v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                            :key="index"
+                                            class="flex items-center"
+                                        >
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(period.start_date) }}</span>
+                                            </div>
+                                            <span class="flex items-center">au</span>
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(period.end_date) }}</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                            @click="handleShowPeriods(replacement.periods)"
+                                        >
+                                            Voir tout
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.start_date) }}</span>
+                                        </div>
+                                        <span class="flex items-center">au</span>
+                                        <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                            <span>{{ formatDate(replacement.end_date) }}</span>
+                                        </div>
+                                    </template>
                                 </TableCell>
 
                                 <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
@@ -101,21 +126,21 @@
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            v-for="(zipCode, index) in (Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes ?? '[]'))"
                                                             :key="index"
-                                                            :class="'mr-1'"
+                                                            class="mr-1"
                                                         >
-                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            {{ zipCode }}{{ index < (Array.isArray(replacement.zip_codes) ? replacement.zip_codes.length : JSON.parse(replacement.zip_codes ?? '[]').length) - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                        v-for="(zipCode, index) in (Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes ?? '[]'))"
                                                         :key="index"
-                                                        :class="'mr-1'"
+                                                        class="mr-1"
                                                     >
-                                                        {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                        {{ zipCode }}{{ index < (Array.isArray(replacement.zip_codes) ? replacement.zip_codes.length : JSON.parse(replacement.zip_codes ?? '[]').length) - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -130,21 +155,21 @@
                                                 <TooltipTrigger>
                                                     <p class="truncate w-full text-start px-2 pt-3 h-10 rounded">
                                                         <span
-                                                            v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                            v-for="(city, index) in (Array.isArray(replacement.cities) ? replacement.cities : JSON.parse(replacement.cities ?? '[]'))"
                                                             :key="index"
-                                                            :class="'mr-1'"
+                                                            class="mr-1"
                                                         >
-                                                            {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                            {{ city }}{{ index < (Array.isArray(replacement.cities) ? replacement.cities.length : JSON.parse(replacement.cities ?? '[]').length) - 1 ? ',' : '' }}
                                                         </span>
                                                     </p>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <span
-                                                        v-for="(city, index) in JSON.parse(replacement.cities)"
+                                                        v-for="(city, index) in (Array.isArray(replacement.cities) ? replacement.cities : JSON.parse(replacement.cities ?? '[]'))"
                                                         :key="index"
-                                                        :class="'mr-1'"
+                                                        class="mr-1"
                                                     >
-                                                        {{ city }}{{ index < JSON.parse(replacement.cities).length - 1 ? ',' : '' }}
+                                                        {{ city }}{{ index < (Array.isArray(replacement.cities) ? replacement.cities.length : JSON.parse(replacement.cities ?? '[]').length) - 1 ? ',' : '' }}
                                                     </span>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -219,7 +244,28 @@
                                 </div>
 
                                 <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
-                                    <template v-if="replacement.start_date !== replacement.end_date">
+                                    <template v-if="replacement.periods.length > 0">
+                                        <div
+                                            v-for="(period, index) in replacement.periods.slice(0, 2)"
+                                            :key="index"
+                                            class="flex flex-col items-center mb-2 space-x-2"
+                                        >
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(period.start_date) }}</span>
+                                            </div>
+                                            <span class="flex items-center">au</span>
+                                            <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
+                                                <span>{{ formatDate(period.end_date) }}</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                            @click="handleShowPeriods(replacement.periods)"
+                                        >
+                                            Voir tout
+                                        </div>
+                                    </template>
+                                    <template v-else-if="replacement.start_date !== replacement.end_date && replacement.start_date != null && replacement.end_date != null">
                                         <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(replacement.start_date) }}</span>
                                         </div>
@@ -245,22 +291,22 @@
                                                 <TooltipTrigger class="block w-full text-start">
                                                     <div class="flex flex-col space-y-1 max-h-20 overflow-y-hidden">
                                                         <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            v-for="(zipCode, index) in (Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes ?? '[]'))"
                                                             :key="index"
                                                             class="mr-1 text-xs"
                                                         >
-                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            {{ zipCode }}{{ index < (Array.isArray(replacement.zip_codes) ? replacement.zip_codes.length : JSON.parse(replacement.zip_codes ?? '[]').length) - 1 ? ',' : '' }}
                                                         </span>
                                                     </div>
                                                 </TooltipTrigger>
                                                 <TooltipContent class="text-sm max-w-[200px]">
                                                     <div class="flex flex-wrap gap-1">
                                                         <span
-                                                            v-for="(zipCode, index) in JSON.parse(replacement.zip_codes)"
+                                                            v-for="(zipCode, index) in (Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes ?? '[]'))"
                                                             :key="'tooltip-' + index"
                                                             class="text-xs"
                                                         >
-                                                            {{ zipCode }}{{ index < JSON.parse(replacement.zip_codes).length - 1 ? ',' : '' }}
+                                                            {{ zipCode }}{{ index < (Array.isArray(replacement.zip_codes) ? replacement.zip_codes.length : JSON.parse(replacement.zip_codes ?? '[]').length) - 1 ? ',' : '' }}
                                                         </span>
                                                     </div>
                                                 </TooltipContent>
@@ -287,13 +333,45 @@
                     </TableBody>
                 </Table>
             </div>
+
+            <Dialog v-model:open="periodDialog">
+                <DialogContent class="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle class="text-base font-semibold text-primary">
+                            Période de remplacement
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
+                        <h5>
+                            Date de début
+                        </h5>
+                        <h5>
+                            Date de fin
+                        </h5>
+                    </div>
+                    <div
+                        v-for="period in selectedPeriods"
+                        :key="period.id"
+                        class="mt-1"
+                    >
+                        <div class="text-sm grid grid-cols-2 items-center">
+                            <span>
+                                {{ formatDate(period.start_date) }}
+                            </span>
+                            <span>
+                                {{ formatDate(period.end_date) }}
+                            </span>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
-import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import { getPeriodsFromTimeSlot, cn } from '~/lib/utils';
 import type { Replacement } from '~/lib/types';
 
 const rawProps = defineProps({
@@ -318,6 +396,14 @@ const formatDate = (isoString) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+};
+
+const selectedPeriods = ref([]);
+const periodDialog = ref(false);
+
+const handleShowPeriods = (periods) => {
+    selectedPeriods.value = periods;
+    periodDialog.value = true;
 };
 
 const normalizeTime = (time) => {

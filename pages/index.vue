@@ -95,10 +95,11 @@ import { PlusCircleIcon, SparklesIcon, PhoneIcon } from '@heroicons/vue/24/solid
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
+import type { Replacement } from '~/lib/types';
 
 const { isAdmin } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();
-const replacements = ref([]);
+const replacements = ref<Replacement[]>([]);
 
 const showContact = ref(false);
 
@@ -106,7 +107,7 @@ onMounted(async () => {
     showContact.value = true;
 
     const data = await getAccordingReplacements();
-    replacements.value = data;
+    replacements.value = (data ?? []) as Replacement[];
 });
 
 useHead({

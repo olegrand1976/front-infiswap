@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const { createHistory } = useNursSupp();
+const { createHistory, submitContact } = useNursService();
 const { $toast } = useNuxtApp();
 const emit = defineEmits(['close']);
 const { isLoggedIn } = useAuth();
@@ -132,16 +132,13 @@ const submitHistory = async () => {
         emit('close');
     }
     catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
         $toast({
-            description: error,
+            description: message,
             status: 'error',
             variant: 'destructive',
         });
     }
-};
-
-const cancel = () => {
-    emit('close');
 };
 
 const contact = reactive({
@@ -151,8 +148,6 @@ const contact = reactive({
     description: '',
     captcha: false,
 });
-
-const { submitContact } = useNursSupp();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
@@ -164,11 +159,16 @@ const { submit, inProgress } = useSubmit(async () => {
         emit('close');
     }
     catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
         $toast({
-            description: error,
+            description: message,
             status: 'error',
             variant: 'destructive',
         });
     }
 });
+
+const cancel = () => {
+    emit('close');
+};
 </script>

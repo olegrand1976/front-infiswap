@@ -77,9 +77,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useNursSupp } from '~/composables/useNursSupp';
+import { useNursService } from '~/composables/useNursService';
 
-const { submitassurContact } = useNursSupp();
+const { submitAssurContact } = useNursService();
 const { $toast } = useNuxtApp();
 
 const props = defineProps<{
@@ -120,7 +120,7 @@ const {
             item => item !== 'Autre (à préciser dans le formulaire)',
         );
 
-        return submitassurContact(formData).then(() => {
+        return submitAssurContact(formData).then(() => {
             $toast({
                 description: 'Demande de devis envoyé avec succès',
             });
