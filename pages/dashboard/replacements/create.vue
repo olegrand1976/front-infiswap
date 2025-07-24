@@ -144,7 +144,7 @@
                     />
 
                     <Button
-                        variant="inline"
+                        variant="none"
                         class="absolute -top-[1.2rem] right-0 font-bold text-primary text-xs mt-2"
                         @click="openProposalDialog('')"
                     >
