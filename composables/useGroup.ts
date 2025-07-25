@@ -6,12 +6,6 @@ export function useGroup() {
     const groups = ref([]);
     const selectedGroup = ref(null);
     const selectedGroupUsers = ref([]);
-    // const pagination = ref({
-    //     current_page: 1,
-    //     per_page: 15,
-    //     total: 0,
-    //     last_page: 1,
-    // });
     const count = ref(0);
 
     async function myGroups() {
@@ -34,7 +28,6 @@ export function useGroup() {
         selectedGroup.value = data.group ?? null;
         selectedGroupUsers.value = data.users.data ?? [];
         count.value = data.count ?? 0;
-        // pagination.value = data.pagination ?? pagination.value;
     }
 
     const fetchGroupMembers = async (groupIds: number[]) => {
@@ -72,7 +65,6 @@ export function useGroup() {
         groups,
         selectedGroup,
         selectedGroupUsers,
-        // pagination,
         myGroups,
         getGroupDetails,
         fetchGroupMembers,
