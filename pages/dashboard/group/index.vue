@@ -46,6 +46,14 @@
                                 class="max-w-sm"
                                 @input="debouncedFilter"
                             />
+                            <InputIcon
+                                v-model="option.zip"
+                                rounded="md"
+                                placeholder="Filtrer par C.P"
+                                class="max-w-sm"
+                                type="number"
+                                @input="debouncedFilter"
+                            />
                             <Button
                                 class="rounded-md"
                                 @click="resetFilter"
@@ -125,6 +133,7 @@ const page = ref(1);
 const perPage = ref(PERPAGE);
 const filters = reactive({
     name: '',
+    zip: '',
     sortKey: 'lastname',
     sortOrder: 'ASC',
 });
@@ -142,6 +151,7 @@ const debounce = (func, delay) => {
 
 const filterUsers = async () => {
     filters.name = option.value.name;
+    filters.zip = option.value.zip;
     page.value = 1;
     await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
@@ -149,14 +159,16 @@ const filterUsers = async () => {
 const debouncedFilter = debounce(filterUsers, 100);
 
 const resetFilter = async () => {
-    const hasActiveFilter = option.value.name !== null && option.value.name !== '';
+    const hasActiveFilter = (option.value.name !== null && option.value.name !== '') || (option.value.zip !== null && option.value.zip !== '');
 
     if (!hasActiveFilter) {
         return;
     }
 
-    option.value.name = null;
-    filters.name = null;
+    option.value.name = '';
+    option.value.zip = '';
+    filters.name = '';
+    filters.zip = '';
     page.value = 1;
 
     await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
@@ -251,6 +263,32 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('phone_number')),
+    },
+    {
+        accessorKey: 'zip_code',
+        accessorFn: (row: User) => row.profile?.zip_code ?? '',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('zip_code'),
+            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, row.getValue('zip_code'));
+        },
+    },
+    {
+        accessorKey: 'city',
+        accessorFn: (row: User) => row.profile?.city ?? '',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('city'),
+            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, row.getValue('city'));
+        },
     },
     {
         accessorKey: 'created_at',
