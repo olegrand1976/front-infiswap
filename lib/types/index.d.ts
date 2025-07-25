@@ -316,7 +316,7 @@ export type Tutorial = {
     title: string;
     description: string;
     tag: string;
-    path?: string;
+    media_path?: string;
     media_type: MediaType;
     mimes_type: string;
 };

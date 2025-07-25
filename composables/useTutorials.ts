@@ -27,9 +27,29 @@ export const useTutorials = () => {
         });
     }
 
+    async function getSpecificTutorial(id: number) {
+        return await $apifetch(`api/admin/tutorials/${id}`);
+    }
+
+    async function getMediaTutorial(id: number) {
+        return await $apifetch(`api/admin/tutorials/${id}/media`);
+    }
+
+    async function updateTutorial(id, formData) {
+        const response = await $apifetch(`/api/admin/tutorials/update/${id}`, {
+            method: 'post',
+            body: formData,
+        });
+
+        return response;
+    }
+
     return {
         createTutorial,
         fetchTutorials,
+        getSpecificTutorial,
+        getMediaTutorial,
+        updateTutorial,
         tutorials,
         count,
     };

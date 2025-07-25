@@ -51,6 +51,7 @@ const perPage = ref(PERPAGE);
 const page = ref(1);
 const option = ref({});
 const config = useRuntimeConfig();
+const router = useRouter();
 
 const mediaTypes = {
     video: 'Video',
@@ -203,6 +204,28 @@ const columns: ColumnDef<Tutorial>[] = [
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
+    {
+        id: 'actions',
+        header: () => {
+            return h('div', { class: 'mx-2' }, 'Actions');
+        },
+        enableHiding: false,
+        cell: ({ row }) => {
+            const tutorial = row.original;
+            const actions = [
+                {
+                    label: 'Modifier',
+                    onClick: () => handleEdit(tutorial),
+                },
+            ];
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(DropdownMenuAction, {
+                    actions: actions,
+                }),
+            ]);
+        },
+    },
 ];
 
 const sort = reactive({
@@ -233,6 +256,10 @@ watch(
     },
     { deep: true },
 );
+
+const handleEdit = (tutorial: Tutorial) => {
+    router.push(`/dashboard/admin/tutorials/${tutorial.id}`);
+};
 
 useHead({ title: 'Gestion des tutoriels' });
 

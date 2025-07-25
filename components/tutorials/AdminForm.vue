@@ -69,13 +69,13 @@
                     />
 
                     <p class="text-sm w-80 text-gray-500">
-                        * Vous pouvez téléverser uniquement des fichiers audio, vidéo ou image
+                        * Vous pouvez téléverser uniquement des fichiers audio, vidéo ou image jusqu'à la taille de 10MB
                     </p>
                 </div>
 
                 <InputIcon
                     v-if="selectedType === 'link'"
-                    v-model="form.path"
+                    v-model="form.media_path"
                     rounded="md"
                     label="Lien de la ressource"
                     placeholder="Lien"
@@ -119,7 +119,8 @@ import { useTutorials } from '@/composables/useTutorials';
 
 import type { Tutorial } from '~/lib/types';
 
-const { createTutorial } = useTutorials();
+const { createTutorial, getMediaTutorial, updateTutorial } = useTutorials();
+
 const { $toast } = useNuxtApp();
 const router = useRouter();
 
@@ -130,7 +131,7 @@ const props = defineProps({
             id: undefined,
             title: '',
             description: '',
-            path: '',
+            media_path: '',
             media_type: null,
             mimes_type: '',
         }),
@@ -147,14 +148,48 @@ const resetForm = () => {
         id: undefined,
         title: '',
         description: '',
-        path: '',
+        media_path: '',
         media_type: null,
         mimes_type: '',
     });
 };
 
 const selectedType = ref<'file' | 'link'>('file');
-const tutorialFile = ref(null);
+const tutorialFile = ref<File | null>(null);
+
+const loadMedia = () => {
+    if (form.id != undefined && form.media_type != 'link') {
+        getMediaTutorial(form.id).then((blob) => {
+            const file = new File([blob], 'media', { type: blob.type });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+
+            const input = document.getElementById('fileInput') as HTMLInputElement;
+            if (input) {
+                input.files = dataTransfer.files;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
+};
+
+onMounted(() => {
+    loadMedia();
+
+    if (form.media_type == 'link') {
+        selectedType.value = 'link';
+    }
+    else {
+        form.media_path = '';
+    }
+});
+
+watch(selectedType, (newVal) => {
+    if (newVal === 'file') {
+        loadMedia();
+    }
+});
 
 const { submit, inProgress } = useSubmit(async () => {
     const payload = new FormData();
@@ -167,22 +202,41 @@ const { submit, inProgress } = useSubmit(async () => {
         payload.append('file', tutorialFile.value);
     }
     else if (selectedType.value === 'link') {
-        payload.append('path', form.path);
+        payload.append('path', form.media_path);
         payload.append('media_type', 'link');
     }
 
-    createTutorial(payload).then((result) => {
-        if (result) {
-            resetForm();
+    if (form.id == undefined) {
+        createTutorial(payload).then((result) => {
+            if (result) {
+                resetForm();
 
-            $toast({
-                description: result.message,
-            });
+                $toast({
+                    description: result.message,
+                });
 
-            setTimeout(() => {
-                router.push('/dashboard/admin/tutorials');
-            }, 2000);
-        }
-    });
+                setTimeout(() => {
+                    router.push('/dashboard/admin/tutorials');
+                }, 2000);
+            }
+        });
+    }
+    else {
+        payload.append('id', String(form.id));
+        payload.append('_method', 'PUT');
+        updateTutorial(form.id, payload).then((result) => {
+            if (result) {
+                resetForm();
+
+                $toast({
+                    description: result.message,
+                });
+
+                setTimeout(() => {
+                    router.push('/dashboard/admin/tutorials');
+                }, 2000);
+            }
+        });
+    }
 });
 </script>
