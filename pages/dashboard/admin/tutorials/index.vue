@@ -198,16 +198,6 @@ const columns: ColumnDef<Tutorial>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'title',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('title'),
-            }, () => ['Titre', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('title')),
-    },
-    {
         accessorKey: 'media_path',
         header: () => {
             return h(Button, {
@@ -268,18 +258,6 @@ const columns: ColumnDef<Tutorial>[] = [
         cell: ({ row }) => {
             const key: string = row.getValue('media_type');
             return h('div', { class: 'ml-4' }, mediaTypes[key] || key);
-        },
-    },
-    {
-        accessorKey: 'mimes_type',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('mimes_type'),
-            }, () => ['Extension MIME', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'ml-4' }, row.getValue('mimes_type') || '-');
         },
     },
     {
