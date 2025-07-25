@@ -243,43 +243,49 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
 </script>
 
 <template>
-    <form
-        v-if="!isFormDisabled"
-        @submit.prevent="submitAssign"
-    >
-        <Separator class="my-4 lg:my-10" />
+    <div v-if="!isFormDisabled">
+        <form @submit.prevent="submitAssign">
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed my-6 ml-4">
+                Associez un(e) infirmier(e) à votre groupe en renseignant son email.
+            </p>
 
-        <div class="grid grid-cols-3 gap-4 lg:gap-8">
-            <div class="p-4 hidden lg:block">
-                <h1 class="font-semibold text-gray-600">
-                    Associer un(e) infirmier(e) à mon groupe
-                </h1>
-                <p class="mt-2 text-md text-gray-500">
-                    Informations de l’infirmier déjà inscrit sur notre plateforme
-                </p>
+            <div class="grid grid-cols-3 gap-4 lg:gap-8">
+                <div class="p-4 hidden lg:block">
+                    <h3 class="font-semibold text-gray-600">
+                        Infirmier(e) déjà inscrit(e)
+                    </h3>
+                    <p class="mt-2 text-md text-gray-500">
+                        Renseignez l'email pour associer.
+                    </p>
+                </div>
+
+                <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
+                    <InputIcon
+                        v-model="formAssign.email"
+                        rounded="md"
+                        label="Email"
+                        placeholder="Email"
+                    />
+                </div>
             </div>
 
-            <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
-                <InputIcon
-                    v-model="formAssign.email"
-                    rounded="md"
-                    label="Email"
-                    placeholder="Email"
-                />
+            <div class="col-span-3 grid place-content-center">
+                <Button
+                    type="submit"
+                    class="rounded-md w-52"
+                    :in-progress="inProgressAssign"
+                >
+                    Associer
+                </Button>
             </div>
-        </div>
 
-        <div class="col-span-3 grid place-content-center">
-            <Button
-                type="submit"
-                class="rounded-md w-52"
-                :in-progress="inProgressAssign"
-            >
-                Associer
-            </Button>
-        </div>
-    </form>
-    <Separator class="my-4 lg:my-10" />
+            <Separator class="my-4 lg:my-10" />
+        </form>
+        <p class="text-gray-700 text-sm md:text-base leading-relaxed mb-4 ml-4">
+            Invitez un(e) nouvel(le) infirmier(e) en complétant le formulaire d’inscription.
+        </p>
+    </div>
+
     <form @submit.prevent="submit">
         <div class="grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
