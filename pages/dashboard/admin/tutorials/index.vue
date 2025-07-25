@@ -2,6 +2,7 @@
     <div class="w-full">
         <DashboardAdminPageHeader
             title="Liste des tutoriels"
+            :count="count"
         >
             <template #action>
                 <Button
@@ -45,7 +46,7 @@ import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { useRuntimeConfig } from '#app';
 import type { Tutorial } from '~/lib/types';
 
-const { tutorials, count, fetchTutorials } = useTutorials();
+const { tutorials, count, fetchTutorials, deleteTutorial } = useTutorials();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -217,6 +218,11 @@ const columns: ColumnDef<Tutorial>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(tutorial),
                 },
+                {
+                    label: 'Supprimer',
+                    confirm: true,
+                    onClick: () => handleDelete(tutorial),
+                },
             ];
 
             return h('div', { class: 'flex justify-center' }, [
@@ -259,6 +265,18 @@ watch(
 
 const handleEdit = (tutorial: Tutorial) => {
     router.push(`/dashboard/admin/tutorials/${tutorial.id}`);
+};
+
+const handleDelete = async (tutorial: Tutorial) => {
+    return await deleteTutorial(tutorial.id).then(async (result) => {
+        if (result) {
+            $toast({
+                description: result.message,
+            });
+
+            await fetchTutorials(page.value, perPage.value);
+        }
+    });
 };
 
 useHead({ title: 'Gestion des tutoriels' });

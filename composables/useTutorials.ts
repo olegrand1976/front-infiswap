@@ -44,12 +44,19 @@ export const useTutorials = () => {
         return response;
     }
 
+    async function deleteTutorial(id: number) {
+        return await $apifetch(`api/admin/tutorials/${id}`, {
+            method: 'DELETE',
+        });
+    }
+
     return {
         createTutorial,
         fetchTutorials,
         getSpecificTutorial,
         getMediaTutorial,
         updateTutorial,
+        deleteTutorial,
         tutorials,
         count,
     };
