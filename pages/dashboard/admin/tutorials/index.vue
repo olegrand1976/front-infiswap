@@ -18,6 +18,45 @@
         </DashboardAdminPageHeader>
 
         <DashboardAdminPageContent>
+            <div class="flex justify-end items-center space-x-4 pt-4 pb-4">
+                <Select
+                    v-model="option.media_type"
+                    @update:model-value="debouncedFilterTutorials"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Type</span>
+                        <span class="ml-4 font-medium">
+                            {{
+                                option.media_type === 'image' ? 'Image' : option.media_type === 'audio' ? 'Audio' : option.media_type === 'video' ? 'Vidéo' :'Tous'
+                            }}
+                        </span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="'image'">
+                                <span class="ml-2">Image</span>
+                            </SelectItem>
+                            <SelectItem :value="'audio'">
+                                <span class="ml-2">Audio</span>
+                            </SelectItem>
+                            <SelectItem :value="'video'">
+                                <span class="ml-2">Vidéo</span>
+                            </SelectItem>
+                            <SelectItem :value="'link'">
+                                <span class="ml-2">Lien</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Button
+                    class="rounded-md !mr-4"
+                    @click="resetFilter"
+                >
+                    <ArrowPathIcon class="md:mr-2" />
+                    <span class="hidden md:inline-block">Restaurer</span>
+                </Button>
+            </div>
+
             <DataTable
                 :data="dataTutorials"
                 :columns="columns"
@@ -31,13 +70,48 @@
                     @update:per-page="handlePerPageChange"
                 />
             </div>
+
+            <Dialog v-model:open="showDialog">
+                <DialogContent class="w-[70vw] h-[30rem]">
+                    <DialogHeader>
+                        <DialogTitle>
+                            Aperçu
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <video
+                        v-if="selectedTutorial.media_type == 'video'"
+                        controls
+                        class="w-[70vw] h-[24rem]"
+                    >
+                        <source :src="baseUrl + selectedTutorial.media_path">
+                        Votre navigateur ne prend pas en charge la vidéo.
+                    </video>
+
+                    <img
+                        v-else-if="selectedTutorial.media_type == 'image'"
+                        :src="baseUrl + selectedTutorial.media_path"
+                        alt="Ressource media"
+                        class="object-cover"
+                    >
+
+                    <audio
+                        v-else-if="selectedTutorial.media_type == 'audio'"
+                        controls
+                        class="w-[70vw] h-[24rem]"
+                    >
+                        <source :src="baseUrl + selectedTutorial.media_path">
+                        Votre navigateur ne prend pas en charge l'audio.
+                    </audio>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
+import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
@@ -50,9 +124,10 @@ const { tutorials, count, fetchTutorials, deleteTutorial } = useTutorials();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
-const option = ref({});
 const config = useRuntimeConfig();
 const router = useRouter();
+const { $toast } = useNuxtApp();
+const baseUrl = config.public.API_URL + '/storage/';
 
 const mediaTypes = {
     video: 'Video',
@@ -60,6 +135,32 @@ const mediaTypes = {
     audio: 'Audio',
     link: 'Lien',
 };
+
+const initialFilter = {
+    media_type: null,
+};
+
+const option = ref({ ...initialFilter });
+
+const debounce = (func, delay) => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
+
+const filterTutorials = async () => {
+    const currentFilter = { ...option.value };
+    await fetchTutorials(page.value, perPage.value, currentFilter);
+};
+
+const debouncedFilterTutorials = debounce(filterTutorials, 100);
+
+const selectedTutorial = ref<Tutorial>(null);
+const showDialog = ref(false);
 
 await fetchTutorials(page.value, perPage.value, option.value);
 
@@ -112,7 +213,7 @@ const columns: ColumnDef<Tutorial>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('media_path'),
-            }, () => ['Chemin', h(ArrowsUpDownIcon, {})]);
+            }, () => ['Ressource', h(ArrowsUpDownIcon, {})]);
         },
         cell: ({ row }) => {
             const mediaPath: string = row.getValue('media_path');
@@ -213,7 +314,21 @@ const columns: ColumnDef<Tutorial>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const tutorial = row.original;
+
             const actions = [
+                tutorial.media_type === 'link'
+                    ? {
+                            label: 'Ouvrir le lien',
+                            onClick: () => {
+                                if (tutorial.media_path) {
+                                    window.open(tutorial.media_path, '_blank');
+                                }
+                            },
+                        }
+                    : {
+                            label: 'Aperçu',
+                            onClick: () => handleShow(tutorial),
+                        },
                 {
                     label: 'Modifier',
                     onClick: () => handleEdit(tutorial),
@@ -262,6 +377,22 @@ watch(
     },
     { deep: true },
 );
+
+const resetFilter = async () => {
+    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    if (isSame) {
+        return;
+    }
+
+    option.value = { ...initialFilter };
+    page.value = 1;
+    await fetchTutorials(page.value, perPage.value, option.value);
+};
+
+const handleShow = (tutorial: Tutorial) => {
+    selectedTutorial.value = tutorial;
+    showDialog.value = true;
+};
 
 const handleEdit = (tutorial: Tutorial) => {
     router.push(`/dashboard/admin/tutorials/${tutorial.id}`);
