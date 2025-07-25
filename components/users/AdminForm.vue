@@ -252,10 +252,10 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
         <div class="grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
                 <h1 class="font-semibold text-gray-600">
-                    Assigner une personne
+                    Associer un(e) infirmier(e) à mon groupe
                 </h1>
                 <p class="mt-2 text-md text-gray-500">
-                    Les informations à compléter
+                    Informations de l’infirmier déjà inscrit sur notre plateforme
                 </p>
             </div>
 
@@ -263,7 +263,7 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
                 <InputIcon
                     v-model="formAssign.email"
                     rounded="md"
-                    label="Son email"
+                    label="Email"
                     placeholder="Email"
                 />
             </div>
@@ -275,7 +275,7 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
                 class="rounded-md w-52"
                 :in-progress="inProgressAssign"
             >
-                Assigner
+                Associer
             </Button>
         </div>
     </form>
