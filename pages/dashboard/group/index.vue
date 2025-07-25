@@ -1,94 +1,111 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex items-center justify-between w-full mb-4">
-            <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[80%] sm:px-9 rounded-lg">
-                Mon <strong>espace groupement</strong>
-            </h1>
-            <Button
-                class="rounded flex items-center gap-2"
-                href="/dashboard/group/create"
-            >
-                <PlusCircleIcon class="w-5 h-5" />
-                <span class="hidden md:inline-block">Nouvel utilisateur</span>
-            </Button>
-        </div>
-
-        <Tabs
-            v-if="groups.length > 0"
-            v-model="selectedGroupId"
-            class="mb-4 mt-2"
+        <DashboardAdminPageHeader
+            title="Mon espace groupement"
         >
-            <TabsList class="w-full flex flex-wrap gap-2">
-                <TabsTrigger
-                    v-for="group in groups"
-                    :key="group.id"
-                    :value="group.id.toString()"
-                    class="w-full md:w-48 h-12"
+            <template #action>
+                <Button
+                    class="rounded"
+                    href="/dashboard/group/create"
                 >
-                    {{ group.name }}
-                </TabsTrigger>
-            </TabsList>
+                    <PlusCircleIcon />
+                    <span class="hidden md:inline-block">
+                        Nouveau groupe
+                    </span>
+                </Button>
+            </template>
+        </DashboardAdminPageHeader>
 
-            <TabsContent
-                v-if="selectedGroup"
-                :value="selectedGroupId"
+        <DashboardAdminPageContent>
+            <Tabs
+                v-if="groups.length > 0"
+                v-model="selectedGroupId"
+                class="mb-4 mt-2"
             >
-                <div class="p-4 flex gap-3 items-center">
-                    <InputIcon
-                        v-model="option.name"
-                        rounded="md"
-                        placeholder="Filtrer par Nom ou Prénom"
-                        class="max-w-sm"
-                        @input="debouncedFilter"
-                    />
-                    <Button
-                        class="rounded-md"
-                        @click="resetFilter"
+                <TabsList class="w-full flex flex-wrap gap-2">
+                    <TabsTrigger
+                        v-for="group in groups"
+                        :key="group.id"
+                        :value="group.id.toString()"
+                        class="w-full md:w-48 h-12"
                     >
-                        <ArrowPathIcon class="md:mr-2" />
-                        <span class="hidden md:inline-block">Restaurer</span>
-                    </Button>
-                </div>
-                <DataTable
-                    :data="selectedGroupUsers"
-                    :columns="columns"
-                    class="no-hover-bg"
-                    @sort="handleSort"
-                />
-                <CustomPagination
-                    :default-page="pagination.current_page"
-                    :per-page="pagination.per_page"
-                    :total="pagination.total"
-                    @update:page="handlePageChange"
-                    @update:per-page="handlePerPageChange"
-                />
-            </TabsContent>
-        </Tabs>
-        <div
-            v-else
-            class="mt-8 flex flex-col items-center justify-center text-center text-gray-500 space-y-4"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-12 w-12 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                        {{ group.name }}
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent
+                    v-if="selectedGroup"
+                    :value="selectedGroupId"
+                >
+                    <div class="p-4 flex items-center justify-between">
+                        <div class="flex gap-3 items-center">
+                            <InputIcon
+                                v-model="option.name"
+                                rounded="md"
+                                placeholder="Filtrer par Nom ou Prénom"
+                                class="max-w-sm"
+                                @input="debouncedFilter"
+                            />
+                            <Button
+                                class="rounded-md"
+                                @click="resetFilter"
+                            >
+                                <ArrowPathIcon class="md:mr-2" />
+                                <span class="hidden md:inline-block">Restaurer</span>
+                            </Button>
+                        </div>
+
+                        <Button
+                            v-if="!isCreateUserDisabled"
+                            class="rounded flex items-center gap-2"
+                            @click="handleCreateUser"
+                        >
+                            <PlusCircleIcon class="w-5 h-5" />
+                            <span class="hidden md:inline-block">Nouvel utilisateur</span>
+                        </Button>
+                    </div>
+
+                    <DataTable
+                        :data="selectedGroupUsers"
+                        :columns="columns"
+                        class="no-hover-bg"
+                        @sort="handleSort"
+                    />
+                    <CustomPagination
+                        :default-page="page"
+                        :per-page="perPage"
+                        :total="count"
+                        @update:page="handlePageChange"
+                        @update:per-page="handlePerPageChange"
+                    />
+                </TabsContent>
+            </Tabs>
+            <div
+                v-else
+                class="mt-8 flex flex-col items-center justify-center text-center text-gray-500 space-y-4"
             >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M20 13V6a2 2 0 00-2-2h-4M4 6v7m16 0H4m16 0v7a2 2 0 01-2 2h-4M4 13v7a2 2 0 002 2h4"
-                />
-            </svg>
-            <p class="text-lg font-semibold">
-                Vous n'appartenez à aucun groupe pour le moment
-            </p>
-            <p class="max-w-sm text-sm text-gray-400">
-                Vous serez ajouté à un groupe lorsqu'un administrateur vous y invitera.
-            </p>
-        </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-12 w-12 text-gray-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20 13V6a2 2 0 00-2-2h-4M4 6v7m16 0H4m16 0v7a2 2 0 01-2 2h-4M4 13v7a2 2 0 002 2h4"
+                    />
+                </svg>
+                <p class="text-lg font-semibold">
+                    Vous n'appartenez à aucun groupe pour le moment
+                </p>
+                <p class="max-w-sm text-sm text-gray-400">
+                    Vous serez ajouté à un groupe lorsqu'un administrateur vous y invitera.
+                </p>
+            </div>
+        </DashboardAdminPageContent>
     </div>
 </template>
 
@@ -100,7 +117,8 @@ import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';
 import type { User } from '~/lib/types';
 
-const { groups, selectedGroup, selectedGroupUsers, pagination, myGroups, fetchGroupDetails } = useGroup();
+const { isAdminGroup } = useAuth();
+const { groups, selectedGroup, selectedGroupUsers, count, myGroups, getGroupDetails } = useGroup();
 
 const selectedGroupId = ref<string>('');
 const page = ref(1);
@@ -125,7 +143,7 @@ const debounce = (func, delay) => {
 const filterUsers = async () => {
     filters.name = option.value.name;
     page.value = 1;
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 const debouncedFilter = debounce(filterUsers, 100);
@@ -141,39 +159,39 @@ const resetFilter = async () => {
     filters.name = null;
     page.value = 1;
 
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 await myGroups();
 
 if (groups.value.length > 0) {
     selectedGroupId.value = groups.value[0].id.toString();
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 }
 
 watch(selectedGroupId, async (newId) => {
     if (newId) {
         page.value = 1;
-        await fetchGroupDetails(parseInt(newId), page.value, perPage.value, filters);
+        await getGroupDetails(parseInt(newId), page.value, perPage.value, filters);
     }
 });
 
 const handlePageChange = async (newPage: number) => {
     page.value = newPage;
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 const handlePerPageChange = async (newPerPage: number) => {
     perPage.value = newPerPage;
     page.value = 1;
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 const handleSort = async ({ column, order }) => {
     filters.sortKey = column;
     filters.sortOrder = order;
     page.value = 1;
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 const sort = reactive({
@@ -189,7 +207,7 @@ const applySort = async () => {
     filters.sortKey = sort.by;
     filters.sortOrder = sort.order;
     page.value = 1;
-    await fetchGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
+    await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
 const setSort = async (columnKey: string) => {
@@ -244,10 +262,21 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             const date = row.getValue('created_at');
-            return h('div', { class: 'text-center' }, formatRelativeDate(date));
+            return h('div', { class: 'text-center' }, formatRelativeDate(String(date)));
         },
     },
 ];
+
+const selectedGroupIdState = useState<number | null>('selectedGroupId', () => null);
+
+const handleCreateUser = () => {
+    selectedGroupIdState.value = Number(selectedGroupId.value);
+    navigateTo('/dashboard/group/create-user');
+};
+const isCreateUserDisabled = computed(() => {
+    if (!selectedGroupId.value) return true;
+    return !isAdminGroup(Number(selectedGroupId.value));
+});
 
 useHead({
     title: 'Mon espace groupement',

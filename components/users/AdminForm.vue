@@ -7,8 +7,13 @@ const props = defineProps<{
 }>();
 
 const { create, update, generatePassword, isAdmin, isAdminGroup } = useAuth();
-const { groups, myGroups } = useGroup();
+const { groups, myGroups, assignUser } = useGroup();
 const isEditMode = computed(() => !!props.user);
+
+function getGroupIdFromState() {
+    const selectedGroupIdState = useState<number | null>('selectedGroupId', () => null);
+    return selectedGroupIdState.value;
+}
 
 const getInitialValue = (user: User | null | undefined = props.user) => ({
     lastname: user?.lastname || null,
@@ -21,7 +26,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     phoneNumber: user?.phone_number || null,
     dateOfBirth: user?.date_of_birth || null,
     language: 'fr',
-    group: user?.group || null,
+    group: getGroupIdFromState()?.toString() || user?.group || null,
     roles: user?.roles || ['nurse'],
     address: {
         street: user?.profile?.street_address || null,
@@ -30,7 +35,6 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
         zipCode: user?.profile?.zip_code || null,
         additionalInformation: user?.profile?.additional_info || null,
     },
-    // settings: user?.settings || null,
     settings: user?.settings
         ? JSON.parse(user.settings)
         : {
@@ -48,28 +52,15 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     professionalCategory: user?.professional_category || null,
 });
 
-const adminGroups = computed(() => {
-    if (isAdmin.value) {
-        return groups.value;
-    }
-    else {
-        return groups.value.filter(group => isAdminGroup(group.id));
-    }
-});
-
-const isSubmitDisabled = computed(() => {
-    if (isAdmin.value) return false;
-    return adminGroups.value.length === 0;
-});
-
-await myGroups();
 const form = reactive(getInitialValue());
 const { $toast } = useNuxtApp();
+
 const { submit, inProgress } = useSubmit(async () => {
     const normalizedDateOfBirth = (() => {
         if (!form.dateOfBirth) return null;
 
-        const cleaned = form.dateOfBirth.replace(/[\/\s]/g, '-');
+        const cleaned = (form.dateOfBirth ?? '').replace(/[/\s]/g, '-');
+
         const parts = cleaned.split('-');
 
         if (parts.length !== 3) return null;
@@ -91,12 +82,12 @@ const { submit, inProgress } = useSubmit(async () => {
     form.dateOfBirth = normalizedDateOfBirth;
 
     if (isEditMode.value && props.user?.id) {
-        const updatedUser = await update(props.user.id, form);
+        const updatedUser = await update(props.user.id, JSON.parse(JSON.stringify(form)));
         resetForm(updatedUser);
         return;
     }
 
-    await create(form);
+    await create(JSON.parse(JSON.stringify(form)));
     resetForm(undefined);
 }, {
     onSuccess: () => {
@@ -198,9 +189,97 @@ const toggleRole = (role: AccountType) => {
 const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
+
+const groupId = getGroupIdFromState();
+
+const adminGroups = computed(() => {
+    if (groupId) {
+        const matchedGroup = groups.value.find(group => group.id === groupId);
+        return matchedGroup ? [matchedGroup] : [];
+    }
+    if (isAdmin.value) {
+        return groups.value;
+    }
+    return groups.value.filter(group => isAdminGroup(group.id));
+});
+
+const isSubmitDisabled = computed(() => {
+    if (isAdmin.value) return false;
+
+    if (groupId) {
+        return !isAdminGroup(groupId);
+    }
+
+    return adminGroups.value.length === 0;
+});
+
+const isFormDisabled = computed(() => {
+    if (isAdmin.value) return true;
+
+    if (groupId) {
+        return !isAdminGroup(groupId);
+    }
+
+    return adminGroups.value.length === 0;
+});
+
+await myGroups();
+
+const formAssign = {
+    email: '',
+};
+
+const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async () => {
+    await assignUser(groupId, formAssign);
+}, {
+    onSuccess: () => {
+        $toast({
+            title: 'Succès !',
+            description: 'Personne assignée avec succès.',
+        });
+        navigateTo('/dashboard/group');
+    },
+});
 </script>
 
 <template>
+    <form
+        v-if="!isFormDisabled"
+        @submit.prevent="submitAssign"
+    >
+        <Separator class="my-4 lg:my-10" />
+
+        <div class="grid grid-cols-3 gap-4 lg:gap-8">
+            <div class="p-4 hidden lg:block">
+                <h1 class="font-semibold text-gray-600">
+                    Assigner une personne
+                </h1>
+                <p class="mt-2 text-md text-gray-500">
+                    Les informations à compléter
+                </p>
+            </div>
+
+            <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
+                <InputIcon
+                    v-model="formAssign.email"
+                    rounded="md"
+                    label="Son email"
+                    placeholder="Email"
+                />
+            </div>
+        </div>
+
+        <div class="col-span-3 grid place-content-center">
+            <Button
+                type="submit"
+                class="rounded-md w-52"
+                :in-progress="inProgressAssign"
+            >
+                Assigner
+            </Button>
+        </div>
+    </form>
+    <Separator class="my-4 lg:my-10" />
     <form @submit.prevent="submit">
         <div class="grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
@@ -464,7 +543,7 @@ const formattedRoles = computed(() => {
                     <Select
                         v-model="form.group"
                         label="Groupe"
-                        :disabled="adminGroups.length === 0"
+                        :disabled="!!groupId || adminGroups.length === 0"
                     >
                         <SelectTrigger
                             position="right"
@@ -491,7 +570,10 @@ const formattedRoles = computed(() => {
             </div>
         </div>
         <Separator class="my-4 lg:my-10" />
-        <div class="col-span-3 grid place-content-center">
+        <div
+            v-if="!isSubmitDisabled"
+            class="col-span-3 grid place-content-center"
+        >
             <Button
                 type="submit"
                 class="rounded-md w-52"

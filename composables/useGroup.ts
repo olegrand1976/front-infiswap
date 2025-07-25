@@ -6,23 +6,24 @@ export function useGroup() {
     const groups = ref([]);
     const selectedGroup = ref(null);
     const selectedGroupUsers = ref([]);
-    const pagination = ref({
-        current_page: 1,
-        per_page: 15,
-        total: 0,
-        last_page: 1,
-    });
+    // const pagination = ref({
+    //     current_page: 1,
+    //     per_page: 15,
+    //     total: 0,
+    //     last_page: 1,
+    // });
+    const count = ref(0);
 
     async function myGroups() {
         const data = await $apifetch('/api/groups/me');
         groups.value = data.groups ?? [];
 
         if (groups.value.length > 0) {
-            await fetchGroupDetails(groups.value[0].id);
+            await getGroupDetails(groups.value[0].id);
         }
     }
 
-    async function fetchGroupDetails(groupId: number, page = 1, perPage = 15, filters = {}) {
+    async function getGroupDetails(groupId: number, page = 1, perPage = 15, filters = {}) {
         const data = await $apifetch(`/api/groups/${groupId}`, {
             params: {
                 page,
@@ -31,8 +32,9 @@ export function useGroup() {
             },
         });
         selectedGroup.value = data.group ?? null;
-        selectedGroupUsers.value = data.users ?? [];
-        pagination.value = data.pagination ?? pagination.value;
+        selectedGroupUsers.value = data.users.data ?? [];
+        count.value = data.count ?? 0;
+        // pagination.value = data.pagination ?? pagination.value;
     }
 
     const fetchGroupMembers = async (groupIds: number[]) => {
@@ -52,13 +54,30 @@ export function useGroup() {
         }
     };
 
+    const newGroup = async (formData) => {
+        return await $apifetch(`/api/groups`, {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
+    const assignUser = async (groupId: number, formData) => {
+        return await $apifetch(`/api/groups/assign/${groupId}`, {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     return {
         groups,
         selectedGroup,
         selectedGroupUsers,
-        pagination,
+        // pagination,
         myGroups,
-        fetchGroupDetails,
+        getGroupDetails,
         fetchGroupMembers,
+        newGroup,
+        assignUser,
+        count,
     };
 }

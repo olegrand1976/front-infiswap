@@ -309,3 +309,9 @@ export type Contact = {
     description?: string;
     created_at?: string;
 };
+
+export type Group = {
+    id: number;
+    name: string;
+    created_at?: string;
+};
