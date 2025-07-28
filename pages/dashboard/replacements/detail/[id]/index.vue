@@ -503,10 +503,6 @@ const isAdminOfReplacementGroup = computed(() => {
     return replacement.value.group_ids.some(groupId => isAdminGroup(groupId));
 });
 
-const canAssignReplacement = computed(() => {
-    return isAdminOfReplacementGroup.value && groupMembers.value.length > 0;
-});
-
 const groupMembers = ref([]);
 const isAssignModalOpen = ref(false);
 const selectedMemberId = ref(null);
@@ -527,6 +523,10 @@ const openAssignModal = async () => {
         isAssignModalOpen.value = true;
     }
 };
+
+const canAssignReplacement = computed(() => {
+    return isAdminOfReplacementGroup.value && groupMembers.value.length > 0;
+});
 
 const selectAndSubmitReplacement = async (nurseId) => {
     selectedMemberId.value = nurseId;
