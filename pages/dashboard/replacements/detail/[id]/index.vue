@@ -262,19 +262,29 @@
             </div>
         </div>
 
-        <Dialog
-            v-model:open="isAssignModalOpen"
-        >
+        <Dialog v-model:open="isAssignModalOpen">
             <DialogContent class="bg-white p-6 rounded-xl max-w-md w-full shadow-xl">
                 <DialogHeader class="text-lg font-semibold mb-4">
                     <DialogTitle>
                         Assigner un remplaçant
                     </DialogTitle>
                 </DialogHeader>
+
                 <p class="text-sm text-gray-500 mb-4">
                     Cliquez sur un membre pour l'assigner comme remplaçant.
                 </p>
-                <ul class="space-y-2 max-h-80 overflow-y-auto">
+
+                <div
+                    v-if="groupMembers.length === 0"
+                    class="text-center text-gray-400 py-8"
+                >
+                    Personne à assigner à ce remplacement.
+                </div>
+
+                <ul
+                    v-else
+                    class="space-y-2 max-h-80 overflow-y-auto"
+                >
                     <li
                         v-for="member in groupMembers"
                         :key="member.id"
@@ -288,6 +298,7 @@
                         <ArrowRightIcon class="size-5 text-primary" />
                     </li>
                 </ul>
+
                 <div class="flex justify-end mt-4">
                     <Button
                         variant="secondary"
@@ -513,7 +524,9 @@ const openAssignModal = async () => {
     const members = await fetchGroupMembers(replacement.value.group_ids);
 
     const userNurseId = user.value?.nurse?.id ?? user.value?.nurse_id;
-    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId);
+    const replacementNurseId = replacement.value?.nurse_id;
+
+    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId && member.nurse_id !== replacementNurseId);
 
     groupMembers.value = filteredMembers;
 
