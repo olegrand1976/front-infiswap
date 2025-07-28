@@ -248,7 +248,7 @@
                 </div>
 
                 <div
-                    v-if="isAdminOfReplacementGroup && groupMembers.length > 0"
+                    v-if="isAdminOfReplacementGroup"
                     class="flex justify-center"
                 >
                     <Button
