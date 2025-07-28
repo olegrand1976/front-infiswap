@@ -1,6 +1,7 @@
 export type Gender = 'M' | 'F' | 'X';
 export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
 export type CountryCode = 'be' | 'fr' | 'us';
+export type MediaType = 'video' | 'audio' | 'image' | 'link';
 
 type GroupRole = {
     group_id: number;
@@ -314,4 +315,14 @@ export type Group = {
     id: number;
     name: string;
     created_at?: string;
+};
+
+export type Tutorial = {
+    id: number;
+    title: string;
+    description: string;
+    tag: string;
+    media_path?: string;
+    media_type: MediaType;
+    mimes_type: string;
 };
