@@ -92,7 +92,7 @@
                         v-else-if="selectedTutorial.media_type == 'image'"
                         :src="baseUrl + selectedTutorial.media_path"
                         alt="Ressource media"
-                        class="object-cover"
+                        class="object-cover w-full h-[24rem]"
                     >
 
                     <audio
