@@ -248,7 +248,7 @@
                 </div>
 
                 <div
-                    v-if="canAssignReplacement"
+                    v-if="isAdminOfReplacementGroup && groupMembers.length > 0"
                     class="flex justify-center"
                 >
                     <Button
@@ -523,10 +523,6 @@ const openAssignModal = async () => {
         isAssignModalOpen.value = true;
     }
 };
-
-const canAssignReplacement = computed(() => {
-    return isAdminOfReplacementGroup.value && groupMembers.value.length > 0;
-});
 
 const selectAndSubmitReplacement = async (nurseId) => {
     selectedMemberId.value = nurseId;
