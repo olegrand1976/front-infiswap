@@ -27,7 +27,7 @@
                         <span>Type</span>
                         <span class="ml-4 font-medium">
                             {{
-                                option.media_type === 'image' ? 'Image' : option.media_type === 'audio' ? 'Audio' : option.media_type === 'video' ? 'Vidéo' :'Tous'
+                                option.media_type === 'image' ? 'Image' : option.media_type === 'audio' ? 'Audio' : option.media_type === 'video' ? 'Vidéo': option.media_type === 'link' ? 'Lien' :'Tous'
                             }}
                         </span>
                     </SelectTrigger>
