@@ -248,7 +248,7 @@
                 </div>
 
                 <div
-                    v-if="isAdminOfReplacementGroup"
+                    v-if="canAssignReplacement"
                     class="flex justify-center"
                 >
                     <Button
@@ -503,6 +503,10 @@ const isAdminOfReplacementGroup = computed(() => {
     return replacement.value.group_ids.some(groupId => isAdminGroup(groupId));
 });
 
+const canAssignReplacement = computed(() => {
+    return isAdminOfReplacementGroup.value && groupMembers.value.length > 0;
+});
+
 const groupMembers = ref([]);
 const isAssignModalOpen = ref(false);
 const selectedMemberId = ref(null);
@@ -513,11 +517,15 @@ const openAssignModal = async () => {
     const members = await fetchGroupMembers(replacement.value.group_ids);
 
     const userNurseId = user.value?.nurse?.id ?? user.value?.nurse_id;
-    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId);
+    const replacementNurseId = replacement.value?.nurse_id;
+
+    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId && member.nurse_id !== replacementNurseId);
 
     groupMembers.value = filteredMembers;
 
-    isAssignModalOpen.value = true;
+    if (filteredMembers.length > 0) {
+        isAssignModalOpen.value = true;
+    }
 };
 
 const selectAndSubmitReplacement = async (nurseId) => {
