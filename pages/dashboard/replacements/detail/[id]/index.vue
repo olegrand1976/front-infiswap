@@ -2,7 +2,7 @@
     <div class="pt-2">
         <div class="flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
-                :class="{ 'w-full': !(user?.nurse && replacement.nurse_id === user.nurse.id), 'w-full lg:w-[55%]': (user?.nurse && replacement.nurse_id === user.nurse.id) }"
+                :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
                 class="rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center"
             >
                 <Button
@@ -57,7 +57,7 @@
             </div>
 
             <div
-                v-if="user?.nurse && replacement.nurse_id === user.nurse_id"
+                v-if="user && replacement.user_id === user.id"
                 class="mt-12 sm:mt-0 w-full sm:h-12 px-3 flex justify-between sm:items-center gap-2"
             >
                 <div class="flex items-center text-center space-x-3 bg-primary h-10 border-2 border-primary rounded-full w-72">
@@ -219,7 +219,7 @@
         </section>
 
         <div
-            v-if="user?.nurse && replacement.nurse_id !== user.nurse.id"
+            v-if="user && replacement.user_id !== user.id"
             class="flex justify-center mt-12"
         >
             <div class="flex flex-row items-center space-x-[8rem]">
@@ -460,7 +460,7 @@ const {
     async () => {
         const payload = {
             ...formData,
-            respondedBy: user.value?.nurse_id ?? user.value?.nurse?.id ?? null,
+            respondedBy: user.value?.id ?? user.value?.id ?? null,
         };
 
         await sendResponse().submitResponse(payload);
@@ -512,8 +512,8 @@ const openAssignModal = async () => {
 
     const members = await fetchGroupMembers(replacement.value.group_ids);
 
-    const userNurseId = user.value?.nurse?.id ?? user.value?.nurse_id;
-    const filteredMembers = members.filter(member => member.nurse_id !== userNurseId);
+    const userNurseId = user.value?.id ?? user.value?.id;
+    const filteredMembers = members.filter(member => member.id !== userNurseId);
 
     groupMembers.value = filteredMembers;
 
