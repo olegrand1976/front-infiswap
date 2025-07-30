@@ -331,7 +331,7 @@ const adminNavigationItems: NavigationItem[] = [
         icon: HeartIcon,
     },
     {
-        label: 'Suivi utilisateurs',
+        label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
     },
