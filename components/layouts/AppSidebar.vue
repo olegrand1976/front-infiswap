@@ -251,7 +251,7 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: QuickReplacementIcon,
     },
     {
-        label: 'Proposer un remplacement',
+        label: 'Demander un(e) remplaçant(e)',
         route: '/dashboard/replacements/create',
         icon: ArrowPathIcon,
     },
