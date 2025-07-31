@@ -49,6 +49,32 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
+                <Select
+                    v-model="option.role"
+                    @update:model-value="debouncedFilterReplacements"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Rôle</span>
+                        <strong class="ml-4">
+                            {{
+                                option.role === 'nurse' ? 'Infirmier(ère)' : option.role === 'caregiver' ? 'Assistant(e) soignant(e)' : option.role === 'midwife' ? 'Sage-femme' : 'tous'
+                            }}
+                        </strong>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="'nurse'">
+                                <span class="ml-2">Infirmier(ère)</span>
+                            </SelectItem>
+                            <SelectItem :value="'caregiver'">
+                                <span class="ml-2">Assistant(e) soignant(e)</span>
+                            </SelectItem>
+                            <SelectItem :value="'midwife'">
+                                <span class="ml-2">Sage-femme</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
                 <Button
                     class="rounded-md"
                     @click="resetFilter"
@@ -227,6 +253,7 @@ const initialFilter = {
     zip: null,
     city: null,
     type: null,
+    role: null,
     province: '',
 };
 
@@ -487,7 +514,7 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorKey: 'nurse_owner',
+        accessorKey: 'user_owner',
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
@@ -495,12 +522,12 @@ const columns: ColumnDef<Replacement>[] = [
             }, () => ['Créateur', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
-            const user = row.original.nurse_owner;
+            const user = row.original.user_owner;
             return h(UsersName, { user });
         },
     },
     {
-        accessorKey: 'nurse_owner_phone_number',
+        accessorKey: 'user_owner_phone_number',
         header: ({ column }) => {
             return h(Button, {
                 variant: 'ghost',
@@ -511,7 +538,7 @@ const columns: ColumnDef<Replacement>[] = [
             ]);
         },
         cell: ({ row }: { row: { getValue: (key: string) => string | null } }) => {
-            const phone: string | null = row.getValue('nurse_owner_phone_number');
+            const phone: string | null = row.getValue('user_owner_phone_number');
             return h('div', { class: 'text-center' }, formatPhoneNumber(phone));
         },
         filterFn: (row, columnId, filterValue) => {
@@ -555,11 +582,11 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorFn: row => (row.matching_nurses || []).map(user => user.full_name).join(', '),
-        id: 'matching_nurses',
+        accessorFn: row => (row.matching_user || []).map(user => user.full_name).join(', '),
+        id: 'matching_user',
         header: () => h(Button, { variant: 'ghost' }, () => ['Notifiés']),
         cell: ({ row }) => {
-            const users = row.original.matching_nurses || [];
+            const users = row.original.matching_user || [];
             const displayText = users.map(u => u.full_name).join(', ');
             const replacementId = row.original.id;
 

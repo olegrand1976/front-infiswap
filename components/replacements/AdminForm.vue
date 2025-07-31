@@ -13,8 +13,8 @@
                     <div class="flex flex-col items-center text-center lg:gap-4">
                         <div class="relative">
                             <img
-                                v-if="form?.nurseOwnerProfilUrl"
-                                :src="useRuntimeConfig().public.API_URL + '/storage/' + form?.nurseOwnerProfilUrl"
+                                v-if="form?.userOwnerProfilUrl"
+                                :src="useRuntimeConfig().public.API_URL + '/storage/' + form?.userOwnerProfilUrl"
                                 class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border border-gray-300"
                             >
                             <img
@@ -31,15 +31,15 @@
                         <div class="text-sm text-gray-500 space-y-1 sm:space-y-2">
                             <p>
                                 <strong class="text-gray-700">Nom complet :</strong>
-                                {{ form.nurseOwnerFullName }}
+                                {{ form.userOwnerFullName }}
                             </p>
                             <p>
                                 <strong class="text-gray-700">Email :</strong>
-                                {{ form.nurseOwnerEmail }}
+                                {{ form.userOwnerEmail }}
                             </p>
                             <p>
                                 <strong class="text-gray-700">Téléphone :</strong>
-                                {{ form.nurseOwnerPhoneNumber }}
+                                {{ form.userOwnerPhoneNumber }}
                             </p>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div
-                    v-if="form.matchingNurses && form.matchingNurses.length"
+                    v-if="form.matchingUser && form.matchingUser.length"
                     class="mt-6 bg-white p-6 rounded-xl border border-gray-200 shadow-md"
                 >
                     <h3 class="text-lg font-bold text-center text-gray-800 mb-4 tracking-wide">
@@ -525,12 +525,12 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
         : replacement?.cities ?? [],
     careTypes: transformCareInformations(replacement?.care_types),
     details: replacement?.details ?? [],
-    nurseOwnerFullName: replacement?.nurse_owner_full_name ?? '',
-    nurseOwnerEmail: replacement?.nurse_owner_email ?? '',
-    nurseOwnerPhoneNumber: replacement?.nurse_owner_phone_number ?? '',
-    nurseOwnerProfilUrl: replacement?.nurse_owner_profil_url ?? '',
-    matchingNurses: replacement?.matching_nurses ?? '',
-    substituteNurse: replacement?.substitute_nurse ?? '',
+    userOwnerFullName: replacement?.user_owner_full_name ?? '',
+    userOwnerEmail: replacement?.user_owner_email ?? '',
+    userOwnerPhoneNumber: replacement?.user_owner_phone_number ?? '',
+    userOwnerProfilUrl: replacement?.user_owner_profil_url ?? '',
+    matchingUser: replacement?.matching_user ?? '',
+    substituteUser: replacement?.substitute_user ?? '',
     candidate: replacement?.candidate ?? false,
     responseCount: replacement?.response_count ?? null,
     periods: replacement?.periods ?? [],
@@ -673,11 +673,11 @@ const limit = 5;
 const matchingUsers = ref<User[]>([]);
 
 function initializeMatchingUsers() {
-    if (!form.matchingNurses || !Array.isArray(form.matchingNurses)) {
+    if (!form.matchingUser || !Array.isArray(form.matchingUser)) {
         matchingUsers.value = [];
         return;
     }
-    matchingUsers.value = JSON.parse(JSON.stringify(form.matchingNurses));
+    matchingUsers.value = JSON.parse(JSON.stringify(form.matchingUser));
 }
 
 const visibleUsers = computed(() => {
