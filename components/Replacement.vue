@@ -535,14 +535,14 @@
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     </TableRow>
                                 </div>
-                                <div v-else-if="filteredReplacements.length === 0">
+                                <div v-else-if="currentReplacements.length === 0">
                                     <p class="text-center text-gray-500 py-8">
                                         Aucun résultat n'est trouvé
                                     </p>
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacementGroup in filteredReplacements"
+                                        v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         :class="[
                                             'gap-2 border border-none overflow-x-hidden relative',
@@ -1024,14 +1024,14 @@
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     </TableRow>
                                 </div>
-                                <div v-else-if="filteredReplacements.length === 0">
+                                <div v-else-if="currentReplacements.length === 0">
                                     <p class="text-center text-gray-500 py-8">
                                         Aucun résultat n'est trouvé
                                     </p>
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacementGroup in filteredReplacements"
+                                        v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
@@ -1548,10 +1548,13 @@ const props = defineProps({
         required: false,
         default: '',
     },
-    filterType: {
-        type: String,
+    filters: {
+        type: Object as PropType<{ type: string; role: string }>,
         required: false,
-        default: 'all',
+        default: () => ({
+            type: 'all',
+            role: 'all',
+        }),
     },
     groupByProvince: {
         type: Boolean,
@@ -1590,6 +1593,11 @@ onMounted(async () => {
     }
     await fetchCareTypes();
     await fetchInitialData(page.value, perPage.value);
+});
+
+const localFilters = reactive({
+    type: props.filters.type,
+    role: props.filters.role,
 });
 
 const user = useState<User>('user');
@@ -1690,6 +1698,13 @@ const hasShift = (replacement, period) => {
     return periods.has(period);
 };
 
+watch(() => props.filters, (newFilters) => {
+    localFilters.type = newFilters.type;
+    localFilters.role = newFilters.role;
+
+    fetchInitialData(page.value, perPage.value);
+}, { deep: true });
+
 const isUrgentReplacement = (replacement) => {
     return replacement.type == 'immediate' && replacement.details.length > 0;
 };
@@ -1705,16 +1720,10 @@ const initialReplacements = ref({
 });
 const currentReplacements = ref([]);
 
-const filteredReplacements = computed(() => {
-    return toRaw(currentReplacements.value).filter(
-        replacement => props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement),
-    );
-});
-
 const groupsByProvince = computed<ProvinceGroups>(() => {
     const groups: ProvinceGroups = {};
 
-    filteredReplacements.value.forEach((replacement: Replacement) => {
+    currentReplacements.value.forEach((replacement: Replacement) => {
         const province = replacement.province || 'Autres';
         if (!groups[province]) {
             groups[province] = [];
@@ -1740,6 +1749,7 @@ const formData = reactive({
             : [],
     selectedDays: [],
     type: props.type,
+    filters: localFilters,
 });
 
 const updateRegionSelection = (region: string, checked: boolean) => {
@@ -1793,6 +1803,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             cities: [],
             selectedDays: [],
             type: props.type,
+            filters: localFilters,
             provinces: selectedRegions.value,
             page,
             perPage,
@@ -1907,6 +1918,7 @@ const submitSearch = async () => {
                 postalCode: toRaw(formData.postalCodeTags),
                 cities: toRaw(formData.cityTags),
                 type: toRaw(formData.type),
+                filters: toRaw(formData.filters),
                 page: page.value,
                 perPage: perPage.value,
             });
