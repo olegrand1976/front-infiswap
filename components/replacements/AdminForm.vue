@@ -89,7 +89,7 @@
                             </div>
                             <div class="text-gray-500 text-xs mt-1">
                                 <span class="font-medium text-gray-600">Email :</span> {{ user.email }}<br>
-                                <span class="font-medium text-gray-600">Code postal :</span> {{ user.zip_code ?? '—' }}
+                                <span class="font-medium text-gray-600">Code postal :</span> {{ user.profile.zip_code ?? '—' }}
                             </div>
                         </li>
                     </ul>
@@ -369,7 +369,7 @@
                         multiple
                     >
                         <SelectTrigger
-                            class="w-full bg-white rounded-lg text-nowrap border border-2 border-gray-300"
+                            class="w-full bg-white rounded-lg text-nowrap border-2 border-gray-300"
                             position="right"
                         >
                             <SelectValue class="truncate w-[200rem]">
@@ -494,7 +494,7 @@ const transformCareInformations = (careInfo: string | object) => {
 
 const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
     id: replacement?.id ?? null,
-    nurseId: replacement?.nurse_id ?? null,
+    userId: replacement?.user_id ?? null,
     replacedBy: replacement?.replaced_by ?? null,
     experienceYears: replacement?.experience_years ?? null,
     startDate: formatDate(replacement?.start_date ?? null),

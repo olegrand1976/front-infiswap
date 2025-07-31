@@ -220,7 +220,7 @@ interface PaginationLink {
 
 export type Replacement = {
     id: number;
-    nurse_id: number;
+    user_id: number;
     replaced_by?: number;
     experience_years: number | null;
     start_date: string;

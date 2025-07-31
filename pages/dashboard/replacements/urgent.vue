@@ -62,7 +62,7 @@
                             <template v-else>
                                 <button
                                     class="bg-success hover:bg-success/90 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow"
-                                    @click="handleInterest(replacement.id, user.nurse.id)"
+                                    @click="handleInterest(replacement.id, user.id)"
                                 >
                                     Je suis intéressé
                                 </button>

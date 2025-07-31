@@ -243,7 +243,7 @@
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -412,7 +412,7 @@
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -430,7 +430,7 @@
                                                         <EyeIcon class="h-6 mt-1" />
                                                     </Button>
                                                     <Button
-                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
+                                                        v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -553,7 +553,7 @@
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -720,7 +720,7 @@
                                                             <span>Modifier</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
-                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                            v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="flex items-center space-x-2 text-sm"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -738,7 +738,7 @@
                                                     <EyeIcon class="h-6 mt-1" />
                                                 </Button>
                                                 <Button
-                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
+                                                    v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                     @click="closeReplacementDialog = true"
                                                 >
@@ -831,7 +831,7 @@
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                                 :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -937,7 +937,7 @@
                                                                     <span>Modifier</span>
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
-                                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                    v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                     class="flex items-center space-x-2 text-sm"
                                                                     @click="closeReplacementDialog = true"
                                                                 >
@@ -949,7 +949,7 @@
                                                     </template>
                                                     <template v-else>
                                                         <Button
-                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                            v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -1039,7 +1039,7 @@
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
                                             :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
@@ -1145,7 +1145,7 @@
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -1157,7 +1157,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <Button
-                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                        v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -1613,7 +1613,7 @@ onMounted(async () => {
 
 const getCreatorInfo = (replacementGroup, field = 'name') => {
     if (props.type !== 'groups') return '';
-    const creator = groupMembers.value.find(member => member.nurse_id === replacementGroup.nurse_id);
+    const creator = groupMembers.value.find(member => member.nurse_id === replacementGroup.user_id);
     if (!creator) return '';
     if (field === 'name') {
         return `${creator.firstname ?? ''} ${creator.lastname ?? ''}`.trim();
@@ -1691,7 +1691,7 @@ const hasShift = (replacement, period) => {
 };
 
 const isUrgentReplacement = (replacement) => {
-    return !replacement.time_slot && replacement.details.length > 0;
+    return replacement.type == 'immediate' && replacement.details.length > 0;
 };
 
 const initialReplacements = ref({
@@ -2000,7 +2000,7 @@ const handleCloseReplacement = async (replacement) => {
 const editDialogOpen = ref(false);
 const editFormData = reactive({
     id: null,
-    nurseId: user.value.nurse.id,
+    nurseId: user.value.id,
     replacedBy: null,
     visibility: '',
     type: '',
@@ -2021,7 +2021,7 @@ const editFormData = reactive({
 
 const resetEditFormData = () => {
     editFormData.id = null;
-    editFormData.nurseId = user.value.nurse.id;
+    editFormData.nurseId = user.value.id;
     editFormData.replacedBy = null;
     editFormData.visibility = '';
     editFormData.type = '';
