@@ -249,7 +249,7 @@
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
                                             <div
-                                                v-if="localFilters.role == 'all'"
+                                                v-if="localFilters.role == 'all' && props.type != 'me'"
                                                 class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
                                             >
                                                 {{ roles[replacementGroup.user_role] }}
@@ -565,16 +565,10 @@
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
                                         <div
-                                            v-if="localFilters.role == 'all'"
-                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
-                                        >
-                                            {{ roles[replacementGroup.user_role] }}
-                                        </div>
-                                        <div
                                             v-if="localFilters.role == 'all' && props.type != 'me'"
                                             class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
                                         >
-                                            {{ roles[user.account_type] }}
+                                            {{ roles[replacementGroup.user_role] }}
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -855,7 +849,7 @@
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                             </div>
                                             <div
-                                                v-if="localFilters.role == 'all'"
+                                                v-if="localFilters.role == 'all' && props.type != 'me'"
                                                 class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
                                             >
                                                 {{ roles[replacementGroup.user_role] }}
@@ -1069,7 +1063,7 @@
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
                                         </div>
                                         <div
-                                            v-if="localFilters.role == 'all'"
+                                            v-if="localFilters.role == 'all' && props.type != 'me'"
                                             class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
                                         >
                                             {{ roles[replacementGroup.user_role] }}
@@ -1729,10 +1723,12 @@ const hasShift = (replacement, period) => {
 };
 
 watch(() => props.filters, (newFilters) => {
-    localFilters.type = newFilters.type;
-    localFilters.role = newFilters.role;
+    if (newFilters) {
+        localFilters.type = newFilters.type;
+        localFilters.role = newFilters.role;
 
-    fetchInitialData(page.value, perPage.value);
+        fetchInitialData(page.value, perPage.value);
+    }
 }, { deep: true });
 
 const isUrgentReplacement = (replacement) => {
