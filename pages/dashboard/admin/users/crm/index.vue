@@ -88,7 +88,7 @@
                 v-model:open="showModal"
                 class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
             >
-                <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-2">
+                <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
                     <UsersCard :user="user" />
                 </DialogContent>
             </Dialog>
@@ -173,6 +173,45 @@
                 </DialogContent>
             </Dialog>
 
+            <Dialog
+                v-model:open="commentDialogOpen"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            >
+                <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
+                    <DialogHeader>
+                        <DialogTitle class="text-lg font-semibold text-primary mb-4">
+                            Rajouter un commentaire
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <form @submit.prevent="saveComment">
+                        <div>
+                            <Textarea
+                                v-model="tempComment"
+                                class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer mb-4"
+                            />
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            <Button
+                                variant="secondary"
+                                class="px-4 py-2 rounded"
+                                type="button"
+                                @click="contactDialogOpen = false"
+                            >
+                                Annuler
+                            </Button>
+                            <Button
+                                type="submit"
+                                class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                            >
+                                Valider
+                            </Button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
             <div>
                 <CustomPagination
                     :default-page="page"
@@ -213,18 +252,27 @@ definePageMeta({
 });
 
 const contactDialogOpen = ref(false);
+const commentDialogOpen = ref(false);
 
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
+const tempComment = ref('');
 
-const { users, getUsers, edit, updateContact } = useAuth();
+const { $toast } = useNuxtApp();
+const { getAll } = useProduct();
+const { users, getUsers, edit, updateContact, updateField } = useAuth();
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
     tempContactDate.value = user.contact_date ?? '';
     tempContactMethod.value = user.contact_method ?? 'mail';
     contactDialogOpen.value = true;
+}
+
+function openCommentDialog(user) {
+    editingUserId.value = user.id;
+    commentDialogOpen.value = true;
 }
 
 async function saveContact() {
@@ -236,6 +284,16 @@ async function saveContact() {
     });
 
     contactDialogOpen.value = false;
+    await getUsers();
+}
+
+async function saveComment() {
+    if (!editingUserId.value) return;
+    await updateField(Number(editingUserId.value), { comment_crm: tempComment.value });
+    setTimeout(() => {
+        $toast({ description: 'Commentaire mises à jour avec succès' });
+    }, 1500);
+    commentDialogOpen.value = false;
     await getUsers();
 }
 
@@ -268,6 +326,9 @@ const filterUsers = async () => {
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
+
+const products = ref([]);
+products.value = await getAll();
 
 await getUsers(page.value, perPage.value, option.value);
 
@@ -350,86 +411,30 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
-        accessorKey: 'insurance',
-        header: 'NursAssur',
-        cell: ({ row }) => {
-            const toggle = async (value: boolean) => {
-                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    dataUsers.value[index].insurance = value ? 1 : 0;
-                }
-
-                await edit(Number(row.original.id), { insurance: dataUsers.value[index].insurance == 1 });
-            };
-
-            return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    'class': 'mx-auto text-center',
-                    'checked': row.original.insurance === 1,
-                    'onUpdate:checked': toggle,
-                }),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'site',
-        header: 'NursTech',
-        cell: ({ row }) => {
-            const toggle = async (value: boolean) => {
-                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    dataUsers.value[index].site = value ? 1 : 0;
-                }
-
-                await edit(Number(row.original.id), { site: dataUsers.value[index].site == 1 });
-            };
-
-            return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    'class': 'mx-auto text-center',
-                    'checked': row.original.site === 1,
-                    'onUpdate:checked': toggle,
-                }),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'ambassador',
-        header: 'Tournée',
-        cell: ({ row }) => {
-            const toggle = async (value: boolean) => {
-                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    dataUsers.value[index].ambassador = value ? 1 : 0;
-                }
-
-                await edit(Number(row.original.id), { ambassador: dataUsers.value[index].ambassador == 1 });
-            };
-
-            return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    'class': 'mx-auto text-center',
-                    'checked': row.original.ambassador === 1,
-                    'onUpdate:checked': toggle,
-                }),
-            ]);
-        },
-    },
-    {
         accessorKey: 'comment_crm',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('comment_crm'),
-            }, () => ['Commentaire', h(ArrowsUpDownIcon, { class: '' })]);
-        },
+        header: () =>
+            h(Button, { variant: 'ghost', onClick: () => setSort('comment_crm') }, () => [
+                'Commentaire',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ]),
         cell: ({ row }) => {
+            const comment = row.original.comment_crm;
+
             return h('div', {
-                class: 'truncate max-w-[200px] text-left',
-                title: row.getValue('comment_crm'),
-            }, row.getValue('comment_crm'));
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                h('span', {
+                    class: 'max-w-[150px] truncate text-sm',
+                    title: comment,
+                }, comment || ''),
+
+                h(PencilIcon, {
+                    class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
+                    onClick: () => {
+                        openCommentDialog(row.original);
+                    },
+                }),
+            ]);
         },
     },
     {
