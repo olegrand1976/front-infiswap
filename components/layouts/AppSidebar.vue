@@ -251,7 +251,7 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: QuickReplacementIcon,
     },
     {
-        label: 'Proposer un remplacement',
+        label: 'Demander un(e) remplaçant(e)',
         route: '/dashboard/replacements/create',
         icon: ArrowPathIcon,
     },
@@ -331,7 +331,7 @@ const adminNavigationItems: NavigationItem[] = [
         icon: HeartIcon,
     },
     {
-        label: 'Suivi utilisateurs',
+        label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
     },
