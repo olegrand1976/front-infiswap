@@ -103,6 +103,12 @@ export function getRole(role: AccountType) {
         case 'sale_representative' :
             activeRole.value = 'Commerciale';
             break;
+        case 'caregiver' :
+            activeRole.value = 'Assistant(e) soignant(e)';
+            break;
+        case 'midwife' :
+            activeRole.value = 'Sage-femme';
+            break;
         default:
             activeRole.value = 'Infirmier(e)';
             break;

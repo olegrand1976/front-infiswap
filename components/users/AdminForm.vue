@@ -168,6 +168,8 @@ const accountOptions = computed<AccountType[]>(() => {
                 'collaborator',
                 'sale_representative',
                 'nurse',
+                'caregiver',
+                'midwife',
             ]
         : [
                 'administrator',

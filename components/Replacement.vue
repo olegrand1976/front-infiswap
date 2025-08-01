@@ -241,12 +241,18 @@
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            </div>
+                                            <div
+                                                v-if="localFilters.role == 'all'"
+                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                            >
+                                                {{ roles[replacementGroup.user_role] }}
                                             </div>
                                             <TableCell
                                                 :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
@@ -551,12 +557,24 @@
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <div
+                                            v-if="localFilters.role == 'all'"
+                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                        >
+                                            {{ roles[replacementGroup.user_role] }}
+                                        </div>
+                                        <div
+                                            v-if="localFilters.role == 'all' && props.type != 'me'"
+                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                        >
+                                            {{ roles[user.account_type] }}
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -829,12 +847,18 @@
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            </div>
+                                            <div
+                                                v-if="localFilters.role == 'all'"
+                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                            >
+                                                {{ roles[replacementGroup.user_role] }}
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -1037,12 +1061,18 @@
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <div
+                                            v-if="localFilters.role == 'all'"
+                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                        >
+                                            {{ roles[replacementGroup.user_role] }}
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1787,6 +1817,12 @@ const frenchDays = {
 
 const toggleDay = (day: string) => {
     formData.selectedDays = selectDays(day, formData.selectedDays);
+};
+
+const roles = {
+    nurse: 'INFIRMIER',
+    caregiver: 'ASSISTANT SOIGNANT',
+    midwife: 'SAGE-FEMME',
 };
 
 const selectedDaysPlaceholder = computed(() => {
