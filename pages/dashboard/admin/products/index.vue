@@ -108,7 +108,7 @@ const columns: ColumnDef<Product>[] = [
                 onClick: () => setSort('description'),
             }, () => ['Description', h(ArrowsUpDownIcon, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('description')),
+        cell: ({ row }) => h('div', { class: 'whitespace-pre-wrap' }, row.getValue('description')),
     },
     {
         accessorKey: 'created_at',

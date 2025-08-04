@@ -327,9 +327,7 @@ const filterUsers = async () => {
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
-const products = ref([]);
-products.value = await getAll();
-
+await getAll();
 await getUsers(page.value, perPage.value, option.value);
 
 const dataUsers = computed(() => users.value?.data ?? []);
@@ -408,6 +406,74 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('city'));
+        },
+    },
+    {
+        accessorKey: 'insurance',
+        header: 'NursAssur',
+        cell: ({ row }) => {
+            const toggle = async (value: boolean) => {
+                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
+                if (index !== -1) {
+                    dataUsers.value[index].insurance = value ? 1 : 0;
+                }
+
+                await edit(Number(row.original.id), { insurance: dataUsers.value[index].insurance == 1 });
+            };
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(Switch, {
+                    'class': 'mx-auto text-center',
+                    'checked': row.original.insurance === 1,
+                    'onUpdate:checked': toggle,
+                }),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'site',
+        header: 'NursTech',
+        cell: ({ row }) => {
+            const toggle = async (value: boolean) => {
+                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
+                if (index !== -1) {
+                    dataUsers.value[index].site = value ? 1 : 0;
+                }
+
+                await edit(Number(row.original.id), { site: dataUsers.value[index].site == 1 });
+            };
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(Switch, {
+                    'class': 'mx-auto text-center',
+                    'checked': row.original.site === 1,
+                    'onUpdate:checked': toggle,
+                }),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'ambassador',
+        header: 'Tournée',
+        cell: ({ row }) => {
+            const toggle = async (value: boolean) => {
+                const index = dataUsers.value.findIndex(item => item.id === row.original.id);
+                if (index !== -1) {
+                    dataUsers.value[index].ambassador = value ? 1 : 0;
+                }
+
+                await edit(Number(row.original.id), { ambassador: dataUsers.value[index].ambassador == 1 });
+            };
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(Switch, {
+                    'class': 'mx-auto text-center',
+                    'checked': row.original.ambassador === 1,
+                    'onUpdate:checked': toggle,
+                }),
+            ]);
         },
     },
     {

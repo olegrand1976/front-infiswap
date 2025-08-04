@@ -1645,7 +1645,7 @@ onMounted(async () => {
 
 const getCreatorInfo = (replacementGroup, field = 'name') => {
     if (props.type !== 'groups') return '';
-    const creator = groupMembers.value.find(member => member.nurse_id === replacementGroup.user_id);
+    const creator = groupMembers.value.find(member => member.user_id === replacementGroup.user_id);
     if (!creator) return '';
     if (field === 'name') {
         return `${creator.firstname ?? ''} ${creator.lastname ?? ''}`.trim();
