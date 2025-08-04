@@ -262,32 +262,40 @@
             </div>
         </div>
 
-        <Dialog
-            v-model:open="isAssignModalOpen"
-        >
+        <Dialog v-model:open="isAssignModalOpen">
             <DialogContent class="bg-white p-6 rounded-xl max-w-md w-full shadow-xl">
                 <DialogHeader class="text-lg font-semibold mb-4">
                     <DialogTitle>
                         Assigner un remplaçant
                     </DialogTitle>
                 </DialogHeader>
+
                 <p class="text-sm text-gray-500 mb-4">
                     Cliquez sur un membre pour l'assigner comme remplaçant.
                 </p>
+
                 <ul class="space-y-2 max-h-80 overflow-y-auto">
-                    <li
-                        v-for="member in groupMembers"
-                        :key="member.id"
-                        class="flex justify-between items-center border rounded p-2 hover:bg-gray-50 cursor-pointer"
-                        @click="selectAndSubmitReplacement(member.nurse_id)"
-                    >
-                        <div class="flex items-center gap-2">
-                            <UserIcon class="size-5 text-primary" />
-                            <span>{{ member.firstname }} {{ member.lastname }}</span>
-                        </div>
-                        <ArrowRightIcon class="size-5 text-primary" />
-                    </li>
+                    <template v-if="groupMembers.length > 0">
+                        <li
+                            v-for="member in groupMembers"
+                            :key="member.id"
+                            class="flex justify-between items-center border rounded p-2 hover:bg-gray-50 cursor-pointer"
+                            @click="selectAndSubmitReplacement(member.user_id)"
+                        >
+                            <div class="flex items-center gap-2">
+                                <UserIcon class="size-5 text-primary" />
+                                <span>{{ member.firstname }} {{ member.lastname }}</span>
+                            </div>
+                            <ArrowRightIcon class="size-5 text-primary" />
+                        </li>
+                    </template>
+                    <template v-else>
+                        <li class="text-sm text-gray-400 text-center py-4">
+                            Personne à affecter à ce remplacement pour le moment.
+                        </li>
+                    </template>
                 </ul>
+
                 <div class="flex justify-end mt-4">
                     <Button
                         variant="secondary"
@@ -512,24 +520,28 @@ const openAssignModal = async () => {
 
     const members = await fetchGroupMembers(replacement.value.group_ids);
 
-    const userNurseId = user.value?.id ?? user.value?.id;
-    const filteredMembers = members.filter(member => member.id !== userNurseId);
+    const userNurseId = user.value?.id ?? null;
+    const replacementUserId = replacement.value?.user_id ?? null;
+
+    const filteredMembers = members.filter(member =>
+        member.user_id !== userNurseId && member.user_id !== replacementUserId,
+    );
 
     groupMembers.value = filteredMembers;
 
     isAssignModalOpen.value = true;
 };
 
-const selectAndSubmitReplacement = async (nurseId) => {
-    selectedMemberId.value = nurseId;
+const selectAndSubmitReplacement = async (userId) => {
+    selectedMemberId.value = userId;
 
     const payload = {
         ...formData,
-        respondedBy: nurseId,
+        respondedBy: userId,
     };
 
     await sendResponse().submitResponse(payload);
-    replacement.value.replaced_by = nurseId;
+    replacement.value.replaced_by = userId;
     isAssignModalOpen.value = false;
 };
 
