@@ -122,7 +122,7 @@
                         </div>
 
                         <Button
-                            variant="inline"
+                            variant="none"
                             class="absolute -top-2 right-0 font-bold text-primary text-xs mt-2"
                             @click="openProposalDialog('')"
                         >
@@ -143,7 +143,9 @@
                     </div>
 
                     <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
-                        <h5>Type de soin</h5>
+                        <h5 class="text-sm text-gray-700 font-medium">
+                            Type de soin
+                        </h5>
                         <Select
                             v-model="formData.careTypes"
                             multiple
@@ -185,6 +187,54 @@
                         </Select>
                     </div>
                 </div>
+
+                <div
+                    v-if="hasMultipleValidRoles"
+                    class="mt-8 sm:mt-12 grid sm:grid-cols-[30%_70%] gap-4 sm:gap-0 items-center"
+                >
+                    <label class="text-sm text-gray-700 font-medium">
+                        Demander en tant que
+                    </label>
+                    <div class="flex gap-2 flex-col sm:flex-row sm:gap-8 2xl:gap-12 sm:items-center">
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="nurse"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="nurse"
+                            >
+                            <label for="nurse">
+                                Infirmier(ère)
+                            </label>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="caregiver"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="caregiver"
+                            >
+                            <label for="caregiver">
+                                Assistant(e) soignant(e)
+                            </label>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="midwife"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="midwife"
+                            >
+                            <label for="midwife">
+                                Sage-femme
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <Button
                     class="my-12 w-80 flex justify-center items-center mx-auto"
                     type="submit"
@@ -201,6 +251,20 @@
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { LayoutsAppImage } from '#components';
+import type { User } from '~/lib/types';
+
+const user = useState<User>('user');
+const validRoles = ['nurse', 'caregiver', 'midwife'];
+const selectedRole = ref(null);
+
+const roleType = computed(() => {
+    return user.value.roles.find(role => validRoles.includes(role));
+});
+const hasMultipleValidRoles = computed(() => {
+    const userRoles = user.value.roles || [];
+    const matchingRoles = userRoles.filter(role => validRoles.includes(role));
+    return matchingRoles.length >= 2;
+});
 
 useHead({
     title: 'Remplacement rapide',
@@ -220,6 +284,7 @@ const formData = reactive({
     startTime: '',
     endTime: '',
     patientCount: '',
+    roleType: roleType.value,
     zipCodes: [],
     cities: [],
     careTypes: [],
@@ -304,5 +369,13 @@ const { submit, inProgress } = useSubmit(async () => {
 
 onMounted(() => {
     fetchCareTypes();
+    if (hasMultipleValidRoles.value) {
+        selectedRole.value = null;
+        formData.roleType = null;
+    }
+    else {
+        selectedRole.value = roleType.value;
+        formData.roleType = roleType.value;
+    }
 });
 </script>

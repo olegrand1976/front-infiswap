@@ -219,7 +219,7 @@
         </section>
 
         <div
-            v-if="user && replacement.user_id !== user.id && replacement.status != 'closed' && replacement.user_role == user.account_type"
+            v-if="user && replacement.user_id !== user.id && replacement.status != 'closed' && replacement.role_type == user.account_type"
             class="flex justify-center mt-12"
         >
             <div class="flex flex-row items-center space-x-[8rem]">

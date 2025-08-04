@@ -221,7 +221,7 @@ interface PaginationLink {
 export type Replacement = {
     id: number;
     user_id: number;
-    user_role: AccountType;
+    role_type: AccountType;
     replaced_by?: number;
     experience_years: number | null;
     start_date: string;
