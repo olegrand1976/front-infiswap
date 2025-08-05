@@ -317,6 +317,11 @@ const adminNavigationItems: NavigationItem[] = [
         icon: ArrowPathIcon,
     },
     {
+        label: 'Intérêt pour remplacement',
+        route: '/dashboard/admin/replacements/interest',
+        icon: ListBulletIcon,
+    },
+    {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
         icon: UserGroupIcon,
