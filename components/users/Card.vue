@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-xl max-w-sm w-full overflow-hidden transition-all duration-300">
+    <div class="bg-white rounded-xl max-w-full w-full overflow-hidden transition-all duration-300">
         <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
             <LayoutsAppImage
                 :src="'logo_white.png'"
@@ -224,8 +224,8 @@
                 <div class="relative">
                     <Textarea
                         v-model="comment"
+                        disabled
                         class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
-                        @keydown.enter.exact.prevent="submitComment"
                     />
                     <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire
@@ -327,8 +327,7 @@ import {
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 
-const { $toast } = useNuxtApp();
-const { isAdmin, updateField } = useAuth();
+const { isAdmin } = useAuth();
 const activeTab = ref('information');
 
 const props = withDefaults(defineProps<{
@@ -371,21 +370,6 @@ const translatedCategory = computed(() => {
 });
 
 const comment = ref(props.user.comment_crm ?? '');
-
-const submitComment = async () => {
-    const value = comment.value;
-
-    try {
-        await updateField(Number(props.user.id), { comment_crm: value });
-        setTimeout(() => {
-            $toast({ description: 'Commentaire mises à jour avec succès' });
-            window.location.reload();
-        }, 1500);
-    }
-    catch (err) {
-        console.error('Erreur API:', err);
-    }
-};
 
 loadActivity();
 </script>

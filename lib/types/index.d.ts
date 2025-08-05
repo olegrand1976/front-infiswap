@@ -326,3 +326,10 @@ export type Tutorial = {
     media_type: MediaType;
     mimes_type: string;
 };
+
+export type Product = {
+    id: number;
+    name: string;
+    description?: string;
+    created_at?: string;
+};

@@ -209,6 +209,7 @@ import {
     InboxIcon,
     QuestionMarkCircleIcon,
     PlayCircleIcon,
+    ShoppingBagIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -349,6 +350,11 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Tutoriels',
         route: '/dashboard/admin/tutorials',
         icon: PlayCircleIcon,
+    },
+    {
+        label: 'Produits',
+        route: '/dashboard/admin/products',
+        icon: ShoppingBagIcon,
     },
 ];
 
