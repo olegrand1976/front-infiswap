@@ -59,6 +59,9 @@
         <section class="lg:container lg:mx-auto lg:px-32">
             <HomeServiceContainer />
         </section>
+        <section class="container lg:mx-auto lg:px-32">
+            <HomeCounterStat />
+        </section>
         <section>
             <HomePlanningContainer />
         </section>

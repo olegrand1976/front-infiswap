@@ -36,6 +36,10 @@ export const useHome = () => {
         return await $apifetch(`${prefix}/${home}`);
     }
 
+    async function count() {
+        return await $apifetch(`/api/home/count`);
+    }
+
     async function edit(id: number, options = {}) {
         return await $apifetch(`${prefix}/update/${id}`, {
             method: 'PUT',
@@ -64,6 +68,7 @@ export const useHome = () => {
         createOrUpdate,
         get,
         edit,
+        count,
         getSpecifiedHome,
         forceDelete,
     };
