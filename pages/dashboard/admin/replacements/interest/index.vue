@@ -4,29 +4,35 @@
 
         <DashboardAdminPageContent>
             <Tabs
+                v-model="selected"
                 class="mb-4"
             >
                 <TabsList class="w-full">
                     <TabsTrigger
-                        value="nurstech"
+                        value="accepted"
                         class="w-full md:w-64 h-12"
                     >
-                        Par infirmière ayant accepté
+                        Par infirmière accepté
                     </TabsTrigger>
                     <TabsTrigger
-                        value="nursassur"
+                        value="posted"
                         class="w-full md:w-64 h-12"
                     >
                         Par infirmière ayant posté
                     </TabsTrigger>
                     <TabsTrigger
-                        value="infiswap"
+                        value="responses"
                         class="w-full md:w-96 h-12"
                     >
                         Par remplacement ayant reçu des réponses
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
+            <div>
+                <ReplacementsInterestNursesAccepted v-if="selected === 'accepted'" />
+                <ReplacementsInterestNursesPosted v-else-if="selected === 'posted'" />
+                <ReplacementsInterestReceivedResponses v-else-if="selected === 'responses'" />
+            </div>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -38,4 +44,6 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
+
+const selected = ref('accepted');
 </script>

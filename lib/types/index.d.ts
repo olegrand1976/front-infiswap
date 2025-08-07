@@ -221,6 +221,7 @@ interface PaginationLink {
 export type Replacement = {
     id: number;
     user_id: number;
+    user: User;
     role_type: AccountType;
     replaced_by?: number;
     experience_years: number | null;
@@ -251,6 +252,7 @@ export type Replacement = {
     periods?: ReplacementPeriod[];
     province?: string;
     group_ids?: number[];
+    created_at?: string | null;
 };
 
 export type ReplacementPeriod = {
@@ -291,6 +293,7 @@ export type ReplacementResponse = {
     updated_at: string;
     confirmed_at: string;
     respondedBy: User;
+    responded_by: User;
     repondedBy: User;
 };
 
@@ -332,4 +335,10 @@ export type Product = {
     name: string;
     description?: string;
     created_at?: string;
+};
+
+export type ReplacementRow = {
+    replacement: Replacement;
+    responses_count: number;
+    responses: ReplacementResponse[];
 };
