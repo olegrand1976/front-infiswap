@@ -19,25 +19,22 @@
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Les intéressés
+                        Les personnes intéressées
                     </DialogTitle>
                 </DialogHeader>
-
-                <DialogContent>
-                    <div v-if="selected">
-                        <ul class="mt-4 list-disc ml-5 space-y-2">
-                            <li
-                                v-for="res in selected.responses"
-                                :key="res.id"
-                            >
-                                <UsersName
-                                    :user="res.responded_by"
-                                    class="font-medium text-gray-800"
-                                />
-                            </li>
-                        </ul>
-                    </div>
-                </DialogContent>
+                <div v-if="selected">
+                    <ul class="mt-4 list-disc ml-5 space-y-2">
+                        <li
+                            v-for="res in selected.responses"
+                            :key="res.id"
+                        >
+                            <UsersName
+                                :user="res.responded_by"
+                                class="font-medium text-gray-800"
+                            />
+                        </li>
+                    </ul>
+                </div>
             </DialogContent>
         </Dialog>
     </div>
@@ -110,7 +107,7 @@ const columns = [
         header: () =>
             h(
                 'div',
-                { class: 'text-center flex items-center justify-center h-full' },
+                { class: 'text-center flex items-center justify-center', style: { minHeight: '40px' } },
                 'Période',
             ),
         accessorKey: 'replacement',
@@ -123,7 +120,7 @@ const columns = [
 
             return h(
                 'div',
-                { class: 'text-center flex items-center justify-center h-full' },
+                { class: 'text-center flex items-center justify-center', style: { minHeight: '40px' } },
                 `${formattedStart} - ${formattedEnd}`,
             );
         },
@@ -132,7 +129,7 @@ const columns = [
         header: () =>
             h(
                 'div',
-                { class: 'text-center flex items-center justify-center h-full' },
+                { class: 'text-center flex items-center justify-center', style: { minHeight: '40px' } },
                 'Plage horaire',
             ),
         accessorKey: 'replacement.time_slot',
@@ -140,7 +137,7 @@ const columns = [
             const timeSlot = row.original.replacement?.timeSlot;
 
             if (!timeSlot) {
-                return h('span', { class: 'text-center block text-gray-400' }, '—');
+                return h('span', { class: 'text-center block text-gray-400', style: { minHeight: '40px' } }, '—');
             }
 
             let parsedTimeSlot;
@@ -148,7 +145,7 @@ const columns = [
                 parsedTimeSlot = typeof timeSlot === 'string' ? JSON.parse(timeSlot) : timeSlot;
             }
             catch (e) {
-                return h('span', { class: 'text-center block text-red-500' }, 'Erreur ');
+                return h('span', { class: 'text-center block text-red-500', style: { minHeight: '40px' } }, 'Erreur ');
             }
 
             const format = (start: string, end: string) => `${start} - ${end}`;
@@ -169,7 +166,7 @@ const columns = [
 
             return h(
                 'span',
-                { class: 'text-center block' },
+                { class: 'text-center block', style: { minHeight: '40px' } },
                 ranges.join(' / '),
             );
         },
@@ -178,7 +175,7 @@ const columns = [
         header: 'Créé par',
         accessorKey: 'replacement.user.full_name',
         cell: ({ row }: { row: { original: ReplacementRow } }) =>
-            row.original.replacement?.user_owner_full_name ?? '—',
+            h('div', { style: { minHeight: '40px' } }, row.original.replacement?.user_owner_full_name ?? '—'),
     },
     {
         header: 'Type',
@@ -189,11 +186,12 @@ const columns = [
                 return h(
                     'span',
                     {
-                        class: 'inline-block px-2 py-1 text-white text-xs font-bold rounded bg-red-500',
+                        class: 'inline-block px-2 py-2 text-white text-xs font-bold rounded bg-red-500',
                     },
                     'URGENT',
                 );
             }
+            return h('span', { style: { minHeight: '40px' } }, ''); 
         },
     },
     {
@@ -205,6 +203,7 @@ const columns = [
                 {
                     class: 'text-blue-600 hover:underline',
                     onClick: () => handleRowClick(row),
+                    style: { minHeight: '40px' },
                 },
                 `${row.original.responses_count ?? 0} réponses`,
             ),
@@ -213,14 +212,14 @@ const columns = [
         header: () =>
             h(
                 'div',
-                { class: 'flex justify-center items-center' },
+                { class: 'flex justify-center items-center', style: { minHeight: '40px' } },
                 'Détail',
             ),
         accessorKey: 'action',
         cell: ({ row }: { row: { original: ReplacementRow } }) =>
             h(
                 'div',
-                { class: 'flex justify-center items-center h-full' },
+                { class: 'flex justify-center items-center', style: { minHeight: '40px' } },
                 [
                     h(
                         NuxtLink,
