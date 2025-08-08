@@ -260,25 +260,30 @@ const selectedRole = ref(null);
 const roleType = computed(() => {
     return user.value.roles.find(role => validRoles.includes(role));
 });
+
 const hasMultipleValidRoles = computed(() => {
     const userRoles = user.value.roles || [];
     const matchingRoles = userRoles.filter(role => validRoles.includes(role));
     return matchingRoles.length >= 2;
 });
 
-useHead({
-    title: 'Remplacement rapide',
-});
-
-definePageMeta({
-    layout: 'dashboard',
-    ssr: false,
-});
-
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
 const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
+
+onMounted(() => {
+    if (hasMultipleValidRoles.value) {
+        selectedRole.value = null;
+        formData.roleType = null;
+    }
+    else {
+        selectedRole.value = roleType.value;
+        formData.roleType = roleType.value;
+    }
+});
+
+await fetchCareTypes();
 
 const formData = reactive({
     startTime: '',
@@ -290,6 +295,12 @@ const formData = reactive({
     careTypes: [],
     zipCodesInput: '',
     citiesInput: '',
+});
+
+watch(selectedRole, (newVal) => {
+    if (newVal) {
+        formData.roleType = newVal;
+    }
 });
 
 const proposalDialog = ref(false);
@@ -367,15 +378,11 @@ const { submit, inProgress } = useSubmit(async () => {
     }
 });
 
-onMounted(() => {
-    fetchCareTypes();
-    if (hasMultipleValidRoles.value) {
-        selectedRole.value = null;
-        formData.roleType = null;
-    }
-    else {
-        selectedRole.value = roleType.value;
-        formData.roleType = roleType.value;
-    }
+useHead({
+    title: 'Remplacement rapide',
+});
+
+definePageMeta({
+    layout: 'dashboard',
 });
 </script>
