@@ -17,17 +17,27 @@
 
         <Dialog v-model:open="showModal">
             <DialogContent>
-                <div v-if="selected">
-                    <ul class="mt-4 list-disc ml-5 space-y-2">
-                        <li
-                            v-for="res in selected.responses"
-                            :key="res.id"
-                        >
-                            <span class="font-semibold">{{ res.responded_by?.full_name }}</span>
-                            <!-- <small class="text-gray-500"> ({{ formatDate(res.created_at) }}) </small> -->
-                        </li>
-                    </ul>
-                </div>
+                <DialogHeader>
+                    <DialogTitle>
+                        Les intéressés
+                    </DialogTitle>
+                </DialogHeader>
+
+                <DialogContent>
+                    <div v-if="selected">
+                        <ul class="mt-4 list-disc ml-5 space-y-2">
+                            <li
+                                v-for="res in selected.responses"
+                                :key="res.id"
+                            >
+                                <UsersName
+                                    :user="res.responded_by"
+                                    class="font-medium text-gray-800"
+                                />
+                            </li>
+                        </ul>
+                    </div>
+                </DialogContent>
             </DialogContent>
         </Dialog>
     </div>
@@ -37,7 +47,7 @@
 import { ref, onMounted } from 'vue';
 import { EyeIcon } from '@heroicons/vue/24/outline';
 import { NuxtLink } from '#components';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { ReplacementRow } from '~/lib/types';
 
 const replacements = ref([]);
@@ -138,7 +148,7 @@ const columns = [
                 parsedTimeSlot = typeof timeSlot === 'string' ? JSON.parse(timeSlot) : timeSlot;
             }
             catch (e) {
-                return h('span', { class: 'text-center block text-red-500' }, 'Erreur');
+                return h('span', { class: 'text-center block text-red-500' }, 'Erreur ');
             }
 
             const format = (start: string, end: string) => `${start} - ${end}`;
@@ -196,7 +206,7 @@ const columns = [
                     class: 'text-blue-600 hover:underline',
                     onClick: () => handleRowClick(row),
                 },
-                `${row.original.responses_count ?? 0} réponse(s)`,
+                `${row.original.responses_count ?? 0} réponses`,
             ),
     },
     {
