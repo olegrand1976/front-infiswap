@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const { createHistory, submitContact } = useNursService();
+const { createHistory, submitContact } = useService();
 const { $toast } = useNuxtApp();
 const emit = defineEmits(['close']);
 const { isLoggedIn } = useAuth();
@@ -124,7 +124,7 @@ const description = ref('');
 
 const submitHistory = async () => {
     try {
-        await createHistory({ description: description.value });
+        await createHistory({ product: 'Nurstech', description: description.value });
         $toast({
             description: 'Votre demande a été transmise à NursTech avec succès.',
         });
@@ -142,6 +142,7 @@ const submitHistory = async () => {
 };
 
 const contact = reactive({
+    product: 'NursTech',
     name: '',
     email: '',
     phone: '',
