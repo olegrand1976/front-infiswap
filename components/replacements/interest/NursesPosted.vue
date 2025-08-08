@@ -89,7 +89,13 @@ import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import UsersName from '@/components/users/Name.vue';
-import type { User } from '~/lib/types';
+import type { User, Replacement } from '~/lib/types';
+
+interface NursePostedRow {
+    total_posted: number;
+    user: User;
+    replacements: Replacement[];
+}
 
 const { data, count, nursesPosted } = useReplacements();
 
@@ -128,7 +134,7 @@ const setSort = (columnKey: string) => {
     refresh(page.value);
 };
 
-const openModal = (row: any) => {
+const openModal = (row: NursePostedRow) => {
     selectedNurse.value = row;
     showModal.value = true;
 };
@@ -138,7 +144,7 @@ const formatDate = (dateStr: string) => {
     return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleDateString();
 };
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<NursePostedRow>[] = [
     {
         accessorKey: 'user.full_name',
         header: () =>

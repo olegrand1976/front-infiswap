@@ -144,7 +144,7 @@ const columns = [
             try {
                 parsedTimeSlot = typeof timeSlot === 'string' ? JSON.parse(timeSlot) : timeSlot;
             }
-            catch (e) {
+            catch {
                 return h('span', { class: 'text-center block text-red-500', style: { minHeight: '40px' } }, 'Erreur ');
             }
 
@@ -191,7 +191,7 @@ const columns = [
                     'URGENT',
                 );
             }
-            return h('span', { style: { minHeight: '40px' } }, ''); 
+            return h('span', { style: { minHeight: '40px' } }, '');
         },
     },
     {
