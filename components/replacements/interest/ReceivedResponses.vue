@@ -24,7 +24,7 @@
                             :key="res.id"
                         >
                             <span class="font-semibold">{{ res.responded_by?.full_name }}</span>
-                            <small class="text-gray-500"> ({{ formatDate(res.created_at) }}) </small>
+                            <!-- <small class="text-gray-500"> ({{ formatDate(res.created_at) }}) </small> -->
                         </li>
                     </ul>
                 </div>
