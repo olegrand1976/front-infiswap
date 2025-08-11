@@ -128,13 +128,19 @@ const columns: ColumnDef<CareType>[] = [
     {
         accessorKey: 'created_at',
         header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            return h('div', { class: 'flex items-center justify-center gap-1' }, [
+                h(Button, {
+                    variant: 'ghost',
+                    onClick: () => setSort('created_at'),
+                    class: 'flex items-center justify-center gap-1',
+                }, () => [
+                    'Création',
+                    h(ArrowsUpDownIcon, { class: '' }),
+                ]),
+            ]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
+            return h('div', { class: 'flex items-center justify-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {
