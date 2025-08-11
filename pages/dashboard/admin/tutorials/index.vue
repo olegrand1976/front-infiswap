@@ -281,7 +281,7 @@ const columns: ColumnDef<Tutorial>[] = [
             }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
+            return h('div', { class: 'text-start ml-4' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {
@@ -318,7 +318,7 @@ const columns: ColumnDef<Tutorial>[] = [
                 },
             ];
 
-            return h('div', { class: 'flex justify-center' }, [
+            return h('div', { class: 'flex justify-start ml-4' }, [
                 h(DropdownMenuAction, {
                     actions: actions,
                 }),
