@@ -180,6 +180,7 @@ const columns: ColumnDef<NursePostedRow>[] = [
                 h(ArrowsUpDownIcon, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => {
+            const val = info.getValue();
             const row = info.row.original;
             return h('div', { class: 'py-2' }, [
                 h(
@@ -188,7 +189,7 @@ const columns: ColumnDef<NursePostedRow>[] = [
                         class: 'text-blue-600 hover:underline',
                         onClick: () => openModal(row),
                     },
-                    `${info.getValue()} posté(s)`,
+                    `${val ?? 0} posté(s)`,
                 ),
             ]);
         },
