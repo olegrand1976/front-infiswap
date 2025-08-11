@@ -187,7 +187,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
                     h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
                 ]),
             ]),
-        cell: info => {
+        cell: (info) => {
             const val = info.getValue();
             const row = info.row.original;
             return h('div', { class: 'flex items-center justify-center py-2' }, [
