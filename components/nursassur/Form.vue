@@ -81,66 +81,71 @@
         <div
             v-else
         >
-            <div
-                class="mb-4 mt-4"
+            <form
+                @submit.prevent="handleContact"
             >
-                <p class="text-xs text-gray-600 mb-2 ml-2">
-                    Que souhaitez-vous comme renseignements ?
-                </p>
-
                 <div
-                    v-if="assurTypes.length > 0"
-                    class="grid grid-cols-1 gap-2"
+                    class="mb-4 mt-4"
                 >
-                    <label
-                        v-for="type in assurTypes"
-                        :key="type.id"
-                        class="flex items-center space-x-2 text-sm text-gray-700"
+                    <p class="text-xs text-gray-600 mb-2 ml-2">
+                        Que souhaitez-vous comme renseignements ?
+                    </p>
+
+                    <div
+                        v-if="assurTypes.length > 0"
+                        class="grid grid-cols-1 gap-2"
                     >
-                        <input
-                            v-model="form.types"
-                            type="checkbox"
-                            :value="type.id"
-                            class="accent-primary"
+                        <label
+                            v-for="type in assurTypes"
+                            :key="type.id"
+                            class="flex items-center space-x-2 text-sm text-gray-700"
                         >
-                        <span>{{ type.label }}</span>
-                    </label>
+                            <input
+                                v-model="form.types"
+                                type="checkbox"
+                                :value="type.id"
+                                class="accent-primary"
+                            >
+                            <span>{{ type.label }}</span>
+                        </label>
+                    </div>
+                    <p
+                        v-else
+                        class="text-xs text-gray-500 mt-2 ml-2"
+                    >
+                        Chargement des types...
+                    </p>
                 </div>
-                <p
-                    v-else
-                    class="text-xs text-gray-500 mt-2 ml-2"
-                >
-                    Chargement des types...
+                <div class="mb-4">
+                    <Textarea
+                        v-model="form.description"
+                        placeholder="Votre message..."
+                        rows="3"
+                        class="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-primary transition"
+                    />
+                </div>
+
+                <p class="text-center text-[0.6rem] text-gray-500 mb-4">
+                    Ce formulaire vous permet de contacter directement les responsables afin de bénéficier de ce service personnalisé.
                 </p>
-            </div>
-            <div class="mb-4">
-                <Textarea
-                    v-model="form.description"
-                    placeholder="Votre message..."
-                    rows="3"
-                    class="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-primary transition"
-                />
-            </div>
 
-            <p class="text-center text-[0.6rem] text-gray-500 mb-4">
-                Ce formulaire vous permet de contacter directement les responsables afin de bénéficier de ce service personnalisé.
-            </p>
+                <div class="flex flex-col sm:flex-row justify-end gap-3">
+                    <button
+                        class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
+                        @click="cancel"
+                    >
+                        Annuler
+                    </button>
 
-            <div class="flex flex-col sm:flex-row justify-end gap-3">
-                <button
-                    class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
-                    @click="cancel"
-                >
-                    Annuler
-                </button>
-
-                <button
-                    class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 hover:shadow transition"
-                    @click="handleContact"
-                >
-                    Nous contacter
-                </button>
-            </div>
+                    <Button
+                        :in-progress="inProgressContact"
+                        class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 hover:shadow transition"
+                        type="submit"
+                    >
+                        Nous contacter
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -149,7 +154,7 @@
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 
-const { getAssurTypes, createAssurHistory } = useNursService();
+const { getAssurTypes, createHistory } = useService();
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
 
@@ -179,30 +184,24 @@ onMounted(async () => {
     }
 });
 
-const handleContact = async () => {
-    try {
-        await createAssurHistory({
-            description: form.value.description,
-            types: form.value.types,
-        });
-        $toast({
-            description: 'Votre demande a été transmise à NursAssur avec succès.',
-        });
-        form.value.types = [];
-        form.value.description = '';
-        emit('close');
-    }
-    catch (error) {
-        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
-        $toast({
-            description: message,
-            status: 'error',
-            variant: 'destructive',
-        });
-    }
-};
+const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async () => {
+    await createHistory({
+        product: 'NursAssur',
+        description: form.value.description,
+        types: form.value.types,
+    });
+
+    $toast({
+        description: 'Votre demande a été transmise à NursAssur avec succès.',
+    });
+
+    form.value.types = [];
+    form.value.description = '';
+    emit('close');
+});
 
 const contact = reactive({
+    product: 'NursAssur',
     name: '',
     email: '',
     phone: '',
@@ -210,11 +209,11 @@ const contact = reactive({
     captcha: false,
 });
 
-const { submitAssurContact } = useNursService();
+const { submitContact } = useService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        await submitAssurContact(contact);
+        await submitContact(contact);
 
         $toast({
             description: 'Votre demande de contact a été transmise à NursAssur avec succès.',

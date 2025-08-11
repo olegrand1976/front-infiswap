@@ -184,14 +184,14 @@ const columns: ColumnDef<Contact>[] = [
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('email')),
     },
     {
-        accessorKey: 'phone',
+        accessorKey: 'phone_number',
         header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => setSort('phone'),
+                onClick: () => setSort('phone_number'),
             }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('phone')),
+        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('phone_number')),
     },
     {
         accessorKey: 'description',
