@@ -175,14 +175,20 @@ const columns: ColumnDef<NursePostedRow>[] = [
     {
         accessorKey: 'total_posted',
         header: () =>
-            h(Button, { variant: 'ghost', onClick: () => setSort('total_posted') }, () => [
-                'Nb. remplacements postés',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4 ml-2' }),
+            h('div', { class: 'flex items-center justify-center gap-1' }, [
+                h(Button, {
+                    variant: 'ghost',
+                    onClick: () => setSort('total_posted'),
+                    class: 'flex items-center justify-center gap-1',
+                }, () => [
+                    'Nb. remplacements postés',
+                    h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                ]),
             ]),
         cell: info => {
             const val = info.getValue();
             const row = info.row.original;
-            return h('div', { class: 'py-2' }, [
+            return h('div', { class: 'flex items-center justify-center py-2' }, [
                 h(
                     'button',
                     {
