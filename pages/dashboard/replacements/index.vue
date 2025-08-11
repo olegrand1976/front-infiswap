@@ -27,29 +27,62 @@
             </h1>
 
             <div class="mt-6 md:mt-0 flex justify-between md:justify-end gap-x-2 xl:gap-x-8 items-center">
-                <Select v-model="selectedFilter">
-                    <SelectTrigger
-                        class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
-                        position="right"
-                    >
-                        <SelectValue
-                            :placeholder="replacementFilters[selectedFilter]"
-                            class="w-[200%] truncate placeholder:text-black"
-                        />
-                    </SelectTrigger>
-
-                    <SelectContent class="border border-none">
-                        <SelectGroup class="w-32">
-                            <SelectItem
-                                v-for="(label, key) in replacementFilters"
-                                :key="key"
-                                :value="key"
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <Button
+                            variant="outline"
+                            class="flex gap-3 items-center border-gray-200 font-normal shadow text-black/90 h-10"
+                        >
+                            <FunnelIcon class="w-5" />
+                            <span>
+                                Filtrer
+                                <span
+                                    v-if="activeFiltersCount > 0"
+                                    class="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full"
+                                >
+                                    {{ activeFiltersCount }}
+                                </span>
+                            </span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent class="w-64">
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>
+                                Type de remplacement
+                            </DropdownMenuLabel>
+                            <DropdownMenuRadioGroup
+                                :model-value="selectedFilters.type"
+                                @update:model-value="selectedFilters.type = $event"
                             >
-                                {{ label }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                                <DropdownMenuRadioItem
+                                    v-for="(label, key) in replacementTypeFilters"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>
+                                Rôle
+                            </DropdownMenuLabel>
+                            <DropdownMenuRadioGroup
+                                :model-value="selectedFilters.role"
+                                @update:model-value="selectedFilters.role = $event"
+                            >
+                                <DropdownMenuRadioItem
+                                    v-for="(label, key) in replacementRoleFilters"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
                 <div class="flex space-x-3 rounded items-center justify-between ps-3 pe-1">
                     <h5 class="text-sm">
@@ -117,7 +150,7 @@
         </div>
 
         <Replacement
-            :filter-type="selectedFilter"
+            :filters="selectedFilters"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
         />
@@ -125,23 +158,47 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
 import { regions } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
 
-const replacementFilters = {
+const replacementTypeFilters = {
     all: 'Tous',
     classic: 'Classique',
-    urgent: 'Urgent',
+    immediate: 'Urgent',
+};
+
+const replacementRoleFilters = {
+    all: 'Tous',
+    nurse: 'Infirmier(ère)',
+    caregiver: 'Assistant(e) soignant(e)',
+    midwife: 'Sage-femme',
 };
 
 const selectedRegions = ref<string[]>([]);
 const isAllSelected = ref(true);
 
-const selectedFilter = ref('all');
-const filterCookie = useCookie('selectedFilter');
+const selectedFilters = ref({
+    type: 'all',
+    role: 'all',
+});
+
+const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
+    default: () => ({
+        type: 'all',
+        role: 'all',
+    }),
+});
+
 const groupByProvince = ref(true);
+
+const activeFiltersCount = computed(() => {
+    let count = 0;
+    if (selectedFilters.value.type !== 'all') count++;
+    if (selectedFilters.value.role !== 'all') count++;
+    return count;
+});
 
 const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
 
@@ -179,14 +236,14 @@ const selectedProvincesPlaceholder = computed(() => {
 });
 
 onMounted(() => {
-    if (filterCookie.value) {
-        selectedFilter.value = filterCookie.value;
+    if (filterCookies.value) {
+        selectedFilters.value = filterCookies.value;
     }
 });
 
-watch(selectedFilter, (newFilter) => {
-    filterCookie.value = newFilter;
-});
+watch(selectedFilters, (newFilters) => {
+    filterCookies.value = newFilters;
+}, { deep: true });
 
 useHead({
     title: 'Chercher un remplacement',

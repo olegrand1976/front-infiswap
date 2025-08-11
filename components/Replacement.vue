@@ -241,12 +241,18 @@
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            </div>
+                                            <div
+                                                v-if="localFilters.role == 'all' && props.type != 'me'"
+                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                            >
+                                                {{ roles[replacementGroup.role_type] }}
                                             </div>
                                             <TableCell
                                                 :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
@@ -412,7 +418,7 @@
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -430,7 +436,7 @@
                                                         <EyeIcon class="h-6 mt-1" />
                                                     </Button>
                                                     <Button
-                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
+                                                        v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -535,14 +541,14 @@
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     </TableRow>
                                 </div>
-                                <div v-else-if="filteredReplacements.length === 0">
+                                <div v-else-if="currentReplacements.length === 0">
                                     <p class="text-center text-gray-500 py-8">
                                         Aucun résultat n'est trouvé
                                     </p>
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacementGroup in filteredReplacements"
+                                        v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         :class="[
                                             'gap-2 border border-none overflow-x-hidden relative',
@@ -551,12 +557,18 @@
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <div
+                                            v-if="localFilters.role == 'all' && props.type != 'me'"
+                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                        >
+                                            {{ roles[replacementGroup.role_type] }}
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -720,7 +732,7 @@
                                                             <span>Modifier</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
-                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                            v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="flex items-center space-x-2 text-sm"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -738,7 +750,7 @@
                                                     <EyeIcon class="h-6 mt-1" />
                                                 </Button>
                                                 <Button
-                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
+                                                    v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null && replacementGroup.status == 'closed'"
                                                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                                     @click="closeReplacementDialog = true"
                                                 >
@@ -829,12 +841,18 @@
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                            { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            </div>
+                                            <div
+                                                v-if="localFilters.role == 'all' && props.type != 'me'"
+                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                            >
+                                                {{ roles[replacementGroup.role_type] }}
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -937,7 +955,7 @@
                                                                     <span>Modifier</span>
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
-                                                                    v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                    v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                     class="flex items-center space-x-2 text-sm"
                                                                     @click="closeReplacementDialog = true"
                                                                 >
@@ -949,7 +967,7 @@
                                                     </template>
                                                     <template v-else>
                                                         <Button
-                                                            v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                            v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                             @click="closeReplacementDialog = true"
                                                         >
@@ -1024,25 +1042,31 @@
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
                                     </TableRow>
                                 </div>
-                                <div v-else-if="filteredReplacements.length === 0">
+                                <div v-else-if="currentReplacements.length === 0">
                                     <p class="text-center text-gray-500 py-8">
                                         Aucun résultat n'est trouvé
                                     </p>
                                 </div>
                                 <div v-else>
                                     <TableRow
-                                        v-for="replacementGroup in filteredReplacements"
+                                        v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute top-[5px] left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
-                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.status == 'open' },
+                                                        { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                        </div>
+                                        <div
+                                            v-if="localFilters.role == 'all' && props.type != 'me'"
+                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
+                                        >
+                                            {{ roles[replacementGroup.role_type] }}
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1145,7 +1169,7 @@
                                                                 <span>Modifier</span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
-                                                                v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                                v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
                                                                 @click="closeReplacementDialog = true"
                                                             >
@@ -1157,7 +1181,7 @@
                                                 </template>
                                                 <template v-else>
                                                     <Button
-                                                        v-if="user.nurse.id == replacementGroup.nurse_id && replacementGroup.replaced_by == null"
+                                                        v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                                         @click="closeReplacementDialog = true"
                                                     >
@@ -1548,10 +1572,13 @@ const props = defineProps({
         required: false,
         default: '',
     },
-    filterType: {
-        type: String,
+    filters: {
+        type: Object as PropType<{ type: string; role: string }>,
         required: false,
-        default: 'all',
+        default: () => ({
+            type: 'all',
+            role: 'all',
+        }),
     },
     groupByProvince: {
         type: Boolean,
@@ -1592,6 +1619,11 @@ onMounted(async () => {
     await fetchInitialData(page.value, perPage.value);
 });
 
+const localFilters = reactive({
+    type: props.filters.type,
+    role: props.filters.role,
+});
+
 const user = useState<User>('user');
 const settings = ref({});
 settings.value = JSON.parse(user.value.settings);
@@ -1613,7 +1645,7 @@ onMounted(async () => {
 
 const getCreatorInfo = (replacementGroup, field = 'name') => {
     if (props.type !== 'groups') return '';
-    const creator = groupMembers.value.find(member => member.nurse_id === replacementGroup.nurse_id);
+    const creator = groupMembers.value.find(member => member.user_id === replacementGroup.user_id);
     if (!creator) return '';
     if (field === 'name') {
         return `${creator.firstname ?? ''} ${creator.lastname ?? ''}`.trim();
@@ -1690,8 +1722,17 @@ const hasShift = (replacement, period) => {
     return periods.has(period);
 };
 
+watch(() => props.filters, (newFilters) => {
+    if (newFilters) {
+        localFilters.type = newFilters.type;
+        localFilters.role = newFilters.role;
+
+        fetchInitialData(page.value, perPage.value);
+    }
+}, { deep: true });
+
 const isUrgentReplacement = (replacement) => {
-    return !replacement.time_slot && replacement.details.length > 0;
+    return replacement.type == 'immediate' && replacement.details.length > 0;
 };
 
 const initialReplacements = ref({
@@ -1705,16 +1746,10 @@ const initialReplacements = ref({
 });
 const currentReplacements = ref([]);
 
-const filteredReplacements = computed(() => {
-    return toRaw(currentReplacements.value).filter(
-        replacement => props.filterType === 'all' || (props.filterType === 'urgent') === isUrgentReplacement(replacement),
-    );
-});
-
 const groupsByProvince = computed<ProvinceGroups>(() => {
     const groups: ProvinceGroups = {};
 
-    filteredReplacements.value.forEach((replacement: Replacement) => {
+    currentReplacements.value.forEach((replacement: Replacement) => {
         const province = replacement.province || 'Autres';
         if (!groups[province]) {
             groups[province] = [];
@@ -1740,6 +1775,7 @@ const formData = reactive({
             : [],
     selectedDays: [],
     type: props.type,
+    filters: localFilters,
 });
 
 const updateRegionSelection = (region: string, checked: boolean) => {
@@ -1779,6 +1815,12 @@ const toggleDay = (day: string) => {
     formData.selectedDays = selectDays(day, formData.selectedDays);
 };
 
+const roles = {
+    nurse: 'INFIRMIER',
+    caregiver: 'ASSISTANT SOIGNANT',
+    midwife: 'SAGE-FEMME',
+};
+
 const selectedDaysPlaceholder = computed(() => {
     if (formData.selectedDays.length === 0) {
         return 'Sélectionner';
@@ -1793,6 +1835,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             cities: [],
             selectedDays: [],
             type: props.type,
+            filters: localFilters,
             provinces: selectedRegions.value,
             page,
             perPage,
@@ -1907,6 +1950,7 @@ const submitSearch = async () => {
                 postalCode: toRaw(formData.postalCodeTags),
                 cities: toRaw(formData.cityTags),
                 type: toRaw(formData.type),
+                filters: toRaw(formData.filters),
                 page: page.value,
                 perPage: perPage.value,
             });
@@ -2000,7 +2044,7 @@ const handleCloseReplacement = async (replacement) => {
 const editDialogOpen = ref(false);
 const editFormData = reactive({
     id: null,
-    nurseId: user.value.nurse.id,
+    nurseId: user.value.id,
     replacedBy: null,
     visibility: '',
     type: '',
@@ -2021,7 +2065,7 @@ const editFormData = reactive({
 
 const resetEditFormData = () => {
     editFormData.id = null;
-    editFormData.nurseId = user.value.nurse.id;
+    editFormData.nurseId = user.value.id;
     editFormData.replacedBy = null;
     editFormData.visibility = '';
     editFormData.type = '';

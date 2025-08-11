@@ -79,7 +79,7 @@ import { useListResponse } from '~/composables/useReplacements';
 import type { User } from '~/lib/types';
 
 const user = useState<User>('user');
-const { listApply, getReplacementApply } = useListResponse(user.value.nurse.id);
+const { listApply, getReplacementApply } = useListResponse(user.value.id);
 
 await getReplacementApply();
 

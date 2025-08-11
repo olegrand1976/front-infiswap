@@ -209,6 +209,7 @@ import {
     InboxIcon,
     QuestionMarkCircleIcon,
     PlayCircleIcon,
+    ShoppingBagIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -251,7 +252,7 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: QuickReplacementIcon,
     },
     {
-        label: 'Proposer un remplacement',
+        label: 'Demander un(e) remplaçant(e)',
         route: '/dashboard/replacements/create',
         icon: ArrowPathIcon,
     },
@@ -316,6 +317,11 @@ const adminNavigationItems: NavigationItem[] = [
         icon: ArrowPathIcon,
     },
     {
+        label: 'Intérêt pour remplacement',
+        route: '/dashboard/admin/replacements/interest',
+        icon: ListBulletIcon,
+    },
+    {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
         icon: UserGroupIcon,
@@ -331,7 +337,7 @@ const adminNavigationItems: NavigationItem[] = [
         icon: HeartIcon,
     },
     {
-        label: 'Suivi utilisateurs',
+        label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
     },
@@ -349,6 +355,11 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Tutoriels',
         route: '/dashboard/admin/tutorials',
         icon: PlayCircleIcon,
+    },
+    {
+        label: 'Produits',
+        route: '/dashboard/admin/products',
+        icon: ShoppingBagIcon,
     },
 ];
 

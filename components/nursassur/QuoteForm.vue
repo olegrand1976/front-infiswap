@@ -77,9 +77,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useNursService } from '~/composables/useNursService';
+import { useService } from '~/composables/useService';
 
-const { submitAssurContact } = useNursService();
+const { submitContact } = useService();
 const { $toast } = useNuxtApp();
 
 const props = defineProps<{
@@ -91,6 +91,7 @@ const emit = defineEmits<{
 }>();
 
 const formData = reactive({
+    product: 'NursAssur',
     name: '',
     email: '',
     phone: '',
@@ -99,6 +100,7 @@ const formData = reactive({
 });
 
 const resetFormData = () => {
+    formData.product = 'NursAssur';
     formData.name = '';
     formData.email = '';
     formData.phone = '';
@@ -120,7 +122,7 @@ const {
             item => item !== 'Autre (à préciser dans le formulaire)',
         );
 
-        return submitAssurContact(formData).then(() => {
+        return submitContact(formData).then(() => {
             $toast({
                 description: 'Demande de devis envoyé avec succès',
             });

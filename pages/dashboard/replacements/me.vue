@@ -6,29 +6,56 @@
             </h1>
 
             <div class="flex justify-end gap-x-4 sm:gap-x-8 items-center">
-                <Select v-model="selectedFilter">
-                    <SelectTrigger
-                        class="bg-white my-0.5 w-28 sm:w-36 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-200 lg:text-sm md:text-xs"
-                        position="right"
-                    >
-                        <SelectValue
-                            :placeholder="replacementFilters[selectedFilter]"
-                            class="w-[200%] truncate placeholder:text-black"
-                        />
-                    </SelectTrigger>
-
-                    <SelectContent class="border border-none">
-                        <SelectGroup class="w-32">
-                            <SelectItem
-                                v-for="(label, key) in replacementFilters"
-                                :key="key"
-                                :value="key"
-                            >
-                                {{ label }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <Button
+                            variant="outline"
+                            class="flex gap-3 items-center shadow h-10 border-gray-200 text-black/90 font-normal"
+                        >
+                            <FunnelIcon class="w-5" />
+                            <span>
+                                Filtrer
+                                <span
+                                    v-if="activeFiltersCount > 0"
+                                    class="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full"
+                                >
+                                    {{ activeFiltersCount }}
+                                </span>
+                            </span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent class="w-64">
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>
+                                Type de remplacement
+                            </DropdownMenuLabel>
+                            <DropdownMenuRadioGroup v-model="selectedFilters.type">
+                                <DropdownMenuRadioItem
+                                    v-for="(label, key) in replacementTypeFilters"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>
+                                Rôle
+                            </DropdownMenuLabel>
+                            <DropdownMenuRadioGroup v-model="selectedFilters.role">
+                                <DropdownMenuRadioItem
+                                    v-for="(label, key) in replacementRoleFilters"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
                 <div
                     class="flex items-center space-x-4 cursor-pointer"
@@ -75,21 +102,21 @@
             <Replacement
                 v-if="selectedType === 'me'"
                 type="me"
-                :filter-type="selectedFilter"
+                :filters="selectedFilters"
                 :group-by-province="groupByProvince"
             />
 
             <Replacement
                 v-else-if="selectedType === 'groups'"
                 type="groups"
-                :filter-type="selectedFilter"
+                :filters="selectedFilters"
                 :group-by-province="groupByProvince"
             />
         </template>
         <template v-else>
             <Replacement
                 type="me"
-                :filter-type="selectedFilter"
+                :filters="selectedFilters"
                 :group-by-province="groupByProvince"
             />
         </template>
@@ -97,23 +124,47 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
 
-const replacementFilters = {
+const replacementTypeFilters = {
     all: 'Tous',
     classic: 'Classique',
     urgent: 'Urgent',
 };
 
-const selectedFilter = ref('all');
-const filterCookie = useCookie('selectedFilter');
+const replacementRoleFilters = {
+    all: 'Tous',
+    nurse: 'Infirmier(ère)',
+    caregiver: 'Assistant(e) soignant(e)',
+    midwife: 'Sage-femme',
+};
+
+const selectedFilters = ref({
+    type: 'all',
+    role: 'all',
+});
+
+const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
+    default: () => ({
+        type: 'all',
+        role: 'all',
+    }),
+});
+
 const groupByProvince = ref(false);
 const { groups, myGroups } = useGroup();
 
 const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
+
+const activeFiltersCount = computed(() => {
+    let count = 0;
+    if (selectedFilters.value.type !== 'all') count++;
+    if (selectedFilters.value.role !== 'all') count++;
+    return count;
+});
 
 const toggleIcon = () => {
     groupByProvince.value = !groupByProvince.value;
@@ -122,13 +173,13 @@ const toggleIcon = () => {
 const selectedType = ref('me');
 
 onMounted(() => {
-    if (filterCookie.value) {
-        selectedFilter.value = filterCookie.value;
+    if (filterCookies.value) {
+        selectedFilters.value = filterCookies.value;
     }
 });
 
-watch(selectedFilter, (newFilter) => {
-    filterCookie.value = newFilter;
+watch(selectedFilters, (newFilters) => {
+    filterCookies.value = newFilters;
 });
 
 await myGroups();

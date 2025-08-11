@@ -209,6 +209,53 @@
                     </Select>
                 </div>
 
+                <div
+                    v-if="hasMultipleValidRoles"
+                    class="flex flex-col space-y-2"
+                >
+                    <label class="text-primary font-semibold">
+                        Demander en tant que
+                    </label>
+                    <div class="flex flex-col gap-4 sm:flex-row sm:gap-12 lg:gap-8 2xl:gap-12 sm:items-center">
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="nurse"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="nurse"
+                            >
+                            <label for="nurse">
+                                Infirmier(ère)
+                            </label>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="caregiver"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="caregiver"
+                            >
+                            <label for="caregiver">
+                                Assistant(e) soignant(e)
+                            </label>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input
+                                id="midwife"
+                                v-model="selectedRole"
+                                type="radio"
+                                name="roleType"
+                                value="midwife"
+                            >
+                            <label for="midwife">
+                                Sage-femme
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
                         Description
@@ -252,18 +299,39 @@ import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
+import type { User } from '~/lib/types';
 
+const user = useState<User>('user');
 const { getZipCodeFromCity } = useOpenai();
 const { getCitiesFomZipCode } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
 const { $toast } = useNuxtApp();
+const validRoles = ['nurse', 'caregiver', 'midwife'];
+const selectedRole = ref(null);
+
+const roleType = computed(() => {
+    return user.value.roles.find(role => validRoles.includes(role));
+});
+const hasMultipleValidRoles = computed(() => {
+    const userRoles = user.value.roles || [];
+    const matchingRoles = userRoles.filter(role => validRoles.includes(role));
+    return matchingRoles.length >= 2;
+});
 
 const isMobile = ref(false);
 onMounted(() => {
     if (import.meta.client) {
         isMobile.value = window.innerWidth <= 1024;
+    }
+    if (hasMultipleValidRoles.value) {
+        selectedRole.value = null;
+        formData.roleType = null;
+    }
+    else {
+        selectedRole.value = roleType.value;
+        formData.roleType = roleType.value;
     }
 });
 
@@ -277,6 +345,7 @@ const formData = reactive({
         },
     ],
     patientCount: null as number | null,
+    roleType: roleType.value,
     zipCodes: [] as string[],
     cities: [] as string[],
     careTypes: [] as number[],
@@ -293,6 +362,12 @@ const formData = reactive({
     comment: '',
     zipCodesInput: '',
     citiesInput: '',
+});
+
+watch(selectedRole, (newVal) => {
+    if (newVal) {
+        formData.roleType = newVal;
+    }
 });
 
 const proposalDialog = ref(false);

@@ -79,7 +79,7 @@ const props = defineProps<{ replacement?: Replacement | null }>();
 
 const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
     id: replacement?.id ?? null,
-    matchingNurses: replacement?.matching_nurses ?? [],
+    matchingUser: replacement?.matching_user ?? [],
 });
 
 const form = reactive(getInitialValue() as any);
@@ -102,7 +102,7 @@ const matchingUsers = ref<User[]>([]);
 const searchQuery = ref('');
 
 function initializeMatchingUsers() {
-    matchingUsers.value = Array.isArray(form.matchingNurses) ? form.matchingNurses : [];
+    matchingUsers.value = Array.isArray(form.matchingUser) ? form.matchingUser : [];
 }
 
 const filteredUsers = computed(() => {

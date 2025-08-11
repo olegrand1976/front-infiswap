@@ -221,7 +221,6 @@
                             <SelectTrigger
                                 class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border border-gray-300 disabled:opacity-100 disabled:cursor-default"
                                 position="right"
-                                disabled
                             >
                                 <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
                                 <SelectValue
@@ -647,8 +646,12 @@ const accountOptions = [
         value: 'nurse',
     },
     {
-        label: 'Groupe d\'infirmiers',
-        value: 'group',
+        label: 'Assistant(e) soignant(e)',
+        value: 'caregiver',
+    },
+    {
+        label: 'Sage-femme',
+        value: 'midwife',
     },
 ];
 

@@ -216,12 +216,49 @@ export const useReplacements = () => {
         return replacement.replaced_by !== null || replacement.status == 'closed';
     }
 
+    const data = useState('data', () => []);
+    const count = useState<number>('count', () => 0);
+
+    const nursesAccepted = async (page = 1, perPage = 15, options = {}) => {
+        try {
+            const response = await $apifetch('api/replacements/interest/accepted', {
+                params: {
+                    page,
+                    perPage,
+                    ...options,
+                },
+            });
+
+            data.value = response.data ?? [];
+            count.value = response.count ?? 0;
+        }
+        catch (error) {
+            console.error('Erreur lors du chargement des données :', error);
+        }
+    };
+
+    const nursesPosted = async (page = 1, perPage = 15, options = {}) => {
+        try {
+            const response = await $apifetch('/api/replacements/interest/posted', {
+                params: { page, perPage, ...options },
+            });
+
+            data.value = response.data ?? [];
+            count.value = response.count ?? 0;
+        }
+        catch (error) {
+            console.error('Erreur chargement infirmières postées :', error);
+        }
+    };
+
     return {
         error,
         loading,
         success,
         user,
         replacements,
+        data,
+        count,
         submitReplacement,
         getMyReplacements,
         getReplacements,
@@ -237,6 +274,8 @@ export const useReplacements = () => {
         activityUser,
         release,
         isClosed,
+        nursesAccepted,
+        nursesPosted,
     };
 };
 
@@ -266,6 +305,7 @@ export const useSearchReplacements = () => {
         cities = [],
         selectedDays = [],
         type = '',
+        filters = { type: 'all', role: 'all' },
         provinces = [],
         page = 1,
         perPage = PERPAGE,
@@ -278,6 +318,7 @@ export const useSearchReplacements = () => {
             cities: cities,
             days: selectedDays,
             type: type,
+            filters: filters,
             provinces: provinces,
             page,
             perPage,

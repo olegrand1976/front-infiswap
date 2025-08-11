@@ -1,5 +1,5 @@
 export type Gender = 'M' | 'F' | 'X';
-export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse';
+export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse' | 'caregiver' | 'midwife';
 export type CountryCode = 'be' | 'fr' | 'us';
 export type MediaType = 'video' | 'audio' | 'image' | 'link';
 
@@ -220,7 +220,9 @@ interface PaginationLink {
 
 export type Replacement = {
     id: number;
-    nurse_id: number;
+    user_id: number;
+    user: User;
+    role_type: AccountType;
     replaced_by?: number;
     experience_years: number | null;
     start_date: string;
@@ -238,19 +240,19 @@ export type Replacement = {
     };
     comment?: string;
     details: ReplacementDetail[];
-    nurse_owner: User;
-    nurse_owner_full_name: string;
-    nurse_owner_email: string;
-    nurse_owner_phone_number: string;
-    nurse_owner_profil_url: string;
-    matching_nurses: User[];
+    user_owner: User;
+    user_owner_full_name: string;
+    user_owner_email: string;
+    user_owner_phone_number: string;
+    user_owner_profil_url: string;
+    matching_user: User[];
     response_count: number;
-    substitute_nurse?: string;
     substitute_user?: User;
     candidate?: boolean;
     periods?: ReplacementPeriod[];
     province?: string;
     group_ids?: number[];
+    created_at?: string | null;
 };
 
 export type ReplacementPeriod = {
@@ -291,6 +293,7 @@ export type ReplacementResponse = {
     updated_at: string;
     confirmed_at: string;
     respondedBy: User;
+    responded_by: User;
     repondedBy: User;
 };
 
@@ -325,4 +328,17 @@ export type Tutorial = {
     media_path?: string;
     media_type: MediaType;
     mimes_type: string;
+};
+
+export type Product = {
+    id: number;
+    name: string;
+    description?: string;
+    created_at?: string;
+};
+
+export type ReplacementRow = {
+    replacement: Replacement;
+    responses_count: number;
+    responses: ReplacementResponse[];
 };
