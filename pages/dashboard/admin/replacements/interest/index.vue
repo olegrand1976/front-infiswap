@@ -20,12 +20,12 @@
                     >
                         Par infirmière ayant posté
                     </TabsTrigger>
-                    <TabsTrigger
+                    <!-- <TabsTrigger
                         value="responses"
                         class="w-full md:w-96 h-12"
                     >
                         Par remplacement ayant reçu des réponses
-                    </TabsTrigger>
+                    </TabsTrigger> -->
                 </TabsList>
             </Tabs>
             <div>
