@@ -69,7 +69,7 @@ export const useProduct = () => {
     const productClick = async (formData) => {
         return await $apifetch('/api/products/click', {
             method: 'POST',
-            body: JSON.stringify(formData),
+            body: formData,
         });
     };
 
