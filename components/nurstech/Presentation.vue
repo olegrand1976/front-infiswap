@@ -17,7 +17,7 @@
                                 <GlobeAltIcon class="absolute -top-0.5 -right-1 w-3 h-3" />
                             </span>
                         </NuxtLink>
-                        <span class="ml-2">et une page dédiée à votre activité sur Infiswap ainsi qu'un accès privilégié à notre base de données "nouveaux patients".</span>
+                        <span class="ml-2">et une page dédiée à votre activité professionnelle.</span>
                     </p>
 
                     <div class="flex flex-wrap justify-center md:justify-start gap-2">

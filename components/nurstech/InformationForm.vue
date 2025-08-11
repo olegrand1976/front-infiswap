@@ -102,6 +102,7 @@ import { reactive } from 'vue';
 
 const { $toast } = useNuxtApp();
 const contact = reactive({
+    product: 'NursTech',
     name: '',
     email: '',
     phone: '',
@@ -109,7 +110,7 @@ const contact = reactive({
     captcha: false,
 });
 
-const { submitContact } = useNursService();
+const { submitContact } = useService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
