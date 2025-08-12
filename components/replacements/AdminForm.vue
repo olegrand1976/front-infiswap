@@ -529,7 +529,7 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     userOwnerEmail: replacement?.user_owner_email ?? '',
     userOwnerPhoneNumber: replacement?.user_owner_phone_number ?? '',
     userOwnerProfilUrl: replacement?.user_owner_profil_url ?? '',
-    matchingUser: replacement?.matching_user ?? '',
+    matchingUser: replacement?.matching_users ?? '',
     substituteUser: replacement?.substitute_user ?? '',
     candidate: replacement?.candidate ?? false,
     responseCount: replacement?.response_count ?? null,

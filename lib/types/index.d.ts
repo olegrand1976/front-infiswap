@@ -245,7 +245,7 @@ export type Replacement = {
     user_owner_email: string;
     user_owner_phone_number: string;
     user_owner_profil_url: string;
-    matching_user: User[];
+    matching_users: User[];
     response_count: number;
     substitute_user?: User;
     candidate?: boolean;
