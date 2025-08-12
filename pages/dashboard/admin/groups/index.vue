@@ -6,7 +6,7 @@
             <template #action>
                 <Button
                     class="rounded"
-                    href="/dashboard/group/create"
+                    href="/dashboard/admin/groups/create"
                 >
                     <PlusCircleIcon />
                     <span class="hidden md:inline-block">
@@ -126,7 +126,7 @@ import { Button } from '@/components/ui/button';
 import type { User } from '~/lib/types';
 
 const { isAdminGroup } = useAuth();
-const { groups, selectedGroup, selectedGroupUsers, count, myGroups, getGroupDetails } = useGroup();
+const { groups, selectedGroup, selectedGroupUsers, count, groupsWithAdmin, getGroupDetails } = useGroup();
 
 const selectedGroupId = ref<string>('');
 const page = ref(1);
@@ -174,7 +174,7 @@ const resetFilter = async () => {
     await getGroupDetails(parseInt(selectedGroupId.value), page.value, perPage.value, filters);
 };
 
-await myGroups();
+await groupsWithAdmin();
 
 if (groups.value.length > 0) {
     selectedGroupId.value = groups.value[0].id.toString();
@@ -345,7 +345,7 @@ const selectedGroupIdState = useState<number | null>('selectedGroupId', () => nu
 
 const handleCreateUser = () => {
     selectedGroupIdState.value = Number(selectedGroupId.value);
-    navigateTo('/dashboard/group/create-user');
+    navigateTo('/dashboard/admin/groups/create-user');
 };
 const isCreateUserDisabled = computed(() => {
     if (!selectedGroupId.value) return true;
@@ -353,12 +353,12 @@ const isCreateUserDisabled = computed(() => {
 });
 
 useHead({
-    title: 'Mon espace groupement',
+    title: 'Espace groupement',
 });
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['admin'],
 });
 </script>
 

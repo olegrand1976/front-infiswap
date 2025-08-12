@@ -357,6 +357,11 @@ const adminNavigationItems: NavigationItem[] = [
         icon: PlayCircleIcon,
     },
     {
+        label: 'Groupement',
+        route: '/dashboard/admin/groups',
+        icon: UserGroupIcon,
+    },
+    {
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,

@@ -26,7 +26,7 @@ const getInitialValue = (user: User | null | undefined = props.user) => ({
     phoneNumber: user?.phone_number || null,
     dateOfBirth: user?.date_of_birth || null,
     language: 'fr',
-    group: getGroupIdFromState()?.toString() || user?.group || null,
+    group_roles: user?.group_roles || [],
     roles: user?.roles || ['nurse'],
     address: {
         street: user?.profile?.street_address || null,
@@ -192,6 +192,11 @@ const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
 
+await myGroups();
+const dataGroup = computed(() =>
+    (groups.value ?? []).filter(group => group.role_name === 'administrator'),
+);
+
 const groupId = getGroupIdFromState();
 
 const adminGroups = computed(() => {
@@ -215,21 +220,33 @@ const isSubmitDisabled = computed(() => {
     return adminGroups.value.length === 0;
 });
 
-const isFormDisabled = computed(() => {
-    if (isAdmin.value) return true;
-
-    if (groupId) {
-        return !isAdminGroup(groupId);
-    }
-
-    return adminGroups.value.length === 0;
+const formattedGroup = computed(() => {
+    return form.group_roles.map(g => g.group_name).join(', ');
 });
 
-await myGroups();
+const selectedGroupIds = ref<number[]>(form.group_roles.map(g => g.group_id));
+
+watch(selectedGroupIds, (newIds) => {
+    form.group_roles = newIds.map(id => ({
+        group_id: id,
+        group_name: dataGroup.value.find(dg => dg.id === id)?.name || '',
+        role_id: 0,
+        role_name: '',
+        created_at: new Date().toISOString(),
+    }));
+}, { immediate: true });
 
 const formAssign = {
     email: '',
 };
+
+function toggleArray<T>(arr: T[], item: T, getKey: (i: T) => unknown = i => i): T[] {
+    const index = arr.findIndex(i => getKey(i) === getKey(item));
+    if (index === -1) {
+        return [...arr, item];
+    }
+    return arr.filter(i => getKey(i) !== getKey(item));
+}
 
 const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async () => {
     await assignUser(groupId, formAssign);
@@ -242,10 +259,12 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
         navigateTo('/dashboard/group');
     },
 });
+
+const route = useRoute();
 </script>
 
 <template>
-    <div v-if="!isFormDisabled">
+    <div v-if="!props.user && groupId && !route.path.includes('/dashboard/admin/users/create')">
         <form @submit.prevent="submitAssign">
             <p class="text-gray-700 text-sm md:text-base leading-relaxed my-6 ml-4">
                 Associez un(e) infirmier(e) à votre groupe en renseignant son email.
@@ -547,30 +566,34 @@ const { submit: submitAssign, inProgress: inProgressAssign } = useSubmit(async (
                         </SelectContent>
                     </Select>
                 </div>
-                <div>
+                <div class="w-full">
                     <Select
-                        v-model="form.group"
-                        label="Groupe"
-                        :disabled="!!groupId || adminGroups.length === 0"
+                        v-model="selectedGroupIds"
+                        multiple
+                        class="w-full"
                     >
                         <SelectTrigger
                             position="right"
-                            class="rounded-md"
+                            class="rounded-md text-nowrap"
                         >
-                            <SelectValue
-                                placeholder="Sélectionner un groupe"
-                                class="text-sm whitespace-nowrap"
-                            />
+                            <SelectValue>
+                                {{ formattedGroup }}
+                            </SelectValue>
                         </SelectTrigger>
-                        <SelectContent class="border border-none">
+                        <SelectContent>
                             <SelectGroup>
-                                <SelectItem
-                                    v-for="group in adminGroups"
+                                <div
+                                    v-for="group in dataGroup"
                                     :key="group.id"
-                                    :value="group.id.toString()"
+                                    class="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100"
+                                    @click.stop="selectedGroupIds = toggleArray(selectedGroupIds, group.id)"
                                 >
-                                    <span class="text-sm whitespace-nowrap">{{ group.name }}</span>
-                                </SelectItem>
+                                    <Checkbox
+                                        :checked="selectedGroupIds.includes(group.id)"
+                                        class="mr-2"
+                                    />
+                                    <span class="text-sm">{{ group.name }}</span>
+                                </div>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
