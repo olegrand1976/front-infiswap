@@ -17,6 +17,15 @@ export function useGroup() {
         }
     }
 
+    async function groupsWithAdmin() {
+        const data = await $apifetch('/api/groups/admin');
+        groups.value = data.groups ?? [];
+
+        if (groups.value.length > 0) {
+            await getGroupDetails(groups.value[0].id);
+        }
+    }
+
     async function getGroupDetails(groupId: number, page = 1, perPage = 15, filters = {}) {
         const data = await $apifetch(`/api/groups/${groupId}`, {
             params: {
@@ -71,5 +80,6 @@ export function useGroup() {
         newGroup,
         assignUser,
         count,
+        groupsWithAdmin,
     };
 }

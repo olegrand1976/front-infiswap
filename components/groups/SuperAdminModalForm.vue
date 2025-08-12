@@ -57,7 +57,7 @@ const { submit, inProgress } = useSubmit(async () => {
         });
 
         navigateTo({
-            path: '/dashboard/group',
+            path: '/dashboard/admin/groups',
         });
     }
     catch (err) {
