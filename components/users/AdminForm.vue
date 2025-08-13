@@ -7,7 +7,7 @@ const props = defineProps<{
 }>();
 
 const { create, update, generatePassword, isAdmin, isAdminGroup } = useAuth();
-const { groups, myGroups, assignUser } = useGroup();
+const { groups, myGroups, assignUser, groupsWithAdmin } = useGroup();
 const isEditMode = computed(() => !!props.user);
 
 function getGroupIdFromState() {
@@ -192,10 +192,21 @@ const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
 
-await myGroups();
-const dataGroup = computed(() =>
-    (groups.value ?? []).filter(group => group.role_name === 'administrator'),
-);
+if (isAdmin.value) {
+    await groupsWithAdmin();
+}
+else {
+    await myGroups();
+}
+
+const dataGroup = computed(() => {
+    if (isAdmin.value) {
+        return groups.value ?? [];
+    }
+    else {
+        return (groups.value ?? []).filter(group => group.role_name === 'administrator');
+    }
+});
 
 const groupId = getGroupIdFromState();
 
@@ -577,7 +588,12 @@ const route = useRoute();
                             class="rounded-md text-nowrap"
                         >
                             <SelectValue>
-                                {{ formattedGroup }}
+                                <template v-if="selectedGroupIds.length > 0">
+                                    {{ formattedGroup }}
+                                </template>
+                                <template v-else>
+                                    <span class="text-gray-500">Sélectionner...</span>
+                                </template>
                             </SelectValue>
                         </SelectTrigger>
                         <SelectContent>

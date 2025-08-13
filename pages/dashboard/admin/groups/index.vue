@@ -64,7 +64,7 @@
                         </div>
 
                         <Button
-                            v-if="!isCreateUserDisabled"
+                            v-if="!isCreateUserDisabled || isAdmin"
                             class="rounded flex items-center gap-2"
                             @click="handleCreateUser"
                         >
@@ -107,10 +107,10 @@
                     />
                 </svg>
                 <p class="text-lg font-semibold">
-                    Vous n'appartenez à aucun groupe pour le moment
+                    Pas de groupe
                 </p>
                 <p class="max-w-sm text-sm text-gray-400">
-                    Vous serez ajouté à un groupe lorsqu'un administrateur vous y invitera.
+                    Aucun groupe n’a encore été créé pour le moment.
                 </p>
             </div>
         </DashboardAdminPageContent>
@@ -125,7 +125,7 @@ import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';
 import type { User } from '~/lib/types';
 
-const { isAdminGroup } = useAuth();
+const { isAdmin, isAdminGroup } = useAuth();
 const { groups, selectedGroup, selectedGroupUsers, count, groupsWithAdmin, getGroupDetails } = useGroup();
 
 const selectedGroupId = ref<string>('');
