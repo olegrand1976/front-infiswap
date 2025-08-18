@@ -126,7 +126,7 @@ const router = useRouter();
 
 const props = defineProps({
     tutorial: {
-        type: Object as PropType<Tutorial>,
+        type: Object as PropType<Tutorial | null>,
         default: () => ({
             id: undefined,
             title: '',
@@ -198,8 +198,17 @@ const { submit, inProgress } = useSubmit(async () => {
     payload.append('description', form.description);
 
     if (selectedType.value === 'file') {
-        payload.append('media_type', tutorialFile.value.type.split('/')[0]);
-        payload.append('file', tutorialFile.value);
+        if (tutorialFile.value) {
+            payload.append('media_type', tutorialFile.value.type.split('/')[0]);
+            payload.append('file', tutorialFile.value);
+        }
+        else {
+            $toast({
+                description: 'Veuillez sélectionner un fichier.',
+                variant: 'destructive',
+            });
+            return;
+        }
     }
     else if (selectedType.value === 'link') {
         payload.append('path', form.media_path);
@@ -207,36 +216,54 @@ const { submit, inProgress } = useSubmit(async () => {
     }
 
     if (form.id == undefined) {
-        createTutorial(payload).then((result) => {
-            if (result) {
-                resetForm();
+        try {
+            const result = await createTutorial(payload);
 
+            resetForm();
+
+            $toast({
+                description: result.message,
+            });
+
+            setTimeout(() => {
+                router.push('/dashboard/admin/tutorials');
+            }, 2000);
+        }
+        catch (err) {
+            if (err.data?.errors) {
+                const firstError = Object.values(err.data.errors)[0][0];
                 $toast({
-                    description: result.message,
+                    description: firstError,
+                    variant: 'destructive',
                 });
-
-                setTimeout(() => {
-                    router.push('/dashboard/admin/tutorials');
-                }, 2000);
             }
-        });
+        }
     }
     else {
         payload.append('id', String(form.id));
         payload.append('_method', 'PUT');
-        updateTutorial(form.id, payload).then((result) => {
-            if (result) {
-                resetForm();
 
+        try {
+            const result = await updateTutorial(form.id, payload);
+            resetForm();
+
+            $toast({
+                description: result.message,
+            });
+
+            setTimeout(() => {
+                router.push('/dashboard/admin/tutorials');
+            }, 2000);
+        }
+        catch (err) {
+            if (err.data?.errors) {
+                const firstError = Object.values(err.data.errors)[0][0];
                 $toast({
-                    description: result.message,
+                    description: firstError,
+                    variant: 'destructive',
                 });
-
-                setTimeout(() => {
-                    router.push('/dashboard/admin/tutorials');
-                }, 2000);
             }
-        });
+        }
     }
 });
 </script>

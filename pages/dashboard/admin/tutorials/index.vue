@@ -27,7 +27,7 @@
                         <span>Type</span>
                         <span class="ml-4 font-medium">
                             {{
-                                option.media_type === 'image' ? 'Image' : option.media_type === 'audio' ? 'Audio' : option.media_type === 'video' ? 'Vidéo' :'Tous'
+                                option.media_type === 'image' ? 'Image' : option.media_type === 'audio' ? 'Audio' : option.media_type === 'video' ? 'Vidéo': option.media_type === 'link' ? 'Lien' :'Tous'
                             }}
                         </span>
                     </SelectTrigger>
@@ -92,7 +92,7 @@
                         v-else-if="selectedTutorial.media_type == 'image'"
                         :src="baseUrl + selectedTutorial.media_path"
                         alt="Ressource media"
-                        class="object-cover"
+                        class="object-cover w-full h-[24rem]"
                     >
 
                     <audio
@@ -281,7 +281,7 @@ const columns: ColumnDef<Tutorial>[] = [
             }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
+            return h('div', { class: 'text-start ml-4' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {
@@ -318,7 +318,7 @@ const columns: ColumnDef<Tutorial>[] = [
                 },
             ];
 
-            return h('div', { class: 'flex justify-center' }, [
+            return h('div', { class: 'flex justify-start ml-4' }, [
                 h(DropdownMenuAction, {
                     actions: actions,
                 }),

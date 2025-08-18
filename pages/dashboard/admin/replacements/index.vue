@@ -582,20 +582,20 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
-        accessorFn: row => (row.matching_user || []).map(user => user.full_name).join(', '),
         id: 'matching_user',
-        header: () => h(Button, { variant: 'ghost' }, () => ['Notifiés']),
+        header: () => h(Button, { variant: 'ghost' }, () => 'Notifiés'),
         cell: ({ row }) => {
-            const users = row.original.matching_user || [];
+            const users = row.original.matching_users || [];
             const displayText = users.map(u => u.full_name).join(', ');
             const replacementId = row.original.id;
 
-            return h('div', { class: 'flex items-center' }, [
+            return h('div', { class: 'flex items-center text-center' }, [
                 h('div', {
                     class: 'ml-2 capitalize truncate max-w-[180px] whitespace-nowrap overflow-hidden',
                     title: displayText,
-                }, displayText),
-                users.length > 0 && h(Button, {
+                }, displayText || '-'),
+                users.length > 0
+                && h(Button, {
                     variant: 'ghost',
                     size: 'sm',
                     onClick: () => navigateTo(`/dashboard/admin/replacements/notified/${replacementId}`),

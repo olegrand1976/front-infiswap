@@ -79,7 +79,7 @@ const props = defineProps<{ replacement?: Replacement | null }>();
 
 const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
     id: replacement?.id ?? null,
-    matchingUser: replacement?.matching_user ?? [],
+    matchingUser: replacement?.matching_users ?? [],
 });
 
 const form = reactive(getInitialValue() as any);
