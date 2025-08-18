@@ -2,6 +2,7 @@
     <div class="-mt-2 relative">
         <LayoutsAppImage
             src="home/nurse_infi.jpg"
+            alt="nurse_infi"
             class="w-full h-[25rem] md:h-[35rem] lg:h-[40rem] xl:h-[60rem] object-right-bottom object-cover"
         />
 
