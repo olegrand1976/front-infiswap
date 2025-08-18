@@ -13,7 +13,7 @@
             v-model:open="showForm"
             class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
         >
-            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-2">
+            <DialogContent class="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-auto">
                 <UsersCard :user="user" />
             </DialogContent>
         </Dialog>

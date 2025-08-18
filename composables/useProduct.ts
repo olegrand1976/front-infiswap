@@ -66,6 +66,13 @@ export const useProduct = () => {
             });
     }
 
+    const productClick = async (formData) => {
+        return await $apifetch('/api/products/click', {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     return {
         products,
         count,
@@ -74,5 +81,6 @@ export const useProduct = () => {
         get,
         softDelete,
         getAll,
+        productClick,
     };
 };

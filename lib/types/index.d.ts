@@ -71,6 +71,14 @@ export type User = {
     contact_date?: string;
     contact_method?: string;
     group_roles?: GroupRole[];
+    product_activity_summary?: ProductActivitySummary[];
+};
+
+type ProductActivitySummary = {
+    product_id: number;
+    product_name: string;
+    last_click_date: string | null;
+    last_contact_date: string | null;
 };
 
 type UserActivity = {
