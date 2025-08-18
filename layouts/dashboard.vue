@@ -4,7 +4,7 @@
             <LayoutsAppSidebar />
         </Sidebar>
         <SidebarInset
-            :class="cn('w-full w-96', {
+            :class="cn('w-full', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
             })"
@@ -17,7 +17,7 @@
                         class="mr-2 h-4"
                     />
                 </div>
-                <!-- <div class="ml-auto"> -->
+
                 <div class="ml-auto flex flex-row-reverse items-center space-x-reverse space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">

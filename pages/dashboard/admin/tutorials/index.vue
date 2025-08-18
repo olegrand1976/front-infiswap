@@ -121,6 +121,7 @@ import { useRuntimeConfig } from '#app';
 import type { Tutorial } from '~/lib/types';
 
 const { tutorials, count, fetchTutorials, deleteTutorial } = useTutorials();
+const { isSaleRepresentative } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -311,11 +312,15 @@ const columns: ColumnDef<Tutorial>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(tutorial),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(tutorial),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(tutorial),
+                            },
+                        ]
+                    : []),
             ];
 
             return h('div', { class: 'flex justify-start ml-4' }, [

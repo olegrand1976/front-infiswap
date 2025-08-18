@@ -68,7 +68,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
+const { users, isSaleRepresentative, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -287,11 +287,15 @@ const columns: ColumnDef<User>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(user),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(user),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(user),
+                            },
+                        ]
+                    : []),
             ];
 
             if (user.email_verified_at == null) {

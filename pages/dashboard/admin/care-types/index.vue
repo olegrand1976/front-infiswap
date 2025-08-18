@@ -50,6 +50,7 @@ definePageMeta({
 });
 
 const { careTypes, getCareTypes, count, forceDelete } = useCareTypes();
+const { isSaleRepresentative } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -156,14 +157,18 @@ const columns: ColumnDef<CareType>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(careType),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(careType),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(careType),
+                            },
+                        ]
+                    : []),
             ];
 
-            return h('div', { class: 'flex justify-center' }, [
+            return h('div', { class: 'flex justify-start ml-4' }, [
                 h(DropdownMenuAction, {
                     actions: actions,
                 }),
