@@ -15,7 +15,11 @@ export const useAuth = () => {
     const isLoggedIn = computed(() => !!user.value && !!user.value.email_verified_at);
 
     const isAdmin = computed((): boolean => {
-        return ['administrator', 'developer'].includes(user.value?.account_type ?? '');
+        return ['administrator', 'developer', 'sale_representative'].includes(user.value?.account_type ?? '');
+    });
+
+    const isSaleRepresentative = computed((): boolean => {
+        return ['sale_representative'].includes(user.value?.account_type ?? '');
     });
 
     const isAdminGroup = (groupId: number): boolean => {
@@ -444,6 +448,7 @@ export const useAuth = () => {
         getUsers,
         isLoggedIn,
         isAdmin,
+        isSaleRepresentative,
         login,
         register,
         registerBeta,

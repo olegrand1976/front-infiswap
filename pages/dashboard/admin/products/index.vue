@@ -50,6 +50,7 @@ definePageMeta({
 });
 
 const { products, getProducts, count, softDelete } = useProduct();
+const { isSaleRepresentative } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -141,14 +142,18 @@ const columns: ColumnDef<Product>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(product),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(product),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(product),
+                            },
+                        ]
+                    : []),
             ];
 
-            return h('div', { class: 'flex justify-center' }, [
+            return h('div', { class: 'flex justify-start ml-4' }, [
                 h(DropdownMenuAction, {
                     actions: actions,
                 }),

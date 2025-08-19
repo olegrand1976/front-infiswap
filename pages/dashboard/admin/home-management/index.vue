@@ -45,6 +45,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { HomeType } from '~/lib/types';
 
 const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
+const { isSaleRepresentative } = useAuth();
 
 await getSpecifiedHome();
 
@@ -187,11 +188,15 @@ const columns: ColumnDef<HomeType>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(home),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(home),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(home),
+                            },
+                        ]
+                    : []),
             ];
 
             return h('div', { class: 'flex justify-center' }, [
