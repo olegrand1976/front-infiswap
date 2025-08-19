@@ -14,9 +14,23 @@
 
                 <section class="mt-4 flex flex-col space-y-8 justify-between">
                     <div>
-                        <h5 class="font-semibold text-center sm:text-start text-primary">
-                            Codes postaux et villes suggérés
-                        </h5>
+                        <div class="flex justify-between items-center">
+                            <h5 class="font-semibold sm:text-start text-primary">
+                                Codes postaux et villes suggérés
+                            </h5>
+                            <p class="font-medium text-xs flex gap-2">
+                                <Checkbox
+                                    :checked="allSelected"
+                                    @update:checked="handleSelectProposal"
+                                />
+                                <span v-if="allSelected">
+                                    Tout décocher
+                                </span>
+                                <span v-else>
+                                    Tout cocher
+                                </span>
+                            </p>
+                        </div>
                         <div
                             v-if="loading"
                             class="flex flex-col items-center mt-8"
@@ -103,6 +117,7 @@ const props = defineProps<{
     newlyAddedValue: string;
     isPreferenceMode: boolean;
 }>();
+const allSelected = ref(true);
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
@@ -149,6 +164,17 @@ watch(
     },
     { immediate: false },
 );
+
+const handleSelectProposal = () => {
+    allSelected.value = !allSelected.value;
+
+    if (!allSelected.value) {
+        tempSelectedLocations.value = [];
+    }
+    else {
+        tempSelectedLocations.value = [...locationData.value];
+    }
+};
 
 const isSelected = (zipCode: string, city: string) => {
     return tempSelectedLocations.value.some(([z, c]) => z === zipCode && c === city);
