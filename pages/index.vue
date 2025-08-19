@@ -59,6 +59,9 @@
         <section class="lg:container lg:mx-auto lg:px-32">
             <HomeServiceContainer />
         </section>
+        <section class="container lg:mx-auto lg:px-32">
+            <HomeCounterStat />
+        </section>
         <section>
             <HomePlanningContainer />
         </section>
@@ -80,7 +83,7 @@
                     Contactez-nous au
                 </h5>
                 <p class="mt-1 text-success text-xl font-bold">
-                    0478.02.33.77
+                    (+32) 478.02.33.77
                 </p>
                 <div class="bg-success p-1 absolute -top-2 -left-2 animate-pulse rounded-lg">
                     <PhoneIcon class="w-4 text-white" />

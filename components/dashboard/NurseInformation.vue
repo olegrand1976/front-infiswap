@@ -226,63 +226,79 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="bg-gray-100 sm:h-full h-80 rounded p-4 mb-4">
-                <div class="text-primary flex justify-between items-center">
-                    <h2>
-                        Mes préférences
-                    </h2>
-                    <Button
-                        variant="inline"
-                        class="font-bold text-xs mt-2"
-                        @click="proposalDialog = true"
-                    >
-                        Boost IA
-                    </Button>
-                </div>
-                <div class="sm:mt-10">
-                    <InputPreferences
-                        :initial-zip-codes="zipCodes"
-                        :initial-cities="cities"
-                        @update:initial-zip-codes="updateZipCodes"
-                        @update:initial-cities="updateCities"
-                        @open-proposal="openProposalDialog"
-                    />
-                </div>
-
-                <ProposalLocationModal
-                    v-model="proposalDialog"
-                    v-model:newly-added-value="newlyAddedValue"
-                    title="Préférences"
-                    description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences"
-                    :initial-zip-codes="zipCodes"
-                    :initial-cities="cities"
-                    :is-preference-mode="true"
-                    @update:initial-zip-codes="updateZipCodes"
-                    @update:initial-cities="updateCities"
-                />
-
-                <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-12 md:mt-4 overflow-hidden">
-                    <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
-                        <label class="text-primary sm:text-white">
-                            <span>Rayon de recherche</span>
-                        </label>
+            <div class="grid">
+                <div class="bg-gray-100 rounded p-4 mb-4">
+                    <div class="text-primary flex justify-between items-center">
+                        <h2>
+                            Mes préférences
+                        </h2>
+                        <Button
+                            variant="none"
+                            class="font-bold text-xs mt-2"
+                            @click="proposalDialog = true"
+                        >
+                            Boost IA
+                        </Button>
+                    </div>
+                    <div class="sm:mt-4">
+                        <InputPreferences
+                            :initial-zip-codes="zipCodes"
+                            :initial-cities="cities"
+                            @update:initial-zip-codes="updateZipCodes"
+                            @update:initial-cities="updateCities"
+                            @open-proposal="openProposalDialog"
+                        />
                     </div>
 
-                    <div class="relative flex items-center">
-                        <InputIcon
-                            v-model="radiusInput"
-                            type="number"
-                            title="Appuyer sur l'icône pour valider"
-                            class="text-sm border border-gray-300 rounded-full h-8 indent-3 bg-transparent sm:border-none sm:rounded w-full pr-10"
-                            min="1"
-                        />
+                    <ProposalLocationModal
+                        v-model="proposalDialog"
+                        v-model:newly-added-value="newlyAddedValue"
+                        title="Préférences"
+                        description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences"
+                        :initial-zip-codes="zipCodes"
+                        :initial-cities="cities"
+                        :is-preference-mode="true"
+                        @update:initial-zip-codes="updateZipCodes"
+                        @update:initial-cities="updateCities"
+                    />
 
-                        <button
-                            class="absolute right-2 text-primary hover:text-green-600 transition"
-                            @click="onUpdateRadius"
-                        >
-                            <CheckIcon class="w-4 h-4" />
-                        </button>
+                    <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-16 sm:mt-4 overflow-hidden">
+                        <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
+                            <label class="ml-3 sm:ml-0 text-primary font-semibold sm:font-normal sm:text-white">
+                                <span>Rayon de recherche</span>
+                            </label>
+                        </div>
+
+                        <div class="-mt-1 sm:mt-0 relative flex items-center border border-gray-400 focus-within:border-primary rounded-full sm:border-none sm:rounded-none">
+                            <InputIcon
+                                v-model="radiusInput"
+                                type="number"
+                                title="Appuyer sur l'icône pour valider"
+                                class="text-sm h-2 sm:h-8 indent-3 bg-transparent border-none rounded w-full pr-10"
+                                min="1"
+                            />
+
+                            <button
+                                class="absolute top-2 right-4 sm:right-2 text-primary hover:text-green-600 transition"
+                                @click="onUpdateRadius"
+                            >
+                                <CheckIcon class="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 flex gap-6 items-center rounded p-4">
+                    <div class="bg-gray-200 p-4 rounded">
+                        <UserIcon class="w-8 opacity-80" />
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-900">
+                            Nombre d'affiliés à votre compte
+                        </h3>
+                        <p class="text-3xl font-bold text-primary">
+                            {{ reports.referrals }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -308,6 +324,7 @@
 <script setup lang="ts">
 import {
     CheckIcon,
+    UserIcon,
 } from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
@@ -329,6 +346,7 @@ type NurseReport = {
     me: number;
     accepted: number;
     total: number;
+    referrals: number;
     reponded_per_month: MonthlyReport[];
 };
 

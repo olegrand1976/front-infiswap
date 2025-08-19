@@ -1,7 +1,9 @@
 <template>
     <NuxtImg
         :src="computedSrc"
+        :alt="alt"
         v-bind="$attrs"
+        format="webp"
     />
 </template>
 
@@ -10,6 +12,7 @@ import { computed } from 'vue';
 
 const props = defineProps({
     src: String,
+    alt: String,
 });
 
 const computedSrc = computed(() => {

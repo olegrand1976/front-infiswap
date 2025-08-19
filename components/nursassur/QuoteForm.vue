@@ -66,6 +66,7 @@
 
             <LayoutsAppImage
                 src="home/woman_nurse_plus.png"
+                alt="woman_nurse_plus"
                 class="hidden lg:block absolute top-1/3 right-12 xl:right-24 w-80 xl:w-96"
             />
         </section>
