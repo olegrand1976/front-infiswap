@@ -412,19 +412,40 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'insurance',
         header: 'NursAssur',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nursassur'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.insurance !== undefined && user.insurance !== null) {
+                    return Number(user.insurance);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].insurance = value ? 1 : 0;
+
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
+                    if (modIndex !== -1) {
+                        mods[modIndex].activate = value ? 1 : 0;
+                    }
+                    dataUsers.value[index].last_product_modifications = [...mods];
                 }
 
-                await edit(Number(row.original.id), { insurance: dataUsers.value[index].insurance == 1 });
+                await edit(Number(row.original.id), { nursassur: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.insurance === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
                 }),
             ]);
@@ -435,19 +456,37 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'site',
         header: 'NursTech',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nurstech'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.site !== undefined && user.site !== null) {
+                    return Number(user.site);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].site = value ? 1 : 0;
-                }
 
-                await edit(Number(row.original.id), { site: dataUsers.value[index].site == 1 });
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
+                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+                    dataUsers.value[index].last_product_modifications = [...mods];
+                }
+                await edit(Number(row.original.id), { nurstech: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.site === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
                 }),
             ]);
@@ -456,25 +495,44 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'ambassador',
-        header: 'Tournée',
+        header: 'Inficoncept',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.ambassador !== undefined && user.ambassador !== null) {
+                    return Number(user.ambassador);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].ambassador = value ? 1 : 0;
-                }
 
-                await edit(Number(row.original.id), { ambassador: dataUsers.value[index].ambassador == 1 });
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
+                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+                    dataUsers.value[index].last_product_modifications = [...mods];
+                }
+                await edit(Number(row.original.id), { inficoncept: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.ambassador === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
                 }),
             ]);
         },
+        enableSorting: false,
     },
     {
         accessorKey: 'comment_crm',
