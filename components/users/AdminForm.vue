@@ -193,12 +193,14 @@ const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
 
-if (isAdmin.value) {
-    await groupsWithAdmin();
-}
-else {
-    await myGroups();
-}
+onMounted(async () => {
+    if (isAdmin.value) {
+        await groupsWithAdmin();
+    }
+    else {
+        await myGroups();
+    }
+});
 
 const dataGroup = computed(() => {
     if (isAdmin.value) {
