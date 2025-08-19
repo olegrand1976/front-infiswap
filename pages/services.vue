@@ -52,12 +52,14 @@
             <div class="absolute bottom-0 right-0 hidden lg:block z-0">
                 <LayoutsAppImage
                     src="Vector_2.png"
+                    alt="Vector_2"
                     class="w-64 lg:w-[32rem] relative"
                 />
             </div>
             <div class="absolute bottom-[20%] left-2 hidden lg:block z-0">
                 <LayoutsAppImage
                     src="/icons/Unin.png"
+                    alt="Unin"
                     class="w-8 lg:w-12 relative"
                 />
             </div>

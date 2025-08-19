@@ -33,10 +33,12 @@
             <section class="hidden lg:grid gap-4">
                 <LayoutsAppImage
                     src="home/nurse_woman.png"
+                    alt="nurse_woman"
                     class="h-80 w-full object-cover rounded-3xl"
                 />
                 <LayoutsAppImage
                     src="home/article_role-of-nursing-info_header.jpg"
+                    alt="article_role-of-nursing-info_header"
                     class="h-full w-full rounded-3xl"
                 />
             </section>
