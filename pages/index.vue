@@ -106,12 +106,12 @@ const replacements = ref<Replacement[]>([]);
 
 const showContact = ref(false);
 
-onMounted(async () => {
+setTimeout(() => {
     showContact.value = true;
+}, 100);
 
-    const data = await getAccordingReplacements();
-    replacements.value = (data ?? []) as Replacement[];
-});
+const data = await getAccordingReplacements();
+replacements.value = (data ?? []) as Replacement[];
 
 useHead({
     title: 'Accueil',
