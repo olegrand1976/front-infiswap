@@ -493,7 +493,11 @@
                     <template v-else>
                         <Table>
                             <TableHeader class="w-full">
-                                <TableRow :class="['overflow-x-hidden gap-2 rounded-t-lg border-none', props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6']">
+                                <TableRow
+                                    :class="['overflow-x-hidden gap-2 rounded-t-lg border-none',
+                                             props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
+                                             props.type === '' ? 'grid grid-cols-7' : 'grid grid-cols-6']"
+                                >
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
                                     </TableHead>
