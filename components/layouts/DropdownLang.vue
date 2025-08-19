@@ -13,7 +13,7 @@
         <SelectContent class="border border-none">
             <SelectGroup class="w-20">
                 <div
-                    v-for="language in languages"
+                    v-for="language in LANGUAGES"
                     :key="language.value"
                     class="flex justify-center items-center"
                 >
@@ -43,21 +43,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-const languages = [
-    {
-        value: 'fr',
-        label: 'FR',
-        name: 'France',
-        icon: '/icons/fr.png',
-    },
-    {
-        value: 'nl',
-        label: 'NL',
-        name: 'Nederlands',
-        icon: '/icons/pays-bas.png',
-    },
-];
+import { LANGUAGES } from '~/lib/constants';
 
 const defaultLanguage = 'fr';
 </script>

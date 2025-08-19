@@ -1,5 +1,5 @@
 export type Gender = 'M' | 'F' | 'X';
-export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'community_manager' | 'sale_representative' | 'nurse' | 'caregiver' | 'midwife';
+export type AccountType = 'administrator' | 'developer' | 'tester' | 'manager' | 'collaborator' | 'community_manager' | 'sale_representative' | 'nurse' | 'caregiver' | 'midwife';
 export type CountryCode = 'be' | 'fr' | 'us';
 export type MediaType = 'video' | 'audio' | 'image' | 'link';
 

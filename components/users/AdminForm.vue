@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ADMIN_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
 import type { AccountType, User } from '~/lib/types';
 import { getRole } from '~/lib/utils';
 
@@ -6,7 +7,7 @@ const props = defineProps<{
     user?: User | null;
 }>();
 
-const { create, update, generatePassword, isAdmin, isAdminGroup } = useAuth();
+const { create, update, generatePassword, isSuperAdmin, isAdmin, isAdminGroup } = useAuth();
 const { groups, myGroups, assignUser, groupsWithAdmin } = useGroup();
 const isEditMode = computed(() => !!props.user);
 
@@ -147,35 +148,12 @@ const categoryPro = [
     },
 ];
 
-const languages = [
-    {
-        value: 'fr',
-        label: 'Français',
-        name: 'francais',
-    },
-    {
-        value: 'nl',
-        label: 'Nederlands',
-        name: 'nederlands',
-    },
-];
-
 const accountOptions = computed<AccountType[]>(() => {
-    return isAdmin.value
-        ? [
-                'administrator',
-                'developer',
-                'collaborator',
-                'community_manager',
-                'sale_representative',
-                'nurse',
-                'caregiver',
-                'midwife',
-            ]
-        : [
-                'administrator',
-                'nurse',
-            ];
+    if (isSuperAdmin.value) return SUPER_ADMIN_ROLES;
+
+    if (isAdmin.value) return ADMIN_ROLES;
+
+    return BASIC_ROLES;
 });
 
 const toggleRole = (role: AccountType) => {
@@ -416,7 +394,7 @@ const route = useRoute();
                         <SelectContent class="border border-none">
                             <SelectGroup>
                                 <SelectItem
-                                    v-for="(lang, index) in languages"
+                                    v-for="(lang, index) in LANGUAGES"
                                     :key="index"
                                     :value="lang.value"
                                 >
