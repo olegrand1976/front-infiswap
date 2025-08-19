@@ -1,5 +1,6 @@
 <template>
     <Select
+        v-model="defaultLanguage"
         :default-value="defaultLanguage"
         disabled
     >
@@ -45,5 +46,5 @@ import {
 } from '@/components/ui/select';
 import { LANGUAGES } from '~/lib/constants';
 
-const defaultLanguage = 'fr';
+const defaultLanguage = ref('fr');
 </script>
