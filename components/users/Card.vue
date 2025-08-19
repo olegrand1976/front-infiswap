@@ -60,6 +60,13 @@
                 </button>
                 <button
                     class="pb-2 border-b-2"
+                    :class="activeTab === 'product' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'product'"
+                >
+                    Produit
+                </button>
+                <button
+                    class="pb-2 border-b-2"
                     :class="activeTab === 'comment' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
                     @click="activeTab = 'comment'"
                 >
@@ -218,6 +225,45 @@
             </div>
 
             <div
+                v-else-if="activeTab === 'product'"
+                class="space-y-3"
+            >
+                <div
+                    v-if="user.product_activity_summary && user.product_activity_summary.length"
+                    class="space-y-4"
+                >
+                    <div
+                        v-for="item in user.product_activity_summary"
+                        :key="item.product_id"
+                        class="p-4 border rounded-md bg-gray-50"
+                    >
+                        <h3 class="font-semibold text-primary">
+                            {{ item.product_name }}
+                        </h3>
+                        <p>
+                            Date du dernier clic :
+                            <span class="font-medium">
+                                {{ item.last_click_date ? formatDate(item.last_click_date) : 'Aucun clic' }}
+                            </span>
+                        </p>
+                        <p>
+                            Date du dernier contact :
+                            <span class="font-medium">
+                                {{ item.last_contact_date ? formatDate(item.last_contact_date) : 'Aucun contact' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <p
+                    v-else
+                    class="text-gray-500"
+                >
+                    Aucune activité produit enregistrée.
+                </p>
+            </div>
+
+            <div
                 v-else-if="activeTab === 'comment'"
                 class="space-y-3"
             >
@@ -372,4 +418,16 @@ const translatedCategory = computed(() => {
 const comment = ref(props.user.comment_crm ?? '');
 
 loadActivity();
+
+function formatDate(dateStr: string): string {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
 </script>

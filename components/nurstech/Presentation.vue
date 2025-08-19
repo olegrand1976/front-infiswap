@@ -25,6 +25,7 @@
                             to="/nurstech-by-infiswap"
                             title="Voir le site"
                             class="px-4 py-1.5 border border-primarytech text-primarytech rounded-md text-sm font-medium transition duration-200 hover:bg-primarytech hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primarytech"
+                            @click="handleProductClick('NursTech')"
                         >
                             Découvrir →
                         </NuxtLink>
@@ -63,6 +64,7 @@
                             to="/nursassur-by-infiswap"
                             title="Voir le site"
                             class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
+                            @click="handleProductClick('NursAssur')"
                         >
                             Découvrir →
                         </NuxtLink>
@@ -99,4 +101,16 @@ import {
 
 const showNursTech = ref(false);
 const showNursAssur = ref(false);
+
+const { productClick } = useProduct();
+
+const handleProductClick = async (productName: string) => {
+    try {
+        await productClick({ product: productName });
+        console.log(`Clic enregistré pour ${productName}`);
+    }
+    catch (error) {
+        console.error('Erreur lors de l’enregistrement du clic', error);
+    }
+};
 </script>

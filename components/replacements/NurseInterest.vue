@@ -63,7 +63,7 @@
             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         >
             <div
-                class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 w-[400px] relative"
+                class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-[600px] max-w-full relative max-h-[90vh] overflow-auto"
             >
                 <button
                     class="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
