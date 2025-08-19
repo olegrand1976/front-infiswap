@@ -244,6 +244,7 @@ definePageMeta({
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
+const { isSaleRepresentative } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -346,7 +347,7 @@ const columns: ColumnDef<Replacement>[] = [
             const a = rowA.original;
             const b = rowB.original;
 
-            const getDate = (rep: any): string => {
+            const getDate = (rep): string => {
                 if (Array.isArray(rep.periods) && rep.periods.length > 0) {
                     return rep.periods[0]?.start_date ?? '';
                 }
@@ -381,7 +382,7 @@ const columns: ColumnDef<Replacement>[] = [
             const repA = rowA.original;
             const repB = rowB.original;
 
-            const getFirstStartTime = (rep: any): string => {
+            const getFirstStartTime = (rep): string => {
                 try {
                     let ts = rep.timeSlot;
                     if (typeof ts === 'string') ts = JSON.parse(ts);
@@ -681,11 +682,15 @@ const columns: ColumnDef<Replacement>[] = [
                         ? handleOpen(replacement)
                         : handleClosed(replacement),
                 },
-                {
-                    label: 'Supprimer',
-                    confirm: true,
-                    onClick: () => handleDelete(replacement),
-                },
+                ...(!isSaleRepresentative.value
+                    ? [
+                            {
+                                label: 'Supprimer',
+                                confirm: true,
+                                onClick: () => handleDelete(replacement),
+                            },
+                        ]
+                    : []),
             ];
 
             return h('div', { class: 'flex justify-center' }, [
