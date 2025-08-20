@@ -165,9 +165,8 @@
                             <Table>
                                 <TableHeader class="w-full">
                                     <TableRow
-                                        :class="['overflow-x-hidden gap-2 rounded-t-lg border-none',
-                                                 props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
-                                                 props.type === '' ? 'grid grid-cols-7' : 'grid grid-cols-6']"
+                                        :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
+                                                 gridColsByType[props.type] ?? 'grid-cols-8',]"
                                     >
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
@@ -222,7 +221,7 @@
                                             :key="index"
                                             :class="[
                                                 'grid gap-2 border border-none overflow-x-hidden h-16',
-                                                props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
+                                                gridColsByType[props.type] ?? 'grid-cols-8',
                                             ]"
                                         >
                                             <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -245,9 +244,8 @@
                                             v-for="replacementGroup in group"
                                             :key="replacementGroup.id"
                                             :class="[
-                                                'gap-2 border border-none overflow-x-hidden relative',
-                                                props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
-                                                props.type !== 'me' ? 'grid grid-cols-7' : 'grid grid-cols-6',
+                                                'gap-2 grid border border-none overflow-x-hidden relative',
+                                                gridColsByType[props.type] ?? 'grid-cols-8',
                                             ]"
                                         >
                                             <div
@@ -494,9 +492,8 @@
                         <Table>
                             <TableHeader class="w-full">
                                 <TableRow
-                                    :class="['overflow-x-hidden gap-2 rounded-t-lg border-none',
-                                             props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
-                                             props.type === '' ? 'grid grid-cols-7' : 'grid grid-cols-6']"
+                                    :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
+                                             gridColsByType[props.type] ?? 'grid-cols-8']"
                                 >
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
@@ -551,8 +548,7 @@
                                         :key="index"
                                         :class="[
                                             'grid gap-2 border border-none overflow-x-hidden h-16',
-                                            props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
-                                            props.type !== 'me' ? 'grid grid-cols-7' : 'grid grid-cols-6',
+                                            gridColsByType[props.type] ?? 'grid-cols-8',
                                         ]"
                                     >
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -575,9 +571,8 @@
                                         v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         :class="[
-                                            'gap-2 border border-none overflow-x-hidden relative',
-                                            props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
-                                            props.type !== 'me' ? 'grid grid-cols-7' : 'grid grid-cols-6',
+                                            'gap-2 border border-none grid overflow-x-hidden relative',
+                                            gridColsByType[props.type] ?? 'grid-cols-8',
                                         ]"
                                     >
                                         <div
@@ -1504,7 +1499,7 @@
         </Dialog>
 
         <Dialog
-            v-if="props.type !== 'me'"
+            v-if="props.type === ''"
             v-model:open="filterRegionDialog"
             class="pb-8 sm:pb-0"
         >
@@ -1625,6 +1620,11 @@ const pagination = ref({
 const filterRegionDialog = ref(true);
 
 const isMobileView = ref(false);
+const gridColsByType: Record<string, string> = {
+    'groups': 'grid-cols-8',
+    'me': 'grid-cols-6',
+    '': 'grid-cols-7',
+};
 
 onMounted(async () => {
     if (import.meta.client) {
