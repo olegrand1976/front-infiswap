@@ -2052,9 +2052,8 @@ const handleCloseReplacement = async (replacement) => {
             $toast({
                 description: response.message,
             });
-            currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
-            pagination.value.total -= 1;
             closeReplacementDialog.value = false;
+            fetchInitialData(page.value, perPage.value);
         }
     }
     catch (error) {
