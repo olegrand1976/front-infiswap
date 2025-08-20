@@ -239,6 +239,7 @@ interface NavigationItem {
     icon: Component | FunctionalComponent | VNode;
     isActive?: boolean;
     children?: NavigationItem[];
+    visible?: boolean;
 }
 
 const nurseNavigationItems: NavigationItem[] = [
@@ -311,98 +312,79 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Tableau de bord',
         route: '/dashboard/admin',
         icon: SquaresPlusIcon,
+        visible: true,
     },
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Remplacements',
-                    route: '/dashboard/admin/replacements',
-                    icon: ArrowPathIcon,
-                },
-            ]
-        : []),
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Intérêt pour remplacement',
-                    route: '/dashboard/admin/replacements/interest',
-                    icon: ListBulletIcon,
-                },
-            ]
-        : []),
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Utilisateurs',
-                    route: '/dashboard/admin/users',
-                    icon: UserGroupIcon,
-                },
-            ]
-        : []),
+    {
+        label: 'Remplacements',
+        route: '/dashboard/admin/replacements',
+        icon: ArrowPathIcon,
+        visible: !isCollaborator.value,
+    },
+    {
+        label: 'Intérêt pour remplacement',
+        route: '/dashboard/admin/replacements/interest',
+        icon: ListBulletIcon,
+        visible: !isCollaborator.value,
+    },
+    {
+        label: 'Utilisateurs',
+        route: '/dashboard/admin/users',
+        icon: UserGroupIcon,
+        visible: !isCollaborator.value,
+    },
     {
         label: 'Accueil',
         route: '/dashboard/admin/home-management',
         icon: WrenchScrewdriverIcon,
+        visible: true,
     },
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Patients',
-                    route: '/dashboard/admin/patients',
-                    icon: HeartIcon,
-                },
-            ]
-        : []),
+    {
+        label: 'Patients',
+        route: '/dashboard/admin/patients',
+        icon: HeartIcon,
+        visible: !isCollaborator.value,
+    },
     {
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
+        visible: true,
     },
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Type de soins',
-                    route: '/dashboard/admin/care-types',
-                    icon: ShieldCheckIcon,
-                },
-            ]
-        : []),
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Contacts',
-                    route: '/dashboard/admin/contacts',
-                    icon: InboxIcon,
-                },
-            ]
-        : []),
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Tutoriels',
-                    route: '/dashboard/admin/tutorials',
-                    icon: PlayCircleIcon,
-                },
-            ]
-        : []),
-    ...(!isCollaborator.value
-        ? [
-                {
-                    label: 'Groupement',
-                    route: '/dashboard/admin/groups',
-                    icon: UserGroupIcon,
-                },
-            ]
-        : []),
+    {
+        label: 'Type de soins',
+        route: '/dashboard/admin/care-types',
+        icon: ShieldCheckIcon,
+        visible: !isCollaborator.value,
+    },
+    {
+        label: 'Contacts',
+        route: '/dashboard/admin/contacts',
+        icon: InboxIcon,
+        visible: !isCollaborator.value,
+    },
+    {
+        label: 'Tutoriels',
+        route: '/dashboard/admin/tutorials',
+        icon: PlayCircleIcon,
+        visible: !isCollaborator.value,
+    },
+    {
+        label: 'Groupement',
+        route: '/dashboard/admin/groups',
+        icon: UserGroupIcon,
+        visible: !isCollaborator.value,
+
+    },
     {
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,
+        visible: true,
     },
 ];
 
 const navigationItems = computed(() => {
-    return isAdmin.value ? adminNavigationItems : nurseNavigationItems;
+    return (isAdmin.value || isCollaborator.value) ? adminNavigationItems.filter((item: NavigationItem) => item.visible === true) : nurseNavigationItems;
 });
 
 const route = useRoute();
