@@ -166,7 +166,7 @@
                                 <TableHeader class="w-full">
                                     <TableRow
                                         :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
-                                                 gridColsByType[props.type] ?? 'grid-cols-8',]"
+                                                 gridColsByType[props.type] ?? 'grid-cols-8']"
                                     >
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
