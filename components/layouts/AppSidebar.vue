@@ -222,6 +222,7 @@ defineProps({
     collapsed: Boolean,
 });
 
+const { logout, isCollaborator } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { isAdmin } = useAuth();
@@ -311,56 +312,88 @@ const adminNavigationItems: NavigationItem[] = [
         route: '/dashboard/admin',
         icon: SquaresPlusIcon,
     },
-    {
-        label: 'Remplacements',
-        route: '/dashboard/admin/replacements',
-        icon: ArrowPathIcon,
-    },
-    {
-        label: 'Intérêt pour remplacement',
-        route: '/dashboard/admin/replacements/interest',
-        icon: ListBulletIcon,
-    },
-    {
-        label: 'Utilisateurs',
-        route: '/dashboard/admin/users',
-        icon: UserGroupIcon,
-    },
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Remplacements',
+                    route: '/dashboard/admin/replacements',
+                    icon: ArrowPathIcon,
+                },
+            ]
+        : []),
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Intérêt pour remplacement',
+                    route: '/dashboard/admin/replacements/interest',
+                    icon: ListBulletIcon,
+                },
+            ]
+        : []),
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Utilisateurs',
+                    route: '/dashboard/admin/users',
+                    icon: UserGroupIcon,
+                },
+            ]
+        : []),
     {
         label: 'Accueil',
         route: '/dashboard/admin/home-management',
         icon: WrenchScrewdriverIcon,
     },
-    {
-        label: 'Patients',
-        route: '/dashboard/admin/patients',
-        icon: HeartIcon,
-    },
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Patients',
+                    route: '/dashboard/admin/patients',
+                    icon: HeartIcon,
+                },
+            ]
+        : []),
     {
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
     },
-    {
-        label: 'Type de soins',
-        route: '/dashboard/admin/care-types',
-        icon: ShieldCheckIcon,
-    },
-    {
-        label: 'Contacts',
-        route: '/dashboard/admin/contacts',
-        icon: InboxIcon,
-    },
-    {
-        label: 'Tutoriels',
-        route: '/dashboard/admin/tutorials',
-        icon: PlayCircleIcon,
-    },
-    {
-        label: 'Groupement',
-        route: '/dashboard/admin/groups',
-        icon: UserGroupIcon,
-    },
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Type de soins',
+                    route: '/dashboard/admin/care-types',
+                    icon: ShieldCheckIcon,
+                },
+            ]
+        : []),
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Contacts',
+                    route: '/dashboard/admin/contacts',
+                    icon: InboxIcon,
+                },
+            ]
+        : []),
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Tutoriels',
+                    route: '/dashboard/admin/tutorials',
+                    icon: PlayCircleIcon,
+                },
+            ]
+        : []),
+    ...(!isCollaborator.value
+        ? [
+                {
+                    label: 'Groupement',
+                    route: '/dashboard/admin/groups',
+                    icon: UserGroupIcon,
+                },
+            ]
+        : []),
     {
         label: 'Produits',
         route: '/dashboard/admin/products',
@@ -374,6 +407,4 @@ const navigationItems = computed(() => {
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
-
-const { logout } = useAuth();
 </script>

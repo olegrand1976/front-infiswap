@@ -5,6 +5,7 @@
         >
             <template #action>
                 <Button
+                    v-if="!isCollaborator"
                     class="rounded"
                     href="/dashboard/admin/products/create"
                 >
@@ -50,7 +51,7 @@ definePageMeta({
 });
 
 const { products, getProducts, count, softDelete } = useProduct();
-const { isSaleRepresentative } = useAuth();
+const { isSaleRepresentative, isCollaborator } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -129,37 +130,41 @@ const columns: ColumnDef<Product>[] = [
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
-    {
-        id: 'actions',
-        header: () => {
-            return h('div', { class: 'mx-2' }, 'Actions');
-        },
-        enableHiding: false,
-        cell: ({ row }) => {
-            const product = row.original;
-            const actions = [
+    ...(!isCollaborator.value
+        ? [
                 {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(product),
-                },
-                ...(!isSaleRepresentative.value
-                    ? [
+                    id: 'actions',
+                    header: () => {
+                        return h('div', { class: 'mx-2' }, 'Actions');
+                    },
+                    enableHiding: false,
+                    cell: ({ row }) => {
+                        const product = row.original;
+                        const actions = [
                             {
-                                label: 'Supprimer',
-                                confirm: true,
-                                onClick: () => handleDelete(product),
+                                label: 'Modifier',
+                                onClick: () => handleEdit(product),
                             },
-                        ]
-                    : []),
-            ];
+                            ...(!isSaleRepresentative.value
+                                ? [
+                                        {
+                                            label: 'Supprimer',
+                                            confirm: true,
+                                            onClick: () => handleDelete(product),
+                                        },
+                                    ]
+                                : []),
+                        ];
 
-            return h('div', { class: 'flex justify-start ml-4' }, [
-                h(DropdownMenuAction, {
-                    actions: actions,
-                }),
-            ]);
-        },
-    },
+                        return h('div', { class: 'flex justify-start ml-4' }, [
+                            h(DropdownMenuAction, {
+                                actions: actions,
+                            }),
+                        ]);
+                    },
+                },
+            ]
+        : []),
 ];
 
 const sort = reactive({

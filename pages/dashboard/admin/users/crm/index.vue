@@ -261,7 +261,7 @@ const tempComment = ref('');
 
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
-const { users, getUsers, edit, updateContact, updateField } = useAuth();
+const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
@@ -426,6 +426,7 @@ const columns: ColumnDef<User>[] = [
                     'class': 'mx-auto text-center',
                     'checked': row.original.insurance === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
@@ -449,6 +450,7 @@ const columns: ColumnDef<User>[] = [
                     'class': 'mx-auto text-center',
                     'checked': row.original.site === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
@@ -472,6 +474,7 @@ const columns: ColumnDef<User>[] = [
                     'class': 'mx-auto text-center',
                     'checked': row.original.ambassador === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
@@ -489,17 +492,19 @@ const columns: ColumnDef<User>[] = [
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
-                h('span', {
-                    class: 'max-w-[150px] truncate text-sm',
-                    title: comment,
-                }, comment || ''),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: comment,
+                            }, comment || ''),
 
-                h(PencilIcon, {
-                    class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
-                    onClick: () => {
-                        openCommentDialog(row.original);
-                    },
-                }),
+                            h(PencilIcon, {
+                                class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
+                                onClick: () => openCommentDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },
@@ -522,13 +527,15 @@ const columns: ColumnDef<User>[] = [
             }
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                h('span', formattedDate),
-                h(PencilIcon, {
-                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                    onClick: () => {
-                        openContactDialog(row.original);
-                    },
-                }),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', formattedDate),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },
@@ -549,13 +556,15 @@ const columns: ColumnDef<User>[] = [
                         : '';
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                h('span', displayMethod),
-                h(PencilIcon, {
-                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                    onClick: () => {
-                        openContactDialog(row.original);
-                    },
-                }),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', displayMethod),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },
