@@ -17,7 +17,7 @@ export const useAuth = () => {
     const hasAccountType = (types: string[]) => computed(() => types.includes(user.value?.account_type ?? ''));
 
     const isSuperAdmin = hasAccountType(['administrator']);
-    const isAdmin = hasAccountType(['administrator', 'developer', 'community_manager', 'sale_representative']);
+    const isAdmin = hasAccountType(['administrator', 'developer', 'collaborator', 'community_manager', 'sale_representative']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
 
