@@ -98,7 +98,6 @@
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
-
             <Replacement
                 v-if="selectedType === 'me'"
                 type="me"
