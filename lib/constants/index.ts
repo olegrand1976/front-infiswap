@@ -15,7 +15,25 @@ export const ADMIN_ROLES: AccountType[] = [
     'community_manager',
 ];
 
-export const BASIC_ROLES: AccountType[] = ['collaborator', 'nurse', 'caregiver', 'midwife'];
+export const ALL_ROLES: AccountType[] = [
+    'administrator',
+    'developer',
+    'tester',
+    'manager',
+    'collaborator',
+    'community_manager',
+    'sale_representative',
+    'nurse',
+    'caregiver',
+    'midwife',
+];
+
+export const BASIC_ROLES: AccountType[] = [
+    'collaborator',
+    'nurse',
+    'caregiver',
+    'midwife',
+];
 
 export const LANGUAGES = [
     {

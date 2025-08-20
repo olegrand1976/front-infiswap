@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ADMIN_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
+import { ADMIN_ROLES, ALL_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
 import type { AccountType, User } from '~/lib/types';
 import { getRole } from '~/lib/utils';
 
@@ -149,9 +149,9 @@ const categoryPro = [
 ];
 
 const accountOptions = computed<AccountType[]>(() => {
-    if (isSuperAdmin.value) return SUPER_ADMIN_ROLES;
+    if (isSuperAdmin.value) return ALL_ROLES;
 
-    if (isAdmin.value) return ADMIN_ROLES;
+    if (isAdmin.value) return ALL_ROLES.filter((item: AccountType) => item !== 'administrator');
 
     return BASIC_ROLES;
 });

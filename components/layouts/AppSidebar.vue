@@ -383,8 +383,20 @@ const adminNavigationItems: NavigationItem[] = [
     },
 ];
 
+const role = computed(() => {
+    if (isAdmin.value) return 'admin';
+    if (isCollaborator.value) return 'collaborator';
+    return 'nurse';
+});
+
 const navigationItems = computed(() => {
-    return (isAdmin.value || isCollaborator.value) ? adminNavigationItems.filter((item: NavigationItem) => item.visible === true) : nurseNavigationItems;
+    switch (role.value) {
+        case 'admin':
+        case 'collaborator':
+            return adminNavigationItems.filter(i => i.visible);
+        default:
+            return nurseNavigationItems;
+    }
 });
 
 const route = useRoute();
