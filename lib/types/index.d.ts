@@ -1,5 +1,5 @@
 export type Gender = 'M' | 'F' | 'X';
-export type AccountType = 'administrator' | 'developer' | 'manager' | 'collaborator' | 'sale_representative' | 'nurse' | 'caregiver' | 'midwife';
+export type AccountType = 'administrator' | 'developer' | 'tester' | 'manager' | 'collaborator' | 'community_manager' | 'sale_representative' | 'nurse' | 'caregiver' | 'midwife';
 export type CountryCode = 'be' | 'fr' | 'us';
 export type MediaType = 'video' | 'audio' | 'image' | 'link';
 
@@ -71,7 +71,15 @@ export type User = {
     contact_date?: string;
     contact_method?: string;
     group_roles?: GroupRole[];
+    last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
+};
+
+type LastProductModifications = {
+    product_id: number;
+    product_name: string;
+    activate: boolean | number;
+    created_at: string;
 };
 
 type ProductActivitySummary = {
