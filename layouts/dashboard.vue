@@ -4,7 +4,7 @@
             <LayoutsAppSidebar :key="user.account_type" />
         </Sidebar>
         <SidebarInset
-            :class="cn('w-full', {
+            :class="cn('w-full w-96', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
             })"
