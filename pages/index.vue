@@ -62,9 +62,9 @@
         <section class="container lg:mx-auto lg:px-32">
             <HomeCounterStat />
         </section>
-        <section>
+        <!-- <section>
             <HomePlanningContainer />
-        </section>
+        </section> -->
         <section>
             <HomeAppDownloadSection />
         </section>
