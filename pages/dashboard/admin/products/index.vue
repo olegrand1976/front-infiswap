@@ -51,7 +51,7 @@ definePageMeta({
 });
 
 const { products, getProducts, count, softDelete } = useProduct();
-const { isSaleRepresentative, isCollaborator } = useAuth();
+const { isCollaborator, isSuperAdmin } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -145,7 +145,7 @@ const columns: ColumnDef<Product>[] = [
                                 label: 'Modifier',
                                 onClick: () => handleEdit(product),
                             },
-                            ...(!isSaleRepresentative.value
+                            ...(isSuperAdmin.value
                                 ? [
                                         {
                                             label: 'Supprimer',

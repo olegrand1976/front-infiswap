@@ -244,7 +244,7 @@ definePageMeta({
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
-const { isSaleRepresentative } = useAuth();
+const { isSuperAdmin } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -682,7 +682,7 @@ const columns: ColumnDef<Replacement>[] = [
                         ? handleOpen(replacement)
                         : handleClosed(replacement),
                 },
-                ...(!isSaleRepresentative.value
+                ...(isSuperAdmin.value
                     ? [
                             {
                                 label: 'Supprimer',

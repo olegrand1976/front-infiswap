@@ -46,7 +46,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { HomeType } from '~/lib/types';
 
 const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
-const { isSaleRepresentative, isCollaborator } = useAuth();
+const { isSuperAdmin, isCollaborator } = useAuth();
 
 await getSpecifiedHome();
 
@@ -191,7 +191,7 @@ const columns: ColumnDef<HomeType>[] = [
                                 label: 'Modifier',
                                 onClick: () => handleEdit(home),
                             },
-                            ...(!isSaleRepresentative.value
+                            ...(isSuperAdmin.value
                                 ? [
                                         {
                                             label: 'Supprimer',

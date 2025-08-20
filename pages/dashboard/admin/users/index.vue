@@ -68,7 +68,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSaleRepresentative, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
+const { users, isSuperAdmin, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -287,7 +287,7 @@ const columns: ColumnDef<User>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(user),
                 },
-                ...(!isSaleRepresentative.value
+                ...(isSuperAdmin.value
                     ? [
                             {
                                 label: 'Supprimer',

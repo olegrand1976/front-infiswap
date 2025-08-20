@@ -50,7 +50,7 @@ definePageMeta({
 });
 
 const { careTypes, getCareTypes, count, forceDelete } = useCareTypes();
-const { isSaleRepresentative } = useAuth();
+const { isSuperAdmin } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -157,7 +157,7 @@ const columns: ColumnDef<CareType>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(careType),
                 },
-                ...(!isSaleRepresentative.value
+                ...(isSuperAdmin.value
                     ? [
                             {
                                 label: 'Supprimer',
