@@ -431,7 +431,7 @@
                                                             <DropdownMenuItem
                                                                 v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="closeReplacementDialog = true"
+                                                                @click="selectReplacement(replacementGroup)"
                                                             >
                                                                 <XMarkIcon class="h-4 w-4" />
                                                                 <span>Fermer</span>
@@ -473,7 +473,7 @@
                                                             <Button
                                                                 variant="default"
                                                                 class="px-8"
-                                                                @click="handleCloseReplacement(replacementGroup)"
+                                                                @click="handleCloseReplacement(selectedReplacement)"
                                                             >
                                                                 Oui
                                                             </Button>
@@ -756,7 +756,7 @@
                                                         <DropdownMenuItem
                                                             v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="flex items-center space-x-2 text-sm"
-                                                            @click="closeReplacementDialog = true"
+                                                            @click="selectReplacement(replacementGroup)"
                                                         >
                                                             <XMarkIcon class="h-4 w-4" />
                                                             <span>Fermer</span>
@@ -798,7 +798,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacementGroup)"
+                                                            @click="handleCloseReplacement(selectedReplacement)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -973,7 +973,7 @@
                                                                 <DropdownMenuItem
                                                                     v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                     class="flex items-center space-x-2 text-sm"
-                                                                    @click="closeReplacementDialog = true"
+                                                                    @click="selectReplacement(replacementGroup)"
                                                                 >
                                                                     <XMarkIcon class="h-4 w-4" />
                                                                     <span>Fermer</span>
@@ -1016,7 +1016,7 @@
                                                             <Button
                                                                 variant="default"
                                                                 class="px-8"
-                                                                @click="handleCloseReplacement(replacement)"
+                                                                @click="handleCloseReplacement(selectedReplacement)"
                                                             >
                                                                 Oui
                                                             </Button>
@@ -1181,7 +1181,7 @@
                                                             <DropdownMenuItem
                                                                 v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="closeReplacementDialog = true"
+                                                                @click="selectReplacement(replacementGroup)"
                                                             >
                                                                 <XMarkIcon class="h-4 w-4" />
                                                                 <span>Fermer</span>
@@ -1224,7 +1224,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacementGroup)"
+                                                            @click="handleCloseReplacement(selectedReplacement)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -1608,6 +1608,7 @@ const { loading, updateReplacement, updateAgainReplacement } = useReplacements()
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
+const selectedReplacement = ref<Replacement>(null);
 const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -1645,6 +1646,11 @@ settings.value = JSON.parse(user.value.settings);
 
 const { fetchGroupMembers } = useGroup();
 const groupMembers = ref([]);
+
+const selectReplacement = (replacement) => {
+    selectedReplacement.value = replacement;
+    closeReplacementDialog.value = true;
+};
 
 onMounted(async () => {
     if (props.type === 'groups') {
@@ -2046,9 +2052,8 @@ const handleCloseReplacement = async (replacement) => {
             $toast({
                 description: response.message,
             });
-            currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
-            pagination.value.total -= 1;
             closeReplacementDialog.value = false;
+            fetchInitialData(page.value, perPage.value);
         }
     }
     catch (error) {
