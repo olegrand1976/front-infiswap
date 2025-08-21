@@ -307,14 +307,22 @@
                 <h3 class="text-white bg-primary p-3 rounded-t-lg">
                     Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                 </h3>
-                <div class="p-4">
-                    <LineChart
-                        :data="formattedData"
-                        index="month"
-                        :categories="['annonces']"
-                        :colors="['hsl(var(--primary))']"
-                        :y-formatter="(tick) => `${tick}`"
-                    />
+                <div v-if="loading">
+                    <Skeleton class="bg-gray-200 m-8 h-64" />
+                </div>
+                <div
+                    v-else
+                    class="p-4"
+                >
+                    <ClientOnly>
+                        <LineChart
+                            :data="formattedData"
+                            index="month"
+                            :categories="['annonces']"
+                            :colors="['hsl(var(--primary))']"
+                            :y-formatter="(tick) => `${tick}`"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
         </section>
@@ -355,6 +363,7 @@ const props = defineProps<{
     tours: Patient[];
 }>();
 
+const loading = ref(true);
 const { updateRadiusKm } = useAuth();
 const user = useUser();
 const proposalDialog = ref(false);
@@ -429,6 +438,10 @@ const months = [
 const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
+
+onMounted(() => {
+    loading.value = false;
+});
 </script>
 
 <style scoped>

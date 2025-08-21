@@ -5,18 +5,26 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions
                 </p>
-                <div class="mt-3 bg-white rounded-sm shadow-md">
-                    <BarChart
-                        :data="registrationChartData.data"
-                        index="name"
-                        :categories="['count']"
-                        :x-formatter="xRegistrationFormatter"
-                        :y-formatter="yFormatter"
-                        :show-all-x-ticks="true"
-                        :colors="['hsl(var(--tertiary))']"
-                        :legend-labels="registrationChartData.legendLabels"
-                        class="w-full"
-                    />
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                </div>
+                <div
+                    v-else
+                    class="mt-3 bg-white rounded-sm shadow-md"
+                >
+                    <ClientOnly>
+                        <BarChart
+                            :data="registrationChartData.data"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xRegistrationFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--tertiary))']"
+                            :legend-labels="registrationChartData.legendLabels"
+                            class="w-full"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
 
@@ -24,18 +32,26 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements
                 </p>
-                <div class="mt-3 bg-white rounded-sm shadow-md">
-                    <BarChart
-                        :data="replacementChartData.data"
-                        index="name"
-                        :categories="['count', 'accepted']"
-                        :x-formatter="xReplacementFormatter"
-                        :y-formatter="yFormatter"
-                        :show-all-x-ticks="true"
-                        :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
-                        :legend-labels="replacementChartData.legendLabels"
-                        class="w-full"
-                    />
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                </div>
+                <div
+                    v-else
+                    class="mt-3 bg-white rounded-sm shadow-md"
+                >
+                    <ClientOnly>
+                        <BarChart
+                            :data="replacementChartData.data"
+                            index="name"
+                            :categories="['count', 'accepted']"
+                            :x-formatter="xReplacementFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :legend-labels="replacementChartData.legendLabels"
+                            class="w-full"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
 
@@ -72,17 +88,25 @@
                     </div>
                 </div>
 
-                <div class="mt-6 bg-white rounded-sm shadow-md p-4">
-                    <LineChart
-                        index="name"
-                        :data="userByProvince"
-                        :categories="['inscrits']"
-                        :y-formatter="yFormatter"
-                        :rounded-corners="4"
-                        :colors="chartLineColors"
-                        class="pb-8 w-full"
-                        :legend-labels="{ inscrits: 'Inscrits' }"
-                    />
+                <div v-if="loading">
+                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
+                </div>
+                <div
+                    v-else
+                    class="mt-6 bg-white rounded-sm shadow-md p-4"
+                >
+                    <ClientOnly>
+                        <LineChart
+                            index="name"
+                            :data="userByProvince"
+                            :categories="['inscrits']"
+                            :y-formatter="yFormatter"
+                            :rounded-corners="4"
+                            :colors="chartLineColors"
+                            class="pb-8 w-full"
+                            :legend-labels="{ inscrits: 'Inscrits' }"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
 
@@ -119,17 +143,25 @@
                     </div>
                 </div>
 
-                <div class="mt-6 bg-white rounded-sm shadow-md p-4">
-                    <AreaChart
-                        index="name"
-                        :data="userByZipCode"
-                        :categories="['inscrits']"
-                        :y-formatter="yFormatter"
-                        :rounded-corners="4"
-                        :colors="chartAreaColors"
-                        class="pb-8 w-full"
-                        :legend-labels="{ inscrits: 'Inscrits' }"
-                    />
+                <div v-if="loading">
+                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-96" />
+                </div>
+                <div
+                    v-else
+                    class="mt-6 bg-white rounded-sm shadow-md p-4"
+                >
+                    <ClientOnly>
+                        <AreaChart
+                            index="name"
+                            :data="userByZipCode"
+                            :categories="['inscrits']"
+                            :y-formatter="yFormatter"
+                            :rounded-corners="4"
+                            :colors="chartAreaColors"
+                            class="pb-8 w-full"
+                            :legend-labels="{ inscrits: 'Inscrits' }"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
         </section>
@@ -139,6 +171,7 @@
             :key="index"
             :title="report.title"
             :items="report.items"
+            :loading="loading"
             class="mt-8"
         />
     </div>
@@ -151,9 +184,10 @@ import { BarChart } from '@/components/ui/chart-bar';
 import { AreaChart } from '@/components/ui/chart-area';
 import { useReports } from '~/composables/useReports';
 
-const { reports, getReports } = useReports();
+const { reports } = useReports();
 
 const { isAdmin } = useAuth();
+const loading = ref(true);
 const { mapWeeklyStatistics, createXFormatter, yFormatter } = useChart();
 
 useHead({ title: 'Tableau de bord' });
@@ -163,7 +197,9 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 
-await getReports();
+onMounted(() => {
+    loading.value = false;
+});
 
 const selectedCountryForProvince = ref('be');
 const selectedCountryForZipCode = ref('be');

@@ -1,5 +1,11 @@
 <template>
-    <div :class="parentClass">
+    <div v-if="loading">
+        <Skeleton class=" bg-gray-200 rounded-sm h-24" />
+    </div>
+    <div
+        v-else
+        :class="parentClass"
+    >
         <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
             {{ title }}
         </p>
@@ -30,5 +36,6 @@ defineProps<{
     title: string;
     items: StatItem[];
     parentClass?: string;
+    loading?: boolean;
 }>();
 </script>
