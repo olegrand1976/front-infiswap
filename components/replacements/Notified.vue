@@ -33,19 +33,10 @@
                         class="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 px-2 rounded hover:bg-gray-50 transition"
                     >
                         <div>
-                            <!-- <UsersName
+                            <UsersCrm
                                 :user="user"
                                 class="font-medium text-gray-800"
-                            /> -->
-                            <NuxtLink
-                                :to="{
-                                    path: '/dashboard/admin/users/crm',
-                                    query: { name: user.full_name },
-                                }"
-                                class="text-gray-800"
-                            >
-                                {{ user.full_name }}
-                            </NuxtLink>
+                            />
                             <div class="text-sm text-gray-500 break-all">
                                 {{ user.email }}
                             </div>

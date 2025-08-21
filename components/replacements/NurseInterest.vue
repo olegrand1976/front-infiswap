@@ -29,15 +29,10 @@
                     >
                         <td class="px-4 py-2 border-b">
                             <!-- {{ item.repondedBy.full_name }} -->
-                            <NuxtLink
-                                :to="{
-                                    path: '/dashboard/admin/users/crm',
-                                    query: { name: item.repondedBy.full_name },
-                                }"
-                                class="text-gray-800"
-                            >
-                                {{ item.repondedBy.full_name }}
-                            </NuxtLink>
+                            <UsersCrm
+                                :user="item.repondedBy"
+                                class="font-medium text-gray-800"
+                            />
                         </td>
                         <td class="px-4 py-2 border-b">
                             {{ item.repondedBy.email }}
