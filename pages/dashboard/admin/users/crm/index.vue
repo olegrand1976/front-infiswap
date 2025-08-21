@@ -298,11 +298,22 @@ async function saveComment() {
 }
 
 const user = ref(null);
+const route = useRoute();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
+
+const emptyFilter = {
+    name: null as string | null,
+    zip: null as string | null,
+    city: null as string | null,
+    insurance: null as number | null,
+    site: null as number | null,
+};
+
 const initialFilter = {
-    name: null,
+    ...emptyFilter,
+    name: (route.query.name as string) ?? null,
     zip: null,
     city: null,
     insurance: null,
@@ -327,6 +338,12 @@ const filterUsers = async () => {
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
+onMounted(() => {
+    if (option.value.name) {
+        debouncedFilterUsers();
+    }
+});
+
 await getAll();
 await getUsers(page.value, perPage.value, option.value);
 
@@ -342,13 +359,17 @@ const handlePerPageChange = async (value: number) => {
 };
 
 const resetFilter = async () => {
-    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    const isSame = JSON.stringify(option.value) === JSON.stringify(emptyFilter);
     if (isSame) {
         return;
     }
 
-    option.value = { ...initialFilter };
+    option.value = { ...emptyFilter };
     page.value = 1;
+
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+
     await getUsers(page.value, perPage.value, option.value);
 };
 
