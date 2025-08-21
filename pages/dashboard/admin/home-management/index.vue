@@ -5,6 +5,7 @@
         >
             <template #action>
                 <Button
+                    v-if="!isCollaborator"
                     class="rounded"
                     href="/dashboard/admin/home-management/create"
                 >
@@ -45,7 +46,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { HomeType } from '~/lib/types';
 
 const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
-const { isSaleRepresentative } = useAuth();
+const { isSuperAdmin, isCollaborator } = useAuth();
 
 await getSpecifiedHome();
 
@@ -177,35 +178,39 @@ const columns: ColumnDef<HomeType>[] = [
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
-    {
-        id: 'actions',
-        header: 'Actions',
-        enableHiding: false,
-        cell: ({ row }) => {
-            const home = row.original;
-            const actions = [
+    ...(!isCollaborator.value
+        ? [
                 {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(home),
-                },
-                ...(!isSaleRepresentative.value
-                    ? [
+                    id: 'actions',
+                    header: 'Actions',
+                    enableHiding: false,
+                    cell: ({ row }) => {
+                        const home = row.original;
+                        const actions = [
                             {
-                                label: 'Supprimer',
-                                confirm: true,
-                                onClick: () => handleDelete(home),
+                                label: 'Modifier',
+                                onClick: () => handleEdit(home),
                             },
-                        ]
-                    : []),
-            ];
+                            ...(isSuperAdmin.value
+                                ? [
+                                        {
+                                            label: 'Supprimer',
+                                            confirm: true,
+                                            onClick: () => handleDelete(home),
+                                        },
+                                    ]
+                                : []),
+                        ];
 
-            return h('div', { class: 'flex justify-center' }, [
-                h(DropdownMenuAction, {
-                    actions: actions,
-                }),
-            ]);
-        },
-    },
+                        return h('div', { class: 'flex justify-center' }, [
+                            h(DropdownMenuAction, {
+                                actions: actions,
+                            }),
+                        ]);
+                    },
+                },
+            ]
+        : []),
 ];
 
 const handleEdit = (home: HomeType) => {

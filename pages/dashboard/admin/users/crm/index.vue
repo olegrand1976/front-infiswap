@@ -261,7 +261,7 @@ const tempComment = ref('');
 
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
-const { users, getUsers, edit, updateContact, updateField } = useAuth();
+const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
@@ -412,20 +412,42 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'insurance',
         header: 'NursAssur',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nursassur'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.insurance !== undefined && user.insurance !== null) {
+                    return Number(user.insurance);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].insurance = value ? 1 : 0;
+
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
+                    if (modIndex !== -1) {
+                        mods[modIndex].activate = value ? 1 : 0;
+                    }
+                    dataUsers.value[index].last_product_modifications = [...mods];
                 }
 
-                await edit(Number(row.original.id), { insurance: dataUsers.value[index].insurance == 1 });
+                await edit(Number(row.original.id), { nursassur: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.insurance === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
@@ -435,20 +457,39 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'site',
         header: 'NursTech',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nurstech'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.site !== undefined && user.site !== null) {
+                    return Number(user.site);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].site = value ? 1 : 0;
-                }
 
-                await edit(Number(row.original.id), { site: dataUsers.value[index].site == 1 });
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
+                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+                    dataUsers.value[index].last_product_modifications = [...mods];
+                }
+                await edit(Number(row.original.id), { nurstech: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.site === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
@@ -456,25 +497,45 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'ambassador',
-        header: 'Tournée',
+        header: 'Inficoncept',
         cell: ({ row }) => {
+            const user = row.original as User;
+
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.ambassador !== undefined && user.ambassador !== null) {
+                    return Number(user.ambassador);
+                }
+                return 0;
+            })();
+
             const toggle = async (value: boolean) => {
                 const index = dataUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     dataUsers.value[index].ambassador = value ? 1 : 0;
-                }
 
-                await edit(Number(row.original.id), { ambassador: dataUsers.value[index].ambassador == 1 });
+                    const mods = dataUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
+                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+                    dataUsers.value[index].last_product_modifications = [...mods];
+                }
+                await edit(Number(row.original.id), { inficoncept: value });
             };
 
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     'class': 'mx-auto text-center',
-                    'checked': row.original.ambassador === 1,
+                    'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
                 }),
             ]);
         },
+        enableSorting: false,
     },
     {
         accessorKey: 'comment_crm',
@@ -489,17 +550,19 @@ const columns: ColumnDef<User>[] = [
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
-                h('span', {
-                    class: 'max-w-[150px] truncate text-sm',
-                    title: comment,
-                }, comment || ''),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: comment,
+                            }, comment || ''),
 
-                h(PencilIcon, {
-                    class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
-                    onClick: () => {
-                        openCommentDialog(row.original);
-                    },
-                }),
+                            h(PencilIcon, {
+                                class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
+                                onClick: () => openCommentDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },
@@ -522,13 +585,15 @@ const columns: ColumnDef<User>[] = [
             }
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                h('span', formattedDate),
-                h(PencilIcon, {
-                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                    onClick: () => {
-                        openContactDialog(row.original);
-                    },
-                }),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', formattedDate),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },
@@ -549,13 +614,15 @@ const columns: ColumnDef<User>[] = [
                         : '';
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                h('span', displayMethod),
-                h(PencilIcon, {
-                    class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                    onClick: () => {
-                        openContactDialog(row.original);
-                    },
-                }),
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', displayMethod),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
             ]);
         },
     },

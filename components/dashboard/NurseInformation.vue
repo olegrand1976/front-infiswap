@@ -297,7 +297,7 @@
                             Nombre d'affiliés à votre compte
                         </h3>
                         <p class="text-3xl font-bold text-primary">
-                            {{ reports.referrals }}
+                            {{ reports?.referrals }}
                         </p>
                     </div>
                 </div>

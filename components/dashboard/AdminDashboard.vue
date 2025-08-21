@@ -163,9 +163,7 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 
-onMounted(async () => {
-    await getReports();
-});
+await getReports();
 
 const selectedCountryForProvince = ref('be');
 const selectedCountryForZipCode = ref('be');

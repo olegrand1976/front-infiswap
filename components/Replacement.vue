@@ -164,7 +164,10 @@
                             </h2>
                             <Table>
                                 <TableHeader class="w-full">
-                                    <TableRow :class="['overflow-x-hidden gap-2 rounded-t-lg border-none', props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6']">
+                                    <TableRow
+                                        :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
+                                                 gridColsByType[props.type] ?? 'grid-cols-8']"
+                                    >
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
                                         </TableHead>
@@ -187,6 +190,12 @@
                                         </TableHead>
                                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                             Types de soins
+                                        </TableHead>
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
+                                            Catégorie
                                         </TableHead>
                                         <TableHead
                                             v-if="props.type === 'groups'"
@@ -212,7 +221,7 @@
                                             :key="index"
                                             :class="[
                                                 'grid gap-2 border border-none overflow-x-hidden h-16',
-                                                props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
+                                                gridColsByType[props.type] ?? 'grid-cols-8',
                                             ]"
                                         >
                                             <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -235,24 +244,18 @@
                                             v-for="replacementGroup in group"
                                             :key="replacementGroup.id"
                                             :class="[
-                                                'gap-2 border border-none overflow-x-hidden relative',
-                                                props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
+                                                'gap-2 grid border border-none overflow-x-hidden relative',
+                                                gridColsByType[props.type] ?? 'grid-cols-8',
                                             ]"
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                            </div>
-                                            <div
-                                                v-if="localFilters.role == 'all' && props.type != 'me'"
-                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
-                                            >
-                                                {{ roles[replacementGroup.role_type] }}
                                             </div>
                                             <TableCell
                                                 :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
@@ -394,6 +397,14 @@
                                                     {{ getCreatorInfo(replacementGroup, 'group') || '—' }}
                                                 </div>
                                             </TableCell>
+                                            <TableCell
+                                                v-if="props.type === ''"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ roles[replacementGroup.role_type] }}
+                                                </div>
+                                            </TableCell>
                                             <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
@@ -420,7 +431,7 @@
                                                             <DropdownMenuItem
                                                                 v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="closeReplacementDialog = true"
+                                                                @click="selectReplacement(replacementGroup)"
                                                             >
                                                                 <XMarkIcon class="h-4 w-4" />
                                                                 <span>Fermer</span>
@@ -462,7 +473,7 @@
                                                             <Button
                                                                 variant="default"
                                                                 class="px-8"
-                                                                @click="handleCloseReplacement(replacementGroup)"
+                                                                @click="handleCloseReplacement(selectedReplacement)"
                                                             >
                                                                 Oui
                                                             </Button>
@@ -480,7 +491,10 @@
                     <template v-else>
                         <Table>
                             <TableHeader class="w-full">
-                                <TableRow :class="['overflow-x-hidden gap-2 rounded-t-lg border-none', props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6']">
+                                <TableRow
+                                    :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
+                                             gridColsByType[props.type] ?? 'grid-cols-8']"
+                                >
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
                                     </TableHead>
@@ -516,6 +530,12 @@
                                     >
                                         Groupe
                                     </TableHead>
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
+                                        Catégorie
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                                         Action
                                     </TableHead>
@@ -528,7 +548,7 @@
                                         :key="index"
                                         :class="[
                                             'grid gap-2 border border-none overflow-x-hidden h-16',
-                                            props.type === 'groups' ? 'grid-cols-8' : 'grid-cols-6',
+                                            gridColsByType[props.type] ?? 'grid-cols-8',
                                         ]"
                                     >
                                         <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
@@ -551,24 +571,18 @@
                                         v-for="replacementGroup in currentReplacements"
                                         :key="replacementGroup.id"
                                         :class="[
-                                            'gap-2 border border-none overflow-x-hidden relative',
-                                            props.type === 'groups' ? 'grid grid-cols-8' : 'grid grid-cols-6',
+                                            'gap-2 border border-none grid overflow-x-hidden relative',
+                                            gridColsByType[props.type] ?? 'grid-cols-8',
                                         ]"
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                        </div>
-                                        <div
-                                            v-if="localFilters.role == 'all' && props.type != 'me'"
-                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
-                                        >
-                                            {{ roles[replacementGroup.role_type] }}
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -708,6 +722,14 @@
                                                 {{ getCreatorInfo(replacementGroup, 'group') || '—' }}
                                             </div>
                                         </TableCell>
+                                        <TableCell
+                                            v-if="props.type === ''"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ roles[replacementGroup.role_type] }}
+                                            </div>
+                                        </TableCell>
                                         <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                             <template v-if="props.type === 'me'">
                                                 <DropdownMenu>
@@ -734,7 +756,7 @@
                                                         <DropdownMenuItem
                                                             v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                             class="flex items-center space-x-2 text-sm"
-                                                            @click="closeReplacementDialog = true"
+                                                            @click="selectReplacement(replacementGroup)"
                                                         >
                                                             <XMarkIcon class="h-4 w-4" />
                                                             <span>Fermer</span>
@@ -776,7 +798,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacementGroup)"
+                                                            @click="handleCloseReplacement(selectedReplacement)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -841,18 +863,12 @@
                                         >
                                             <div
                                                 v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                                :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                             { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
                                                 {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                            </div>
-                                            <div
-                                                v-if="localFilters.role == 'all' && props.type != 'me'"
-                                                class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
-                                            >
-                                                {{ roles[replacementGroup.role_type] }}
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -957,7 +973,7 @@
                                                                 <DropdownMenuItem
                                                                     v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                     class="flex items-center space-x-2 text-sm"
-                                                                    @click="closeReplacementDialog = true"
+                                                                    @click="selectReplacement(replacementGroup)"
                                                                 >
                                                                     <XMarkIcon class="h-4 w-4" />
                                                                     <span>Fermer</span>
@@ -1000,7 +1016,7 @@
                                                             <Button
                                                                 variant="default"
                                                                 class="px-8"
-                                                                @click="handleCloseReplacement(replacement)"
+                                                                @click="handleCloseReplacement(selectedReplacement)"
                                                             >
                                                                 Oui
                                                             </Button>
@@ -1055,18 +1071,12 @@
                                     >
                                         <div
                                             v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
-                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 right-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                            :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
                                                         { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
                                             {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
-                                        </div>
-                                        <div
-                                            v-if="localFilters.role == 'all' && props.type != 'me'"
-                                            class="-ml-[-2] bg-success text-xs absolute -top-0.5 left-0 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] z-10 animate-pulse shadow-md"
-                                        >
-                                            {{ roles[replacementGroup.role_type] }}
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1171,7 +1181,7 @@
                                                             <DropdownMenuItem
                                                                 v-if="user.id == replacementGroup.user_id && replacementGroup.replaced_by == null"
                                                                 class="flex items-center space-x-2 text-sm"
-                                                                @click="closeReplacementDialog = true"
+                                                                @click="selectReplacement(replacementGroup)"
                                                             >
                                                                 <XMarkIcon class="h-4 w-4" />
                                                                 <span>Fermer</span>
@@ -1214,7 +1224,7 @@
                                                         <Button
                                                             variant="default"
                                                             class="px-8"
-                                                            @click="handleCloseReplacement(replacementGroup)"
+                                                            @click="handleCloseReplacement(selectedReplacement)"
                                                         >
                                                             Oui
                                                         </Button>
@@ -1489,7 +1499,7 @@
         </Dialog>
 
         <Dialog
-            v-if="props.type !== 'me'"
+            v-if="props.type === ''"
             v-model:open="filterRegionDialog"
             class="pb-8 sm:pb-0"
         >
@@ -1598,6 +1608,7 @@ const { loading, updateReplacement, updateAgainReplacement } = useReplacements()
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
+const selectedReplacement = ref<Replacement>(null);
 const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -1610,6 +1621,11 @@ const pagination = ref({
 const filterRegionDialog = ref(true);
 
 const isMobileView = ref(false);
+const gridColsByType: Record<string, string> = {
+    'groups': 'grid-cols-8',
+    'me': 'grid-cols-6',
+    '': 'grid-cols-7',
+};
 
 onMounted(async () => {
     if (import.meta.client) {
@@ -1630,6 +1646,11 @@ settings.value = JSON.parse(user.value.settings);
 
 const { fetchGroupMembers } = useGroup();
 const groupMembers = ref([]);
+
+const selectReplacement = (replacement) => {
+    selectedReplacement.value = replacement;
+    closeReplacementDialog.value = true;
+};
 
 onMounted(async () => {
     if (props.type === 'groups') {
@@ -1816,9 +1837,9 @@ const toggleDay = (day: string) => {
 };
 
 const roles = {
-    nurse: 'INFIRMIER',
-    caregiver: 'ASSISTANT SOIGNANT',
-    midwife: 'SAGE-FEMME',
+    nurse: 'Infirmier(e)',
+    caregiver: 'Assistant(e) soignant(e)',
+    midwife: 'Sage-femme',
 };
 
 const selectedDaysPlaceholder = computed(() => {
@@ -2031,9 +2052,8 @@ const handleCloseReplacement = async (replacement) => {
             $toast({
                 description: response.message,
             });
-            currentReplacements.value = currentReplacements.value.filter(r => r.id !== replacement.id);
-            pagination.value.total -= 1;
             closeReplacementDialog.value = false;
+            fetchInitialData(page.value, perPage.value);
         }
     }
     catch (error) {

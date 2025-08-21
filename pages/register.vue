@@ -259,7 +259,7 @@
                             <SelectContent class="border border-none">
                                 <SelectGroup>
                                     <div
-                                        v-for="language in languages"
+                                        v-for="language in LANGUAGES"
                                         :key="language.value"
                                         class="flex justify-center items-center -ms-3"
                                     >
@@ -578,6 +578,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { LANGUAGES } from '~/lib/constants';
 
 const genders = [
     {
@@ -624,19 +625,6 @@ const countryOfWork = [
         label: 'France',
         name: 'france',
         icon: '/icons/fr.png',
-    },
-];
-
-const languages = [
-    {
-        value: 'fr',
-        label: 'Français',
-        name: 'francais',
-    },
-    {
-        value: 'nl',
-        label: 'Nederlands',
-        name: 'nederlands',
     },
 ];
 
@@ -714,7 +702,7 @@ const formData = reactive({
     accountType: accountOptions[0].value,
     passwordConfirmation: '',
     gender: 'F',
-    language: languages[0].value,
+    language: LANGUAGES[0].value,
     phoneNumber: undefined,
     identifierNumber: '',
     address: {

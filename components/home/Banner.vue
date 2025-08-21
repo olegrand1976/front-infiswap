@@ -177,15 +177,13 @@ const activeHomes = ref([]);
 const currentSlide = ref(0);
 const carouselContentRef = ref(null);
 
-onMounted(async () => {
-    const response = await getSpecifiedHome({
-        params: {
-            filter: 'active',
-        },
-    });
-
-    activeHomes.value = response?.data || [];
+const response = await getSpecifiedHome({
+    params: {
+        filter: 'active',
+    },
 });
+
+activeHomes.value = response?.data || [];
 
 function scrollToSlide(index: number) {
     currentSlide.value = index;

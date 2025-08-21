@@ -52,7 +52,7 @@
                             />
                         </div>
                     </div>
-                    <div class="block lg:hidden">
+                    <div class="block relative lg:hidden">
                         <div>
                             <h5 class="text-sm text-gray-700 font-medium leading-tight">
                                 Codes postaux *
@@ -67,6 +67,14 @@
                                 @item-added="onZipCodeAdded"
                             />
                         </div>
+
+                        <Button
+                            variant="none"
+                            class="absolute -top-2 -right-2 font-bold text-primary text-xs mt-2"
+                            @click="openProposalDialog('')"
+                        >
+                            Boost IA
+                        </Button>
 
                         <div>
                             <h5 class="text-sm text-gray-700 font-medium leading-tight mt-4">
@@ -142,7 +150,7 @@
                         />
                     </div>
 
-                    <div class="grid grid-cols-[30%_70%] items-center mt-4 lg:pt-8">
+                    <div class="grid grid-cols-[30%_70%] items-center pt-4 lg:pt-8">
                         <h5 class="text-sm text-gray-700 font-medium">
                             Type de soin
                         </h5>

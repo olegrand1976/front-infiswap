@@ -222,6 +222,7 @@ defineProps({
     collapsed: Boolean,
 });
 
+const { logout, isCollaborator } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { isAdmin } = useAuth();
@@ -238,6 +239,7 @@ interface NavigationItem {
     icon: Component | FunctionalComponent | VNode;
     isActive?: boolean;
     children?: NavigationItem[];
+    visible?: boolean;
 }
 
 const nurseNavigationItems: NavigationItem[] = [
@@ -310,70 +312,93 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Tableau de bord',
         route: '/dashboard/admin',
         icon: SquaresPlusIcon,
+        visible: true,
     },
     {
         label: 'Remplacements',
         route: '/dashboard/admin/replacements',
         icon: ArrowPathIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Intérêt pour remplacement',
         route: '/dashboard/admin/replacements/interest',
         icon: ListBulletIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
         icon: UserGroupIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Accueil',
         route: '/dashboard/admin/home-management',
         icon: WrenchScrewdriverIcon,
+        visible: true,
     },
     {
         label: 'Patients',
         route: '/dashboard/admin/patients',
         icon: HeartIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UsersIcon,
+        visible: true,
     },
     {
         label: 'Type de soins',
         route: '/dashboard/admin/care-types',
         icon: ShieldCheckIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Contacts',
         route: '/dashboard/admin/contacts',
         icon: InboxIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Tutoriels',
         route: '/dashboard/admin/tutorials',
         icon: PlayCircleIcon,
+        visible: !isCollaborator.value,
     },
     {
         label: 'Groupement',
         route: '/dashboard/admin/groups',
         icon: UserGroupIcon,
+        visible: !isCollaborator.value,
+
     },
     {
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,
+        visible: true,
     },
 ];
 
+const role = computed(() => {
+    if (isAdmin.value) return 'admin';
+    if (isCollaborator.value) return 'collaborator';
+    return 'nurse';
+});
+
 const navigationItems = computed(() => {
-    return isAdmin.value ? adminNavigationItems : nurseNavigationItems;
+    switch (role.value) {
+        case 'admin':
+        case 'collaborator':
+            return adminNavigationItems.filter(i => i.visible);
+        default:
+            return nurseNavigationItems;
+    }
 });
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
-
-const { logout } = useAuth();
 </script>

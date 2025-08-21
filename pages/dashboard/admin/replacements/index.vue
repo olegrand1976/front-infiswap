@@ -55,11 +55,11 @@
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Rôle</span>
-                        <strong class="ml-4">
+                        <span class="ml-4 font-semibold text-nowrap w-40">
                             {{
                                 option.role === 'nurse' ? 'Infirmier(ère)' : option.role === 'caregiver' ? 'Assistant(e) soignant(e)' : option.role === 'midwife' ? 'Sage-femme' : 'tous'
                             }}
-                        </strong>
+                        </span>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -244,7 +244,7 @@ definePageMeta({
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
-const { isSaleRepresentative } = useAuth();
+const { isSuperAdmin } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -682,7 +682,7 @@ const columns: ColumnDef<Replacement>[] = [
                         ? handleOpen(replacement)
                         : handleClosed(replacement),
                 },
-                ...(!isSaleRepresentative.value
+                ...(isSuperAdmin.value
                     ? [
                             {
                                 label: 'Supprimer',

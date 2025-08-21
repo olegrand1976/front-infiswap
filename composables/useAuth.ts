@@ -14,12 +14,15 @@ export const useAuth = () => {
     const count = useState<number>('userCount', () => 0);
     const isLoggedIn = computed(() => !!user.value && !!user.value.email_verified_at);
 
-    const isAdmin = computed((): boolean => {
-        return ['administrator', 'developer', 'sale_representative'].includes(user.value?.account_type ?? '');
-    });
+    const hasAccountType = (types: string[]) => computed(() => types.includes(user.value?.account_type ?? ''));
 
-    const isSaleRepresentative = computed((): boolean => {
-        return ['sale_representative'].includes(user.value?.account_type ?? '');
+    const isSuperAdmin = hasAccountType(['administrator']);
+    const isAdmin = hasAccountType(['administrator', 'developer', 'collaborator', 'community_manager', 'sale_representative']);
+    const isCommunityManager = hasAccountType(['community_manager']);
+    const isSaleRepresentative = hasAccountType(['sale_representative']);
+
+    const isCollaborator = computed((): boolean => {
+        return ['collaborator'].includes(user.value?.account_type ?? '');
     });
 
     const isAdminGroup = (groupId: number): boolean => {
@@ -447,8 +450,11 @@ export const useAuth = () => {
         forceDelete,
         getUsers,
         isLoggedIn,
+        isSuperAdmin,
         isAdmin,
+        isCommunityManager,
         isSaleRepresentative,
+        isCollaborator,
         login,
         register,
         registerBeta,

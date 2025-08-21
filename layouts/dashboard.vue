@@ -1,10 +1,10 @@
 <template>
     <SidebarProvider class="bg-green-300">
         <Sidebar class="bg-white">
-            <LayoutsAppSidebar />
+            <LayoutsAppSidebar :key="user.account_type" />
         </Sidebar>
         <SidebarInset
-            :class="cn('w-full', {
+            :class="cn('w-full w-96', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
             })"
@@ -222,6 +222,7 @@ import { cn } from '@/lib/utils';
 import { getRole } from '~/lib/utils';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
+
 const roles = ref<AccountType[]>();
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();

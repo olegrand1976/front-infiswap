@@ -172,6 +172,19 @@
                             </div>
                         </div>
 
+                        <div class="mt-8">
+                            <div class="h-10 flex bg-primary rounded justify-center items-center">
+                                <h4 class="text-white text-sm text-center">
+                                    Rôle recherché
+                                </h4>
+                            </div>
+                            <div class="mt-4 space-y-4">
+                                <div class="bg-gray-200 text-sm py-2 rounded px-3">
+                                    <span>{{ roles[replacement.role_type] }}</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="bg-gray-200 mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
@@ -338,6 +351,12 @@ const formData = reactive({
     replacementId: replacementId,
     comment: '',
 });
+
+const roles = {
+    nurse: 'Infirmier(e)',
+    caregiver: 'Assistant(e) soignant(e)',
+    midwife: 'Sage-femme',
+};
 
 const goBack = () => {
     if (window.history.length > 1) {

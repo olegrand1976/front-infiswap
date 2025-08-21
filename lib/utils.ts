@@ -97,6 +97,9 @@ export function getRole(role: AccountType) {
         case 'manager':
             activeRole.value = 'Gestionnaire';
             break;
+        case 'community_manager' :
+            activeRole.value = 'Community Manager';
+            break;
         case 'collaborator':
             activeRole.value = 'Collaborateur';
             break;

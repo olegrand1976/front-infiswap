@@ -62,9 +62,9 @@
         <section class="container lg:mx-auto lg:px-32">
             <HomeCounterStat />
         </section>
-        <section>
+        <!-- <section>
             <HomePlanningContainer />
-        </section>
+        </section> -->
         <section>
             <HomeAppDownloadSection />
         </section>
@@ -106,12 +106,12 @@ const replacements = ref<Replacement[]>([]);
 
 const showContact = ref(false);
 
-onMounted(async () => {
+setTimeout(() => {
     showContact.value = true;
+}, 100);
 
-    const data = await getAccordingReplacements();
-    replacements.value = (data ?? []) as Replacement[];
-});
+const data = await getAccordingReplacements();
+replacements.value = (data ?? []) as Replacement[];
 
 useHead({
     title: 'Accueil',

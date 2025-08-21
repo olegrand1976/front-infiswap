@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ADMIN_ROLES, ALL_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
 import type { AccountType, User } from '~/lib/types';
 import { getRole } from '~/lib/utils';
 
@@ -6,7 +7,7 @@ const props = defineProps<{
     user?: User | null;
 }>();
 
-const { create, update, generatePassword, isAdmin, isAdminGroup } = useAuth();
+const { create, update, generatePassword, isSuperAdmin, isAdmin, isAdminGroup } = useAuth();
 const { groups, myGroups, assignUser, groupsWithAdmin } = useGroup();
 const isEditMode = computed(() => !!props.user);
 
@@ -147,34 +148,12 @@ const categoryPro = [
     },
 ];
 
-const languages = [
-    {
-        value: 'fr',
-        label: 'Français',
-        name: 'francais',
-    },
-    {
-        value: 'nl',
-        label: 'Nederlands',
-        name: 'nederlands',
-    },
-];
-
 const accountOptions = computed<AccountType[]>(() => {
-    return isAdmin.value
-        ? [
-                'administrator',
-                'developer',
-                'collaborator',
-                'sale_representative',
-                'nurse',
-                'caregiver',
-                'midwife',
-            ]
-        : [
-                'administrator',
-                'nurse',
-            ];
+    if (isSuperAdmin.value) return ALL_ROLES;
+
+    if (isAdmin.value) return ALL_ROLES.filter((item: AccountType) => item !== 'administrator');
+
+    return BASIC_ROLES;
 });
 
 const toggleRole = (role: AccountType) => {
@@ -192,12 +171,14 @@ const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
 
-if (isAdmin.value) {
-    await groupsWithAdmin();
-}
-else {
-    await myGroups();
-}
+onMounted(async () => {
+    if (isAdmin.value) {
+        await groupsWithAdmin();
+    }
+    else {
+        await myGroups();
+    }
+});
 
 const dataGroup = computed(() => {
     if (isAdmin.value) {
@@ -413,7 +394,7 @@ const route = useRoute();
                         <SelectContent class="border border-none">
                             <SelectGroup>
                                 <SelectItem
-                                    v-for="(lang, index) in languages"
+                                    v-for="(lang, index) in LANGUAGES"
                                     :key="index"
                                     :value="lang.value"
                                 >
