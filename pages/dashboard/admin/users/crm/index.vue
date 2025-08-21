@@ -550,7 +550,7 @@ const columns: ColumnDef<User>[] = [
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
@@ -585,7 +585,7 @@ const columns: ColumnDef<User>[] = [
             }
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', formattedDate),
@@ -614,7 +614,7 @@ const columns: ColumnDef<User>[] = [
                         : '';
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', displayMethod),
