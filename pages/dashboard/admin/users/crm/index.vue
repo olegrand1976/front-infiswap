@@ -1,226 +1,270 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Suivi utilisateurs - CRM" />
+        <DashboardAdminPageHeader title="CRM - Suivi utilisateurs - Suivi commercial" />
 
         <DashboardAdminPageContent>
-            <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
-                <InputIcon
-                    v-model="option.name"
-                    rounded="md"
-                    placeholder="Filtrer par Nom ou Prénom"
-                    class="w-[250px]"
-                    @input="debouncedFilterUsers"
-                />
-                <InputIcon
-                    v-model="option.zip"
-                    rounded="md"
-                    placeholder="Code postal"
-                    class="w-[250px]"
-                    type="number"
-                    @input="debouncedFilterUsers"
-                />
-                <InputIcon
-                    v-model="option.city"
-                    rounded="md"
-                    placeholder="Ville"
-                    class="w-[250px]"
-                    @input="debouncedFilterUsers"
-                />
-                <Select
-                    v-model="option.insurance"
-                    @update:model-value="debouncedFilterUsers"
-                >
-                    <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>Nursassur</span>
-                        <strong class="ml-4">
-                            {{
-                                option.insurance === 1 ? 'oui' : option.insurance === 0 ? 'non' : 'tous'
-                            }}
-                        </strong>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="1">
-                                <span class="ml-2">Oui</span>
-                            </SelectItem>
-                            <SelectItem :value="0">
-                                <span class="ml-2">Non</span>
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <Select
-                    v-model="option.site"
-                    @update:model-value="debouncedFilterUsers"
-                >
-                    <SelectTrigger class="max-w-sm rounded-md gap-2">
-                        <span>NursTech</span>
-                        <strong class="ml-4">
-                            {{
-                                option.site === 1 ? 'oui' : option.site === 0 ? 'non' : 'tous'
-                            }}
-                        </strong>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="1">
-                                <span class="ml-2">Oui</span>
-                            </SelectItem>
-                            <SelectItem :value="0">
-                                <span class="ml-2">Non</span>
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <Button
-                    class="rounded-md"
-                    @click="resetFilter"
-                >
-                    <ArrowPathIcon class="md:mr-2" />
-                    <span class="hidden md:inline-block">Restaurer</span>
-                </Button>
-            </div>
-            <DataTable
-                :data="dataUsers"
-                :columns="columns"
-            />
-            <Dialog
-                v-model:open="showModal"
-                class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+            <Tabs
+                v-model="selectedCrm"
+                class="mb-4"
             >
-                <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
-                    <UsersCard :user="user" />
-                </DialogContent>
-            </Dialog>
+                <TabsList class="w-full">
+                    <TabsTrigger
+                        value="users"
+                        class="w-full md:w-48 h-12"
+                    >
+                        Suivi des utilisateurs
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="commercial"
+                        class="w-full md:w-48 h-12"
+                    >
+                        Suivi commercial
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
 
-            <Dialog
-                v-model:open="contactDialogOpen"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-            >
-                <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
-                    <DialogHeader>
-                        <DialogTitle class="text-lg font-semibold text-primary mb-4">
-                            Modifier le contact
-                        </DialogTitle>
-                    </DialogHeader>
+            <template v-if="selectedCrm === 'users'">
+                <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+                    <InputIcon
+                        v-model="option.name"
+                        rounded="md"
+                        placeholder="Filtrer par Nom ou Prénom"
+                        class="w-[250px]"
+                        @input="debouncedFilterUsers"
+                    />
+                    <InputIcon
+                        v-model="option.zip"
+                        rounded="md"
+                        placeholder="Code postal"
+                        class="w-[250px]"
+                        type="number"
+                        @input="debouncedFilterUsers"
+                    />
+                    <InputIcon
+                        v-model="option.city"
+                        rounded="md"
+                        placeholder="Ville"
+                        class="w-[250px]"
+                        @input="debouncedFilterUsers"
+                    />
+                    <Select
+                        v-model="option.insurance"
+                        @update:model-value="debouncedFilterUsers"
+                    >
+                        <SelectTrigger class="max-w-sm rounded-md gap-2">
+                            <span>Nursassur</span>
+                            <strong class="ml-4">
+                                {{
+                                    option.insurance === 1 ? 'oui' : option.insurance === 0 ? 'non' : 'tous'
+                                }}
+                            </strong>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="1">
+                                    <span class="ml-2">Oui</span>
+                                </SelectItem>
+                                <SelectItem :value="0">
+                                    <span class="ml-2">Non</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <Select
+                        v-model="option.site"
+                        @update:model-value="debouncedFilterUsers"
+                    >
+                        <SelectTrigger class="max-w-sm rounded-md gap-2">
+                            <span>NursTech</span>
+                            <strong class="ml-4">
+                                {{
+                                    option.site === 1 ? 'oui' : option.site === 0 ? 'non' : 'tous'
+                                }}
+                            </strong>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="1">
+                                    <span class="ml-2">Oui</span>
+                                </SelectItem>
+                                <SelectItem :value="0">
+                                    <span class="ml-2">Non</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <Button
+                        class="rounded-md"
+                        @click="resetFilter"
+                    >
+                        <ArrowPathIcon class="md:mr-2" />
+                        <span class="hidden md:inline-block">Restaurer</span>
+                    </Button>
+                </div>
+                <DataTable
+                    :data="dataUsers"
+                    :columns="columns"
+                />
+                <Dialog
+                    v-model:open="showModal"
+                    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+                >
+                    <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
+                        <UsersCard :user="user" />
+                    </DialogContent>
+                </Dialog>
 
-                    <form @submit.prevent="saveContact">
-                        <div class="mb-4">
-                            <label
-                                for="contactDate"
-                                class="block mb-1 text-sm font-medium text-gray-700"
-                            >
-                                Date de contact
-                            </label>
-                            <InputIcon
-                                id="contactDate"
-                                v-model="tempContactDate"
-                                type="date"
-                                class="w-full"
-                            />
-                        </div>
+                <Dialog
+                    v-model:open="contactDialogOpen"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                >
+                    <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
+                        <DialogHeader>
+                            <DialogTitle class="text-lg font-semibold text-primary mb-4">
+                                Modifier le contact
+                            </DialogTitle>
+                        </DialogHeader>
 
-                        <div class="mb-4">
-                            <span class="block mb-1 text-sm font-medium text-gray-700">Mode de contact</span>
-                            <div class="flex space-x-4">
-                                <label class="inline-flex items-center">
-                                    <input
-                                        v-model="tempContactMethod"
-                                        type="radio"
-                                        value="mail"
-                                        class="form-radio"
-                                    >
-                                    <span class="ml-2">Mail</span>
+                        <form @submit.prevent="saveContact">
+                            <div class="mb-4">
+                                <label
+                                    for="contactDate"
+                                    class="block mb-1 text-sm font-medium text-gray-700"
+                                >
+                                    Date de contact
                                 </label>
-                                <label class="inline-flex items-center">
-                                    <input
-                                        v-model="tempContactMethod"
-                                        type="radio"
-                                        value="phone"
-                                        class="form-radio"
-                                    >
-                                    <span class="ml-2">Téléphone</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input
-                                        v-model="tempContactMethod"
-                                        type="radio"
-                                        value="visio"
-                                        class="form-radio"
-                                    >
-                                    <span class="ml-2">Visioconférence</span>
-                                </label>
+                                <InputIcon
+                                    id="contactDate"
+                                    v-model="tempContactDate"
+                                    type="date"
+                                    class="w-full"
+                                />
                             </div>
-                        </div>
 
-                        <div class="flex justify-end space-x-2">
-                            <Button
-                                variant="secondary"
-                                class="px-4 py-2 rounded"
-                                type="button"
-                                @click="contactDialogOpen = false"
-                            >
-                                Annuler
-                            </Button>
-                            <Button
-                                type="submit"
-                                class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
-                            >
-                                Valider
-                            </Button>
-                        </div>
-                    </form>
-                </DialogContent>
-            </Dialog>
+                            <div class="mb-4">
+                                <span class="block mb-1 text-sm font-medium text-gray-700">Mode de contact</span>
+                                <div class="flex space-x-4">
+                                    <label class="inline-flex items-center">
+                                        <input
+                                            v-model="tempContactMethod"
+                                            type="radio"
+                                            value="mail"
+                                            class="form-radio"
+                                        >
+                                        <span class="ml-2">Mail</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input
+                                            v-model="tempContactMethod"
+                                            type="radio"
+                                            value="phone"
+                                            class="form-radio"
+                                        >
+                                        <span class="ml-2">Téléphone</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input
+                                            v-model="tempContactMethod"
+                                            type="radio"
+                                            value="visio"
+                                            class="form-radio"
+                                        >
+                                        <span class="ml-2">Visioconférence</span>
+                                    </label>
+                                </div>
+                            </div>
 
-            <Dialog
-                v-model:open="commentDialogOpen"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-            >
-                <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
-                    <DialogHeader>
-                        <DialogTitle class="text-lg font-semibold text-primary mb-4">
-                            Rajouter un commentaire
-                        </DialogTitle>
-                    </DialogHeader>
+                            <div class="flex justify-end space-x-2">
+                                <Button
+                                    variant="secondary"
+                                    class="px-4 py-2 rounded"
+                                    type="button"
+                                    @click="contactDialogOpen = false"
+                                >
+                                    Annuler
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                                >
+                                    Valider
+                                </Button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
 
-                    <form @submit.prevent="saveComment">
-                        <div>
-                            <Textarea
-                                v-model="tempComment"
-                                class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer mb-4"
-                            />
-                        </div>
+                <Dialog
+                    v-model:open="commentDialogOpen"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                >
+                    <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
+                        <DialogHeader>
+                            <DialogTitle class="text-lg font-semibold text-primary mb-4">
+                                Rajouter un commentaire
+                            </DialogTitle>
+                        </DialogHeader>
 
-                        <div class="flex justify-end space-x-2">
-                            <Button
-                                variant="secondary"
-                                class="px-4 py-2 rounded"
-                                type="button"
-                                @click="contactDialogOpen = false"
-                            >
-                                Annuler
-                            </Button>
-                            <Button
-                                type="submit"
-                                class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
-                            >
-                                Valider
-                            </Button>
-                        </div>
-                    </form>
-                </DialogContent>
-            </Dialog>
+                        <form @submit.prevent="saveComment">
+                            <div>
+                                <Textarea
+                                    v-model="tempComment"
+                                    class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer mb-4"
+                                />
+                            </div>
 
-            <div>
-                <CustomPagination
-                    :default-page="page"
-                    :per-page="perPage"
-                    :total="users.total"
-                    @update:page="refreshUsers"
-                    @update:per-page="handlePerPageChange"
+                            <div class="flex justify-end space-x-2">
+                                <Button
+                                    variant="secondary"
+                                    class="px-4 py-2 rounded"
+                                    type="button"
+                                    @click="contactDialogOpen = false"
+                                >
+                                    Annuler
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                                >
+                                    Valider
+                                </Button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+                <div>
+                    <CustomPagination
+                        :default-page="page"
+                        :per-page="perPage"
+                        :total="users.total"
+                        @update:page="refreshUsers"
+                        @update:per-page="handlePerPageChange"
+                    />
+                </div>
+            </template>
+            <template v-else-if="selectedCrm === 'commercial'">
+                <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+                    <InputIcon
+                        v-model="option.name"
+                        rounded="md"
+                        placeholder="Filtrer par Nom ou Prénom"
+                        class="w-[250px]"
+                        @input="debouncedFilterUsers"
+                    />
+                    <Button
+                        class="rounded-md"
+                        @click="resetFilter"
+                    >
+                        <ArrowPathIcon class="md:mr-2" />
+                        <span class="hidden md:inline-block">Restaurer</span>
+                    </Button>
+                </div>
+                <DataTable
+                    :data="dataUsers"
+                    :columns="columnsCml"
                 />
-            </div>
+            </template>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -251,6 +295,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
+const selectedCrm = ref('users');
 const contactDialogOpen = ref(false);
 const commentDialogOpen = ref(false);
 
@@ -956,6 +1001,182 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
 
             return h('div', { class: 'text-center' }, formattedDate);
+        },
+    },
+    {
+        accessorKey: 'created_at',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('created_at'),
+            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
+        },
+    },
+    {
+        accessorKey: 'action',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('action'),
+            }, () => ['Action', h(ArrowsUpDownIcon)]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, [
+                h(EyeIcon, {
+                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
+                    onClick: () => openModal(row.original),
+                }),
+            ]);
+        },
+    },
+];
+
+const columnsCml: ColumnDef<User>[] = [
+    {
+        id: 'select',
+        header: ({ table }) => h(Checkbox, {
+            'checked': table.getIsAllPageRowsSelected()
+                ? true
+                : table.getIsSomePageRowsSelected()
+                    ? 'indeterminate'
+                    : false,
+            'onUpdate:checked': value => table.toggleAllPageRowsSelected(!!value),
+            'ariaLabel': 'Select all',
+            'class': 'mx-2',
+        }),
+        cell: ({ row }) => h(Checkbox, {
+            'checked': row.getIsSelected(),
+            'onUpdate:checked': value => row.toggleSelected(!!value),
+            'ariaLabel': 'Select row',
+            'class': 'mx-2',
+        }),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: 'full_name',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('firstname'),
+            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
+    },
+    {
+        accessorKey: 'zip_code',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('zip_code'),
+            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, row.getValue('zip_code'));
+        },
+    },
+    {
+        accessorKey: 'city',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('city'),
+            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, row.getValue('city'));
+        },
+    },
+    {
+        accessorKey: 'comment_crm',
+        header: () =>
+            h(Button, { variant: 'ghost', onClick: () => setSort('comment_crm') }, () => [
+                'Commentaire',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ]),
+        cell: ({ row }) => {
+            const comment = row.original.comment_crm;
+
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: comment,
+                            }, comment || ''),
+
+                            h(PencilIcon, {
+                                class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
+                                onClick: () => openCommentDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'contact_date',
+        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_date') }, () => [
+            'Date de contact',
+            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+        ]),
+        cell: ({ row }) => {
+            const rawDate = row.original.contact_date;
+            let formattedDate = '';
+
+            if (rawDate) {
+                const date = new Date(rawDate);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                formattedDate = `${day}/${month}/${year}`;
+            }
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', formattedDate),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'contact_method',
+        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_method') }, () => [
+            'Contacté par',
+            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+        ]),
+        cell: ({ row }) => {
+            const method = row.original.contact_method;
+            const displayMethod = method === 'mail'
+                ? 'Mail'
+                : method === 'phone'
+                    ? 'Téléphone'
+                    : method === 'visio'
+                        ? 'Visioconférence'
+                        : '';
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', displayMethod),
+                            h(PencilIcon, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
+                                onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
+            ]);
         },
     },
     {
