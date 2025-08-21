@@ -653,7 +653,6 @@ const columns: ColumnDef<User>[] = [
             ]),
         cell: ({ row }) => {
             const comment = row.original.comment_crm;
-
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
