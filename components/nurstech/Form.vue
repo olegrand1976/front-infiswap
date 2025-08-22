@@ -96,6 +96,7 @@
             <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
                 <button
                     class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
+                    type="button"
                     @click="cancel"
                 >
                     Annuler
