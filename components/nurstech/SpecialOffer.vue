@@ -25,10 +25,10 @@
                 <div class="bg-white/10 rounded-xl p-5 shadow-md">
                     <h3 class="font-bold text-lg md:text-xl mb-3 flex items-center gap-2">
                         🔹 Formule STARTERS
-                        <span class="font-normal italic text-sm">(Pour bien débuter)</span>
+                        <span class="font-normal italic text-sm">- pour bien débuter!</span>
                     </h3>
                     <ul class="space-y-2 pl-4">
-                        <li>- Création du site : <span class="font-semibold">450 €</span> (paiement comptant)</li>
+                        <li>- Création du site : <span class="font-semibold">450 €</span></li>
                         <li>
                             - Maintenance :
                             <ul class="pl-6 mt-1 space-y-1">
@@ -58,11 +58,11 @@
                 <div class="bg-white/10 rounded-xl p-5 shadow-md">
                     <h3 class="font-bold text-lg md:text-xl mb-3 flex items-center gap-2">
                         🔹 Formule STANDARD
-                        <span class="font-normal italic text-sm">(Pour plus de liberté)</span>
+                        <span class="font-normal italic text-sm">- pour une présence digitale professionnelle!</span>
                     </h3>
                     <ul class="space-y-2 pl-4">
-                        <li>- Création du site : <span class="font-semibold">900 €</span> (paiement comptant)</li>
-                        <li>- Maintenance : <span class="font-semibold">50 €</span> / mois (ou <span class="font-semibold">500 €</span> / an), dès la première année et sur toute la durée du contrat</li>
+                        <li>- Création du site : <span class="font-semibold">900 €</span></li>
+                        <li>- Maintenance : <span class="font-semibold">50 €</span> / mois (ou <span class="font-semibold">500 €</span> / an)</li>
                     </ul>
                 </div>
 
@@ -71,14 +71,14 @@
                         🔹 Option supplémentaire
                     </h3>
                     <p class="pl-4">
-                        Nom de domaine spécifique : <span class="font-semibold">100 € / an</span>
+                        Nom de domaine spécifique : <span class="font-semibold">25 €</span> à la création + <span class="font-semibold">10 € / mois</span>
                     </p>
                 </div>
 
-                <p class="text-center text-base md:text-lg font-medium leading-snug mt-6">
+                <!-- <p class="text-center text-base md:text-lg font-medium leading-snug mt-6">
                     👉 La <span class="font-bold">formule STARTERS</span> est idéale pour se lancer avec un budget maîtrisé,<br class="hidden md:block">
                     tandis que la <span class="font-bold">formule STANDARD</span> offre une solution plus complète et durable.
-                </p>
+                </p> -->
             </div>
         </div>
     </div>

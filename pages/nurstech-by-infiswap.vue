@@ -8,7 +8,7 @@
         <NurstechSpecialOffer id="special-offer" />
         <NurstechInformationForm id="information-form" />
         <NurstechCommunity id="community" />
-        <NurstechPartners id="partners" />
+        <!-- <NurstechPartners id="partners" /> -->
     </div>
 </template>
 

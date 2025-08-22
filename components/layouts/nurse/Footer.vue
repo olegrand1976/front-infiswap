@@ -120,6 +120,16 @@
         </div>
 
         <div
+            v-if="props.theme == 'assur'"
+            class="container pt-4 w-full text-center text-xs font-medium"
+            :class="txtClass"
+        >
+            <p>
+                N.E. 0899.850.984 Barbara Murgo,  Intermédiaire d’assurances agissant pour Quality Insurance & Crédit SRL  – Agent d'assurance exclusif lié P&V ASSURANCES
+            </p>
+        </div>
+
+        <div
             class="container py-4 w-full text-center"
             :class="txtClass"
         >
