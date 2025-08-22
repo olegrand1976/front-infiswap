@@ -134,11 +134,20 @@
             :class="txtClass"
         >
             <NuxtLink
+                v-if="props.theme != 'assur'"
                 to="https://www.ll-it-sc.be"
                 target="_blank"
                 class="text-center text-[0.6em] md:text-xs"
             >
-                @2025 <span class="font-bold">Nursi</span>Tech - Tous droits réservés
+                @2025 <span class="font-bold">Nurs</span>Tech - Tous droits réservés
+            </NuxtLink>
+            <NuxtLink
+                v-else
+                to="https://www.ll-it-sc.be"
+                target="_blank"
+                class="text-center text-[0.6em] md:text-xs"
+            >
+                @2025 <span class="font-bold">Nurs</span>Assur - Tous droits réservés
             </NuxtLink>
         </div>
     </footer>
