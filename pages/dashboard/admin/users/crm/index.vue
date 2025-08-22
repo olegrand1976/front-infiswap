@@ -1102,18 +1102,13 @@ const columnsCml: ColumnDef<User>[] = [
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'max-w-[150px] truncate text-sm',
                                 title: comment,
                             }, comment || ''),
-
-                            h(PencilIcon, {
-                                class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
-                                onClick: () => openCommentDialog(row.original),
-                            }),
                         ]),
             ]);
         },
@@ -1137,14 +1132,10 @@ const columnsCml: ColumnDef<User>[] = [
             }
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', formattedDate),
-                            h(PencilIcon, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                                onClick: () => openContactDialog(row.original),
-                            }),
                         ]),
             ]);
         },
@@ -1166,15 +1157,28 @@ const columnsCml: ColumnDef<User>[] = [
                         : '';
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator
+                isCollaborator.value
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', displayMethod),
-                            h(PencilIcon, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
-                                onClick: () => openContactDialog(row.original),
-                            }),
                         ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'contact',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('contact'),
+            }, () => ['Contact', h(ArrowsUpDownIcon)]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, [
+                h(EyeIcon, {
+                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
+                    onClick: () => openModal(row.original),
+                }),
             ]);
         },
     },
@@ -1188,23 +1192,6 @@ const columnsCml: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
-        },
-    },
-    {
-        accessorKey: 'action',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('action'),
-            }, () => ['Action', h(ArrowsUpDownIcon)]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, [
-                h(EyeIcon, {
-                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
-                    onClick: () => openModal(row.original),
-                }),
-            ]);
         },
     },
 ];

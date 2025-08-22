@@ -261,6 +261,19 @@ export const useAuth = () => {
         });
     }
 
+    async function getCrmPlus(page = 1, perPage = 15, options = {}) {
+        return await $apifetch('api/crm', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            users.value = response.users;
+            count.value = response.count;
+        });
+    }
+
     type UserForm = {
         lastname: string;
         firstname: string;
@@ -449,6 +462,7 @@ export const useAuth = () => {
         validate,
         forceDelete,
         getUsers,
+        getCrmPlus,
         isLoggedIn,
         isSuperAdmin,
         isAdmin,
