@@ -72,6 +72,13 @@
                 >
                     Commentaire
                 </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'commercial' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'commercial'"
+                >
+                    Commercial
+                </button>
             </div>
 
             <div
@@ -276,6 +283,15 @@
                     <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire
                     </p>
+                </div>
+            </div>
+
+            <div
+                v-else-if="activeTab === 'commercial'"
+                class="space-y-3"
+            >
+                <div class="relative border border-gray-200 rounded-lg p-4">
+                    <p>Atao tsika ato ny resaka commerce jiaby</p>
                 </div>
             </div>
         </div>

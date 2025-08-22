@@ -11,6 +11,19 @@ type GroupRole = {
     created_at: string;
 };
 
+type CrmUser = {
+    client_type: string;
+    nb_call?: number;
+    nb_sale?: number;
+    nb_recommandation?: number;
+    nb_meeting?: number;
+    ng_pending?: number;
+    last_contact_date?: string;
+    last_contact_method?: string;
+    last_comment?: string;
+    created_at: string;
+};
+
 export type User = {
     id: number;
     lastname: string;
@@ -71,6 +84,7 @@ export type User = {
     contact_date?: string;
     contact_method?: string;
     group_roles?: GroupRole[];
+    crm?: CrmUser;
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
 };
