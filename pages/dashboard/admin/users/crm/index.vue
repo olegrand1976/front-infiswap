@@ -244,26 +244,6 @@
                 </div>
             </template>
             <template v-else-if="selectedCrm === 'commercial'">
-                <!-- <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
-                    <InputIcon
-                        v-model="option.name"
-                        rounded="md"
-                        placeholder="Filtrer par Nom ou Prénom"
-                        class="w-[250px]"
-                        @input="debouncedFilterUsers"
-                    />
-                    <Button
-                        class="rounded-md"
-                        @click="resetFilter"
-                    >
-                        <ArrowPathIcon class="md:mr-2" />
-                        <span class="hidden md:inline-block">Restaurer</span>
-                    </Button>
-                </div>
-                <DataTable
-                    :data="dataUsers"
-                    :columns="columnsCml"
-                /> -->
                 <CrmAdminList />
             </template>
         </DashboardAdminPageContent>
