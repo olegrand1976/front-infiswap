@@ -5,7 +5,7 @@ export const useReports = () => {
 
     const reports = useState('reports', () => null);
     const error = useState('reportsError', () => null);
-    const loading = useState('reportsLoading', () => false);
+    const loading = useState('loading', () => false);
 
     const getReports = async () => {
         loading.value = true;
