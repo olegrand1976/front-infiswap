@@ -244,7 +244,7 @@
                 </div>
             </template>
             <template v-else-if="selectedCrm === 'commercial'">
-                <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+                <!-- <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
                     <InputIcon
                         v-model="option.name"
                         rounded="md"
@@ -263,7 +263,8 @@
                 <DataTable
                     :data="dataUsers"
                     :columns="columnsCml"
-                />
+                /> -->
+                <CrmAdminList />
             </template>
         </DashboardAdminPageContent>
     </div>
@@ -1029,169 +1030,6 @@ const columns: ColumnDef<User>[] = [
                     onClick: () => openModal(row.original),
                 }),
             ]);
-        },
-    },
-];
-
-const columnsCml: ColumnDef<User>[] = [
-    {
-        id: 'select',
-        header: ({ table }) => h(Checkbox, {
-            'checked': table.getIsAllPageRowsSelected()
-                ? true
-                : table.getIsSomePageRowsSelected()
-                    ? 'indeterminate'
-                    : false,
-            'onUpdate:checked': value => table.toggleAllPageRowsSelected(!!value),
-            'ariaLabel': 'Select all',
-            'class': 'mx-2',
-        }),
-        cell: ({ row }) => h(Checkbox, {
-            'checked': row.getIsSelected(),
-            'onUpdate:checked': value => row.toggleSelected(!!value),
-            'ariaLabel': 'Select row',
-            'class': 'mx-2',
-        }),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'full_name',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('firstname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
-    },
-    {
-        accessorKey: 'zip_code',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('zip_code'),
-            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, row.getValue('zip_code'));
-        },
-    },
-    {
-        accessorKey: 'city',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('city'),
-            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, row.getValue('city'));
-        },
-    },
-    {
-        accessorKey: 'comment_crm',
-        header: () =>
-            h(Button, { variant: 'ghost', onClick: () => setSort('comment_crm') }, () => [
-                'Commentaire',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-            ]),
-        cell: ({ row }) => {
-            const comment = row.original.comment_crm;
-
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: comment,
-                            }, comment || ''),
-                        ]),
-            ]);
-        },
-    },
-    {
-        accessorKey: 'contact_date',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_date') }, () => [
-            'Date de contact',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
-        cell: ({ row }) => {
-            const rawDate = row.original.contact_date;
-            let formattedDate = '';
-
-            if (rawDate) {
-                const date = new Date(rawDate);
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                formattedDate = `${day}/${month}/${year}`;
-            }
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', formattedDate),
-                        ]),
-            ]);
-        },
-    },
-    {
-        accessorKey: 'contact_method',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_method') }, () => [
-            'Contacté par',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
-        cell: ({ row }) => {
-            const method = row.original.contact_method;
-            const displayMethod = method === 'mail'
-                ? 'Mail'
-                : method === 'phone'
-                    ? 'Téléphone'
-                    : method === 'visio'
-                        ? 'Visioconférence'
-                        : '';
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', displayMethod),
-                        ]),
-            ]);
-        },
-    },
-    {
-        accessorKey: 'contact',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowsUpDownIcon)]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, [
-                h(EyeIcon, {
-                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
-                    onClick: () => openModal(row.original),
-                }),
-            ]);
-        },
-    },
-    {
-        accessorKey: 'created_at',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
 ];
