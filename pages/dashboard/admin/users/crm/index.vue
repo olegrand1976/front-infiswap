@@ -270,12 +270,14 @@ function openContactDialog(user) {
     contactDialogOpen.value = true;
 }
 
-function openCommentDialog(user) {
+function openCommentDialog(user: User) {
     editingUserId.value = user.id;
+    tempComment.value = user.comment_crm ?? '';
     commentDialogOpen.value = true;
 }
 
 async function updateUserField(
+    type: 'comment' | 'contact',
     field: Partial<User>,
     dialogRef: Ref<boolean>,
     successMessage: string,
@@ -283,9 +285,17 @@ async function updateUserField(
     if (!editingUserId.value) return;
 
     try {
-        const response: { message: string; user: User } = await (field.comment_crm
-            ? updateField(Number(editingUserId.value), field)
-            : updateContact(editingUserId.value, field));
+        let response: { message: string; user: User };
+
+        if (type === 'comment') {
+            response = await updateField(Number(editingUserId.value), field);
+        }
+        else if (type === 'contact') {
+            response = await updateContact(Number(editingUserId.value), field);
+        }
+        else {
+            throw new Error(`Type inconnu pour la mise à jour utilisateur: ${type}`);
+        }
 
         if (response?.user && users.value) {
             users.value = {
@@ -297,7 +307,8 @@ async function updateUserField(
         }
 
         dialogRef.value = false;
-        if (field.comment_crm) tempComment.value = '';
+        if (type === 'comment') tempComment.value = '';
+
         $toast({ description: successMessage });
     }
     catch (error) {
@@ -308,6 +319,7 @@ async function updateUserField(
 
 function saveContact() {
     return updateUserField(
+        'contact',
         {
             contact_date: tempContactDate.value,
             contact_method: tempContactMethod.value,
@@ -319,6 +331,7 @@ function saveContact() {
 
 function saveComment() {
     return updateUserField(
+        'comment',
         { comment_crm: tempComment.value },
         commentDialogOpen,
         'Commentaire mis à jour avec succès',
