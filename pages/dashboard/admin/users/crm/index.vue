@@ -275,27 +275,54 @@ function openCommentDialog(user) {
     commentDialogOpen.value = true;
 }
 
-async function saveContact() {
+async function updateUserField(
+    field: Partial<User>,
+    dialogRef: Ref<boolean>,
+    successMessage: string,
+) {
     if (!editingUserId.value) return;
 
-    await updateContact(editingUserId.value, {
-        contact_date: tempContactDate.value,
-        contact_method: tempContactMethod.value,
-    });
+    try {
+        const response: { message: string; user: User } = await (field.comment_crm
+            ? updateField(Number(editingUserId.value), field)
+            : updateContact(editingUserId.value, field));
 
-    contactDialogOpen.value = false;
-    await getUsers();
+        if (response?.user && users.value) {
+            users.value = {
+                ...users.value,
+                data: users.value.data.map(u =>
+                    u.id === editingUserId.value ? response.user : u,
+                ),
+            };
+        }
+
+        dialogRef.value = false;
+        if (field.comment_crm) tempComment.value = '';
+        $toast({ description: successMessage });
+    }
+    catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
+        $toast({ description: 'Une erreur est survenue', variant: 'destructive' });
+    }
 }
 
-async function saveComment() {
-    if (!editingUserId.value) return;
-    await updateField(Number(editingUserId.value), { comment_crm: tempComment.value }).then(async () => {
-        $toast({ description: 'Commentaire mises à jour avec succès' });
+function saveContact() {
+    return updateUserField(
+        {
+            contact_date: tempContactDate.value,
+            contact_method: tempContactMethod.value,
+        },
+        contactDialogOpen,
+        'Contact mis à jour avec succès',
+    );
+}
 
-        commentDialogOpen.value = false;
-        tempComment.value = '';
-        await getUsers();
-    });
+function saveComment() {
+    return updateUserField(
+        { comment_crm: tempComment.value },
+        commentDialogOpen,
+        'Commentaire mis à jour avec succès',
+    );
 }
 
 const user = ref(null);
