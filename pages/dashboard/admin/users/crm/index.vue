@@ -289,12 +289,13 @@ async function saveContact() {
 
 async function saveComment() {
     if (!editingUserId.value) return;
-    await updateField(Number(editingUserId.value), { comment_crm: tempComment.value });
-    setTimeout(() => {
+    await updateField(Number(editingUserId.value), { comment_crm: tempComment.value }).then(async () => {
         $toast({ description: 'Commentaire mises à jour avec succès' });
-    }, 1500);
-    commentDialogOpen.value = false;
-    await getUsers();
+
+        commentDialogOpen.value = false;
+        tempComment.value = '';
+        await getUsers();
+    });
 }
 
 const user = ref(null);
