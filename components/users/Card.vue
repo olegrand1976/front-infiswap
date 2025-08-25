@@ -334,18 +334,20 @@
                         </h2>
 
                         <form
-                            action=""
                             class="space-y-6"
+                            @submit.prevent="submit"
                         >
                             <div class="flex flex-col md:flex-row md:items-end gap-4">
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.start_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.end_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
@@ -355,6 +357,7 @@
                             <div class="flex flex-col gap-1 w-full">
                                 <label class="text-gray-500 text-sm font-medium">Nombre d'appels</label>
                                 <InputIcon
+                                    v-model="form.number"
                                     type="number"
                                     placeholder="12"
                                     rounded="md"
@@ -365,6 +368,7 @@
                                 <Button
                                     type="submit"
                                     class="rounded-lg w-52"
+                                    :in-progress="inProgress"
                                 >
                                     Sauvegarder
                                 </Button>
@@ -377,18 +381,20 @@
                         </h2>
 
                         <form
-                            action=""
                             class="space-y-6"
+                            @submit.prevent="submit"
                         >
                             <div class="flex flex-col md:flex-row md:items-end gap-4">
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.start_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.end_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
@@ -399,7 +405,7 @@
                                 <p class="text-gray-700">
                                     Produit :
                                 </p>
-                                <Select v-model="selectedProduct">
+                                <Select v-model="form.produit_id">
                                     <SelectTrigger
                                         class="w-full bg-white rounded-lg text-nowrap border-2 border-gray-300"
                                         position="right"
@@ -417,13 +423,14 @@
                                     </SelectContent>
                                 </Select>
                                 <!-- <p class="mt-3 text-sm text-gray-600">
-                                    Produit sélectionné ID : <span class="font-semibold">{{ selectedProduct }}</span>
+                                    Produit sélectionné ID : <span class="font-semibold">{{ form.produit_id }}</span>
                                 </p> -->
                             </div>
 
                             <div class="flex flex-col gap-1 w-full">
                                 <label class="text-gray-500 text-sm font-medium">Nombre de ventes</label>
                                 <InputIcon
+                                    v-model="form.number"
                                     type="number"
                                     placeholder="12"
                                     rounded="md"
@@ -432,8 +439,10 @@
 
                             <div class="grid place-content-center">
                                 <Button
+                                    v-model="form.number"
                                     type="submit"
                                     class="rounded-lg w-52"
+                                    :in-progress="inProgress"
                                 >
                                     Sauvegarder
                                 </Button>
@@ -446,18 +455,20 @@
                         </h2>
 
                         <form
-                            action=""
                             class="space-y-6"
+                            @submit.prevent="submit"
                         >
                             <div class="flex flex-col md:flex-row md:items-end gap-4">
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.start_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.end_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
@@ -467,6 +478,7 @@
                             <div class="flex flex-col gap-1 w-full">
                                 <label class="text-gray-500 text-sm font-medium">Nombre de recommandation</label>
                                 <InputIcon
+                                    v-model="form.number"
                                     type="number"
                                     placeholder="12"
                                     rounded="md"
@@ -477,6 +489,7 @@
                                 <Button
                                     type="submit"
                                     class="rounded-lg w-52"
+                                    :in-progress="inProgress"
                                 >
                                     Sauvegarder
                                 </Button>
@@ -489,18 +502,20 @@
                         </h2>
 
                         <form
-                            action=""
                             class="space-y-6"
+                            @submit.prevent="submit"
                         >
                             <div class="flex flex-col md:flex-row md:items-end gap-4">
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.start_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.end_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
@@ -510,6 +525,7 @@
                             <div class="flex flex-col gap-1 w-full">
                                 <label class="text-gray-500 text-sm font-medium">Nombre de rendez-vous</label>
                                 <InputIcon
+                                    v-model="form.number"
                                     type="number"
                                     placeholder="12"
                                     rounded="md"
@@ -520,6 +536,7 @@
                                 <Button
                                     type="submit"
                                     class="rounded-lg w-52"
+                                    :in-progress="inProgress"
                                 >
                                     Sauvegarder
                                 </Button>
@@ -532,18 +549,20 @@
                         </h2>
 
                         <form
-                            action=""
                             class="space-y-6"
+                            @submit.prevent="submit"
                         >
                             <div class="flex flex-col md:flex-row md:items-end gap-4">
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.start_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-1 w-full">
                                     <InputIcon
+                                        v-model="form.end_date"
                                         type="date"
                                         class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                                     />
@@ -553,6 +572,7 @@
                             <div class="flex flex-col gap-1 w-full">
                                 <label class="text-gray-500 text-sm font-medium">Nombre de réponse en attente</label>
                                 <InputIcon
+                                    v-model="form.number"
                                     type="number"
                                     placeholder="12"
                                     rounded="md"
@@ -563,6 +583,7 @@
                                 <Button
                                     type="submit"
                                     class="rounded-lg w-52"
+                                    :in-progress="inProgress"
                                 >
                                     Sauvegarder
                                 </Button>
@@ -681,10 +702,11 @@ const props = withDefaults(defineProps<{
 
 const { activityUser } = useReplacements();
 const { getAll } = useProduct();
+const { crmUser } = useCrm();
 const activityData = ref(null);
 
 const products = ref<{ id: number; name: string }[]>([]);
-const selectedProduct = ref<string>('');
+// const selectedProduct = ref<string>('');
 
 onMounted(async () => {
     const result = await getAll();
@@ -716,6 +738,30 @@ const translatedCategory = computed(() => {
     }
 
     return props.user.professional_category;
+});
+
+const { $toast } = useNuxtApp();
+
+const form = ref({
+    start_date: '',
+    end_date: '',
+    produit_id: null,
+    number: '',
+    type: '',
+});
+
+watch(tradeTab, (val) => {
+    form.value.type = val;
+}, { immediate: true });
+
+const { submit, inProgress } = useSubmit(async () => {
+    await crmUser(form.value);
+}, {
+    onSuccess: () => {
+        $toast({
+            description: 'Données mis à jour avec succès',
+        });
+    },
 });
 
 const comment = ref(props.user.comment_crm ?? '');
