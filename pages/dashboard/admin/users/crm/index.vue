@@ -208,7 +208,7 @@
                         <form @submit.prevent="saveComment">
                             <div>
                                 <Textarea
-                                    v-model="tempComment"
+                                    v-model="updateFormData.lastComment"
                                     class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer mb-4"
                                 />
                             </div>
@@ -218,7 +218,7 @@
                                     variant="secondary"
                                     class="px-4 py-2 rounded"
                                     type="button"
-                                    @click="contactDialogOpen = false"
+                                    @click="commentDialogOpen = false"
                                 >
                                     Annuler
                                 </Button>
@@ -262,6 +262,8 @@ import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
+import { useCrm } from '@/composables/useCrm';
+
 const showModal = ref(false);
 
 const openModal = (selectedUser) => {
@@ -283,11 +285,14 @@ const commentDialogOpen = ref(false);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
+const tempCrmId = ref<number | null>(null);
 const tempComment = ref('');
+const tempClientType = ref('users');
 
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
 const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
+const { updateCrmUser } = useCrm();
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
@@ -298,9 +303,49 @@ function openContactDialog(user) {
 
 function openCommentDialog(user: User) {
     editingUserId.value = user.id;
-    tempComment.value = user.comment_crm ?? '';
+    tempCrmId.value = Number(user.crm.id);
+    tempClientType.value = user.crm.client_type ?? '';
+    tempComment.value = user.crm.last_comment ?? '';
     commentDialogOpen.value = true;
 }
+
+const updateFormData = reactive({
+    clientType: tempClientType.value,
+    lastContactDate: '',
+    lastContactMethod: '',
+    lastComment: tempComment,
+});
+
+const updateCrmUserField = async (
+    type: 'comment' | 'contact',
+    dialogRef: Ref<boolean>,
+) => {
+    try {
+        const response = await updateCrmUser(tempCrmId.value, updateFormData);
+
+        $toast({
+            description: response.message,
+        });
+
+        if (response?.crm && users.value) {
+            users.value = {
+                ...users.value,
+                data: users.value.data.map(u =>
+                    u.id === editingUserId.value ? response.user : u,
+                ),
+            };
+        }
+    }
+    catch {
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        dialogRef.value = false;
+    }
+};
 
 async function updateUserField(
     type: 'comment' | 'contact',
@@ -355,14 +400,12 @@ function saveContact() {
     );
 }
 
-function saveComment() {
-    return updateUserField(
+const saveComment = () => {
+    return updateCrmUserField(
         'comment',
-        { comment_crm: tempComment.value },
         commentDialogOpen,
-        'Commentaire mis à jour avec succès',
     );
-}
+};
 
 const user = ref(null);
 const route = useRoute();
@@ -626,14 +669,15 @@ const columns: ColumnDef<User>[] = [
         enableSorting: false,
     },
     {
-        accessorKey: 'comment_crm',
+        accessorKey: 'crm.last_comment',
         header: () =>
-            h(Button, { variant: 'ghost', onClick: () => setSort('comment_crm') }, () => [
+            h(Button, { variant: 'ghost', onClick: () => setSort('crm.last_comment') }, () => [
                 'Commentaire',
                 h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
             ]),
         cell: ({ row }) => {
-            const comment = row.original.comment_crm;
+            const comment = row.original?.crm?.last_comment;
+
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [

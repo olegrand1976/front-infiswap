@@ -12,6 +12,7 @@ type GroupRole = {
 };
 
 type CrmUser = {
+    id: number;
     user_id: number;
     client_type: string;
     nb_call?: number;

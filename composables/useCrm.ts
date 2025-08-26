@@ -10,7 +10,15 @@ export const useCrm = () => {
         });
     };
 
+    const updateCrmUser = async (id, formData) => {
+        return await $apifetch(`/api/crm/${id}/update`, {
+            method: 'PUT',
+            body: formData,
+        });
+    };
+
     return {
         crmUser,
+        updateCrmUser,
     };
 };

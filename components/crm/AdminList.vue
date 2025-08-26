@@ -241,14 +241,14 @@ const columnsCrm: ColumnDef<User>[] = [
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
-        accessorKey: 'comment_crm',
+        accessorKey: 'crm.last_comment',
         header: () =>
-            h(Button, { variant: 'ghost', onClick: () => setSort('comment_crm') }, () => [
+            h(Button, { variant: 'ghost', onClick: () => setSort('crm.last_comment') }, () => [
                 'Commentaire',
                 h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
             ]),
         cell: ({ row }) => {
-            const comment = row.original.comment_crm;
+            const comment = row.original?.crm?.last_comment;
 
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
