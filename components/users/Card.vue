@@ -72,6 +72,13 @@
                 >
                     Commentaire
                 </button>
+                <button
+                    class="pb-2 border-b-2"
+                    :class="activeTab === 'commercial' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                    @click="activeTab = 'commercial'"
+                >
+                    Commercial
+                </button>
             </div>
 
             <div
@@ -278,6 +285,313 @@
                     </p>
                 </div>
             </div>
+
+            <div
+                v-else-if="activeTab === 'commercial'"
+                class="space-y-3"
+            >
+                <div class="relative border border-gray-200 rounded-lg p-4">
+                    <div class="flex gap-4 mb-4 border-b border-gray-300">
+                        <button
+                            class="pb-2 border-b-2"
+                            :class="tradeTab === 'call' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = 'call'"
+                        >
+                            Appels
+                        </button>
+                        <button
+                            class="pb-2 border-b-2"
+                            :class="tradeTab === 'sale' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = 'sale'"
+                        >
+                            Ventes
+                        </button>
+                        <button
+                            class="pb-2 border-b-2"
+                            :class="tradeTab === 'recommandation' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = 'recommandation'"
+                        >
+                            Recommandation
+                        </button>
+                        <button
+                            class="pb-2 border-b-2"
+                            :class="tradeTab === 'meeting' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = 'meeting'"
+                        >
+                            Rendez-vous
+                        </button>
+                        <button
+                            class="pb-2 border-b-2"
+                            :class="tradeTab === 'pending' ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = 'pending'"
+                        >
+                            Réponse en attente
+                        </button>
+                    </div>
+                    <div v-if="tradeTab === 'call'">
+                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                            Le nombre d’appels passés sur une période donnée
+                        </h2>
+
+                        <form
+                            class="space-y-6"
+                            @submit.prevent="submit"
+                        >
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.start_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.end_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <label class="text-gray-500 text-sm font-medium">Nombre d'appels</label>
+                                <InputIcon
+                                    v-model="form.number"
+                                    type="number"
+                                    placeholder="12"
+                                    rounded="md"
+                                />
+                            </div>
+
+                            <div class="grid place-content-center">
+                                <Button
+                                    type="submit"
+                                    class="rounded-lg w-52"
+                                    :in-progress="inProgress"
+                                >
+                                    Sauvegarder
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                    <div v-else-if="tradeTab === 'sale'">
+                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                            Le nombre de ventes sur une période donnée
+                        </h2>
+
+                        <form
+                            class="space-y-6"
+                            @submit.prevent="submit"
+                        >
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.start_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.end_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <p class="text-gray-700">
+                                    Produit :
+                                </p>
+                                <Select v-model="form.produit_id">
+                                    <SelectTrigger
+                                        class="w-full bg-white rounded-lg text-nowrap border-2 border-gray-300"
+                                        position="right"
+                                    >
+                                        <SelectValue placeholder="Choisis un produit" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem
+                                            v-for="product in products"
+                                            :key="product.id"
+                                            :value="String(product.id)"
+                                        >
+                                            {{ product.name }}
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <!-- <p class="mt-3 text-sm text-gray-600">
+                                    Produit sélectionné ID : <span class="font-semibold">{{ form.produit_id }}</span>
+                                </p> -->
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <label class="text-gray-500 text-sm font-medium">Nombre de ventes</label>
+                                <InputIcon
+                                    v-model="form.number"
+                                    type="number"
+                                    placeholder="12"
+                                    rounded="md"
+                                />
+                            </div>
+
+                            <div class="grid place-content-center">
+                                <Button
+                                    v-model="form.number"
+                                    type="submit"
+                                    class="rounded-lg w-52"
+                                    :in-progress="inProgress"
+                                >
+                                    Sauvegarder
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                    <div v-else-if="tradeTab === 'recommandation'">
+                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                            Le nombre de recommandation sur une période donnée
+                        </h2>
+
+                        <form
+                            class="space-y-6"
+                            @submit.prevent="submit"
+                        >
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.start_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.end_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <label class="text-gray-500 text-sm font-medium">Nombre de recommandation</label>
+                                <InputIcon
+                                    v-model="form.number"
+                                    type="number"
+                                    placeholder="12"
+                                    rounded="md"
+                                />
+                            </div>
+
+                            <div class="grid place-content-center">
+                                <Button
+                                    type="submit"
+                                    class="rounded-lg w-52"
+                                    :in-progress="inProgress"
+                                >
+                                    Sauvegarder
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                    <div v-else-if="tradeTab === 'meeting'">
+                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                            Le nombre de rendez-vous sur une période donnée
+                        </h2>
+
+                        <form
+                            class="space-y-6"
+                            @submit.prevent="submit"
+                        >
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.start_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.end_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <label class="text-gray-500 text-sm font-medium">Nombre de rendez-vous</label>
+                                <InputIcon
+                                    v-model="form.number"
+                                    type="number"
+                                    placeholder="12"
+                                    rounded="md"
+                                />
+                            </div>
+
+                            <div class="grid place-content-center">
+                                <Button
+                                    type="submit"
+                                    class="rounded-lg w-52"
+                                    :in-progress="inProgress"
+                                >
+                                    Sauvegarder
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                    <div v-else-if="tradeTab === 'pending'">
+                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                            Le nombre de réponse en attente pendant une période donnée
+                        </h2>
+
+                        <form
+                            class="space-y-6"
+                            @submit.prevent="submit"
+                        >
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.start_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <InputIcon
+                                        v-model="form.end_date"
+                                        type="date"
+                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 w-full">
+                                <label class="text-gray-500 text-sm font-medium">Nombre de réponse en attente</label>
+                                <InputIcon
+                                    v-model="form.number"
+                                    type="number"
+                                    placeholder="12"
+                                    rounded="md"
+                                />
+                            </div>
+
+                            <div class="grid place-content-center">
+                                <Button
+                                    type="submit"
+                                    class="rounded-lg w-52"
+                                    :in-progress="inProgress"
+                                >
+                                    Sauvegarder
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div
             v-else
@@ -375,6 +689,7 @@ import { useRuntimeConfig } from '#app';
 
 const { isAdmin } = useAuth();
 const activeTab = ref('information');
+const tradeTab = ref('call');
 
 const props = withDefaults(defineProps<{
     user: User;
@@ -386,7 +701,17 @@ const props = withDefaults(defineProps<{
 });
 
 const { activityUser } = useReplacements();
+const { getAll } = useProduct();
+const { crmUser } = useCrm();
 const activityData = ref(null);
+
+const products = ref<{ id: number; name: string }[]>([]);
+// const selectedProduct = ref<string>('');
+
+onMounted(async () => {
+    const result = await getAll();
+    products.value = result;
+});
 
 async function loadActivity() {
     if (!props.user || !props.user.id) return;
@@ -413,6 +738,30 @@ const translatedCategory = computed(() => {
     }
 
     return props.user.professional_category;
+});
+
+const { $toast } = useNuxtApp();
+
+const form = ref({
+    start_date: '',
+    end_date: '',
+    produit_id: null,
+    number: '',
+    type: '',
+});
+
+watch(tradeTab, (val) => {
+    form.value.type = val;
+}, { immediate: true });
+
+const { submit, inProgress } = useSubmit(async () => {
+    await crmUser(form.value);
+}, {
+    onSuccess: () => {
+        $toast({
+            description: 'Données mis à jour avec succès',
+        });
+    },
 });
 
 const comment = ref(props.user.comment_crm ?? '');
