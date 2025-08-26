@@ -358,3 +358,12 @@ export type ReplacementRow = {
     responses_count: number;
     responses: ReplacementResponse[];
 };
+
+export type Comment = {
+    id: number;
+    commentable_id: number;
+    commentable_type: string;
+    body: string;
+    created_at: string;
+    updated_at: string;
+};
