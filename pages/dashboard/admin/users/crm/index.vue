@@ -291,8 +291,8 @@ const tempClientType = ref('users');
 
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
-const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
-const { updateCrmUser } = useCrm();
+const { edit, updateContact, updateField, isCollaborator } = useAuth();
+const { updateCrmUser, users, getCrmPlus } = useCrm();
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
@@ -443,7 +443,7 @@ const debounce = (func, delay) => {
 
 const filterUsers = async () => {
     const currentFilter = { ...option.value };
-    await getUsers(page.value, perPage.value, currentFilter);
+    await getCrmPlus(page.value, perPage.value, currentFilter);
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
@@ -455,17 +455,17 @@ onMounted(() => {
 });
 
 await getAll();
-await getUsers(page.value, perPage.value, option.value);
+await getCrmPlus(page.value, perPage.value, option.value);
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+    await getCrmPlus(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getUsers(page.value, value, option.value);
+    await getCrmPlus(page.value, value, option.value);
 };
 
 const resetFilter = async () => {
@@ -480,7 +480,7 @@ const resetFilter = async () => {
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
 
-    await getUsers(page.value, perPage.value, option.value);
+    await getCrmPlus(page.value, perPage.value, option.value);
 };
 
 const columns: ColumnDef<User>[] = [
@@ -1080,7 +1080,7 @@ const setSort = (columnKey: string) => {
 watch(
     () => sort,
     async (newVal) => {
-        await getUsers(page.value, perPage.value, {
+        await getCrmPlus(page.value, perPage.value, {
             sortOrder: newVal.order,
             sortKey: newVal.by,
         });

@@ -115,6 +115,8 @@ import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
+import { useCrm } from '@/composables/useCrm';
+
 const showModal = ref(false);
 
 const openModal = (selectedUser) => {
@@ -130,7 +132,8 @@ definePageMeta({
 });
 
 const { getAll } = useProduct();
-const { users, getCrmPlus, isCollaborator } = useAuth();
+const { isCollaborator } = useAuth();
+const { users, getCrmPlus } = useCrm();
 
 const user = ref(null);
 const route = useRoute();
