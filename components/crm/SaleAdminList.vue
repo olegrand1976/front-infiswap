@@ -10,7 +10,11 @@
             class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full mx-2">
-                <UsersCard :user="user" />
+                <UsersCard
+                    :user="user"
+                    @close="showModal = false"
+                    @refresh-users="emit('refresh-users', page)"
+                />
             </DialogContent>
         </Dialog>
 

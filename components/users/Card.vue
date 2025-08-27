@@ -742,25 +742,57 @@ const translatedCategory = computed(() => {
 
 const { $toast } = useNuxtApp();
 
-const form = ref({
+const defaultForm = {
+    user_id: props.user.id,
+    client_type: 'user',
     start_date: '',
     end_date: '',
-    produit_id: null,
     number: '',
+    produit_id: '',
     type: '',
-});
+};
+
+const form = ref({ ...defaultForm });
 
 watch(tradeTab, (val) => {
     form.value.type = val;
 }, { immediate: true });
 
+const emit = defineEmits(['close', 'refresh-users']);
+
 const { submit, inProgress } = useSubmit(async () => {
-    await crmUser(form.value);
+    const payload = {
+        user_id: form.value.user_id,
+        client_type: form.value.client_type,
+        last_contact_date: form.value.start_date,
+        last_contact_method: null,
+        last_comment: comment.value ?? null,
+        history: [
+            {
+                action_type: form.value.type,
+                number_of_times: form.value.number,
+                start_date: form.value.start_date,
+                end_date: form.value.end_date,
+                product_id: form.value.produit_id,
+                method: null,
+                status: null,
+                other_informations: null,
+                comment: comment.value ?? '',
+                // referred_id: props.user.id,
+            },
+        ],
+    };
+
+    await crmUser(payload);
 }, {
     onSuccess: () => {
         $toast({
-            description: 'Données mis à jour avec succès',
+            description: 'Données mises à jour avec succès',
         });
+        form.value = { ...defaultForm };
+        comment.value = '';
+        emit('refresh-users');
+        emit('close');
     },
 });
 
