@@ -219,7 +219,10 @@
                                     <div class="text-gray-700 text-sm mb-2 flex justify-between">
                                         <span>{{ formatRelativeDate(comment.created_at) }}</span>
                                         <span>
-                                            <!-- <EditAndDeleteAction /> -->
+                                            <EditAndDeleteAction
+                                                :on-delete="() => deleteComment(comment)"
+                                                :on-edit="() => prepareCommentToUpdate(comment)"
+                                            />
                                         </span>
                                     </div>
                                     <p class="text-gray-700">
@@ -231,10 +234,10 @@
 
                         <form
                             class="flex-shrink-0 pt-2"
-                            @submit.prevent="createComment"
+                            @submit.prevent="createOrUpdateComment"
                         >
                             <h3 class="text-md font-bold mb-2">
-                                Nouveau commentaire
+                                {{ updatingComment!== null ? 'Modificatoin Commentaire' : 'Nouveau commentaire' }}
                             </h3>
                             <Textarea
                                 v-model="updateFormData.lastComment"
@@ -245,7 +248,7 @@
                                 type="submit"
                                 :in-progress="progressingComment"
                             >
-                                Créer
+                                {{ updatingComment!== null ? 'Modifier' : 'Créer' }}
                             </Button>
                         </form>
                     </DialogContent>
@@ -305,12 +308,13 @@ const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
 const tempCrmId = ref<number | null>(null);
 const tempComment = ref('');
+const updatingComment = ref<Comment | null>();
 const tempClientType = ref('users');
 
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
 const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
-const { loading, userComments, getUserComments, destroy, store } = useComment();
+const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateCrmUser } = useCrm();
 
 function openContactDialog(user) {
@@ -325,21 +329,44 @@ async function openCommentDialog(user: User) {
     tempCrmId.value = user.id;
     getUserComments(user);
 }
-const { submit: createComment, inProgress: progressingComment } = useSubmit(
+
+const prepareCommentToUpdate = (comment: Comment) => {
+    updatingComment.value = comment;
+};
+const { submit: createOrUpdateComment, inProgress: progressingComment } = useSubmit(
     async () => {
-        const response = await store(tempCrmId.value, 'User', tempComment.value);
+        if (updatingComment.value !== null && updatingComment.value instanceof Comment) {
+            const response = await update(updatingComment.value, {
+                ...updatingComment.value,
+                body: tempComment.value,
+            });
 
-        users.value = {
-            ...users.value,
-            data: users.value.data.map((u: User) =>
-                u.id === tempCrmId.value
-                    ? { ...u, comment: response }
-                    : u,
-            ),
-        };
+            userComments.value = userComments.value.map(c =>
+                c.id === updatingComment.value!.id ? { ...c, body: response.body } : c,
+            );
 
-        userComments.value.unshift(response);
+            users.value = {
+                ...users.value,
+                data: users.value.data.map((u: User) =>
+                    u.id === tempCrmId.value ? { ...u, comment: response } : u,
+                ),
+            };
+        }
+        else {
+            const response = await store(tempCrmId.value, 'User', tempComment.value);
+
+            userComments.value.unshift(response);
+
+            users.value = {
+                ...users.value,
+                data: users.value.data.map((u: User) =>
+                    u.id === tempCrmId.value ? { ...u, comment: response } : u,
+                ),
+            };
+        }
+
         tempComment.value = '';
+        updatingComment.value = null;
     },
     {
         onError: (error) => {
@@ -355,6 +382,14 @@ const deleteComment = (comment: Comment) => {
     destroy(comment).then(() => {
         userComments.value = userComments.value.filter((item: Comment) => item.id !== comment.id);
 
+        users.value = {
+            ...users.value,
+            data: users.value.data.map((u: User) =>
+                u.id === tempCrmId.value
+                    ? { ...u, comment: userComments.value[0] }
+                    : u,
+            ),
+        };
         $toast({
             description: 'Commentaire supprimé avec succès',
         });
