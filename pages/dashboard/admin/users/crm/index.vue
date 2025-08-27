@@ -198,7 +198,7 @@
                     v-model:open="commentDialogOpen"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                 >
-                    <DialogContent class="bg-white rounded-lg w-full sm:max-w-[425px] max-h-[90dvh] flex flex-col">
+                    <DialogContent class="bg-white rounded-lg w-full min-h-[40vh] sm:min-h-[300px] sm:max-w-[425px] max-h-[700px] flex flex-col">
                         <DialogHeader class="flex-shrink-0">
                             <DialogTitle class="text-primary">
                                 Commentaires
@@ -206,7 +206,10 @@
                         </DialogHeader>
 
                         <div class="flex-1 overflow-y-auto space-y-4">
-                            <RollingLoader v-if="loading" :loading="loading" />
+                            <RollingLoader
+                                v-if="loading"
+                                :loading="loading"
+                            />
                             <div v-else-if="userComments.length>0">
                                 <div
                                     v-for="(comment, key) in userComments"
@@ -214,10 +217,10 @@
                                     class="bg-white p-4 rounded-lg shadow-md"
                                 >
                                     <div class="text-gray-700 text-sm mb-2 flex justify-between">
-                                       <span>{{ formatRelativeDate(comment.created_at) }}</span>
-                                       <span>
-                                            <EditAndDeleteAction />
-                                       </span>
+                                        <span>{{ formatRelativeDate(comment.created_at) }}</span>
+                                        <span>
+                                            <!-- <EditAndDeleteAction /> -->
+                                        </span>
                                     </div>
                                     <p class="text-gray-700">
                                         {{ comment.body }}
@@ -226,7 +229,10 @@
                             </div>
                         </div>
 
-                        <form class="flex-shrink-0 pt-2">
+                        <form
+                            class="flex-shrink-0 pt-2"
+                            @submit.prevent="createComment"
+                        >
                             <h3 class="text-md font-bold mb-2">
                                 Nouveau commentaire
                             </h3>
@@ -237,8 +243,9 @@
                             <Button
                                 class="rounded"
                                 type="submit"
+                                :in-progress="progressingComment"
                             >
-                                Submit
+                                Créer
                             </Button>
                         </form>
                     </DialogContent>
@@ -266,13 +273,12 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { EyeIcon, PencilIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
-import type { User } from '~/lib/types';
+import type { User, Comment } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-
 import { useCrm } from '@/composables/useCrm';
 import RollingLoader from '~/components/RollingLoader.vue';
 
@@ -304,7 +310,7 @@ const tempClientType = ref('users');
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
 const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
-const { loading, userComments, getUserComments } = useComment();
+const { loading, userComments, getUserComments, destroy, store } = useComment();
 const { updateCrmUser } = useCrm();
 
 function openContactDialog(user) {
@@ -316,9 +322,49 @@ function openContactDialog(user) {
 
 async function openCommentDialog(user: User) {
     commentDialogOpen.value = true;
-
+    tempCrmId.value = user.id;
     getUserComments(user);
 }
+const { submit: createComment, inProgress: progressingComment } = useSubmit(
+    async () => {
+        const response = await store(tempCrmId.value, 'User', tempComment.value);
+
+        users.value = {
+            ...users.value,
+            data: users.value.data.map((u: User) =>
+                u.id === tempCrmId.value
+                    ? { ...u, comment: response }
+                    : u,
+            ),
+        };
+
+        userComments.value.unshift(response);
+        tempComment.value = '';
+    },
+    {
+        onError: (error) => {
+            $toast({
+                description: error.message,
+                variant: 'destructive',
+            });
+        },
+    },
+);
+
+const deleteComment = (comment: Comment) => {
+    destroy(comment).then(() => {
+        userComments.value = userComments.value.filter((item: Comment) => item.id !== comment.id);
+
+        $toast({
+            description: 'Commentaire supprimé avec succès',
+        });
+    }).catch(() => {
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
+        });
+    });
+};
 
 const updateFormData = reactive({
     clientType: tempClientType.value,
@@ -369,10 +415,7 @@ async function updateUserField(
     try {
         let response: { message: string; user: User };
 
-        if (type === 'comment') {
-            response = await updateField(Number(editingUserId.value), field);
-        }
-        else if (type === 'contact') {
+        if (type === 'contact') {
             response = await updateContact(Number(editingUserId.value), field);
         }
         else {
@@ -389,7 +432,6 @@ async function updateUserField(
         }
 
         dialogRef.value = false;
-        if (type === 'comment') tempComment.value = '';
 
         $toast({ description: successMessage });
     }

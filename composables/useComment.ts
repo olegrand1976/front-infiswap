@@ -20,6 +20,7 @@ export const useComment = () => {
         loading.value = true;
         const response = await $apifetch(`api/users/${user.id}/comments`);
         userComments.value = response.comments;
+
         loading.value = false;
     }
 
