@@ -198,7 +198,7 @@
                     v-model:open="commentDialogOpen"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                 >
-                    <DialogContent class="bg-white rounded-lg w-full min-h-[40vh] sm:min-h-[300px] sm:max-w-[425px] max-h-[700px] flex flex-col">
+                    <DialogContent class="bg-white rounded-lg w-full min-h-[40vh] sm:min-h-[300px] sm:max-w-[700px] max-h-[700px] flex flex-col">
                         <DialogHeader class="flex-shrink-0">
                             <DialogTitle class="text-primary">
                                 Commentaires
@@ -216,16 +216,22 @@
                                     :key="key"
                                     class="bg-white p-4 rounded-lg shadow-md"
                                 >
-                                    <div class="text-gray-700 text-sm mb-2 flex justify-between">
-                                        <span>{{ formatRelativeDate(comment.created_at) }}</span>
-                                        <span>
+                                    <div class="text-gray-700 text-sm mb-2 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <span>{{ formatRelativeDate(comment.created_at) }}</span>
+                                            <span
+                                                v-if="comment.created_at !== comment.updated_at"
+                                                class=" text-xs font-semibold"
+                                            >Modifié</span>
+                                        </div>
+                                        <div>
                                             <EditAndDeleteAction
                                                 :on-delete="() => deleteComment(comment)"
                                                 :on-edit="() => prepareCommentToUpdate(comment)"
                                             />
-                                        </span>
+                                        </div>
                                     </div>
-                                    <p class="text-gray-700">
+                                    <p class="text-gray-700 w-full break-words whitespace-normal">
                                         {{ comment.body }}
                                     </p>
                                 </div>
@@ -248,7 +254,7 @@
                                 type="submit"
                                 :in-progress="progressingComment"
                             >
-                                {{ updatingComment!== null ? 'Modifier' : 'Créer' }}
+                                {{ updatingComment !== null ? 'Modifier' : 'Créer' }}
                             </Button>
                         </form>
                     </DialogContent>
@@ -299,23 +305,23 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const selectedCrm = ref('users');
-const contactDialogOpen = ref(false);
-const commentDialogOpen = ref(false);
-
-const tempContactDate = ref('');
-const tempContactMethod = ref('mail');
-const editingUserId = ref<number | null>(null);
-const tempCrmId = ref<number | null>(null);
-const tempComment = ref('');
-const updatingComment = ref<Comment | null>();
-const tempClientType = ref('users');
-
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
 const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateCrmUser } = useCrm();
+
+const selectedCrm = ref('users');
+const contactDialogOpen = ref(false);
+const commentDialogOpen = ref(false);
+const tempContactDate = ref('');
+const tempContactMethod = ref('mail');
+const editingUserId = ref<number | null>(null);
+const tempCrmId = ref<number | null>(null);
+const tempComment = ref('');
+const updatingComment = ref<Comment | null>(null);
+const tempClientType = ref('users');
+
 
 function openContactDialog(user) {
     editingUserId.value = user.id;
@@ -332,17 +338,20 @@ async function openCommentDialog(user: User) {
 
 const prepareCommentToUpdate = (comment: Comment) => {
     updatingComment.value = comment;
+    tempComment.value = comment.body;
 };
+
 const { submit: createOrUpdateComment, inProgress: progressingComment } = useSubmit(
     async () => {
-        if (updatingComment.value !== null && updatingComment.value instanceof Comment) {
+        if (updatingComment.value !== null && typeof updatingComment.value.body === 'string') {
             const response = await update(updatingComment.value, {
-                ...updatingComment.value,
+                commentableId: updatingComment.value.commentable_id,
+                commentableType: 'User',
                 body: tempComment.value,
             });
 
             userComments.value = userComments.value.map(c =>
-                c.id === updatingComment.value!.id ? { ...c, body: response.body } : c,
+                c.id === updatingComment.value!.id ? { ...c, ...response } : c,
             );
 
             users.value = {
@@ -365,13 +374,14 @@ const { submit: createOrUpdateComment, inProgress: progressingComment } = useSub
             };
         }
 
-        tempComment.value = '';
+        tempCrmId.value = null;
+        tempComment.value = null;
         updatingComment.value = null;
     },
     {
-        onError: (error) => {
+        onError: () => {
             $toast({
-                description: error.message,
+                description: 'Une erreur est survenue',
                 variant: 'destructive',
             });
         },

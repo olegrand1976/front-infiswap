@@ -5,8 +5,8 @@ export const useComment = () => {
     const userComments = useState<Comment[]>('comments', () => undefined);
     const { $apifetch } = useNuxtApp();
 
-    async function store(id: number, type: string, body: string) {
-        return await $apifetch('api/comments', {
+    async function store(id: number, type: string, body: string): Promise<Comment> {
+        const response = await $apifetch('api/comments', {
             method: 'POST',
             body: {
                 commentableId: id,
@@ -14,6 +14,8 @@ export const useComment = () => {
                 body: body,
             },
         });
+
+        return response;
     };
 
     async function getUserComments(user: User) {
@@ -30,11 +32,17 @@ export const useComment = () => {
         });
     }
 
-    async function update(comment: Comment, newValue: Comment) {
-        await $apifetch(`api/comments/${comment.id}`, {
+    async function update(comment: Comment, newValue: {
+        commentableId: number;
+        commentableType: string;
+        body: string;
+    }): Promise<Comment> {
+        const response = await $apifetch(`api/comments/${comment.id}`, {
             method: 'PUT',
             params: newValue,
         });
+
+        return response;
     }
 
     return {
