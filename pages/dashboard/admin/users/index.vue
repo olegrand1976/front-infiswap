@@ -23,7 +23,7 @@
                     placeholder="Filtrer par C.P"
                     class="max-w-sm"
                     type="number"
-                    @input="debouncedFilterUsers"
+                    @input="handleZipCodeInput"
                 />
                 <Button
                     class="rounded-md"
@@ -117,6 +117,14 @@ const resetFilter = async () => {
     option.value = { ...initialFilter };
     page.value = 1;
     await getUsers(page.value, perPage.value, option.value);
+};
+
+const handleZipCodeInput = () => {
+    const zip = option.value.zip?.toString() ?? '';
+
+    if (zip.length === 4 || zip.length === 5) {
+        debouncedFilterUsers();
+    }
 };
 
 const columns: ColumnDef<User>[] = [

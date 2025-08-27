@@ -17,7 +17,7 @@
                     placeholder="Code postal"
                     class="w-[250px]"
                     type="number"
-                    @input="debouncedFilterUsers"
+                    @input="handleZipCodeInput"
                 />
                 <InputIcon
                     v-model="option.city"
@@ -412,6 +412,14 @@ const resetFilter = async () => {
     window.history.replaceState({}, '', cleanUrl);
 
     await getUsers(page.value, perPage.value, option.value);
+};
+
+const handleZipCodeInput = () => {
+    const zip = option.value.zip?.toString() ?? '';
+
+    if (zip.length === 4 || zip.length === 5) {
+        debouncedFilterUsers();
+    }
 };
 
 const columns: ColumnDef<User>[] = [
