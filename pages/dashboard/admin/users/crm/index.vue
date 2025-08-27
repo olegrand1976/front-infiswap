@@ -374,7 +374,6 @@ const { submit: createOrUpdateComment, inProgress: progressingComment } = useSub
             };
         }
 
-        tempCrmId.value = null;
         tempComment.value = null;
         updatingComment.value = null;
     },
@@ -497,13 +496,6 @@ function saveContact() {
         'Contact mis à jour avec succès',
     );
 }
-
-const saveComment = () => {
-    return updateCrmUserField(
-        'comment',
-        commentDialogOpen,
-    );
-};
 
 const user = ref(null);
 const route = useRoute();
