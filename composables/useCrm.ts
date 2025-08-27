@@ -20,7 +20,7 @@ export const useCrm = () => {
     }
 
     const crmUser = async (formData) => {
-        return await $apifetch('/api/crm', {
+        return await $apifetch('/api/crm/plus', {
             method: 'POST',
             body: formData,
         });

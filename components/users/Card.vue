@@ -34,7 +34,7 @@
 
         <div
             v-if="isAdmin"
-            class="px-6 text-left text-sm text-gray-700 mb-8"
+            class="px-6 text-left text-sm text-gray-700 mb-8 h-96 overflow-y-auto"
         >
             <div class="flex gap-4 mb-4 border-b border-gray-300">
                 <button
@@ -83,7 +83,7 @@
 
             <div
                 v-if="activeTab === 'activite'"
-                class="space-y-3"
+                class="space-y-3 border border-gray-200 rounded-lg p-4"
             >
                 <div
                     class="flex items-center gap-2 cursor-pointer"
@@ -159,7 +159,7 @@
 
             <div
                 v-else-if="activeTab === 'information'"
-                class="space-y-3"
+                class="space-y-3 border border-gray-200 rounded-lg p-4"
             >
                 <p class="flex items-center gap-2 text-primary">
                     <EnvelopeIcon class="w-5 h-5" />
@@ -185,7 +185,7 @@
 
             <div
                 v-else-if="activeTab === 'contact'"
-                class="space-y-3"
+                class="space-y-3 border border-gray-200 rounded-lg p-4"
             >
                 <p>
                     Date de dernier contact :
@@ -233,7 +233,7 @@
 
             <div
                 v-else-if="activeTab === 'product'"
-                class="space-y-3"
+                class="space-y-3 border border-gray-200 rounded-lg p-4"
             >
                 <div
                     v-if="user.product_activity_summary && user.product_activity_summary.length"
