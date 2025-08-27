@@ -198,37 +198,48 @@
                     v-model:open="commentDialogOpen"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                 >
-                    <DialogContent class="bg-white rounded-lg p-6 max-w-md w-full">
-                        <DialogHeader>
-                            <DialogTitle class="text-lg font-semibold text-primary mb-4">
-                                Rajouter un commentaire
+                    <DialogContent class="bg-white rounded-lg w-full sm:max-w-[425px] max-h-[90dvh] flex flex-col">
+                        <DialogHeader class="flex-shrink-0">
+                            <DialogTitle class="text-primary">
+                                Commentaires
                             </DialogTitle>
                         </DialogHeader>
 
-                        <form @submit.prevent="saveComment">
-                            <div>
-                                <Textarea
-                                    v-model="updateFormData.lastComment"
-                                    class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer mb-4"
-                                />
+                        <div class="flex-1 overflow-y-auto space-y-4">
+                            <RollingLoader v-if="loading" :loading="loading" />
+                            <div v-else-if="userComments.length>0">
+                                <div
+                                    v-for="(comment, key) in userComments"
+                                    :key="key"
+                                    class="bg-white p-4 rounded-lg shadow-md"
+                                >
+                                    <div class="text-gray-700 text-sm mb-2 flex justify-between">
+                                       <span>{{ formatRelativeDate(comment.created_at) }}</span>
+                                       <span>
+                                            <EditAndDeleteAction />
+                                       </span>
+                                    </div>
+                                    <p class="text-gray-700">
+                                        {{ comment.body }}
+                                    </p>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="flex justify-end space-x-2">
-                                <Button
-                                    variant="secondary"
-                                    class="px-4 py-2 rounded"
-                                    type="button"
-                                    @click="commentDialogOpen = false"
-                                >
-                                    Annuler
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
-                                >
-                                    Valider
-                                </Button>
-                            </div>
+                        <form class="flex-shrink-0 pt-2">
+                            <h3 class="text-md font-bold mb-2">
+                                Nouveau commentaire
+                            </h3>
+                            <Textarea
+                                v-model="updateFormData.lastComment"
+                                class="w-full h-[4rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
+                            />
+                            <Button
+                                class="rounded"
+                                type="submit"
+                            >
+                                Submit
+                            </Button>
                         </form>
                     </DialogContent>
                 </Dialog>
@@ -263,6 +274,7 @@ import { Switch } from '~/components/ui/switch';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 import { useCrm } from '@/composables/useCrm';
+import RollingLoader from '~/components/RollingLoader.vue';
 
 const showModal = ref(false);
 
@@ -292,6 +304,7 @@ const tempClientType = ref('users');
 const { $toast } = useNuxtApp();
 const { getAll } = useProduct();
 const { users, getUsers, edit, updateContact, updateField, isCollaborator } = useAuth();
+const { loading, userComments, getUserComments } = useComment();
 const { updateCrmUser } = useCrm();
 
 function openContactDialog(user) {
@@ -301,12 +314,10 @@ function openContactDialog(user) {
     contactDialogOpen.value = true;
 }
 
-function openCommentDialog(user: User) {
-    editingUserId.value = user.id;
-    tempCrmId.value = Number(user.crm.id);
-    tempClientType.value = user.crm.client_type ?? '';
-    tempComment.value = user.crm.last_comment ?? '';
+async function openCommentDialog(user: User) {
     commentDialogOpen.value = true;
+
+    getUserComments(user);
 }
 
 const updateFormData = reactive({
@@ -669,14 +680,14 @@ const columns: ColumnDef<User>[] = [
         enableSorting: false,
     },
     {
-        accessorKey: 'crm.last_comment',
+        accessorKey: 'comment',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('crm.last_comment') }, () => [
                 'Commentaire',
                 h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
             ]),
         cell: ({ row }) => {
-            const comment = row.original?.crm?.last_comment;
+            const comment = row.original?.comment;
 
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
@@ -686,8 +697,7 @@ const columns: ColumnDef<User>[] = [
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'max-w-[150px] truncate text-sm',
-                                title: comment,
-                            }, comment || ''),
+                            }, comment?.body || ''),
 
                             h(PencilIcon, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
