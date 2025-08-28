@@ -225,7 +225,7 @@
                                 value="caregiver"
                             >
                             <label for="caregiver">
-                                Assistant(e) soignant(e)
+                                Aide soignant(e)
                             </label>
                         </div>
                         <div class="flex gap-2 items-center">

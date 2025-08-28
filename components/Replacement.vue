@@ -1838,7 +1838,7 @@ const toggleDay = (day: string) => {
 
 const roles = {
     nurse: 'Infirmier(e)',
-    caregiver: 'Assistant(e) soignant(e)',
+    caregiver: 'Aide soignant(e)',
     midwife: 'Sage-femme',
 };
 

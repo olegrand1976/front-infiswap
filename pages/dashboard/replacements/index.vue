@@ -172,7 +172,7 @@ const replacementTypeFilters = {
 const replacementRoleFilters = {
     all: 'Tous',
     nurse: 'Infirmier(ère)',
-    caregiver: 'Assistant(e) soignant(e)',
+    caregiver: 'Aide soignant(e)',
     midwife: 'Sage-femme',
 };
 
