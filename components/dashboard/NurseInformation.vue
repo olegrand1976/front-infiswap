@@ -18,7 +18,7 @@
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>Vous cherchez un remplaçant pour compléter votre tournée ?</span>
+                                            <span>Vous cherchez à complèter votre tournée.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
@@ -96,7 +96,7 @@
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
-                                            <span>Accédez à la liste des remplacements pour lesquels vous avez candidaté.</span>
+                                            <span>Accédez à la liste des remplacements où vous avez postulés.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
@@ -130,7 +130,7 @@
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-primary font-bold mr-1 md:mr-2">•</span>
-                                            <span>Vous cherchez un remplaçant pour compléter votre tournée ?</span>
+                                            <span>Vous cherchez à complèter votre tournée.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
@@ -205,7 +205,7 @@
                                     <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
                                         <li class="flex items-start">
                                             <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
-                                            <span>Accédez à la liste des remplacements pour lesquels vous avez candidaté.</span>
+                                            <span>Accédez à la liste des remplacements où vous avez postulés.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
