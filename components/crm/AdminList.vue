@@ -186,6 +186,7 @@ function openModal(selectedUser: User) {
 function openContactDialog(user: User) {
     editingUserId.value = user.id;
     tempCrmId.value = Number(user.crm.id);
+    console.log('haka anazy ', user);
     tempClientType.value = user.crm.client_type ?? '';
     tempContactDate.value = user.contact_date ?? '';
     tempContactMethod.value = user.contact_method ?? 'mail';
@@ -282,7 +283,7 @@ function saveContact() {
     //     'Contact mis à jour avec succès',
     // );
     return updateCrmUserField(
-        'contact',
+        'comment',
         contactDialogOpen,
     );
 }
@@ -376,7 +377,7 @@ const columns: ColumnDef<User>[] = [
                 const index = localUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
                     localUsers.value[index].insurance = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_prnullableoduct_modifications ?? [];
+                    const mods = localUsers.value[index].last_product_modifications ?? [];
                     const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
                     if (modIndex !== -1) {
                         mods[modIndex].activate = value ? 1 : 0;
