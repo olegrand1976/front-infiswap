@@ -160,7 +160,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort']);
+const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 
 const showModal = ref(false);
 const contactDialogOpen = ref(false);
@@ -170,9 +170,9 @@ const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
 const tempCrmId = ref<number | null>(null);
 const tempComment = ref('');
-const tempClientType = ref('users');
+const tempClientType = ref('user');
 const { $toast } = useNuxtApp();
-const { edit, updateContact, updateField, isCollaborator } = useAuth();
+const { edit, isCollaborator } = useAuth();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
 
@@ -186,10 +186,9 @@ function openModal(selectedUser: User) {
 function openContactDialog(user: User) {
     editingUserId.value = user.id;
     tempCrmId.value = Number(user.crm.id);
-    console.log('haka anazy ', user);
     tempClientType.value = user.crm.client_type ?? '';
-    tempContactDate.value = user.contact_date ?? '';
-    tempContactMethod.value = user.contact_method ?? 'mail';
+    tempContactDate.value = user.crm.last_contact_date ?? '';
+    tempContactMethod.value = user.crm.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
     contactDialogOpen.value = true;
@@ -205,6 +204,7 @@ function openCommentDialog(user: User) {
 }
 
 const updateFormData = reactive({
+    userId: editingUserId,
     clientType: tempClientType.value,
     lastContactDate: tempContactDate,
     lastContactMethod: tempContactMethod,
@@ -226,6 +226,12 @@ const updateCrmUserField = async (
         //         data: localUsers.map(u => u.id === editingUserId.value ? response.user : u),
         //     };
         // }
+        if (response?.crm) {
+            localUsers.value = localUsers.value.map(u =>
+                u.id === editingUserId.value ? { ...u, crm: response.crm } : u,
+            );
+            emit('update-users', localUsers.value);
+        }
     }
     catch {
         $toast({
@@ -234,54 +240,12 @@ const updateCrmUserField = async (
         });
     }
     finally {
+        // emit('refresh-users');
         dialogRef.value = false;
     }
 };
 
-async function updateUserField(
-    type: 'comment' | 'contact',
-    field: Partial<User>,
-    dialogRef: Ref<boolean>,
-    successMessage: string,
-) {
-    if (!editingUserId.value) return;
-    try {
-        let response: { message: string; user: User };
-        if (type === 'comment') {
-            response = await updateField(Number(editingUserId.value), field);
-        }
-        else if (type === 'contact') {
-            response = await updateContact(Number(editingUserId.value), field);
-        }
-        else {
-            throw new Error(`Type inconnu pour la mise à jour utilisateur: ${type}`);
-        }
-        // if (response?.user && props.users) {
-        //     props.users = {
-        //         ...props.users,
-        //         data: localUsers.map(u => u.id === editingUserId.value ? response.user : u),
-        //     };
-        // }
-        dialogRef.value = false;
-        if (type === 'comment') tempComment.value = '';
-        $toast({ description: successMessage });
-    }
-    catch (error) {
-        console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
-        $toast({ description: 'Une erreur est survenue', variant: 'destructive' });
-    }
-}
-
 function saveContact() {
-    // return updateUserField(
-    //     'contact',
-    //     {
-    //         contact_date: tempContactDate.value,
-    //         contact_method: tempContactMethod.value,
-    //     },
-    //     contactDialogOpen,
-    //     'Contact mis à jour avec succès',
-    // );
     return updateCrmUserField(
         'comment',
         contactDialogOpen,
@@ -506,7 +470,7 @@ const columns: ColumnDef<User>[] = [
             h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const rawDate = row.original.contact_date;
+            const rawDate = row.original.crm.last_contact_date;
             let formattedDate = '';
             if (rawDate) {
                 const date = new Date(rawDate);
@@ -535,7 +499,7 @@ const columns: ColumnDef<User>[] = [
             h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const method = row.original.contact_method;
+            const method = row.original.crm.last_contact_method;
             const displayMethod = method === 'mail'
                 ? 'Mail'
                 : method === 'phone'

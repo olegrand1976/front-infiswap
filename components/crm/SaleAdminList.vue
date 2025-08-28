@@ -124,7 +124,7 @@ const columnsCrm: ColumnDef<User>[] = [
             h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const rawDate = row.original.contact_date;
+            const rawDate = row.original.crm.last_contact_date;
             let formattedDate = '';
             if (rawDate) {
                 const date = new Date(rawDate);
@@ -149,7 +149,7 @@ const columnsCrm: ColumnDef<User>[] = [
             h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const method = row.original.contact_method;
+            const method = row.original.crm.last_contact_method;
             const displayMethod = method === 'mail'
                 ? 'Mail'
                 : method === 'phone'
@@ -185,10 +185,17 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'nb_call',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('nb_call') }, () => [
-            'Nombre d\'appels passés dans la semaine',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_call'),
+                title: 'Nombre d\'appels passés dans la semaine',
+            },
+            () => [
+                'Nombre d\'appels passés',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
         cell: ({ row }) => {
             const nb_call = Number(row.original.crm?.nb_call) || 0;
             return h('div', {
@@ -207,10 +214,17 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'nb_sale',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('nb_sale') }, () => [
-            'Nombre de vente passés dans la semaine',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_sale'),
+                title: 'Nombre de vente passés dans la semaine',
+            },
+            () => [
+                'Nombre de vente passés',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
         cell: ({ row }) => {
             const nb_sale = Number(row.original.crm?.nb_sale) || 0;
             return h('div', {
@@ -229,10 +243,17 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'nb_recommandation',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('nb_recommandation') }, () => [
-            'Nombre de recommandations obtenues',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_recommandation'),
+                title: 'Nombre de recommandations obtenues dans la semaine',
+            },
+            () => [
+                'Nombre de recommandations obtenues',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
         cell: ({ row }) => {
             const nb_recommandation = Number(row.original.crm?.nb_recommandation) || 0;
             return h('div', {
@@ -251,10 +272,17 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'nb_meeting',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('nb_meeting') }, () => [
-            'Nombre de rendez-vous planifiés',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_meeting'),
+                title: 'Nombre de rendez-vous planifiés dans la semaine',
+            },
+            () => [
+                'Nombre de rendez-vous planifiés',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
         cell: ({ row }) => {
             const nb_meeting = Number(row.original.crm?.nb_meeting) || 0;
             return h('div', {
@@ -267,6 +295,35 @@ const columnsCrm: ColumnDef<User>[] = [
                                 class: 'max-w-[150px] truncate text-sm',
                                 title: nb_meeting.toString(),
                             }, nb_meeting || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_pending',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_pending'),
+                title: 'Nombre de réponse en attente dans la semaine',
+            },
+            () => [
+                'Nombre de réponse en attente',
+                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_pending = Number(row.original.crm?.nb_pending) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_pending.toString(),
+                            }, nb_pending || ''),
                         ]),
             ]);
         },
