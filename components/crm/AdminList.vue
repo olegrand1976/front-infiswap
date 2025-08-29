@@ -220,12 +220,24 @@ const updateCrmUserField = async (
         $toast({
             description: response.message,
         });
-        // if (response?.crm && props.users) {
-        //     props.users = {
-        //         ...props.users,
-        //         data: localUsers.map(u => u.id === editingUserId.value ? response.user : u),
-        //     };
-        // }
+        const idx = localUsers.value.findIndex(u => u.id === editingUserId.value);
+        if (idx !== -1) {
+            const current = localUsers.value[idx];
+            const updatedUser = {
+                ...current,
+                crm: {
+                    ...current.crm,
+                    ...(type === 'contact'
+                        ? {
+                                last_contact_date: updateFormData.lastContactDate,
+                                last_contact_method: updateFormData.lastContactMethod,
+                            }
+                        : { last_comment: updateFormData.lastComment }),
+                },
+            };
+            localUsers.value[idx] = updatedUser;
+            localUsers.value = [...localUsers.value];
+        }
     }
     catch {
         $toast({
@@ -234,14 +246,13 @@ const updateCrmUserField = async (
         });
     }
     finally {
-        emit('refresh-users');
         dialogRef.value = false;
     }
 };
 
 function saveContact() {
     return updateCrmUserField(
-        'comment',
+        'contact',
         contactDialogOpen,
     );
 }

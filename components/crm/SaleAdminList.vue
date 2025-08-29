@@ -13,7 +13,6 @@
                 <UsersCard
                     :user="user"
                     @close="showModal = false"
-                    @refresh-users="emit('refresh-users', page)"
                 />
             </DialogContent>
         </Dialog>
