@@ -19,7 +19,7 @@ type CrmUser = {
     nb_sale?: number;
     nb_recommandation?: number;
     nb_meeting?: number;
-    ng_pending?: number;
+    nb_pending?: number;
     last_contact_date?: string;
     last_contact_method?: string;
     last_comment?: string;
