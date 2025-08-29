@@ -305,7 +305,7 @@ const deleteComment = (comment: Comment) => {
         userComments.value = userComments.value.filter((item: Comment) => item.id !== comment.id);
 
         localUsers.value = localUsers.value.map(u =>
-            u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            u.id === tempCrmId.value ? { ...u, last_comment: userComments.value[0] } : u,
         );
 
         emit('update-users', {
