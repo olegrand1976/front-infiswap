@@ -705,7 +705,7 @@ const { getAll } = useProduct();
 const { crmUser } = useCrm();
 const activityData = ref(null);
 const products = ref<{ id: number; name: string }[]>([]);
-const emit = defineEmits(['close', 'refresh-users']);
+const emit = defineEmits(['close', 'refresh-users', 'user-updated']);
 const { $toast } = useNuxtApp();
 const defaultForm = {
     user_id: props.user.id,
@@ -780,15 +780,18 @@ const { submit, inProgress } = useSubmit(async () => {
         ],
     };
 
-    await crmUser(payload);
+    // await crmUser(payload);
+    const response = await crmUser(payload);
+    return response.crm;
 }, {
-    onSuccess: () => {
+    onSuccess: (updatedUser) => {
         $toast({
             description: 'Données mises à jour avec succès',
         });
         form.value = { ...defaultForm };
         comment.value = '';
-        emit('refresh-users');
+        // emit('refresh-users');
+        emit('user-updated', updatedUser);
         emit('close');
     },
 });

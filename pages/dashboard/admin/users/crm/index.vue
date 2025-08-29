@@ -112,6 +112,7 @@
                     @refresh-users="refreshUsers"
                     @handle-per-page-change="handlePerPageChange"
                     @set-sort="setSort"
+                    @user-updated="handleUserUpdate"
                 />
             </template>
         </DashboardAdminPageContent>
@@ -188,6 +189,15 @@ onMounted(async () => {
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
     await getCrmPlus(newPage, perPage.value, { ...option.value, sortOrder: sort.order, sortKey: sort.by });
+};
+
+const handleUserUpdate = (updatedCrmObject) => {
+    const index = users.value.data.findIndex(u => u.id === updatedCrmObject.user_id);
+    if (index !== -1) {
+        const existingUser = { ...users.value.data[index] };
+        existingUser.crm = updatedCrmObject;
+        users.value.data[index] = existingUser;
+    }
 };
 
 const handlePerPageChange = async (value: number) => {

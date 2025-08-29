@@ -13,6 +13,7 @@
                 <UsersCard
                     :user="user"
                     @close="showModal = false"
+                    @user-updated="emit('user-updated', $event)"
                 />
             </DialogContent>
         </Dialog>
@@ -24,6 +25,7 @@
                 :total="props.users.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
+                @user-updated="emit('user-updated', $event)"
             />
         </div>
     </div>
@@ -45,7 +47,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort']);
+const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'user-updated']);
 
 const showModal = ref(false);
 const user = ref<User | null>(null);
@@ -341,7 +343,9 @@ const columnsCrm: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users, (newUsers) => {
-    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
-}, { immediate: true });
+watch(() => props.users.data, (newUsersData) => {
+    if (newUsersData) {
+        localUsers.value = [...newUsersData];
+    }
+}, { deep: true, immediate: true });
 </script>
