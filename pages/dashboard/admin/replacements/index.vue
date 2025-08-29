@@ -57,7 +57,7 @@
                         <span>Rôle</span>
                         <span class="ml-4 font-semibold text-nowrap w-40">
                             {{
-                                option.role === 'nurse' ? 'Infirmier(ère)' : option.role === 'caregiver' ? 'Assistant(e) soignant(e)' : option.role === 'midwife' ? 'Sage-femme' : 'tous'
+                                option.role === 'nurse' ? 'Infirmier(ère)' : option.role === 'caregiver' ? 'Aide soignant(e)' : option.role === 'midwife' ? 'Sage-femme' : 'tous'
                             }}
                         </span>
                     </SelectTrigger>
@@ -67,7 +67,7 @@
                                 <span class="ml-2">Infirmier(ère)</span>
                             </SelectItem>
                             <SelectItem :value="'caregiver'">
-                                <span class="ml-2">Assistant(e) soignant(e)</span>
+                                <span class="ml-2">Aide soignant(e)</span>
                             </SelectItem>
                             <SelectItem :value="'midwife'">
                                 <span class="ml-2">Sage-femme</span>

@@ -634,7 +634,7 @@ const accountOptions = [
         value: 'nurse',
     },
     {
-        label: 'Assistant(e) soignant(e)',
+        label: 'Aide soignant(e)',
         value: 'caregiver',
     },
     {

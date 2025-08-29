@@ -34,8 +34,8 @@
                     rounded="md"
                     placeholder="Code postal"
                     class="w-[250px]"
-                    type="number"
-                    @input="debouncedFilterUsers"
+                    type="numeric"
+                    @input="handleZipCodeInput"
                 />
                 <InputIcon
                     v-model="option.city"
@@ -205,6 +205,19 @@ const resetFilter = async () => {
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
     await getCrmPlus(page.value, perPage.value, option.value);
+};
+
+const handleZipCodeInput = (event) => {
+    const zip = event.target.value ?? '';
+
+    if (zip.length === 0) {
+        resetFilter();
+        return;
+    }
+
+    if (zip.length === 4 || zip.length === 5) {
+        debouncedFilterUsers(zip);
+    }
 };
 
 const sort = reactive({

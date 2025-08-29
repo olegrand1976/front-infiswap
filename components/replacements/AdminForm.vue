@@ -65,7 +65,7 @@
                             @click.prevent="handleOpenReleaseConfirmation"
                         >
                             <ArrowPathIcon class="mr-2" />
-                            <span>Libérer le remplacement</span>
+                            <span>Ré-ouvrir le remplacement</span>
                         </Button>
                     </div>
                 </div>
@@ -422,7 +422,7 @@
         <AlertDialog :open="openReleaseModal">
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Libérer le remplacement</AlertDialogTitle>
+                    <AlertDialogTitle>Ré-ouvrir le remplacement</AlertDialogTitle>
                     <AlertDialogDescription>
                         Cela définira toutes les réponses liées à ce remplacement comme étant en attente. Cette action est irréversible.
                     </AlertDialogDescription>
@@ -454,7 +454,7 @@ const props = defineProps<{
 
 const { isAdmin } = useAuth();
 const { careTypes, fetchCareTypes } = useCareTypes();
-const { updateAgainReplacement, release } = useReplacements();
+const { updateAgainReplacement, updateReplacement } = useReplacements();
 const isEditMode = computed(() => !!props.replacement);
 const formatDate = (dateString: string | null) => {
     const date = new Date(dateString);
@@ -474,11 +474,9 @@ function handleCloseReleaseConfirmation() {
     openReleaseModal.value = false;
 }
 
-async function handleRelease(replacement: Replacement) {
-    return await release(replacement.id).then(() => {
-        handleCloseReleaseConfirmation();
-    });
-}
+const emit = defineEmits<{
+    (e: 'update:replacement', value: Replacement): void;
+}>();
 
 const transformCareInformations = (careInfo: string | object) => {
     try {
@@ -592,6 +590,23 @@ const { submit, inProgress } = useSubmit(async () => {
         });
     },
 });
+
+async function handleRelease(replacement: Replacement): Promise<{ replacement: Replacement; message: string }> {
+    const response = await updateReplacement({
+        id: replacement.id,
+        status: 'open',
+    });
+
+    const updatedReplacement = { ...props.replacement, status: response.replacement.status };
+
+    emit('update:replacement', updatedReplacement);
+
+    form.status = response.replacement.status;
+
+    handleCloseReleaseConfirmation();
+
+    return response;
+}
 
 const handleCareTypeClick = (careTypesArray, careTypes) => {
     const index = careTypesArray.indexOf(careTypes);

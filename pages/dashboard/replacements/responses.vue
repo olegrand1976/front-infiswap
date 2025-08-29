@@ -46,12 +46,35 @@
                                 Période
                             </p>
                             <p>
-                                <template v-if="response?.parent?.start_date === response?.parent?.end_date">
-                                    {{ new Date(response?.parent?.start_date).toLocaleDateString('fr-FR') }}
+                                <template v-if="response?.parent?.start_date && response?.parent?.end_date">
+                                    <template v-if="response.parent.start_date === response.parent.end_date">
+                                        {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }}
+                                    </template>
+                                    <template v-else>
+                                        {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }} -
+                                        {{ new Date(response.parent.end_date).toLocaleDateString('fr-FR') }}
+                                    </template>
                                 </template>
+
+                                <template v-else-if="response?.parent?.periods?.length">
+                                    <ul>
+                                        <li
+                                            v-for="(period) in response.parent.periods"
+                                            :key="period.id"
+                                        >
+                                            <template v-if="period.start_date === period.end_date">
+                                                {{ new Date(period.start_date).toLocaleDateString('fr-FR') }}
+                                            </template>
+                                            <template v-else>
+                                                {{ new Date(period.start_date).toLocaleDateString('fr-FR') }} -
+                                                {{ new Date(period.end_date).toLocaleDateString('fr-FR') }}
+                                            </template>
+                                        </li>
+                                    </ul>
+                                </template>
+
                                 <template v-else>
-                                    {{ new Date(response?.parent?.start_date).toLocaleDateString('fr-FR') }} -
-                                    {{ new Date(response?.parent?.end_date).toLocaleDateString('fr-FR') }}
+                                    Non défini
                                 </template>
                             </p>
                         </div>
@@ -343,7 +366,21 @@ const formatArray = (jsonString: string) => {
 const formatTimeSlot = (timeSlot: string) => {
     try {
         const slot = JSON.parse(timeSlot);
-        return `${slot.start_at} - ${slot.end_at}`;
+
+        const extractSlots = (obj: any): string[] => {
+            const results: string[] = [];
+            if (obj.start_at && obj.end_at) {
+                results.push(`${obj.start_at} - ${obj.end_at}`);
+            }
+            for (const key in obj) {
+                if (typeof obj[key] === 'object') {
+                    results.push(...extractSlots(obj[key]));
+                }
+            }
+            return results;
+        };
+
+        return extractSlots(slot).join(' | ');
     }
     catch {
         return timeSlot;
