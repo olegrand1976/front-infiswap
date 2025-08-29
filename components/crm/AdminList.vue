@@ -227,15 +227,6 @@ function openContactDialog(user: User) {
     contactDialogOpen.value = true;
 }
 
-// function openCommentDialog(user: User) {
-//     editingUserId.value = user.id;
-//     tempCrmId.value = Number(user.crm.id);
-//     tempClientType.value = user.crm.client_type ?? '';
-//     tempComment.value = user.crm.last_comment ?? '';
-//     updateFormData.lastComment = tempComment.value;
-//     commentDialogOpen.value = true;
-// }
-
 async function openCommentDialog(user: User) {
     commentDialogOpen.value = true;
     tempCrmId.value = user.id;
