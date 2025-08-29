@@ -234,7 +234,7 @@ const updateCrmUserField = async (
         });
     }
     finally {
-        // emit('refresh-users');
+        emit('refresh-users');
         dialogRef.value = false;
     }
 };
