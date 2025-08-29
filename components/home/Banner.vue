@@ -133,20 +133,20 @@
                 />
             </div>
             <div class="p-4 lg:p-8 col-span-3 lg:col-span-2 text-start lg:text-start">
-                <p class="font-bold mb-4">
-                    🎉 Ça y est, InfiSwap est en ligne ! 🩺
+                <p class="mb-4">
+                    🩺 InfiSwap, c’est la 1ère plateforme belge 100% automatisée dédiée au remplacement entre infirmier(ère)s indépendant(e)s. Et chaque semaine, de nouveaux pros rejoignent la communauté ! 💪
                 </p>
                 <p class="mb-4">
-                    Après plusieurs semaines de travail intense, de tests et de collaboration avec des infirmier(ère)s de terrain, nous avons le plaisir de vous annoncer l’ouverture officielle de notre plateforme.
+                    Pensée avec et pour les professionnel(le)s de terrain, InfiSwap simplifie vos démarches : que vous cherchiez un remplacement, un complément d’activité ou une meilleure organisation de votre tournée, tout se fait en quelques clics, sans frais.
                 </p>
                 <p class="mb-4">
-                    Notre objectif : vous offrir un outil simple, fluide et pensé pour répondre à vos besoins concrets — que vous cherchiez un remplacement, un complément d’activité ou une solution pour mieux organiser votre tournée.
+                    ✅ Zéro papier
+                    ✅ Zéro perte de temps
+                    ✅ Zéro commission
+                    Juste un outil simple, fluide et efficace pour vous aider à travailler plus librement.
                 </p>
                 <p class="mb-4">
-                    🚀 Ce n’est que le début : d’autres fonctionnalités arrivent très bientôt pour enrichir encore votre expérience.
-                </p>
-                <p class="mb-4">
-                    🙏 Merci pour votre patience, votre confiance et votre enthousiasme. L’aventure commence maintenant… et on est ravis de la vivre avec vous !
+                    🚀 De nombreuses nouveautés sont encore à venir pour enrichir votre expérience. Rejoignez le mouvement, InfiSwap continue de grandir avec vous !
                 </p>
             </div>
         </div>
