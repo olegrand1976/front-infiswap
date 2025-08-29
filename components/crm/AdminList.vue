@@ -107,10 +107,10 @@
                         v-if="loading"
                         :loading="loading"
                     />
-                    <div v-else-if="userComments.length>0">
+                    <div v-else>
                         <div
-                            v-for="(comment, key) in userComments"
-                            :key="key"
+                            v-for="comment in userComments"
+                            :key="comment.id"
                             class="bg-white p-4 rounded-lg shadow-md"
                         >
                             <div class="text-gray-700 text-sm mb-2 flex justify-between items-center">
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-700 w-full break-words whitespace-normal">
-                                {{ comment.body }}
+                                {{ comment.body ?? '' }}
                             </p>
                         </div>
                     </div>
@@ -181,6 +181,7 @@ import { Switch } from '~/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/composables/useAuth';
+import { formatRelativeDate } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
 
@@ -238,7 +239,7 @@ function openContactDialog(user: User) {
 async function openCommentDialog(user: User) {
     commentDialogOpen.value = true;
     tempCrmId.value = user.id;
-    getUserComments(user);
+    await getUserComments(user);
 }
 
 const prepareCommentToUpdate = (comment: Comment) => {
@@ -259,24 +260,31 @@ const { submit: createOrUpdateComment, inProgress: progressingComment } = useSub
                 c.id === updatingComment.value!.id ? { ...c, ...response } : c,
             );
 
-            users.value = {
-                ...users.value,
-                data: users.value.data.map((u: User) =>
-                    u.id === tempCrmId.value ? { ...u, comment: response } : u,
+            localUsers.value = localUsers.value.map(u =>
+                u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            );
+            emit('update-users', {
+                ...props.users,
+                data: props.users.data.map((u: User) =>
+                    u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
                 ),
-            };
+            });
         }
         else {
             const response = await store(tempCrmId.value, 'User', tempComment.value);
 
             userComments.value.unshift(response);
 
-            users.value = {
-                ...users.value,
-                data: users.value.data.map((u: User) =>
-                    u.id === tempCrmId.value ? { ...u, comment: response } : u,
+            localUsers.value = localUsers.value.map(u =>
+                u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            );
+
+            emit('update-users', {
+                ...props.users,
+                data: props.users.data.map((u: User) =>
+                    u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
                 ),
-            };
+            });
         }
 
         tempComment.value = null;
@@ -296,14 +304,19 @@ const deleteComment = (comment: Comment) => {
     destroy(comment).then(() => {
         userComments.value = userComments.value.filter((item: Comment) => item.id !== comment.id);
 
-        users.value = {
-            ...users.value,
-            data: users.value.data.map((u: User) =>
+        localUsers.value = localUsers.value.map(u =>
+            u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+        );
+
+        emit('update-users', {
+            ...props.users,
+            data: props.users.data.map((u: User) =>
                 u.id === tempCrmId.value
-                    ? { ...u, comment: userComments.value[0] }
+                    ? { ...u, last_comment: userComments.value[0] || null }
                     : u,
             ),
-        };
+        });
+
         $toast({
             description: 'Commentaire supprimé avec succès',
         });
@@ -357,13 +370,6 @@ function saveContact() {
         contactDialogOpen,
     );
 }
-
-const saveComment = () => {
-    return updateCrmUserField(
-        'comment',
-        commentDialogOpen,
-    );
-};
 
 const setSort = (columnKey: string) => {
     emit('set-sort', columnKey);
@@ -544,13 +550,10 @@ const columns: ColumnDef<User>[] = [
         enableSorting: false,
     },
     {
-        accessorKey: 'crm.last_comment',
-        header: () => h(Button, { variant: 'ghost', onClick: () => setSort('crm.last_comment') }, () => [
-            'Commentaire',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
-        ]),
+        accessorKey: 'last_comment',
+        header: 'Commentaire',
         cell: ({ row }) => {
-            const comment = row.original?.crm?.last_comment;
+            const comment = row.original?.last_comment;
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
@@ -559,8 +562,8 @@ const columns: ColumnDef<User>[] = [
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'max-w-[150px] truncate text-sm',
-                                title: comment,
-                            }, comment || ''),
+                                title: comment?.body ?? '',
+                            }, comment?.body || ''),
                             h(PencilIcon, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
                                 onClick: () => openCommentDialog(row.original),

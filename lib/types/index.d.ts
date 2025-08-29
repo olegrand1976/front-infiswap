@@ -89,7 +89,7 @@ export type User = {
     crm?: CrmUser;
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
-    comment: Comment;
+    last_comment: Comment;
 };
 
 type LastProductModifications = {
