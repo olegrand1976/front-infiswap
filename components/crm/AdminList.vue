@@ -226,12 +226,6 @@ const updateCrmUserField = async (
         //         data: localUsers.map(u => u.id === editingUserId.value ? response.user : u),
         //     };
         // }
-        if (response?.crm) {
-            localUsers.value = localUsers.value.map(u =>
-                u.id === editingUserId.value ? { ...u, crm: response.crm } : u,
-            );
-            emit('update-users', localUsers.value);
-        }
     }
     catch {
         $toast({
