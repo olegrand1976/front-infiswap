@@ -704,8 +704,21 @@ const { activityUser } = useReplacements();
 const { getAll } = useProduct();
 const { crmUser } = useCrm();
 const activityData = ref(null);
-
 const products = ref<{ id: number; name: string }[]>([]);
+const emit = defineEmits(['close', 'refresh-users']);
+const { $toast } = useNuxtApp();
+const defaultForm = {
+    user_id: props.user.id,
+    client_type: 'user',
+    start_date: '',
+    end_date: '',
+    number: '',
+    produit_id: '',
+    type: '',
+};
+const form = ref({ ...defaultForm });
+const comment = ref(props.user.comment_crm ?? '');
+
 // const selectedProduct = ref<string>('');
 
 onMounted(async () => {
@@ -740,25 +753,9 @@ const translatedCategory = computed(() => {
     return props.user.professional_category;
 });
 
-const { $toast } = useNuxtApp();
-
-const defaultForm = {
-    user_id: props.user.id,
-    client_type: 'user',
-    start_date: '',
-    end_date: '',
-    number: '',
-    produit_id: '',
-    type: '',
-};
-
-const form = ref({ ...defaultForm });
-
 watch(tradeTab, (val) => {
     form.value.type = val;
 }, { immediate: true });
-
-const emit = defineEmits(['close', 'refresh-users']);
 
 const { submit, inProgress } = useSubmit(async () => {
     const payload = {
@@ -795,8 +792,6 @@ const { submit, inProgress } = useSubmit(async () => {
         emit('close');
     },
 });
-
-const comment = ref(props.user.comment_crm ?? '');
 
 loadActivity();
 
