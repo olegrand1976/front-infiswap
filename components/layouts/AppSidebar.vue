@@ -319,7 +319,7 @@ const adminNavigationItems: NavigationItem[] = [
         visible: true,
     },
     {
-        label: 'Inscription de la sémaine dernière',
+        label: 'Inscriptions de la semaine dernière',
         route: 'https://metabase.infiswap.be/public/dashboard/c3547aaf-0edd-4e3c-b050-729bacb0cc6a',
         icon: ChartBarIcon,
         visible: !isCollaborator.value,
