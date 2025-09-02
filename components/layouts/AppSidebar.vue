@@ -212,7 +212,6 @@ import {
     PlayCircleIcon,
     ShoppingBagIcon,
     ChartBarIcon,
-    ChartPieIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -319,18 +318,10 @@ const adminNavigationItems: NavigationItem[] = [
         visible: true,
     },
     {
-        label: 'Inscriptions de la semaine dernière',
-        route: 'https://metabase.infiswap.be/public/dashboard/c3547aaf-0edd-4e3c-b050-729bacb0cc6a',
+        label: 'Inscriptions',
+        route: '/dashboard/admin/registrations',
         icon: ChartBarIcon,
         visible: !isCollaborator.value,
-        external: true,
-    },
-    {
-        label: 'Inscription du mois dernier',
-        route: 'https://metabase.infiswap.be/public/dashboard/6eed0ce9-679a-4d4f-a938-d7fad95a14bd',
-        icon: ChartPieIcon,
-        visible: !isCollaborator.value,
-        external: true,
     },
     {
         label: 'Remplacements',

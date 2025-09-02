@@ -196,3 +196,13 @@ export const regions = [
     'Flandre-Occidentale',
     'Flandre-Orientale',
 ];
+
+export function debounce(func, delay) {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    return (...args) => {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};

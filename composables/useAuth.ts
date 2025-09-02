@@ -261,6 +261,18 @@ export const useAuth = () => {
         });
     }
 
+    async function getRecentUsers(page = 1, perPage = 15, options = {}) {
+        return await $apifetch('api/admin/users/registration', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            users.value = response;
+        });
+    }
+
     async function getCrmPlus(page = 1, perPage = 15, options = {}) {
         return await $apifetch('api/crm', {
             params: {
@@ -499,5 +511,6 @@ export const useAuth = () => {
         updateContact,
         updateRadiusKm,
         isAdminGroup,
+        getRecentUsers,
     };
 };
