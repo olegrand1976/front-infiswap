@@ -17,7 +17,10 @@
                         <span>
                             Semaine dernière
                         </span>
-                        <Badge class="bg-primary text-white ml-2">
+                        <Badge
+                            v-if="dataWeekUsers?.length != 0"
+                            class="bg-primary text-white ml-2"
+                        >
                             {{ dataWeekUsers?.length }}
                         </Badge>
                     </TabsTrigger>
@@ -28,7 +31,10 @@
                         <span>
                             Mois dernier
                         </span>
-                        <Badge class="bg-primary text-white ml-2">
+                        <Badge
+                            v-if="dataMonthUsers?.length != 0"
+                            class="bg-primary text-white ml-2"
+                        >
                             {{ dataMonthUsers?.length }}
                         </Badge>
                     </TabsTrigger>
@@ -38,15 +44,15 @@
                 :data="selectedPeriod == 'lastWeek' ? dataWeekUsers : dataMonthUsers"
                 :columns="columns"
             />
-            <div>
-                <CustomPagination
-                    :default-page="page"
-                    :per-page="perPage"
-                    :total="selectedPeriod == 'lastWeek' ? dataWeekUsers?.length : dataMonthUsers?.length"
-                    @update:per-page="handlePerPageChange"
-                />
-            </div>
         </DashboardAdminPageContent>
+        <div>
+            <CustomPagination
+                :default-page="page"
+                :per-page="perPage"
+                :total="selectedPeriod == 'lastWeek' ? dataWeekUsers?.length : dataMonthUsers?.length"
+                @update:per-page="handlePerPageChange"
+            />
+        </div>
     </div>
 </template>
 
