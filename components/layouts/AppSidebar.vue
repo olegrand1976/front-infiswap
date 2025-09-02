@@ -106,6 +106,13 @@
                                             />
                                             <span>{{ item.label }}</span>
                                         </div>
+
+                                        <Badge
+                                            v-if="item.route === '/dashboard/admin/contacts'"
+                                            class="ml-2 bg-primary text-white"
+                                        >
+                                            5
+                                        </Badge>
                                     </NuxtLink>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

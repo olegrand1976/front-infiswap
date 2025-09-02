@@ -12,19 +12,40 @@
                         value="nurstech"
                         class="w-full md:w-48 h-12"
                     >
-                        Nurstech
+                        <span>
+                            Nurstech
+                        </span>
+                        <Badge
+                            class="ml-2 bg-primary text-white"
+                        >
+                            5
+                        </Badge>
                     </TabsTrigger>
                     <TabsTrigger
                         value="nursassur"
                         class="w-full md:w-48 h-12"
                     >
-                        Nursassur
+                        <span>
+                            Nursassur
+                        </span>
+                        <Badge
+                            class="ml-2 bg-primary text-white"
+                        >
+                            5
+                        </Badge>
                     </TabsTrigger>
                     <TabsTrigger
                         value="infiswap"
                         class="w-full md:w-48 h-12"
                     >
-                        Infiswap
+                        <span>
+                            Infiswap
+                        </span>
+                        <Badge
+                            class="ml-2 bg-primary text-white"
+                        >
+                            5
+                        </Badge>
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
