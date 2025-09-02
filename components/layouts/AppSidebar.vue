@@ -97,6 +97,7 @@
                                             'bg-primary text-white font-bold': isActiveRoute(item.route),
                                             'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
                                         }"
+                                        :target="item.external ? '_blank': ''"
                                     >
                                         <div class="flex space-x-2 items-center">
                                             <component
@@ -158,7 +159,7 @@
             <SidebarGroup class="hover:cursor-pointer">
                 <NuxtLink
                     to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
-                    target="_blanl"
+                    target="_blank"
                     class="text-center flex flex-col gap-1"
                 >
                     <div class="flex justify-center text-yellow-400">
@@ -210,6 +211,8 @@ import {
     QuestionMarkCircleIcon,
     PlayCircleIcon,
     ShoppingBagIcon,
+    ChartBarIcon,
+    ChartPieIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -240,6 +243,7 @@ interface NavigationItem {
     isActive?: boolean;
     children?: NavigationItem[];
     visible?: boolean;
+    external?: boolean;
 }
 
 const nurseNavigationItems: NavigationItem[] = [
@@ -313,6 +317,20 @@ const adminNavigationItems: NavigationItem[] = [
         route: '/dashboard/admin',
         icon: SquaresPlusIcon,
         visible: true,
+    },
+    {
+        label: 'Inscriptions de la semaine dernière',
+        route: 'https://metabase.infiswap.be/public/dashboard/c3547aaf-0edd-4e3c-b050-729bacb0cc6a',
+        icon: ChartBarIcon,
+        visible: !isCollaborator.value,
+        external: true,
+    },
+    {
+        label: 'Inscription du mois dernier',
+        route: 'https://metabase.infiswap.be/public/dashboard/6eed0ce9-679a-4d4f-a938-d7fad95a14bd',
+        icon: ChartPieIcon,
+        visible: !isCollaborator.value,
+        external: true,
     },
     {
         label: 'Remplacements',
