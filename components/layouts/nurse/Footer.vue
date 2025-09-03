@@ -1,5 +1,14 @@
 <template>
     <footer>
+        <div
+            v-if="props.theme == 'assur'"
+            class="w-full text-center py-6 px-4 font-medium text-sm"
+            :class="txtClass"
+        >
+            <p>
+                N.E. 0899.850.984 Barbara Murgo, Intermédiaire d’assurances agissant pour Quality Insurance & Crédit SRL – Agent d'assurance exclusif lié P&V ASSURANCES
+            </p>
+        </div>
         <div :class="bgClass">
             <div class="flex lg:container flex-col md:flex-row justify-center items-center pt-8 md:py-12 px-4">
                 <div class="flex flex-col w-full max-w-2xl justify-center items-center">
@@ -116,16 +125,6 @@
                 <NuxtLink>Site commercialisé par </NuxtLink>
                 <NuxtLink>LL-IT Software & Computer</NuxtLink> :
                 <NuxtLink to="https://www.ll-it-sc.be">www.ll-it-sc.be</NuxtLink>
-            </p>
-        </div>
-
-        <div
-            v-if="props.theme == 'assur'"
-            class="container pt-4 w-full text-center text-xs font-medium"
-            :class="txtClass"
-        >
-            <p>
-                N.E. 0899.850.984 Barbara Murgo,  Intermédiaire d’assurances agissant pour Quality Insurance & Crédit SRL  – Agent d'assurance exclusif lié P&V ASSURANCES
             </p>
         </div>
 
