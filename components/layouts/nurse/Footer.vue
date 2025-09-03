@@ -6,10 +6,13 @@
         >
             <div class="flex lg:container flex-col md:flex-row justify-center items-center pt-8 md:py-10 px-4 -mt-4">
                 <div class="flex flex-col w-full max-w-2xl justify-center items-center">
-                    <div class="flex flex-col w-full space-y-4 py-8 md:py-0 text-center">
-                        <h3 class="text-white font-semibold lg:text-xl md:text-lg">
-                            N.E. 0899.850.984 Barbara Murgo, <br> Intermédiaire d’assurances agissant pour <br> Quality Insurance & Crédit SRL <br> Agent d'assurance exclusif lié P&V ASSURANCES
+                    <div class="flex flex-col line- w-full space-y-2 py-8 md:py-0 text-center text-white">
+                        <h3 class="font-semibold lg:text-xl md:text-lg">
+                            N.E. 0899.850.984 Barbara Murgo
                         </h3>
+                        <p>Intermédiaire d’assurances agissant pour</p>
+                        <p>Quality Insurance & Crédit SRL</p>
+                        <p>Agent d'assurance exclusif lié <span class="font-semibold">P&V ASSURANCES</span></p>
                     </div>
                 </div>
             </div>
