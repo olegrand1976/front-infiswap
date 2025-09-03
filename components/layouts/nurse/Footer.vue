@@ -2,7 +2,7 @@
     <footer>
         <div
             v-if="props.theme == 'assur'"
-            class="w-full text-center py-6 px-4 font-medium text-base -mt-10"
+            class="w-full text-center py-6 px-4 font-medium text-lg -mt-10"
             :class="txtClass"
         >
             <p>
