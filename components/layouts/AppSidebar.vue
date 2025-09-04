@@ -1,8 +1,8 @@
 <template>
     <Sidebar>
-        <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content min-w-[260px] w-[260px]">
+        <SidebarContent class="p-2 bg-white flex flex-col gap-8 justify-between sidebar-content min-w-[260px] w-[260px]">
             <SidebarGroup
-                :class="cn('h-full rounded-xl pb-6', {
+                :class="cn('rounded-xl pb-6', {
                     'bg-white': isAdmin,
                     'bg-gray-100': !isAdmin,
                 })"
@@ -12,7 +12,7 @@
                 </SidebarHeader>
 
                 <SidebarGroupContent
-                    class="mt-2 mx-auto h-full flex flex-col justify-between"
+                    class="mt-2 mx-auto flex flex-col gap-4"
                     :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
@@ -171,14 +171,12 @@
                     </div>
                     <p class="text-sm font-bold">Évaluez-nous sur</p>
                     <LayoutsAppImage
-                        src="/google-brand-color.svg"
+                        src="/google-brand.svg"
                         class="w-32 mx-auto"
                     />
                 </NuxtLink>
-            </SidebarGroup>
-            <SidebarGroup>
                 <Button
-                    class="w-full rounded flex space-x-2 items-center justify-arround"
+                    class="w-full mt-4 rounded flex space-x-2 items-center justify-arround"
                     @click="logout"
                 >
                     <PowerIcon class="w-6 opacity-80" />
@@ -212,7 +210,6 @@ import {
     PlayCircleIcon,
     ShoppingBagIcon,
     ChartBarIcon,
-    ChartPieIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -319,18 +316,10 @@ const adminNavigationItems: NavigationItem[] = [
         visible: true,
     },
     {
-        label: 'Inscriptions de la semaine dernière',
-        route: 'https://metabase.infiswap.be/public/dashboard/c3547aaf-0edd-4e3c-b050-729bacb0cc6a',
+        label: 'Inscriptions',
+        route: '/dashboard/admin/registrations',
         icon: ChartBarIcon,
         visible: !isCollaborator.value,
-        external: true,
-    },
-    {
-        label: 'Inscription du mois dernier',
-        route: 'https://metabase.infiswap.be/public/dashboard/6eed0ce9-679a-4d4f-a938-d7fad95a14bd',
-        icon: ChartPieIcon,
-        visible: !isCollaborator.value,
-        external: true,
     },
     {
         label: 'Remplacements',

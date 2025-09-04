@@ -230,6 +230,8 @@ export type CareType = {
     price?: number;
 };
 export type Pagination<T> = {
+    weekly?: T[];
+    monthly?: T[];
     current_page: number;
     data: T[];
     first_page_url: string;
