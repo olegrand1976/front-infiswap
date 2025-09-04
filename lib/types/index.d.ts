@@ -11,6 +11,12 @@ type GroupRole = {
     created_at: string;
 };
 
+export type Referrer = {
+    id: number;
+    full_name: string;
+    email: string;
+};
+
 type CrmUser = {
     id: number;
     user_id: number;
@@ -24,6 +30,7 @@ type CrmUser = {
     last_contact_method?: string;
     last_comment?: string;
     created_at: string;
+    referred_by?; Referrer;
 };
 
 export type User = {
@@ -90,6 +97,7 @@ export type User = {
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
     last_comment: Comment;
+    is_business_referrer?: boolean | number;
 };
 
 type LastProductModifications = {

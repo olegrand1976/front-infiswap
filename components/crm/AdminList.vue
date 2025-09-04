@@ -157,6 +157,64 @@
             </DialogContent>
         </Dialog>
 
+        <Dialog
+            v-model:open="referrerDialogOpen"
+            class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+        >
+            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
+                <p class="font-semibold mb-4">
+                    Sélectionner un référent
+                </p>
+
+                <RollingLoader
+                    v-if="loading"
+                    :loading="loading"
+                />
+
+                <template v-else>
+                    <p
+                        v-if="!userReferrer || userReferrer.length === 0"
+                        class="text-gray-500 italic text-center py-4"
+                    >
+                        Pas encore de porteur d'affaire enregistré
+                    </p>
+
+                    <ul
+                        v-else
+                        class="space-y-2 max-h-64 overflow-y-auto"
+                    >
+                        <li
+                            v-for="ref in userReferrer"
+                            :key="ref.id"
+                            class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
+                            :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
+                            @click="selectedReferrer = ref"
+                        >
+                            {{ ref.full_name }} ({{ ref.email }})
+                        </li>
+                    </ul>
+                </template>
+
+                <div class="flex justify-end space-x-2 mt-4">
+                    <Button
+                        variant="secondary"
+                        class="px-4 py-2 rounded"
+                        type="button"
+                        @click="referrerDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        type="button"
+                        class="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                        @click="confirmReferrer"
+                    >
+                        Valider
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+
         <div>
             <CustomPagination
                 :default-page="page"
@@ -174,7 +232,7 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { EyeIcon, PencilIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
-import type { Comment, Pagination, User } from '~/lib/types';
+import type { Comment, Pagination, User, Referrer } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -193,10 +251,12 @@ const props = defineProps<{
 
 const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
+const { updateReferrer, userReferrer, getUserReferrer } = useReferrer();
 
 const showModal = ref(false);
 const contactDialogOpen = ref(false);
 const commentDialogOpen = ref(false);
+const referrerDialogOpen = ref(false);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
@@ -208,6 +268,7 @@ const { $toast } = useNuxtApp();
 const { edit, isCollaborator } = useAuth();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
+const selectedReferrer = ref<{ id: number } | null>(null);
 
 const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
 
@@ -231,6 +292,47 @@ async function openCommentDialog(user: User) {
     commentDialogOpen.value = true;
     tempCrmId.value = user.id;
     await getUserComments(user);
+}
+
+async function openReferrerDialog(user: User) {
+    referrerDialogOpen.value = true;
+    tempCrmId.value = user.id;
+    await getUserReferrer();
+}
+
+async function confirmReferrer() {
+    if (!selectedReferrer.value) return;
+
+    try {
+        const response: { referred_by: Referrer } = await updateReferrer(tempCrmId.value, {
+            referred_by: selectedReferrer.value.id,
+        });
+
+        localUsers.value = localUsers.value.map(u =>
+            u.id === tempCrmId.value
+                ? { ...u, referred_by: { ...response.referred_by } }
+                : u,
+        );
+
+        emit('update-users', {
+            ...props.users,
+            data: localUsers.value,
+        });
+
+        $toast({
+            description: 'Porteur d\'affaire mis à jour avec succès',
+            variant: 'success',
+        });
+
+        referrerDialogOpen.value = false;
+    }
+    catch (error) {
+        console.error(error);
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
+        });
+    }
 }
 
 const prepareCommentToUpdate = (comment: Comment) => {
@@ -626,6 +728,30 @@ const columns: ColumnDef<User>[] = [
                             h(PencilIcon, {
                                 class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
                                 onClick: () => openContactDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'crm.referred_by',
+        header: 'Apporté par',
+        cell: ({ row }) => {
+            const referrer = row.original?.referred_by as Referrer | undefined;
+
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: referrer?.full_name ?? '',
+                            }, referrer?.full_name || ''),
+                            h(PencilIcon, {
+                                class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 flex-shrink-0',
+                                onClick: () => openReferrerDialog(row.original),
                             }),
                         ]),
             ]);
