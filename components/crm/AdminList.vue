@@ -304,13 +304,13 @@ async function confirmReferrer() {
     if (!selectedReferrer.value) return;
 
     try {
-        const response: { referred_by: Referrer } = await updateReferrer(tempCrmId.value, {
+        const response = await updateReferrer(tempCrmId.value, {
             referred_by: selectedReferrer.value.id,
         });
 
         localUsers.value = localUsers.value.map(u =>
             u.id === tempCrmId.value
-                ? { ...u, referred_by: { ...response.referred_by } }
+                ? { ...u, referred_by: { ...response } }
                 : u,
         );
 
