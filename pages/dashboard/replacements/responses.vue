@@ -301,7 +301,7 @@ import { useListResponse, changeStatusReplacement } from '~/composables/useRepla
 import type { ReplacementResponse, User } from '~/lib/types';
 
 const user = useState<User>('user');
-const { listResponse, getReplacementResponses } = useListResponse(user.value.nurse.id);
+const { listResponse, getReplacementResponses } = useListResponse(user.value.id);
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
 const selectedNurse = ref(null);
