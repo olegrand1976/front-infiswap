@@ -542,6 +542,37 @@
                     </form>
                 </DialogContent>
             </Dialog>
+
+            <Dialog v-model:open="preferenceDialog">
+                <DialogContent
+                    class="sm:max-w-xl overflow-y-auto"
+                >
+                    <DialogHeader>
+                        <DialogTitle>
+                            Afficher par préférence
+                        </DialogTitle>
+                    </DialogHeader>
+                    <p class="text-center sm:text-start">
+                        Souhaitez-vous afficher la liste de recherche en se basant sur votre préférence ?
+                    </p>
+
+                    <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
+                        <Button
+                            variant="secondary"
+                            class="w-full sm:w-auto"
+                            @click="cancelFilterPreference"
+                        >
+                            Non
+                        </Button>
+                        <Button
+                            class="w-full sm:w-auto"
+                            @click="acceptFilterPreference"
+                        >
+                            Oui
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </Tabs>
     </div>
 </template>
@@ -581,6 +612,7 @@ const formData = reactive({
 
 const detailDialog = ref(false);
 const responseDialog = ref(false);
+const preferenceDialog = ref(true);
 
 const handleShowDetail = (partnership: UserPartner) => {
     selectedPartnership.value = partnership;
@@ -598,10 +630,24 @@ const postalCodeInput = ref('');
 const cityInput = ref('');
 
 const searchFormData = reactive({
-    postalCodeTags: setting?.replacement?.zip_codes,
-    cityTags: setting?.replacement?.cities,
+    postalCodeTags: [],
+    cityTags: [],
     type: activeTab.value,
 });
+
+const cancelFilterPreference = async () => {
+    searchFormData.postalCodeTags = [];
+    searchFormData.cityTags = [];
+    preferenceDialog.value = false;
+    await loadDemandPartners();
+};
+
+const acceptFilterPreference = async () => {
+    searchFormData.postalCodeTags = setting?.replacement?.zip_codes || [];
+    searchFormData.cityTags = setting?.replacement?.cities || [];
+    preferenceDialog.value = false;
+    await loadDemandPartners();
+};
 
 const isSubmitted = ref(false);
 
@@ -666,10 +712,6 @@ const changePerPage = async (newPerPage: number) => {
     page.value = 1;
     await loadDemandPartners();
 };
-
-onMounted(async () => {
-    await loadDemandPartners();
-});
 
 const removeTag = async (tagArrayRef, tagToRemove) => {
     const updatedTags = tagArrayRef.filter(tag => tag !== tagToRemove);
