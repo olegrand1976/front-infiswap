@@ -217,6 +217,7 @@ import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useRuntimeConfig } from '#app';
+import { PERPAGE } from '~/lib/constants';
 
 defineProps({
     collapsed: Boolean,
@@ -233,6 +234,11 @@ const closeSidebar = () => {
         setOpenMobile(false);
     }
 };
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const { products, getProducts } = useProduct();
+await getProducts(page.value, perPage.value);
+
 interface NavigationItem {
     label: string;
     route: string;
@@ -242,6 +248,21 @@ interface NavigationItem {
     visible?: boolean;
     external?: boolean;
 }
+
+const contactChildren = computed(() => {
+    return [
+        {
+            label: 'Infiswap',
+            route: '/dashboard/admin/contacts/infiswap',
+            icon: InboxIcon,
+        },
+        ...products.value.map(p => ({
+            label: p.name,
+            route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
+            icon: InboxIcon,
+        })),
+    ];
+});
 
 const nurseNavigationItems: NavigationItem[] = [
     {
@@ -365,9 +386,10 @@ const adminNavigationItems: NavigationItem[] = [
     },
     {
         label: 'Contacts',
-        route: '/dashboard/admin/contacts',
+        route: '/dashboard/admin/contacts/infiswap',
         icon: InboxIcon,
         visible: !isCollaborator.value,
+        children: contactChildren.value,
     },
     {
         label: 'Tutoriels',
