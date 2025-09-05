@@ -90,6 +90,8 @@ export type User = {
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
     last_comment: Comment;
+    is_business_referrer?: boolean | number;
+    referred_by?; Referrer;
 };
 
 type LastProductModifications = {
@@ -385,4 +387,10 @@ export type Comment = {
     body: string;
     created_at: string;
     updated_at: string;
+};
+
+export type Referrer = {
+    id: number;
+    full_name: string;
+    email: string;
 };

@@ -61,6 +61,7 @@ import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.v
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
+import { Switch } from '~/components/ui/switch';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -68,7 +69,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, count, getUsers, forceDelete, resendEmailVerification, validate } = useAuth();
+const { users, isSuperAdmin, count, getUsers, forceDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -274,6 +275,31 @@ const columns: ColumnDef<User>[] = [
             const zipCodes = settings?.replacement?.zip_codes?.join(', ') || 'Aucun code postal';
             return h('div', { class: 'text-center capitalize truncate whitespace-nowrap overflow-hidden' }, zipCodes);
         },
+    },
+    {
+        accessorKey: 'is_business_referrer',
+        header: 'Porteur d\'affaire',
+        cell: ({ row }) => {
+            const user = row.original as User;
+
+            const toggle = async (value: boolean) => {
+                const response = await edit(Number(user.id), { is_business_referrer: value });
+
+                if (response.status === 'Succès') {
+                    user.is_business_referrer = value;
+                }
+            };
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(Switch, {
+                    'class': 'mx-auto text-center',
+                    'checked': !!user.is_business_referrer,
+                    'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
+                }),
+            ]);
+        },
+        enableSorting: false,
     },
     {
         accessorKey: 'created_at',
