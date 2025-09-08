@@ -1631,8 +1631,6 @@ onMounted(async () => {
     if (import.meta.client) {
         isMobileView.value = window.innerWidth <= 1024;
     }
-    await fetchCareTypes();
-    await fetchInitialData(page.value, perPage.value);
 });
 
 const localFilters = reactive({
@@ -1885,6 +1883,8 @@ watch(
     },
     { deep: true },
 );
+
+await fetchCareTypes();
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
@@ -2208,7 +2208,6 @@ const { submit } = useSubmit(async () => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>
 
