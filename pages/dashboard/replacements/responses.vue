@@ -346,13 +346,6 @@ const openNurseDialog = (responseDetail: ReplacementResponse) => {
     nurseDialog.value = true;
 };
 
-await getReplacementResponses();
-
-definePageMeta({
-    layout: 'dashboard',
-    middleware: ['auth', 'verified'],
-});
-
 const formatArray = (jsonString: string) => {
     try {
         const array = JSON.parse(jsonString);
@@ -367,16 +360,25 @@ const formatTimeSlot = (timeSlot: string) => {
     try {
         const slot = JSON.parse(timeSlot);
 
-        const extractSlots = (obj: any): string[] => {
+        const extractSlots = (obj): string[] => {
             const results: string[] = [];
-            if (obj.start_at && obj.end_at) {
-                results.push(`${obj.start_at} - ${obj.end_at}`);
+
+            if (typeof obj !== 'object' || obj === null) {
+                return results;
             }
+
+            if ('start_at' in obj || 'end_at' in obj) {
+                const start = obj.start_at ?? 'Non défini';
+                const end = obj.end_at ?? 'Non défini';
+                results.push(`${start} - ${end}`);
+            }
+
             for (const key in obj) {
-                if (typeof obj[key] === 'object') {
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
                     results.push(...extractSlots(obj[key]));
                 }
             }
+
             return results;
         };
 
@@ -386,4 +388,11 @@ const formatTimeSlot = (timeSlot: string) => {
         return timeSlot;
     }
 };
+
+await getReplacementResponses();
+
+definePageMeta({
+    layout: 'dashboard',
+    middleware: ['auth', 'verified'],
+});
 </script>
