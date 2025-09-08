@@ -83,7 +83,7 @@
                                 class="flex flex-row space-x-3"
                             >
                                 <PhoneIcon class="h-4 w-4 text-primary" />
-                                <p class="text-sm">0478.02.33.77</p>
+                                <p class="text-sm">+32 (0) 478.02.33.77</p>
                             </NuxtLink>
                         </li>
                         <li>

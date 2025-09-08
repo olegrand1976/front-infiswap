@@ -15,7 +15,7 @@
                     href="mailto:info@infiswap.be"
                     class="text-primary font-bold"
                     target="_blank"
-                >info@infiswap.be</a> ou au 0478.02.33.77 pour plus d'informations.
+                >info@infiswap.be</a> ou au +32 (0) 478.02.33.77 pour plus d'informations.
             </p>
             <p class="mt-2">
                 Après cette période de lancement un tarif de 18 €/mois ou 180 €/an sera demandé aux infirmières souhaitant continuer à utiliser InfiSwap.
