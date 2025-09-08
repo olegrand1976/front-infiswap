@@ -1573,6 +1573,11 @@ import { useCareTypes } from '@/composables/useCareTypes';
 const { $toast } = useNuxtApp();
 
 const props = defineProps({
+    selectedRegions: {
+        type: Array as PropType<string[]>,
+        required: false,
+        default: () => [],
+    },
     type: {
         type: String,
         required: false,
@@ -1605,7 +1610,6 @@ const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 const selectedReplacement = ref<Replacement>(null);
-const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const pagination = ref({
@@ -1793,24 +1797,32 @@ const formData = reactive({
     filters: localFilters,
 });
 
+const emit = defineEmits(['update:selectedRegions']);
+let newRegions = [...props.selectedRegions];
+let internalUpdate = false;
+
 const updateRegionSelection = (region: string, checked: boolean) => {
+    internalUpdate = true;
+
     if (checked) {
-        if (!selectedRegions.value.includes(region)) {
-            selectedRegions.value = [...selectedRegions.value, region];
+        if (!newRegions.includes(region)) {
+            newRegions.push(region);
         }
     }
     else {
-        selectedRegions.value = selectedRegions.value.filter(r => r !== region);
+        newRegions = newRegions.filter(r => r !== region);
     }
+    emit('update:selectedRegions', newRegions);
 };
 
 const validateSelection = async () => {
     filterRegionDialog.value = false;
     await fetchInitialData(page.value, perPage.value);
+    emit('update:selectedRegions', props.selectedRegions);
 };
 
 const cancelSelection = () => {
-    selectedRegions.value = [];
+    emit('update:selectedRegions', []);
     filterRegionDialog.value = false;
 };
 
@@ -1851,7 +1863,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             selectedDays: [],
             type: props.type,
             filters: localFilters,
-            provinces: selectedRegions.value,
+            provinces: newRegions,
             page,
             perPage,
         });
@@ -1873,7 +1885,12 @@ watch(
     () => props.filteredProvinces,
     (newProvinces, oldProvinces) => {
         if (newProvinces !== oldProvinces) {
-            selectedRegions.value = [...newProvinces as string[]];
+            newRegions = [...newProvinces as string[]];
+
+            if (internalUpdate) {
+                internalUpdate = false;
+                return;
+            }
             fetchInitialData(page.value, perPage.value);
         }
     },
