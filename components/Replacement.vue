@@ -249,13 +249,12 @@
                                             ]"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell
                                                 :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
@@ -576,13 +575,12 @@
                                         ]"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -862,13 +860,12 @@
                                             class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -1070,13 +1067,12 @@
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
