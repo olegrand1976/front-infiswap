@@ -225,9 +225,9 @@
             </div>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="grid">
-                <div class="bg-gray-100 rounded p-4 mb-4">
+        <section class="flex flex-col lg:flex-row w-full">
+            <div class="w-full">
+                <div class="bg-gray-100 rounded p-4">
                     <div class="text-primary flex justify-between items-center">
                         <h2>
                             Mes préférences
@@ -303,7 +303,7 @@
                 </div>
             </div>
 
-            <div class="bg-gray-100 rounded-b-lg relative">
+            <div class="w-full">
                 <h3 class="text-white bg-primary p-3 rounded-t-lg">
                     Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                 </h3>
