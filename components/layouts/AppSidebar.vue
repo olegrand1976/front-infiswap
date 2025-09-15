@@ -410,6 +410,12 @@ const adminNavigationItems: NavigationItem[] = [
         icon: ShoppingBagIcon,
         visible: true,
     },
+    {
+        label: 'Contrats NURSTECH',
+        route: '/dashboard/admin/contracts/nurstech',
+        icon: ShoppingBagIcon,
+        visible: true,
+    },
 ];
 
 const role = computed(() => {
