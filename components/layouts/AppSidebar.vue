@@ -392,6 +392,12 @@ const adminNavigationItems: NavigationItem[] = [
         children: contactChildren.value,
     },
     {
+        label: 'Contrats NURSTECH',
+        route: '/dashboard/admin/contracts/nurstech',
+        icon: DocumentCurrencyEuroIcon,
+        visible: true,
+    },
+    {
         label: 'Tutoriels',
         route: '/dashboard/admin/tutorials',
         icon: PlayCircleIcon,
@@ -408,12 +414,6 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,
-        visible: true,
-    },
-    {
-        label: 'Contrats NURSTECH',
-        route: '/dashboard/admin/contracts/nurstech',
-        icon: DocumentCurrencyEuroIcon,
         visible: true,
     },
 ];

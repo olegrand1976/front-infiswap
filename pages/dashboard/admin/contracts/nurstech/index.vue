@@ -24,31 +24,45 @@
 
                         <div class="mt-4 mb-6">
                             <InputIcon
+                                v-model="optionUser.name"
                                 :icon="UserCircleIcon"
                                 rounded="md"
                                 placeholder="Entrer nom ou prénom"
                                 class="max-w-full"
+                                @input="debouncedFilterUsers"
                             />
 
-                            <ul class="mt-4 divide-y divide-gray-100">
-                                <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 px-2 rounded hover:bg-gray-50 transition">
-                                    <div>
-                                        <h4 class="font-semibold">
-                                            DUBOIS Paul
-                                        </h4>
-                                        <p>
-                                            paul@gmail.com
-                                        </p>
-                                    </div>
+                            <template v-if="dataUsers.length != 0">
+                                <ul class="mt-4 divide-y divide-gray-100">
+                                    <li
+                                        v-for="user in dataUsers"
+                                        :key="user.id"
+                                        class="flex justify-between items-center py-4 px-2 rounded hover:bg-gray-50 transition"
+                                    >
+                                        <div>
+                                            <UsersCrm
+                                                :user="user"
+                                                class="font-semibold text-gray-800"
+                                            />
+                                            <p>
+                                                {{ user.email }}
+                                            </p>
+                                        </div>
 
-                                    <div>
-                                        <PlusCircleIcon
-                                            class="w-8 text-primary cursor-pointer"
-                                            @click="router.push('/dashboard/admin/contracts/nurstech/create')"
-                                        />
-                                    </div>
-                                </li>
-                            </ul>
+                                        <div>
+                                            <PlusCircleIcon
+                                                class="w-8 text-primary cursor-pointer"
+                                                @click="handleCreateContract(user)"
+                                            />
+                                        </div>
+                                    </li>
+                                </ul>
+                            </template>
+                            <template v-else>
+                                <p class="mt-8 text-gray-500 text-center">
+                                    Aucune résultat trouvé
+                                </p>
+                            </template>
 
                             <div class="mt-8 flex justify-end">
                                 <Button
@@ -119,10 +133,34 @@ import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
+import { debounce } from '~/lib/utils';
 
-const { isSuperAdmin } = useAuth();
+const { isSuperAdmin, users, getUsers } = useAuth();
+
 const router = useRouter();
 const searchUserDialog = ref(false);
+const initialFilterUser = {
+    name: null,
+};
+const perPage = ref(5);
+const page = ref(1);
+const optionUser = ref({ ...initialFilterUser });
+
+const dataUsers = computed(() => users.value?.data ?? []);
+
+const filterUsers = async () => {
+    if (optionUser.value.name != '') {
+        const currentFilter = { ...optionUser.value };
+        await getUsers(page.value, perPage.value, currentFilter);
+    }
+};
+
+const debouncedFilterUsers = debounce(filterUsers, 100);
+
+const handleCreateContract = (user) => {
+    localStorage.setItem('user_contract', JSON.stringify(user));
+    router.push('/dashboard/admin/contracts/nurstech/create');
+};
 
 const dataContracts = [
     {

@@ -16,12 +16,26 @@
                 <InputIcon
                     rounded="md"
                     class="max-w-full"
+                    :model-value="user?.full_name"
+                    :disabled="true"
                 />
 
-                <Button class="rounded-md">
+                <Button
+                    class="rounded-md"
+                    @click="showModalUser = true"
+                >
                     <EyeIcon />
                     <span>Détail</span>
                 </Button>
+
+                <Dialog
+                    v-model:open="showModalUser"
+                    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+                >
+                    <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
+                        <UsersCard :user="user" />
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
 
@@ -158,4 +172,14 @@
 
 <script lang="ts" setup>
 import { EyeIcon } from '@heroicons/vue/24/outline';
+
+const user = ref(null);
+const showModalUser = ref(false);
+
+const storedUser = localStorage.getItem('user_contract');
+
+if (storedUser) {
+    user.value = JSON.parse(storedUser);
+    localStorage.removeItem('user_contract');
+}
 </script>

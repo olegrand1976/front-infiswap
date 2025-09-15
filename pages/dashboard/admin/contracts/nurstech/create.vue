@@ -5,7 +5,7 @@
         />
 
         <DashboardAdminPageContent class="bg-gray-100">
-            <ContractsAdminForm />
+            <NurstechContractAdminForm />
         </DashboardAdminPageContent>
     </div>
 </template>
