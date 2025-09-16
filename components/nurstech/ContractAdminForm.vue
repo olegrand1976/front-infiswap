@@ -74,9 +74,6 @@
                             <SelectItem :value="'standard'">
                                 <span class="text-sm">STANDARD</span>
                             </SelectItem>
-                            <SelectItem :value="'premium'">
-                                <span class="text-sm">PREMIUM</span>
-                            </SelectItem>
                         </SelectGroup>
                     </SelectContent>
                 </Select>
@@ -90,48 +87,13 @@
                         <div class="flex items-center space-x-2">
                             <Checkbox
                                 id="customDomain"
-                                v-model="formData.options.customDomain"
+                                v-model="formData.customDomain"
                             />
                             <label
                                 for="customDomain"
                             >
                                 Nom de domaine personnalisé
                             </label>
-                        </div>
-
-                        <div class="sm:flex sm:space-x-6 text-gray-600 text-sm">
-                            <label>
-                                Maintenance :
-                            </label>
-                            <div class="flex gap-8 items-center mt-4 sm:mt-0">
-                                <div class="flex gap-3 items-center">
-                                    <input
-                                        id="monthly"
-                                        v-model="formData.options.maintenance"
-                                        type="radio"
-                                        value="monthly"
-                                    >
-                                    <label
-                                        for="monthly"
-                                        class="text-sm"
-                                    >
-                                        Mensuel
-                                    </label>
-                                </div>
-
-                                <div class="flex gap-3 items-center">
-                                    <input
-                                        id="yearly"
-                                        v-model="formData.options.maintenance"
-                                        type="radio"
-                                        value="yearly"
-                                    >
-                                    <label
-                                        for="yearly"
-                                        class="text-sm"
-                                    >Annuel</label>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -233,24 +195,27 @@ if (storedUser) {
 const formData = reactive({
     userId: user.value.id,
     formula: '',
-    options: {
-        customDomain: false,
-        maintenance: '',
-    },
+    customDomain: false,
     paymentMode: '',
 });
 
 const resetForm = () => {
     formData.userId = user.value.id;
     formData.formula = '';
-    formData.options.customDomain = false;
-    formData.options.maintenance = '';
+    formData.customDomain = false;
     formData.paymentMode = '';
 };
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        const result = await create(formData);
+        const payload = {
+            ...formData,
+            options: {
+                customDomain: formData.customDomain,
+            },
+        };
+
+        const result = await create(payload);
 
         if (result.contract) {
             resetForm();

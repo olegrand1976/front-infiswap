@@ -339,9 +339,6 @@ const columnsContracts = [
                     label: 'Modifier',
                 },
                 {
-                    label: 'Génerer le PDF',
-                },
-                {
                     label: 'Signer le bon',
                 },
                 ...(isSuperAdmin.value
