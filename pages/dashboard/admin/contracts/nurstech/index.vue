@@ -2,6 +2,7 @@
     <div>
         <DashboardAdminPageHeader
             title="Contrats / NURSTECH"
+            :count="count"
         >
             <template #action>
                 <Button
@@ -84,7 +85,11 @@
 
         <DashboardAdminPageContent>
             <div class="flex gap-6 items-center p-4">
-                <Select class="w-64">
+                <Select
+                    v-model="optionContract.status"
+                    class="w-64"
+                    @update:model-value="debouncedFilterContracts"
+                >
                     <SelectTrigger class="rounded-md gap-2">
                         <SelectValue
                             placeholder="Filtrer par statut"
@@ -111,6 +116,7 @@
 
                 <Button
                     class="rounded-md"
+                    @click="resetFilter"
                 >
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
@@ -123,6 +129,16 @@
                     :columns="columnsContracts"
                 />
             </div>
+
+            <div>
+                <CustomPagination
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="count"
+                    @update:page="refreshContracts"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -131,6 +147,7 @@
 import { MagnifyingGlassIcon, ArrowPathIcon, ArrowsUpDownIcon, UserCircleIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
+import { useContract } from '@/composables/useContract';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { debounce } from '~/lib/utils';
@@ -139,12 +156,20 @@ const { isSuperAdmin, users, getUsers } = useAuth();
 
 const router = useRouter();
 const searchUserDialog = ref(false);
+
 const initialFilterUser = {
     name: null,
 };
+const initialFilterContract = {
+    status: null,
+};
+const optionUser = ref({ ...initialFilterUser });
+const optionContract = ref({ ...initialFilterContract });
+
 const perPage = ref(5);
 const page = ref(1);
-const optionUser = ref({ ...initialFilterUser });
+
+const { contracts, count, getContracts } = useContract();
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
@@ -155,26 +180,31 @@ const filterUsers = async () => {
     }
 };
 
+const filterContracts = async () => {
+    const currentFilter = { ...optionContract.value };
+    await getContracts(page.value, perPage.value, currentFilter);
+};
+
 const debouncedFilterUsers = debounce(filterUsers, 100);
+const debouncedFilterContracts = debounce(filterContracts, 100);
 
 const handleCreateContract = (user) => {
     localStorage.setItem('user_contract', JSON.stringify(user));
     router.push('/dashboard/admin/contracts/nurstech/create');
 };
 
-const dataContracts = [
-    {
-        id: 1,
-        name: 'Test',
-        email: 'email@gmail.com',
-        phone_number: '01 02 03 05',
-        formula: 'STANDARD',
-        option: 'Maintenance par mois',
-        payment_mode: 'Mensuel',
-        pdf_path: 'test-purchase-order.pdf',
-        status: 'Signé',
-    },
-];
+await getContracts(page.value, perPage.value, optionContract.value);
+
+const dataContracts = computed(() => contracts.value ?? []);
+
+const refreshContracts = async (page: number) => {
+    await getContracts(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    await getContracts(page.value, value, optionContract.value);
+};
 
 const columnsContracts = [
     {
@@ -350,6 +380,27 @@ const setSort = (columnKey: string) => {
         sort.by = columnKey;
         sort.order = 'DESC';
     }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await getContracts(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by });
+    },
+    { deep: true },
+);
+
+const resetFilter = async () => {
+    const isSame = JSON.stringify(optionContract.value) === JSON.stringify(initialFilterContract);
+    if (isSame) {
+        return;
+    }
+
+    optionContract.value = { ...initialFilterContract };
+    page.value = 1;
+    await getContracts(page.value, perPage.value, optionContract.value);
 };
 
 useHead({ title: 'Contrats / NursTech' });

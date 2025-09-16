@@ -192,6 +192,21 @@
                         Signer le bon de commande
                     </DialogTitle>
                 </DialogHeader>
+                <div class="mt-2">
+                    Le fichier de bon de commande pour l'utilisateur sélectionné est prêt. Voulez-vous le signer ?
+                </div>
+
+                <DialogFooter class="mt-6">
+                    <Button
+                        variant="secondary"
+                        @click="handleReportSign"
+                    >
+                        Plus tard
+                    </Button>
+                    <Button>
+                        Oui
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     </form>
@@ -203,6 +218,7 @@ import { useContract } from '@/composables/useContract';
 
 const user = ref(null);
 const { $toast } = useNuxtApp();
+const router = useRouter();
 const { create } = useContract();
 const showModalUser = ref(false);
 const showSignPDFModal = ref(false);
@@ -249,4 +265,13 @@ const { submit, inProgress } = useSubmit(async () => {
         });
     }
 });
+
+const handleReportSign = () => {
+    showSignPDFModal.value = true;
+    router.push('/dashboard/admin/contracts/nurstech');
+
+    $toast({
+        description: 'Bon de commande créé avec succès !',
+    });
+};
 </script>

@@ -1,14 +1,29 @@
-import { ref } from 'vue';
+import { useState, useNuxtApp } from '#app';
 
 export const useContract = () => {
     const loading = ref(false);
     const error = ref<string | null>(null);
     const { $apifetch } = useNuxtApp();
+    const contracts = useState('contracts', () => []);
+    const count = useState<number>('contractsCount', () => 0);
 
     const create = async (formData) => {
         return await $apifetch('/api/admin/contracts/create', {
             method: 'POST',
             body: formData,
+        });
+    };
+
+    const getContracts = async (page = 1, perPage = 25, options = {}) => {
+        return await $apifetch('api/admin/contracts/', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            contracts.value = response.contracts;
+            count.value = response.count;
         });
     };
 
@@ -36,5 +51,13 @@ export const useContract = () => {
         }
     };
 
-    return { create, generatePdf, loading, error };
+    return {
+        count,
+        contracts,
+        create,
+        getContracts,
+        generatePdf,
+        loading,
+        error,
+    };
 };
