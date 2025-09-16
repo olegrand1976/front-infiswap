@@ -5,6 +5,13 @@ export const useContract = () => {
     const error = ref<string | null>(null);
     const { $apifetch } = useNuxtApp();
 
+    const create = async (formData) => {
+        return await $apifetch('/api/admin/contracts/create', {
+            method: 'POST',
+            body: formData,
+        });
+    };
+
     const generatePdf = async (userId: number) => {
         if (!userId) return;
         loading.value = true;
@@ -29,5 +36,5 @@ export const useContract = () => {
         }
     };
 
-    return { generatePdf, loading, error };
+    return { create, generatePdf, loading, error };
 };

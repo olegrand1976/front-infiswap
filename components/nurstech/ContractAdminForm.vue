@@ -1,5 +1,8 @@
 <template>
-    <form class="w-full">
+    <form
+        class="w-full"
+        @submit.prevent="submit"
+    >
         <Separator class="my-4 lg:my-10" />
 
         <div class="grid lg:grid-cols-3 gap-8 items-center">
@@ -53,6 +56,7 @@
 
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-8">
                 <Select
+                    v-model="formData.formula"
                     label="Formule"
                     class="font-medium"
                 >
@@ -84,7 +88,10 @@
 
                     <div class="flex flex-col gap-8 md:flex-row md:gap-24">
                         <div class="flex items-center space-x-2">
-                            <Checkbox id="customDomain" />
+                            <Checkbox
+                                id="customDomain"
+                                v-model="formData.options.customDomain"
+                            />
                             <label
                                 for="customDomain"
                             >
@@ -100,6 +107,7 @@
                                 <div class="flex gap-3 items-center">
                                     <input
                                         id="monthly"
+                                        v-model="formData.options.maintenance"
                                         type="radio"
                                         value="monthly"
                                     >
@@ -114,6 +122,7 @@
                                 <div class="flex gap-3 items-center">
                                     <input
                                         id="yearly"
+                                        v-model="formData.options.maintenance"
                                         type="radio"
                                         value="yearly"
                                     >
@@ -135,6 +144,7 @@
                         <div class="flex gap-3 items-center">
                             <input
                                 id="monthly"
+                                v-model="formData.paymentMode"
                                 type="radio"
                                 value="monthly"
                             >
@@ -149,6 +159,7 @@
                         <div class="flex gap-3 items-center">
                             <input
                                 id="yearly"
+                                v-model="formData.paymentMode"
                                 type="radio"
                                 value="yearly"
                             >
@@ -164,17 +175,37 @@
 
         <Separator class="my-10" />
 
-        <Button class="rounded-md mt-4 flex justify-center mx-auto w-64">
+        <Button
+            class="rounded-md mt-4 flex justify-center mx-auto w-64"
+            type="submit"
+            :in-progress="inProgress"
+        >
             Créer
         </Button>
+
+        <Dialog
+            v-model:open="showSignPDFModal"
+        >
+            <DialogContent class="max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>
+                        Signer le bon de commande
+                    </DialogTitle>
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
     </form>
 </template>
 
 <script lang="ts" setup>
 import { EyeIcon } from '@heroicons/vue/24/outline';
+import { useContract } from '@/composables/useContract';
 
 const user = ref(null);
+const { $toast } = useNuxtApp();
+const { create } = useContract();
 const showModalUser = ref(false);
+const showSignPDFModal = ref(false);
 
 const storedUser = localStorage.getItem('user_contract');
 
@@ -182,4 +213,40 @@ if (storedUser) {
     user.value = JSON.parse(storedUser);
     localStorage.removeItem('user_contract');
 }
+
+const formData = reactive({
+    userId: user.value.id,
+    formula: '',
+    options: {
+        customDomain: false,
+        maintenance: '',
+    },
+    paymentMode: '',
+});
+
+const resetForm = () => {
+    formData.userId = user.value.id;
+    formData.formula = '';
+    formData.options.customDomain = false;
+    formData.options.maintenance = '';
+    formData.paymentMode = '';
+};
+
+const { submit, inProgress } = useSubmit(async () => {
+    try {
+        const result = await create(formData);
+
+        if (result.contract) {
+            resetForm();
+            showSignPDFModal.value = true;
+        }
+    }
+    catch (error) {
+        $toast({
+            description: error,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+});
 </script>
