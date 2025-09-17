@@ -62,41 +62,24 @@
                 >
                     <SelectTrigger
                         position="right"
-                        class="rounded-md mt-2"
+                        class="rounded-md mt-2 text-nowrap"
                     >
                         <SelectValue placeholder="Sélectionner..." />
                     </SelectTrigger>
                     <SelectContent class="border border-none">
                         <SelectGroup>
                             <SelectItem :value="'starter'">
-                                <span class="text-sm">STARTER</span>
+                                <span class="text-sm">Starter</span>
                             </SelectItem>
                             <SelectItem :value="'standard'">
-                                <span class="text-sm">STANDARD</span>
+                                <span class="text-sm">Standard</span>
+                            </SelectItem>
+                            <SelectItem :value="'custom_domain'">
+                                <span class="text-sm">Nom de domaine personnalisé</span>
                             </SelectItem>
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-
-                <div class="flex flex-col space-y-6 text-gray-600 text-sm">
-                    <label class="font-medium">
-                        Options supplémentaires
-                    </label>
-
-                    <div class="flex flex-col gap-8 md:flex-row md:gap-24">
-                        <div class="flex items-center space-x-2">
-                            <Checkbox
-                                id="customDomain"
-                                v-model="formData.customDomain"
-                            />
-                            <label
-                                for="customDomain"
-                            >
-                                Nom de domaine personnalisé
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="flex flex-col space-y-3 text-gray-600 text-sm">
                     <label class="font-medium">
@@ -189,33 +172,23 @@ const storedUser = localStorage.getItem('user_contract');
 
 if (storedUser) {
     user.value = JSON.parse(storedUser);
-    localStorage.removeItem('user_contract');
 }
 
 const formData = reactive({
     userId: user.value.id,
     formula: '',
-    customDomain: false,
     paymentMode: '',
 });
 
 const resetForm = () => {
     formData.userId = user.value.id;
     formData.formula = '';
-    formData.customDomain = false;
     formData.paymentMode = '';
 };
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        const payload = {
-            ...formData,
-            options: {
-                customDomain: formData.customDomain,
-            },
-        };
-
-        const result = await create(payload);
+        const result = await create(formData);
 
         if (result.contract) {
             resetForm();
@@ -233,6 +206,7 @@ const { submit, inProgress } = useSubmit(async () => {
 
 const handleReportSign = () => {
     showSignPDFModal.value = true;
+    localStorage.removeItem('user_contract');
     router.push('/dashboard/admin/contracts/nurstech');
 
     $toast({

@@ -266,17 +266,7 @@ const columnsContracts = [
                 onClick: () => setSort('formula'),
             }, () => ['Formule', h(ArrowsUpDownIcon, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, row.getValue('formula')),
-    },
-    {
-        accessorKey: 'option',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('option'),
-            }, () => ['Option', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('option')),
+        cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('formula')),
     },
     {
         accessorKey: 'payment_mode',
