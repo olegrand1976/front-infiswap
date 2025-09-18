@@ -13,7 +13,7 @@
                     <div class="flex flex-col space-y-4 mt-4">
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <PhoneIcon class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">0478.02.33.77</span>
+                            <span class="md:text-xs lg:text-sm">+32 (0) 478.02.33.77</span>
                         </p>
                         <p class="text-sm flex flex-row space-x-2 items-center">
                             <MapPinIcon class="text-primary w-4 h-4" />
