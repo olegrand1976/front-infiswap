@@ -167,7 +167,7 @@
 
 <script lang="ts" setup>
 import { MagnifyingGlassIcon, ArrowPathIcon, ArrowsUpDownIcon, UserCircleIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useContract } from '@/composables/useContract';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
@@ -342,6 +342,22 @@ const columnsContracts = [
         },
     },
     {
+        id: 'action',
+        header: () => {
+            return h(Button, {
+                variant: 'ghost',
+            }, () => ['Visualiser', h(ArrowsUpDownIcon)]);
+        },
+        cell: ({ row }) => {
+            return h('div', { class: 'text-center' }, [
+                h(EyeIcon, {
+                    class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
+                    onClick: () => viewPdf(row.original.id),
+                }),
+            ]);
+        },
+    },
+    {
         id: 'actions',
         header: () => {
             return h('div', { class: 'mx-2' }, 'Actions');
@@ -356,10 +372,6 @@ const columnsContracts = [
                 {
                     label: 'Signer le bon',
                     onClick: () => handleOpenSignModal(contract.id),
-                },
-                {
-                    label: 'Visualiser le PDF',
-                    onClick: () => viewPdf(contract.id),
                 },
                 ...(isSuperAdmin.value
                     ? [
