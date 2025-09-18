@@ -278,27 +278,15 @@ const columns: ColumnDef<User>[] = [
         enableSorting: false,
     },
     {
-        accessorKey: 'crm.last_contact_date',
+        accessorKey: 'last_contact_date',
         header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => setSort('crm.last_contact_date'),
+                onClick: () => setSort('last_contact_date'),
             }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('crm.last_contact_date')));
-        },
-    },
-    {
-        accessorKey: 'crm.last_contact_date',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('crm.last_contact_date'),
-            }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('crm.last_contact_date')));
+            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('last_contact_date')));
         },
     },
     {
