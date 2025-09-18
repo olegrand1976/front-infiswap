@@ -194,7 +194,7 @@ const page = ref(1);
 const showSignPDFModal = ref(false);
 const selectedContractId = ref<number | null>(null);
 
-const { contracts, count, getContracts, signContract } = useContract();
+const { contracts, count, getContracts, signContract, viewPdf } = useContract();
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
@@ -359,9 +359,7 @@ const columnsContracts = [
                 },
                 {
                     label: 'Visualiser le PDF',
-                    onClick: () => {
-                        window.open(`/api/contracts/${contract.id}/view-pdf`, '_blank');
-                    },
+                    onClick: () => viewPdf(contract.id),
                 },
                 ...(isSuperAdmin.value
                     ? [
