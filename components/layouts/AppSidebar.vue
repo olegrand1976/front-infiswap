@@ -112,7 +112,12 @@
                         </section>
                     </SidebarMenu>
 
-                    <div class="flex justify-between items-center mx-auto">
+                   
+                </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarGroup class="hover:cursor-pointer">
+
+                  <div class="flex justify-between items-center mx-auto">
                         <CopyButton
                             variant="none"
                             label="Inviter vos collègues"
@@ -154,9 +159,7 @@
                             </div>
                         </DialogContent>
                     </Dialog>
-                </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup class="hover:cursor-pointer">
+
                 <NuxtLink
                     to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
                     target="_blank"
