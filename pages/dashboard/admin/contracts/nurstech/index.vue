@@ -139,6 +139,28 @@
                     @update:per-page="handlePerPageChange"
                 />
             </div>
+
+            <Dialog v-model:open="showSignPDFModal">
+                <DialogContent class="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Signer le bon de commande</DialogTitle>
+                    </DialogHeader>
+                    <div class="mt-2">
+                        Le fichier de bon de commande pour l'utilisateur sélectionné est prêt. Voulez-vous le signer ?
+                    </div>
+                    <DialogFooter class="mt-6">
+                        <Button
+                            variant="secondary"
+                            @click="showSignPDFModal = false"
+                        >
+                            Plus tard
+                        </Button>
+                        <Button @click="handleConfirmSign">
+                            Oui
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -169,7 +191,10 @@ const optionContract = ref({ ...initialFilterContract });
 const perPage = ref(5);
 const page = ref(1);
 
-const { contracts, count, getContracts } = useContract();
+const showSignPDFModal = ref(false);
+const selectedContractId = ref<number | null>(null);
+
+const { contracts, count, getContracts, signContract } = useContract();
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
@@ -330,6 +355,13 @@ const columnsContracts = [
                 },
                 {
                     label: 'Signer le bon',
+                    onClick: () => handleOpenSignModal(contract.id),
+                },
+                {
+                    label: 'Visualiser le PDF',
+                    onClick: () => {
+                        window.open(`/api/contracts/${contract.id}/view-pdf`, '_blank');
+                    },
                 },
                 ...(isSuperAdmin.value
                     ? [
@@ -388,6 +420,18 @@ const resetFilter = async () => {
     optionContract.value = { ...initialFilterContract };
     page.value = 1;
     await getContracts(page.value, perPage.value, optionContract.value);
+};
+
+const handleOpenSignModal = (contractId: number) => {
+    selectedContractId.value = contractId;
+    showSignPDFModal.value = true;
+};
+
+const handleConfirmSign = async () => {
+    if (selectedContractId.value) {
+        await signContract(selectedContractId.value);
+    }
+    showSignPDFModal.value = false;
 };
 
 useHead({ title: 'Contrats / NursTech' });

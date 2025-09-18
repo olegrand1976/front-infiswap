@@ -51,6 +51,36 @@ export const useContract = () => {
         }
     };
 
+    const signContract = async (contractId: number) => {
+        const newWindow = window.open('', '_blank');
+        try {
+            const response = await $apifetch(`/api/contracts/${contractId}/sign`, {
+                method: 'POST',
+            });
+
+            if (response.contract) {
+                const index = contracts.value.findIndex(c => c.id === response.contract.id);
+                if (index !== -1) {
+                    contracts.value[index] = response.contract;
+                }
+            }
+
+            if (response.signature_url && newWindow) {
+                newWindow.location.href = response.signature_url;
+            }
+            else if (newWindow) {
+                newWindow.close();
+            }
+
+            return response;
+        }
+        catch (error) {
+            console.error('Erreur lors de la signature:', error);
+            if (newWindow) newWindow.close();
+            throw error;
+        }
+    };
+
     return {
         count,
         contracts,
@@ -59,5 +89,6 @@ export const useContract = () => {
         generatePdf,
         loading,
         error,
+        signContract,
     };
 };
