@@ -111,54 +111,51 @@
                             </SidebarMenuItem>
                         </section>
                     </SidebarMenu>
-
-                   
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
+                <div class="flex justify-between items-center mx-auto">
+                    <CopyButton
+                        variant="none"
+                        label="Inviter vos collègues"
+                        class="text-primary"
+                        :show-label="true"
+                        :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                        success-message="Lien copié avec succès"
+                    />
 
-                  <div class="flex justify-between items-center mx-auto">
-                        <CopyButton
-                            variant="none"
-                            label="Inviter vos collègues"
-                            class="text-primary"
-                            :show-label="true"
-                            :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
-                            success-message="Lien copié avec succès"
-                        />
+                    <QuestionMarkCircleIcon
+                        class="w-4 text-blue-500 cursor-pointer"
+                        @click="referralDialog = true"
+                    />
+                </div>
 
-                        <QuestionMarkCircleIcon
-                            class="w-4 text-blue-500 cursor-pointer"
-                            @click="referralDialog = true"
-                        />
-                    </div>
+                <Dialog v-model:open="referralDialog">
+                    <DialogContent class="max-w-xl">
+                        <DialogHeader>
+                            <DialogTitle class="text-primary">
+                                Inviter vos collègues
+                            </DialogTitle>
+                        </DialogHeader>
+                        <p>
+                            Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                        </p>
 
-                    <Dialog v-model:open="referralDialog">
-                        <DialogContent class="max-w-xl">
-                            <DialogHeader>
-                                <DialogTitle class="text-primary">
-                                    Inviter vos collègues
-                                </DialogTitle>
-                            </DialogHeader>
-                            <p>
-                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="mt-4">
+                                {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
                             </p>
 
-                            <div class="flex justify-between items-center mb-4">
-                                <p class="mt-4">
-                                    {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
-                                </p>
-
-                                <CopyButton
-                                    variant="none"
-                                    class="text-primary mt-3"
-                                    :show-label="false"
-                                    :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
-                                    success-message="Lien copié avec succès"
-                                />
-                            </div>
-                        </DialogContent>
-                    </Dialog>
+                            <CopyButton
+                                variant="none"
+                                class="text-primary mt-3"
+                                :show-label="false"
+                                :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                                success-message="Lien copié avec succès"
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
                 <NuxtLink
                     to="https://g.page/r/Cf8HfnS8YUz2EAE/review"

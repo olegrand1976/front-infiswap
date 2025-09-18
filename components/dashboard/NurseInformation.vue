@@ -303,33 +303,34 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
+            <<<<<<< HEAD
             <div class="bg-gray-100 lg:w-1/2 rounded-b-lg relative">
-=======
-            <div class="w-full">
->>>>>>> origin/anja/feat/inviter-collègue
-                <h3 class="text-white bg-primary p-3 rounded-t-lg">
-                    Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
-                </h3>
-                <div v-if="loading">
-                    <Skeleton class="bg-gray-200 m-8 h-64" />
-                </div>
-                <div
-                    v-else
-                    class="p-4"
-                >
-                    <ClientOnly>
-                        <LineChart
-                            :data="formattedData"
-                            index="month"
-                            :categories="['annonces']"
-                            :colors="['hsl(var(--primary))']"
-                            :y-formatter="(tick) => `${tick}`"
-                        />
-                    </ClientOnly>
+                =======
+                <div class="w-full">
+                    >>>>>>> origin/anja/feat/inviter-collègue
+                    <h3 class="text-white bg-primary p-3 rounded-t-lg">
+                        Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
+                    </h3>
+                    <div v-if="loading">
+                        <Skeleton class="bg-gray-200 m-8 h-64" />
+                    </div>
+                    <div
+                        v-else
+                        class="p-4"
+                    >
+                        <ClientOnly>
+                            <LineChart
+                                :data="formattedData"
+                                index="month"
+                                :categories="['annonces']"
+                                :colors="['hsl(var(--primary))']"
+                                :y-formatter="(tick) => `${tick}`"
+                            />
+                        </ClientOnly>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </template>
 
