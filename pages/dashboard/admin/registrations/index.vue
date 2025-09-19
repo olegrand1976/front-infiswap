@@ -1,7 +1,7 @@
 <template>
     <div>
         <DashboardAdminPageHeader
-            title="Inscriptions"
+            title="Suivi inscriptions"
         />
 
         <DashboardAdminPageContent>
