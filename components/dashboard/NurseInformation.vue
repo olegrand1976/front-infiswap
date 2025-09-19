@@ -225,8 +225,8 @@
             </div>
         </section>
 
-        <section class="flex flex-col lg:flex-row w-full">
-            <div class="w-full">
+        <section class="flex flex-col lg:flex-row w-full items-stretch">
+            <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg">
                 <div class="bg-gray-100 rounded p-4">
                     <div class="text-primary flex justify-between items-center">
                         <h2>
@@ -288,7 +288,7 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-100 flex gap-6 items-center rounded p-4">
+                <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg flex flex-col">
                     <div class="bg-gray-200 p-4 rounded">
                         <UserIcon class="w-8 opacity-80" />
                     </div>
@@ -303,28 +303,26 @@
                 </div>
             </div>
 
-            <div class="bg-gray-100 lg:w-1/2 rounded-b-lg relative">
-                <div class="w-full">
-                    <h3 class="text-white bg-primary p-3 rounded-t-lg">
-                        Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
-                    </h3>
-                    <div v-if="loading">
-                        <Skeleton class="bg-gray-200 m-8 h-64" />
-                    </div>
-                    <div
-                        v-else
-                        class="p-4"
-                    >
-                        <ClientOnly>
-                            <LineChart
-                                :data="formattedData"
-                                index="month"
-                                :categories="['annonces']"
-                                :colors="['hsl(var(--primary))']"
-                                :y-formatter="(tick) => `${tick}`"
-                            />
-                        </ClientOnly>
-                    </div>
+            <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg">
+                <h3 class="text-white bg-primary p-3 rounded-t-lg">
+                    Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
+                </h3>
+                <div v-if="loading">
+                    <Skeleton class="bg-gray-200 m-8 h-64" />
+                </div>
+                <div
+                    v-else
+                    class="p-4"
+                >
+                    <ClientOnly>
+                        <LineChart
+                            :data="formattedData"
+                            index="month"
+                            :categories="['annonces']"
+                            :colors="['hsl(var(--primary))']"
+                            :y-formatter="(tick) => `${tick}`"
+                        />
+                    </ClientOnly>
                 </div>
             </div>
         </section>
