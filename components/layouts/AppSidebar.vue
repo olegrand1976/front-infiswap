@@ -210,6 +210,7 @@ import {
     PlayCircleIcon,
     ShoppingBagIcon,
     ChartBarIcon,
+    LinkIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -408,6 +409,12 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,
+        visible: true,
+    },
+    {
+        label: 'Suivi des liens',
+        route: '/dashboard/admin/stats',
+        icon: LinkIcon,
         visible: true,
     },
 ];

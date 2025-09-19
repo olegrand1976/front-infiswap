@@ -394,3 +394,10 @@ export type Referrer = {
     full_name: string;
     email: string;
 };
+
+export type Stat = {
+    id: number;
+    web_site_name: string;
+    count: number;
+    last_count: string;
+};
