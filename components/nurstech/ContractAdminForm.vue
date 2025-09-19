@@ -265,30 +265,4 @@ const handleReportSign = () => {
         description: 'Bon de commande créé avec succès !',
     });
 };
-
-// const handleConfirmSign = async () => {
-//     if (selectedContractId.value) {
-//         try {
-//             const updatedContract = await signContract(selectedContractId.value);
-
-//             const userIndex = dataUsers.value.findIndex(u => u.id === updatedContract.user_id);
-//             if (userIndex !== -1) {
-//                 dataUsers.value[userIndex].contract_signed = true;
-//             }
-
-//             $toast({
-//                 description: 'Le contrat a été signé avec succès !',
-//             });
-//         }
-//         catch (error) {
-//             console.error('Erreur lors de la signature du contrat :', error);
-//             $toast({
-//                 description: 'Erreur lors de la signature du contrat.',
-//                 status: 'error',
-//                 variant: 'destructive',
-//             });
-//         }
-//     }
-//     showSignPDFModal.value = false;
-// };
 </script>
