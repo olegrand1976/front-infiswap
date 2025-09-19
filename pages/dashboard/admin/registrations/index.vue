@@ -12,28 +12,28 @@
                 <TabsList class="w-full">
                     <TabsTrigger
                         value="lastWeek"
-                        class="md:w-80 h-16"
+                        class="md:w-80 h-16 flex items-center"
                     >
                         <span>
                             Semaine dernière
                         </span>
                         <Badge
                             v-if="dataWeekUsers?.length != 0"
-                            class="bg-primary text-white ml-2"
+                            class="bg-primary text-white ml-2 px-2 py-1 inline-flex items-center justify-center"
                         >
                             {{ dataWeekUsers?.length }}
                         </Badge>
                     </TabsTrigger>
                     <TabsTrigger
                         value="lastMonth"
-                        class="md:w-80 h-16"
+                        class="md:w-80 h-16 flex items-center"
                     >
                         <span>
                             Mois dernier
                         </span>
                         <Badge
                             v-if="dataMonthUsers?.length != 0"
-                            class="bg-primary text-white ml-2"
+                            class="bg-primary text-white ml-2 px-2 py-1 inline-flex items-center justify-center"
                         >
                             {{ dataMonthUsers?.length }}
                         </Badge>
@@ -286,7 +286,8 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('last_contact_date')));
+            const value = row.getValue('last_contact_date');
+            return h('div', { class: 'text-center' }, value ? formatRelativeDate(String(value)) : '');
         },
     },
     {
@@ -298,7 +299,8 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Dernière connexion', h(ArrowsUpDownIcon, { class: '' })]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('last_login_at')));
+            const value = row.getValue('last_login_at');
+            return h('div', { class: 'text-center' }, value ? formatRelativeDate(String(value)) : '');
         },
     },
 ];

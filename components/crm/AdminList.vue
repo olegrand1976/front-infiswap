@@ -635,7 +635,7 @@ const columns: ColumnDef<User>[] = [
                 const index = localUsers.value.findIndex(item => item.id === row.original.id);
                 if (index !== undefined && index !== -1 && props.users) {
                     localUsers.value[index].ambassador = value ? 1 : 0;
-                    const mods = localUsers[index].last_product_modifications ?? [];
+                    const mods = localUsers.value[index].last_product_modifications ?? [];
                     const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
                     if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
                     localUsers.value[index].last_product_modifications = [...mods];
