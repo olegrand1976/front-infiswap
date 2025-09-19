@@ -7,9 +7,9 @@
 
         <Dialog
             v-model:open="showModal"
-            class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
         >
-            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full mx-2">
+            <DialogContent class="w-full max-w-3xl p-6 mx-2 bg-white rounded-lg shadow-lg">
                 <UsersCard
                     :user="user"
                     @close="showModal = false"
@@ -219,10 +219,10 @@ const columnsCrm: ColumnDef<User>[] = [
             {
                 variant: 'ghost',
                 onClick: () => setSort('nb_sale'),
-                title: 'Nombre de vente passés dans la semaine',
+                title: 'Nombre de ventes passées dans la semaine',
             },
             () => [
-                'Nombre de vente passés',
+                'Nombre de ventes passées',
                 h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
@@ -306,10 +306,10 @@ const columnsCrm: ColumnDef<User>[] = [
             {
                 variant: 'ghost',
                 onClick: () => setSort('nb_pending'),
-                title: 'Nombre de réponse en attente dans la semaine',
+                title: 'Nombre de réponses en attente dans la semaine',
             },
             () => [
-                'Nombre de réponse en attente',
+                'Nombre de réponses en attente',
                 h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
