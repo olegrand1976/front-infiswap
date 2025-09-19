@@ -194,8 +194,8 @@ const page = ref(1);
 const showSignPDFModal = ref(false);
 const selectedContractId = ref<number | null>(null);
 
-const { contracts, count, getContracts, signContract, viewPdf } = useContract();
-
+const { contracts, count, getContracts, signContract, viewPdf, forceDelete } = useContract();
+const { $toast } = useNuxtApp();
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const filterUsers = async () => {
@@ -368,6 +368,7 @@ const columnsContracts = [
             const actions = [
                 {
                     label: 'Modifier',
+                    onClick: () => handleEdit(contract.id),
                 },
                 {
                     label: 'Signer le bon',
@@ -378,6 +379,7 @@ const columnsContracts = [
                             {
                                 label: 'Supprimer',
                                 confirm: true,
+                                onClick: () => handleDelete(contract.id),
                             },
                         ]
                     : []),
@@ -439,9 +441,38 @@ const handleOpenSignModal = (contractId: number) => {
 
 const handleConfirmSign = async () => {
     if (selectedContractId.value) {
-        await signContract(selectedContractId.value);
+        try {
+            const updatedContract = await signContract(selectedContractId.value);
+
+            const contractIndex = contracts.value.findIndex(c => c.id === updatedContract.id);
+            if (contractIndex !== -1) {
+                contracts.value[contractIndex].status = updatedContract.status;
+            }
+
+            $toast({
+                description: 'Le contrat a été signé avec succès !',
+            });
+        }
+        catch (error) {
+            console.error('Erreur lors de la signature du contrat :', error);
+            $toast({
+                description: 'Erreur lors de la signature du contrat.',
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
     }
     showSignPDFModal.value = false;
+};
+
+const handleEdit = (contractId: number) => {
+    navigateTo(`/dashboard/admin/contracts/nurstech/${contractId}`);
+};
+
+const handleDelete = async (contractId: number) => {
+    return await forceDelete(contractId).then(async () => {
+        await getContracts(page.value, perPage.value, optionContract.value);
+    });
 };
 
 useHead({ title: 'Contrats / NursTech' });

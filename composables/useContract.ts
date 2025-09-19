@@ -3,7 +3,7 @@ import { useState, useNuxtApp } from '#app';
 export const useContract = () => {
     const loading = ref(false);
     const error = ref<string | null>(null);
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
     const contracts = useState('contracts', () => []);
     const count = useState<number>('contractsCount', () => 0);
 
@@ -100,6 +100,33 @@ export const useContract = () => {
         }
     };
 
+    const update = async (id: number, payload: Record<string, any>) => {
+        return await $apifetch(`/api/contracts/${id}`, {
+            method: 'PUT',
+            body: payload,
+        });
+    };
+
+    async function forceDelete(contractId: number) {
+        await $apifetch(`/api/contracts/${contractId}`, {
+            method: 'DELETE',
+        }).then(() => {
+            $toast({
+                description: 'Suppression réussie.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la suppression.',
+                });
+            });
+    }
+
+    const getById = async (id: number) => {
+        return await $apifetch(`/api/contracts/${id}`);
+    };
+
     return {
         count,
         contracts,
@@ -109,5 +136,8 @@ export const useContract = () => {
         error,
         signContract,
         viewPdf,
+        update,
+        forceDelete,
+        getById,
     };
 };

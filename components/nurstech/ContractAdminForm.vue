@@ -131,25 +131,23 @@
         <Dialog
             v-model:open="showSignPDFModal"
         >
-            <DialogContent class="max-w-lg">
+            <DialogContent class="max-w-lg text-center">
                 <DialogHeader>
-                    <DialogTitle>
-                        Signer le bon de commande
+                    <DialogTitle class="text-xl font-semibold text-green-600">
+                        Félicitations !
                     </DialogTitle>
                 </DialogHeader>
-                <div class="mt-2">
-                    Le fichier de bon de commande pour l'utilisateur sélectionné est prêt. Voulez-vous le signer ?
+                <div class="mt-4 text-gray-700">
+                    Votre bon de commande a été créé avec succès.
                 </div>
 
-                <DialogFooter class="mt-6">
+                <DialogFooter class="mt-6 flex justify-center">
                     <Button
                         variant="secondary"
+                        class="px-6 rounded-xl shadow-md hover:shadow-lg"
                         @click="handleReportSign"
                     >
-                        Plus tard
-                    </Button>
-                    <Button>
-                        Oui
+                        Consulter la liste
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -160,39 +158,93 @@
 <script lang="ts" setup>
 import { EyeIcon } from '@heroicons/vue/24/outline';
 import { useContract } from '@/composables/useContract';
+import { useAuth } from '@/composables/useAuth';
+
+const props = defineProps<{
+    initialContract?: any;
+    mode?: 'create' | 'edit';
+}>();
 
 const user = ref(null);
 const { $toast } = useNuxtApp();
 const router = useRouter();
-const { create } = useContract();
+const { create, update } = useContract();
+const { show } = useAuth();
+
 const showModalUser = ref(false);
 const showSignPDFModal = ref(false);
 
-const storedUser = localStorage.getItem('user_contract');
+const fetchUser = async () => {
+    if (props.mode === 'edit' && props.initialContract?.user_id) {
+        try {
+            user.value = await show(props.initialContract.user_id);
+        }
+        catch (error) {
+            console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+            $toast({
+                description: 'Erreur lors de la récupération de l\'utilisateur',
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
+    }
+    else {
+        const storedUser = localStorage.getItem('user_contract');
+        if (storedUser) {
+            user.value = JSON.parse(storedUser);
+        }
+    }
+};
 
-if (storedUser) {
-    user.value = JSON.parse(storedUser);
-}
+await fetchUser();
 
 const formData = reactive({
-    userId: user.value.id,
-    formula: '',
-    paymentMode: '',
+    userId: props.initialContract?.user_id || user.value?.id || null,
+    formula: props.initialContract?.formula || '',
+    paymentMode: props.initialContract?.payment_mode || '',
 });
 
 const resetForm = () => {
-    formData.userId = user.value.id;
+    formData.userId = user.value?.id || null;
     formData.formula = '';
     formData.paymentMode = '';
 };
 
+watch(
+    () => props.initialContract,
+    async (newVal) => {
+        if (newVal) {
+            formData.userId = newVal.user_id || null;
+            formData.formula = newVal.formula || '';
+            formData.paymentMode = newVal.payment_mode || '';
+
+            if (props.mode === 'edit' && newVal.user_id) {
+                try {
+                    const response = await show(newVal.user_id);
+                    user.value = response.user;
+                }
+                catch (error) {
+                    console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+                }
+            }
+        }
+    },
+    { immediate: true },
+);
+
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        const result = await create(formData);
-
-        if (result.contract) {
-            resetForm();
-            showSignPDFModal.value = true;
+        if (props.mode === 'edit') {
+            await update(props.initialContract.id, formData);
+            $toast({ description: 'Contrat modifié avec succès !' });
+            router.push('/dashboard/admin/contracts/nurstech');
+        }
+        else {
+            const result = await create(formData);
+            if (result.contract) {
+                resetForm();
+                showSignPDFModal.value = true;
+            }
         }
     }
     catch (error) {
@@ -205,7 +257,7 @@ const { submit, inProgress } = useSubmit(async () => {
 });
 
 const handleReportSign = () => {
-    showSignPDFModal.value = true;
+    showSignPDFModal.value = false;
     localStorage.removeItem('user_contract');
     router.push('/dashboard/admin/contracts/nurstech');
 
@@ -213,4 +265,30 @@ const handleReportSign = () => {
         description: 'Bon de commande créé avec succès !',
     });
 };
+
+// const handleConfirmSign = async () => {
+//     if (selectedContractId.value) {
+//         try {
+//             const updatedContract = await signContract(selectedContractId.value);
+
+//             const userIndex = dataUsers.value.findIndex(u => u.id === updatedContract.user_id);
+//             if (userIndex !== -1) {
+//                 dataUsers.value[userIndex].contract_signed = true;
+//             }
+
+//             $toast({
+//                 description: 'Le contrat a été signé avec succès !',
+//             });
+//         }
+//         catch (error) {
+//             console.error('Erreur lors de la signature du contrat :', error);
+//             $toast({
+//                 description: 'Erreur lors de la signature du contrat.',
+//                 status: 'error',
+//                 variant: 'destructive',
+//             });
+//         }
+//     }
+//     showSignPDFModal.value = false;
+// };
 </script>
