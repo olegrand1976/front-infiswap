@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 bg-white z-[9999]"></div>
+    <div class="fixed inset-0 bg-white z-[9999]" />
 </template>
 
 <script lang="ts" setup>
