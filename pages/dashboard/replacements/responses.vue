@@ -104,9 +104,12 @@
                     >
                         <Table>
                             <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-3 overflow-x-hidden border-none">
+                                <TableRow class="grid grid-cols-4 overflow-x-hidden border-none">
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
                                         Infirmier
+                                    </TableHead>
+                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
+                                        Téléphone
                                     </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
                                         Code Postal
@@ -122,32 +125,36 @@
                                     <TableRow
                                         v-for="responseDetail in visibleResponses(response.responses)"
                                         :key="responseDetail.id"
-                                        class="grid grid-cols-3 my-2 gap-2 border border-none overflow-x-hidden relative"
+                                        class="grid grid-cols-4 w-full my-2 border border-none overflow-x-hidden relative"
                                     >
-                                        <TableCell class="flex flex-col sm:flex-row items-center justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
-                                            <template v-if="responseDetail?.respondedBy?.profile?.profil_url == null">
+                                        <TableCell class="w-full truncate flex flex-nowrap flex-col sm:flex-row items-center justify-center sm:justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
+                                            <template v-if="responseDetail?.responded_by?.profile?.profil_url == null">
                                                 <UserCircleIcon class="size-8 text-black/60" />
                                             </template>
                                             <template v-else>
                                                 <img
                                                     class="w-8 h-8 rounded-full object-cover object-center"
-                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.respondedBy?.profile?.profil_url"
+                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.responded_by?.profile?.profil_url"
                                                 >
                                             </template>
-                                            <p>
-                                                {{ responseDetail?.respondedBy?.full_name }}
+                                            <p class="truncate">
+                                                {{ responseDetail?.responded_by?.full_name }}
                                             </p>
                                         </TableCell>
 
-                                        <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ responseDetail?.respondedBy?.profile?.zip_code }}
+                                        <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
+                                            {{ responseDetail?.responded_by?.phone_number }}
+                                        </TableCell>
+
+                                        <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
+                                            {{ responseDetail?.responded_by?.profile?.zip_code }}
                                         </TableCell>
 
                                         <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
                                             <template v-if="responseDetail.status === 'confirmed'">
                                                 <p class="flex items-center space-x-2 text-success font-medium">
                                                     <CheckBadgeIcon class="w-6" />
-                                                    <span>Accepté</span>
+                                                    <span class="hidden 2xl:block">Accepté</span>
                                                 </p>
                                                 <Button
                                                     class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
@@ -201,7 +208,7 @@
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle
-                        v-if="selectedNurse.respondedBy.gender === 'F'"
+                        v-if="selectedUser.responded_by.gender === 'F'"
                     >
                         Informations de l'infirmière
                     </DialogTitle>
@@ -213,36 +220,36 @@
                 </DialogHeader>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="flex space-x-4 items-center mt-4"
                 >
-                    <img
-                        :src="selectedNurse.respondedBy?.profile?.profil_url
-                            ? useRuntimeConfig().public.API_URL + '/storage/' + selectedNurse.respondedBy.profile.profil_url
+                    <LayoutsAppImage
+                        :src="selectedUser.responded_by?.profile?.profil_url
+                            ? useRuntimeConfig().public.API_URL + '/storage/' + selectedUser.responded_by.profile.profil_url
                             : '/icons/user-circle.png'"
                         class="w-8 h-8 sm:w-12 sm:h-12 rounded-full opacity-60"
-                    >
+                    />
                     <div class="flex flex-col space-y-2">
                         <h6 class="font-medium">
-                            {{ selectedNurse.respondedBy.firstname }} {{ selectedNurse.respondedBy.lastname }}
+                            {{ selectedUser.responded_by.full_name }}
                         </h6>
                     </div>
                 </div>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
                         Numéro {{ identifierLabel }}
                     </h5>
                     <p class="ps-4">
-                        {{ selectedNurse.respondedBy.identifier_number }}
+                        {{ selectedUser.responded_by.identifier_number }}
                     </p>
                 </div>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
@@ -250,43 +257,43 @@
                         <span class="md:hidden">Email</span>
                     </h5>
                     <p class="ps-4">
-                        {{ selectedNurse.respondedBy.email }}
+                        {{ selectedUser.responded_by.email }}
                     </p>
                 </div>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
                         N° téléphone
                     </h5>
                     <p class="ps-4">
-                        {{ selectedNurse.respondedBy.phone_number }}
+                        {{ selectedUser.responded_by.phone_number }}
                     </p>
                 </div>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
                         Code postal
                     </h5>
                     <p class="ps-4">
-                        {{ selectedNurse.respondedBy.zip_code }}
+                        {{ selectedUser.responded_by.profile.zip_code }}
                     </p>
                 </div>
 
                 <div
-                    v-if="selectedNurse"
+                    v-if="selectedUser"
                     class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
                 >
                     <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
                         Ville
                     </h5>
                     <p class="ps-4">
-                        {{ selectedNurse.respondedBy.city }}
+                        {{ selectedUser.responded_by.profile.city }}
                     </p>
                 </div>
             </DialogContent>
@@ -304,7 +311,7 @@ const user = useState<User>('user');
 const { listResponse, getReplacementResponses } = useListResponse(user.value.id);
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
-const selectedNurse = ref(null);
+const selectedUser = ref(null);
 
 const { identifierLabel } = useCountry();
 
@@ -342,7 +349,7 @@ const handleCancel = async (responseDetail: ReplacementResponse) => {
 };
 
 const openNurseDialog = (responseDetail: ReplacementResponse) => {
-    selectedNurse.value = responseDetail;
+    selectedUser.value = responseDetail;
     nurseDialog.value = true;
 };
 
