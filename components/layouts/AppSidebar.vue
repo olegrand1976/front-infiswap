@@ -345,7 +345,7 @@ const adminNavigationItems: NavigationItem[] = [
         visible: true,
     },
     {
-        label: 'Inscriptions',
+        label: 'Suivi inscriptions',
         route: '/dashboard/admin/registrations',
         icon: ChartBarIcon,
         visible: !isCollaborator.value,
