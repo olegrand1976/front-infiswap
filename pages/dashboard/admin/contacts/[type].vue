@@ -306,35 +306,34 @@ const columns: ColumnDef<Contact>[] = [
             return h('div', { class: 'flex items-center justify-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
-    {
-        accessorKey: 'action',
-        header: 'Action',
-        cell: ({ row }) => {
-            const contact = row.original;
+    ...(type.value === 'infiswap'
+        ? [{
+                accessorKey: 'action',
+                header: 'Action',
+                cell: ({ row }) => {
+                    const contact = row.original;
 
-            return h(
-                'div',
-                {
-                    class: 'flex ml-4 items-center gap-2',
+                    return h(
+                        'div',
+                        { class: 'flex ml-4 items-center gap-2' },
+                        [
+                            !contact.hasResponded
+                            && h(PencilIcon, {
+                                class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
+                                title: 'Répondre',
+                                onClick: () => handleReply(contact),
+                            }),
+                            contact.hasResponded
+                            && h(EyeIcon, {
+                                class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
+                                title: 'Voir la réponse',
+                                onClick: () => router.push('/dashboard/admin/mails'),
+                            }),
+                        ].filter(Boolean),
+                    );
                 },
-                [
-                    !contact.hasResponded
-                    && h(PencilIcon, {
-                        class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
-                        title: 'Répondre',
-                        onClick: () => handleReply(contact),
-                    }),
-
-                    contact.hasResponded
-                    && h(EyeIcon, {
-                        class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
-                        title: 'Voir la réponse',
-                        onClick: () => router.push('/dashboard/admin/mails'),
-                    }),
-                ].filter(Boolean),
-            );
-        },
-    },
+            }]
+        : []),
 ];
 
 const newMail = ref<{
