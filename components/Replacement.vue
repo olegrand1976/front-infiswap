@@ -168,6 +168,18 @@
                                         :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
                                                  gridColsByType[props.type] ?? 'grid-cols-8']"
                                     >
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                        >
+                                            Nom complet
+                                        </TableHead>
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                        >
+                                            Téléphone
+                                        </TableHead>
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
                                         </TableHead>
@@ -257,13 +269,29 @@
                                                 URGENT
                                             </div>
                                             <TableCell
-                                                :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
+                                                v-if="props.type === ''"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ replacementGroup.user_full_name }}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                v-if="props.type === ''"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ replacementGroup.user_phone_number }}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
                                             >
                                                 <template v-if="replacementGroup.periods.length > 0">
                                                     <div
                                                         v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                         :key="index"
-                                                        class="flex items-center"
+                                                        class="flex flex-col 2xl:flex-row items-center"
                                                     >
                                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                             <span>{{ formatDate(period.start_date) }}</span>
@@ -404,7 +432,7 @@
                                                     {{ roles[replacementGroup.role_type] }}
                                                 </div>
                                             </TableCell>
-                                            <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <TableCell class="text-xs flex -mt-12 2xl:mt-0 items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger>
@@ -494,6 +522,18 @@
                                     :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
                                              gridColsByType[props.type] ?? 'grid-cols-8']"
                                 >
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                    >
+                                        Nom complet
+                                    </TableHead>
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                    >
+                                        Téléphone
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
                                     </TableHead>
@@ -582,12 +622,28 @@
                                         >
                                             URGENT
                                         </div>
-                                        <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
+                                        <TableCell
+                                            v-if="props.type === ''"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ replacementGroup.user_full_name }}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell
+                                            v-if="props.type === ''"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ replacementGroup.user_phone_number }}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
                                                 <div
                                                     v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                     :key="index"
-                                                    class="flex flex-col items-center mb-2"
+                                                    class="flex flex-col 2xl:flex-row items-center mb-2"
                                                 >
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                         <span>{{ formatDate(period.start_date) }}</span>
@@ -728,7 +784,7 @@
                                                 {{ roles[replacementGroup.role_type] }}
                                             </div>
                                         </TableCell>
-                                        <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                        <TableCell class="text-xs flex -mt-12 2xl:mt-0 items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                             <template v-if="props.type === 'me'">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger>
@@ -825,10 +881,19 @@
                             <Table>
                                 <TableHeader class="w-full">
                                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
+                                            Nom complet
+                                        </TableHead>
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Date
                                         </TableHead>
-                                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        <TableHead
+                                            v-if="props.type === 'me'"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
                                             Localité
                                         </TableHead>
                                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -907,7 +972,7 @@
                                                     </div>
                                                 </template>
                                             </TableCell>
-                                            <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                            <TableCell class="bg-[#F1F2F7] flex flex-col justify-center w-full py-auto items-center text-xs px-2 py-4">
                                                 <div class="bg-[#E4E7F4] rounded p-2">
                                                     <TooltipProvider>
                                                         <Tooltip>
@@ -943,7 +1008,7 @@
                                                     </TooltipProvider>
                                                 </div>
                                             </TableCell>
-                                            <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <TableCell class="text-xs flex flex-col justify-center w-full py-auto items-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <div class="flex flex-col items-center justify-center space-y-2">
                                                     <template v-if="props.type === 'me'">
                                                         <DropdownMenu>
@@ -1032,10 +1097,19 @@
                         <Table>
                             <TableHeader class="w-full">
                                 <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
+                                        Nom complet
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Date
                                     </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    <TableHead
+                                        v-if="props.type === 'me'"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
                                         Localité
                                     </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -1114,7 +1188,7 @@
                                                 </div>
                                             </template>
                                         </TableCell>
-                                        <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                        <TableCell class="bg-[#F1F2F7] flex flex-col justify-center w-full py-auto items-center text-xs px-2 py-4">
                                             <div class="bg-[#E4E7F4] rounded p-2">
                                                 <TooltipProvider>
                                                     <Tooltip>
@@ -1150,7 +1224,7 @@
                                                 </TooltipProvider>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                        <TableCell class="text-xs flex flex-col justify-center w-full py-auto items-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                             <div class="flex flex-col items-center justify-center space-y-2">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
@@ -1624,7 +1698,7 @@ const isMobileView = ref(false);
 const gridColsByType: Record<string, string> = {
     'groups': 'grid-cols-8',
     'me': 'grid-cols-6',
-    '': 'grid-cols-7',
+    '': 'grid-cols-9',
 };
 
 onMounted(async () => {
