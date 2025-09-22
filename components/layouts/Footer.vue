@@ -1,70 +1,70 @@
 <template>
     <footer class="bg-muted">
-        <div class="flex lg:container flex-col md:flex-row justify-center md:justify-between md:space-x-4 items-center md:items-start pt-8 md:py-12 md:px-8">
+        <div class="flex flex-col items-center justify-center pt-8 lg:container md:flex-row md:justify-between md:space-x-4 md:items-start md:py-12 md:px-8">
             <div class="flex justify-center">
                 <LayoutsLogo class="h-16 lg:h-20" />
             </div>
 
-            <div class="flex flex-col w-full md:w-auto lg:w-auto justify-center items-center md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
+            <div class="flex flex-col items-center justify-center w-full md:w-auto lg:w-auto md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
                 <div class="hidden md:block md:-mt-6">
                     <h3 class="font-semibold md:text-sm">
                         CONTACT
                     </h3>
-                    <div class="flex flex-col space-y-4 mt-4">
-                        <p class="text-sm flex flex-row space-x-2 items-center">
-                            <PhoneIcon class="text-primary w-4 h-4" />
-                            <span class="md:text-xs lg:text-sm">+32 (0) 478.02.33.77</span>
+                    <div class="flex flex-col mt-4 space-y-4">
+                        <p class="flex flex-row items-center space-x-2 text-sm">
+                            <PhoneIcon class="w-4 h-4 text-primary" />
+                            <span class="md:text-xs lg:text-sm">0478.02.33.77</span>
                         </p>
-                        <p class="text-sm flex flex-row space-x-2 items-center">
-                            <MapPinIcon class="text-primary w-4 h-4" />
+                        <p class="flex flex-row items-center space-x-2 text-sm">
+                            <MapPinIcon class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</span>
                         </p>
-                        <p class="text-sm flex flex-row space-x-2 items-center">
-                            <EnvelopeIcon class="text-primary w-4 h-4" />
+                        <p class="flex flex-row items-center space-x-2 text-sm">
+                            <EnvelopeIcon class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">info@infiswap.be</span>
                         </p>
-                        <p class="text-sm flex flex-row space-x-2 items-center">
-                            <GlobeAltIcon class="text-primary w-4 h-4" />
+                        <p class="flex flex-row items-center space-x-2 text-sm">
+                            <GlobeAltIcon class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">www.infiswap.be</span>
                         </p>
                     </div>
                 </div>
 
-                <div class="flex flex-col w-96 space-y-4 py-8 md:py-0">
-                    <h3 class="text-center md:text-start lg:text-base md:text-sm text-primary font-semibold">
+                <div class="flex flex-col py-8 space-y-4 w-96 md:py-0">
+                    <h3 class="font-semibold text-center md:text-start lg:text-base md:text-sm text-primary">
                         S'inscrire à la newsletter
                     </h3>
-                    <p class="hidden md:block text-sm md:text-xs lg:text-sm">
+                    <p class="hidden text-sm md:block md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                         Vous pouvez vous désabonner à tout moment. Pour en savoir plus sur notre politique
                         de protection des données cliquez ici.
                     </p>
-                    <p class="md:hidden w-80 mx-auto text-center text-sm md:text-xs lg:text-sm">
+                    <p class="mx-auto text-sm text-center md:hidden w-80 md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                     </p>
                     <form
-                        class="mx-auto md:mx-0 bg-primary flex flex-row justify-between items-center h-9 rounded-full"
+                        class="flex flex-row items-center justify-between mx-auto rounded-full md:mx-0 bg-primary h-9"
                         @submit.prevent="subscribeNewsletter"
                     >
-                        <div class="flex flex-row justify-start items-center">
-                            <EnvelopeIcon class="text-white w-4 h-4 ms-3" />
+                        <div class="flex flex-row items-center justify-start">
+                            <EnvelopeIcon class="w-4 h-4 text-white ms-3" />
                             <Input
                                 v-model="email"
                                 variant="transparent"
                                 placeholder="Email"
-                                class="w-44 md:w-52 lg:w-full text-white text-sm"
+                                class="text-sm text-white w-44 md:w-52 lg:w-full"
                             />
                         </div>
                         <Button
                             :disabled="isLoading"
                             variant="secondary"
-                            class="text-primary h-8"
+                            class="h-8 text-primary"
                             type="submit"
                         >
                             {{ isLoading ? "Envoi..." : "Enregistrer" }}
                         </Button>
                     </form>
-                    <div class="flex flex-row justify-center md:justify-start space-x-4 pt-4 md:pt-0">
+                    <div class="flex flex-row justify-center pt-4 space-x-4 md:justify-start md:pt-0">
                         <NuxtLink to="https://web.facebook.com/profile.php?viewas=100000686899395&id=61572833867576">
                             <LayoutsAppImage
                                 src="icons/facebook.png"
@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <div class="bg-primary text-white py-4 md:px-0 px-8">
+        <div class="px-8 py-4 text-white bg-primary md:px-0">
             <p
                 class="text-center text-[0.6em] md:text-xs"
             >
@@ -103,7 +103,7 @@
             </p>
         </div>
 
-        <div class="container py-4 w-full text-center">
+        <div class="container w-full py-4 text-center">
             <NuxtLink
                 to="https://www.ll-it-sc.be"
                 target="_blank"

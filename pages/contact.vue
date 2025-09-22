@@ -9,7 +9,7 @@
                 @submit.prevent="submit"
             >
                 <FormField name="name">
-                    <div class="relative w-full items-center">
+                    <div class="relative items-center w-full">
                         <InputIcon
                             v-model="formData.name"
                             :icon="UserCircleIcon"
@@ -29,7 +29,7 @@
                 </FormField>
 
                 <FormField name="email">
-                    <div class="relative w-full items-center">
+                    <div class="relative items-center w-full">
                         <InputIcon
                             v-model="formData.email"
                             :icon="EnvelopeIcon"
@@ -49,7 +49,7 @@
                 </FormField>
 
                 <FormField name="phoneNumber">
-                    <div class="relative w-full items-center">
+                    <div class="relative items-center w-full">
                         <InputIcon
                             v-model="formData.phoneNumber"
                             :icon="PhoneIcon"
@@ -69,19 +69,19 @@
                 </FormField>
 
                 <FormField name="message">
-                    <FormItem class="flex flex-col py-2 px-4 rounded-3xl border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary border-gray-300">
-                        <div class="flex space-x-3 items-center">
-                            <EnvelopeIcon class="text-primary w-6" />
-                            <span class="text-primary text-sm">
+                    <FormItem class="flex flex-col px-4 py-2 border border-gray-300 rounded-3xl focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+                        <div class="flex items-center space-x-3">
+                            <EnvelopeIcon class="w-6 text-primary" />
+                            <span class="text-sm text-primary">
                                 Message
                             </span>
                         </div>
                         <FormControl>
-                            <div class="flex w-full items-center space-x-1">
+                            <div class="flex items-center w-full space-x-1">
                                 <Textarea
                                     v-model="formData.message"
                                     placeholder="Votre message..."
-                                    class="bg-white h-40"
+                                    class="h-40 bg-white"
                                 />
                             </div>
                         </FormControl>
@@ -89,7 +89,7 @@
                 </FormField>
 
                 <Button
-                    class="mt-4 md:mx-44 mx-20 font-bold"
+                    class="mx-20 mt-4 font-bold md:mx-44"
                     type="submit"
                     :in-progress="inProgress"
                 >
@@ -98,18 +98,18 @@
             </form>
 
             <section class="grid lg:grid-cols-4 grid-cols-2 container sm:w-[70%] lg:w-[55%] gap-4 my-12">
-                <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
-                    <h4 class="flex space-x-2 items-center justify-center text-sm text-primary group-hover:text-white font-bold">
+                <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
+                    <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <EnvelopeIcon class="w-6 h-6" />
                         <span>Téléphone</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
-                        +32 (0) 478.02.33.77
+                        0478.02.33.77
                     </p>
                 </div>
 
-                <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
-                    <h4 class="flex space-x-2 items-center justify-center text-sm text-primary group-hover:text-white font-bold">
+                <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
+                    <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <MapPinIcon class="w-6 h-6" />
                         <span>Emplacement</span>
                     </h4>
@@ -118,8 +118,8 @@
                     </p>
                 </div>
 
-                <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
-                    <h4 class="flex space-x-2 items-center justify-center text-sm text-primary group-hover:text-white font-bold">
+                <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
+                    <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <EnvelopeIcon class="w-6 h-6" />
                         <span>Email</span>
                     </h4>
@@ -128,8 +128,8 @@
                     </p>
                 </div>
 
-                <div class="bg-white cursor-pointer shadow hover:bg-primary hover:scale-105 p-4 rounded-2xl transform transition duration-300 ease-in-out group">
-                    <h4 class="flex space-x-2 items-center justify-center text-sm text-primary group-hover:text-white font-bold">
+                <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
+                    <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <GlobeAltIcon class="w-6 h-6" />
                         <span>Site</span>
                     </h4>

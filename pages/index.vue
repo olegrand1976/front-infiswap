@@ -1,5 +1,5 @@
 <template>
-    <div class="sm:mt-0 mt-16 relative">
+    <div class="relative mt-16 sm:mt-0">
         <div class="flex flex-col">
             <HomeBanner />
             <div class="container mt-12">
@@ -12,20 +12,20 @@
             class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
         >
             <div class="flex items-center justify-between w-full text-primary">
-                <h3 class="hidden md:block xl:text-xl lg:text-xl md:text-xl sm:text-xl text-xl">
+                <h3 class="hidden text-xl md:block xl:text-xl lg:text-xl md:text-xl sm:text-xl">
                     <span>Découvrez les remplacements </span> <span class="font-bold">les plus récents</span>
                 </h3>
-                <h3 class="md:hidden text-xl font-bold flex items-center gap-2">
+                <h3 class="flex items-center gap-2 text-xl font-bold md:hidden">
                     <SparklesIcon class="size-5" /> Des remplacements
                 </h3>
                 <NuxtLink
                     to="/dashboard/replacements/immediate"
                     class="flex items-center"
                 >
-                    <Button class="hidden md:inline-block text-sm bg-primary">
+                    <Button class="hidden text-sm md:inline-block bg-primary">
                         <span>Créer remplacement</span>
                     </Button>
-                    <PlusCircleIcon class="inline-block md:hidden w-8 h-8 text-primary" />
+                    <PlusCircleIcon class="inline-block w-8 h-8 md:hidden text-primary" />
                 </NuxtLink>
             </div>
             <div class="w-full">
@@ -33,12 +33,12 @@
                     :replacements="replacements"
                     :loading="loading"
                 />
-                <div class="w-full flex justify-center">
+                <div class="flex justify-center w-full">
                     <NuxtLink
                         v-if="isAdmin"
                         to="/dashboard/admin/replacements"
                     >
-                        <Button class="text-base bg-primary lg:mb-4 px-16 py-3">
+                        <Button class="px-16 py-3 text-base bg-primary lg:mb-4">
                             Voir plus
                         </Button>
                     </NuxtLink>
@@ -46,7 +46,7 @@
                         v-else
                         to="/dashboard/replacements"
                     >
-                        <Button class="text-base bg-primary lg:mb-4 px-16 py-3">
+                        <Button class="px-16 py-3 text-base bg-primary lg:mb-4">
                             Voir plus
                         </Button>
                     </NuxtLink>
@@ -70,7 +70,7 @@
         </section>
 
         <div
-            class="fixed bottom-16 sm:bottom-0 sm:top-32 right-0 w-48 sm:w-64 z-50"
+            class="fixed right-0 z-50 w-48 bottom-16 sm:bottom-0 sm:top-32 sm:w-64"
         >
             <a
                 href="tel:+32478023377"
@@ -79,13 +79,13 @@
                     showContact ? 'translate-x-0' : 'translate-x-[105%]',
                 ]"
             >
-                <h5 class="text-sm mb-2 font-bold">
+                <h5 class="mb-2 text-sm font-bold">
                     Contactez-nous au
                 </h5>
-                <p class="mt-1 text-success text-xl font-bold">
-                    (+32) 478.02.33.77
+                <p class="mt-1 text-xl font-bold text-success">
+                    0478.02.33.77
                 </p>
-                <div class="bg-success p-1 absolute -top-2 -left-2 animate-pulse rounded-lg">
+                <div class="absolute p-1 rounded-lg bg-success -top-2 -left-2 animate-pulse">
                     <PhoneIcon class="w-4 text-white" />
                 </div>
             </a>

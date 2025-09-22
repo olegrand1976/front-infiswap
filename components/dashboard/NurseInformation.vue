@@ -1,29 +1,29 @@
 <template>
     <div class="space-y-6">
-        <section class="grid grid-cols-1 items-center gap-4">
+        <section class="grid items-center grid-cols-1 gap-4">
             <NurstechPresentation />
 
-            <div class="hidden lg:block mx-8">
+            <div class="hidden mx-8 lg:block">
                 <Carousel :opts="{ slidesToScroll: 1, slidesToShow: 4 }">
                     <CarouselContent>
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                                <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 rounded-lg border-primary">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-primary md:p-3 md:text-sm">
                                     Rechercher un remplacement
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center md:mb-3 text-primary md:text-base">
                                         Rechercher un remplacement
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-primary md:mr-2">•</span>
                                             <span>Vous cherchez à complèter votre tournée.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements">
-                                            <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition rounded bg-primary md:py-2 md:text-sm hover:bg-primary/90">
                                                 Rechercher
                                             </button>
                                         </NuxtLink>
@@ -33,23 +33,23 @@
                         </CarouselItem>
 
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
-                                <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 rounded-lg border-success">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-success md:p-3 md:text-sm">
                                     Me faire remplacer
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center md:mb-3 text-success md:text-base">
                                         Me faire remplacer
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-success font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-success md:mr-2">•</span>
                                             <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/create">
-                                            <button class="bg-success text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-success/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition rounded bg-success md:py-2 md:text-sm hover:bg-success/90">
                                                 Demander
                                             </button>
                                         </NuxtLink>
@@ -59,23 +59,23 @@
                         </CarouselItem>
 
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="rounded-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
-                                <div class="bg-indigo-600 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 border-indigo-600 rounded-lg">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-indigo-600 md:p-3 md:text-sm">
                                     Voir les intéressés
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-indigo-600 text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center text-indigo-600 md:mb-3 md:text-base">
                                         Candidats à mes remplacements
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-indigo-600 font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-indigo-600 md:mr-2">•</span>
                                             <span>Consultez les utilisateurs ayant répondu positivement à vos offres de remplacement.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/responses">
-                                            <button class="bg-indigo-600 text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-indigo-600/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition bg-indigo-600 rounded md:py-2 md:text-sm hover:bg-indigo-600/90">
                                                 Consulter
                                             </button>
                                         </NuxtLink>
@@ -85,23 +85,23 @@
                         </CarouselItem>
 
                         <CarouselItem class="basis-1/3 2xl:basis-1/4">
-                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 bg-orange-700 flex flex-col h-full">
-                                <div class="bg-orange-700 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden bg-orange-700 border-2 border-orange-700 rounded-lg">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-orange-700 md:p-3 md:text-sm">
                                     Mes accords de remplacement
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-orange-700 text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center text-orange-700 md:mb-3 md:text-base">
                                         Accords de remplacement
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-orange-700 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements où vous avez postulés.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/applied">
-                                            <button class="bg-orange-700 text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-orange-700/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition bg-orange-700 rounded md:py-2 md:text-sm hover:bg-orange-700/90">
                                                 Accéder
                                             </button>
                                         </NuxtLink>
@@ -115,27 +115,27 @@
                 </Carousel>
             </div>
 
-            <div class="relative lg:hidden mx-8">
+            <div class="relative mx-8 lg:hidden">
                 <Carousel>
                     <CarouselContent>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-primary flex flex-col h-full">
-                                <div class="bg-primary text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 rounded-lg border-primary">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-primary md:p-3 md:text-sm">
                                     Rechercher un remplacement
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-primary text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center md:mb-3 text-primary md:text-base">
                                         Rechercher un remplacement
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-primary font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-primary md:mr-2">•</span>
                                             <span>Vous cherchez à complèter votre tournée.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements">
-                                            <button class="bg-primary text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-primary/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition rounded bg-primary md:py-2 md:text-sm hover:bg-primary/90">
                                                 Rechercher
                                             </button>
                                         </NuxtLink>
@@ -144,23 +144,23 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-success flex flex-col h-full">
-                                <div class="bg-success text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 rounded-lg border-success">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-success md:p-3 md:text-sm">
                                     Me faire remplacer
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-success text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center md:mb-3 text-success md:text-base">
                                         Me faire remplacer
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-success font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-success md:mr-2">•</span>
                                             <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/create">
-                                            <button class="bg-success text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-success/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition rounded bg-success md:py-2 md:text-sm hover:bg-success/90">
                                                 Demander
                                             </button>
                                         </NuxtLink>
@@ -169,23 +169,23 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-indigo-600 flex flex-col h-full">
-                                <div class="bg-indigo-600 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden border-2 border-indigo-600 rounded-lg">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-indigo-600 md:p-3 md:text-sm">
                                     Voir les intéressés
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-indigo-600 text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center text-indigo-600 md:mb-3 md:text-base">
                                         Candidats à mes remplacements
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-indigo-600 font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-indigo-600 md:mr-2">•</span>
                                             <span>Consultez les utilisateurs ayant répondu positivement à vos offres de remplacement.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/responses">
-                                            <button class="bg-indigo-600 text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-indigo-600/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition bg-indigo-600 rounded md:py-2 md:text-sm hover:bg-indigo-600/90">
                                                 Consulter
                                             </button>
                                         </NuxtLink>
@@ -194,23 +194,23 @@
                             </div>
                         </CarouselItem>
                         <CarouselItem>
-                            <div class="rounded-lg overflow-hidden border-2 border-orange-700 bg-orange-700 flex flex-col h-full">
-                                <div class="bg-orange-700 text-white p-2 md:p-3 text-center text-base md:text-sm font-bold tracking-wide uppercase">
+                            <div class="flex flex-col h-full overflow-hidden bg-orange-700 border-2 border-orange-700 rounded-lg">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-orange-700 md:p-3 md:text-sm">
                                     Mes accords de remplacement
                                 </div>
-                                <div class="bg-white text-gray-700 p-3 md:p-5 flex flex-col flex-grow">
-                                    <p class="mb-2 md:mb-3 text-orange-700 text-center text-sm md:text-base font-medium">
+                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center text-orange-700 md:mb-3 md:text-base">
                                         Accords de remplacement
                                     </p>
-                                    <ul class="mb-2 md:mb-4 space-y-1 text-xs md:text-sm flex-grow">
+                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
-                                            <span class="text-orange-700 font-bold mr-1 md:mr-2">•</span>
+                                            <span class="mr-1 font-bold text-orange-700 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements où vous avez postulés.</span>
                                         </li>
                                     </ul>
                                     <div class="pt-2 md:pt-4">
                                         <NuxtLink to="/dashboard/replacements/applied">
-                                            <button class="bg-orange-700 text-white w-full py-1 md:py-2 rounded text-sm md:text-sm font-semibold hover:bg-orange-700/90 transition">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition bg-orange-700 rounded md:py-2 md:text-sm hover:bg-orange-700/90">
                                                 Accéder
                                             </button>
                                         </NuxtLink>
@@ -225,16 +225,16 @@
             </div>
         </section>
 
-        <section class="flex flex-col lg:flex-row w-full items-stretch">
-            <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg">
-                <div class="bg-gray-100 rounded p-4">
-                    <div class="text-primary flex justify-between items-center">
+        <section class="flex flex-col items-stretch w-full lg:flex-row">
+            <div class="w-full bg-white rounded-lg shadow-lg lg:w-1/2">
+                <div class="p-4 bg-gray-100 rounded">
+                    <div class="flex items-center justify-between text-primary">
                         <h2>
                             Mes préférences
                         </h2>
                         <Button
                             variant="none"
-                            class="font-bold text-xs mt-2"
+                            class="mt-2 text-xs font-bold"
                             @click="proposalDialog = true"
                         >
                             Boost IA
@@ -263,23 +263,23 @@
                     />
 
                     <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-16 sm:mt-4 overflow-hidden">
-                        <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full mb-4">
-                            <label class="ml-3 sm:ml-0 text-primary font-semibold sm:font-normal sm:text-white">
+                        <div class="flex flex-col mb-4 sm:bg-primary sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                            <label class="ml-3 font-semibold sm:ml-0 text-primary sm:font-normal sm:text-white">
                                 <span>Rayon de recherche</span>
                             </label>
                         </div>
 
-                        <div class="-mt-1 sm:mt-0 relative flex items-center border border-gray-400 focus-within:border-primary rounded-full sm:border-none sm:rounded-none">
+                        <div class="relative flex items-center -mt-1 border border-gray-400 rounded-full sm:mt-0 focus-within:border-primary sm:border-none sm:rounded-none">
                             <InputIcon
                                 v-model="radiusInput"
                                 type="number"
                                 title="Appuyer sur l'icône pour valider"
-                                class="text-sm h-2 sm:h-8 indent-3 bg-transparent border-none rounded w-full pr-10"
+                                class="w-full h-2 pr-10 text-sm bg-transparent border-none rounded sm:h-8 indent-3"
                                 min="1"
                             />
 
                             <button
-                                class="absolute top-2 right-4 sm:right-2 text-primary hover:text-green-600 transition"
+                                class="absolute transition top-2 right-4 sm:right-2 text-primary hover:text-green-600"
                                 @click="onUpdateRadius"
                             >
                                 <CheckIcon class="w-4 h-4" />
@@ -288,11 +288,11 @@
                     </div>
                 </div>
 
-                <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg flex flex-col">
-                    <div class="bg-gray-200 p-4 rounded">
-                        <UserIcon class="w-8 opacity-80" />
+                <div class="flex flex-col w-full bg-white rounded-lg shadow-lg">
+                    <div class="p-5 mt-8 bg-gray-200 rounded">
+                        <UserIcon class="w-8 opacity-80 " />
                     </div>
-                    <div>
+                    <div class="p-4">
                         <h3 class="text-sm text-gray-900">
                             Nombre d'affiliés à votre compte
                         </h3>
@@ -303,12 +303,12 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-lg">
-                <h3 class="text-white bg-primary p-3 rounded-t-lg">
+            <div class="w-full bg-white rounded-lg shadow-lg lg:w-1/2">
+                <h3 class="p-3 text-white rounded-t-lg bg-primary">
                     Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                 </h3>
                 <div v-if="loading">
-                    <Skeleton class="bg-gray-200 m-8 h-64" />
+                    <Skeleton class="h-64 m-8 bg-gray-200" />
                 </div>
                 <div
                     v-else
