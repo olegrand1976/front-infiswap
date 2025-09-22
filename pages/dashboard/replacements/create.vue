@@ -91,11 +91,13 @@
                             <p>De</p>
                             <InputTime
                                 v-model="formData.timeSlot.morning.startAt"
+                                class="w-full"
                                 input-class="rounded-full"
                             />
                             <p>à</p>
                             <InputTime
                                 v-model="formData.timeSlot.morning.endAt"
+                                class="w-full"
                                 input-class="rounded-full"
                             />
                         </div>

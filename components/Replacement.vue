@@ -249,13 +249,12 @@
                                             ]"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell
                                                 :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
@@ -576,13 +575,12 @@
                                         ]"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
                                         <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
@@ -862,13 +860,12 @@
                                             class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -1070,13 +1067,12 @@
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1577,6 +1573,11 @@ import { useCareTypes } from '@/composables/useCareTypes';
 const { $toast } = useNuxtApp();
 
 const props = defineProps({
+    selectedRegions: {
+        type: Array as PropType<string[]>,
+        required: false,
+        default: () => [],
+    },
     type: {
         type: String,
         required: false,
@@ -1609,7 +1610,6 @@ const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 const selectedReplacement = ref<Replacement>(null);
-const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const pagination = ref({
@@ -1631,8 +1631,6 @@ onMounted(async () => {
     if (import.meta.client) {
         isMobileView.value = window.innerWidth <= 1024;
     }
-    await fetchCareTypes();
-    await fetchInitialData(page.value, perPage.value);
 });
 
 const localFilters = reactive({
@@ -1799,24 +1797,32 @@ const formData = reactive({
     filters: localFilters,
 });
 
+const emit = defineEmits(['update:selectedRegions']);
+let newRegions = [...props.selectedRegions];
+let internalUpdate = false;
+
 const updateRegionSelection = (region: string, checked: boolean) => {
+    internalUpdate = true;
+
     if (checked) {
-        if (!selectedRegions.value.includes(region)) {
-            selectedRegions.value = [...selectedRegions.value, region];
+        if (!newRegions.includes(region)) {
+            newRegions.push(region);
         }
     }
     else {
-        selectedRegions.value = selectedRegions.value.filter(r => r !== region);
+        newRegions = newRegions.filter(r => r !== region);
     }
+    emit('update:selectedRegions', newRegions);
 };
 
 const validateSelection = async () => {
     filterRegionDialog.value = false;
     await fetchInitialData(page.value, perPage.value);
+    emit('update:selectedRegions', props.selectedRegions);
 };
 
 const cancelSelection = () => {
-    selectedRegions.value = [];
+    emit('update:selectedRegions', []);
     filterRegionDialog.value = false;
 };
 
@@ -1857,7 +1863,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             selectedDays: [],
             type: props.type,
             filters: localFilters,
-            provinces: selectedRegions.value,
+            provinces: newRegions,
             page,
             perPage,
         });
@@ -1879,12 +1885,19 @@ watch(
     () => props.filteredProvinces,
     (newProvinces, oldProvinces) => {
         if (newProvinces !== oldProvinces) {
-            selectedRegions.value = [...newProvinces as string[]];
+            newRegions = [...newProvinces as string[]];
+
+            if (internalUpdate) {
+                internalUpdate = false;
+                return;
+            }
             fetchInitialData(page.value, perPage.value);
         }
     },
     { deep: true },
 );
+
+await fetchCareTypes();
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
@@ -2208,7 +2221,6 @@ const { submit } = useSubmit(async () => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>
 

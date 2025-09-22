@@ -104,7 +104,7 @@
                         <span>Téléphone</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
-                        0478.02.33.77
+                        +32 (0) 478.02.33.77
                     </p>
                 </div>
 

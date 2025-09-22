@@ -1,8 +1,8 @@
 <template>
     <Sidebar>
-        <SidebarContent class="p-2 bg-white flex flex-col h-full justify-between sidebar-content min-w-[260px] w-[260px]">
+        <SidebarContent class="p-2 bg-white flex flex-col gap-8 justify-between sidebar-content min-w-[260px] w-[260px]">
             <SidebarGroup
-                :class="cn('h-full rounded-xl pb-6', {
+                :class="cn('rounded-xl pb-6', {
                     'bg-white': isAdmin,
                     'bg-gray-100': !isAdmin,
                 })"
@@ -12,7 +12,7 @@
                 </SidebarHeader>
 
                 <SidebarGroupContent
-                    class="mt-2 mx-auto h-full flex flex-col justify-between"
+                    class="mt-2 mx-auto flex flex-col gap-4"
                     :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
                 >
                     <SidebarMenu>
@@ -118,52 +118,52 @@
                             </SidebarMenuItem>
                         </section>
                     </SidebarMenu>
-
-                    <div class="flex justify-between items-center mx-auto">
-                        <CopyButton
-                            variant="none"
-                            label="Inviter vos collègues"
-                            class="text-primary"
-                            :show-label="true"
-                            :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
-                            success-message="Lien copié avec succès"
-                        />
-
-                        <QuestionMarkCircleIcon
-                            class="w-4 text-blue-500 cursor-pointer"
-                            @click="referralDialog = true"
-                        />
-                    </div>
-
-                    <Dialog v-model:open="referralDialog">
-                        <DialogContent class="max-w-xl">
-                            <DialogHeader>
-                                <DialogTitle class="text-primary">
-                                    Inviter vos collègues
-                                </DialogTitle>
-                            </DialogHeader>
-                            <p>
-                                Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
-                            </p>
-
-                            <div class="flex justify-between items-center mb-4">
-                                <p class="mt-4">
-                                    {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
-                                </p>
-
-                                <CopyButton
-                                    variant="none"
-                                    class="text-primary mt-3"
-                                    :show-label="false"
-                                    :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
-                                    success-message="Lien copié avec succès"
-                                />
-                            </div>
-                        </DialogContent>
-                    </Dialog>
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
+                <div class="flex justify-between items-center mx-auto">
+                    <CopyButton
+                        variant="none"
+                        label="Inviter vos collègues"
+                        class="text-primary"
+                        :show-label="true"
+                        :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                        success-message="Lien copié avec succès"
+                    />
+
+                    <QuestionMarkCircleIcon
+                        class="w-4 text-blue-500 cursor-pointer"
+                        @click="referralDialog = true"
+                    />
+                </div>
+
+                <Dialog v-model:open="referralDialog">
+                    <DialogContent class="max-w-xl">
+                        <DialogHeader>
+                            <DialogTitle class="text-primary">
+                                Inviter vos collègues
+                            </DialogTitle>
+                        </DialogHeader>
+                        <p>
+                            Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                        </p>
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="mt-4">
+                                {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
+                            </p>
+
+                            <CopyButton
+                                variant="none"
+                                class="text-primary mt-3"
+                                :show-label="false"
+                                :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                                success-message="Lien copié avec succès"
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
                 <NuxtLink
                     to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
                     target="_blank"
@@ -178,14 +178,12 @@
                     </div>
                     <p class="text-sm font-bold">Évaluez-nous sur</p>
                     <LayoutsAppImage
-                        src="/google-brand-color.svg"
+                        src="/google-brand.svg"
                         class="w-32 mx-auto"
                     />
                 </NuxtLink>
-            </SidebarGroup>
-            <SidebarGroup>
                 <Button
-                    class="w-full rounded flex space-x-2 items-center justify-arround"
+                    class="w-full mt-4 rounded flex space-x-2 items-center justify-arround"
                     @click="logout"
                 >
                     <PowerIcon class="w-6 opacity-80" />
@@ -219,7 +217,7 @@ import {
     PlayCircleIcon,
     ShoppingBagIcon,
     ChartBarIcon,
-    ChartPieIcon,
+    LinkIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -227,6 +225,7 @@ import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useRuntimeConfig } from '#app';
+import { PERPAGE } from '~/lib/constants';
 
 defineProps({
     collapsed: Boolean,
@@ -243,6 +242,11 @@ const closeSidebar = () => {
         setOpenMobile(false);
     }
 };
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const { products, getProducts } = useProduct();
+await getProducts(page.value, perPage.value);
+
 interface NavigationItem {
     label: string;
     route: string;
@@ -252,6 +256,21 @@ interface NavigationItem {
     visible?: boolean;
     external?: boolean;
 }
+
+const contactChildren = computed(() => {
+    return [
+        {
+            label: 'Infiswap',
+            route: '/dashboard/admin/contacts/infiswap',
+            icon: InboxIcon,
+        },
+        ...products.value.map(p => ({
+            label: p.name,
+            route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
+            icon: InboxIcon,
+        })),
+    ];
+});
 
 const nurseNavigationItems: NavigationItem[] = [
     {
@@ -326,18 +345,10 @@ const adminNavigationItems: NavigationItem[] = [
         visible: true,
     },
     {
-        label: 'Inscriptions de la semaine dernière',
-        route: 'https://metabase.infiswap.be/public/dashboard/c3547aaf-0edd-4e3c-b050-729bacb0cc6a',
+        label: 'Inscriptions',
+        route: '/dashboard/admin/registrations',
         icon: ChartBarIcon,
         visible: !isCollaborator.value,
-        external: true,
-    },
-    {
-        label: 'Inscription du mois dernier',
-        route: 'https://metabase.infiswap.be/public/dashboard/6eed0ce9-679a-4d4f-a938-d7fad95a14bd',
-        icon: ChartPieIcon,
-        visible: !isCollaborator.value,
-        external: true,
     },
     {
         label: 'Remplacements',
@@ -383,9 +394,10 @@ const adminNavigationItems: NavigationItem[] = [
     },
     {
         label: 'Contacts',
-        route: '/dashboard/admin/contacts',
+        route: '/dashboard/admin/contacts/infiswap',
         icon: InboxIcon,
         visible: !isCollaborator.value,
+        children: contactChildren.value,
     },
     {
         label: 'Tutoriels',
@@ -404,6 +416,12 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBagIcon,
+        visible: true,
+    },
+    {
+        label: 'Suivi des liens',
+        route: '/dashboard/admin/stats',
+        icon: LinkIcon,
         visible: true,
     },
 ];

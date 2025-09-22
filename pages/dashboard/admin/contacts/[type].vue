@@ -1,54 +1,8 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Liste des contacts" />
+        <DashboardAdminPageHeader :title="`Liste des contacts - ${typeLabel}`" />
 
         <DashboardAdminPageContent>
-            <Tabs
-                v-model="selectedType"
-                class="mb-4"
-            >
-                <TabsList class="w-full">
-                    <TabsTrigger
-                        value="nurstech"
-                        class="w-full md:w-48 h-12"
-                    >
-                        <span>
-                            Nurstech
-                        </span>
-                        <Badge
-                            class="ml-2 bg-primary text-white"
-                        >
-                            5
-                        </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="nursassur"
-                        class="w-full md:w-48 h-12"
-                    >
-                        <span>
-                            Nursassur
-                        </span>
-                        <Badge
-                            class="ml-2 bg-primary text-white"
-                        >
-                            5
-                        </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="infiswap"
-                        class="w-full md:w-48 h-12"
-                    >
-                        <span>
-                            Infiswap
-                        </span>
-                        <Badge
-                            class="ml-2 bg-primary text-white"
-                        >
-                            5
-                        </Badge>
-                    </TabsTrigger>
-                </TabsList>
-            </Tabs>
             <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
                 <InputIcon
                     v-model="option.name"
@@ -97,6 +51,10 @@ definePageMeta({
     middleware: ['admin'],
 });
 
+const route = useRoute();
+const type = computed<string>(() => (route.params.type as string) || 'nurstech');
+const typeLabel = computed(() => type.value.charAt(0).toUpperCase() + type.value.slice(1));
+
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -118,7 +76,7 @@ const filter = async () => {
     const currentFilter = {
         ...option.value,
     };
-    await getContacts(selectedType, page.value, perPage.value, currentFilter);
+    await getContacts(type, page.value, perPage.value, currentFilter);
 };
 
 const resetFilter = async () => {
@@ -129,24 +87,23 @@ const resetFilter = async () => {
 
     option.value = { ...initialFilter };
     page.value = 1;
-    await getContacts(selectedType, page.value, perPage.value, option.value);
+    await getContacts(type, page.value, perPage.value, option.value);
 };
 
 const debouncedFilter = debounce(filter, 100);
 
 const { contacts, count, getContacts } = useContact();
-const selectedType = ref('nurstech');
 
-await getContacts(selectedType, page.value, perPage.value, option.value);
+await getContacts(type, page.value, perPage.value, option.value);
 const dataContacts = computed(() => contacts.value ?? []);
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getContacts(selectedType, page.value, value, option.value);
+    await getContacts(type, page.value, value, option.value);
 };
 
 const refresh = async (page: number) => {
-    await getContacts(selectedType, page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+    await getContacts(type, page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
 };
 
 const sort = reactive({
@@ -168,15 +125,15 @@ const setSort = (columnKey: string) => {
     }
 };
 
-watch(selectedType, async () => {
+watch(type, async () => {
     page.value = 1;
-    await getContacts(selectedType, page.value, perPage.value, option.value);
+    await getContacts(type, page.value, perPage.value, option.value);
 });
 
 watch(
     () => sort,
     async (newVal) => {
-        await getContacts(selectedType, page.value, perPage.value, {
+        await getContacts(type, page.value, perPage.value, {
             sortOrder: newVal.order,
             sortKey: newVal.by });
     },

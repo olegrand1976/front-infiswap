@@ -150,6 +150,7 @@
         </div>
 
         <Replacement
+            v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
@@ -177,7 +178,7 @@ const replacementRoleFilters = {
 };
 
 const selectedRegions = ref<string[]>([]);
-const isAllSelected = ref(true);
+const isAllSelected = computed(() => selectedRegions.value.length === 0);
 
 const selectedFilters = ref({
     type: 'all',
@@ -207,7 +208,6 @@ const toggleIcon = () => {
 };
 
 const toggleAllRegions = (checked: boolean) => {
-    isAllSelected.value = checked;
     if (checked) {
         selectedRegions.value = [];
     }
@@ -215,16 +215,12 @@ const toggleAllRegions = (checked: boolean) => {
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     if (checked) {
-        isAllSelected.value = false;
         if (!selectedRegions.value.includes(region)) {
             selectedRegions.value = [...selectedRegions.value, region];
         }
     }
     else {
         selectedRegions.value = selectedRegions.value.filter(r => r !== region);
-        if (selectedRegions.value.length === 0) {
-            isAllSelected.value = true;
-        }
     }
 };
 
@@ -252,6 +248,5 @@ useHead({
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>
