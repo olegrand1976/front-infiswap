@@ -351,6 +351,7 @@ export type Contact = {
     phone?: string;
     description?: string;
     created_at?: string;
+    hasResponded?: boolean;
 };
 
 export type Group = {
