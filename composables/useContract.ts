@@ -124,7 +124,8 @@ export const useContract = () => {
     }
 
     const getById = async (id: number) => {
-        return await $apifetch(`/api/contracts/${id}`);
+        const response = await $apifetch(`/api/contracts/${id}`);
+        return response.data;
     };
 
     return {

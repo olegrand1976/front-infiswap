@@ -303,11 +303,8 @@
                 </div>
             </div>
 
-            <<<<<<< HEAD
             <div class="bg-gray-100 lg:w-1/2 rounded-b-lg relative">
-                =======
                 <div class="w-full">
-                    >>>>>>> origin/anja/feat/inviter-collègue
                     <h3 class="text-white bg-primary p-3 rounded-t-lg">
                         Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
                     </h3>
