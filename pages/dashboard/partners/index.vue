@@ -412,7 +412,7 @@
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
-                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />                                                    
+                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
@@ -431,8 +431,6 @@
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
-
-                                            
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -458,32 +456,32 @@
                 </div>
             </TabsContent>
 
-             <Dialog v-model:open="closePartenershipDialog">
+            <Dialog v-model:open="closePartenershipDialog">
                 <DialogContent class="overflow-y-auto sm:max-w-lg">
-                     <DialogHeader>
+                    <DialogHeader>
                         <DialogTitle>Fermer la demande</DialogTitle>
-                          <DialogDescription class="mt-3 mb-6">
-                             Etes-vous sur de vouloir fermer cette demande ?
-                          </DialogDescription>
-                        </DialogHeader>
-                      <div class="flex items-center justify-center mt-4 space-x-6 sm:mt-8 sm:justify-end">
-                      <Button
-                             variant="secondary"
-                             class="px-8 bg-gray-200 hover:bg-gray-300"
-                              @click="closePartenershipDialog = false"
-                              >
-                             Non
-                          </Button>
-                             <Button
-                                variant="default"
-                                class="px-8"
-                                @click="handleClosePartenership(selectedPartnership)"
-                                >
+                        <DialogDescription class="mt-3 mb-6">
+                            Etes-vous sur de vouloir fermer cette demande ?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div class="flex items-center justify-center mt-4 space-x-6 sm:mt-8 sm:justify-end">
+                        <Button
+                            variant="secondary"
+                            class="px-8 bg-gray-200 hover:bg-gray-300"
+                            @click="closePartenershipDialog = false"
+                        >
+                            Non
+                        </Button>
+                        <Button
+                            variant="default"
+                            class="px-8"
+                            @click="handleClosePartenership(selectedPartnership)"
+                        >
                             Oui
-                             </Button>
-                     </div>
+                        </Button>
+                    </div>
                 </DialogContent>
-             </Dialog>
+            </Dialog>
 
             <Dialog v-model:open="detailDialog">
                 <DialogContent class="sm:max-w-lg h-[50vh] overflow-y-auto">
@@ -536,7 +534,6 @@
                         >
                             Annuler
                         </Button>
-
                     </div>
                     <div
                         v-else-if="selectedPartnership.has_responded"
@@ -659,7 +656,6 @@ const detailDialog = ref(false);
 const responseDialog = ref(false);
 const preferenceDialog = ref(true);
 
-
 const handleShowDetail = (partnership: UserPartner) => {
     selectedPartnership.value = partnership;
     detailDialog.value = true;
@@ -673,11 +669,9 @@ const handleMakeResponse = () => {
 const cancelSelection = () => {
     detailDialog.value = false;
     responseDialog.value = null;
-    
 };
 
-const { fetchDemandPartners, demandPartners, sendResponse, loading ,updatePartnership, updateAgainPartenership} = usePartners();
-
+const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership, updateAgainPartenership } = usePartners();
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -695,7 +689,6 @@ const cancelFilterPreference = async () => {
     await loadDemandPartners();
 };
 
-
 const acceptFilterPreference = async () => {
     searchFormData.postalCodeTags = setting?.replacement?.zip_codes || [];
     searchFormData.cityTags = setting?.replacement?.cities || [];
@@ -712,7 +705,6 @@ const fetchInitialData = async (pageNum, perPageNum) => {
         perPage: perPageNum,
     });
 };
-
 
 const closePartenershipDialog = ref(false);
 

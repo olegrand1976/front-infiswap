@@ -97,7 +97,7 @@ export const usePartners = () => {
         });
     };
 
-     const updatePartnership = async (formData) => {
+    const updatePartnership = async (formData) => {
         return await $apifetch(`/api/partners/${formData.id}`, {
             method: 'PUT',
             body: formData,
