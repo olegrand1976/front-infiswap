@@ -442,16 +442,22 @@ const handleOpenSignModal = (contractId: number) => {
 const handleConfirmSign = async () => {
     if (selectedContractId.value) {
         try {
-            const updatedContract = await signContract(selectedContractId.value);
+            // const updatedContract = await signContract(selectedContractId.value);
 
-            const contractIndex = contracts.value.findIndex(c => c.id === updatedContract.id);
-            if (contractIndex !== -1) {
-                contracts.value[contractIndex].status = updatedContract.status;
-            }
+            // const contractIndex = contracts.value.findIndex(c => c.id === updatedContract.id);
+            // if (contractIndex !== -1) {
+            //     contracts.value[contractIndex].status = updatedContract.status;
+            // }
 
-            $toast({
-                description: 'Le contrat a été signé avec succès !',
-            });
+            await signContract(selectedContractId.value);
+            await getContracts(page.value, perPage.value, optionContract.value);
+
+            setTimeout(() => {
+                $toast({
+                    description: 'Le contrat a été signé avec succès !',
+                });
+                showSignPDFModal.value = false;
+            }, 1500);
         }
         catch (error) {
             console.error('Erreur lors de la signature du contrat :', error);
@@ -462,7 +468,6 @@ const handleConfirmSign = async () => {
             });
         }
     }
-    showSignPDFModal.value = false;
 };
 
 const handleEdit = (contractId: number) => {
