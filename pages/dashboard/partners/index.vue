@@ -1,20 +1,20 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="flex items-center justify-between w-full">
-            <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <h1 class="flex w-full py-3 rounded-lg text-primary sm:bg-gray-100 sm:px-9">
                 Rechercher <span class="ml-1 font-semibold">un binôme</span>
             </h1>
         </div>
 
         <form
-            class="mt-8 grid grid-cols-1 md:grid-cols-6 items-center gap-6 w-full"
+            class="grid items-center w-full grid-cols-1 gap-6 mt-8 md:grid-cols-6"
             @submit.prevent="search"
         >
             <div
-                class="col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
                 title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
             >
-                <h5 class="text-white text-xs">
+                <h5 class="text-xs text-white">
                     <span class="hidden sm:block lg:hidden xl:block">Codes postaux</span>
                     <span class="sm:hidden lg:block xl:hidden">CP</span>
                 </h5>
@@ -39,7 +39,7 @@
                     <TagsInputInput
                         v-model="postalCodeInput"
                         :class="[Array.isArray(searchFormData.postalCodeTags) && searchFormData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
-                        class="text-xs flex items-center"
+                        class="flex items-center text-xs"
                         placeholder="8793"
                         @blur="handleBlur"
                         @keydown.enter="() => addTag(postalCodeInput, searchFormData.postalCodeTags)"
@@ -48,10 +48,10 @@
             </div>
 
             <div
-                class="col-span-2 flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1 w-full"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
                 title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
             >
-                <h5 class="text-white text-xs">
+                <h5 class="text-xs text-white">
                     <span>Ville(s)</span>
                 </h5>
                 <TagsInput
@@ -60,7 +60,7 @@
                 >
                     <div
                         :class="[Array.isArray(searchFormData.cityTags) && searchFormData.cityTags.length ? 'w-1/2' : 'hidden']"
-                        class="flex max-w-52 md:max-w-40 items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                        class="flex items-center space-x-1 overflow-x-auto max-w-52 md:max-w-40 whitespace-nowrap no-scrollbar"
                     >
                         <TagsInputItem
                             v-for="item in searchFormData.cityTags"
@@ -75,7 +75,7 @@
                     <TagsInputInput
                         v-model="cityInput"
                         :class="[Array.isArray(searchFormData.cityTags) && searchFormData.cityTags.length ? 'w-1/2' : 'w-full']"
-                        class="text-xs flex items-center"
+                        class="flex items-center text-xs"
                         placeholder="City38"
                         @blur="handleBlur"
                         @keydown.enter="() => addTag(cityInput, searchFormData.cityTags)"
@@ -83,17 +83,17 @@
                 </TagsInput>
             </div>
 
-            <div class="col-span-2 flex justify-between md:justify-start items-center gap-6 w-full">
+            <div class="flex items-center justify-between w-full col-span-2 gap-6 md:justify-start">
                 <Button
-                    class="bg-primary flex items-center justify-center text-sm h-11 px-4"
+                    class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                     @click="reinitializeFilter"
                 >
                     <ArrowPathIcon class="w-6" />
-                    <span class="ml-2 block md:hidden text-sm">Réinitialiser</span>
+                    <span class="block ml-2 text-sm md:hidden">Réinitialiser</span>
                 </Button>
                 <Button
                     type="submit"
-                    class="text-sm bg-primary flex items-center justify-center h-11 px-4"
+                    class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                 >
                     <MagnifyingGlassIcon class="w-6" />
                     <span class="ml-2 text-sm">Rechercher</span>
@@ -131,17 +131,17 @@
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
-                            <TableRow class="grid grid-cols-3 md:grid-cols-4 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                            <TableRow class="grid grid-cols-3 gap-2 overflow-x-hidden border-none rounded-t-lg md:grid-cols-4">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Ville
                                 </TableHead>
-                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                <TableHead class="items-center justify-center hidden w-full col-span-1 text-xs text-white bg-primary md:flex">
                                     Description
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Actions
                                 </TableHead>
                             </TableRow>
@@ -152,19 +152,19 @@
                                 <TableRow
                                     v-for="(_, index) in Array.from({ length: 10 })"
                                     :key="index"
-                                    class="grid grid-cols-3 md:grid-cols-4 gap-2 border border-none overflow-x-hidden h-16"
+                                    class="grid h-16 grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-4"
                                 >
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden w-full h-10 bg-gray-100 md:block" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
                             <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
                                     v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
-                                    class="grid grid-cols-3 md:grid-cols-4 gap-2 border border-none overflow-x-hidden relative"
+                                    class="relative grid grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-4"
                                 >
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
@@ -202,7 +202,7 @@
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <EyeIcon class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -212,7 +212,7 @@
                                 </TableRow>
                             </div>
                             <div v-else>
-                                <p class="text-center text-gray-500 py-8">
+                                <p class="py-8 text-center text-gray-500">
                                     Aucun résultat n'est trouvé
                                 </p>
                             </div>
@@ -236,17 +236,17 @@
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
-                            <TableRow class="grid grid-cols-3 md:grid-cols-4 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                            <TableRow class="grid grid-cols-3 gap-2 overflow-x-hidden border-none rounded-t-lg md:grid-cols-4">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Ville
                                 </TableHead>
-                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                <TableHead class="items-center justify-center hidden w-full col-span-1 text-xs text-white bg-primary md:flex">
                                     Description
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Actions
                                 </TableHead>
                             </TableRow>
@@ -257,19 +257,19 @@
                                 <TableRow
                                     v-for="(_, index) in Array.from({ length: 10 })"
                                     :key="index"
-                                    class="grid grid-cols-3 md:grid-cols-4 gap-2 border border-none overflow-x-hidden h-16"
+                                    class="grid h-16 grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-4"
                                 >
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden w-full h-10 bg-gray-100 md:block" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
                             <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
                                     v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
-                                    class="grid grid-cols-3 md:grid-cols-4 gap-2 border border-none overflow-x-hidden relative"
+                                    class="relative grid grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-4"
                                 >
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
@@ -307,7 +307,7 @@
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <EyeIcon class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -317,7 +317,7 @@
                                 </TableRow>
                             </div>
                             <div v-else>
-                                <p class="text-center text-gray-500 py-8">
+                                <p class="py-8 text-center text-gray-500">
                                     Aucun résultat n'est trouvé
                                 </p>
                             </div>
@@ -341,20 +341,20 @@
                 <div class="grid my-8">
                     <Table>
                         <TableHeader class="w-full">
-                            <TableRow class="grid grid-cols-3 md:grid-cols-5 overflow-x-hidden gap-2 rounded-t-lg border-none">
-                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                            <TableRow class="grid grid-cols-3 gap-2 overflow-x-hidden border-none rounded-t-lg md:grid-cols-5">
+                                <TableHead class="items-center justify-center hidden w-full col-span-1 text-xs text-white bg-primary md:flex">
                                     Code postal
                                 </TableHead>
-                                <TableHead class="hidden col-span-1 bg-primary w-full md:flex justify-center items-center text-white text-xs">
+                                <TableHead class="items-center justify-center hidden w-full col-span-1 text-xs text-white bg-primary md:flex">
                                     Ville
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Type de demande
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Description
                                 </TableHead>
-                                <TableHead class="col-span-1 bg-primary w-full flex justify-center items-center text-white text-xs">
+                                <TableHead class="flex items-center justify-center w-full col-span-1 text-xs text-white bg-primary">
                                     Actions
                                 </TableHead>
                             </TableRow>
@@ -365,20 +365,20 @@
                                 <TableRow
                                     v-for="(_, index) in Array.from({ length: 10 })"
                                     :key="index"
-                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden h-16"
+                                    class="grid h-16 grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-5"
                                 >
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="hidden md:block h-10 w-full bg-gray-100" /></TableCell>
-                                    <TableCell><Skeleton class="h-10 w-full bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
+                                    <TableCell><Skeleton class="hidden w-full h-10 bg-gray-100 md:block" /></TableCell>
+                                    <TableCell><Skeleton class="hidden w-full h-10 bg-gray-100 md:block" /></TableCell>
+                                    <TableCell><Skeleton class="w-full h-10 bg-gray-100" /></TableCell>
                                 </TableRow>
                             </div>
                             <div v-else-if="demandPartners.data.length !== 0">
                                 <TableRow
                                     v-for="partnership in demandPartners.data"
                                     :key="partnership.id"
-                                    class="grid grid-cols-3 md:grid-cols-5 gap-2 border border-none overflow-x-hidden relative"
+                                    class="relative grid grid-cols-3 gap-2 overflow-x-hidden border border-none md:grid-cols-5"
                                 >
                                     <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
@@ -403,7 +403,7 @@
                                     </TableCell>
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-start items-center w-full">
-                                            <span class="truncate w-full">
+                                            <span class="w-full truncate">
                                                 {{ partnership.description }}
                                             </span>
                                         </div>
@@ -412,24 +412,33 @@
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
-                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />                                                    
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <EyeIcon class="w-4 h-4" />
                                                         <span>Détail</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        class="flex items-center space-x-2 text-sm cursor-pointer"
+                                                        @click="closePartenershipDialog = true; selectedPartnership = partnership"
+                                                    >
+                                                        <XMarkIcon class="w-4 h-4" />
+                                                        <span>Fermer</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
+
+                                            
                                         </div>
                                     </TableCell>
                                 </TableRow>
                             </div>
                             <div v-else>
-                                <p class="text-center text-gray-500 py-8">
+                                <p class="py-8 text-center text-gray-500">
                                     Aucun résultat n'est trouvé
                                 </p>
                             </div>
@@ -449,6 +458,33 @@
                 </div>
             </TabsContent>
 
+             <Dialog v-model:open="closePartenershipDialog">
+                <DialogContent class="overflow-y-auto sm:max-w-lg">
+                     <DialogHeader>
+                        <DialogTitle>Fermer la demande</DialogTitle>
+                          <DialogDescription class="mt-3 mb-6">
+                             Etes-vous sur de vouloir fermer cette demande ?
+                          </DialogDescription>
+                        </DialogHeader>
+                      <div class="flex items-center justify-center mt-4 space-x-6 sm:mt-8 sm:justify-end">
+                      <Button
+                             variant="secondary"
+                             class="px-8 bg-gray-200 hover:bg-gray-300"
+                              @click="closePartenershipDialog = false"
+                              >
+                             Non
+                          </Button>
+                             <Button
+                                variant="default"
+                                class="px-8"
+                                @click="handleClosePartenership(selectedPartnership)"
+                                >
+                            Oui
+                             </Button>
+                     </div>
+                </DialogContent>
+             </Dialog>
+
             <Dialog v-model:open="detailDialog">
                 <DialogContent class="sm:max-w-lg h-[50vh] overflow-y-auto">
                     <DialogHeader>
@@ -457,7 +493,7 @@
 
                     <div
                         v-if="selectedPartnership"
-                        class="mt-4 flex justify-center items-center mx-auto w-80"
+                        class="flex items-center justify-center mx-auto mt-4 w-80"
                     >
                         <UsersCard
                             :user="selectedPartnership.user"
@@ -465,7 +501,7 @@
                         />
                     </div>
 
-                    <div class="mt-4 flex flex-col space-y-2 px-8 sm:px-16">
+                    <div class="flex flex-col px-8 mt-4 space-y-2 sm:px-16">
                         <label class="font-semibold text-primary">
                             Type de demande
                         </label>
@@ -477,7 +513,7 @@
                         </p>
                     </div>
 
-                    <div class="mt-4 flex flex-col space-y-2 px-8 sm:px-16">
+                    <div class="flex flex-col px-8 mt-4 space-y-2 sm:px-16">
                         <label class="font-semibold text-primary">
                             Description
                         </label>
@@ -488,15 +524,23 @@
 
                     <div v-if="!selectedPartnership.has_responded && selectedPartnership.user.id != user.id">
                         <Button
-                            class="my-6 flex justify-center items-center mx-auto w-80"
+                            class="flex items-center justify-center mx-auto my-6 w-80"
                             @click="handleMakeResponse"
                         >
                             S'intéresser
                         </Button>
+                        <Button
+                            variant="secondary"
+                            class="flex items-center justify-center mx-auto my-6 w-80"
+                            @click="cancelSelection"
+                        >
+                            Annuler
+                        </Button>
+
                     </div>
                     <div
                         v-else-if="selectedPartnership.has_responded"
-                        class="my-6 text-success flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100 w-80"
+                        class="flex items-center justify-center gap-3 p-3 mx-auto my-6 bg-gray-100 rounded-full text-success w-80"
                     >
                         <CheckBadgeIcon class="w-8" />
                         <p class="font-semibold">
@@ -508,7 +552,7 @@
 
             <Dialog v-model:open="responseDialog">
                 <DialogContent
-                    class="sm:max-w-xl overflow-y-auto"
+                    class="overflow-y-auto sm:max-w-xl"
                 >
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-3">
@@ -523,7 +567,7 @@
                             />
                         </div>
 
-                        <div class="mt-8 flex gap-3 text-gray-700">
+                        <div class="flex gap-3 mt-8 text-gray-700">
                             <InformationCircleIcon class="w-8" />
                             <p class="text-sm">
                                 En vous proposant comme candidat pour cette demande, vous témoignez de votre volonté de collaborer et de former un binôme avec la personne qui a posté cette demande.
@@ -533,7 +577,7 @@
                         <div class="my-8">
                             <Button
                                 type="submit"
-                                class="flex justify-center mx-auto items-center w-64"
+                                class="flex items-center justify-center w-64 mx-auto"
                                 :in-progress="inProgress"
                             >
                                 Enregistrer
@@ -545,7 +589,7 @@
 
             <Dialog v-model:open="preferenceDialog">
                 <DialogContent
-                    class="sm:max-w-xl overflow-y-auto"
+                    class="overflow-y-auto sm:max-w-xl"
                 >
                     <DialogHeader>
                         <DialogTitle>
@@ -556,7 +600,7 @@
                         Souhaitez-vous afficher la liste de recherche en se basant sur votre préférence ?
                     </p>
 
-                    <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
+                    <DialogFooter class="flex flex-col items-center gap-4 my-6 sm:flex-row sm:space-x-4">
                         <Button
                             variant="secondary"
                             class="w-full sm:w-auto"
@@ -585,6 +629,7 @@ import {
     EyeIcon,
     CheckBadgeIcon,
     InformationCircleIcon,
+    XMarkIcon,
 } from '@heroicons/vue/24/outline';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -614,6 +659,7 @@ const detailDialog = ref(false);
 const responseDialog = ref(false);
 const preferenceDialog = ref(true);
 
+
 const handleShowDetail = (partnership: UserPartner) => {
     selectedPartnership.value = partnership;
     detailDialog.value = true;
@@ -624,7 +670,14 @@ const handleMakeResponse = () => {
     responseDialog.value = true;
 };
 
-const { fetchDemandPartners, demandPartners, sendResponse, loading } = usePartners();
+const cancelSelection = () => {
+    detailDialog.value = false;
+    responseDialog.value = null;
+    
+};
+
+const { fetchDemandPartners, demandPartners, sendResponse, loading ,updatePartnership, updateAgainPartenership} = usePartners();
+
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -642,11 +695,42 @@ const cancelFilterPreference = async () => {
     await loadDemandPartners();
 };
 
+
 const acceptFilterPreference = async () => {
     searchFormData.postalCodeTags = setting?.replacement?.zip_codes || [];
     searchFormData.cityTags = setting?.replacement?.cities || [];
     preferenceDialog.value = false;
     await loadDemandPartners();
+};
+
+const fetchInitialData = async (pageNum, perPageNum) => {
+    await fetchDemandPartners({
+        postalCode: searchFormData.postalCodeTags,
+        cities: searchFormData.cityTags,
+        type: searchFormData.type,
+        page: pageNum,
+        perPage: perPageNum,
+    });
+};
+
+
+const closePartenershipDialog = ref(false);
+
+const handleClosePartenership = async (partnership) => {
+    partnership.status = 'closed';
+    try {
+        const response = await updatePartnership(partnership);
+        if (response) {
+            $toast({
+                description: 'Succès',
+            });
+            closePartenershipDialog.value = false;
+            fetchInitialData(page.value, perPage.value);
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
 };
 
 const isSubmitted = ref(false);
