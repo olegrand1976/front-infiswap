@@ -94,6 +94,9 @@ export function getRole(role: AccountType) {
         case 'developer':
             activeRole.value = 'Développeur';
             break;
+        case 'tester' :
+            activeRole.value = 'Testeur';
+            break;
         case 'manager':
             activeRole.value = 'Gestionnaire';
             break;
@@ -111,6 +114,9 @@ export function getRole(role: AccountType) {
             break;
         case 'midwife' :
             activeRole.value = 'Sage-femme';
+            break;
+        case 'nurse' :
+            activeRole.value = 'Infirmier(e)';
             break;
         default:
             activeRole.value = 'Infirmier(e)';
