@@ -140,7 +140,7 @@
                     @submit.prevent="createOrUpdateComment"
                 >
                     <h3 class="text-md font-bold mb-2">
-                        {{ updatingComment!== null ? 'Modificatoin Commentaire' : 'Nouveau commentaire' }}
+                        {{ updatingComment!== null ? 'Modification Commentaire' : 'Nouveau commentaire' }}
                     </h3>
                     <Textarea
                         v-model="updateFormData.lastComment"
