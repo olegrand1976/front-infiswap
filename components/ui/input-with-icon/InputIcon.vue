@@ -17,6 +17,7 @@ const props = defineProps<{
     labelClass?: string;
     size?: 'sm' | 'md' | 'lg';
     errors?: string[];
+    disabled?: boolean;
 }>();
 
 const emits = defineEmits<{
@@ -78,6 +79,7 @@ const togglePasswordVisibility = () => {
             v-model="modelValue"
             :type="props.type === 'password' ? (isPasswordVisible ? 'text' : 'password') : props.type"
             :placeholder="placeholder"
+            :disabled="props.disabled"
             :class="cn(
                 'flex h-10 w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:text-sm focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                 sizeClasses[size || 'md'],

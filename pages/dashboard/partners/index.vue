@@ -422,12 +422,10 @@
                                                         <EyeIcon class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
-                                                    
+
                                                     <DropdownMenuItem
-                                                       @click="closePartenershipDialog = true; 
-                                                         selectedPartnership = partnership"
-                                                         
-   
+                                                        @click="closePartenershipDialog = true;
+                                                                selectedPartnership = partnership"
                                                     >
                                                         <XMarkIcon class="w-4 h-4" />
                                                         <span>Fermer</span>
@@ -641,8 +639,6 @@ import { PERPAGE } from '~/lib/constants';
 
 const selectedPartnership = ref<UserPartner | null>(null);
 
-
-
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const activeTab = ref('in_search');
@@ -702,35 +698,34 @@ const acceptFilterPreference = async () => {
     await loadDemandPartners();
 };
 
-const fetchInitialData = async (pageNum, perPageNum) => 
-{ await fetchDemandPartners({ 
-    postalCode: searchFormData.postalCodeTags, 
-    cities: searchFormData.cityTags, 
-    type: searchFormData.type, 
-    page: pageNum, 
-    perPage: perPageNum, 
-}); 
-}; 
+const fetchInitialData = async (pageNum, perPageNum) => {
+    await fetchDemandPartners({
+        postalCode: searchFormData.postalCodeTags,
+        cities: searchFormData.cityTags,
+        type: searchFormData.type,
+        page: pageNum,
+        perPage: perPageNum,
+    });
+};
 
-const closePartenershipDialog = ref(false); 
+const closePartenershipDialog = ref(false);
 
-const handleClosePartenership = async (partnership) => { 
-    partnership.status = 'closed'; 
-    try { 
-        const response = await updatePartnership(partnership); 
-        if (response) { 
-            $toast({ 
-                description: 'Succès', 
+const handleClosePartenership = async (partnership) => {
+    partnership.status = 'closed';
+    try {
+        const response = await updatePartnership(partnership);
+        if (response) {
+            $toast({
+                description: 'Succès',
             });
-             closePartenershipDialog.value = false; 
-             fetchInitialData(page.value, perPage.value);
-             } 
-            } 
-    catch (error) { 
-                console.error(error); 
-            }
-         };
-
+            closePartenershipDialog.value = false;
+            fetchInitialData(page.value, perPage.value);
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
 
 const isSubmitted = ref(false);
 

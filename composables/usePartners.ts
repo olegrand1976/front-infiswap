@@ -1,4 +1,3 @@
-
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
@@ -104,9 +103,6 @@ export const usePartners = () => {
             body: formData,
         });
     };
-
-
-    
 
     const updateAgainPartenership = async (formData) => {
         return await $apifetch(`/api/partners/update-again/${formData.id}`, {

@@ -208,7 +208,7 @@ import {
     MagnifyingGlassIcon,
     UsersIcon,
     Cog8ToothIcon,
-    HeartIcon,
+    DocumentCurrencyEuroIcon,
     WrenchScrewdriverIcon,
     ChatBubbleLeftEllipsisIcon,
     ShieldCheckIcon,
@@ -374,12 +374,12 @@ const adminNavigationItems: NavigationItem[] = [
         icon: WrenchScrewdriverIcon,
         visible: true,
     },
-    {
-        label: 'Patients',
-        route: '/dashboard/admin/patients',
-        icon: HeartIcon,
-        visible: !isCollaborator.value,
-    },
+    // {
+    //     label: 'Patients',
+    //     route: '/dashboard/admin/patients',
+    //     icon: HeartIcon,
+    //     visible: !isCollaborator.value,
+    // },
     {
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
@@ -398,6 +398,12 @@ const adminNavigationItems: NavigationItem[] = [
         icon: InboxIcon,
         visible: !isCollaborator.value,
         children: contactChildren.value,
+    },
+    {
+        label: 'Contrats NURSTECH',
+        route: '/dashboard/admin/contracts/nurstech',
+        icon: DocumentCurrencyEuroIcon,
+        visible: true,
     },
     {
         label: 'Tutoriels',
