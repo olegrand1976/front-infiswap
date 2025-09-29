@@ -225,7 +225,7 @@
             </div>
         </section>
 
-        <section class="flex flex-col items-stretch w-full lg:flex-row">
+        <section class="flex flex-col items-stretch w-full lg:flex-row gap-6">
             <div class="w-full bg-white rounded-lg shadow-lg lg:w-1/2">
                 <div class="p-4 bg-gray-100 rounded">
                     <div class="flex items-center justify-between text-primary">
