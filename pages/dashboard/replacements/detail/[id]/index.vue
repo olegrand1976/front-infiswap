@@ -159,22 +159,6 @@
                             {{ group.times }}
                         </div>
 
-                        <div
-                            v-if="group.patients"
-                            class="mt-8"
-                        >
-                            <div class="h-10 flex bg-primary rounded justify-center items-center">
-                                <h4 class="text-white text-sm text-center">
-                                    Patient(s)
-                                </h4>
-                            </div>
-                            <div class="mt-4 space-y-4">
-                                <div class="bg-gray-200 text-xs py-2 rounded px-3 text-center">
-                                    <span>{{ group.patients }}</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
@@ -313,7 +297,7 @@
                         >
                             <div class="flex items-center gap-2">
                                 <UserIcon class="size-5 text-primary" />
-                                <span>{{ member.firstname }} {{ member.lastname }}</span>
+                                <span>{{ member?.firstname }} {{ member?.lastname }}</span>
                             </div>
                             <ArrowRightIcon class="size-5 text-primary" />
                         </li>
@@ -347,7 +331,6 @@ import {
 } from '@heroicons/vue/24/solid';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
-import { getFullName } from '~/lib/utils';
 
 const user = useState('user');
 const route = useRoute();
@@ -395,7 +378,6 @@ const groupedDetails = computed(() => {
         grouped[groupKey] = {
             date: periodRanges,
             times: new Set(),
-            patients: new Set(),
             careTypes: new Set(),
             zipCodes: new Set(),
             cities: new Set(),
@@ -426,7 +408,6 @@ const groupedDetails = computed(() => {
                 grouped[detail.date] = {
                     date: detail.date,
                     times: new Set(),
-                    patients: new Set(),
                     careTypes: new Set(),
                     zipCodes: new Set(),
                     cities: new Set(),
@@ -437,9 +418,6 @@ const groupedDetails = computed(() => {
             replacement.value.care_types.forEach(care => grouped[detail.date].careTypes.add(care.name));
             JSON.parse(replacement.value.zip_codes).forEach(zipCode => grouped[detail.date].zipCodes.add(zipCode));
             JSON.parse(replacement.value.cities).forEach(city => grouped[detail.date].cities.add(city));
-            if (detail.patient.firstname || detail.patient.lastname) {
-                grouped[detail.date].patients.add(getFullName(detail.patient));
-            }
         });
     }
     else if (replacement.value.timeSlot) {
@@ -448,7 +426,6 @@ const groupedDetails = computed(() => {
         grouped[date] = {
             date: date,
             times: new Set(),
-            patients: new Set(),
             careTypes: new Set(),
             zipCodes: new Set(),
             cities: new Set(),
@@ -475,7 +452,6 @@ const groupedDetails = computed(() => {
         grouped[date] = {
             date: date,
             times: new Set(),
-            patients: new Set(),
             careTypes: new Set(),
             zipCodes: new Set(),
             cities: new Set(),
@@ -492,7 +468,6 @@ const groupedDetails = computed(() => {
         careTypes: Array.from(group.careTypes).join(', '),
         zipCodes: Array.from(group.zipCodes).join(', '),
         cities: Array.from(group.cities).join(', '),
-        patients: Array.from(group.patients).join(', '),
     }));
 });
 
