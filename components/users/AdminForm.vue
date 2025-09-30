@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { ADMIN_ROLES, ALL_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
 import type { AccountType, User } from '~/lib/types';
 import { getRole } from '~/lib/utils';
-import { computed, onMounted, reactive, ref, watch} from 'vue';
-
 
 const props = defineProps<{
     user?: User | null;
@@ -173,22 +172,21 @@ const formattedRoles = computed(() => {
     return form.roles.map(getRole).join(', ');
 });
 
-
 onMounted(async () => {
     if (isAdmin.value) {
         await groupsWithAdmin();
-    } else {
+    }
+    else {
         await myGroups();
     }
-    
+
     const equipeInfiswap = groups.value.find(g => g.name === 'Equipe Infiswap');
     if (equipeInfiswap) {
-        
         groups.value = [
             equipeInfiswap,
-            ...groups.value.filter(g => g.id !== equipeInfiswap.id)
+            ...groups.value.filter(g => g.id !== equipeInfiswap.id),
         ];
-        
+
         if (!selectedGroupIds.value.includes(equipeInfiswap.id)) {
             selectedGroupIds.value = [equipeInfiswap.id, ...selectedGroupIds.value];
         }
@@ -574,47 +572,46 @@ const route = useRoute();
                     </Select>
                 </div>
                 <div class="w-full">
-                   
-                <Select
-                      v-model="selectedGroupIds"
-                      multiple
-                      class="w-full">
-                         <SelectTrigger
+                    <Select
+                        v-model="selectedGroupIds"
+                        multiple
+                        class="w-full"
+                    >
+                        <SelectTrigger
                             position="right"
                             class="rounded-md text-nowrap"
-               >
-                               <SelectValue>
-                                   <template v-if="selectedGroupIds.length > 0">
-                                   {{
-                                       selectedGroupIds
-                                       .map(id => dataGroup.find(g => g.id === id)?.name)
-                                       .filter(Boolean)
-                                       .join(', ')
-                                  }}
-                                   </template>
-                                   <template v-else>
-                                        <span class="text-gray-500">Equipe Infiswap</span>
-                                   </template>
-                               </SelectValue>
-                         </SelectTrigger>
-                    <SelectContent>
-                   <SelectGroup>
-                         <div
-                             v-for="group in dataGroup"
-                             :key="group.id"
-                             class="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100"
-                             @click.stop="selectedGroupIds = toggleArray(selectedGroupIds, group.id)"
-                      >
-                          <Checkbox
-                               :checked="selectedGroupIds.includes(group.id)"
-                               class="mr-2"
-                          />
-                           <span class="text-sm">{{ group.name }}</span>
-                         </div>
-                   </SelectGroup>
-                   </SelectContent>
-                </Select>
-
+                        >
+                            <SelectValue>
+                                <template v-if="selectedGroupIds.length > 0">
+                                    {{
+                                        selectedGroupIds
+                                            .map(id => dataGroup.find(g => g.id === id)?.name)
+                                            .filter(Boolean)
+                                            .join(', ')
+                                    }}
+                                </template>
+                                <template v-else>
+                                    <span class="text-gray-500">Equipe Infiswap</span>
+                                </template>
+                            </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <div
+                                    v-for="group in dataGroup"
+                                    :key="group.id"
+                                    class="flex items-center px-2 py-1 cursor-pointer hover:bg-gray-100"
+                                    @click.stop="selectedGroupIds = toggleArray(selectedGroupIds, group.id)"
+                                >
+                                    <Checkbox
+                                        :checked="selectedGroupIds.includes(group.id)"
+                                        class="mr-2"
+                                    />
+                                    <span class="text-sm">{{ group.name }}</span>
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </div>

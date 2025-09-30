@@ -3,12 +3,12 @@
         <div class="flex flex-col space-y-8 sm:space-y-24">
             <div
                 class="mt-3 flex relative flex-col sm:container md:flex-row items-center xl:space-x-30 lg:space-x-24 md:space-x-8"
-            >             
-                    <LayoutsAppImage
-                        src="/home/equipe_infirmier.png"
-                        alt="Image d'une equipe infirmier"
-                        class="h-56 sm:h-56 md:h-72 lg:h-full object-cover"
-                    />
+            >
+                <LayoutsAppImage
+                    src="/home/equipe_infirmier.png"
+                    alt="Image d'une equipe infirmier"
+                    class="h-56 sm:h-56 md:h-72 lg:h-full object-cover"
+                />
                 <div
                     class="px-8 md:px-0 mt-18 sm:mt-0 flex flex-col space-y-8"
                 >
