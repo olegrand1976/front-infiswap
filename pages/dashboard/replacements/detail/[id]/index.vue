@@ -26,7 +26,7 @@
                     </div>
                     <div
                         v-else
-                        class="flex flex-col sm:flex-row sm:space-x-5 space-y-4 sm:space-y-0"
+                        class="flex flex-col sm:flex-row sm:gap-10 space-y-4 sm:space-y-0"
                     >
                         <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
                             <span class="text-xs text-white ms-3">Début</span>
