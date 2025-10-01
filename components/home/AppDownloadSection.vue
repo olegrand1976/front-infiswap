@@ -1,6 +1,6 @@
 <template>
     <div class="relative pt-16 sm:pt-52 lg:pt-16 pb-2">
-        <div class="flex lg:flex-row flex-col-reverse justify-center items-center relative z-20 mx-auto lg:space-x-24 xl:space-x-40">
+        <div class="flex lg:flex-row flex-col-reverse justify-center items-center relative z-20 mx-auto lg:space-x-24 xl:space-x-72">
             <div>
                 <LayoutsAppImage
                     src="Group_1048.png"
