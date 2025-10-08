@@ -342,7 +342,7 @@
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                 <div
+                <div
                     class="relative"
                 >
                     <LayoutsAppImage
@@ -371,7 +371,6 @@
                         infirmiers à la recherche de remplaçants.
                     </p>
                 </div>
-               
             </div>
         </div>
         <div class="container">
@@ -422,7 +421,7 @@
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                 <div
+                <div
                     class="relative"
                 >
                     <LayoutsAppImage
@@ -454,7 +453,6 @@
                         compétences à jour et valoriser votre expertise.
                     </p>
                 </div>
-               
             </div>
         </div>
 
