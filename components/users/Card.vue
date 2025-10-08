@@ -721,9 +721,12 @@ const comment = ref(props.user.comment_crm ?? '');
 
 // const selectedProduct = ref<string>('');
 
+const admin = isAdmin ?? ref(false);
 onMounted(async () => {
-    const result = await getAll();
-    products.value = result;
+    if (admin.value === true) {
+        const result = await getAll();
+        products.value = result;
+    }
 });
 
 async function loadActivity() {
