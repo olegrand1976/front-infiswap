@@ -111,6 +111,12 @@
                 />
             </div>
 
+            <ReplacementDetailsModal
+                :replacement-id="selectedReplacementId"
+                :open="isModalOpen"
+                @update:open="isModalOpen = $event"
+            />
+
             <Dialog v-model:open="isDialogOpen">
                 <DialogContent class="rounded-2xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
                     <DialogHeader>
@@ -231,6 +237,7 @@ import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
+import ReplacementDetailsModal from '~/components/replacements/ReplacementDetailsModal.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
 
 import UsersName from '@/components/users/Name.vue';
@@ -327,8 +334,17 @@ const handlePerPageChange = async (value: number) => {
     await getReplacementsForAdmin(page.value, value);
 };
 
+const isModalOpen = ref(false);
+const selectedReplacementId = ref<number | null>(null);
+
+function handleViewDetails(id: number) {
+    selectedReplacementId.value = id;
+    isModalOpen.value = true;
+}
+
 const columns: ColumnDef<Replacement>[] = [
     {
+        id: 'view_details',
         accessorKey: 'start_date',
         header: ({ column }) => h(Button, {
             variant: 'ghost',
@@ -337,10 +353,15 @@ const columns: ColumnDef<Replacement>[] = [
         }, () => ['Période', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
-            return h(ReplacementPeriod, {
+            return h('div', {
+                class: 'font-medium cursor-pointer',
                 style: 'white-space: nowrap; min-width: 200px;',
-                replacement: row.original,
-            });
+                onClick: () => handleViewDetails(row.original.id),
+            }, [
+                h(ReplacementPeriod, {
+                    replacement: row.original,
+                }),
+            ]);
         },
 
         sortingFn: (rowA, rowB) => {
