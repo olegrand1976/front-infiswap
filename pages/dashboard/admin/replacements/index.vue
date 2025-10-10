@@ -723,6 +723,32 @@ const columns: ColumnDef<Replacement>[] = [
     },
 ];
 
+const excludedColumnsForModal = ['user_owner', 'substitute_user'];
+
+columns.forEach((col: any) => {
+    if (col.id !== 'actions') {
+        const originalCell = col.cell;
+        col.cell = (ctx) => {
+            const vnode = originalCell ? originalCell(ctx) : h('div', ctx.getValue?.() ?? '');
+
+            return h(
+                'div',
+                {
+                    class: 'cursor-pointer hover:bg-gray-100 hover:scale-105 transition-all duration-150 text-sm',
+                    style: 'padding: 4px;',
+                    onClick: (e: MouseEvent) => {
+                        const target = e.target as HTMLElement;
+                        if (['BUTTON', 'A', 'SVG', 'PATH'].includes(target.tagName)) return;
+                        if (excludedColumnsForModal.includes(col.id) || excludedColumnsForModal.includes(col.accessorKey)) return;
+                        handleViewDetails(ctx.row.original.id);
+                    },
+                },
+                [vnode],
+            );
+        };
+    }
+});
+
 const sort = reactive({
     order: 'DESC',
     by: null,

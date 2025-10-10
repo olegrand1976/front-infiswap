@@ -60,7 +60,7 @@ const formattedPeriods = computed(() => {
 
 const postalInfo = computed(() => {
     if (!replacement.value) return { zipCodes: '-', cities: '-' };
-    const parse = (data: any) => {
+    const parse = (data) => {
         try {
             const parsed = typeof data === 'string' ? JSON.parse(data) : data;
             return Array.isArray(parsed) ? parsed.join(', ') : parsed || '-';
@@ -208,16 +208,17 @@ const formatPhone = (num?: string) =>
                                     >
                                         <template v-if="parsedTimeSlots.type === 'multi'">
                                             <div
-                                                v-if="parsedTimeSlots.morning"
-                                                class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium"
+                                                v-if="parsedTimeSlots.morning && parsedTimeSlots.morning.start_at && parsedTimeSlots.morning.end_at"
+                                                class="block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium mb-1"
                                             >
-                                                Matin : {{ parsedTimeSlots.morning.start_at }} → {{ parsedTimeSlots.morning.end_at }}
+                                                Matin : {{ parsedTimeSlots.morning.start_at }} - {{ parsedTimeSlots.morning.end_at }}
                                             </div>
+
                                             <div
-                                                v-if="parsedTimeSlots.evening"
-                                                class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium ml-2"
+                                                v-if="parsedTimeSlots.evening && parsedTimeSlots.evening.start_at && parsedTimeSlots.evening.end_at"
+                                                class="block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium"
                                             >
-                                                Soir : {{ parsedTimeSlots.evening.start_at }} → {{ parsedTimeSlots.evening.end_at }}
+                                                Soir : {{ parsedTimeSlots.evening.start_at }} - {{ parsedTimeSlots.evening.end_at }}
                                             </div>
                                         </template>
 
@@ -225,7 +226,7 @@ const formatPhone = (num?: string) =>
                                             v-else-if="parsedTimeSlots.type === 'single'"
                                             class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium"
                                         >
-                                            Heure : {{ parsedTimeSlots.single.start_at }} → {{ parsedTimeSlots.single.end_at }}
+                                            Heure : {{ parsedTimeSlots.single.start_at }} - {{ parsedTimeSlots.single.end_at }}
                                         </div>
 
                                         <div
@@ -237,7 +238,7 @@ const formatPhone = (num?: string) =>
                                                 :key="i"
                                                 class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium mr-2"
                                             >
-                                                {{ d.start_at }} → {{ d.end_at }}
+                                                {{ d.start_at }} - {{ d.end_at }}
                                             </div>
                                         </div>
                                     </div>
