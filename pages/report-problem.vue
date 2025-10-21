@@ -2,7 +2,7 @@
     <NuxtLayout name="guest-with-title">
         <template #title>
             <p class="md:mt-2 font-bold">
-                Reporter un problème
+                Signaler un problème
             </p>
         </template>
 
@@ -12,7 +12,7 @@
         >
             <div class="space-y-2">
                 <p class="text-lg font-medium text-gray-700">
-                    Bonjour à vous, <span class="font-semibold text-primary">{{ fullname }}</span>
+                    Bonjour <span class="font-semibold text-primary">{{ firstname }},</span>
                 </p>
                 <p class="text-gray-600 text-sm">
                     Décrivez brièvement le souci rencontré afin que notre équipe puisse l’analyser.
@@ -58,7 +58,7 @@ definePageMeta({
 });
 
 const token = ref('');
-const fullname = ref('');
+const firstname = ref('');
 const { reportErrorUser, getUserNameReport } = useMail();
 const { $toast } = useNuxtApp();
 
@@ -93,6 +93,6 @@ onMounted(async () => {
     formData.token = token.value;
 
     const response = await getUserNameReport(token.value);
-    fullname.value = response.name;
+    firstname.value = response.name;
 });
 </script>
