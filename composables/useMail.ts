@@ -72,6 +72,10 @@ export const useMail = () => {
         });
     };
 
+    const getUserNameReport = async (token) => {
+        return await $apifetch(`/api/report-error/name/${token}`);
+    };
+
     return {
         error,
         loading,
@@ -81,5 +85,6 @@ export const useMail = () => {
         sendMail,
         reportProblem,
         reportErrorUser,
+        getUserNameReport,
     };
 };

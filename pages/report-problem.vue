@@ -10,6 +10,15 @@
             class="mb-16 md:mb-0 md:mt-10 mx-8 max-w-2xl md:mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6 border border-gray-100"
             @submit.prevent="submit"
         >
+            <div class="space-y-2">
+                <p class="text-lg font-medium text-gray-700">
+                    Bonjour à vous, <span class="font-semibold text-primary">{{ fullname }}</span>
+                </p>
+                <p class="text-gray-600 text-sm">
+                    Décrivez brièvement le souci rencontré afin que notre équipe puisse l’analyser.
+                </p>
+            </div>
+
             <div>
                 <Textarea
                     v-model="formData.message"
@@ -49,7 +58,8 @@ definePageMeta({
 });
 
 const token = ref('');
-const { reportErrorUser } = useMail();
+const fullname = ref('');
+const { reportErrorUser, getUserNameReport } = useMail();
 const { $toast } = useNuxtApp();
 
 const formData = reactive({
@@ -77,9 +87,12 @@ const { submit, inProgress } = useSubmit(async () => {
     },
 });
 
-onMounted(() => {
+onMounted(async () => {
     const params = new URLSearchParams(window.location.search);
     token.value = params.get('token');
     formData.token = token.value;
+
+    const response = await getUserNameReport(token.value);
+    fullname.value = response.name;
 });
 </script>
