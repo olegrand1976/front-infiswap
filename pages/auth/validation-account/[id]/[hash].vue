@@ -31,16 +31,20 @@
                 <p
                     class="md:text-sm sm:text-xs text-center xl:mx-44 lg:mx-32 md:mx-16 sm:mx-12 mt-6"
                 >
-                    <RollingLoader
+                    <span
                         v-if="loading"
-                        :loading="loading"
-                    />
-                    <template v-else-if="errorMessage">
+                        class="flex justify-center py-12"
+                    >
+                        <RollingLoader
+                            :loading="loading"
+                        />
+                    </span>
+                    <span v-else-if="errorMessage">
                         <span class="text-red-500">{{ errorMessage }}</span>
-                    </template>
-                    <template v-else>
+                    </span>
+                    <span v-else>
                         <span>Votre compte a été validé avec succès ! Vous allez être redirigé vers notre page de connexion.</span>
-                    </template>
+                    </span>
                 </p>
             </div>
 
