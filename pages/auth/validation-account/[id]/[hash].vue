@@ -32,15 +32,18 @@
                     class="md:text-sm sm:text-xs text-center xl:mx-44 lg:mx-32 md:mx-16 sm:mx-12 mt-6"
                 >
                     <span
-                        v-if="loading"
+                        v-if="validated"
+                        class="flex justify-center py-12"
+                    >
+                        Votre compte a été validé avec succès !
+                    </span>
+                    <span
+                        v-else
                         class="flex justify-center py-12"
                     >
                         <RollingLoader
                             :loading="loading"
                         />
-                    </span>
-                    <span v-if="validated">
-                        <span>Votre compte a été validé avec succès !</span>
                     </span>
                 </p>
             </div>
@@ -93,7 +96,7 @@ onMounted(async () => {
     validated.value = await validateEmail(id as string, hash as string);
 
     if (validated.value) {
-        setTimeout(() => navigateTo('/login'), 1000);
+        navigateTo('/login');
     }
 });
 </script>
