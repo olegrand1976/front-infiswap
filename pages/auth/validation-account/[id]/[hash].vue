@@ -33,7 +33,7 @@
                 >
                     <span
                         v-if="validated"
-                        class="flex justify-center py-12"
+                        class="flex justify-center py-12 text-success font-semibold"
                     >
                         Votre compte a été validé avec succès !
                     </span>
@@ -96,7 +96,9 @@ onMounted(async () => {
     validated.value = await validateEmail(id as string, hash as string);
 
     if (validated.value) {
-        navigateTo('/login');
+        setTimeout(() => {
+            navigateTo('/login');
+        }, 1000);
     }
 });
 </script>
