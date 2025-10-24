@@ -39,11 +39,8 @@
                             :loading="loading"
                         />
                     </span>
-                    <span v-else-if="errorMessage">
-                        <span class="text-red-500">{{ errorMessage }}</span>
-                    </span>
-                    <span v-else>
-                        <span>Votre compte a été validé avec succès ! Vous allez être redirigé vers notre page de connexion.</span>
+                    <span v-if="validated">
+                        <span>Votre compte a été validé avec succès !</span>
                     </span>
                 </p>
             </div>
@@ -78,33 +75,25 @@ definePageMeta({
 });
 
 const user = useUser();
-const { validateEmail, loading } = useAuth();
+const { validateEmail, resendEmailVerification, loading } = useAuth();
 const route = useRoute();
-const errorMessage = ref('');
+const validated = ref(false);
 
 useHead({
     title: 'Validation de compte',
 });
 
 onMounted(async () => {
-    const id = route.params.id as string;
-    const hash = route.params.hash as string;
+    const { id, hash } = route.params;
 
     if (!id || !hash) {
-        errorMessage.value = 'Lien de vérification invalide.';
         return;
     }
 
-    try {
-        await validateEmail(id, hash);
-        setTimeout(() => {
-            navigateTo('/login');
-        }, 2000);
-    }
-    catch (error) {
-        errorMessage.value = error.message;
+    validated.value = await validateEmail(id as string, hash as string);
+
+    if (validated.value) {
+        setTimeout(() => navigateTo('/login'), 1000);
     }
 });
-
-const { resendEmailVerification } = useAuth();
 </script>

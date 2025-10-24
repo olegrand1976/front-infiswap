@@ -107,15 +107,26 @@ export const useAuth = () => {
     }
 
     async function validateEmail(id: string, hash: string) {
+        loading.value = true;
+
         try {
-            loading.value = true;
-            const response = await $apifetch(`/api/email/verify/${id}/${hash}`, {
+            await $apifetch(`/api/email/verify/${id}/${hash}`, {
                 method: 'POST',
             });
-            return response;
+
+            $toast({
+                description: 'Compte validé avec succès.',
+            });
+
+            return true;
         }
         catch (err) {
-            throw new Error(err?.data?.message || 'Erreur lors de la validation du compte.', err);
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur s’est produite lors de la validation de votre compte. Merci de réessayer plus tard.',
+            });
+
+            throw new Error(err);
         }
         finally {
             loading.value = false;
