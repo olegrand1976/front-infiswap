@@ -108,6 +108,7 @@ export const useAuth = () => {
 
     async function validateEmail(id: string, hash: string) {
         try {
+            loading.value = true;
             const response = await $apifetch(`/api/email/verify/${id}/${hash}`, {
                 method: 'POST',
             });
@@ -115,6 +116,9 @@ export const useAuth = () => {
         }
         catch (err) {
             throw new Error(err?.data?.message || 'Erreur lors de la validation du compte.', err);
+        }
+        finally {
+            loading.value = false;
         }
     }
 
@@ -525,5 +529,6 @@ export const useAuth = () => {
         isAdminGroup,
         getRecentUsers,
         validateEmail,
+        loading,
     };
 };

@@ -67,15 +67,15 @@
 <script lang="ts" setup>
 import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { navigateTo } from '#app';
+import RollingLoader from '~/components/RollingLoader.vue';
 
 definePageMeta({
     layout: 'guest',
 });
 
 const user = useUser();
-const { validateEmail } = useAuth();
+const { validateEmail, loading } = useAuth();
 const route = useRoute();
-const loading = ref(true);
 const errorMessage = ref('');
 
 useHead({
@@ -88,7 +88,6 @@ onMounted(async () => {
 
     if (!id || !hash) {
         errorMessage.value = 'Lien de vérification invalide.';
-        loading.value = false;
         return;
     }
 
@@ -100,9 +99,6 @@ onMounted(async () => {
     }
     catch (error) {
         errorMessage.value = error.message;
-    }
-    finally {
-        loading.value = false;
     }
 });
 
