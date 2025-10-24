@@ -106,6 +106,18 @@ export const useAuth = () => {
             .catch((error) => { throw error; });
     }
 
+    async function validateEmail(id: string, hash: string) {
+        try {
+            const response = await $apifetch(`/api/email/verify/${id}/${hash}`, {
+                method: 'POST',
+            });
+            return response;
+        }
+        catch (err) {
+            throw new Error(err?.data?.message || 'Erreur lors de la validation du compte.', err);
+        }
+    }
+
     async function registerBeta(credentials) {
         await $apifetch('/api/user-betas',
             { method: 'post', body: credentials },
@@ -512,5 +524,6 @@ export const useAuth = () => {
         updateRadiusKm,
         isAdminGroup,
         getRecentUsers,
+        validateEmail,
     };
 };
