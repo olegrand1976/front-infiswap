@@ -106,6 +106,33 @@ export const useAuth = () => {
             .catch((error) => { throw error; });
     }
 
+    async function validateEmail(id: string, hash: string) {
+        loading.value = true;
+
+        try {
+            await $apifetch(`/api/email/verify/${id}/${hash}`, {
+                method: 'POST',
+            });
+
+            $toast({
+                description: 'Compte validé avec succès.',
+            });
+
+            return true;
+        }
+        catch (err) {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur s’est produite lors de la validation de votre compte. Merci de réessayer plus tard.',
+            });
+
+            throw new Error(err);
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
     async function registerBeta(credentials) {
         await $apifetch('/api/user-betas',
             { method: 'post', body: credentials },
@@ -512,5 +539,7 @@ export const useAuth = () => {
         updateRadiusKm,
         isAdminGroup,
         getRecentUsers,
+        validateEmail,
+        loading,
     };
 };

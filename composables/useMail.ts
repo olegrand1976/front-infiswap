@@ -63,6 +63,19 @@ export const useMail = () => {
         return true;
     };
 
+    const reportErrorUser = async (formData) => {
+        return await $apifetch(`/api/report-error/${formData.token}`, {
+            method: 'POST',
+            body: {
+                message: formData.message,
+            },
+        });
+    };
+
+    const getUserNameReport = async (token) => {
+        return await $apifetch(`/api/report-error/name/${token}`);
+    };
+
     return {
         error,
         loading,
@@ -71,5 +84,7 @@ export const useMail = () => {
         getMailSend,
         sendMail,
         reportProblem,
+        reportErrorUser,
+        getUserNameReport,
     };
 };

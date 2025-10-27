@@ -7,7 +7,7 @@
                 <LayoutsAppImage
                     src="/home/equipe_infirmier.png"
                     alt="Image d'une equipe infirmier"
-                    class="h-56 sm:h-56 md:h-72 lg:h-full object-cover"
+                    class="ml-auto rounded-3xl h-96 w-full md:w-1/2 lg:w-full object-cover object-center"
                 />
                 <div
                     class="px-8 md:px-0 mt-18 sm:mt-0 flex flex-col space-y-8"
