@@ -1575,35 +1575,75 @@
         >
             <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Zone géographique (province)</DialogTitle>
+                    <DialogTitle>Zone géographique</DialogTitle>
                     <DialogDescription>
-                        Cochez une ou plusieurs provinces pour filtrer les remplacements.
+                        <template v-if="user.profile.country == 'fr' && user.profile.working_at == 'France'">
+                            Entrez et cochez une ou plusieurs départements pour filtrer les remplacements.
+                        </template>
+                        <template v-else>
+                            Cochez une ou plusieurs provinces pour filtrer les remplacements.
+                        </template>
                     </DialogDescription>
                 </DialogHeader>
-                <div class="grid sm:grid-cols-2 gap-4 py-4">
-                    <div
-                        v-for="region in regions"
-                        :key="region"
-                        class="flex items-center"
-                    >
-                        <label
-                            :for="region"
-                            class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
-                            :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
-                        >
-                            <Checkbox
-                                :id="region"
-                                :checked="selectedRegions.includes(region)"
-                                :value="region"
-                                class="group-hover:border-white"
-                                @update:checked="updateRegionSelection(region, $event)"
-                            />
-                            <span class="ml-1">
-                                {{ region }}
-                            </span>
-                        </label>
+                <template v-if="user.profile.country == 'fr' && user.profile.working_at == 'France'">
+                    <div class="py-4">
+                        <InputIcon
+                            v-model="searchQuery"
+                            placeholder="Entrer un département"
+                        />
+
+                        <div class="grid sm:grid-cols-2 gap-4 mt-8">
+                            <div
+                                v-for="region in filteredDepartments"
+                                :key="region"
+                                class="flex items-center"
+                            >
+                                <label
+                                    :for="region"
+                                    class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
+                                    :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
+                                >
+                                    <Checkbox
+                                        :id="region"
+                                        :checked="selectedRegions.includes(region)"
+                                        :value="region"
+                                        class="group-hover:border-white"
+                                        @update:checked="updateRegionSelection(region, $event)"
+                                    />
+                                    <span class="ml-1">
+                                        {{ region }}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="grid sm:grid-cols-2 gap-4 py-4">
+                        <div
+                            v-for="region in regions"
+                            :key="region"
+                            class="flex items-center"
+                        >
+                            <label
+                                :for="region"
+                                class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
+                                :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
+                            >
+                                <Checkbox
+                                    :id="region"
+                                    :checked="selectedRegions.includes(region)"
+                                    :value="region"
+                                    class="group-hover:border-white"
+                                    @update:checked="updateRegionSelection(region, $event)"
+                                />
+                                <span class="ml-1">
+                                    {{ region }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </template>
                 <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
                     <Button
                         variant="secondary"
@@ -1631,7 +1671,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
-import { regions, selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
+import { regions, departments, selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1704,6 +1744,10 @@ const gridColsByType: Record<string, string> = {
 onMounted(async () => {
     if (import.meta.client) {
         isMobileView.value = window.innerWidth <= 1024;
+    }
+
+    if (user.value.profile.country === 'fr' && user.value.profile.working_at === 'France') {
+        displayedDepartments.value = getRandomItems(departments, 6);
     }
 });
 
@@ -1868,12 +1912,16 @@ const formData = reactive({
             : [],
     selectedDays: [],
     type: props.type,
+    country: user.value.profile.country,
     filters: localFilters,
 });
 
 const emit = defineEmits(['update:selectedRegions']);
 let newRegions = [...props.selectedRegions];
 let internalUpdate = false;
+
+const searchQuery = ref('');
+const displayedDepartments = ref([]);
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     internalUpdate = true;
@@ -1899,6 +1947,18 @@ const cancelSelection = () => {
     emit('update:selectedRegions', []);
     filterRegionDialog.value = false;
 };
+
+const getRandomItems = (array, count) => {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+};
+
+const filteredDepartments = computed(() => {
+    if (!searchQuery.value) return displayedDepartments.value;
+    return departments.filter(dep =>
+        dep.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    );
+});
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays = {
@@ -1936,6 +1996,7 @@ const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
             cities: [],
             selectedDays: [],
             type: props.type,
+            country: user.value.profile.country,
             filters: localFilters,
             provinces: newRegions,
             page,
@@ -2151,7 +2212,7 @@ const handleCloseReplacement = async (replacement) => {
 const editDialogOpen = ref(false);
 const editFormData = reactive({
     id: null,
-    nurseId: user.value.id,
+    userId: user.value.id,
     replacedBy: null,
     visibility: '',
     type: '',
@@ -2172,7 +2233,7 @@ const editFormData = reactive({
 
 const resetEditFormData = () => {
     editFormData.id = null;
-    editFormData.nurseId = user.value.id;
+    editFormData.userId = user.value.id;
     editFormData.replacedBy = null;
     editFormData.visibility = '';
     editFormData.type = '';
@@ -2201,6 +2262,7 @@ const openEditDialog = (replacement: Replacement) => {
     };
 
     editFormData.id = replacement.id;
+    editFormData.userId = replacement.user_id;
     editFormData.replacedBy = replacement.replaced_by ? replacement.replaced_by : null;
     editFormData.visibility = replacement.visibility;
     editFormData.status = replacement.status;

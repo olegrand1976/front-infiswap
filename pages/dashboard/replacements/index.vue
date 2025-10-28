@@ -84,7 +84,10 @@
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div class="flex space-x-3 rounded items-center justify-between ps-3 pe-1">
+                <div
+                    v-if="user.profile.country != 'fr' && user.profile.working_at != 'France'"
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
                     <h5 class="text-sm">
                         Provinces
                     </h5>
@@ -163,6 +166,9 @@ import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/out
 import { useCookie } from '#app';
 import { regions } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
+import type { User } from '~/lib/types';
+
+const user = useState<User>('user');
 
 const replacementTypeFilters = {
     all: 'Tous',
