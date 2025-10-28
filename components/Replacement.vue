@@ -77,7 +77,7 @@
                                             v-model="postalCodeInput"
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="1000"
+                                            :placeholder="user.profile.country == 'fr' ? 75000 : 1000"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(postalCodeInput, formData.postalCodeTags)"
                                         />
@@ -121,7 +121,7 @@
                                             v-model="cityInput"
                                             :class="[groupsByProvince && Object.keys(groupsByProvince).length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="Bruxelles"
+                                            :placeholder="user.profile.country == 'fr' ? 'Paris' : 'Bruxelles'"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(cityInput, formData.cityTags)"
                                         />

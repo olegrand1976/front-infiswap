@@ -130,6 +130,52 @@
                         </SelectContent>
                     </Select>
                 </div>
+                <div
+                    v-else
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
+                    <h5 class="text-sm">
+                        Départements
+                    </h5>
+                    <Select>
+                        <SelectTrigger
+                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
+                            position="right"
+                        >
+                            <SelectValue
+                                :placeholder="selectedProvincesPlaceholder"
+                                class="text-xs text-black w-[200%] truncate"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup class="w-32 truncate">
+                                <div class="flex items-center space-2 mb-2">
+                                    <Checkbox
+                                        id="tous"
+                                        :checked="isAllSelected"
+                                        class="mr-2"
+                                        @update:checked="toggleAllRegions($event)"
+                                    />
+                                    <label class="text-xs text-nowrap truncate">Tous</label>
+                                </div>
+                                <div
+                                    v-for="(region, index) in departments"
+                                    :key="index"
+                                    class="flex items-center space-2 mb-2"
+                                >
+                                    <Checkbox
+                                        :id="region"
+                                        :checked="selectedRegions.includes(region)"
+                                        :value="region"
+                                        class="mr-2"
+                                        @update:checked="updateRegionSelection(region, $event)"
+                                    />
+                                    <label class="text-xs text-nowrap truncate">{{ region }}</label>
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
 
                 <div
                     class="hidden sm:flex items-center space-x-4 cursor-pointer"
@@ -164,7 +210,7 @@
 <script setup lang="ts">
 import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
-import { regions } from '~/lib/utils';
+import { regions, departments } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
 
