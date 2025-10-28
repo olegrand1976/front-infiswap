@@ -85,7 +85,7 @@
                 </DropdownMenu>
 
                 <div
-                    v-if="user.profile.country != 'fr' && user.profile.working_at != 'France'"
+                    v-if="user.profile.country != 'fr'"
                     class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
                 >
                     <h5 class="text-sm">

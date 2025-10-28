@@ -1585,7 +1585,7 @@
                         </template>
                     </DialogDescription>
                 </DialogHeader>
-                <template v-if="user.profile.country == 'fr' && user.profile.working_at == 'France'">
+                <template v-if="user.profile.country == 'fr'">
                     <div class="py-4">
                         <InputIcon
                             v-model="searchQuery"
