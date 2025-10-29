@@ -59,7 +59,7 @@
                             </h5>
                             <InputTagManager
                                 v-model="formData.zipCodes"
-                                placeholder="6565,4561,1237"
+                                :placeholder="user.profile.country == 'fr' ? '75000, 40990, 89550' : '6565,4561,1237'"
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :comma-validation="false"
@@ -82,7 +82,7 @@
                             </h5>
                             <InputTagManager
                                 v-model="formData.cities"
-                                placeholder="Anvers, Bruges, Gand"
+                                :placeholder="user.profile.country ? 'Paris, Landes, Yonne' : 'Anvers, Bruges, Gand'"
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :comma-validation="true"
