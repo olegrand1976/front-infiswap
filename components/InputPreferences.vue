@@ -22,7 +22,7 @@
                 >
                     <div
                         v-if="isZipCodeFocused"
-                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2 bg-gray-50 shadow rounded-md"
+                        class="absolute -top-2 sm:-top-12 sm:left-52 text-sm p-2 bg-gray-50 shadow rounded-md"
                     >
                         <p>Appuyer sur Entrée pour valider</p>
                     </div>
@@ -94,7 +94,7 @@
                 >
                     <div
                         v-if="isCityFocused"
-                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2"
+                        class="absolute -top-2 sm:-top-12 bg-gray-50 shadow sm:left-52 text-sm p-2"
                     >
                         <p>Appuyer sur Entrée pour valider</p>
                     </div>
