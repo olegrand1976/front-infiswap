@@ -63,6 +63,9 @@
                                 <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                                 class="hover:bg-primary"
                                 @click="logout"
