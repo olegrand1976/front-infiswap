@@ -46,50 +46,24 @@
                 </h1>
                 <div class="w-full container">
                     <form
-                        class="flex flex-col space-y-4"
+                        class="flex flex-col space-y-6 mx-24"
                         @submit.prevent="resetPassword"
                     >
-                        <FormField name="email">
-                            <FormItem>
-                                <FormLabel class="text-xs text-primary font-bold mb-12">
-                                    Nouveau mot de passe
-                                </FormLabel>
-                                <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex items-center space-x-1">
-                                            <LockClosedIcon class="text-primary w-7" />
-                                            <Input
-                                                v-model="formData.password"
-                                                type="password"
-                                                placeholder="Saisissez votre mot de passe"
-                                                class="md:text-sm sm:text-xs"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </div>
-                            </FormItem>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.password"
+                            :icon="LockClosedIcon"
+                            type="password"
+                            placeholder="Nouveau mot de passe"
+                            class="text-sm w-full"
+                        />
 
-                        <FormField name="email">
-                            <FormItem>
-                                <FormLabel class="text-xs text-primary font-bold mb-12">
-                                    Confirmer le nouveau mot de passe
-                                </FormLabel>
-                                <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                    <FormControl>
-                                        <div class="flex items-center space-x-1">
-                                            <LockClosedIcon class="text-primary w-7" />
-                                            <Input
-                                                v-model="formData.passwordConfirm"
-                                                type="password"
-                                                placeholder="Saisissez votre mot de passe"
-                                                class="md:text-sm sm:text-xs"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </div>
-                            </FormItem>
-                        </FormField>
+                        <InputIcon
+                            v-model="formData.passwordConfirm"
+                            :icon="LockClosedIcon"
+                            type="password"
+                            placeholder="Confirmer mot de passe"
+                            class="text-sm w-full"
+                        />
 
                         <div class="flex justify-center items-center mx-auto pt-8">
                             <Button

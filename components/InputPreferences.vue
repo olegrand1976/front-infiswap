@@ -22,7 +22,7 @@
                 >
                     <div
                         v-if="isZipCodeFocused"
-                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2 bg-gray-50 shadow rounded-md"
+                        class="absolute -top-2 sm:-top-12 sm:left-52 text-sm p-2 bg-gray-50 shadow rounded-md"
                     >
                         <p>Appuyer sur Entrée pour valider</p>
                     </div>
@@ -44,7 +44,7 @@
 
                         <TagsInputInput
                             class="-mt-1 sm:w-24 2xl:w-auto flex-1 min-w-[80px]"
-                            placeholder="8973"
+                            :placeholder="user.profile.country == 'fr' ? '75000' : '1000'"
                             @input="isZipCodeFocused = true"
                             @blur="handleBlur"
                             @keyup.enter="() => addPreference('zipCode')"
@@ -94,7 +94,7 @@
                 >
                     <div
                         v-if="isCityFocused"
-                        class="absolute -top-2 sm:-top-12 sm:left-48 text-sm p-2"
+                        class="absolute -top-2 sm:-top-12 bg-gray-50 shadow sm:left-52 text-sm p-2"
                     >
                         <p>Appuyer sur Entrée pour valider</p>
                     </div>
@@ -117,7 +117,7 @@
                     </div>
                     <TagsInputInput
                         class="-mt-1 sm:w-24 2xl:w-auto flex-1 min-w-[80px]"
-                        placeholder="Bruxelles"
+                        :placeholder="user.profile.country == 'fr' ? 'Paris' : 'Bruxelles'"
                         @input="isCityFocused = true"
                         @blur="handleBlur"
                         @keyup.enter="() => addPreference('city')"
@@ -157,11 +157,14 @@ import {
     TagsInputItemText,
 } from '@/components/ui/tags-input';
 import { useAuth } from '~/composables/useAuth';
+import type { User } from '~/lib/types';
 
 const props = defineProps<{
     initialZipCodes: string[];
     initialCities: string[];
 }>();
+
+const user = useState<User>('user');
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;

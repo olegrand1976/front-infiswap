@@ -318,4 +318,8 @@ const handleDisable = async () => {
         console.error('Erreur lors de la désactivation des notifications :', error);
     }
 };
+
+definePageMeta({
+    ssr: false,
+});
 </script>
