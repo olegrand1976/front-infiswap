@@ -272,8 +272,11 @@
                                                 v-if="props.type === ''"
                                                 class="bg-gray-100 text-xs pt-5"
                                             >
-                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                                    {{ replacementGroup.user_full_name }}
+                                                <div
+                                                    class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                                    @click="handleShowInfoUser(user)"
+                                                >
+                                                    {{ replacementGroup.user.full_name }}
                                                 </div>
                                             </TableCell>
                                             <TableCell
@@ -281,7 +284,7 @@
                                                 class="bg-gray-100 text-xs pt-5"
                                             >
                                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                                    {{ replacementGroup.user_phone_number }}
+                                                    {{ replacementGroup.user.phone_number }}
                                                 </div>
                                             </TableCell>
                                             <TableCell
@@ -626,8 +629,11 @@
                                             v-if="props.type === ''"
                                             class="bg-gray-100 text-xs pt-5"
                                         >
-                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                                {{ replacementGroup.user_full_name }}
+                                            <div
+                                                class="pt-3 h-10 cursor-pointer rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                                @click="handleShowInfoUser(replacementGroup.user)"
+                                            >
+                                                {{ replacementGroup.user.full_name }}
                                             </div>
                                         </TableCell>
                                         <TableCell
@@ -635,7 +641,7 @@
                                             class="bg-gray-100 text-xs pt-5"
                                         >
                                             <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                                {{ replacementGroup.user_phone_number }}
+                                                {{ replacementGroup.user.phone_number }}
                                             </div>
                                         </TableCell>
                                         <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
@@ -1661,6 +1667,19 @@
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        <Dialog
+            v-model:open="showInfoUser"
+            class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+        >
+            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
+                <UsersCard
+                    v-if="showInfoUser"
+                    :user="selectedUser"
+                    :show-full-info="true"
+                />
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -1716,6 +1735,14 @@ const props = defineProps({
         default: () => [],
     },
 });
+
+const selectedUser = ref(null);
+const showInfoUser = ref(false);
+
+const handleShowInfoUser = (user) => {
+    selectedUser.value = user;
+    showInfoUser.value = true;
+};
 
 type ProvinceGroups = Record<string, Replacement[]>;
 

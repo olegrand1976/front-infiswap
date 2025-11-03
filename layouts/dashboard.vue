@@ -63,7 +63,9 @@
                                 <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                                v-if="user.account_type != 'nurse' && user.account_type != 'caregiver' && user.account_type != 'midwife'"
+                            >
                                 <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuItem
