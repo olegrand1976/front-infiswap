@@ -274,7 +274,7 @@
                                             >
                                                 <div
                                                     class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
-                                                    @click="handleShowInfoUser(user)"
+                                                    @click="handleShowInfoUser(replacementGroup.user)"
                                                 >
                                                     {{ replacementGroup.user.full_name }}
                                                 </div>
@@ -1739,8 +1739,8 @@ const props = defineProps({
 const selectedUser = ref(null);
 const showInfoUser = ref(false);
 
-const handleShowInfoUser = (user) => {
-    selectedUser.value = user;
+const handleShowInfoUser = (replacementUser) => {
+    selectedUser.value = replacementUser;
     showInfoUser.value = true;
 };
 
