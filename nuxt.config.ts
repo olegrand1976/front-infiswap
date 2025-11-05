@@ -61,6 +61,7 @@ export default defineNuxtConfig({
             API_URL: process.env.API_URL,
             FRONT_END_URL: process.env.FRONT_END_URL,
             OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+            MAINTENANCE_MODE: process.env.MAINTENANCE_MODE === 'true' || false
             metapixel: {
                 default: {
                     id: '1687858552113266',
