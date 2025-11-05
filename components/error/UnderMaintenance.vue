@@ -28,6 +28,7 @@
                 <p class="text-xs md:text-sm">
                     Le site est actuellement en maintenance. Nous vous remercions de votre compréhension et reviendrons très prochainement
                 </p>
+                
                 <NuxtLink
                     to="/dashboard"
                     class="btn-pill text-white bg-primary hover:bg-primary/90 transition-base p-2 font-semibold w-[200px] md:w-[348px]"
