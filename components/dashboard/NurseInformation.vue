@@ -379,7 +379,7 @@
                                 <InputTagManager
                                     v-model="formData.citiesArray"
                                     :icon="BuildingOffice2Icon"
-                                    label="Villes"
+                                    label="Villes associées"
                                     :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                     :is-mobile="false"
                                     :comma-validation="true"
