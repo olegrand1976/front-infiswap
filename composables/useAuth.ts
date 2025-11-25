@@ -238,13 +238,13 @@ export const useAuth = () => {
             method: 'delete',
             body: id,
         });
-    };
+    }
 
-    async function logout() {
+    function logout() {
         loading.value = false;
         try {
             if (!isLoggedIn.value) return;
-            await $apifetch('api/logout', { method: 'post' });
+            $apifetch('api/logout', { method: 'post' });
             user.value = null;
             useCookie(AUTH_TOKEN).value = '';
 

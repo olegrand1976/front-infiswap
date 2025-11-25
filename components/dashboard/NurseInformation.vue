@@ -327,15 +327,187 @@
             </div>
         </section>
     </div>
+
+    <Dialog v-model:open="configDialog">
+        <DialogContent class="max-w-2xl h-[60vh] overflow-y-auto">
+            <DialogHeader>
+                <DialogTitle class="text-xl text-primary">
+                    Préférences de recherche
+                </DialogTitle>
+            </DialogHeader>
+
+            <div class="space-y-6 mt-4">
+                <div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Quel rayon de recherche préférez-vous ?
+                        </label>
+
+                        <InputIcon
+                            v-model="formData.radiusKm"
+                            :icon="MapIcon"
+                            icon-class="-mt-5"
+                            class="w-full"
+                            size="md"
+                            :placeholder="'5 km'"
+                        />
+
+                        <label class="text-[0.65rem]"> Ce rayon s’applique aux recherches de remplacement autour de vos codes postaux préférés.</label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Quels sont vos préférences pour une remplacement ?
+                        </label>
+
+                        <div class="hidden lg:flex space-x-4">
+                            <div class="flex-1">
+                                <InputTagManager
+                                    v-model="formData.zipCodesArray"
+                                    :icon="InboxArrowDownIcon"
+                                    label="Codes postaux *"
+                                    :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
+                                    :is-mobile="false"
+                                    :comma-validation="false"
+                                    @keydown.enter.prevent
+                                />
+                            </div>
+
+                            <div class="flex-1">
+                                <InputTagManager
+                                    v-model="formData.citiesArray"
+                                    :icon="BuildingOffice2Icon"
+                                    label="Villes"
+                                    :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
+                                    :is-mobile="false"
+                                    :comma-validation="true"
+                                    :no-space-validation="true"
+                                    @keydown.enter.prevent
+                                />
+                            </div>
+                        </div>
+                        <div class="block lg:hidden">
+                            <div class="flex-1">
+                                <InputTagManager
+                                    v-model="formData.zipCodesArray"
+                                    :icon="InboxArrowDownIcon"
+                                    label="Codes postaux *"
+                                    :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
+                                    :is-mobile="true"
+                                    :comma-validation="false"
+                                    @keydown.enter.prevent
+                                />
+                            </div>
+
+                            <div class="flex-1">
+                                <InputTagManager
+                                    v-model="formData.citiesArray"
+                                    :icon="BuildingOffice2Icon"
+                                    label="Villes"
+                                    :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
+                                    :is-mobile="true"
+                                    :comma-validation="true"
+                                    :no-space-validation="true"
+                                    @keydown.enter.prevent
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Comment nous avez-vous connu ?
+                        </label>
+
+                        <div class="relative w-full">
+                            <div class="pointer-events-none absolute top-2 left-2 flex items-center text-primary">
+                                <QuestionMarkCircleIcon class="w-6 h-6" />
+                            </div>
+
+                            <select
+                                v-model="selectedReferral"
+                                class="w-full appearance-none rounded-full border border-gray-300 py-2 px-4 pl-10 pr-10 text-sm bg-white text-gray-600"
+                            >
+                                <option
+                                    disabled
+                                    value=""
+                                >
+                                    Sélectionnez une option
+                                </option>
+                                <option
+                                    v-for="option in referral_source"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+
+                            <div class="pointer-events-none absolute top-3 right-3 flex items-center text-primary">
+                                <svg
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <InputIcon
+                            v-if="formData.referralSource.startsWith('other:')"
+                            :value="formData.referralSource.replace(/^other:/, '')"
+                            placeholder="Veuillez préciser"
+                            :icon="EllipsisHorizontalCircleIcon"
+                            class="w-full"
+                            @input="event => formData.referralSource = `other:${event.target.value}`"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
+                <Button
+                    variant="secondary"
+                    class="w-full sm:w-auto"
+                    @click="configDialog = false"
+                >
+                    <span class="mt-2">Annuler</span>
+                </Button>
+                <Button
+                    class="w-full sm:w-auto"
+                    @click="handleSetPreference"
+                >
+                    <span class="mt-2">Enregistrer</span>
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 </template>
 
 <script setup lang="ts">
 import {
     CheckIcon,
     UserIcon,
+    EllipsisHorizontalCircleIcon,
+    BuildingOffice2Icon,
+    InboxArrowDownIcon,
+    MapIcon,
+    QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
+import InputTagManager from '~/components/InputTagManager.vue';
 import type { UserSettings, Patient } from '~/lib/types';
 import {
     Carousel,
@@ -364,10 +536,29 @@ const props = defineProps<{
 }>();
 
 const loading = ref(true);
-const { updateRadiusKm } = useAuth();
+const { updateRadiusKm, createPreferences, refresh } = useAuth();
 const user = useUser();
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
+const configDialog = ref(false);
+const { $toast } = useNuxtApp();
+
+const arePreferencesEmpty = () => {
+    if (!user.value?.settings) return true;
+
+    try {
+        const settings: UserSettings = JSON.parse(user.value.settings || '{}');
+
+        const hasZipCodes = settings.replacement?.zip_codes?.filter(Boolean).length > 0;
+        const hasCities = settings.replacement?.cities?.filter(Boolean).length > 0;
+        const hasRadius = settings.radius_km && settings.radius_km !== '0' && settings.radius_km !== '';
+
+        return !(hasZipCodes || hasCities || hasRadius);
+    }
+    catch {
+        return true;
+    }
+};
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -439,8 +630,91 @@ const currentMonthIndex = currentDate.getMonth();
 const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
 previousMonth.value = months[previousMonthIndex];
 
+const referral_source = [
+    {
+        label: 'Publicité Facebook',
+        value: 'facebook_ads',
+    },
+    {
+        label: 'Post page Infiswap',
+        value: 'infiswap_post',
+    },
+    {
+        label: 'Communication forum infirmière',
+        value: 'nurse_forum',
+    },
+    {
+        label: 'Moteur de recherche',
+        value: 'search_engine',
+    },
+    {
+        label: 'Bouche à oreille',
+        value: 'word_of_mouth',
+    },
+    {
+        label: 'Autres',
+        value: 'other:',
+    },
+];
+
+const selectedReferral = computed({
+    get() {
+        return formData.referralSource.startsWith('other:') ? 'other:' : formData.referralSource;
+    },
+    set(val) {
+        formData.referralSource = val;
+    },
+});
+
+const formData = reactive({
+    referralSource: '',
+    zipCodesArray: [],
+    citiesArray: [],
+    radiusKm: '',
+});
+
+watch(configDialog, (isOpen) => {
+    if (isOpen) {
+        const settings = user.value?.settings ? JSON.parse(user.value.settings) : {};
+        formData.zipCodesArray = settings.replacement?.zip_codes || [];
+        formData.citiesArray = settings.replacement?.cities || [];
+        formData.radiusKm = settings.radius_km || 5;
+        formData.referralSource = settings.referral_source || '';
+    }
+});
+
+const handleSetPreference = async () => {
+    try {
+        await createPreferences({
+            key: 'replacement',
+            value: {
+                zip_codes: formData.zipCodesArray,
+                cities: formData.citiesArray,
+            },
+        });
+
+        await updateRadiusKm(Number(formData.radiusKm));
+        await refresh();
+
+        zipCodes.value = [...formData.zipCodesArray];
+        cities.value = [...formData.citiesArray];
+
+        $toast({ description: 'Préférences enregistrées avec succès' });
+        configDialog.value = false;
+    }
+    catch {
+        $toast({ variant: 'destructive', description: 'Erreur lors de l’enregistrement' });
+    }
+};
+
 onMounted(() => {
     loading.value = false;
+
+    nextTick(() => {
+        if (arePreferencesEmpty()) {
+            configDialog.value = true;
+        }
+    });
 });
 </script>
 

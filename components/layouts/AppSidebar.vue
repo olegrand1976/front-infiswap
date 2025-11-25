@@ -231,10 +231,9 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { logout, isCollaborator } = useAuth();
+const { isAdmin, logout, isCollaborator } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
-const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
 const referralDialog = ref(false);
 const closeSidebar = () => {
