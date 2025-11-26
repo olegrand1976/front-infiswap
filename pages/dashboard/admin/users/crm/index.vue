@@ -103,6 +103,22 @@
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
+
+            <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <button
+                    v-for="tab in countryTabs"
+                    :key="tab.value"
+                    :class="[
+                        'px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors',
+                        (tab.value === '' && option.country === '') || (tab.value !== '' && option.country === tab.value)
+                            ? 'bg-primary text-white shadow-md'
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
+                    @click="setCountryFilter(tab.value)"
+                >
+                    {{ tab.label }}
+                </button>
+            </div>
+
             <template v-if="selectedCrm === 'users'">
                 <CrmAdminList
                     :users="users"
@@ -161,10 +177,23 @@ const route = useRoute();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 
+const countryTabs = [
+    { label: 'Toutes', value: '' },
+    { label: 'Belgique', value: 'be' },
+    { label: 'France', value: 'fr' },
+];
+
+const setCountryFilter = (country) => {
+    option.value.country = country;
+    page.value = 1;
+    filterUsers();
+};
+
 const emptyFilter = {
     name: null as string | null,
     zip: null as string | null,
     city: null as string | null,
+    country: null as string | null,
     insurance: null as number | null,
     site: null as number | null,
     deleted: null as boolean | null,
@@ -175,6 +204,7 @@ const initialFilter = {
     name: (route.query.name as string) ?? null,
     zip: null,
     city: null,
+    country: '',
     insurance: null,
     site: null,
     deleted: false,
