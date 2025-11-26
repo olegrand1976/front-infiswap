@@ -180,7 +180,7 @@ const columnsExUsers: ColumnDef<User>[] = [
             const restoredByName = user.restored_by?.full_name ?? '-';
 
             if (!user.restored_by) {
-                return h('div', { class: 'text-center ml-8' }, restoredByName);
+                return h('div', { class: 'ml-10' }, restoredByName);
             }
 
             const restoredBy = user.restored_by;
