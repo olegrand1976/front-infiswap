@@ -33,13 +33,14 @@
 
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PencilIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { PencilIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { Button } from '@/components/ui/button';
 import type { Pagination, User } from '~/lib/types';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
+import UsersName from '@/components/users/Name.vue';
 
 const props = defineProps<{
     users: Pagination<User>;
@@ -182,12 +183,8 @@ const columnsExUsers: ColumnDef<User>[] = [
                 return h('div', { class: 'text-center ml-8' }, restoredByName);
             }
 
-            return h('div', { class: 'flex gap-1 items-center' }, [
-                h('span', restoredByName),
-                h(Button, { variant: 'ghost', size: 'sm' }, () =>
-                    h(EyeIcon, { class: 'h-4 w-4' }),
-                ),
-            ]);
+            const restoredBy = user.restored_by;
+            return h(UsersName, { class: 'hover:scale-105 hover:transition-all hover:duration-300 cursor-pointer', user: restoredBy });
         },
         enableSorting: false,
     },
