@@ -91,7 +91,9 @@ export type User = {
     product_activity_summary?: ProductActivitySummary[];
     last_comment: Comment;
     is_business_referrer?: boolean | number;
-    referred_by?; Referrer;
+    referred_by?: Referrer;
+    restored_by?: User;
+    restored_at?: string;
 };
 
 type LastProductModifications = {

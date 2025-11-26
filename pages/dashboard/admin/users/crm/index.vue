@@ -19,6 +19,15 @@
                     >
                         Suivi commercial
                     </TabsTrigger>
+                    <TabsTrigger
+                        value="exUsers"
+                        class="w-full md:w-48 h-12"
+                    >
+                        <span class="mr-2">Ex-utilisateurs</span>
+                        <Badge v-if="trashCount > 0">
+                            {{ trashCount }}
+                        </Badge>
+                    </TabsTrigger>
                 </TabsList>
             </Tabs>
             <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
@@ -115,6 +124,17 @@
                     @user-updated="handleUserUpdate"
                 />
             </template>
+            <template v-else-if="selectedCrm === 'exUsers'">
+                <CrmExUserList
+                    :users="users"
+                    :page="page"
+                    :per-page="perPage"
+                    @refresh-users="refreshUsers"
+                    @handle-per-page-change="handlePerPageChange"
+                    @set-sort="setSort"
+                    @user-updated="handleUserUpdate"
+                />
+            </template>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -135,7 +155,7 @@ definePageMeta({
 });
 
 const selectedCrm = ref('users');
-const { getCrmPlus, users } = useCrm();
+const { getCrmPlus, users, trashCount } = useCrm();
 const { getAll } = useProduct();
 const route = useRoute();
 const perPage = ref(PERPAGE);
@@ -147,6 +167,7 @@ const emptyFilter = {
     city: null as string | null,
     insurance: null as number | null,
     site: null as number | null,
+    deleted: null as boolean | null,
 };
 
 const initialFilter = {
@@ -156,6 +177,7 @@ const initialFilter = {
     city: null,
     insurance: null,
     site: null,
+    deleted: false,
 };
 
 const option = ref({ ...initialFilter });
@@ -172,6 +194,14 @@ const debounce = (func, delay) => {
 
 const filterUsers = async () => {
     const currentFilter = { ...option.value };
+
+    if (selectedCrm.value === 'exUsers') {
+        currentFilter.deleted = true;
+    }
+    else {
+        currentFilter.deleted = false;
+    }
+
     await getCrmPlus(page.value, perPage.value, currentFilter);
 };
 
@@ -188,7 +218,15 @@ onMounted(async () => {
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
-    await getCrmPlus(newPage, perPage.value, { ...option.value, sortOrder: sort.order, sortKey: sort.by });
+    const currentFilter = { ...option.value };
+    if (selectedCrm.value === 'exUsers') currentFilter.deleted = true;
+    else currentFilter.deleted = false;
+
+    await getCrmPlus(newPage, perPage.value, {
+        ...currentFilter,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
 
 const handleUserUpdate = (updatedCrmObject) => {
@@ -227,13 +265,25 @@ const toggleSort = () => {
 };
 
 const setSort = async (columnKey: string) => {
-    if (sort.by === columnKey) {
-        toggleSort();
-    }
+    if (sort.by === columnKey) toggleSort();
     else {
         sort.by = columnKey;
         sort.order = 'DESC';
     }
-    await getCrmPlus(page.value, perPage.value, { ...option.value, sortOrder: sort.order, sortKey: sort.by });
+
+    const currentFilter = { ...option.value };
+    if (selectedCrm.value === 'exUsers') currentFilter.deleted = true;
+    else currentFilter.deleted = false;
+
+    await getCrmPlus(page.value, perPage.value, {
+        ...currentFilter,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
+
+watch(selectedCrm, async () => {
+    page.value = 1;
+    await filterUsers();
+});
 </script>
