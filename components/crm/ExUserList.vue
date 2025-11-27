@@ -48,11 +48,12 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const { edit } = useAuth();
+const { edit, restore } = useAuth();
 
 const showModal = ref(false);
 const loggedUser = useUser();
 const user = ref<User | null>(null);
+const { $toast } = useNuxtApp();
 
 function openModal(selectedUser: User) {
     user.value = selectedUser;
@@ -206,10 +207,13 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h('div', { class: 'mx-2' }, 'Actions');
         },
         enableHiding: false,
-        cell: () => {
+        cell: ({ row }) => {
+            const user = row.original;
             const actions = [
                 {
                     label: 'Restaurer',
+                    confirm: true,
+                    onClick: () => handleRestore(user),
                 },
             ];
 
@@ -227,4 +231,14 @@ watch(() => props.users.data, (newUsersData) => {
         localUsers.value = [...newUsersData];
     }
 }, { deep: true, immediate: true });
+
+const handleRestore = async (user: User) => {
+    const response = await restore(user.id);
+
+    $toast({
+        description: response.message,
+    });
+
+    localUsers.value = localUsers.value.filter(u => u.id !== user.id);
+};
 </script>
