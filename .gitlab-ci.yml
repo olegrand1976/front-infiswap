@@ -21,7 +21,7 @@ build:
       - .npm/
   before_script:
     - apk add --no-cache nodejs npm bash git curl
-    - curl -fsSL https://get.docker.com | SSH
+    - curl -fsSL https://get.docker.com | sh
     - |
       cat > .env << EOF
       NODE_ENV=${NODE_ENV}
