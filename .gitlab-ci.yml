@@ -4,8 +4,7 @@ stages:
 
 build:
   stage: build
-  image: node:20    # Utilise Node 20 pour disposer d'une version récente
-  services:
+  image: docker:24.0.5
     - name: docker:dind
       alias: docker
       command: ["--tls=false"]
