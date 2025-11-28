@@ -260,8 +260,8 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.registration_statistics.this_month + reports.value.registration_statistics.last_30_days,
-                    label: 'Ce mois / Mois glissant',
+                    value: reports.value.registration_statistics.last_30_days,
+                    label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: UserGroupIcon,
                     containerClass: 'string',
@@ -338,8 +338,8 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.accepted_replacement_statistics.this_month + reports.value.accepted_replacement_statistics.last_30_days,
-                    label: 'Ce mois / Mois glissant',
+                    value: reports.value.accepted_replacement_statistics.last_30_days,
+                    label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: ArrowPathIcon,
                     containerClass: 'string',
@@ -364,8 +364,8 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.replacement_response_statistics.this_month + reports.value.replacement_response_statistics.last_30_days,
-                    label: 'Ce mois / Mois glissant',
+                    value: reports.value.replacement_response_statistics.last_30_days,
+                    label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: PaperAirplaneIcon,
                     containerClass: 'string',
