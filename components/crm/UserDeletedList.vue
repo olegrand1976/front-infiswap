@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PencilIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon } from '@heroicons/vue/24/outline';
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { Button } from '@/components/ui/button';
@@ -134,7 +134,7 @@ const columnsExUsers: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-8' }, [
-                h(PencilIcon, {
+                h(EyeIcon, {
                     class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
                     onClick: () => openModal(row.original),
                 }),

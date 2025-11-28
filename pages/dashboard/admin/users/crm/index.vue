@@ -23,7 +23,7 @@
                         value="exUsers"
                         class="w-full md:w-48 h-12"
                     >
-                        <span class="mr-2">Ex-utilisateurs</span>
+                        <span class="mr-2">Comptes supprimés</span>
                         <Badge v-if="trashCount > 0">
                             {{ trashCount }}
                         </Badge>
@@ -141,7 +141,7 @@
                 />
             </template>
             <template v-else-if="selectedCrm === 'exUsers'">
-                <CrmExUserList
+                <CrmUserDeletedList
                     :users="users"
                     :page="page"
                     :per-page="perPage"
