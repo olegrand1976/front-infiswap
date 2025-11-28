@@ -490,6 +490,12 @@ export const useAuth = () => {
         });
     }
 
+    async function restore(id: number) {
+        return await $apifetch(`/api/admin/users/${id}/restore`, {
+            method: 'PUT',
+        });
+    }
+
     return {
         user,
         users,
@@ -540,6 +546,7 @@ export const useAuth = () => {
         isAdminGroup,
         getRecentUsers,
         validateEmail,
+        restore,
         loading,
     };
 };
