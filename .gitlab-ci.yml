@@ -6,7 +6,7 @@ build:
   stage: build
   image: docker:24.0.5
   services:
-    - name: docker:dind
+    - name: docker:24-dind
       alias: docker
       command: ["--tls=false"]
   variables:
@@ -20,7 +20,7 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apk add --no-cache nodejs npm bash git curl python3 build-base
+    - apk add --no-cache nodejs npm bash python3 build-base git curl
     - |
       cat > .env << EOF
       NODE_ENV=${NODE_ENV}
