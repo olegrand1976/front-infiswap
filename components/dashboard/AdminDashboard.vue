@@ -260,7 +260,7 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.registration_statistics.this_month + reports.value.registration_statistics.last_month,
+                    value: reports.value.registration_statistics.this_month + reports.value.registration_statistics.last_30_days,
                     label: 'Ce mois / Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: UserGroupIcon,
@@ -286,7 +286,7 @@ const adminReports = computed(() => {
         //             containerClass: 'string',
         //         },
         //         {
-        //             value: reports.value.patient_by_nurse_statistics.this_month + reports.value.patient_by_nurse_statistics.last_month,
+        //             value: reports.value.patient_by_nurse_statistics.this_month + reports.value.patient_by_nurse_statistics.last_30_days,
         //             label: 'Ce mois / Mois glissant',
         //             colorClass: 'bg-orange-700',
         //             icon: HeartIcon,
@@ -312,7 +312,7 @@ const adminReports = computed(() => {
         //             containerClass: 'string',
         //         },
         //         {
-        //             value: reports.value.tour_statistics.this_month + reports.value.tour_statistics.last_month,
+        //             value: reports.value.tour_statistics.this_month + reports.value.tour_statistics.last_30_days,
         //             label: 'Ce mois / Mois glissant',
         //             colorClass: 'bg-orange-700',
         //             icon: MapPinIcon,
@@ -338,7 +338,7 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.accepted_replacement_statistics.this_month + reports.value.accepted_replacement_statistics.last_month,
+                    value: reports.value.accepted_replacement_statistics.this_month + reports.value.accepted_replacement_statistics.last_30_days,
                     label: 'Ce mois / Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: ArrowPathIcon,
@@ -364,7 +364,7 @@ const adminReports = computed(() => {
                     containerClass: 'string',
                 },
                 {
-                    value: reports.value.replacement_response_statistics.this_month + reports.value.replacement_response_statistics.last_month,
+                    value: reports.value.replacement_response_statistics.this_month + reports.value.replacement_response_statistics.last_30_days,
                     label: 'Ce mois / Mois glissant',
                     colorClass: 'bg-orange-700',
                     icon: PaperAirplaneIcon,
