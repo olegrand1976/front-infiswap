@@ -1,6 +1,48 @@
 <template>
     <div>
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
+            <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                </div>
+                <div
+                    v-else
+                    class="mt-3 grid sm:grid-cols-2 gap-4 sm:gap-8 items-center"
+                >
+                    <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
+                        <div>
+                            <h3 class="text-sm font-semibold">
+                                Utilisateurs belges
+                            </h3>
+                            <p class="font-semibold text-primary text-3xl">
+                                {{ userBelgianCount }}
+                            </p>
+                        </div>
+                        <LayoutsAppImage
+                            :src="'/icons/belgium.png'"
+                            alt="Belgium flag"
+                            class="w-8 sm:w-12"
+                        />
+                    </div>
+
+                    <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
+                        <div>
+                            <h3 class="text-sm font-semibold">
+                                Utilisateurs français
+                            </h3>
+                            <p class="font-semibold text-success text-3xl">
+                                {{ userFrenchCount }}
+                            </p>
+                        </div>
+                        <LayoutsAppImage
+                            :src="'/icons/fr.png'"
+                            alt="France flag"
+                            class="w-8 sm:w-12"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de cette semaine-ci
@@ -163,6 +205,36 @@
                 </div>
             </div>
 
+            <div
+                v-if="deletedUserChartData.data.length > 0"
+                class="col-span-1 lg:col-span-2"
+            >
+                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                    Évolution des utilisateurs perdus
+                </p>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                </div>
+                <div
+                    v-else
+                    class="mt-3 bg-white rounded-sm shadow-md"
+                >
+                    <ClientOnly>
+                        <BarChart
+                            :data="deletedUserChartData.data"
+                            index="name"
+                            :categories="['count']"
+                            :x-formatter="xDeletedUsersFormatter"
+                            :y-formatter="yFormatter"
+                            :show-all-x-ticks="true"
+                            :colors="['hsl(var(--tertiary))']"
+                            :legend-labels="deletedUserChartData.legendLabels"
+                            class="w-full"
+                        />
+                    </ClientOnly>
+                </div>
+            </div>
+
             <div class="col-span-1 lg:col-span-2">
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions par province
@@ -312,6 +384,9 @@ onMounted(() => {
 const selectedCountryForProvince = ref('be');
 const selectedCountryForZipCode = ref('be');
 
+const userBelgianCount = computed(() => reports.value.registration_statistics?.total_belgian);
+const userFrenchCount = computed(() => reports.value.registration_statistics?.total_french);
+
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
 
@@ -347,11 +422,15 @@ const registrationDailyChartData = computed(() => {
 });
 
 const registrationMonthlyChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.registration_statistics?.month, '', ['Total']);
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.month, 'Semaine', ['Total']);
 });
 
 const registrationChartData = computed(() => {
     return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks_year, 'Semaine', ['Total']);
+});
+
+const deletedUserChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.total_deleted, 'Semaine', ['Total']);
 });
 
 const replacementDailyChartData = computed(() => {
@@ -369,6 +448,7 @@ const replacementChartData = computed(() => {
 const xRegistrationDayFormatter = computed(() => createXFormatter(computed(() => registrationDailyChartData.value.data)));
 const xRegistrationMonthFormatter = computed(() => createXFormatter(computed(() => registrationMonthlyChartData.value.data)));
 const xRegistrationWeekYearFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
+const xDeletedUsersFormatter = computed(() => createXFormatter(computed(() => deletedUserChartData.value.data)));
 const xReplacementDayFormatter = computed(() => createXFormatter(computed(() => replacementDailyChartData.value.data)));
 const xReplacementMonthFormatter = computed(() => createXFormatter(computed(() => replacementMonthlyChartData.value.data)));
 const xReplacementWeekYearFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
