@@ -12,7 +12,7 @@
                     <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
                         <div>
                             <h3 class="text-sm font-semibold">
-                                Utilisateurs belges
+                                Utilisateur en Belgique
                             </h3>
                             <p class="font-semibold text-primary text-3xl">
                                 {{ userBelgianCount }}
@@ -28,7 +28,7 @@
                     <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
                         <div>
                             <h3 class="text-sm font-semibold">
-                                Utilisateurs français
+                                Utilisateur en France
                             </h3>
                             <p class="font-semibold text-success text-3xl">
                                 {{ userFrenchCount }}
