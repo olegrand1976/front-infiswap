@@ -262,8 +262,8 @@ const user = useState<User>('user');
 const selectedCountry = ref(user.value.profile.country);
 
 const countries = {
-    fr: 'France',
     be: 'Belgique',
+    fr: 'France',
 };
 
 const replacementTypeFilters = {
