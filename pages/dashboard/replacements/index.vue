@@ -107,7 +107,20 @@
                                     :key="code"
                                     :value="code"
                                 >
-                                    {{ label }}
+                                    <div class="flex flex-nowrap gap-2 items-center">
+                                        <LayoutsAppImage
+                                            v-if="code === 'fr'"
+                                            :src="'/icons/fr.png'"
+                                            alt="France flag"
+                                            class="w-3"
+                                        />
+                                        <LayoutsAppImage
+                                            v-else-if="code === 'be'"
+                                            :src="'/icons/belgium.png'"
+                                            alt="Belgium flag"
+                                        />
+                                        <span>{{ label }}</span>
+                                    </div>
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
