@@ -184,20 +184,20 @@
                             <SelectContent class="border border-none w-full">
                                 <SelectGroup>
                                     <div
-                                        v-for="country in countries"
-                                        :key="country.value"
+                                        v-for="c in countries"
+                                        :key="c.value"
                                         class="flex justify-center items-center -ms-3 w-full"
                                     >
-                                        <SelectItem :value="country.value">
+                                        <SelectItem :value="c.value">
                                             <div class="flex w-full">
                                                 <LayoutsAppImage
-                                                    :src="country.icon"
-                                                    :alt="country.name"
+                                                    :src="c.icon"
+                                                    :alt="c.name"
                                                     class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
                                                     format="png"
                                                 />
                                                 <div class="sm:text-xs xl:text-sm">
-                                                    {{ country.label }}
+                                                    {{ c.label }}
                                                 </div>
                                             </div>
                                         </SelectItem>
@@ -245,7 +245,10 @@
                     </div>
 
                     <div class="col-span-2">
-                        <Select v-model="formData.language">
+                        <Select
+                            v-model="formData.language"
+                            disabled
+                        >
                             <SelectTrigger
                                 class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
                                 position="right"
@@ -271,6 +274,17 @@
                             </SelectContent>
                         </Select>
                     </div>
+
+                    <div class="col-span-2 lg:col-span-2">
+                        <InputIcon
+                            v-model="formData.identifierNumber"
+                            :icon="IdentificationIcon"
+                            size="md"
+                            :placeholder="identifierLabel"
+                        />
+                    </div>
+
+                    <br>
 
                     <div class="col-span-2">
                         <label class="text-sm font-medium text-gray-700">
@@ -351,153 +365,7 @@
                         </Select>
                     </div>
 
-                    <div class="col-span-2 lg:col-span-2">
-                        <InputIcon
-                            v-model="formData.identifierNumber"
-                            :icon="IdentificationIcon"
-                            size="md"
-                            :placeholder="identifierLabel"
-                        />
-                    </div>
-
-                    <div class="col-span-2 lg:col-span-4">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">
-                                Quel rayon de recherche préférez-vous ?
-                            </label>
-
-                            <InputIcon
-                                v-model="formData.radiusKm"
-                                :icon="MapIcon"
-                                class="w-full"
-                                size="md"
-                                :placeholder="'5 km'"
-                            />
-
-                            <label class="text-[0.65rem]"> Ce rayon s’applique aux recherches de remplacement autour de vos codes postaux préférés.</label>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2 lg:col-span-4">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">
-                                Quels sont vos préférences pour une remplacement ?
-                            </label>
-
-                            <div class="hidden lg:flex space-x-4">
-                                <div class="flex-1">
-                                    <InputTagManager
-                                        v-model="formData.zipCodesArray"
-                                        :icon="InboxArrowDownIcon"
-                                        label="Codes postaux *"
-                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
-                                        :is-mobile="false"
-                                        :comma-validation="false"
-                                        @keydown.enter.prevent
-                                    />
-                                </div>
-
-                                <div class="flex-1">
-                                    <InputTagManager
-                                        v-model="formData.citiesArray"
-                                        :icon="BuildingOffice2Icon"
-                                        label="Villes"
-                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
-                                        :is-mobile="false"
-                                        :comma-validation="true"
-                                        :no-space-validation="true"
-                                        @keydown.enter.prevent
-                                    />
-                                </div>
-                            </div>
-                            <div class="block lg:hidden">
-                                <div class="flex-1">
-                                    <InputTagManager
-                                        v-model="formData.zipCodesArray"
-                                        :icon="InboxArrowDownIcon"
-                                        label="Codes postaux *"
-                                        :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
-                                        :is-mobile="true"
-                                        :comma-validation="false"
-                                        @keydown.enter.prevent
-                                    />
-                                </div>
-
-                                <div class="flex-1 mt-4">
-                                    <InputTagManager
-                                        v-model="formData.citiesArray"
-                                        :icon="BuildingOffice2Icon"
-                                        label="Villes"
-                                        :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
-                                        :is-mobile="true"
-                                        :comma-validation="true"
-                                        :no-space-validation="true"
-                                        @keydown.enter.prevent
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-2 lg:col-span-4">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">
-                                Comment nous avez-vous connu ?
-                            </label>
-
-                            <div class="relative w-full">
-                                <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center text-primary">
-                                    <QuestionMarkCircleIcon class="w-6 h-6" />
-                                </div>
-
-                                <select
-                                    v-model="selectedReferral"
-                                    class="w-full appearance-none rounded-full border border-gray-300 py-2 px-4 pl-10 pr-10 text-sm bg-white text-gray-600"
-                                >
-                                    <option
-                                        disabled
-                                        value=""
-                                    >
-                                        Sélectionnez une option
-                                    </option>
-                                    <option
-                                        v-for="option in referral_source"
-                                        :key="option.value"
-                                        :value="option.value"
-                                    >
-                                        {{ option.label }}
-                                    </option>
-                                </select>
-
-                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-primary">
-                                    <svg
-                                        class="h-4 w-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M19 9l-7 7-7-7"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <InputIcon
-                                v-if="formData.referralSource.startsWith('other:')"
-                                :value="formData.referralSource.replace(/^other:/, '')"
-                                placeholder="Veuillez préciser"
-                                :icon="EllipsisHorizontalCircleIcon"
-                                class="w-full"
-                                @input="event => formData.referralSource = `other:${event.target.value}`"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="col-span-2 lg:col-span-4">
+                    <div class="mt-4 col-span-2 lg:col-span-4">
                         <div class="space-y-4">
                             <label class="flex items-start cursor-pointer">
                                 <Checkbox
@@ -562,13 +430,10 @@ import {
     BuildingOffice2Icon,
     MapPinIcon,
     InboxArrowDownIcon,
-    QuestionMarkCircleIcon,
     UserGroupIcon,
-    MapIcon,
 } from '@heroicons/vue/24/solid';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
-import InputTagManager from '~/components/InputTagManager.vue';
 
 import {
     Select,
@@ -604,6 +469,12 @@ const countries = [
         label: 'Belgique',
         name: 'belgique',
         icon: '/icons/belgium.png',
+    },
+    {
+        value: 'fr',
+        label: 'France',
+        name: 'france',
+        icon: '/icons/fr.png',
     },
     {
         value: 'nl',
@@ -643,33 +514,6 @@ const accountOptions = [
     },
 ];
 
-const referral_source = [
-    {
-        label: 'Publicité Facebook',
-        value: 'facebook_ads',
-    },
-    {
-        label: 'Post page Infiswap',
-        value: 'infiswap_post',
-    },
-    {
-        label: 'Communication forum infirmière',
-        value: 'nurse_forum',
-    },
-    {
-        label: 'Moteur de recherche',
-        value: 'search_engine',
-    },
-    {
-        label: 'Bouche à oreille',
-        value: 'word_of_mouth',
-    },
-    {
-        label: 'Autres',
-        value: 'other:',
-    },
-];
-
 const professionalCategory = [
     {
         label: 'Indépendant(e)',
@@ -680,15 +524,6 @@ const professionalCategory = [
         value: 'independent',
     },
 ];
-
-const selectedReferral = computed({
-    get() {
-        return formData.referralSource.startsWith('other:') ? 'other:' : formData.referralSource;
-    },
-    set(val) {
-        formData.referralSource = val;
-    },
-});
 
 const { country } = useCountry();
 

@@ -18,7 +18,7 @@
             <Pricing />
         </div>
     </NuxtLayout> -->
-    <section class="bg-white grid place-content-center">
+    <section class="bg-white grid place-content-center mb-4">
         <TemporaryFree />
     </section>
 </template>

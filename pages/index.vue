@@ -83,7 +83,7 @@
                     Contactez-nous au
                 </h5>
                 <p class="mt-1 text-xl font-bold text-success">
-                    0478.02.33.77
+                    (+32) 478 02 33 77
                 </p>
                 <div class="absolute p-1 rounded-lg bg-success -top-2 -left-2 animate-pulse">
                     <PhoneIcon class="w-4 text-white" />
@@ -115,6 +115,12 @@ replacements.value = (data ?? []) as Replacement[];
 
 useHead({
     title: 'Accueil',
-    meta: [{ name: 'description', content: 'Page d\'accueil....' }],
+    meta: [
+        {
+            name: 'description',
+            content:
+        'InfiSwap – la plateforme de référence du remplacement infirmier. InfiSwap connecte les infirmières et infirmiers indépendants de Belgique et de France pour organiser facilement leurs remplacements : planification des absences (vacances, formation, urgences), recherche de missions, profils vérifiés, messagerie sécurisée et alertes instantanées. Une solution pensée pour assurer la continuité des soins, simplifier l’administratif et développer votre activité. Rejoignez la communauté !',
+        },
+    ],
 });
 </script>

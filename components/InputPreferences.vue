@@ -168,6 +168,7 @@ const user = useState<User>('user');
 
 const emit = defineEmits<{
     (e: 'update:initialZipCodes', value: string[]): void;
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'update:initialCities', value: string[]): void;
     (e: 'open-proposal', value: string): void;
 }>();

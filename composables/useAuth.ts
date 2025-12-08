@@ -238,13 +238,13 @@ export const useAuth = () => {
             method: 'delete',
             body: id,
         });
-    };
+    }
 
-    async function logout() {
+    function logout() {
         loading.value = false;
         try {
             if (!isLoggedIn.value) return;
-            await $apifetch('api/logout', { method: 'post' });
+            $apifetch('api/logout', { method: 'post' });
             user.value = null;
             useCookie(AUTH_TOKEN).value = '';
 
@@ -490,6 +490,12 @@ export const useAuth = () => {
         });
     }
 
+    async function restore(id: number) {
+        return await $apifetch(`/api/admin/users/${id}/restore`, {
+            method: 'PUT',
+        });
+    }
+
     return {
         user,
         users,
@@ -540,6 +546,7 @@ export const useAuth = () => {
         isAdminGroup,
         getRecentUsers,
         validateEmail,
+        restore,
         loading,
     };
 };

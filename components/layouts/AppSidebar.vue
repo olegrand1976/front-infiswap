@@ -231,10 +231,9 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { logout, isCollaborator } = useAuth();
+const { isAdmin, logout, isCollaborator } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
-const { isAdmin } = useAuth();
 const { setOpenMobile, isMobile } = useSidebar();
 const referralDialog = ref(false);
 const closeSidebar = () => {
@@ -340,7 +339,7 @@ const nurseNavigationItems: NavigationItem[] = [
 const adminNavigationItems: NavigationItem[] = [
     {
         label: 'Tableau de bord',
-        route: '/dashboard/admin',
+        route: '/dashboard',
         icon: SquaresPlusIcon,
         visible: true,
     },
