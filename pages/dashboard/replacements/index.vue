@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 md:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
+        <div class="flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
+            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
                 <span>
                     Chercher <strong>un remplacement</strong>
                 </span>
@@ -26,7 +26,7 @@
                 </div>
             </h1>
 
-            <div class="mt-6 md:mt-0 flex justify-between md:justify-end gap-x-2 xl:gap-x-8 items-center">
+            <div class="mt-6 lg:mt-0 flex justify-between lg:justify-end gap-x-2 xl:gap-x-8 items-center">
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button
