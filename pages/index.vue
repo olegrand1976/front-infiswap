@@ -115,6 +115,12 @@ replacements.value = (data ?? []) as Replacement[];
 
 useHead({
     title: 'Accueil',
-    meta: [{ name: 'description', content: 'Page d\'accueil....' }],
+    meta: [
+        {
+            name: 'description',
+            content:
+        'InfiSwap – la plateforme de référence du remplacement infirmier. InfiSwap connecte les infirmières et infirmiers indépendants de Belgique et de France pour organiser facilement leurs remplacements : planification des absences (vacances, formation, urgences), recherche de missions, profils vérifiés, messagerie sécurisée et alertes instantanées. Une solution pensée pour assurer la continuité des soins, simplifier l’administratif et développer votre activité. Rejoignez la communauté !',
+        },
+    ],
 });
 </script>
