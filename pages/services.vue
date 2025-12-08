@@ -542,6 +542,13 @@
 <script lang="ts" setup>
 useHead({
     title: 'Services',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'Découvrez les services InfiSwap, la plateforme complète dédiée aux infirmiers indépendants. Recherche de remplacements, notifications en temps réel, gestion de planning, communication sécurisée, création de page professionnelle avec NursTech, assurances spécialisées avec NursAssur et outils d’organisation adaptés à votre activité. Simplifiez votre quotidien et développez votre activité infirmière grâce à InfiSwap.',
+        },
+    ],
 });
 
 definePageMeta({

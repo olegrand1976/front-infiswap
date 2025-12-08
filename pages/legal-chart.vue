@@ -88,7 +88,13 @@ const validateCharte = () => {
 
 useHead({
     title: 'Charte de Bonne Conduite',
-    meta: [{ name: 'description', content: '' }],
+    meta: [
+        {
+            name: 'description',
+            content:
+                'Découvrez la Charte de Bonne Conduite d’InfiSwap : règles de respect, éthique professionnelle, confidentialité et engagement entre infirmiers remplaçants et titulaires. Une ligne de conduite essentielle pour garantir confiance, professionnalisme et qualité des remplacements au sein de la communauté InfiSwap.',
+        },
+    ],
 });
 
 definePageMeta({

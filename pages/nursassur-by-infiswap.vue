@@ -29,7 +29,14 @@ const items = [
 ];
 
 useHead({
-    title: 'NursAssur - by infiswap',
+    title: 'NursAssur',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'NursAssur - InfiSwap : comparez et choisissez les meilleures assurances professionnelles pour infirmiers indépendants. Responsabilité civile, protection juridique, prévoyance, hospitalisation, assurance véhicule professionnel et solutions de crédit personnalisées.',
+        },
+    ],
 });
 
 definePageMeta({

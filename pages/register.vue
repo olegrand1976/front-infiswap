@@ -588,5 +588,12 @@ definePageMeta({
 
 useHead({
     title: 'Inscription',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'Inscrivez-vous sur InfiSwap et rejoignez la plateforme dédiée aux infirmiers indépendants. Trouvez des remplacements, organisez vos absences, gérez vos missions et rejoignez une communauté professionnelle active en Belgique et en France.',
+        },
+    ],
 });
 </script>

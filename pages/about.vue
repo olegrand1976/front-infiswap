@@ -204,7 +204,14 @@ const cards = [
 ];
 
 useHead({
-    title: 'A propos',
+    title: 'À propos',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'InfiSwap est la plateforme innovante pour les infirmiers libéraux, facilitant la gestion des remplacements, la planification des tournées et le suivi des formations. Simplifiez vos missions, optimisez votre planning, développez votre réseau professionnel et concentrez-vous sur l’essentiel : soigner vos patients.',
+        },
+    ],
 });
 
 definePageMeta({
