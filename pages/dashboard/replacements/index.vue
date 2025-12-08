@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 md:w-[45%] lg:w-[45%] xl:w-[55%] 2xl:w-[65%] sm:px-9 rounded-lg">
+            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 md:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
                 <span>
                     Chercher <strong>un remplacement</strong>
                 </span>
@@ -85,7 +85,37 @@
                 </DropdownMenu>
 
                 <div
-                    v-if="user.profile.country != 'fr'"
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
+                    <h5 class="text-sm">
+                        Pays
+                    </h5>
+                    <Select v-model="selectedCountry">
+                        <SelectTrigger
+                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
+                            position="right"
+                        >
+                            <SelectValue
+                                :placeholder="countries[selectedCountry]"
+                                class="text-xs text-black w-[200%] truncate"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup class="w-32 truncate">
+                                <SelectItem
+                                    v-for="[code, label] in Object.entries(countries)"
+                                    :key="code"
+                                    :value="code"
+                                >
+                                    {{ label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div
+                    v-if="selectedCountry != 'fr'"
                     class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
                 >
                     <h5 class="text-sm">
@@ -201,6 +231,7 @@
         <Replacement
             v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
+            :selected-country="selectedCountry"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
         />
@@ -215,6 +246,12 @@ import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
 
 const user = useState<User>('user');
+const selectedCountry = ref(user.value.profile.country);
+
+const countries = {
+    fr: 'France',
+    be: 'Belgique',
+};
 
 const replacementTypeFilters = {
     all: 'Tous',

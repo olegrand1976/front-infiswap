@@ -77,7 +77,7 @@
                                             v-model="postalCodeInput"
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            :placeholder="user.profile.country == 'fr' ? 75000 : 1000"
+                                            :placeholder="props.selectedCountry == 'fr' ? 75000 : 1000"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(postalCodeInput, formData.postalCodeTags)"
                                         />
@@ -121,7 +121,7 @@
                                             v-model="cityInput"
                                             :class="[groupsByProvince && Object.keys(groupsByProvince).length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            :placeholder="user.profile.country == 'fr' ? 'Paris' : 'Bruxelles'"
+                                            :placeholder="props.selectedCountry == 'fr' ? 'Paris' : 'Bruxelles'"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(cityInput, formData.cityTags)"
                                         />
@@ -1583,7 +1583,7 @@
                 <DialogHeader>
                     <DialogTitle>Zone géographique</DialogTitle>
                     <DialogDescription>
-                        <template v-if="user.profile.country == 'fr' && user.profile.working_at == 'France'">
+                        <template v-if="user.profile.country == 'fr'">
                             Entrez et cochez une ou plusieurs départements pour filtrer les remplacements.
                         </template>
                         <template v-else>
@@ -1591,7 +1591,7 @@
                         </template>
                     </DialogDescription>
                 </DialogHeader>
-                <template v-if="user.profile.country == 'fr'">
+                <template v-if="selectedCountry == 'fr'">
                     <div class="py-4">
                         <InputIcon
                             v-model="searchQuery"
@@ -1734,6 +1734,11 @@ const props = defineProps({
         required: false,
         default: () => [],
     },
+    selectedCountry: {
+        type: String,
+        required: false,
+        default: 'be',
+    },
 });
 
 const selectedUser = ref(null);
@@ -1773,7 +1778,7 @@ onMounted(async () => {
         isMobileView.value = window.innerWidth <= 1024;
     }
 
-    if (user.value.profile.country === 'fr' && user.value.profile.working_at === 'France') {
+    if (user.value.profile.country === 'fr') {
         displayedDepartments.value = getRandomItems(departments, 6);
     }
 });
@@ -1895,6 +1900,15 @@ watch(() => props.filters, (newFilters) => {
     }
 }, { deep: true });
 
+watch(
+    () => props.selectedCountry,
+    (newCountry) => {
+        if (newCountry) {
+            fetchInitialData(page.value, perPage.value, newCountry);
+        }
+    },
+);
+
 const isUrgentReplacement = (replacement) => {
     return replacement.type == 'immediate' && replacement.details.length > 0;
 };
@@ -1939,7 +1953,7 @@ const formData = reactive({
             : [],
     selectedDays: [],
     type: props.type,
-    country: user.value.profile.country,
+    country: props.selectedCountry,
     filters: localFilters,
 });
 
@@ -2016,14 +2030,14 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
+const fetchInitialData = async (page = 1, perPage = PERPAGE, country = props.selectedCountry) => {
     try {
         const response = await fetchReplacements({
             postalCode: [],
             cities: [],
             selectedDays: [],
             type: props.type,
-            country: user.value.profile.country,
+            country: country,
             filters: localFilters,
             provinces: newRegions,
             page,
