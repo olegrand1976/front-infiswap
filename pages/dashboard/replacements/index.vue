@@ -330,6 +330,10 @@ watch(selectedFilters, (newFilters) => {
     filterCookies.value = newFilters;
 }, { deep: true });
 
+watch(selectedCountry, () => {
+    selectedRegions.value = [];
+});
+
 useHead({
     title: 'Chercher un remplacement',
 });
