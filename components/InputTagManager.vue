@@ -76,7 +76,6 @@ const emit = defineEmits(['update:modelValue', 'item-added', 'item-removed', 'op
 
 const inputValue = ref('');
 const items = ref([...props.modelValue]);
-const { $toast } = useNuxtApp();
 
 watch(
     () => props.modelValue,
@@ -85,22 +84,8 @@ watch(
     },
 );
 
-const MAX_ITEMS = 4;
-
-const canAddMore = computed(() => items.value.length < MAX_ITEMS);
-
 const addItem = () => {
     const value = inputValue.value.trim().replace(/[,\s]+$/, '');
-
-    if (!canAddMore.value) {
-        $toast({
-            variant: 'destructive',
-            description: 'Limite d\'ajout atteint',
-        });
-
-        inputValue.value = '';
-        return;
-    }
 
     if (value && !items.value.includes(value)) {
         items.value.push(value);
