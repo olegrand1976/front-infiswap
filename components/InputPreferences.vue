@@ -17,9 +17,9 @@
                         />
                         <Button
                             class="bg-primary text-white rounded-full hover:bg-primary/90 h-10"
-                            @click="zipInputs[i - 1] ? removeZip(i - 1) : saveZip(i - 1)"
+                            @click="isInitialZip(i - 1) ? removeZip(i - 1) : saveZip(i - 1)"
                         >
-                            {{ zipInputs[i - 1] ? 'Retirer' : 'Ajouter' }}
+                            {{ isInitialZip(i - 1) ? 'Retirer' : 'Ajouter' }}
                         </Button>
                     </div>
                 </div>
@@ -42,9 +42,9 @@
                         <Button
                             size="sm"
                             class="bg-primary text-white rounded-full hover:bg-primary/90 h-10"
-                            @click="cityInputs[i - 1] ? removeCity(i - 1) : saveCity(i - 1)"
+                            @click="isInitialCity(i - 1) ? removeCity(i - 1) : saveCity(i - 1)"
                         >
-                            {{ cityInputs[i - 1] ? 'Retirer' : 'Ajouter' }}
+                            {{ isInitialCity(i - 1) ? 'Retirer' : 'Ajouter' }}
                         </Button>
                     </div>
                 </div>
@@ -135,6 +135,18 @@ async function savePreferences(addedValue?: string) {
     catch (err) {
         console.error(err);
     }
+}
+
+function isInitialZip(index: number) {
+    const initial = props.initialZipCodes[index] || '';
+    const current = zipInputs.value[index] || '';
+    return current === initial && current.trim() !== '';
+}
+
+function isInitialCity(index: number) {
+    const initial = props.initialCities[index] || '';
+    const current = cityInputs.value[index] || '';
+    return current === initial && current.trim() !== '';
 }
 
 async function saveZip(index: number) {
