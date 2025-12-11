@@ -1,5 +1,5 @@
 <template>
-    <div class="space-y-6 lg:pl-20 2xl:pl-0">
+    <div class="space-y-6">
         <section class="grid items-center grid-cols-1 gap-4">
             <NurstechPresentation />
 
