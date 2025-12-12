@@ -844,13 +844,15 @@
                             </Button>
                         </div>
 
-                        <InputPreferences
-                            :initial-zip-codes="zipCodes"
-                            :initial-cities="cities"
-                            @update:initial-zip-codes="updateZipCodes"
-                            @update:initial-cities="updateCities"
-                            @open-proposal="openProposalDialog"
-                        />
+                        <div class="mt-4">
+                            <InputPreferences
+                                :initial-zip-codes="zipCodes"
+                                :initial-cities="cities"
+                                @update:initial-zip-codes="updateZipCodes"
+                                @update:initial-cities="updateCities"
+                                @open-proposal="openProposalDialog"
+                            />
+                        </div>
 
                         <ProposalLocationModal
                             v-model="proposalDialog"
@@ -864,7 +866,7 @@
                             @update:initial-cities="updateCities"
                         />
 
-                        <div class="mt-12 lg:mt-4 space-y-3">
+                        <div class="mt-12 lg:mt-6 space-y-3">
                             <div
                                 class="block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full opacity-70 cursor-not-allowed"
                             >

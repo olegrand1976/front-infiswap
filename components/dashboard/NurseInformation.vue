@@ -226,8 +226,8 @@
         </section>
 
         <section class="flex flex-col items-stretch w-full lg:flex-row gap-6">
-            <div class="w-full bg-white rounded-lg shadow-lg lg:w-1/2">
-                <div class="p-4 bg-gray-100 rounded">
+            <div class="w-full bg-gray-100 rounded-lg shadow-lg lg:w-1/2">
+                <div class="p-4 rounded">
                     <div class="flex items-center justify-between text-primary">
                         <h2>
                             Mes préférences
@@ -240,7 +240,12 @@
                             Boost IA
                         </Button>
                     </div>
-                    <div class="sm:mt-4">
+
+                    <p class="hidden mt-4 text-sm text-gray-600 2xl:block">
+                        Entrez vos codes postaux et villes préférés afin de personnaliser vos résultats. Vous pouvez ajuster vos préférences à tout moment pour que les suggestions correspondent exactement à vos besoins.
+                    </p>
+
+                    <div class="sm:mt-4 2xl:mt-6">
                         <InputPreferences
                             :initial-zip-codes="zipCodes"
                             :initial-cities="cities"
@@ -262,7 +267,11 @@
                         @update:initial-cities="updateCities"
                     />
 
-                    <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-16 sm:mt-4 overflow-hidden">
+                    <p class="hidden mt-8 text-sm text-gray-600 2xl:block">
+                        Indiquez la distance autour de votre localisation pour vos recherches.
+                    </p>
+
+                    <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-8 sm:mt-8 2xl:mt-6 overflow-hidden">
                         <div class="flex flex-col mb-4 sm:bg-primary sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
                             <label class="ml-3 font-semibold sm:ml-0 text-primary sm:font-normal sm:text-white">
                                 <span>Rayon de recherche</span>
@@ -287,9 +296,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="w-full lg:w-1/2 space-y-8">
                 <div class="flex flex-col w-full bg-white rounded-lg shadow-lg">
-                    <div class="p-5 mt-8 bg-gray-200 rounded">
+                    <div class="p-5 bg-gray-200 rounded">
                         <UserIcon class="w-8 opacity-80 " />
                     </div>
                     <div class="p-4">
@@ -301,28 +312,28 @@
                         </p>
                     </div>
                 </div>
-            </div>
 
-            <div class="w-full bg-white rounded-lg shadow-lg lg:w-1/2">
-                <h3 class="p-3 text-white rounded-t-lg bg-primary">
-                    Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
-                </h3>
-                <div v-if="loading">
-                    <Skeleton class="h-64 m-8 bg-gray-200" />
-                </div>
-                <div
-                    v-else
-                    class="p-4"
-                >
-                    <ClientOnly>
-                        <LineChart
-                            :data="formattedData"
-                            index="month"
-                            :categories="['annonces']"
-                            :colors="['hsl(var(--primary))']"
-                            :y-formatter="(tick) => `${tick}`"
-                        />
-                    </ClientOnly>
+                <div class=" bg-white rounded-lg shadow-lg ">
+                    <h3 class="p-3 text-white rounded-t-lg bg-primary">
+                        Nombres d'annonces auxquelles j'ai répondu sur InfiSwap par mois
+                    </h3>
+                    <div v-if="loading">
+                        <Skeleton class="h-64 m-8 bg-gray-200" />
+                    </div>
+                    <div
+                        v-else
+                        class="p-4"
+                    >
+                        <ClientOnly>
+                            <LineChart
+                                :data="formattedData"
+                                index="month"
+                                :categories="['annonces']"
+                                :colors="['hsl(var(--primary))']"
+                                :y-formatter="(tick) => `${tick}`"
+                            />
+                        </ClientOnly>
+                    </div>
                 </div>
             </div>
         </section>
