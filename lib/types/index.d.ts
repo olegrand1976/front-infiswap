@@ -94,6 +94,7 @@ export type User = {
     referred_by?: Referrer;
     restored_by?: User;
     restored_at?: string;
+    referral_source?: string;
 };
 
 type LastProductModifications = {

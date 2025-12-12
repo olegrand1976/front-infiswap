@@ -7,13 +7,21 @@
                     <div
                         v-for="i in 4"
                         :key="'zip-' + i"
-                        class="flex items-center gap-2 rounded-full border border-primary bg-white"
+                        class="flex relative items-center gap-2 rounded-full border border-primary bg-white"
                     >
+                        <div
+                            v-if="showZipTooltip[i - 1]"
+                            class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
+                        >
+                            Cliquez sur “Ajouter” pour valider votre saisie.
+                        </div>
+
                         <InputIcon
                             v-model="zipInputs[i - 1]"
                             type="text"
                             :placeholder="user.profile.country === 'fr' ? '75000' : '1000'"
                             class="border-none flex-1 w-full"
+                            @input="onZipInput(i - 1)"
                         />
                         <Button
                             class="bg-primary text-white rounded-full hover:bg-primary/90 h-10"
@@ -31,13 +39,21 @@
                     <div
                         v-for="i in 4"
                         :key="'city-' + i"
-                        class="flex items-center gap-2 rounded-full border border-primary bg-white"
+                        class="flex relative items-center gap-2 rounded-full border border-primary bg-white"
                     >
+                        <div
+                            v-if="showCityTooltip[i - 1]"
+                            class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
+                        >
+                            Cliquez sur “Ajouter” pour valider votre saisie.
+                        </div>
+
                         <InputIcon
                             v-model="cityInputs[i - 1]"
                             type="text"
                             :placeholder="user.profile.country === 'fr' ? 'Paris' : 'Bruxelles'"
                             class="border-none flex-1 w-full"
+                            @input="onCityInput(i - 1)"
                         />
                         <Button
                             size="sm"
@@ -75,6 +91,9 @@ const user = useState<User>('user');
 
 const zipCodes = ref([...props.initialZipCodes]);
 const cities = ref([...props.initialCities]);
+
+const showZipTooltip = ref([false, false, false, false]);
+const showCityTooltip = ref([false, false, false, false]);
 
 const zipInputs = ref([
     props.initialZipCodes[0] || '',
@@ -149,15 +168,27 @@ function isInitialCity(index: number) {
     return current === initial && current.trim() !== '';
 }
 
+function onZipInput(index: number) {
+    const value = zipInputs.value[index].trim();
+    showZipTooltip.value[index] = value !== '' && !isInitialZip(index);
+}
+
+function onCityInput(index: number) {
+    const value = cityInputs.value[index].trim();
+    showCityTooltip.value[index] = value !== '' && !isInitialCity(index);
+}
+
 async function saveZip(index: number) {
     const value = zipInputs.value[index].trim();
     if (!value) return;
+    showZipTooltip.value[index] = false;
     await savePreferences(value);
 }
 
 async function saveCity(index: number) {
     const value = cityInputs.value[index].trim();
     if (!value) return;
+    showCityTooltip.value[index] = false;
     await savePreferences(value);
 }
 
