@@ -562,9 +562,9 @@ const arePreferencesEmpty = () => {
 
         const hasZipCodes = settings.replacement?.zip_codes?.filter(Boolean).length > 0;
         const hasCities = settings.replacement?.cities?.filter(Boolean).length > 0;
-        const hasRadius = settings.radius_km && settings.radius_km !== '0' && settings.radius_km !== '';
+        const hasReferral = user.value.referral_source !== '';
 
-        return !(hasZipCodes || hasCities || hasRadius);
+        return !(hasZipCodes && hasCities && hasReferral);
     }
     catch {
         return true;
@@ -678,7 +678,7 @@ const selectedReferral = computed({
 });
 
 const formData = reactive({
-    referralSource: '',
+    referralSource: user.value.referral_source ?? '',
     zipCodesArray: [],
     citiesArray: [],
     radiusKm: '',
@@ -690,12 +690,16 @@ watch(configDialog, (isOpen) => {
         formData.zipCodesArray = settings.replacement?.zip_codes || [];
         formData.citiesArray = settings.replacement?.cities || [];
         formData.radiusKm = settings.radius_km || 5;
-        formData.referralSource = settings.referral_source || '';
+        formData.referralSource = user.value.referral_source || '';
     }
 });
 
 const handleSetPreference = async () => {
     try {
+        if (formData.referralSource) {
+            await useAuth().updateField(user.value.id, { referral_source: formData.referralSource });
+        }
+
         await createPreferences({
             key: 'replacement',
             value: {
