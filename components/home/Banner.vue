@@ -150,7 +150,7 @@
                 </p>
             </div>
         </div>
-        <div class="flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
+        <div class="z-40 flex justify-center mt-6 lg:mt-0 lg:items-center lg:justify-center col-span-6 lg:col-span-1">
             <a
                 href="/dashboard/replacements/immediate"
                 class="transition-transform transform hover:scale-105"
