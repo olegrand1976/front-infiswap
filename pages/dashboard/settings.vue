@@ -1,6 +1,12 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary mt-4"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
             <h1 class="text-primary">
                 Paramètres
             </h1>
@@ -1130,6 +1136,7 @@ import {
 } from '@heroicons/vue/24/solid';
 
 import { useRouter } from 'vue-router';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1138,6 +1145,7 @@ import { useAuth } from '~/composables/useAuth';
 import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
 const router = useRouter();

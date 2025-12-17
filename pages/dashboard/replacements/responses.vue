@@ -1,6 +1,12 @@
 <template>
     <div>
-        <h1 class="p-3 text-primary mb-4 rounded-lg font-bold">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary mt-4"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <h1 class="mt-6 p-3 text-primary mb-4 rounded-lg font-bold">
             Historique de mes réponses
         </h1>
 
@@ -302,10 +308,11 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const { listResponse, getReplacementResponses } = useListResponse(user.value.id);

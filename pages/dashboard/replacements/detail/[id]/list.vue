@@ -1,8 +1,10 @@
 <template>
     <div class="pt-3">
-        <Button @click="goBack">
-            Retour
-        </Button>
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
 
         <h1 class="mt-4 rounded bg-gray-100 text-primary text-center lg:text-start font-bold p-2 lg:p-4">
             <span class="hidden lg:inline-block">Personnes intéressées par mon remplacement</span>
@@ -99,17 +101,15 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { CheckCircleIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import { goBack } from '~/lib/utils';
 
 const { changeStatus } = changeStatusReplacement();
 
 const route = useRoute();
 const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
-
-const goBack = () => {
-    window.history.back();
-};
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
 
