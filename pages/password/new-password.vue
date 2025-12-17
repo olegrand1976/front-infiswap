@@ -194,12 +194,9 @@ const resetPassword = async () => {
     };
 
     try {
-        const response = await $apifetch('/api/reset-password', {
+        const response = await $apifetch('api/reset-password', {
             method: 'POST',
             body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-            },
         });
 
         if (response && response.data && response.data.success) {
