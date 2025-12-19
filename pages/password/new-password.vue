@@ -217,11 +217,11 @@ const resetPassword = async () => {
             }, 2000);
         }
     }
-    catch (error) {
+    catch (error: any) {
         console.error('Erreur lors de l\'envoi des données :', error);
         $toast({
             title: 'Oups! Une erreur s\'est produite',
-            description: 'Échec de l\'envoi du formulaire',
+            description: error.data?.message || 'Échec de l\'envoi du formulaire',
             variant: 'destructive',
         });
     }
