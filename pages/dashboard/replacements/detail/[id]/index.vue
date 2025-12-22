@@ -145,10 +145,10 @@
                             </div>
                             <div class="mt-4 space-y-4">
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
-                                    <span>Nom : {{ replacement.user_full_name }}</span>
+                                    <span>Nom : {{ replacement.user.full_name }}</span>
                                 </div>
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
-                                    <span>Téléphone : {{ replacement.user_phone_number }}</span>
+                                    <span>Téléphone : {{ replacement.user.phone_number }}</span>
                                 </div>
                             </div>
                         </div>
