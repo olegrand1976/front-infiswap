@@ -455,7 +455,7 @@
                             v-if="demandPartners.data.length > 0"
                             :default-page="page"
                             :per-page="perPage"
-                            :total="demandPartners.total"
+                            :total="demandPartners.meta.total"
                             @update:page="changePage"
                             @update:per-page="changePerPage"
                         />
@@ -681,7 +681,7 @@ const cancelSelection = () => {
     responseDialog.value = null;
 };
 
-const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership } = usePartners();
+const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership, count } = usePartners();
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -707,13 +707,14 @@ const acceptFilterPreference = async () => {
 };
 
 const fetchInitialData = async (pageNum, perPageNum) => {
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: pageNum,
-        perPage: perPageNum,
-    });
+    await fetchDemandPartners(
+        pageNum,
+        perPageNum,
+        {
+            zip_code: searchFormData.postalCodeTags,
+            city: searchFormData.cityTags,
+            type: searchFormData.type,
+        });
 };
 
 const closePartenershipDialog = ref(false);
@@ -738,13 +739,15 @@ const handleClosePartenership = async (partnership) => {
 const isSubmitted = ref(false);
 
 const loadDemandPartners = async () => {
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        // type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await fetchDemandPartners(
+        page.value,
+        perPage.value,
+        {
+            zip_code: searchFormData.postalCodeTags,
+            city: searchFormData.cityTags,
+            type: searchFormData.type,
+        },
+    );
 };
 
 const handleBlur = (event) => {
@@ -773,13 +776,14 @@ const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
     searchFormData.type = newTab;
     page.value = 1;
-    await fetchDemandPartners({
-        postalCode: searchFormData.postalCodeTags,
-        cities: searchFormData.cityTags,
-        type: searchFormData.type,
-        page: page.value,
-        perPage: perPage.value,
-    });
+    await fetchDemandPartners(
+        page.value,
+        perPage.value,
+        {
+            zip_code: searchFormData.postalCodeTags,
+            city: searchFormData.cityTags,
+            type: searchFormData.type,
+        });
 };
 
 const search = async () => {

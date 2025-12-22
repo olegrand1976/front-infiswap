@@ -362,6 +362,12 @@ const adminNavigationItems: NavigationItem[] = [
         visible: !isCollaborator.value,
     },
     {
+        label: 'Binômes',
+        route: '/dashboard/admin/partners',
+        icon: UsersIcon,
+        visible: !isCollaborator.value,
+    },
+    {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
         icon: UserGroupIcon,
