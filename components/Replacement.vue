@@ -77,7 +77,7 @@
                                             v-model="postalCodeInput"
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="1000"
+                                            :placeholder="props.selectedCountry == 'fr' ? 75000 : 1000"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(postalCodeInput, formData.postalCodeTags)"
                                         />
@@ -121,7 +121,7 @@
                                             v-model="cityInput"
                                             :class="[groupsByProvince && Object.keys(groupsByProvince).length > 0 ? 'w-1/2' : 'w-full']"
                                             class="text-xs flex items-center"
-                                            placeholder="Bruxelles"
+                                            :placeholder="props.selectedCountry == 'fr' ? 'Paris' : 'Bruxelles'"
                                             @blur="handleBlur"
                                             @keydown.enter="() => addTag(cityInput, formData.cityTags)"
                                         />
@@ -168,6 +168,18 @@
                                         :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
                                                  gridColsByType[props.type] ?? 'grid-cols-8']"
                                     >
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                        >
+                                            Nom complet
+                                        </TableHead>
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                        >
+                                            Téléphone
+                                        </TableHead>
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Jour
                                         </TableHead>
@@ -249,22 +261,40 @@
                                             ]"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell
-                                                :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
+                                                v-if="props.type === ''"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div
+                                                    class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                                    @click="handleShowInfoUser(replacementGroup.user)"
+                                                >
+                                                    {{ replacementGroup.user.full_name }}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                v-if="props.type === ''"
+                                                class="bg-gray-100 text-xs pt-5"
+                                            >
+                                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {{ replacementGroup.user.phone_number }}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]"
                                             >
                                                 <template v-if="replacementGroup.periods.length > 0">
                                                     <div
                                                         v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                         :key="index"
-                                                        class="flex items-center"
+                                                        class="flex flex-col 2xl:flex-row items-center"
                                                     >
                                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                             <span>{{ formatDate(period.start_date) }}</span>
@@ -405,7 +435,7 @@
                                                     {{ roles[replacementGroup.role_type] }}
                                                 </div>
                                             </TableCell>
-                                            <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <TableCell class="text-xs flex -mt-12 2xl:mt-0 items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger>
@@ -495,6 +525,18 @@
                                     :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
                                              gridColsByType[props.type] ?? 'grid-cols-8']"
                                 >
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                    >
+                                        Nom complet
+                                    </TableHead>
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs"
+                                    >
+                                        Téléphone
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Jour
                                     </TableHead>
@@ -576,20 +618,38 @@
                                         ]"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
-                                        <TableCell :class="[cn('flex justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
+                                        <TableCell
+                                            v-if="props.type === ''"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div
+                                                class="pt-3 h-10 cursor-pointer rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                                @click="handleShowInfoUser(replacementGroup.user)"
+                                            >
+                                                {{ replacementGroup.user.full_name }}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell
+                                            v-if="props.type === ''"
+                                            class="bg-gray-100 text-xs pt-5"
+                                        >
+                                            <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
+                                                {{ replacementGroup.user.phone_number }}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': replacementGroup.periods.length > 0 })]">
                                             <template v-if="replacementGroup.periods.length > 0">
                                                 <div
                                                     v-for="(period, index) in replacementGroup.periods.slice(0, 2)"
                                                     :key="index"
-                                                    class="flex flex-col items-center mb-2"
+                                                    class="flex flex-col 2xl:flex-row items-center mb-2"
                                                 >
                                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                                         <span>{{ formatDate(period.start_date) }}</span>
@@ -730,7 +790,7 @@
                                                 {{ roles[replacementGroup.role_type] }}
                                             </div>
                                         </TableCell>
-                                        <TableCell class="text-xs flex items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                        <TableCell class="text-xs flex -mt-12 2xl:mt-0 items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                             <template v-if="props.type === 'me'">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger>
@@ -827,10 +887,19 @@
                             <Table>
                                 <TableHeader class="w-full">
                                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                        <TableHead
+                                            v-if="props.type === ''"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
+                                            Nom complet
+                                        </TableHead>
                                         <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                             Date
                                         </TableHead>
-                                        <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                        <TableHead
+                                            v-if="props.type === 'me'"
+                                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                        >
                                             Localité
                                         </TableHead>
                                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -862,13 +931,12 @@
                                             class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                         >
                                             <div
-                                                v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                                v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                                 :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                            { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                             { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                                 )]"
                                             >
-                                                {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                                URGENT
                                             </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
@@ -910,7 +978,7 @@
                                                     </div>
                                                 </template>
                                             </TableCell>
-                                            <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                            <TableCell class="bg-[#F1F2F7] flex flex-col justify-center w-full py-auto items-center text-xs px-2 py-4">
                                                 <div class="bg-[#E4E7F4] rounded p-2">
                                                     <TooltipProvider>
                                                         <Tooltip>
@@ -946,7 +1014,7 @@
                                                     </TooltipProvider>
                                                 </div>
                                             </TableCell>
-                                            <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                            <TableCell class="text-xs flex flex-col justify-center w-full py-auto items-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                                 <div class="flex flex-col items-center justify-center space-y-2">
                                                     <template v-if="props.type === 'me'">
                                                         <DropdownMenu>
@@ -1035,10 +1103,19 @@
                         <Table>
                             <TableHeader class="w-full">
                                 <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
+                                    <TableHead
+                                        v-if="props.type === ''"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
+                                        Nom complet
+                                    </TableHead>
                                     <TableHead class="bg-primary w-full xl:col-span-1 lg:col-span-[1.5] flex justify-center items-center text-white text-xs">
                                         Date
                                     </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                                    <TableHead
+                                        v-if="props.type === 'me'"
+                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                                    >
                                         Localité
                                     </TableHead>
                                     <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -1070,13 +1147,12 @@
                                         class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                                     >
                                         <div
-                                            v-if="isUrgentReplacement(replacementGroup) || replacementGroup.replaced_by !== null || replacementGroup.status == 'closed'"
+                                            v-if="isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null"
                                             :class="[cn('-ml-[-2] text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                                        { 'bg-yellow-400': replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' },
                                                         { 'bg-primary text-white ': replacementGroup.type == 'immediate' && replacementGroup.replaced_by == null && replacementGroup.status == 'open' },
                                             )]"
                                         >
-                                            {{ replacementGroup.replaced_by !== null || replacementGroup.status == 'closed' ? 'FERMÉ' : 'URGENT' }}
+                                            URGENT
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1118,7 +1194,7 @@
                                                 </div>
                                             </template>
                                         </TableCell>
-                                        <TableCell class="bg-[#F1F2F7] text-xs px-2 py-4">
+                                        <TableCell class="bg-[#F1F2F7] flex flex-col justify-center w-full py-auto items-center text-xs px-2 py-4">
                                             <div class="bg-[#E4E7F4] rounded p-2">
                                                 <TooltipProvider>
                                                     <Tooltip>
@@ -1154,7 +1230,7 @@
                                                 </TooltipProvider>
                                             </div>
                                         </TableCell>
-                                        <TableCell class="text-xs bg-[#F1F2F7] overflow-x-hidden pt-4">
+                                        <TableCell class="text-xs flex flex-col justify-center w-full py-auto items-center bg-[#F1F2F7] overflow-x-hidden pt-4">
                                             <div class="flex flex-col items-center justify-center space-y-2">
                                                 <template v-if="props.type === 'me'">
                                                     <DropdownMenu>
@@ -1505,35 +1581,75 @@
         >
             <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Zone géographique (province)</DialogTitle>
+                    <DialogTitle>Zone géographique</DialogTitle>
                     <DialogDescription>
-                        Cochez une ou plusieurs provinces pour filtrer les remplacements.
+                        <template v-if="user.profile.country == 'fr'">
+                            Entrez et cochez une ou plusieurs départements pour filtrer les remplacements.
+                        </template>
+                        <template v-else>
+                            Cochez une ou plusieurs provinces pour filtrer les remplacements.
+                        </template>
                     </DialogDescription>
                 </DialogHeader>
-                <div class="grid sm:grid-cols-2 gap-4 py-4">
-                    <div
-                        v-for="region in regions"
-                        :key="region"
-                        class="flex items-center"
-                    >
-                        <label
-                            :for="region"
-                            class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
-                            :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
-                        >
-                            <Checkbox
-                                :id="region"
-                                :checked="selectedRegions.includes(region)"
-                                :value="region"
-                                class="group-hover:border-white"
-                                @update:checked="updateRegionSelection(region, $event)"
-                            />
-                            <span class="ml-1">
-                                {{ region }}
-                            </span>
-                        </label>
+                <template v-if="selectedCountry == 'fr'">
+                    <div class="py-4">
+                        <InputIcon
+                            v-model="searchQuery"
+                            placeholder="Entrer un département"
+                        />
+
+                        <div class="grid sm:grid-cols-2 gap-4 mt-8">
+                            <div
+                                v-for="region in filteredDepartments"
+                                :key="region"
+                                class="flex items-center"
+                            >
+                                <label
+                                    :for="region"
+                                    class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
+                                    :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
+                                >
+                                    <Checkbox
+                                        :id="region"
+                                        :checked="selectedRegions.includes(region)"
+                                        :value="region"
+                                        class="group-hover:border-white"
+                                        @update:checked="updateRegionSelection(region, $event)"
+                                    />
+                                    <span class="ml-1">
+                                        {{ region }}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="grid sm:grid-cols-2 gap-4 py-4">
+                        <div
+                            v-for="region in regions"
+                            :key="region"
+                            class="flex items-center"
+                        >
+                            <label
+                                :for="region"
+                                class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
+                                :class="{ 'bg-primary text-white': selectedRegions.includes(region) }"
+                            >
+                                <Checkbox
+                                    :id="region"
+                                    :checked="selectedRegions.includes(region)"
+                                    :value="region"
+                                    class="group-hover:border-white"
+                                    @update:checked="updateRegionSelection(region, $event)"
+                                />
+                                <span class="ml-1">
+                                    {{ region }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </template>
                 <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
                     <Button
                         variant="secondary"
@@ -1551,6 +1667,19 @@
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        <Dialog
+            v-model:open="showInfoUser"
+            class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+        >
+            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
+                <UsersCard
+                    v-if="showInfoUser"
+                    :user="selectedUser"
+                    :show-full-info="true"
+                />
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -1561,7 +1690,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
-import { regions, selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
+import { regions, departments, selectDays, getPeriodsFromTimeSlot } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1577,6 +1706,11 @@ import { useCareTypes } from '@/composables/useCareTypes';
 const { $toast } = useNuxtApp();
 
 const props = defineProps({
+    selectedRegions: {
+        type: Array as PropType<string[]>,
+        required: false,
+        default: () => [],
+    },
     type: {
         type: String,
         required: false,
@@ -1600,7 +1734,20 @@ const props = defineProps({
         required: false,
         default: () => [],
     },
+    selectedCountry: {
+        type: String,
+        required: false,
+        default: 'be',
+    },
 });
+
+const selectedUser = ref(null);
+const showInfoUser = ref(false);
+
+const handleShowInfoUser = (replacementUser) => {
+    selectedUser.value = replacementUser;
+    showInfoUser.value = true;
+};
 
 type ProvinceGroups = Record<string, Replacement[]>;
 
@@ -1609,7 +1756,6 @@ const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
 const selectedReplacement = ref<Replacement>(null);
-const selectedRegions = ref<string[]>([]);
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const pagination = ref({
@@ -1624,15 +1770,17 @@ const isMobileView = ref(false);
 const gridColsByType: Record<string, string> = {
     'groups': 'grid-cols-8',
     'me': 'grid-cols-6',
-    '': 'grid-cols-7',
+    '': 'grid-cols-9',
 };
 
 onMounted(async () => {
     if (import.meta.client) {
         isMobileView.value = window.innerWidth <= 1024;
     }
-    await fetchCareTypes();
-    await fetchInitialData(page.value, perPage.value);
+
+    if (user.value.profile.country === 'fr') {
+        displayedDepartments.value = getRandomItems(departments, 6);
+    }
 });
 
 const localFilters = reactive({
@@ -1752,6 +1900,15 @@ watch(() => props.filters, (newFilters) => {
     }
 }, { deep: true });
 
+watch(
+    () => props.selectedCountry,
+    (newCountry) => {
+        if (newCountry) {
+            fetchInitialData(page.value, perPage.value, newCountry);
+        }
+    },
+);
+
 const isUrgentReplacement = (replacement) => {
     return replacement.type == 'immediate' && replacement.details.length > 0;
 };
@@ -1796,29 +1953,53 @@ const formData = reactive({
             : [],
     selectedDays: [],
     type: props.type,
+    country: props.selectedCountry,
     filters: localFilters,
 });
 
+const emit = defineEmits(['update:selectedRegions']);
+let newRegions = [...props.selectedRegions];
+let internalUpdate = false;
+
+const searchQuery = ref('');
+const displayedDepartments = ref([]);
+
 const updateRegionSelection = (region: string, checked: boolean) => {
+    internalUpdate = true;
+
     if (checked) {
-        if (!selectedRegions.value.includes(region)) {
-            selectedRegions.value = [...selectedRegions.value, region];
+        if (!newRegions.includes(region)) {
+            newRegions.push(region);
         }
     }
     else {
-        selectedRegions.value = selectedRegions.value.filter(r => r !== region);
+        newRegions = newRegions.filter(r => r !== region);
     }
+    emit('update:selectedRegions', newRegions);
 };
 
 const validateSelection = async () => {
     filterRegionDialog.value = false;
     await fetchInitialData(page.value, perPage.value);
+    emit('update:selectedRegions', props.selectedRegions);
 };
 
 const cancelSelection = () => {
-    selectedRegions.value = [];
+    emit('update:selectedRegions', []);
     filterRegionDialog.value = false;
 };
+
+const getRandomItems = (array, count) => {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+};
+
+const filteredDepartments = computed(() => {
+    if (!searchQuery.value) return displayedDepartments.value;
+    return departments.filter(dep =>
+        dep.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    );
+});
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays = {
@@ -1849,15 +2030,16 @@ const selectedDaysPlaceholder = computed(() => {
     return formData.selectedDays.map(day => frenchDays[day]).join(', ');
 });
 
-const fetchInitialData = async (page = 1, perPage = PERPAGE) => {
+const fetchInitialData = async (page = 1, perPage = PERPAGE, country = props.selectedCountry) => {
     try {
         const response = await fetchReplacements({
             postalCode: [],
             cities: [],
             selectedDays: [],
             type: props.type,
+            country: country,
             filters: localFilters,
-            provinces: selectedRegions.value,
+            provinces: newRegions,
             page,
             perPage,
         });
@@ -1879,12 +2061,19 @@ watch(
     () => props.filteredProvinces,
     (newProvinces, oldProvinces) => {
         if (newProvinces !== oldProvinces) {
-            selectedRegions.value = [...newProvinces as string[]];
+            newRegions = [...newProvinces as string[]];
+
+            if (internalUpdate) {
+                internalUpdate = false;
+                return;
+            }
             fetchInitialData(page.value, perPage.value);
         }
     },
     { deep: true },
 );
+
+await fetchCareTypes();
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
@@ -2064,7 +2253,7 @@ const handleCloseReplacement = async (replacement) => {
 const editDialogOpen = ref(false);
 const editFormData = reactive({
     id: null,
-    nurseId: user.value.id,
+    userId: user.value.id,
     replacedBy: null,
     visibility: '',
     type: '',
@@ -2085,7 +2274,7 @@ const editFormData = reactive({
 
 const resetEditFormData = () => {
     editFormData.id = null;
-    editFormData.nurseId = user.value.id;
+    editFormData.userId = user.value.id;
     editFormData.replacedBy = null;
     editFormData.visibility = '';
     editFormData.type = '';
@@ -2114,6 +2303,7 @@ const openEditDialog = (replacement: Replacement) => {
     };
 
     editFormData.id = replacement.id;
+    editFormData.userId = replacement.user_id;
     editFormData.replacedBy = replacement.replaced_by ? replacement.replaced_by : null;
     editFormData.visibility = replacement.visibility;
     editFormData.status = replacement.status;
@@ -2208,7 +2398,6 @@ const { submit } = useSubmit(async () => {
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>
 

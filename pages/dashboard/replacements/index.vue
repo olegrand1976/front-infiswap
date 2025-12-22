@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 md:w-[45%] lg:w-[45%] xl:w-[55%] 2xl:w-[65%] sm:px-9 rounded-lg">
+        <div class="flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
+            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
                 <span>
                     Chercher <strong>un remplacement</strong>
                 </span>
@@ -26,7 +26,7 @@
                 </div>
             </h1>
 
-            <div class="mt-6 md:mt-0 flex justify-between md:justify-end gap-x-2 xl:gap-x-8 items-center">
+            <div class="mt-6 lg:mt-0 flex justify-between lg:justify-end gap-x-2 xl:gap-x-8 items-center">
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button
@@ -84,7 +84,53 @@
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div class="flex space-x-3 rounded items-center justify-between ps-3 pe-1">
+                <div
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
+                    <h5 class="text-sm">
+                        Pays
+                    </h5>
+                    <Select v-model="selectedCountry">
+                        <SelectTrigger
+                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
+                            position="right"
+                        >
+                            <SelectValue
+                                :placeholder="countries[selectedCountry]"
+                                class="text-xs text-black w-[200%] truncate"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup class="w-32 truncate">
+                                <SelectItem
+                                    v-for="[code, label] in Object.entries(countries)"
+                                    :key="code"
+                                    :value="code"
+                                >
+                                    <div class="flex flex-nowrap gap-2 items-center">
+                                        <LayoutsAppImage
+                                            v-if="code === 'fr'"
+                                            :src="'/icons/fr.png'"
+                                            alt="France flag"
+                                            class="w-3"
+                                        />
+                                        <LayoutsAppImage
+                                            v-else-if="code === 'be'"
+                                            :src="'/icons/belgium.png'"
+                                            alt="Belgium flag"
+                                        />
+                                        <span>{{ label }}</span>
+                                    </div>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div
+                    v-if="selectedCountry != 'fr'"
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
                     <h5 class="text-sm">
                         Provinces
                     </h5>
@@ -127,6 +173,52 @@
                         </SelectContent>
                     </Select>
                 </div>
+                <div
+                    v-else
+                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
+                >
+                    <h5 class="text-sm">
+                        Départements
+                    </h5>
+                    <Select>
+                        <SelectTrigger
+                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
+                            position="right"
+                        >
+                            <SelectValue
+                                :placeholder="selectedProvincesPlaceholder"
+                                class="text-xs text-black w-[200%] truncate"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup class="w-32 truncate">
+                                <div class="flex items-center space-2 mb-2">
+                                    <Checkbox
+                                        id="tous"
+                                        :checked="isAllSelected"
+                                        class="mr-2"
+                                        @update:checked="toggleAllRegions($event)"
+                                    />
+                                    <label class="text-xs text-nowrap truncate">Tous</label>
+                                </div>
+                                <div
+                                    v-for="(region, index) in departments"
+                                    :key="index"
+                                    class="flex items-center space-2 mb-2"
+                                >
+                                    <Checkbox
+                                        :id="region"
+                                        :checked="selectedRegions.includes(region)"
+                                        :value="region"
+                                        class="mr-2"
+                                        @update:checked="updateRegionSelection(region, $event)"
+                                    />
+                                    <label class="text-xs text-nowrap truncate">{{ region }}</label>
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
 
                 <div
                     class="hidden sm:flex items-center space-x-4 cursor-pointer"
@@ -150,7 +242,9 @@
         </div>
 
         <Replacement
+            v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
+            :selected-country="selectedCountry"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
         />
@@ -160,8 +254,17 @@
 <script setup lang="ts">
 import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
-import { regions } from '~/lib/utils';
+import { regions, departments } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
+import type { User } from '~/lib/types';
+
+const user = useState<User>('user');
+const selectedCountry = ref(user.value.profile.country);
+
+const countries = {
+    be: 'Belgique',
+    fr: 'France',
+};
 
 const replacementTypeFilters = {
     all: 'Tous',
@@ -177,7 +280,7 @@ const replacementRoleFilters = {
 };
 
 const selectedRegions = ref<string[]>([]);
-const isAllSelected = ref(true);
+const isAllSelected = computed(() => selectedRegions.value.length === 0);
 
 const selectedFilters = ref({
     type: 'all',
@@ -207,7 +310,6 @@ const toggleIcon = () => {
 };
 
 const toggleAllRegions = (checked: boolean) => {
-    isAllSelected.value = checked;
     if (checked) {
         selectedRegions.value = [];
     }
@@ -215,16 +317,12 @@ const toggleAllRegions = (checked: boolean) => {
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     if (checked) {
-        isAllSelected.value = false;
         if (!selectedRegions.value.includes(region)) {
             selectedRegions.value = [...selectedRegions.value, region];
         }
     }
     else {
         selectedRegions.value = selectedRegions.value.filter(r => r !== region);
-        if (selectedRegions.value.length === 0) {
-            isAllSelected.value = true;
-        }
     }
 };
 
@@ -245,6 +343,10 @@ watch(selectedFilters, (newFilters) => {
     filterCookies.value = newFilters;
 }, { deep: true });
 
+watch(selectedCountry, () => {
+    selectedRegions.value = [];
+});
+
 useHead({
     title: 'Chercher un remplacement',
 });
@@ -252,6 +354,5 @@ useHead({
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-    ssr: false,
 });
 </script>

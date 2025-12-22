@@ -97,6 +97,20 @@ export const usePartners = () => {
         });
     };
 
+    const updatePartnership = async (formData) => {
+        return await $apifetch(`/api/partners/${formData.id}`, {
+            method: 'PUT',
+            body: formData,
+        });
+    };
+
+    const updateAgainPartenership = async (formData) => {
+        return await $apifetch(`/api/partners/update-again/${formData.id}`, {
+            method: 'PUT',
+            body: formData,
+        });
+    };
+
     return {
         demandPartner,
         demandPartners,
@@ -108,5 +122,7 @@ export const usePartners = () => {
         sendResponse,
         fetchResponses,
         updateStatusResponse,
+        updatePartnership,
+        updateAgainPartenership,
     };
 };

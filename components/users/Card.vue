@@ -1,30 +1,30 @@
 <template>
-    <div class="bg-white rounded-xl max-w-full w-full overflow-hidden transition-all duration-300">
-        <div class="relative h-36 bg-primary to-blue-700 flex items-center justify-center">
+    <div class="w-full max-w-full overflow-hidden transition-all duration-300 bg-white rounded-xl">
+        <div class="relative flex items-center justify-center h-36 bg-primary to-blue-700">
             <LayoutsAppImage
                 :src="'logo_white.png'"
                 alt="logo-InfiSwap"
-                class="w-48 hover:cursor-pointer mb-8"
+                class="w-48 mb-8 hover:cursor-pointer"
                 format="png"
             />
             <img
                 v-if="user.profil_url"
                 :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
                 alt="Photo de profil"
-                class="absolute w-28 h-28 rounded-full border-4 border-white -bottom-14"
+                class="absolute border-4 border-white rounded-full w-28 h-28 -bottom-14"
             >
             <UserCircleIcon
                 v-else
-                class="absolute w-28 h-28 text-white bg-gray-300 rounded-full border-4 border-white -bottom-14"
+                class="absolute text-white bg-gray-300 border-4 border-white rounded-full w-28 h-28 -bottom-14"
             />
         </div>
 
-        <div class="pt-20 px-6 text-center">
-            <h1 class="text-2xl text-gray-800 dark:text-white mb-1">
+        <div class="px-6 pt-20 text-center">
+            <h1 class="mb-1 text-2xl text-gray-800 dark:text-white">
                 <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
                     user.lastname }}</span>
             </h1>
-            <p class="text-gray-500 font-semibold mb-4">
+            <p class="mb-4 font-semibold text-gray-500">
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
                 <template v-if="user.professional_category">
                     - {{ translatedCategory }}
@@ -34,7 +34,7 @@
 
         <div
             v-if="isAdmin"
-            class="px-6 text-left text-sm text-gray-700 mb-8 h-96 overflow-y-auto"
+            class="px-6 mb-8 overflow-y-auto text-sm text-left text-gray-700 h-96"
         >
             <div class="flex gap-4 mb-4 border-b border-gray-300">
                 <button
@@ -83,7 +83,7 @@
 
             <div
                 v-if="activeTab === 'activite'"
-                class="space-y-3 border border-gray-200 rounded-lg p-4"
+                class="p-4 space-y-3 border border-gray-200 rounded-lg"
             >
                 <div
                     class="flex items-center gap-2 cursor-pointer"
@@ -117,7 +117,7 @@
                     <p>Accept. réponse : <span class="font-semibold">{{ user.historic_activity?.last_accept_response_date ?? '—' }}</span></p>
                 </div>
 
-                <div class="border-t border-gray-300 w-full my-2" />
+                <div class="w-full my-2 border-t border-gray-300" />
 
                 <div class="flex items-center gap-2">
                     <DocumentPlusIcon class="w-5 h-5 text-primary" />
@@ -146,7 +146,7 @@
                     </p>
                 </div>
 
-                <div class="border-t border-gray-300 w-full my-2" />
+                <div class="w-full my-2 border-t border-gray-300" />
 
                 <div
                     v-if="user.ambassador === 1"
@@ -159,7 +159,7 @@
 
             <div
                 v-else-if="activeTab === 'information'"
-                class="space-y-3 border border-gray-200 rounded-lg p-4"
+                class="p-4 space-y-3 border border-gray-200 rounded-lg"
             >
                 <p class="flex items-center gap-2 text-primary">
                     <EnvelopeIcon class="w-5 h-5" />
@@ -185,7 +185,7 @@
 
             <div
                 v-else-if="activeTab === 'contact'"
-                class="space-y-3 border border-gray-200 rounded-lg p-4"
+                class="p-4 space-y-3 border border-gray-200 rounded-lg"
             >
                 <p>
                     Date de dernier contact :
@@ -226,14 +226,14 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <XCircleIcon class="text-gray-300 w-5 h-5" />
+                    <XCircleIcon class="w-5 h-5 text-gray-300" />
                     <label>Tournée</label>
                 </div>
             </div>
 
             <div
                 v-else-if="activeTab === 'product'"
-                class="space-y-3 border border-gray-200 rounded-lg p-4"
+                class="p-4 space-y-3 border border-gray-200 rounded-lg"
             >
                 <div
                     v-if="user.product_activity_summary && user.product_activity_summary.length"
@@ -280,7 +280,7 @@
                         disabled
                         class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
                     />
-                    <p class="text-sm text-gray-500 mt-1 hidden peer-focus:block">
+                    <p class="hidden mt-1 text-sm text-gray-500 peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire
                     </p>
                 </div>
@@ -290,7 +290,7 @@
                 v-else-if="activeTab === 'commercial'"
                 class="space-y-3"
             >
-                <div class="relative border border-gray-200 rounded-lg p-4">
+                <div class="relative p-4 border border-gray-200 rounded-lg">
                     <div class="flex gap-4 mb-4 border-b border-gray-300">
                         <button
                             class="pb-2 border-b-2"
@@ -329,7 +329,7 @@
                         </button>
                     </div>
                     <div v-if="tradeTab === 'call'">
-                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                        <h2 class="mb-6 italic font-semibold text-center text-gray-700">
                             Le nombre d’appels passés sur une période donnée
                         </h2>
 
@@ -337,25 +337,25 @@
                             class="space-y-6"
                             @submit.prevent="submit"
                         >
-                            <div class="flex flex-col md:flex-row md:items-end gap-4">
-                                <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.start_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
-                                <div class="flex flex-col gap-1 w-full">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.end_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
-                                <label class="text-gray-500 text-sm font-medium">Nombre d'appels</label>
+                            <div class="flex flex-col w-full gap-1">
+                                <label class="text-sm font-medium text-gray-500">Nombre d'appels</label>
                                 <InputIcon
                                     v-model="form.number"
                                     type="number"
@@ -376,7 +376,7 @@
                         </form>
                     </div>
                     <div v-else-if="tradeTab === 'sale'">
-                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                        <h2 class="mb-6 italic font-semibold text-center text-gray-700">
                             Le nombre de ventes sur une période donnée
                         </h2>
 
@@ -384,30 +384,30 @@
                             class="space-y-6"
                             @submit.prevent="submit"
                         >
-                            <div class="flex flex-col md:flex-row md:items-end gap-4">
-                                <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.start_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
-                                <div class="flex flex-col gap-1 w-full">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.end_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col w-full gap-1">
                                 <p class="text-gray-700">
                                     Produit :
                                 </p>
                                 <Select v-model="form.produit_id">
                                     <SelectTrigger
-                                        class="w-full bg-white rounded-lg text-nowrap border-2 border-gray-300"
+                                        class="w-full bg-white border-2 border-gray-300 rounded-lg text-nowrap"
                                         position="right"
                                     >
                                         <SelectValue placeholder="Choisis un produit" />
@@ -427,8 +427,8 @@
                                 </p> -->
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
-                                <label class="text-gray-500 text-sm font-medium">Nombre de ventes</label>
+                            <div class="flex flex-col w-full gap-1">
+                                <label class="text-sm font-medium text-gray-500">Nombre de ventes</label>
                                 <InputIcon
                                     v-model="form.number"
                                     type="number"
@@ -450,7 +450,7 @@
                         </form>
                     </div>
                     <div v-else-if="tradeTab === 'recommandation'">
-                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                        <h2 class="mb-6 italic font-semibold text-center text-gray-700">
                             Le nombre de recommandation sur une période donnée
                         </h2>
 
@@ -458,25 +458,25 @@
                             class="space-y-6"
                             @submit.prevent="submit"
                         >
-                            <div class="flex flex-col md:flex-row md:items-end gap-4">
-                                <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.start_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
-                                <div class="flex flex-col gap-1 w-full">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.end_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
-                                <label class="text-gray-500 text-sm font-medium">Nombre de recommandation</label>
+                            <div class="flex flex-col w-full gap-1">
+                                <label class="text-sm font-medium text-gray-500">Nombre de recommandation</label>
                                 <InputIcon
                                     v-model="form.number"
                                     type="number"
@@ -497,7 +497,7 @@
                         </form>
                     </div>
                     <div v-else-if="tradeTab === 'meeting'">
-                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
+                        <h2 class="mb-6 italic font-semibold text-center text-gray-700">
                             Le nombre de rendez-vous sur une période donnée
                         </h2>
 
@@ -505,25 +505,25 @@
                             class="space-y-6"
                             @submit.prevent="submit"
                         >
-                            <div class="flex flex-col md:flex-row md:items-end gap-4">
-                                <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.start_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
-                                <div class="flex flex-col gap-1 w-full">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.end_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
-                                <label class="text-gray-500 text-sm font-medium">Nombre de rendez-vous</label>
+                            <div class="flex flex-col w-full gap-1">
+                                <label class="text-sm font-medium text-gray-500">Nombre de rendez-vous</label>
                                 <InputIcon
                                     v-model="form.number"
                                     type="number"
@@ -544,33 +544,33 @@
                         </form>
                     </div>
                     <div v-else-if="tradeTab === 'pending'">
-                        <h2 class="text-center italic font-semibold text-gray-700 mb-6">
-                            Le nombre de réponse en attente pendant une période donnée
+                        <h2 class="mb-6 italic font-semibold text-center text-gray-700">
+                            Le nombre de réponses en attente pendant une période donnée
                         </h2>
 
                         <form
                             class="space-y-6"
                             @submit.prevent="submit"
                         >
-                            <div class="flex flex-col md:flex-row md:items-end gap-4">
-                                <div class="flex flex-col gap-1 w-full">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-end">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.start_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
-                                <div class="flex flex-col gap-1 w-full">
+                                <div class="flex flex-col w-full gap-1">
                                     <InputIcon
                                         v-model="form.end_date"
                                         type="date"
-                                        class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
+                                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col gap-1 w-full">
-                                <label class="text-gray-500 text-sm font-medium">Nombre de réponse en attente</label>
+                            <div class="flex flex-col w-full gap-1">
+                                <label class="text-sm font-medium text-gray-500">Nombre de réponses en attente</label>
                                 <InputIcon
                                     v-model="form.number"
                                     type="number"
@@ -600,7 +600,7 @@
             <div class="my-4">
                 <Separator class="w-full h-1 bg-gray-200" />
             </div>
-            <div class="text-left text-sm text-gray-500 space-y-2 px-6">
+            <div class="px-6 space-y-2 text-sm text-left text-gray-500">
                 <template v-if="minimalInfo">
                     <p class="flex items-center gap-2">
                         <BuildingOffice2Icon class="w-5 h-5 text-primary" />
@@ -660,10 +660,10 @@
                 </template>
             </div>
             <div class="pb-10">
-                <Separator class="w-full h-1 bg-gray-200 my-3" />
+                <Separator class="w-full h-1 my-3 bg-gray-200" />
             </div>
         </div>
-        <div class="bg-primary h-4 w-full rounded-b-xl" />
+        <div class="w-full h-4 bg-primary rounded-b-xl" />
     </div>
 </template>
 
@@ -721,9 +721,12 @@ const comment = ref(props.user.comment_crm ?? '');
 
 // const selectedProduct = ref<string>('');
 
+const admin = isAdmin ?? ref(false);
 onMounted(async () => {
-    const result = await getAll();
-    products.value = result;
+    if (admin.value === true) {
+        const result = await getAll();
+        products.value = result;
+    }
 });
 
 async function loadActivity() {

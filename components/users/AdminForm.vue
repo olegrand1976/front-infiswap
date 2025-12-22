@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { ADMIN_ROLES, ALL_ROLES, BASIC_ROLES, LANGUAGES, SUPER_ADMIN_ROLES } from '~/lib/constants';
 import type { AccountType, User } from '~/lib/types';
 import { getRole } from '~/lib/utils';
@@ -177,6 +178,18 @@ onMounted(async () => {
     }
     else {
         await myGroups();
+    }
+
+    const equipeInfiswap = groups.value.find(g => g.name === 'Equipe Infiswap');
+    if (equipeInfiswap) {
+        groups.value = [
+            equipeInfiswap,
+            ...groups.value.filter(g => g.id !== equipeInfiswap.id),
+        ];
+
+        if (!selectedGroupIds.value.includes(equipeInfiswap.id)) {
+            selectedGroupIds.value = [equipeInfiswap.id, ...selectedGroupIds.value];
+        }
     }
 });
 
@@ -570,10 +583,15 @@ const route = useRoute();
                         >
                             <SelectValue>
                                 <template v-if="selectedGroupIds.length > 0">
-                                    {{ formattedGroup }}
+                                    {{
+                                        selectedGroupIds
+                                            .map(id => dataGroup.find(g => g.id === id)?.name)
+                                            .filter(Boolean)
+                                            .join(', ')
+                                    }}
                                 </template>
                                 <template v-else>
-                                    <span class="text-gray-500">Sélectionner...</span>
+                                    <span class="text-gray-500">Equipe Infiswap</span>
                                 </template>
                             </SelectValue>
                         </SelectTrigger>

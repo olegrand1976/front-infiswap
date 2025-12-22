@@ -106,6 +106,33 @@ export const useAuth = () => {
             .catch((error) => { throw error; });
     }
 
+    async function validateEmail(id: string, hash: string) {
+        loading.value = true;
+
+        try {
+            await $apifetch(`/api/email/verify/${id}/${hash}`, {
+                method: 'POST',
+            });
+
+            $toast({
+                description: 'Compte validé avec succès.',
+            });
+
+            return true;
+        }
+        catch (err) {
+            $toast({
+                variant: 'destructive',
+                description: 'Une erreur s’est produite lors de la validation de votre compte. Merci de réessayer plus tard.',
+            });
+
+            throw new Error(err);
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
     async function registerBeta(credentials) {
         await $apifetch('/api/user-betas',
             { method: 'post', body: credentials },
@@ -211,13 +238,13 @@ export const useAuth = () => {
             method: 'delete',
             body: id,
         });
-    };
+    }
 
-    async function logout() {
+    function logout() {
         loading.value = false;
         try {
             if (!isLoggedIn.value) return;
-            await $apifetch('api/logout', { method: 'post' });
+            $apifetch('api/logout', { method: 'post' });
             user.value = null;
             useCookie(AUTH_TOKEN).value = '';
 
@@ -258,6 +285,18 @@ export const useAuth = () => {
         }).then((response) => {
             users.value = response.users;
             count.value = response.count;
+        });
+    }
+
+    async function getRecentUsers(page = 1, perPage = 15, options = {}) {
+        return await $apifetch('api/admin/users/registration', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            users.value = response;
         });
     }
 
@@ -451,6 +490,12 @@ export const useAuth = () => {
         });
     }
 
+    async function restore(id: number) {
+        return await $apifetch(`/api/admin/users/${id}/restore`, {
+            method: 'PUT',
+        });
+    }
+
     return {
         user,
         users,
@@ -499,5 +544,9 @@ export const useAuth = () => {
         updateContact,
         updateRadiusKm,
         isAdminGroup,
+        getRecentUsers,
+        validateEmail,
+        restore,
+        loading,
     };
 };

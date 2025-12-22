@@ -90,6 +90,11 @@ export type User = {
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
     last_comment: Comment;
+    is_business_referrer?: boolean | number;
+    referred_by?: Referrer;
+    restored_by?: User;
+    restored_at?: string;
+    referral_source?: string;
 };
 
 type LastProductModifications = {
@@ -230,6 +235,8 @@ export type CareType = {
     price?: number;
 };
 export type Pagination<T> = {
+    weekly?: T[];
+    monthly?: T[];
     current_page: number;
     data: T[];
     first_page_url: string;
@@ -254,6 +261,8 @@ interface PaginationLink {
 export type Replacement = {
     id: number;
     user_id: number;
+    user_full_name: string;
+    user_phone_number: string;
     user: User;
     role_type: AccountType;
     replaced_by?: number;
@@ -345,6 +354,7 @@ export type Contact = {
     phone?: string;
     description?: string;
     created_at?: string;
+    hasResponded?: boolean;
 };
 
 export type Group = {
@@ -383,4 +393,17 @@ export type Comment = {
     body: string;
     created_at: string;
     updated_at: string;
+};
+
+export type Referrer = {
+    id: number;
+    full_name: string;
+    email: string;
+};
+
+export type Stat = {
+    id: number;
+    web_site_name: string;
+    count: number;
+    last_count: string;
 };

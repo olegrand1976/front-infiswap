@@ -14,7 +14,14 @@
 
 <script setup lang="ts">
 useHead({
-    title: 'NursTech - by infiswap',
+    title: 'NursTech',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'NursTech - InfiSwap : solutions digitales pour infirmiers indépendants. Création de sites web, outils numériques, valorisation de votre activité et accompagnement marketing pour booster votre visibilité professionnelle.',
+        },
+    ],
 });
 
 definePageMeta({

@@ -253,6 +253,13 @@ definePageMeta({
 
 useHead({
     title: 'Connexion',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'Connectez-vous à InfiSwap pour accéder à votre espace professionnel, gérer vos remplacements infirmiers, consulter vos missions et profiter de toutes les fonctionnalités de la plateforme. Authentification sécurisée pour infirmiers indépendants en Belgique et en France.',
+        },
+    ],
 });
 </script>
 

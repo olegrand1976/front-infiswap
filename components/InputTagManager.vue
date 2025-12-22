@@ -86,6 +86,7 @@ watch(
 
 const addItem = () => {
     const value = inputValue.value.trim().replace(/[,\s]+$/, '');
+
     if (value && !items.value.includes(value)) {
         items.value.push(value);
         emit('update:modelValue', items.value);

@@ -72,7 +72,7 @@
                                 type="submit"
                                 class="font-bold px-16 md:text-sm sm:text-xs"
                             >
-                                Envoyer un email
+                                Réinitialiser
                             </Button>
                         </div>
                     </form>

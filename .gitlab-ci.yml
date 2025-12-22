@@ -4,9 +4,9 @@ stages:
 
 build:
   stage: build
-  image: node:20    # Utilise Node 20 pour disposer d'une version récente
+  image: docker:24.0.5
   services:
-    - name: docker:dind
+    - name: docker:24-dind
       alias: docker
       command: ["--tls=false"]
   variables:
@@ -20,8 +20,7 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apt-get update && apt-get install -y docker.io  # Installer le client Docker sur Debian
-    # Créer le fichier .env à partir des variables CI/CD
+    - apk add --no-cache nodejs npm bash python3 build-base git curl
     - |
       cat > .env << EOF
       NODE_ENV=${NODE_ENV}
@@ -77,7 +76,7 @@ build:
 #####################################
 deploy_front1:
   stage: deploy
-  image: docker:20.10.16
+  image: docker:24
   services:
     - name: docker:dind
       alias: docker

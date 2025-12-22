@@ -85,18 +85,73 @@
             </div>
             <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 <button
-                    v-for="tab in provinceTabs"
+                    v-for="tab in countryTabs"
                     :key="tab.value"
                     :class="[
-                        'px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors',
-                        (tab.value === '' && option.province === '') || (tab.value !== '' && option.province === tab.value)
+                        'px-4 py-2 cursor-pointer rounded-md whitespace-nowrap text-sm font-medium transition-colors',
+                        (tab.value === '' && option.country === '') || (tab.value !== '' && option.country === tab.value)
                             ? 'bg-primary text-white shadow-md'
                             : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
-                    @click="setProvinceFilter(tab.value)"
+                    @click="handleShowRegion(tab.value)"
                 >
                     {{ tab.label }}
                 </button>
             </div>
+
+            <Dialog
+                v-model:open="regionDialog"
+                class="pb-8 sm:pb-0"
+            >
+                <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Zone géographique</DialogTitle>
+                        <DialogDescription>
+                            Sélectionner la région souhaitée pour le filtrage
+                        </DialogDescription>
+                    </DialogHeader>
+                    <template v-if="selectedCountry == 'fr'">
+                        <div class="py-4">
+                            <InputIcon
+                                v-model="searchQuery"
+                                placeholder="Entrer un département"
+                                rounded="md"
+                            />
+
+                            <div class="grid sm:grid-cols-2 gap-4 mt-8">
+                                <button
+                                    v-for="region in filteredDepartments"
+                                    :key="region"
+                                    :class="[
+                                        'px-4 py-2 cursor-pointer rounded-md whitespace-nowrap text-sm font-medium transition-colors',
+                                        (option.province === region)
+                                            ? 'bg-primary text-white shadow-md'
+                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
+                                    @click="setProvinceFilter('fr', region)"
+                                >
+                                    <span>{{ region }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="grid sm:grid-cols-2 gap-4 py-4">
+                            <div
+                                v-for="region in regions"
+                                :key="region"
+                                :class="[
+                                    'px-4 py-2 cursor-pointer rounded-md whitespace-nowrap text-sm font-medium transition-colors',
+                                    (option.province === region)
+                                        ? 'bg-primary text-white shadow-md'
+                                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
+                                @click="setProvinceFilter('be', region)"
+                            >
+                                <span>{{ region }}</span>
+                            </div>
+                        </div>
+                    </template>
+                </DialogContent>
+            </Dialog>
+
             <DataTable
                 :data="replacements.data"
                 :columns="columns"
@@ -110,6 +165,12 @@
                     @update:per-page="handlePerPageChange"
                 />
             </div>
+
+            <ReplacementDetailsModal
+                :replacement-id="selectedReplacementId"
+                :open="isModalOpen"
+                @update:open="isModalOpen = $event"
+            />
 
             <Dialog v-model:open="isDialogOpen">
                 <DialogContent class="rounded-2xl p-6 shadow-2xl bg-white dark:bg-gray-900 max-w-3xl mx-auto">
@@ -229,8 +290,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
-import { formatPhoneNumber } from '~/lib/utils';
+import { regions, departments, formatPhoneNumber } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
+import ReplacementDetailsModal from '~/components/replacements/ReplacementDetailsModal.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
 
 import UsersName from '@/components/users/Name.vue';
@@ -255,6 +317,7 @@ const initialFilter = {
     city: null,
     type: null,
     role: null,
+    country: '',
     province: '',
 };
 
@@ -270,25 +333,50 @@ const debounce = (func, delay) => {
     };
 };
 
-const provinceTabs = [
+const regionDialog = ref(false);
+const countryTabs = [
     { label: 'Toutes', value: '' },
-    { label: 'Bruxelles-Capitale', value: 'Bruxelles-Capitale' },
-    { label: 'Brabant Wallon', value: 'Brabant wallon' },
-    { label: 'Brabant Flamand', value: 'Brabant flamand' },
-    { label: 'Brabant flamand - Overijse', value: 'Brabant flamand - Overijse' },
-    { label: 'Anvers', value: 'Anvers' },
-    { label: 'Limbourg', value: 'Limbourg' },
-    { label: 'Liège', value: 'Liège' },
-    { label: 'Namur', value: 'Namur' },
-    { label: 'Hainaut', value: 'Hainaut' },
-    { label: 'Luxembourg', value: 'Luxembourg' },
-    { label: 'Flandre-Occidentale', value: 'Flandre-Occidentale' },
-    { label: 'Flandre-Orientale', value: 'Flandre-Orientale' },
-    { label: 'Autres', value: 'Autres' },
+    { label: 'Belgique', value: 'be' },
+    { label: 'France', value: 'fr' },
 ];
 
-const setProvinceFilter = (province) => {
-    option.value.province = province;
+const selectedCountry = ref('');
+const searchQuery = ref('');
+const displayedDepartments = ref([]);
+
+const handleShowRegion = async (region) => {
+    if (region !== '') {
+        if (region === 'fr') {
+            displayedDepartments.value = getRandomItems(departments, 6);
+        }
+        selectedCountry.value = region;
+        regionDialog.value = true;
+    }
+    else {
+        option.value.country = '';
+        option.value.province = '';
+        selectedCountry.value = '';
+        page.value = 1;
+
+        await filterReplacements();
+    }
+};
+
+const getRandomItems = (array, count) => {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+};
+
+const filteredDepartments = computed(() => {
+    if (!searchQuery.value) return displayedDepartments.value;
+    return departments.filter(dep =>
+        dep.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    );
+});
+
+const setProvinceFilter = (country, region) => {
+    option.value.country = country;
+    option.value.province = region;
     page.value = 1;
     filterReplacements();
 };
@@ -296,9 +384,11 @@ const setProvinceFilter = (province) => {
 const filterReplacements = async () => {
     const currentFilter = {
         ...option.value,
-        province: option.value.province || '',
+        country: option.value.country,
+        province: option.value.province,
     };
     await getReplacementsForAdmin(page.value, perPage.value, currentFilter);
+    regionDialog.value = false;
 };
 
 const resetFilter = async () => {
@@ -327,8 +417,17 @@ const handlePerPageChange = async (value: number) => {
     await getReplacementsForAdmin(page.value, value);
 };
 
+const isModalOpen = ref(false);
+const selectedReplacementId = ref<number | null>(null);
+
+function handleViewDetails(id: number) {
+    selectedReplacementId.value = id;
+    isModalOpen.value = true;
+}
+
 const columns: ColumnDef<Replacement>[] = [
     {
+        id: 'view_details',
         accessorKey: 'start_date',
         header: ({ column }) => h(Button, {
             variant: 'ghost',
@@ -337,10 +436,15 @@ const columns: ColumnDef<Replacement>[] = [
         }, () => ['Période', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
 
         cell: ({ row }) => {
-            return h(ReplacementPeriod, {
+            return h('div', {
+                class: 'font-medium cursor-pointer',
                 style: 'white-space: nowrap; min-width: 200px;',
-                replacement: row.original,
-            });
+                onClick: () => handleViewDetails(row.original.id),
+            }, [
+                h(ReplacementPeriod, {
+                    replacement: row.original,
+                }),
+            ]);
         },
 
         sortingFn: (rowA, rowB) => {
@@ -701,6 +805,32 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
 ];
+
+const excludedColumnsForModal = ['user_owner', 'substitute_user'];
+
+columns.forEach((col: any) => {
+    if (col.id !== 'actions') {
+        const originalCell = col.cell;
+        col.cell = (ctx) => {
+            const vnode = originalCell ? originalCell(ctx) : h('div', ctx.getValue?.() ?? '');
+
+            return h(
+                'div',
+                {
+                    class: 'cursor-pointer hover:bg-gray-100 hover:scale-105 transition-all duration-150 text-sm',
+                    style: 'padding: 4px;',
+                    onClick: (e: MouseEvent) => {
+                        const target = e.target as HTMLElement;
+                        if (['BUTTON', 'A', 'SVG', 'PATH'].includes(target.tagName)) return;
+                        if (excludedColumnsForModal.includes(col.id) || excludedColumnsForModal.includes(col.accessorKey)) return;
+                        handleViewDetails(ctx.row.original.id);
+                    },
+                },
+                [vnode],
+            );
+        };
+    }
+});
 
 const sort = reactive({
     order: 'DESC',

@@ -14,7 +14,7 @@
                             Téléphone
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Status
+                            Statut
                         </th>
                         <th class="px-4 py-2 border-b">
                             Actions

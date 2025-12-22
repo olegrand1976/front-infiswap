@@ -10,6 +10,27 @@ export const useChart = () => {
         };
     }
 
+    function mapDailyStatistics(statistics, labelPrefix = '', legendLabels = ['Nombre'], params = []) {
+        const dayNames = {
+            monday: 'Lundi',
+            tuesday: 'Mardi',
+            wednesday: 'Mercredi',
+            thursday: 'Jeudi',
+            friday: 'Vendredi',
+            saturday: 'Samedi',
+            sunday: 'Dimanche',
+        };
+
+        return {
+            data: statistics?.map(day => ({
+                name: `${labelPrefix}${dayNames[day.day] ?? day.day}`,
+                count: Number(day.count) || 0,
+                ...getParamsValue(day, params),
+            })) || [],
+            legendLabels,
+        };
+    }
+
     function getParamsValue(stats: Record<string, string | number>, params: string[] = []) {
         const data = {};
         if (params.length > 0) {
@@ -36,6 +57,7 @@ export const useChart = () => {
 
     return {
         mapWeeklyStatistics,
+        mapDailyStatistics,
         createXFormatter,
         yFormatter,
     };

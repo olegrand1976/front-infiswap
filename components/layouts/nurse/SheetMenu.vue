@@ -2,13 +2,13 @@
     <Sheet>
         <SheetTrigger
             as-child
-            class="bg-primary rounded-full text-white p-1"
+            class="p-1 text-white rounded-full bg-primary"
         >
             <Bars4Icon class="inline-block text-primary w-7 h-7" />
         </SheetTrigger>
         <SheetContent
             overlay-class="bg-black/5"
-            class="bg-muted pt-16"
+            class="pt-16 bg-muted"
         >
             <div>
                 <div
@@ -16,13 +16,13 @@
                     class="flex justify-between gap-4"
                 >
                     <Button
-                        class="mx-auto inline-flex font-bold rounded-3xl ml-4 z-20"
+                        class="z-20 inline-flex mx-auto ml-4 font-bold rounded-3xl"
                         href="/login"
                     >
                         Connexion
                     </Button>
                     <Button
-                        class="mx-auto inline-flex font-bold rounded-3xl ml-4 z-20"
+                        class="z-20 inline-flex mx-auto ml-4 font-bold rounded-3xl"
                         href="/register"
                     >
                         Inscription
@@ -30,13 +30,13 @@
                 </div>
                 <Button
                     v-if="isLoggedIn"
-                    class="w-44 mx-auto inline-flex rounded-3xl ml-4 z-20"
+                    class="z-20 inline-flex mx-auto ml-4 w-44 rounded-3xl"
                     href="/dashboard"
                 >
                     Tableau de bord
                 </Button>
-                <nav class="flex ps-5 mt-8">
-                    <ul class="flex flex-col text-sm space-y-9 items-start">
+                <nav class="flex mt-8 ps-5">
+                    <ul class="flex flex-col items-start text-sm space-y-9">
                         <li
                             v-for="(item, index) in navigationItems"
                             :key="index"
@@ -53,7 +53,7 @@
                 </nav>
             </div>
 
-            <div class="absolute bottom-96 right-0">
+            <div class="absolute right-0 bottom-96">
                 <LayoutsAppImage
                     src="stetho3.png"
                     alt="Stethoscope"
@@ -69,20 +69,20 @@
                 />
             </div>
 
-            <div class="bg-primary w-full h-12 mt-20 ml-5 shadow-xl text-primary" />
+            <div class="w-full h-12 mt-20 ml-5 shadow-xl bg-primary text-primary" />
 
-            <div class="mb-8 ml-4 flex flex-col">
+            <div class="flex flex-col mb-8 ml-4">
                 <div class="text-black">
-                    <h4 class="font-bold mt-8">
+                    <h4 class="mt-8 font-bold">
                         CONTACT
                     </h4>
-                    <ul class="mt-8 flex flex-col space-y-5">
+                    <ul class="flex flex-col mt-8 space-y-5">
                         <li>
                             <NuxtLink
                                 to="/"
                                 class="flex flex-row space-x-3"
                             >
-                                <PhoneIcon class="h-4 w-4 text-primary" />
+                                <PhoneIcon class="w-4 h-4 text-primary" />
                                 <p class="text-sm">0478.02.33.77</p>
                             </NuxtLink>
                         </li>
@@ -91,7 +91,7 @@
                                 to="/"
                                 class="flex flex-row space-x-3"
                             >
-                                <MapPinIcon class="h-4 w-4 text-primary" />
+                                <MapPinIcon class="w-4 h-4 text-primary" />
                                 <p class="text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</p>
                             </NuxtLink>
                         </li>
@@ -100,7 +100,7 @@
                                 to="/"
                                 class="flex flex-row justify-start space-x-3"
                             >
-                                <EnvelopeIcon class="h-4 w-4 text-primary" />
+                                <EnvelopeIcon class="w-4 h-4 text-primary" />
                                 <p class="text-sm">info@infiswap.be</p>
                             </NuxtLink>
                         </li>
@@ -109,7 +109,7 @@
                                 to="/"
                                 class="flex flex-row justify-start space-x-3"
                             >
-                                <GlobeAltIcon class="h-4 w-4 text-primary" />
+                                <GlobeAltIcon class="w-4 h-4 text-primary" />
                                 <p class="text-sm">www.infiswap.be</p>
                             </NuxtLink>
                         </li>

@@ -342,21 +342,8 @@
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3
-                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
-                    >
-                        Développement de votre réseau professionnel
-                    </h3>
-                    <p class="hidden lg:flex text-base">
-                        Renforcez vos liens avec d’autres professionnels de la santé et
-                        élargissez votre réseau grâce à de nouvelles collaborations.
-                        Augmentez votre visibilité auprès des établissements et des
-                        infirmiers à la recherche de remplaçants.
-                    </p>
-                </div>
                 <div
-                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
+                    class="relative"
                 >
                     <LayoutsAppImage
                         src="/home/computer.png"
@@ -371,31 +358,25 @@
                         </h3>
                     </div>
                 </div>
+                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
+                    <h3
+                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                    >
+                        Développement de votre réseau professionnel
+                    </h3>
+                    <p class="hidden lg:flex text-base">
+                        Renforcez vos liens avec d’autres professionnels de la santé et
+                        élargissez votre réseau grâce à de nouvelles collaborations.
+                        Augmentez votre visibilité auprès des établissements et des
+                        infirmiers à la recherche de remplaçants.
+                    </p>
+                </div>
             </div>
         </div>
         <div class="container">
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                <div class="relative">
-                    <LayoutsAppImage
-                        src="/home/nurse_woman.png"
-                        alt="une infirmier"
-                        class="w-full z-10"
-                    />
-                    <div
-                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
-                    >
-                        <h3 class="text-primary text-lg font-bold">
-                            Gestion administrative
-                            <br>
-                            et suivi des formations
-                            <br>
-                            (bientôt disponible)
-                        </h3>
-                    </div>
-                </div>
-
                 <div class="space-y-6">
                     <h3
                         class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
@@ -416,28 +397,32 @@
                         activité.
                     </p>
                 </div>
+                <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end">
+                    <LayoutsAppImage
+                        src="/home/nurse_woman.png"
+                        alt="une infirmier"
+                        class="w-full z-10"
+                    />
+                    <div
+                        class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
+                    >
+                        <h3 class="text-primary text-lg font-bold">
+                            Gestion administrative
+                            <br>
+                            et suivi des formations
+                            <br>
+                            (bientôt disponible)
+                        </h3>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container">
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <h3
-                        class="lg:block hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
-                    >
-                        Suivi des formations
-                    </h3>
-                    <p class="hidden lg:flex text-base">
-                        Assurez-vous de rester en conformité avec les obligations légales
-                        grâce à un suivi détaillé de vos formations.
-                        <br>
-                        Recevez des rappels et gérez vos inscriptions pour maintenir vos
-                        compétences à jour et valoriser votre expertise.
-                    </p>
-                </div>
                 <div
-                    class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
+                    class="relative"
                 >
                     <LayoutsAppImage
                         src="/home/A nurse looking for medicine.png"
@@ -453,6 +438,20 @@
                             professionnelles
                         </h3>
                     </div>
+                </div>
+                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
+                    <h3
+                        class="lg:block hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                    >
+                        Suivi des formations
+                    </h3>
+                    <p class="hidden lg:flex text-base">
+                        Assurez-vous de rester en conformité avec les obligations légales
+                        grâce à un suivi détaillé de vos formations.
+                        <br>
+                        Recevez des rappels et gérez vos inscriptions pour maintenir vos
+                        compétences à jour et valoriser votre expertise.
+                    </p>
                 </div>
             </div>
         </div>
@@ -543,6 +542,13 @@
 <script lang="ts" setup>
 useHead({
     title: 'Services',
+    meta: [
+        {
+            name: 'description',
+            content:
+                'Découvrez les services InfiSwap, la plateforme complète dédiée aux infirmiers indépendants. Recherche de remplacements, notifications en temps réel, gestion de planning, communication sécurisée, création de page professionnelle avec NursTech, assurances spécialisées avec NursAssur et outils d’organisation adaptés à votre activité. Simplifiez votre quotidien et développez votre activité infirmière grâce à InfiSwap.',
+        },
+    ],
 });
 
 definePageMeta({

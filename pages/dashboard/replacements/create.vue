@@ -91,11 +91,13 @@
                             <p>De</p>
                             <InputTime
                                 v-model="formData.timeSlot.morning.startAt"
+                                class="w-full"
                                 input-class="rounded-full"
                             />
                             <p>à</p>
                             <InputTime
                                 v-model="formData.timeSlot.morning.endAt"
+                                class="w-full"
                                 input-class="rounded-full"
                             />
                         </div>
@@ -134,7 +136,7 @@
                     <InputTagManager
                         v-model="formData.zipCodes"
                         label="Codes postaux"
-                        placeholder="6565,4561,1237"
+                        :placeholder="user.profile.country == 'fr' ? '75000, 40990, 89550' : '6565,4561,1237'"
                         :is-mobile="isMobile"
                         :comma-validation="false"
                         :count="4"
@@ -155,7 +157,7 @@
                 <InputTagManager
                     v-model="formData.cities"
                     label="Villes"
-                    placeholder="Anvers, Bruges, Gand"
+                    :placeholder="user.profile.country ? 'Paris, Landes, Yonne' : 'Anvers, Bruges, Gand'"
                     :is-mobile="isMobile"
                     class="mt-4"
                     :comma-validation="true"

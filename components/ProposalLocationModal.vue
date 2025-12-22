@@ -126,6 +126,7 @@ const emit = defineEmits<{
     (e: 'update:newlyAddedValue', value: string): void;
 }>();
 
+const loadingDialog = ref(true);
 const modelValue = defineModel<boolean>();
 const openDialog = computed({
     get: () => modelValue.value,
@@ -153,19 +154,37 @@ watch(
 watch(
     () => openDialog.value,
     async (isOpen) => {
-        if (isOpen) {
+        if (!isOpen) return;
+
+        loadingDialog.value = true;
+
+        try {
             const zipCode = props.newlyAddedValue || user.value.profile.zip_code || '';
             if (zipCode) {
                 locationData.value = await getNearbyLocalities(zipCode, 5, 'be', props.initialZipCodes, props.initialCities);
-
-                tempSelectedLocations.value = [...locationData.value];
+                if (!locationData.value.length) {
+                    locationData.value = [];
+                }
             }
+
+            tempSelectedLocations.value = [...locationData.value];
+            allSelected.value = tempSelectedLocations.value.length === locationData.value.length;
+        }
+        catch {
+            locationData.value = [];
+            tempSelectedLocations.value = [];
+            allSelected.value = false;
+        }
+        finally {
+            loadingDialog.value = false;
         }
     },
     { immediate: false },
 );
 
 const handleSelectProposal = () => {
+    if (loadingDialog.value) return;
+
     allSelected.value = !allSelected.value;
 
     if (!allSelected.value) {
@@ -217,20 +236,28 @@ const handleCreatePreference = async () => {
         catch (error) {
             console.error('Failed to save preferences:', error);
         }
+        finally {
+            await nextTick();
+            emit('update:initialZipCodes', mergedZipCodes);
+            emit('update:initialCities', mergedCities);
+            emit('update:newlyAddedValue', '');
+            openDialog.value = false;
+        }
     }
-
-    await nextTick();
-    emit('update:initialZipCodes', mergedZipCodes);
-    emit('update:initialCities', mergedCities);
-    emit('update:newlyAddedValue', '');
-    openDialog.value = false;
+    else {
+        await nextTick();
+        emit('update:initialZipCodes', mergedZipCodes);
+        emit('update:initialCities', mergedCities);
+        emit('update:newlyAddedValue', '');
+        openDialog.value = false;
+    }
 };
 
 const cancel = () => {
     tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
         zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
     );
-    emit('update:newlyAddedValue', '');
     openDialog.value = false;
+    emit('update:newlyAddedValue', '');
 };
 </script>

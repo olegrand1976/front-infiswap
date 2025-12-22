@@ -64,6 +64,11 @@
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                                v-if="user.account_type != 'nurse' && user.account_type != 'caregiver' && user.account_type != 'midwife'"
+                            >
+                                <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                                 class="hover:bg-primary"
                                 @click="logout"
                             >
@@ -315,4 +320,8 @@ const handleDisable = async () => {
         console.error('Erreur lors de la désactivation des notifications :', error);
     }
 };
+
+definePageMeta({
+    ssr: false,
+});
 </script>

@@ -1,0 +1,108 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: docker:24.0.5
+    - name: docker:dind
+      alias: docker
+      command: ["--tls=false"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    NODE_ENV: production
+  cache:
+    key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
+    paths:
+      - node_modules/
+      - .npm/
+  before_script:
+    - apt-get update && apt-get install -y docker.io  # Installer le client Docker sur Debian
+    # Créer le fichier .env à partir des variables CI/CD
+    - |
+      cat > .env << EOF
+      NODE_ENV=${NODE_ENV}
+      API_URL=${API_URL}
+      FRONT_END_URL=${FRONT_END_URL}
+      PORT=${PORT}
+      OPENAI_API_KEY=${OPENAI_API_KEY}
+      EOF
+    - cat .env # Afficher pour vérification (attention aux secrets)
+  script:
+    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
+    - rm -rf node_modules
+    - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
+    - npm install
+    - export NODE_OPTIONS=--max_old_space_size=8192
+    - NODE_ENV=production npm run build
+    # Copier le .env dans l'image Docker
+    - |
+      # Créer un Dockerfile temporaire qui inclut .env
+      cat > Dockerfile.temp << 'EOF'
+      FROM node:20.18.0-slim
+      WORKDIR /app
+      COPY . .
+      # Ajouter le fichier .env créé pendant le CI/CD
+      COPY .env .env
+      # Le reste du Dockerfile
+      RUN npm install && \
+        NODE_ENV=production npm run build && \
+        npm prune --production && \
+        if ! getent group www-data >/dev/null 2>&1; then \
+        groupadd -r www-data; \
+        fi && \
+        if ! id -u www-data >/dev/null 2>&1; then \
+        useradd -r -g www-data www-data; \
+        fi && \
+        chown -R www-data:www-data /app
+      USER www-data
+      ENV NODE_ENV=production
+      ENV PORT=3000
+      EXPOSE 3000
+      CMD ["node", ".output/server/index.mjs"]
+      EOF
+    - docker build -f Dockerfile.temp --pull -t docker.io/$DOCKERHUB_USERNAME/front-app:latest .
+    - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    - docker images
+  only:
+    - main
+
+#####################################
+# Déploiement sur FRONT1
+#####################################
+deploy_front1:
+  stage: deploy
+  image: docker:20.10.16
+  services:
+    - name: docker:dind
+      alias: docker
+      command: ["--tls=false"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - apk add --no-cache openssh-client sshpass
+    - echo "$SSH_PRIVATE_KEY" > id_rsa
+    - chmod 600 id_rsa
+    - echo "$SSH_KNOWN_HOSTS" > known_hosts
+    # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
+    - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
+  script:
+    #- docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+    # Récupération de l'image depuis Docker Hub
+    #- docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Connexion SSH sur FRONT1 pour déployer via docker-compose
+    - >
+      ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
+        docker compose -f /srv/front/docker-compose.prod.yml down &&
+        docker compose -f /srv/front/docker-compose.prod.yml up --build -d
+      "
+  only:
+    - main
