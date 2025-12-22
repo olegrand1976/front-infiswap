@@ -1,6 +1,12 @@
 <template>
     <div class="pt-2">
-        <div class="flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
                 :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
                 class="rounded sm:bg-gray-100 sm:h-12 px-3 flex flex-col space-y-6 sm:space-y-0 sm:space-x-4 sm:flex-row justify-between sm:items-center"
@@ -139,10 +145,10 @@
                             </div>
                             <div class="mt-4 space-y-4">
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
-                                    <span>Nom : {{ replacement.user_full_name }}</span>
+                                    <span>Nom : {{ replacement.user.full_name }}</span>
                                 </div>
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
-                                    <span>Téléphone : {{ replacement.user_phone_number }}</span>
+                                    <span>Téléphone : {{ replacement.user.phone_number }}</span>
                                 </div>
                             </div>
                         </div>
@@ -323,6 +329,7 @@
 </template>
 
 <script setup>
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import {
     CalendarDaysIcon,
     ClockIcon,

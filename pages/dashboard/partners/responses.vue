@@ -1,6 +1,12 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex items-center justify-between w-full">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex items-center justify-between w-full">
             <h1 class="flex w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
                 Liste des <span class="ml-1 font-semibold">intéressées par votre demande</span>
             </h1>
@@ -173,10 +179,11 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeftIcon, CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
+import { goBack } from '~/lib/utils';
 
 const { fetchResponses, demandResponses, updateStatusResponse, loading } = usePartners();
 

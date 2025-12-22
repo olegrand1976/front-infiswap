@@ -1,6 +1,12 @@
 <template>
     <div class="space-y-6">
-        <div class="bg-gray-100 flex items-center px-6 rounded-lg w-full h-12">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 bg-gray-100 flex items-center px-6 rounded-lg w-full h-12">
             <LayoutsAppImage
                 src="/home/help_me.png"
                 class="h-10 w-10 object-contain mr-3"
@@ -256,10 +262,12 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { LayoutsAppImage } from '#components';
 import type { User } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const validRoles = ['nurse', 'caregiver', 'midwife'];

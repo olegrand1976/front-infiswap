@@ -3,6 +3,12 @@
         class="lg:ml-20 xl:ml-0"
         @submit.prevent="submit"
     >
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary mt-4"
+            title="Retour"
+            @click="goBack"
+        />
+
         <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24">
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow pb-8">
@@ -296,12 +302,14 @@
 
 <script lang="ts" setup>
 import { XMarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 import type { User } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const { getZipCodeFromCity } = useOpenai();

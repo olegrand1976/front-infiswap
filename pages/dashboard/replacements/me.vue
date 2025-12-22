@@ -1,6 +1,12 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex items-center justify-between w-full">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex items-center justify-between w-full">
             <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] sm:px-9 rounded-lg">
                 Mes <strong>remplacements</strong>
             </h1>
@@ -123,10 +129,11 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
+import { goBack } from '~/lib/utils';
 
 const replacementTypeFilters = {
     all: 'Tous',

@@ -1,6 +1,12 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex items-center justify-between w-full">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex items-center justify-between w-full">
             <h1 class="flex w-full py-3 rounded-lg text-primary sm:bg-gray-100 sm:px-9">
                 Rechercher <span class="ml-1 font-semibold">un binôme</span>
             </h1>
@@ -628,6 +634,7 @@ import {
     CheckBadgeIcon,
     InformationCircleIcon,
     XMarkIcon,
+    ArrowLeftIcon,
 } from '@heroicons/vue/24/outline';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -636,6 +643,7 @@ import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
 import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
+import { goBack } from '~/lib/utils';
 
 const selectedPartnership = ref<UserPartner | null>(null);
 
@@ -673,7 +681,7 @@ const cancelSelection = () => {
     responseDialog.value = null;
 };
 
-const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership, updateAgainPartenership } = usePartners();
+const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership } = usePartners();
 
 const postalCodeInput = ref('');
 const cityInput = ref('');

@@ -1,6 +1,12 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
             <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
                 <span>
                     Chercher <strong>un remplacement</strong>
@@ -252,9 +258,9 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon, FunnelIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
-import { regions, departments } from '~/lib/utils';
+import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
 

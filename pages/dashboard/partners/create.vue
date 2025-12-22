@@ -1,6 +1,12 @@
 <template>
     <div>
-        <div class="flex items-center justify-between w-full">
+        <ArrowLeftIcon
+            class="size-6 cursor-pointer hover:text-primary"
+            title="Retour"
+            @click="goBack"
+        />
+
+        <div class="mt-6 flex items-center justify-between w-full">
             <h1 class="flex lg:ml-20 w-full py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg 2xl:ml-0">
                 Demander <span class="ml-1 font-semibold">une collaboration</span>
             </h1>
@@ -95,9 +101,10 @@
 </template>
 
 <script lang="ts" setup>
-import { InformationCircleIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeftIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { usePartners } from '@/composables/usePartners';
 import type { User } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const { create } = usePartners();
