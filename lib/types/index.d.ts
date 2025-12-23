@@ -307,6 +307,9 @@ export type ReplacementPeriod = {
 export type UserPartner = {
     id: number;
     user: User;
+    partner?: User;
+    notified_users?: User[];
+    responses_count?: number;
     type: string;
     duration: string;
     has_responded: boolean;
