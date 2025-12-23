@@ -21,6 +21,7 @@
                 />
                 <Button
                     class="rounded-md"
+                    @click="resetFilter"
                 >
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
@@ -65,7 +66,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { fetchDemandPartners, demandPartners } = usePartners();
+const { fetchDemandPartners, demandPartners, forceDelete } = usePartners();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -81,6 +82,11 @@ const option = ref({ ...initialFilter });
 
 await fetchDemandPartners(page.value, perPage.value, option.value);
 const dataPartners = computed(() => demandPartners.value.data ?? []);
+
+// const typePartnership = {
+//     in_search: 'Recherche',
+//     available: 'Disponible',
+// };
 
 const filterPartnerships = async () => {
     const currentFilter = { ...option.value };
@@ -107,6 +113,24 @@ const handlePerPageChange = async (value: number) => {
     await filterPartnerships();
 };
 
+const resetFilter = async () => {
+    const isSame = JSON.stringify(option.value) === JSON.stringify(initialFilter);
+    if (isSame) {
+        return;
+    }
+
+    option.value = { ...initialFilter };
+    page.value = 1;
+    await fetchDemandPartners(
+        page.value,
+        perPage.value,
+        {
+            zip_code: option.value.zip,
+            city: option.value.city,
+            type: option.value.type,
+        });
+};
+
 const columns: ColumnDef<UserPartner>[] = [
     {
         id: 'select',
@@ -129,20 +153,36 @@ const columns: ColumnDef<UserPartner>[] = [
         enableSorting: false,
         enableHiding: false,
     },
+    // {
+    //     id: 'type',
+    //     accessorFn: row => row.type,
+    //     header: ({ column }) =>
+    //         h(Button, {
+    //             variant: 'ghost',
+    //             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+    //         }, () => ['Type', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+    //     cell: ({ row }) => {
+    //         const type = typePartnership[row.original.type];
+    //         return h('div', { class: 'ml-4' }, type);
+    //     },
+    // },
     {
-        accessorKey: 'zip_code',
+        id: 'zip_code',
+        accessorFn: row => row.user.zip_code,
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['Code postal', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const zip_code = row.original.user.zip_code;
-            return h('div', { class: 'ml-4' }, zip_code);
+            const zip_code = Number(row.original.user.zip_code);
+            return h('div', { class: 'ml-8' }, Number(zip_code));
         },
+        sortingFn: 'alphanumeric',
     },
     {
-        accessorKey: 'city',
+        id: 'city',
+        accessorFn: row => row.user.city,
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
@@ -154,7 +194,8 @@ const columns: ColumnDef<UserPartner>[] = [
         },
     },
     {
-        accessorKey: 'creator',
+        id: 'creator',
+        accessorFn: row => row.user,
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
@@ -164,9 +205,19 @@ const columns: ColumnDef<UserPartner>[] = [
             const user = row.original.user;
             return h(UsersName, { user });
         },
+        sortingFn: (rowA, rowB, columnId) => {
+            const userA = rowA.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+            const userB = rowB.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+
+            const nameA = userA ? `${userA.firstname ?? ''} ${userA.lastname ?? ''}`.toLowerCase() : '';
+            const nameB = userB ? `${userB.firstname ?? ''} ${userB.lastname ?? ''}`.toLowerCase() : '';
+
+            return nameA.localeCompare(nameB);
+        },
     },
     {
-        accessorKey: 'partner',
+        id: 'partner',
+        accessorFn: row => row.partner,
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
@@ -180,6 +231,15 @@ const columns: ColumnDef<UserPartner>[] = [
             }
 
             return h(UsersName, { user });
+        },
+        sortingFn: (rowA, rowB, columnId) => {
+            const userA = rowA.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+            const userB = rowB.getValue(columnId) as { firstname?: string; lastname?: string } | null;
+
+            const nameA = userA ? `${userA.firstname ?? ''} ${userA.lastname ?? ''}`.toLowerCase() : '';
+            const nameB = userB ? `${userB.firstname ?? ''} ${userB.lastname ?? ''}`.toLowerCase() : '';
+
+            return nameA.localeCompare(nameB);
         },
     },
     {
@@ -230,11 +290,12 @@ const columns: ColumnDef<UserPartner>[] = [
     },
     {
         accessorKey: 'created_at',
-        header: () => {
+        header: ({ column }) => {
             return h('div', { class: 'flex items-center justify-center gap-1' }, [
                 h(Button, {
                     variant: 'ghost',
                     class: 'flex items-center justify-center gap-1',
+                    onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 }, () => [
                     'Création',
                     h(ArrowsUpDownIcon, { class: '' }),
@@ -251,7 +312,8 @@ const columns: ColumnDef<UserPartner>[] = [
             return h('div', { class: 'mx-2' }, 'Actions');
         },
         enableHiding: false,
-        cell: () => {
+        cell: ({ row }) => {
+            const partnership = row.original;
             const actions = [
                 {
                     label: 'Modifier',
@@ -261,6 +323,7 @@ const columns: ColumnDef<UserPartner>[] = [
                             {
                                 label: 'Supprimer',
                                 confirm: true,
+                                onClick: () => handleDelete(partnership),
                             },
                         ]
                     : []),
@@ -274,4 +337,45 @@ const columns: ColumnDef<UserPartner>[] = [
         },
     },
 ];
+
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const toggleSort = () => {
+    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const setSort = (columnKey: string) => {
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
+    else {
+        sort.by = columnKey;
+        sort.order = 'DESC';
+    }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await fetchDemandPartners(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by,
+            type: 'admin',
+        },
+        );
+    },
+    { deep: true },
+);
+
+const handleDelete = async (partnership: UserPartner) => {
+    await forceDelete(partnership.id).then(() => {
+        demandPartners.value.data = demandPartners.value.data.filter(
+            p => p.id !== partnership.id,
+        );
+    });
+};
 </script>

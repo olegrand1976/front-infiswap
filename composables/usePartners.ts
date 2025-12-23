@@ -3,7 +3,7 @@ import type { Pagination, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 
 export const usePartners = () => {
-    const { $apifetch } = useNuxtApp();
+    const { $apifetch, $toast } = useNuxtApp();
     const loading = useState('loading', () => false);
     const count = useState<number>('userCount', () => 0);
     const demandPartners = useState<Pagination<UserPartner>>('demandPartners', () => ({
@@ -44,8 +44,11 @@ export const usePartners = () => {
         });
     }
 
-    const detailDemandPartner = async (userPartnerId: number) => {
-        const response = await $apifetch(`/api/partners/${userPartnerId}`, { method: 'GET' });
+    const detailDemandPartner = async (userPartnerId: number, notified: boolean = false) => {
+        const response = await $apifetch(
+            `/api/partners/${userPartnerId}?notified=${notified ? 1 : 0}`,
+            { method: 'GET' },
+        );
         demandPartner.value = response.partnership;
     };
 
@@ -82,6 +85,22 @@ export const usePartners = () => {
         });
     };
 
+    async function forceDelete(partner: number) {
+        return await $apifetch(`api/admin/partners/${partner}`, {
+            method: 'DELETE',
+        }).then(() => {
+            $toast({
+                description: 'Suppression réussie.',
+            });
+        })
+            .catch(() => {
+                $toast({
+                    variant: 'destructive',
+                    description: 'Une erreur est survenue lors de la suppression.',
+                });
+            });
+    }
+
     return {
         demandPartner,
         demandPartners,
@@ -96,5 +115,6 @@ export const usePartners = () => {
         updateStatusResponse,
         updatePartnership,
         updateAgainPartenership,
+        forceDelete,
     };
 };
