@@ -681,7 +681,7 @@ const cancelSelection = () => {
     responseDialog.value = null;
 };
 
-const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership, count } = usePartners();
+const { fetchDemandPartners, demandPartners, sendResponse, loading, updatePartnership } = usePartners();
 
 const postalCodeInput = ref('');
 const cityInput = ref('');
@@ -711,7 +711,7 @@ const fetchInitialData = async (pageNum, perPageNum) => {
         pageNum,
         perPageNum,
         {
-            zip_code: searchFormData.postalCodeTags,
+            zip_code: searchFormData.postalCodeTags.join(','),
             city: searchFormData.cityTags,
             type: searchFormData.type,
         });
@@ -743,7 +743,7 @@ const loadDemandPartners = async () => {
         page.value,
         perPage.value,
         {
-            zip_code: searchFormData.postalCodeTags,
+            zip_code: searchFormData.postalCodeTags.join(','),
             city: searchFormData.cityTags,
             type: searchFormData.type,
         },
@@ -780,7 +780,7 @@ const handleTabChange = async (newTab: string) => {
         page.value,
         perPage.value,
         {
-            zip_code: searchFormData.postalCodeTags,
+            zip_code: searchFormData.postalCodeTags.join(','),
             city: searchFormData.cityTags,
             type: searchFormData.type,
         });
