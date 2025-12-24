@@ -313,6 +313,7 @@ export type UserPartner = {
     type: string;
     duration: string;
     has_responded: boolean;
+    status: 'open' | 'closed';
     description: string | null;
 };
 

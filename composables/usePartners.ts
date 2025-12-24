@@ -59,9 +59,17 @@ export const usePartners = () => {
         });
     };
 
-    const fetchResponses = async () => {
-        const response = await $apifetch(`/api/partners/responses/receive`, { method: 'GET' });
-        demandResponses.value = response;
+    const fetchResponses = async (userPartnerId?: number | null) => {
+        const query = userPartnerId
+            ? `?userPartnerId=${userPartnerId}`
+            : '';
+
+        const response = await $apifetch(
+            `/api/partners/responses/receive${query}`,
+            { method: 'GET' },
+        );
+
+        demandResponses.value = response.responses;
     };
 
     const updateStatusResponse = async (userPartnerResponse) => {

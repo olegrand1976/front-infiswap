@@ -279,7 +279,7 @@ const columns: ColumnDef<UserPartner>[] = [
             return h(
                 NuxtLink,
                 {
-                    to: `/dashboard/admin/replacements/interest/${id}`,
+                    to: `/dashboard/admin/partners/interest/${id}`,
                     class: 'text-blue-600 hover:underline',
                     style: 'display: block; margin-left: 3rem;',
                 },
@@ -317,6 +317,7 @@ const columns: ColumnDef<UserPartner>[] = [
             const actions = [
                 {
                     label: 'Modifier',
+                    onClick: () => handleEdit(partnership),
                 },
                 ...(isSuperAdmin.value
                     ? [
@@ -370,6 +371,10 @@ watch(
     },
     { deep: true },
 );
+
+const handleEdit = (userPartner: UserPartner) => {
+    navigateTo(`/dashboard/admin/partners/${userPartner.id}`);
+};
 
 const handleDelete = async (partnership: UserPartner) => {
     await forceDelete(partnership.id).then(() => {

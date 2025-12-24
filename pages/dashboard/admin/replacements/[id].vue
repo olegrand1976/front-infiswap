@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DashboardAdminPageHeader title="Mis à jour d'un remplacement" />
+        <DashboardAdminPageHeader title="Mise à jour d'un remplacement" />
         <DashboardAdminPageContent class="bg-gray-100">
             <ReplacementsAdminForm :replacement="replacement" />
         </DashboardAdminPageContent>
