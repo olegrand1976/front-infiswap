@@ -53,15 +53,20 @@
                     </p>
 
                     <div
-                        v-if="partnership && partnership.status == 'closed' && form.status == 'closed' && isAdmin"
+                        v-if="partnership && isAdmin"
                         class="text-center mt-4"
                     >
                         <Button
                             class="w-full max-w-sm rounded"
-                            @click.prevent="handleOpenReleaseConfirmation"
+                            @click.prevent="form.status == 'closed' ? handleOpenReleaseConfirmation() : handleRelease('closed')"
                         >
                             <ArrowPathIcon class="mr-2" />
-                            <span>Ré-ouvrir la demande</span>
+                            <span v-if="form.status == 'closed'">
+                                Ré-ouvrir la demande
+                            </span>
+                            <span v-else>
+                                Fermer la demande
+                            </span>
                         </Button>
                     </div>
                 </div>
@@ -167,7 +172,7 @@
                     </AlertDialogCancel>
                     <AlertDialogAction
                         class="rounded"
-                        @click.prevent="handleRelease('open')"
+                        @click.prevent="form.status == 'closed' ? handleRelease('open') : handleRelease('closed')"
                     >
                         Valider
                     </AlertDialogAction>
@@ -267,16 +272,17 @@ async function handleRelease(status: string) {
 
     try {
         const response = await updatePartnership(payload);
-        $toast({
-            description: 'Demande de collaboration ré-ouverte',
-        });
 
         form.status = response.partnership.status;
+
+        $toast({
+            description: form.status == 'open' ? 'Demande de collaboration ré-ouverte' : 'Demande de collaboration fermée',
+        });
     }
     catch {
         $toast({
             variant: 'destructive',
-            description: 'Erreur lors de la fermeture de la demande',
+            description: form.status == 'open' ? 'Erreur lors de l\'ouverture de la demande' : 'Erreur lors de la fermeture de la demande',
         });
     }
 

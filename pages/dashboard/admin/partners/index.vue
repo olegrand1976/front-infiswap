@@ -1,6 +1,9 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Des binômes" />
+        <DashboardAdminPageHeader
+            title="Des binômes"
+            :count="count"
+        />
 
         <DashboardAdminPageContent>
             <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide mb-4">
@@ -66,8 +69,9 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { fetchDemandPartners, demandPartners, forceDelete } = usePartners();
+const { fetchDemandPartners, demandPartners, forceDelete, updatePartnership, count } = usePartners();
 
+const { $toast } = useNuxtApp();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const { isSuperAdmin } = useAuth();
@@ -175,8 +179,27 @@ const columns: ColumnDef<UserPartner>[] = [
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }, () => ['Code postal', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const zip_code = Number(row.original.user.zip_code);
-            return h('div', { class: 'ml-8' }, Number(zip_code));
+            const zipCode = Number(row.original.user.zip_code);
+            const isClosed = row.original.status === 'closed';
+
+            return h('div', { class: 'relative ml-8 flex items-center' }, [
+                isClosed && h(
+                    'span',
+                    {
+                        class: `
+                        absolute -top-4 -left-10
+                        bg-primary rounded-md text-white
+                        text-xs px-2 py-0.5
+                        font-semibold
+                        shadow
+                        z-10 animate-pulse
+                    `,
+                    },
+                    'FERMÉ',
+                ),
+
+                h('span', zipCode.toString()),
+            ]);
         },
         sortingFn: 'alphanumeric',
     },
@@ -319,6 +342,10 @@ const columns: ColumnDef<UserPartner>[] = [
                     label: 'Modifier',
                     onClick: () => handleEdit(partnership),
                 },
+                {
+                    label: partnership.status == 'open' ? 'Fermer' : 'Ouvrir',
+                    onClick: () => partnership.status == 'open' ? handleOpenOrClose(partnership, 'closed') : handleOpenOrClose(partnership, 'open'),
+                },
                 ...(isSuperAdmin.value
                     ? [
                             {
@@ -374,6 +401,37 @@ watch(
 
 const handleEdit = (userPartner: UserPartner) => {
     navigateTo(`/dashboard/admin/partners/${userPartner.id}`);
+};
+
+const handleOpenOrClose = async (
+    partnership: UserPartner,
+    status: 'open' | 'closed',
+) => {
+    try {
+        await updatePartnership({ ...partnership, status });
+
+        demandPartners.value.data = demandPartners.value.data.map(p =>
+            p.id === partnership.id
+                ? { ...p, status }
+                : p,
+        );
+
+        $toast({
+            description:
+                status === 'closed'
+                    ? 'Demande fermée avec succès'
+                    : 'Demande ouverte avec succès',
+        });
+    }
+    catch {
+        $toast({
+            variant: 'destructive',
+            description:
+                status === 'closed'
+                    ? 'Une erreur est survenue lors de la fermeture'
+                    : 'Une erreur est survenue lors de l’ouverture',
+        });
+    }
 };
 
 const handleDelete = async (partnership: UserPartner) => {
