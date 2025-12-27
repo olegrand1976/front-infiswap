@@ -38,15 +38,7 @@
             </div>
 
             <div class="bg-white container w-full xl:h-[100vh] lg:h-[55vh] flex flex-col space-y-12 justify-center items-center relative">
-                <div class="absolute top-8 left-8">
-                    <button
-                        class="flex items-center space-x-2 text-primary hover:underline group"
-                        @click="navigateTo('/login')"
-                    >
-                        <ArrowLeftIcon class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                        <span class="font-medium">Retour</span>
-                    </button>
-                </div>
+                <BackButton to="/login" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
@@ -95,14 +87,7 @@
         <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
-            <div class="absolute top-4 left-4 z-30">
-                <button
-                    class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm text-primary"
-                    @click="navigateTo('/login')"
-                >
-                    <ArrowLeftIcon class="w-6 h-6" />
-                </button>
-            </div>
+            <BackButton to="/login" />
 
             <div class="flex flex-col items-center space-y-2 px-6 mt-32 text-center">
                 <h1 class="text-lg text-primary">
@@ -155,8 +140,9 @@
 </template>
 
 <script lang="ts" setup>
-import { LockClosedIcon, ArrowLeftIcon } from '@heroicons/vue/24/solid';
+import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
+import BackButton from '~/components/ui/back-button/BackButton.vue';
 
 const { $toast } = useNuxtApp();
 

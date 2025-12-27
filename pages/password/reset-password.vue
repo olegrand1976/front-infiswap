@@ -37,7 +37,8 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-screen flex flex-col space-y-12 justify-center items-center">
+            <div class="bg-white container w-full xl:h-screen flex flex-col space-y-12 justify-center items-center relative">
+                <BackButton to="/login" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
@@ -67,10 +68,10 @@
                             </h4>
                         </div>
 
-                        <div class="flex justify-center items-center mx-auto pt-4">
+                        <div class="flex w-full justify-center items-center mx-auto pt-4">
                             <Button
                                 type="submit"
-                                class="font-bold px-16 md:text-sm sm:text-xs"
+                                class="font-bold w-[70%] md:text-sm sm:text-xs"
                             >
                                 Réinitialiser
                             </Button>
@@ -82,6 +83,7 @@
 
         <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
+            <BackButton to="/login" />
 
             <h1 class="text-lg text-center text-primary mt-32">
                 Réinitialisez votre <span class="font-bold">mot de passe</span>
@@ -113,8 +115,8 @@
                         </FormItem>
                     </FormField>
 
-                    <div class="px-8 pt-8">
-                        <h4 class="font-light text-xstext-center">
+                    <div class="pt-8">
+                        <h4 class="font-light text-xs lg:text-sm text-center">
                             Saisissez votre adresse éléctronique et nous vous enverrons un code
                             pour réinitialiser votre mot de passe
                         </h4>
@@ -137,6 +139,7 @@
 <script lang="ts" setup>
 import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
+import BackButton from '~/components/ui/back-button/BackButton.vue';
 
 const { $toast } = useNuxtApp();
 definePageMeta({
