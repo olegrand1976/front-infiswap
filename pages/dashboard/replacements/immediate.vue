@@ -383,6 +383,7 @@ const { submit, inProgress } = useSubmit(async () => {
             return navigateTo('/register-immediate');
         }
         console.error('Erreur soumise:', err);
+        throw err;
     }
 });
 

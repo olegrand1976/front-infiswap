@@ -119,6 +119,7 @@ import { useTutorials } from '@/composables/useTutorials';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { useRuntimeConfig } from '#app';
 import type { Tutorial } from '~/lib/types';
+import { getErrorMessage } from '~/lib/utils';
 
 const { tutorials, count, fetchTutorials, deleteTutorial } = useTutorials();
 const { isSuperAdmin } = useAuth();
@@ -382,7 +383,8 @@ const handleEdit = (tutorial: Tutorial) => {
 };
 
 const handleDelete = async (tutorial: Tutorial) => {
-    return await deleteTutorial(tutorial.id).then(async (result) => {
+    try {
+        const result = await deleteTutorial(tutorial.id);
         if (result) {
             $toast({
                 description: result.message,
@@ -390,7 +392,13 @@ const handleDelete = async (tutorial: Tutorial) => {
 
             await fetchTutorials(page.value, perPage.value);
         }
-    });
+    }
+    catch (error) {
+        $toast({
+            description: getErrorMessage(error),
+            variant: 'destructive',
+        });
+    }
 };
 
 useHead({ title: 'Gestion des tutoriels' });
