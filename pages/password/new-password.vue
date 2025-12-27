@@ -76,7 +76,7 @@
                                 type="submit"
                                 class="font-bold px-16 md:text-sm sm:text-xs"
                             >
-                                Réinitialisez le mot de passe
+                                Enregistrer mon nouveau mot de passe
                             </Button>
                         </div>
                     </form>
@@ -130,7 +130,7 @@
                             type="submit"
                             class="font-bold px-16 md:text-sm sm:text-xs"
                         >
-                            Réinitialisez le mot de passe
+                            Enregistrer mon nouveau mot de passe
                         </Button>
                     </div>
                 </form>
