@@ -73,6 +73,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { getErrorMessage } from '~/lib/utils';
 
 const { $apifetch } = useNuxtApp();
 const { $toast } = useNuxtApp();
@@ -153,18 +154,10 @@ const handleSubmit = async (event) => {
         }
     }
     catch (error) {
-        if (error.data.message) {
-            $toast({
-                variant: 'destructive',
-                description: error.data.message,
-            });
-        }
-        else {
-            $toast({
-                variant: 'destructive',
-                description: 'Une erreur s\'est produite. Veuillez réessayer',
-            });
-        }
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
     }
 };
 

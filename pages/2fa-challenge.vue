@@ -157,6 +157,7 @@ import {
     PinInputSeparator,
 } from '@/components/ui/pin-input';
 import { useCookie } from '#app';
+import { getErrorMessage } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
 
@@ -167,16 +168,14 @@ const resendingCode = ref(false);
 const resendCode = async () => {
     resendingCode.value = true;
 
-    return login(JSON.parse(localStorage.getItem('credentials'))).then(async (res) => {
+    return login(JSON.parse(localStorage.getItem('credentials'))).then(async () => {
         await nextTick();
 
-        if (res.message) {
-            $toast({
-                description: 'Un nouveau code a été envoyé.',
-            });
+        $toast({
+            description: 'Un nouveau code a été envoyé.',
+        });
 
-            resendingCode.value = false;
-        }
+        resendingCode.value = false;
     });
 };
 
@@ -195,15 +194,7 @@ const { submit, inProgress } = useSubmit(
         useCookie('2fa_hash').value = '';
         localStorage.removeItem('credentials');
         pinValue.value = [];
-    },
-    {
-        onError: () => {
-            $toast({
-                description: 'Code incorrect',
-                variant: 'destructive',
-            });
-        },
-    },
+    }
 );
 
 definePageMeta({

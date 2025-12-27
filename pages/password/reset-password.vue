@@ -139,6 +139,7 @@
 <script lang="ts" setup>
 import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
+import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
 const { $toast } = useNuxtApp();
@@ -158,7 +159,10 @@ const submitForm = async (event: Event) => {
     event.preventDefault();
 
     if (!email.value) {
-        $toast.error('Veuillez entrer une adresse email valide.');
+        $toast({
+            description: 'Veuillez entrer une adresse email valide.',
+            variant: 'destructive',
+        });
         return;
     }
 
@@ -194,7 +198,7 @@ const submitForm = async (event: Event) => {
         console.error('Erreur API:', error);
         $toast({
             title: 'Oups! Une erreur s\'est produite',
-            description: 'Échec de l\'envoi du formulaire',
+            description: getErrorMessage(error),
             variant: 'destructive',
         });
     }

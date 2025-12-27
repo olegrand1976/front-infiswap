@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref) {
     ref.value
-    = typeof updaterOrValue === 'function'
+        = typeof updaterOrValue === 'function'
             ? updaterOrValue(ref.value)
             : updaterOrValue;
 }
@@ -94,28 +94,28 @@ export function getRole(role: AccountType) {
         case 'developer':
             activeRole.value = 'Développeur';
             break;
-        case 'tester' :
+        case 'tester':
             activeRole.value = 'Testeur';
             break;
         case 'manager':
             activeRole.value = 'Gestionnaire';
             break;
-        case 'community_manager' :
+        case 'community_manager':
             activeRole.value = 'Community Manager';
             break;
         case 'collaborator':
             activeRole.value = 'Collaborateur';
             break;
-        case 'sale_representative' :
+        case 'sale_representative':
             activeRole.value = 'Commerciale';
             break;
-        case 'caregiver' :
+        case 'caregiver':
             activeRole.value = 'Aide soignant(e)';
             break;
-        case 'midwife' :
+        case 'midwife':
             activeRole.value = 'Sage-femme';
             break;
-        case 'nurse' :
+        case 'nurse':
             activeRole.value = 'Infirmier(e)';
             break;
         default:
@@ -316,3 +316,16 @@ export function debounce(func, delay) {
         }, delay);
     };
 };
+
+export function getErrorMessage(error: any): string {
+    if (!error) return 'Une erreur inconnue est survenue';
+
+    if (typeof error === 'string') return error;
+
+    return (
+        error.data?.message
+        || error.response?._data?.message
+        || error.message
+        || 'Une erreur est survenue lors de la communication avec le serveur'
+    );
+}

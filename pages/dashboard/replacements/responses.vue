@@ -304,10 +304,12 @@
 <script lang="ts" setup>
 import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
+import { getErrorMessage } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
 
 const user = useState<User>('user');
+const { $toast } = useNuxtApp();
 const { listResponse, getReplacementResponses } = useListResponse(user.value.id);
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
@@ -333,6 +335,10 @@ const handleAccept = async (responseDetail: ReplacementResponse) => {
         responseDetail.status = 'confirmed';
     }
     catch (error) {
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
         console.error('Failed to update status:', error);
     }
 };
@@ -344,6 +350,10 @@ const handleCancel = async (responseDetail: ReplacementResponse) => {
         await getReplacementResponses();
     }
     catch (error) {
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
         console.error('Failed to update status:', error);
     }
 };

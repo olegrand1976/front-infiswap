@@ -142,6 +142,7 @@
 <script lang="ts" setup>
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
+import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
 const { $toast } = useNuxtApp();
@@ -215,7 +216,7 @@ const resetPassword = async () => {
         console.error('Erreur lors de l\'envoi des données :', error);
         $toast({
             title: 'Oups! Une erreur s\'est produite',
-            description: error.data?.message || 'Échec de l\'envoi du formulaire',
+            description: getErrorMessage(error),
             variant: 'destructive',
         });
     }
