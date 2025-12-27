@@ -41,9 +41,14 @@
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
-                <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Réinitialisez votre <span class="font-bold">mot de passe</span>
-                </h1>
+                <div class="flex flex-col items-center space-y-2">
+                    <h1 class="md:text-2xl sm:text-xl text-center text-primary">
+                        Nouveau <span class="font-bold">mot de passe</span>
+                    </h1>
+                    <p class="text-gray-400 text-sm text-center">
+                        Veuillez saisir votre nouveau mot de passe sécurisé.
+                    </p>
+                </div>
                 <div class="w-full container">
                     <form
                         class="flex flex-col space-y-6 mx-24"
@@ -81,58 +86,43 @@
         <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
-            <h1 class="text-lg text-center text-primary mt-32">
-                Réinitialisez votre <span class="font-bold">mot de passe</span>
-            </h1>
+            <div class="flex flex-col items-center space-y-2 px-6 mt-32 text-center">
+                <h1 class="text-lg text-primary">
+                    Nouveau <span class="font-bold">mot de passe</span>
+                </h1>
+                <p class="text-gray-400 text-xs">
+                    Veuillez saisir votre nouveau mot de passe sécurisé.
+                </p>
+            </div>
 
             <div class="w-full container mt-12">
                 <form
-                    class="flex flex-col space-y-8"
+                    class="flex flex-col space-y-6 px-6"
                     @submit.prevent="resetPassword"
                 >
-                    <FormField name="email">
-                        <FormItem>
-                            <FormLabel class="text-xs text-primary font-bold mb-12">
-                                Nouveau mot de passe
-                            </FormLabel>
-                            <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center space-x-1">
-                                        <LockClosedIcon class="text-primary w-7" />
-                                        <Input
-                                            v-model="formData.password"
-                                            type="password"
-                                            placeholder="Saisissez votre mot de passe"
-                                            class="md:text-sm sm:text-xs"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </div>
-                        </FormItem>
-                    </FormField>
+                    <div class="space-y-4">
+                        <InputIcon
+                            v-model="formData.password"
+                            :icon="LockClosedIcon"
+                            type="password"
+                            label="Nouveau mot de passe"
+                            label-class="text-xs text-primary font-bold mb-2 uppercase"
+                            placeholder="Saisissez votre mot de passe"
+                            class="text-sm w-full"
+                        />
 
-                    <FormField name="email">
-                        <FormItem>
-                            <FormLabel class="text-xs text-primary font-bold mb-12">
-                                Confirmer le nouveau mot de passe
-                            </FormLabel>
-                            <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
-                                <FormControl>
-                                    <div class="flex items-center space-x-1">
-                                        <LockClosedIcon class="text-primary w-7" />
-                                        <Input
-                                            v-model="formData.passwordConfirm"
-                                            type="password"
-                                            placeholder="Saisissez votre mot de passe"
-                                            class="md:text-sm sm:text-xs"
-                                        />
-                                    </div>
-                                </FormControl>
-                            </div>
-                        </FormItem>
-                    </FormField>
+                        <InputIcon
+                            v-model="formData.passwordConfirm"
+                            :icon="LockClosedIcon"
+                            type="password"
+                            label="Confirmer le nouveau mot de passe"
+                            label-class="text-xs text-primary font-bold mb-2 uppercase"
+                            placeholder="Saisissez votre mot de passe"
+                            class="text-sm w-full"
+                        />
+                    </div>
 
-                    <div class="flex justify-center items-center mx-auto pt-12">
+                    <div class="flex justify-center items-center mx-auto pt-8">
                         <Button
                             type="submit"
                             class="font-bold px-16 md:text-sm sm:text-xs"
