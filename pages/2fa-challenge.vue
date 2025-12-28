@@ -194,7 +194,7 @@ const { submit, inProgress } = useSubmit(
         useCookie('2fa_hash').value = '';
         localStorage.removeItem('credentials');
         pinValue.value = [];
-    }
+    },
 );
 
 definePageMeta({

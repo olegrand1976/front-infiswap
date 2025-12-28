@@ -1128,9 +1128,9 @@ import {
     EnvelopeOpenIcon,
     UserGroupIcon,
 } from '@heroicons/vue/24/solid';
+import { useRouter } from 'vue-router';
 import { getErrorMessage } from '~/lib/utils';
 
-import { useRouter } from 'vue-router';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
