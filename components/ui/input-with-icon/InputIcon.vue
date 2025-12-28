@@ -32,14 +32,30 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 
 const sizeClasses = computed(() => {
     const hasIcon = !!props.icon;
+    const isPassword = props.type === 'password';
 
     const baseClasses = {
-        sm: hasIcon ? 'h-8 text-sm pl-6 pr-2' : 'h-8 text-sm px-3',
-        md: hasIcon ? 'h-10 text-base pl-10 pr-3' : 'h-10 text-base px-3',
-        lg: hasIcon ? 'h-12 text-lg pl-10 pr-4' : 'h-12 text-lg px-4',
+        sm: hasIcon ? 'h-9 text-sm pl-9' : 'h-9 text-sm px-4',
+        md: hasIcon ? 'h-11 text-base pl-10' : 'h-11 text-base px-5',
+        lg: hasIcon ? 'h-14 text-lg pl-12' : 'h-14 text-lg px-6',
     };
 
-    return baseClasses[props.size || 'md'];
+    let classes = baseClasses[props.size || 'md'];
+
+    // Add extra right padding for password visibility toggle
+    if (isPassword) {
+        classes += ' pr-12';
+    }
+    else {
+        const paddingRight = {
+            sm: ' pr-4',
+            md: ' pr-5',
+            lg: ' pr-6',
+        };
+        classes += paddingRight[props.size || 'md'];
+    }
+
+    return classes;
 });
 
 const roundedClass = computed(() => {
@@ -83,8 +99,7 @@ const togglePasswordVisibility = () => {
                 :placeholder="placeholder"
                 :disabled="props.disabled"
                 :class="cn(
-                    'flex h-10 w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:text-sm focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-                    sizeClasses[size || 'md'],
+                    'flex w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                     sizeClasses,
                     roundedClass,
                     { 'border-red-500': props.errors && props.errors.length > 0 },
@@ -94,16 +109,16 @@ const togglePasswordVisibility = () => {
             >
             <span
                 v-if="icon"
-                class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+                class="absolute left-0 inset-y-0 flex items-center justify-center pl-3"
             >
                 <component
                     :is="icon"
-                    :class="cn('size-6', 'text-primary', props.iconClass)"
+                    :class="cn('size-5', 'text-primary', props.iconClass)"
                 />
             </span>
             <span
                 v-if="props.type === 'password'"
-                class="absolute end-2 inset-y-0 flex items-center cursor-pointer"
+                class="absolute right-3 inset-y-0 flex items-center cursor-pointer z-10"
                 @click="togglePasswordVisibility"
             >
                 <EyeIcon

@@ -52,14 +52,14 @@
                 </div>
                 <div class="w-full container">
                     <form
-                        class="flex flex-col space-y-6 mx-24"
+                        class="flex flex-col space-y-6 max-w-[500px] mx-auto"
                         @submit.prevent="resetPassword"
                     >
                         <InputIcon
                             v-model="formData.password"
                             :icon="LockClosedIcon"
                             type="password"
-                            placeholder="Nouveau mot de passe"
+                            placeholder="Mot de passe"
                             class="text-sm w-full"
                         />
 
@@ -67,16 +67,16 @@
                             v-model="formData.passwordConfirm"
                             :icon="LockClosedIcon"
                             type="password"
-                            placeholder="Confirmer mot de passe"
+                            placeholder="Confirmation"
                             class="text-sm w-full"
                         />
 
                         <div class="flex justify-center items-center mx-auto pt-8">
                             <Button
                                 type="submit"
-                                class="font-bold px-16 md:text-sm sm:text-xs"
+                                class="font-bold px-12 md:text-sm sm:text-xs"
                             >
-                                Enregistrer mon nouveau mot de passe
+                                Enregistrer
                             </Button>
                         </div>
                     </form>
@@ -100,7 +100,7 @@
 
             <div class="w-full container mt-12">
                 <form
-                    class="flex flex-col space-y-6 px-6"
+                    class="flex flex-col space-y-6"
                     @submit.prevent="resetPassword"
                 >
                     <div class="space-y-4">
@@ -110,7 +110,7 @@
                             type="password"
                             label="Nouveau mot de passe"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            placeholder="Saisissez votre mot de passe"
+                            placeholder="Mot de passe"
                             class="text-sm w-full"
                         />
 
@@ -120,7 +120,7 @@
                             type="password"
                             label="Confirmer le nouveau mot de passe"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            placeholder="Saisissez votre mot de passe"
+                            placeholder="Confirmation"
                             class="text-sm w-full"
                         />
                     </div>
@@ -128,9 +128,9 @@
                     <div class="flex justify-center items-center mx-auto pt-8">
                         <Button
                             type="submit"
-                            class="font-bold px-16 md:text-sm sm:text-xs"
+                            class="font-bold px-12 md:text-sm sm:text-xs"
                         >
-                            Enregistrer mon nouveau mot de passe
+                            Enregistrer
                         </Button>
                     </div>
                 </form>

@@ -56,7 +56,7 @@
                         <InputIcon
                             v-model="email"
                             type="email"
-                            placeholder="Email"
+                            placeholder="Votre email"
                             :icon="EnvelopeIcon"
                         />
 
@@ -103,7 +103,7 @@
                                     <InputIcon
                                         v-model="email"
                                         type="email"
-                                        placeholder="Email"
+                                        placeholder="Votre email"
                                         :icon="EnvelopeIcon"
                                     />
                                 </FormControl>
@@ -120,9 +120,9 @@
                         <div class="flex justify-center items-center mx-auto pt-8">
                             <Button
                                 type="submit"
-                                class="font-bold px-16 text-xs"
+                                class="font-bold px-12 text-xs"
                             >
-                                Envoyer un email
+                                Réinitialiser
                             </Button>
                         </div>
                     </form>
