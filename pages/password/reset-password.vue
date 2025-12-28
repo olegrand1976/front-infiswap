@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
-            <div class="bg-tertiary/30 sm:hidden lg:flex flex-col items-center lg:w-[115vw] relative container">
-                <div class="hidden lg:flex justify-center items-center mb-auto mt-[30%]">
+    <div class="min-h-screen">
+        <div class="hidden lg:flex flex-row justify-center h-auto min-h-screen">
+            <div class="hidden lg:flex bg-tertiary/30 flex-col items-center lg:w-[115vw] relative container">
+                <div class="lg:flex justify-center items-center mb-auto mt-[30%]">
                     <LayoutsAppImage
                         src="/icons/unlock.png"
                         class="lg:w-52"
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-screen flex flex-col space-y-12 justify-center items-center relative">
+            <div class="hidden lg:flex bg-white container w-full flex-col space-y-12 justify-center items-center relative">
                 <BackButton to="/login" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
@@ -57,7 +57,6 @@
                             v-model="email"
                             type="email"
                             placeholder="Email"
-                            class="md:text-sm sm:text-xs"
                             :icon="EnvelopeIcon"
                         />
 
@@ -81,57 +80,56 @@
             </div>
         </div>
 
-        <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
+        <div class="lg:hidden min-h-screen w-full flex flex-col justify-between relative overflow-y-auto">
             <LayoutsHeaderMobile />
             <BackButton to="/login" />
 
-            <h1 class="text-lg text-center text-primary mt-32">
-                Réinitialisez votre <span class="font-bold">mot de passe</span>
-            </h1>
+            <div class="flex flex-col justify-center items-center px-6 flex-grow py-12">
+                <h1 class="text-lg text-center text-primary mb-8">
+                    Réinitialisez votre <span class="font-bold">mot de passe</span>
+                </h1>
 
-            <div class="w-full container mt-8">
-                <form
-                    class="flex flex-col flex-grow"
-                    @submit.prevent="submitForm"
-                >
-                    <FormField name="email">
-                        <FormItem>
-                            <FormLabel class="text-xs text-primary font-bold mb-12">
-                                Votre adresse e-mail
-                            </FormLabel>
-                            <div class="flex flex-col space-x-1 px-4 h-10 rounded-full border border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90">
+                <div class="w-full max-w-sm">
+                    <form
+                        class="flex flex-col"
+                        @submit.prevent="submitForm"
+                    >
+                        <FormField name="email">
+                            <FormItem>
+                                <FormLabel class="text-xs text-primary font-bold mb-2 block">
+                                    Votre adresse e-mail
+                                </FormLabel>
                                 <FormControl>
-                                    <div class="flex items-center space-x-1">
-                                        <EnvelopeIcon class="text-primary w-5" />
-                                        <Input
-                                            v-model="email"
-                                            type="email"
-                                            placeholder="Email"
-                                            class="text-xs"
-                                        />
-                                    </div>
+                                    <InputIcon
+                                        v-model="email"
+                                        type="email"
+                                        placeholder="Email"
+                                        :icon="EnvelopeIcon"
+                                    />
                                 </FormControl>
-                            </div>
-                        </FormItem>
-                    </FormField>
+                            </FormItem>
+                        </FormField>
 
-                    <div class="pt-8">
-                        <h4 class="font-light text-xs lg:text-sm text-center">
-                            Saisissez votre adresse éléctronique et nous vous enverrons un code
-                            pour réinitialiser votre mot de passe
-                        </h4>
-                    </div>
+                        <div class="pt-8">
+                            <h4 class="font-light text-xs text-center px-4">
+                                Saisissez votre adresse éléctronique et nous vous enverrons un code
+                                pour réinitialiser votre mot de passe
+                            </h4>
+                        </div>
 
-                    <div class="flex justify-center items-center mx-auto pt-8">
-                        <Button
-                            type="submit"
-                            class="font-bold px-16 text-xs"
-                        >
-                            Envoyer un email
-                        </Button>
-                    </div>
-                </form>
+                        <div class="flex justify-center items-center mx-auto pt-8">
+                            <Button
+                                type="submit"
+                                class="font-bold px-16 text-xs"
+                            >
+                                Envoyer un email
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </div>
+
+            <div class="bg-primary text-primary h-10 w-full mt-auto" />
         </div>
     </div>
 </template>
@@ -141,6 +139,7 @@ import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
+import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 
 const { $toast } = useNuxtApp();
 definePageMeta({
@@ -204,3 +203,10 @@ const submitForm = async (event: Event) => {
     }
 };
 </script>
+
+<style scoped>
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+</style>
