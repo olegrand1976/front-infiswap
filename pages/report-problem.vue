@@ -47,6 +47,7 @@
 
 <script lang="ts" setup>
 import { useMail } from '~/composables/useMail';
+import { getErrorMessage } from '~/lib/utils';
 
 useHead({
     title: 'Reporter un problème',
@@ -78,12 +79,6 @@ const { submit, inProgress } = useSubmit(async () => {
         });
 
         formData.message = '';
-    },
-    onError: () => {
-        $toast({
-            variant: 'destructive',
-            description: response,
-        });
     },
 });
 

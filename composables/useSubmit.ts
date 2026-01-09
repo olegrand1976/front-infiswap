@@ -1,3 +1,5 @@
+import { getErrorMessage } from '~/lib/utils';
+
 export type ValidationErrors = Record<string, string[]>;
 
 export type UseSubmitOptions<T> = {
@@ -43,10 +45,8 @@ export function useSubmit<T>(
                 });
             }
             else {
-                const errorMessage = e.data?.message || e.message || 'Une erreur est survenue';
-
                 $toast({
-                    title: errorMessage,
+                    title: getErrorMessage(e),
                     variant: 'destructive',
                 });
 

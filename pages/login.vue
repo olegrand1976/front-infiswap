@@ -37,7 +37,8 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col space-y-12 justify-center items-center">
+            <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col space-y-12 justify-center items-center relative">
+                <BackButton to="/" />
                 <div>
                     <LayoutsLogo class="lg:w-80 sm:w-72" />
                 </div>
@@ -127,6 +128,8 @@
         <div class="sm:hidden min-h-screen w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
+            <BackButton to="/" />
+
             <div class="flex flex-col justify-center items-center px-6 flex-grow">
                 <form
                     class="w-full max-w-sm"
@@ -164,7 +167,7 @@
                         </div>
 
                         <NuxtLink
-                            to="/password/reset/reset-password"
+                            to="/password/reset-password"
                             class="text-primary"
                         >*Mot de passe oublié</NuxtLink>
                     </div>
@@ -213,6 +216,8 @@ import { useCookie } from '#app';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import Button from '~/components/ui/button/Button.vue';
+import BackButton from '~/components/ui/back-button/BackButton.vue';
+import { getErrorMessage } from '~/lib/utils';
 
 const router = useRouter();
 const { login } = useAuth();
@@ -235,14 +240,6 @@ const { submit, inProgress } = useSubmit(
         else {
             return router.push('/dashboard');
         }
-    },
-    {
-        onError: (error) => {
-            $toast({
-                description: error.message,
-                variant: 'destructive',
-            });
-        },
     },
 );
 

@@ -290,7 +290,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
-import { regions, departments, formatPhoneNumber } from '~/lib/utils';
+import { regions, departments, formatPhoneNumber, getErrorMessage } from '~/lib/utils';
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 import ReplacementDetailsModal from '~/components/replacements/ReplacementDetailsModal.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
@@ -910,26 +910,34 @@ const getFilteredHistory = computed(() => {
 const confirmRelaunch = async () => {
     if (!selectedReplacement.value || !selectedOption.value) return;
 
-    if (selectedOption.value === 'creator') {
-        const response = await relaunchMailToCreator(selectedReplacement.value);
-        if (response.success === false) {
-            $toast({
-                description: 'Ce remplacement ne remplit pas les conditions pour un renvoi de mail.',
-                variant: 'destructive',
-            });
-            return;
+    try {
+        if (selectedOption.value === 'creator') {
+            const response = await relaunchMailToCreator(selectedReplacement.value);
+            if (response.success === false) {
+                $toast({
+                    description: 'Ce remplacement ne remplit pas les conditions pour un renvoi de mail.',
+                    variant: 'destructive',
+                });
+                return;
+            }
         }
-    }
-    else if (selectedOption.value === 'interested') {
-        await relaunchMailToRegion(selectedReplacement.value);
-    }
+        else if (selectedOption.value === 'interested') {
+            await relaunchMailToRegion(selectedReplacement.value);
+        }
 
-    $toast({
-        description: 'Mail renvoyé avec succès',
-    });
+        $toast({
+            description: 'Mail renvoyé avec succès',
+        });
 
-    await getReplacementsForAdmin();
-    closeDialog();
+        await getReplacementsForAdmin();
+        closeDialog();
+    }
+    catch (error) {
+        $toast({
+            description: getErrorMessage(error),
+            variant: 'destructive',
+        });
+    }
 };
 
 const handleClosed = async (replacement: Replacement) => {

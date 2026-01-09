@@ -172,7 +172,7 @@ import { Button } from '@/components/ui/button';
 import { useContract } from '@/composables/useContract';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
-import { debounce } from '~/lib/utils';
+import { debounce, getErrorMessage } from '~/lib/utils';
 
 const { isSuperAdmin, users, getUsers } = useAuth();
 
@@ -462,8 +462,7 @@ const handleConfirmSign = async () => {
         catch (error) {
             console.error('Erreur lors de la signature du contrat :', error);
             $toast({
-                description: 'Erreur lors de la signature du contrat.',
-                status: 'error',
+                description: getErrorMessage(error),
                 variant: 'destructive',
             });
         }

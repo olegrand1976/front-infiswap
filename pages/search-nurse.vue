@@ -252,6 +252,7 @@ import {
     FaceSmileIcon,
 } from '@heroicons/vue/24/solid';
 import { searchNurse } from '~/composables/usePatients';
+import { getErrorMessage } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
 
@@ -323,25 +324,9 @@ const { submit, inProgress } = useSubmit(
             }, 2000);
         }
         catch (err) {
-            let errorMessage = 'Échec de l\'envoi du formulaire';
-
-            if (err?.data?.errors) {
-                const backendErrors = err.data.errors;
-                const firstKey = Object.keys(backendErrors)[0];
-
-                if (firstKey) {
-                    const firstError = backendErrors[firstKey];
-                    errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
-                    error[firstKey] = errorMessage;
-                }
-            }
-            else if (err?.data?.message) {
-                errorMessage = err.data.message;
-            }
-
             $toast({
                 title: 'Oups! Une erreur s\'est produite',
-                description: errorMessage,
+                description: getErrorMessage(err),
                 variant: 'destructive',
             });
         }

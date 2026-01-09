@@ -102,8 +102,8 @@
 import { useRoute } from 'vue-router';
 import { CheckCircleIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
-import { goBack } from '~/lib/utils';
 
 const { changeStatus } = changeStatusReplacement();
 
@@ -124,7 +124,7 @@ const updateStatus = async (id: number, status: string) => {
     catch (error) {
         $toast({
             variant: 'destructive',
-            description: 'Erreur lors du changement de statut',
+            description: getErrorMessage(error),
         });
         console.error(error);
     }

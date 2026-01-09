@@ -842,7 +842,7 @@
                             </h3>
 
                             <Button
-                                variant="inline"
+                                variant="outline"
                                 class="font-bold text-xs text-primary -mt-1 lg:-mt-2"
                                 @click="proposalDialog = true"
                             >
@@ -1134,9 +1134,9 @@ import {
     EnvelopeOpenIcon,
     UserGroupIcon,
 } from '@heroicons/vue/24/solid';
-
 import { useRouter } from 'vue-router';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { getErrorMessage, goBack } from '~/lib/utils';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1145,7 +1145,6 @@ import { useAuth } from '~/composables/useAuth';
 import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
-import { goBack } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
 const router = useRouter();
@@ -1414,6 +1413,10 @@ const { submit } = useSubmit(
         }
         catch (error) {
             console.log(error);
+            $toast({
+                variant: 'destructive',
+                description: getErrorMessage(error),
+            });
         }
     },
 );
@@ -1431,6 +1434,10 @@ const handleDeleteAvatar = async () => {
     }
     catch (error) {
         console.log(error);
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
     }
 };
 
@@ -1486,7 +1493,7 @@ const disableAuth2Fa = async () => {
         console.log(error);
         $toast({
             variant: 'destructive',
-            description: 'Echec de la mise à jour',
+            description: getErrorMessage(error),
         });
     }
 };
@@ -1542,7 +1549,7 @@ const handleVerifyCode = async () => {
         console.log(error);
         $toast({
             variant: 'destructive',
-            description: 'Echec de la mise à jour',
+            description: getErrorMessage(error),
         });
     }
 };
@@ -1621,7 +1628,7 @@ const handleDeleteAccount = async () => {
         console.log(error);
         $toast({
             variant: 'destructive',
-            description: 'La suppression du compte n\'a pas aboutie',
+            description: getErrorMessage(error),
         });
     }
 };

@@ -152,7 +152,7 @@ import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import type { Contact } from '~/lib/types';
 import { useMail } from '@/composables/useMail';
-import { debounce } from '~/lib/utils';
+import { debounce, getErrorMessage } from '~/lib/utils';
 
 useHead({ title: 'Gestion des contacts' });
 const { sendMail } = useMail();
@@ -420,17 +420,10 @@ const { submit, inProgress } = useSubmit(
             });
         }
         catch (err) {
-            if (err.data && err.data.errors) {
-                const backendErrors = err.data.errors;
-                const firstField = Object.keys(backendErrors)[0];
-                const firstMessage = backendErrors[firstField][0];
-
-                $toast({
-                    description: firstMessage,
-                    status: 'error',
-                    variant: 'destructive',
-                });
-            }
+            $toast({
+                description: getErrorMessage(err),
+                variant: 'destructive',
+            });
         }
     },
 );

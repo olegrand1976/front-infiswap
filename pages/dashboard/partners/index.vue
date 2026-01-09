@@ -643,7 +643,7 @@ import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';
 import type { User, UserPartner } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
-import { goBack } from '~/lib/utils';
+import { goBack, getErrorMessage } from '~/lib/utils';
 
 const selectedPartnership = ref<UserPartner | null>(null);
 
@@ -732,6 +732,10 @@ const handleClosePartenership = async (partnership) => {
         }
     }
     catch (error) {
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
         console.error(error);
     }
 };

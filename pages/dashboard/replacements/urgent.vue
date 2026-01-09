@@ -85,6 +85,7 @@
 
 <script setup lang="ts">
 import { useNearbyReplacements } from '~/composables/useReplacements';
+import { getErrorMessage } from '~/lib/utils';
 
 const user = useUser();
 const { $apifetch, $toast } = useNuxtApp();
@@ -126,15 +127,9 @@ const handleInterest = async (replacementId, nurseId) => {
         });
     }
     catch (error) {
-        let errorMessage = 'Une erreur est survenue.';
-
-        if (error?.response?._data?.message) {
-            errorMessage = error.response._data.message;
-        }
-
         $toast({
             title: 'Oups !',
-            description: errorMessage,
+            description: getErrorMessage(error),
             variant: 'destructive',
         });
     }
