@@ -22,7 +22,16 @@
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">
                             <div>
-                                <p class="font-medium">
+                                <p
+                                    v-if="user?.type == 'institution'"
+                                    class="font-medium"
+                                >
+                                    {{ user?.institution_name || 'Institution XXX' }}
+                                </p>
+                                <p
+                                    v-else
+                                    class="font-medium"
+                                >
                                     {{ user?.full_name || 'xxx XXX' }}
                                 </p>
                                 <p
@@ -31,7 +40,7 @@
                                         'text-primary': !isAdmin,
                                     })"
                                 >
-                                    {{ getRole(user?.account_type) }}
+                                    {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
                                 </p>
                             </div>
                             <template v-if="user?.profil_url != null">

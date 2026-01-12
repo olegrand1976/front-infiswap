@@ -218,6 +218,8 @@ import {
     ShoppingBagIcon,
     ChartBarIcon,
     LinkIcon,
+    BriefcaseIcon,
+    DocumentTextIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -231,7 +233,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isAdmin, logout, isCollaborator } = useAuth();
+const { isAdmin, logout, isCollaborator, isInstitution } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -437,8 +439,28 @@ const adminNavigationItems: NavigationItem[] = [
     },
 ];
 
+const institutionNavigationItems: NavigationItem[] = [
+    {
+        label: 'Tableau de bord',
+        route: '/dashboard/institution',
+        icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Missions',
+        route: '/dashboard/institution/missions',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Factures',
+        route: '/dashboard/institution/invoices',
+        icon: DocumentTextIcon,
+        visible: true,
+    },
+];
+
 const role = computed(() => {
     if (isAdmin.value) return 'admin';
+    if (isInstitution.value) return 'institution';
     if (isCollaborator.value) return 'collaborator';
     return 'nurse';
 });
@@ -448,6 +470,8 @@ const navigationItems = computed(() => {
         case 'admin':
         case 'collaborator':
             return adminNavigationItems.filter(i => i.visible);
+        case 'institution':
+            return institutionNavigationItems;
         default:
             return nurseNavigationItems;
     }

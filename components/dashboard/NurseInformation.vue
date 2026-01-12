@@ -278,12 +278,13 @@
                             </label>
                         </div>
 
-                        <div class="relative flex items-center -mt-1 border border-gray-400 rounded-full sm:mt-0 focus-within:border-primary sm:border-none sm:rounded-none">
+                        <div class="relative flex items-center -mt-1 border border-gray-400 rounded-full sm:-mt-0 focus-within:border-primary sm:border-none sm:rounded-none">
                             <InputIcon
                                 v-model="radiusInput"
                                 type="number"
                                 title="Appuyer sur l'icône pour valider"
-                                class="w-full h-2 pr-10 text-sm bg-transparent border-none rounded sm:h-8 indent-3"
+                                class="w-full h-2 pr-10 text-sm bg-transparent border-none sm:h-8 rounded indent-3"
+                                :input-class="true"
                                 min="1"
                             />
 
@@ -357,7 +358,6 @@
                         <InputIcon
                             v-model="formData.radiusKm"
                             :icon="MapIcon"
-                            icon-class="-mt-5"
                             class="w-full"
                             size="md"
                             :placeholder="'5 km'"

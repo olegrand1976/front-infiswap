@@ -20,6 +20,9 @@ export const useAuth = () => {
     const isAdmin = hasAccountType(['administrator', 'developer', 'collaborator', 'community_manager', 'sale_representative']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
+    const isInstitution = computed((): boolean => {
+        return user.value?.type === 'institution';
+    });
 
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
@@ -511,6 +514,7 @@ export const useAuth = () => {
         isLoggedIn,
         isSuperAdmin,
         isAdmin,
+        isInstitution,
         isCommunityManager,
         isSaleRepresentative,
         isCollaborator,

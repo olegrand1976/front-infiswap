@@ -33,6 +33,8 @@ export type User = {
     full_name: string;
     identifier_number: string;
     email: string;
+    type: 'standard' | 'institution';
+    institution_name?: string | null;
     password?: string;
     gender: Gender;
     phone_number?: string | null;
