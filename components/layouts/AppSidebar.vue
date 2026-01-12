@@ -332,6 +332,17 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: UserGroupIcon,
     },
     {
+        label: 'Missions',
+        route: '/dashboard/institution/missions',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Factures',
+        route: '/dashboard/institution/invoices',
+        icon: DocumentTextIcon,
+        visible: true,
+    },
+    {
         label: 'Paramètres',
         route: '/dashboard/settings',
         icon: Cog8ToothIcon,
@@ -455,6 +466,11 @@ const institutionNavigationItems: NavigationItem[] = [
         route: '/dashboard/institution/invoices',
         icon: DocumentTextIcon,
         visible: true,
+    },
+    {
+        label: 'Paramètres',
+        route: '/dashboard/settings',
+        icon: Cog8ToothIcon,
     },
 ];
 
