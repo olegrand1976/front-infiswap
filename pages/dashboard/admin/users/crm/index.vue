@@ -119,38 +119,52 @@
                 </button>
             </div>
 
-            <template v-if="selectedCrm === 'users'">
-                <CrmAdminList
-                    :users="users"
-                    :page="page"
-                    :per-page="perPage"
-                    @refresh-users="refreshUsers"
-                    @handle-per-page-change="handlePerPageChange"
-                    @set-sort="setSort"
-                />
-            </template>
-            <template v-else-if="selectedCrm === 'commercial'">
-                <CrmSaleAdminList
-                    :users="users"
-                    :page="page"
-                    :per-page="perPage"
-                    @refresh-users="refreshUsers"
-                    @handle-per-page-change="handlePerPageChange"
-                    @set-sort="setSort"
-                    @user-updated="handleUserUpdate"
-                />
-            </template>
-            <template v-else-if="selectedCrm === 'exUsers'">
-                <CrmUserDeletedList
-                    :users="users"
-                    :page="page"
-                    :per-page="perPage"
-                    @refresh-users="refreshUsers"
-                    @handle-per-page-change="handlePerPageChange"
-                    @set-sort="setSort"
-                    @user-updated="handleUserUpdate"
-                />
-            </template>
+            <div
+                v-if="isCountryLoading"
+                class="px-4 space-y-3 mb-6"
+            >
+                <div
+                    v-for="i in 6"
+                    :key="i"
+                    class="flex flex-col gap-6"
+                >
+                    <Skeleton class="h-12 rounded-md bg-gray-50" />
+                </div>
+            </div>
+            <div v-else>
+                <template v-if="selectedCrm === 'users'">
+                    <CrmAdminList
+                        :users="users"
+                        :page="page"
+                        :per-page="perPage"
+                        @refresh-users="refreshUsers"
+                        @handle-per-page-change="handlePerPageChange"
+                        @set-sort="setSort"
+                    />
+                </template>
+                <template v-else-if="selectedCrm === 'commercial'">
+                    <CrmSaleAdminList
+                        :users="users"
+                        :page="page"
+                        :per-page="perPage"
+                        @refresh-users="refreshUsers"
+                        @handle-per-page-change="handlePerPageChange"
+                        @set-sort="setSort"
+                        @user-updated="handleUserUpdate"
+                    />
+                </template>
+                <template v-else-if="selectedCrm === 'exUsers'">
+                    <CrmUserDeletedList
+                        :users="users"
+                        :page="page"
+                        :per-page="perPage"
+                        @refresh-users="refreshUsers"
+                        @handle-per-page-change="handlePerPageChange"
+                        @set-sort="setSort"
+                        @user-updated="handleUserUpdate"
+                    />
+                </template>
+            </div>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -159,6 +173,7 @@
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
+import { Skeleton } from '@/components/ui/skeleton';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm } from '@/composables/useCrm';
 import { useProduct } from '~/composables/useProduct';
@@ -171,6 +186,7 @@ definePageMeta({
 });
 
 const selectedCrm = ref('users');
+const isCountryLoading = ref(false);
 const { getCrmPlus, users, trashCount } = useCrm();
 const { getAll } = useProduct();
 const route = useRoute();
@@ -183,10 +199,16 @@ const countryTabs = [
     { label: 'France', value: 'fr' },
 ];
 
-const setCountryFilter = (country) => {
+const setCountryFilter = async (country) => {
+    if (option.value.country === country) return;
+
+    isCountryLoading.value = true;
     option.value.country = country;
     page.value = 1;
-    filterUsers();
+
+    await filterUsers();
+
+    isCountryLoading.value = false;
 };
 
 const emptyFilter = {
