@@ -75,11 +75,20 @@ definePageMeta({
     middleware: 'institution',
 });
 
+const statusLabel = {
+    open: 'Planifiée',
+    in_progress: 'En cours',
+    completed: 'Terminée',
+    cancelled: 'Annulée',
+};
+
+const router = useRouter();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 
 const initialFilter = {
     date: '',
+    type: 'institution',
 };
 
 const option = ref({ ...initialFilter });
@@ -159,7 +168,7 @@ const columns: ColumnDef<Mission>[] = [
         },
     },
     {
-        id: 'Service',
+        id: 'service',
         accessorFn: row => row.service,
         header: () =>
             h(Button, {
@@ -168,6 +177,18 @@ const columns: ColumnDef<Mission>[] = [
         cell: ({ row }) => {
             const service = row.original.service;
             return h('div', { class: 'ml-4 w-40 truncate' }, service);
+        },
+    },
+    {
+        id: 'status',
+        accessorFn: row => row.status,
+        header: () =>
+            h(Button, {
+                variant: 'ghost',
+            }, () => ['Statut', h('', { class: 'ml-2 h-4 w-4' })]),
+        cell: ({ row }) => {
+            const status = row.original.status;
+            return h('div', { class: 'px-4 py-3 text-xs font-medium bg-primary/20 text-gray-700 rounded-full' }, statusLabel[status]);
         },
     },
     {
@@ -211,13 +232,21 @@ const columns: ColumnDef<Mission>[] = [
         id: 'actions',
         header: 'Actions',
         enableHiding: false,
-        cell: () => {
+        cell: ({row}) => {
+            const mission = row.original;
             const actions = [
                 {
                     label: 'Modifier',
+                    onClick: () => handleEdit(mission),
+                },
+                {
+                    label: 'Changer le statut',
                 },
                 {
                     label: 'Voir les candidatures',
+                },
+                {
+                    label: 'Générer la facture',
                 },
                 {
                     label: 'Supprimer',
@@ -261,4 +290,8 @@ watch(
     },
     { deep: true },
 );
+
+const handleEdit = (mission: Mission) => {
+    router.push(`/dashboard/institution/missions/${mission.id}`);
+};
 </script>

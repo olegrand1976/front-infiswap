@@ -432,6 +432,7 @@ export type Mission = {
     start_date: string;
     end_date?: string;
     service: string;
+    status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
     accepted_candidate?: User;
     created_at?: string;

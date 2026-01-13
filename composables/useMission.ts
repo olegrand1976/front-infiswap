@@ -28,11 +28,26 @@ export const useMissions = () => {
         });
     }
 
+    async function getById(id: number) {
+        return await $apifetch(`api/institution/missions/${id}`);
+    }
+
+    async function update(id, formData) {
+        const response = await $apifetch(`api/institution/missions/${id}`, {
+            method: 'put',
+            body: formData,
+        });
+
+        return response;
+    }
+
     return {
         missions,
         count,
         create,
         getAll,
+        getById,
+        update,
         error,
         loading,
     };

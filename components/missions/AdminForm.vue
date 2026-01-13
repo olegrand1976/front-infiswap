@@ -8,7 +8,7 @@
         <div class="mt-8 grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
                 <h1 class="font-semibold text-gray-600">
-                    Nouvelle mission
+                    {{ mission?.id ? 'Mettre à jour la mission' : 'Nouvelle mission' }}
                 </h1>
                 <p class="mt-2 text-md text-gray-500">
                     Les informations à compléter
@@ -18,14 +18,14 @@
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-8">
                 <div class="grid sm:grid-cols-2 gap-4">
                     <InputIcon
-                        v-model="formData.startDate"
+                        v-model="startDate"
                         type="datetime-local"
                         rounded="md"
                         label="Date de début"
                         placeholder="Date de début"
                     />
                     <InputIcon
-                        v-model="formData.endDate"
+                        v-model="endDate"
                         type="datetime-local"
                         rounded="md"
                         label="Date de fin (* optionnel)"
@@ -44,7 +44,7 @@
                 </div>
 
                 <InputIcon
-                    v-model="formData.requiredDiploma"
+                    v-model="formData.required_diploma"
                     rounded="md"
                     label="Diplôme requis"
                     placeholder="Diplôme requis"
@@ -58,7 +58,7 @@
                         class="rounded-md w-52"
                         :in-progress="inProgress"
                     >
-                        Créer une mission
+                        {{ mission?.id ? 'Mettre à jour' : 'Créer une mission' }}
                     </Button>
                 </div>
             </div>
@@ -67,19 +67,62 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from '~/lib/types';
+import type { Mission, User } from '~/lib/types';
+
+const props = defineProps({
+    mission: {
+        type: Object as PropType<Mission>,
+        default: () => ({
+            id: undefined,
+            institution_id: undefined,
+            start_date: '',
+            end_date: '',
+            service: '',
+            status: '',
+            required_diploma: '',
+        }),
+    },
+});
 
 const user = useState<User>('user');
-const { create } = useMissions();
+const { create, update } = useMissions();
 
 const { $toast } = useNuxtApp();
 
-const formData = reactive({
-    institutionId: user.value.id || null,
-    startDate: '',
-    endDate: '',
-    service: '',
-    requiredDiploma: '',
+const formData = reactive({ ...props.mission });
+watch(() => props.mission, (newVal) => {
+    Object.assign(formData, newVal);
+}, { deep: true });
+
+function toDatetimeLocal(value?: string | null) {
+    if (!value) return null;
+
+    const date = new Date(value);
+    return date.toISOString().slice(0, 16);
+}
+
+function fromDatetimeLocal(value?: string | null) {
+    if (!value) return null;
+
+    return new Date(value).toISOString();
+}
+
+const startDate = computed({
+    get() {
+        return toDatetimeLocal(formData.start_date);
+    },
+    set(value) {
+        formData.start_date = fromDatetimeLocal(value);
+    },
+});
+
+const endDate = computed({
+    get() {
+        return toDatetimeLocal(formData.end_date);
+    },
+    set(value) {
+        formData.end_date = fromDatetimeLocal(value);
+    },
 });
 
 const resetForm = () => {
@@ -93,13 +136,21 @@ const resetForm = () => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
-        formData.institutionId = user.value.id;
-        await create(formData);
-        $toast({
-            description: 'Mission créé avec succès',
-        });
+        if (formData.id == undefined) {
+            formData.institution_id = user.value.id;
+            await create(formData);
+            $toast({
+                description: 'Mission créé avec succès',
+            });
 
-        resetForm();
+            resetForm();
+        }
+        else {
+            await update(formData.id, formData);
+            $toast({
+                description: 'Mission mis à jour avec succès',
+            });
+        }
     }
     catch (err) {
         if (err.data?.errors) {
