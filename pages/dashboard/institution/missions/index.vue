@@ -66,7 +66,8 @@ import { PERPAGE } from '~/lib/constants';
 import type { Mission } from '~/lib/types';
 import { debounce } from '~/lib/utils';
 
-const { getAll, missions } = useMissions();
+const { $toast } = useNuxtApp();
+const { getAll, missions, remove } = useMissions();
 
 useHead({ title: 'Mission' });
 
@@ -232,7 +233,7 @@ const columns: ColumnDef<Mission>[] = [
         id: 'actions',
         header: 'Actions',
         enableHiding: false,
-        cell: ({row}) => {
+        cell: ({ row }) => {
             const mission = row.original;
             const actions = [
                 {
@@ -250,6 +251,8 @@ const columns: ColumnDef<Mission>[] = [
                 },
                 {
                     label: 'Supprimer',
+                    confirm: true,
+                    onClick: () => handleDelete(mission),
                 },
             ];
 
@@ -293,5 +296,17 @@ watch(
 
 const handleEdit = (mission: Mission) => {
     router.push(`/dashboard/institution/missions/${mission.id}`);
+};
+
+const handleDelete = async (mission: Mission) => {
+    return await remove(mission.id).then(async () => {
+        missions.value.data = missions.value.data.filter(
+            m => m.id !== mission.id,
+        );
+
+        $toast({
+            description: 'Mission supprimée avec succès.',
+        });
+    });
 };
 </script>

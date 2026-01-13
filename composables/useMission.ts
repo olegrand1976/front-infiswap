@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useNuxtApp } from '#app';
+
+type MissionList = {
+    data: any[];
+    meta: any;
+};
 
 export const useMissions = () => {
     const { $apifetch } = useNuxtApp();
-    const missions = useState('missions', () => []);
+    const missions = useState<MissionList>('missions', () => ({ data: [], meta: {} }));
     const count = useState<number>('missionsCount', () => 0);
     const error = useState('error', () => null);
     const loading = useState('loading', () => false);
@@ -41,6 +47,12 @@ export const useMissions = () => {
         return response;
     }
 
+    async function remove(id: number) {
+        return await $apifetch(`api/institution/missions/${id}`, {
+            method: 'DELETE',
+        });
+    }
+
     return {
         missions,
         count,
@@ -48,6 +60,7 @@ export const useMissions = () => {
         getAll,
         getById,
         update,
+        remove,
         error,
         loading,
     };
