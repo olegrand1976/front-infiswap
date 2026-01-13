@@ -413,3 +413,27 @@ export type Stat = {
     count: number;
     last_count: string;
 };
+
+export type Mission = {
+    id: number;
+    institution_id: number;
+    institution: {
+        id: number;
+        institution_name: string;
+        type: string;
+        fullname: string;
+        email: string;
+        phone_number: string;
+        street_address: string | null;
+        city: string | null;
+        zip_code: string | null;
+        country: string | null;
+    };
+    start_date: string;
+    end_date?: string;
+    service: string;
+    required_diploma: string;
+    accepted_candidate?: User;
+    created_at?: string;
+    updated_at?: string;
+};

@@ -41,7 +41,7 @@
                     :default-page="page"
                     :per-page="perPage"
                     :total="demandPartners.meta.total"
-                    @update:page="refreshReplacement"
+                    @update:page="refreshDemand"
                     @update:per-page="handlePerPageChange"
                 />
             </div>
@@ -107,7 +107,7 @@ const filterPartnerships = async () => {
 
 const debouncedFilterPartnerships = debounce(filterPartnerships, 100);
 
-const refreshReplacement = async (pge: number) => {
+const refreshDemand = async (pge: number) => {
     page.value = pge;
     await filterPartnerships();
 };
