@@ -105,6 +105,7 @@ const filterMissions = async () => {
         perPage.value,
         {
             date: currentFilter.date,
+            type: 'institution',
         });
 };
 

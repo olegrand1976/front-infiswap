@@ -428,6 +428,7 @@ export type Mission = {
         city: string | null;
         zip_code: string | null;
         country: string | null;
+        profil_url: string | null;
     };
     start_date: string;
     end_date?: string;

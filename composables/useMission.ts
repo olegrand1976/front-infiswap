@@ -65,3 +65,28 @@ export const useMissions = () => {
         loading,
     };
 };
+
+export const useMissionResponses = () => {
+    const { $apifetch } = useNuxtApp();
+    const responses = useState<MissionList>('missionResponses', () => ({ data: [], meta: {} }));
+    const count = useState<number>('missionResponsesCount', () => 0);
+    const error = useState('missionResponsesError', () => null);
+    const loading = useState('missionResponsesLoading', () => false);
+
+    async function apply(formData) {
+        const response = await $apifetch(`/api/institution/missions/responses`, {
+            method: 'post',
+            body: formData,
+        });
+
+        return response;
+    }
+
+    return {
+        responses,
+        count,
+        apply,
+        error,
+        loading,
+    };
+};

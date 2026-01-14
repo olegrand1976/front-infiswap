@@ -121,7 +121,10 @@
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
-                <div class="flex justify-between items-center mx-auto">
+                <div
+                    v-if="user.type != 'institution'"
+                    class="flex justify-between items-center mx-auto"
+                >
                     <CopyButton
                         variant="none"
                         label="Inviter vos collègues"
@@ -220,6 +223,7 @@ import {
     LinkIcon,
     BriefcaseIcon,
     DocumentTextIcon,
+    MegaphoneIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -305,6 +309,23 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: UsersIcon,
     },
     {
+        label: 'Missions',
+        route: '/dashboard/missions',
+        icon: BriefcaseIcon,
+        children: [
+            {
+                label: 'Offres',
+                route: '/dashboard/missions',
+                icon: MegaphoneIcon,
+            },
+            {
+                label: 'Mes missions',
+                route: '/dashboard/missions/me',
+                icon: BriefcaseIcon,
+            },
+        ],
+    },
+    {
         label: 'Binômes',
         route: '/dashboard/partners',
         icon: UserGroupIcon,
@@ -330,17 +351,6 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Mon groupement',
         route: '/dashboard/group',
         icon: UserGroupIcon,
-    },
-    {
-        label: 'Missions',
-        route: '/dashboard/institution/missions',
-        icon: BriefcaseIcon,
-    },
-    {
-        label: 'Factures',
-        route: '/dashboard/institution/invoices',
-        icon: DocumentTextIcon,
-        visible: true,
     },
     {
         label: 'Paramètres',
