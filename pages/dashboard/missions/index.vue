@@ -46,6 +46,7 @@
             <div class="flex items-center justify-between w-full col-span-2 gap-6 md:justify-start">
                 <Button
                     class="flex items-center justify-center px-4 text-sm bg-primary h-11"
+                    @click="reinitializeFilter"
                 >
                     <ArrowPathIcon class="w-6" />
                     <span class="block ml-2 text-sm md:hidden">Réinitialiser</span>
@@ -221,6 +222,28 @@ const isExpanded = ref(false);
 const toggleExpand = () => {
     isExpanded.value = !isExpanded.value;
 };
+
+const reinitializeFilter = async () => {
+    option.value.date = '';
+    option.value.institutionName = '';
+
+    page.value = 1;
+    await filterMissions();
+};
+
+watch(
+    () => [option.value.institutionName, option.value.date],
+    async ([newInstitution, newDate], [oldInstitution, oldDate]) => {
+        const wasFiltered
+            = (oldInstitution && !newInstitution)
+                || (oldDate && !newDate);
+
+        if (wasFiltered) {
+            page.value = 1;
+            await filterMissions();
+        }
+    },
+);
 
 const handleApply = (missionId: number) => {
     router.push(`/dashboard/missions/${missionId}/apply`);

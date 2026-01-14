@@ -101,7 +101,6 @@ const togglePasswordVisibility = () => {
                 :placeholder="placeholder"
                 :disabled="props.disabled"
                 :class="cn(
-                    props.inputClass,
                     'flex w-full rounded-full py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                     sizeClasses,
                     roundedClass,
