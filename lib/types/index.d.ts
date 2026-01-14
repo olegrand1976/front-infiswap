@@ -439,3 +439,16 @@ export type Mission = {
     created_at?: string;
     updated_at?: string;
 };
+
+export type MissionResponse = {
+    id: number;
+    mission_id: number;
+    mission: Mission;
+    responded_by: number;
+    responder: User;
+    description?: string;
+    status: 'pending' | 'accepted' | 'rejected';
+    responded_at?: string;
+    created_at?: string;
+    updated_at?: string;
+};

@@ -52,6 +52,58 @@
                 />
             </div>
         </DashboardAdminPageContent>
+
+        <Dialog v-model:open="statusDialog">
+            <DialogContent class="max-w-xl p-6">
+                <DialogTitle class="text-lg font-semibold text-gray-900">
+                    Changer le statut
+                </DialogTitle>
+
+                <DialogDescription class="mt-4 text-sm text-gray-600">
+                    En changeant le statut de la mission, vous mettez à jour son état d’avancement
+                </DialogDescription>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <label
+                        v-for="status in statuses"
+                        :key="status.key"
+                        class="cursor-pointer rounded-lg border p-5 transition
+               hover:border-primary"
+                        :class="selectedStatus === status.key
+                            ? 'border-2 border-primary bg-primary/5'
+                            : 'border-gray-200 bg-gray-50'"
+                    >
+                        <input
+                            v-model="selectedStatus"
+                            type="radio"
+                            :value="status.key"
+                            class="sr-only"
+                        >
+
+                        <div class="space-y-1">
+                            <h3 class="font-semibold text-primary">
+                                {{ status.label }}
+                            </h3>
+                            <p class="text-xs text-gray-500">
+                                {{ statusDescription[status.key] }}
+                            </p>
+                        </div>
+                    </label>
+                </div>
+
+                <DialogFooter class="mt-6 flex gap-4 items-center">
+                    <Button
+                        class="bg-gray-200 text-gray-800 hover:bg-gray-300"
+                        @click="handleCloseStatusDialog"
+                    >
+                        Annuler
+                    </Button>
+                    <Button @click="handleChangeStatus">
+                        Enregistrer
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -63,11 +115,11 @@ import UsersName from '@/components/users/Name.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
-import type { Mission } from '~/lib/types';
+import type { Mission, User } from '~/lib/types';
 import { debounce } from '~/lib/utils';
 
 const { $toast } = useNuxtApp();
-const { getAll, missions, remove } = useMissions();
+const { getAll, missions, update, remove } = useMissions();
 
 useHead({ title: 'Mission' });
 
@@ -83,8 +135,26 @@ const statusLabel = {
     cancelled: 'Annulée',
 };
 
+const statuses = [
+    { key: 'open', label: 'Planifiée' },
+    { key: 'in_progress', label: 'En cours' },
+    { key: 'completed', label: 'Terminée' },
+    { key: 'cancelled', label: 'Annulée' },
+];
+
+const statusDescription: Record<string, string> = {
+    open: 'Mission planifiée, en attente de démarrage.',
+    in_progress: 'Mission actuellement en cours.',
+    completed: 'Mission terminée avec succès.',
+    cancelled: 'Mission annulée par l’institution.',
+};
+
 const router = useRouter();
 const perPage = ref(PERPAGE);
+const user = useState<User>('user');
+const selectedMission = ref<Mission>(null);
+const selectedStatus = ref(null);
+const statusDialog = ref(false);
 const page = ref(1);
 
 const initialFilter = {
@@ -190,7 +260,7 @@ const columns: ColumnDef<Mission>[] = [
             }, () => ['Statut', h('', { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const status = row.original.status;
-            return h('div', { class: 'px-4 py-3 text-xs font-medium bg-primary/20 text-gray-700 rounded-full' }, statusLabel[status]);
+            return h('div', { class: 'px-4 py-3 text-xs text-center font-medium bg-primary/20 text-gray-700 rounded-full' }, statusLabel[status]);
         },
     },
     {
@@ -215,7 +285,7 @@ const columns: ColumnDef<Mission>[] = [
 
         cell: ({ row }) => {
             const user = row.original.accepted_candidate;
-            return h(UsersName, { user });
+            return h(UsersName, { class: 'ml-4', user: user });
         },
     },
     {
@@ -243,6 +313,7 @@ const columns: ColumnDef<Mission>[] = [
                 },
                 {
                     label: 'Changer le statut',
+                    onClick: () => handleOpenStatusDialog(mission),
                 },
                 {
                     label: 'Voir les candidatures',
@@ -309,5 +380,59 @@ const handleDelete = async (mission: Mission) => {
             description: 'Mission supprimée avec succès.',
         });
     });
+};
+
+const handleOpenStatusDialog = (mission: Mission) => {
+    selectedMission.value = mission;
+    selectedStatus.value = mission.status;
+    statusDialog.value = true;
+};
+
+const handleCloseStatusDialog = () => {
+    statusDialog.value = false;
+    selectedMission.value = null;
+    selectedStatus.value = null;
+};
+
+const handleChangeStatus = async () => {
+    const formData = {
+        institution_id: user.value.id,
+        start_date: selectedMission.value.start_date,
+        required_diploma: selectedMission.value.required_diploma,
+        status: selectedStatus.value,
+    };
+
+    try {
+        const response = await update(selectedMission.value.id, formData);
+
+        if (response.data) {
+            $toast({
+                description: 'Mission mis à jour avec succès',
+            });
+
+            const updatedMission = response.data;
+
+            missions.value = {
+                ...missions.value,
+                data: missions.value.data.map(mission =>
+                    mission.id === updatedMission.id
+                        ? { ...mission, ...updatedMission }
+                        : mission,
+                ),
+            };
+
+            handleCloseStatusDialog();
+        }
+    }
+    catch (err) {
+        if (err.data?.errors) {
+            const firstError = Object.values(err.data.errors)[0][0];
+            $toast({
+                description: firstError,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
+    }
 };
 </script>

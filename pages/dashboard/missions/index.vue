@@ -128,6 +128,12 @@
                         {{ formatToDMY(mission.end_date, true) }}
                     </span>
                 </div>
+                <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
+                    <AcademicCapIcon class="h-4 w-4 text-gray-400" />
+                    <span>
+                        {{ mission.required_diploma }}
+                    </span>
+                </div>
 
                 <div class="mt-6 flex items-center justify-end gap-3">
                     <Button @click="handleApply(mission.id)">
@@ -156,7 +162,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeftIcon, ArrowPathIcon, CalendarIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, CalendarIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

@@ -226,6 +226,12 @@
                                 {{ formatToDMY(mission.end_date, true) }}
                             </span>
                         </div>
+                        <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
+                            <AcademicCapIcon class="h-4 w-4 text-gray-400" />
+                            <span>
+                                {{ mission.required_diploma }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div v-else>
@@ -239,7 +245,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeftIcon, ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, CalendarIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

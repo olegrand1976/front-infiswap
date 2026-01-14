@@ -224,6 +224,7 @@ import {
     BriefcaseIcon,
     DocumentTextIcon,
     MegaphoneIcon,
+    UserCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -322,6 +323,11 @@ const nurseNavigationItems: NavigationItem[] = [
                 label: 'Mes missions',
                 route: '/dashboard/missions/me',
                 icon: BriefcaseIcon,
+            },
+            {
+                label: 'Candidature',
+                route: '/dashboard/missions/candidacy',
+                icon: UserCircleIcon,
             },
         ],
     },

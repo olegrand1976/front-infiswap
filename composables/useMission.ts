@@ -73,6 +73,18 @@ export const useMissionResponses = () => {
     const error = useState('missionResponsesError', () => null);
     const loading = useState('missionResponsesLoading', () => false);
 
+    async function getAll(page = 1, perPage = 25, options = {}) {
+        return await $apifetch('/api/institution/missions/responses', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            responses.value = response;
+        });
+    }
+
     async function apply(formData) {
         const response = await $apifetch(`/api/institution/missions/responses`, {
             method: 'post',
@@ -85,6 +97,7 @@ export const useMissionResponses = () => {
     return {
         responses,
         count,
+        getAll,
         apply,
         error,
         loading,
