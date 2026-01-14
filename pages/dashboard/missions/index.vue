@@ -104,9 +104,20 @@
                     </div>
                 </div>
 
-                <p class="mt-5 text-sm leading-relaxed text-gray-700 line-clamp-3">
-                    {{ mission.service }}
-                </p>
+                <div class="mt-5">
+                    <p
+                        class="text-sm leading-relaxed text-gray-700"
+                        :class="!isExpanded ? 'line-clamp-3': ''"
+                    >
+                        {{ mission.service }}
+                    </p>
+                    <button
+                        class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
+                        @click="toggleExpand"
+                    >
+                        {{ isExpanded ? 'Voir moins' : 'Voir plus' }}
+                    </button>
+                </div>
 
                 <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
                     <CalendarIcon class="h-4 w-4 text-gray-400" />
@@ -204,6 +215,12 @@ const searchMission = debounce(async () => {
     await filterMissions();
     isSearching.value = false;
 }, 100);
+
+const isExpanded = ref(false);
+
+const toggleExpand = () => {
+    isExpanded.value = !isExpanded.value;
+};
 
 const handleApply = (missionId: number) => {
     router.push(`/dashboard/missions/${missionId}/apply`);
