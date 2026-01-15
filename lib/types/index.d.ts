@@ -417,6 +417,13 @@ export type Stat = {
 export type Mission = {
     id: number;
     institution_id: number;
+    service_id?: number;
+    service?: {
+        id: number;
+        institution_id: number;
+        name: string;
+        phone_number?: string;
+    };
     institution: {
         id: number;
         institution_name: string;
@@ -432,7 +439,9 @@ export type Mission = {
     };
     start_date: string;
     end_date?: string;
-    service: string;
+    time_start_at: string;
+    time_end_at: string;
+    description: string;
     status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
     accepted_candidate?: User;

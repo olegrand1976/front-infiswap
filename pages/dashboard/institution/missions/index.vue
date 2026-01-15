@@ -117,6 +117,7 @@ import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.v
 import { PERPAGE } from '~/lib/constants';
 import type { Mission, User } from '~/lib/types';
 import { debounce } from '~/lib/utils';
+import { formatTime } from '~/composables/useDate';
 
 const { $toast } = useNuxtApp();
 const { getAll, missions, update, remove } = useMissions();
@@ -214,6 +215,18 @@ const columns: ColumnDef<Mission>[] = [
         enableHiding: false,
     },
     {
+        id: 'service',
+        accessorFn: row => row.service,
+        header: () =>
+            h(Button, {
+                variant: 'ghost',
+            }, () => ['Service', h('', { class: 'ml-2 h-4 w-4' })]),
+        cell: ({ row }) => {
+            const serviceName = row.original.service.name;
+            return h('div', { class: 'ml-4 w-40 truncate' }, serviceName);
+        },
+    },
+    {
         id: 'start_date',
         accessorFn: row => row.start_date,
         header: () =>
@@ -223,7 +236,7 @@ const columns: ColumnDef<Mission>[] = [
             }, () => ['Date de début', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const startDate = row.original.start_date;
-            return h('div', { class: 'ml-4' }, formatToDMY(startDate, true));
+            return h('div', { class: 'ml-4' }, formatToDMY(startDate));
         },
     },
     {
@@ -236,19 +249,32 @@ const columns: ColumnDef<Mission>[] = [
             }, () => ['Date de fin', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const endDate = row.original.end_date;
-            return h('div', { class: 'ml-4' }, formatToDMY(endDate, true));
+            return h('div', { class: 'ml-4' }, formatToDMY(endDate));
         },
     },
     {
-        id: 'service',
-        accessorFn: row => row.service,
+        id: 'description',
+        accessorFn: row => row.description,
         header: () =>
             h(Button, {
                 variant: 'ghost',
-            }, () => ['Service', h('', { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Description', h('', { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const service = row.original.service;
-            return h('div', { class: 'ml-4 w-40 truncate' }, service);
+            const description = row.original.description;
+            return h('div', { class: 'ml-4 w-40 truncate' }, description);
+        },
+    },
+    {
+        id: 'time_start_at',
+        accessorFn: row => row.time_start_at,
+        header: () =>
+            h(Button, {
+                variant: 'ghost',
+            }, () => ['Horaire', h('', { class: 'ml-2 h-4 w-4' })]),
+        cell: ({ row }) => {
+            const timeStartAt = row.original.time_start_at;
+            const timeEndAt = row.original.time_end_at;
+            return h('div', { class: 'ml-4' }, `${formatTime(timeStartAt)} à ${formatTime(timeEndAt)}`);
         },
     },
     {
@@ -300,7 +326,7 @@ const columns: ColumnDef<Mission>[] = [
                 h('div', {
                     class: 'ml-2 capitalize truncate max-w-[180px] whitespace-nowrap overflow-hidden',
                     title: displayText,
-                }, displayText || '-'),
+                }, displayText || ''),
                 users.length > 0
                 && h(Button, {
                     variant: 'ghost',

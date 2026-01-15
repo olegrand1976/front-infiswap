@@ -19,27 +19,81 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <InputIcon
                         v-model="startDate"
-                        type="datetime-local"
+                        type="date"
                         rounded="md"
                         label="Date de début"
                         placeholder="Date de début"
                     />
                     <InputIcon
                         v-model="endDate"
-                        type="datetime-local"
+                        type="date"
                         rounded="md"
                         label="Date de fin (* optionnel)"
                         placeholder="Date de fin"
                     />
                 </div>
 
+                <div class="space-y-3">
+                    <label class="text-gray-500">
+                        Horaire
+                    </label>
+
+                    <div class="flex gap-6 items-center">
+                        <InputTime
+                            v-model="formData.time_start_at"
+                            class="w-full"
+                            input-class="rounded-md"
+                        />
+                        <p>
+                            à
+                        </p>
+                        <InputTime
+                            v-model="formData.time_end_at"
+                            class="w-full"
+                            input-class="rounded-md"
+                        />
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="text-gray-500">
+                        Associer à un service
+                    </label>
+
+                    <Select v-model="formData.service_id">
+                        <SelectTrigger
+                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                            position="right"
+                        >
+                            <BriefcaseIcon class="text-gray-500 w-9 h-9 sm:w-7 sm:h-7" />
+                            <SelectValue
+                                placeholder="Service"
+                                class="text-nowrap w-full text-sm ml-3 my-auto"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <div
+                                    v-for="service in dataServices"
+                                    :key="service.id"
+                                    class="flex justify-center items-center -ms-3"
+                                >
+                                    <SelectItem :value="service.id">
+                                        <span class="xl:text-sm sm:text-xs">{{ service.name }}</span>
+                                    </SelectItem>
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
                 <div>
-                    <label class="text-gray-500">Service</label>
+                    <label class="text-gray-500">Description</label>
                     <Textarea
-                        v-model="formData.service"
+                        v-model="formData.description"
                         :rows="8"
                         class="w-full border border-gray-300 rounded-md focus-within:border-primary focus-within:border-2"
-                        placeholder="Décrivez le service offert dans cette mission..."
+                        placeholder="Décrivez la mission..."
                     />
                 </div>
 
@@ -67,6 +121,7 @@
 </template>
 
 <script lang="ts" setup>
+import { BriefcaseIcon } from '@heroicons/vue/24/outline';
 import type { Mission, User } from '~/lib/types';
 
 const props = defineProps({
@@ -75,9 +130,12 @@ const props = defineProps({
         default: () => ({
             id: undefined,
             institution_id: undefined,
+            service_id: undefined,
             start_date: '',
             end_date: '',
-            service: '',
+            time_start_at: '',
+            time_end_at: '',
+            description: '',
             status: '',
             required_diploma: '',
         }),
@@ -86,6 +144,11 @@ const props = defineProps({
 
 const user = useState<User>('user');
 const { create, update } = useMissions();
+const { getAll, services } = useInstitutionServices();
+
+const dataServices = computed(() => services.value.data ?? []);
+
+await getAll(1, 50);
 
 const { $toast } = useNuxtApp();
 
@@ -127,10 +190,12 @@ const endDate = computed({
 
 const resetForm = () => {
     Object.assign(formData, {
-        startDate: '',
-        endDate: '',
-        service: '',
-        requiredDiploma: '',
+        start_date: '',
+        end_date: '',
+        time_start_at: '',
+        time_end_at: '',
+        description: '',
+        required_diploma: '',
     });
 };
 

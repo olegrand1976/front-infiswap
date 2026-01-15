@@ -118,7 +118,7 @@
                                 </div>
                             </div>
 
-                            <Badge :class="['text-xs min-w-20', statusClasses[response.status] ?? 'bg-gray-200 text-gray-700']">
+                            <Badge :class="['text-xs min-w-24', statusClasses[response.status] ?? 'bg-gray-200 text-gray-700']">
                                 {{ statusResponse[response?.status] }}
                             </Badge>
                         </div>
@@ -128,7 +128,7 @@
                                 class="text-sm leading-relaxed text-gray-700"
                                 :class="!isExpanded ? 'line-clamp-3': ''"
                             >
-                                {{ response.mission.service }}
+                                {{ response.mission.description }}
                             </p>
                             <button
                                 class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
@@ -141,9 +141,9 @@
                         <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
                             <CalendarIcon class="h-4 w-4 text-gray-400" />
                             <span>
-                                {{ formatToDMY(response.mission.start_date, true) }}
+                                {{ formatToDMY(response.mission.start_date) }}
                                 <span class="mx-1 text-gray-300">→</span>
-                                {{ formatToDMY(response.mission.end_date, true) }}
+                                {{ formatToDMY(response.mission.end_date) }}
                             </span>
                         </div>
                         <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">

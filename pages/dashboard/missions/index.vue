@@ -96,7 +96,7 @@
 
                         <div>
                             <h2 class="text-sm font-semibold text-gray-900">
-                                {{ mission.institution.institution_name }}
+                                {{ mission.institution.institution_name }} {{ mission.service != 'null' ? `- ${mission.service.name}` : '' }}
                             </h2>
                             <p class="text-xs text-gray-500">
                                 Publié {{ formatRelativeDate(mission.created_at) }}
@@ -107,10 +107,10 @@
 
                 <div class="mt-5">
                     <p
-                        class="text-sm leading-relaxed text-gray-700"
+                        class="text-sm leading-relaxed text-gray-700 text-wrap"
                         :class="!isExpanded ? 'line-clamp-3': ''"
                     >
-                        {{ mission.service }}
+                        {{ mission.description }}
                     </p>
                     <button
                         class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
@@ -123,9 +123,17 @@
                 <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
                     <CalendarIcon class="h-4 w-4 text-gray-400" />
                     <span>
-                        {{ formatToDMY(mission.start_date, true) }}
+                        {{ formatToDMY(mission.start_date) }}
                         <span class="mx-1 text-gray-300">→</span>
-                        {{ formatToDMY(mission.end_date, true) }}
+                        {{ formatToDMY(mission.end_date) }}
+                    </span>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
+                    <ClockIcon class="h-4 w-4 text-gray-400" />
+                    <span>
+                        {{ formatTime(mission.time_start_at) }}
+                        <span class="mx-1 text-gray-300">→</span>
+                        {{ formatTime(mission.time_end_at) }}
                     </span>
                 </div>
                 <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
@@ -162,8 +170,8 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, CalendarIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
-import { formatRelativeDate, formatToDMY } from '~/composables/useDate';
+import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';
 
