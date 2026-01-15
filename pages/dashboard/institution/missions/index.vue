@@ -109,7 +109,7 @@
 
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PlusIcon, ArrowPathIcon, ChevronUpDownIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, ArrowPathIcon, ChevronUpDownIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import UsersName from '@/components/users/Name.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -289,6 +289,28 @@ const columns: ColumnDef<Mission>[] = [
         },
     },
     {
+        id: 'matching_candidates',
+        header: () => h(Button, { variant: 'ghost' }, () => 'Candidats'),
+        cell: ({ row }) => {
+            const users = row.original.matching_candidates || [];
+            const displayText = users.map(u => u.full_name).join(', ');
+            const missionId = row.original.id;
+
+            return h('div', { class: 'flex items-center text-center' }, [
+                h('div', {
+                    class: 'ml-2 capitalize truncate max-w-[180px] whitespace-nowrap overflow-hidden',
+                    title: displayText,
+                }, displayText || '-'),
+                users.length > 0
+                && h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    onClick: () => navigateTo(`/dashboard/institution/missions/candidacy/${missionId}`),
+                }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
+            ]);
+        },
+    },
+    {
         accessorKey: 'created_at',
         header: () => {
             return h(Button, {
@@ -317,6 +339,7 @@ const columns: ColumnDef<Mission>[] = [
                 },
                 {
                     label: 'Voir les candidatures',
+                    onClick: () => handleShowCandidacy(mission),
                 },
                 {
                     label: 'Générer la facture',
@@ -368,6 +391,10 @@ watch(
 
 const handleEdit = (mission: Mission) => {
     router.push(`/dashboard/institution/missions/${mission.id}`);
+};
+
+const handleShowCandidacy = (mission: Mission) => {
+    router.push(`/dashboard/institution/missions/candidacy/${mission.id}`);
 };
 
 const handleDelete = async (mission: Mission) => {

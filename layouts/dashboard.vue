@@ -60,7 +60,7 @@
                             <template v-if="roles.length>1">
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    v-for="(role, index) in roles.filter((role) => role!==user.account_type)"
+                                    v-for="(role, index) in roles.filter((role) => role!==user?.account_type)"
                                     :key="index"
                                     @click="switchRole(role)"
                                 >
@@ -73,7 +73,7 @@
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                v-if="user.account_type != 'nurse' && user.account_type != 'caregiver' && user.account_type != 'midwife'"
+                                v-if="user?.account_type != 'nurse' && user?.account_type != 'caregiver' && user?.account_type != 'midwife'"
                             >
                                 <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
                             </DropdownMenuItem>

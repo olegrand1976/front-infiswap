@@ -436,6 +436,8 @@ export type Mission = {
     status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
     accepted_candidate?: User;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    matching_candidates?: any;
     created_at?: string;
     updated_at?: string;
 };

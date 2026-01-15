@@ -94,10 +94,33 @@ export const useMissionResponses = () => {
         return response;
     }
 
+    async function getByMission(id, page = 1, perPage = 25, options = {}) {
+        return await $apifetch(`/api/institution/missions/responses/${id}`, {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            responses.value = response;
+        });
+    }
+
+    async function update(id, formData) {
+        const response = await $apifetch(`api/institution/missions/responses/${id}`, {
+            method: 'put',
+            body: formData,
+        });
+
+        return response;
+    }
+
     return {
         responses,
         count,
         getAll,
+        getByMission,
+        update,
         apply,
         error,
         loading,
