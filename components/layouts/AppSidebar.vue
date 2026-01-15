@@ -231,7 +231,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isAdmin, logout, isCollaborator } = useAuth();
+const { isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -438,16 +438,38 @@ const adminNavigationItems: NavigationItem[] = [
 ];
 
 const role = computed(() => {
-    if (isAdmin.value) return 'admin';
+    if (isAdmin.value || isDeveloper.value) return 'admin';
+    if (isManager.value) return 'manager';
+    if (isCommunityManager.value) return 'community_manager';
+    if (isSaleRepresentative.value) return 'sale_representative';
     if (isCollaborator.value) return 'collaborator';
+    if (isMedical.value) return 'medical';
     return 'nurse';
 });
 
 const navigationItems = computed(() => {
     switch (role.value) {
         case 'admin':
-        case 'collaborator':
             return adminNavigationItems.filter(i => i.visible);
+        case 'manager':
+            return adminNavigationItems.filter(i => i.visible && (
+                !i.route.includes('crm')
+                && !i.route.includes('care-types')
+            ));
+        case 'community_manager':
+        case 'sale_representative':
+            return adminNavigationItems.filter(i => i.visible && (
+                i.route.includes('crm')
+                || i.route.includes('users')
+                || i.route.includes('products')
+                || i.route.includes('stats')
+                || i.route.includes('replacements')
+                || i.route.includes('registrations')
+                || (isSaleRepresentative.value && i.route.includes('contracts'))
+            ));
+        case 'collaborator':
+        case 'medical':
+            return nurseNavigationItems;
         default:
             return nurseNavigationItems;
     }

@@ -17,13 +17,17 @@ export const useAuth = () => {
     const hasAccountType = (types: string[]) => computed(() => types.includes(user.value?.account_type ?? ''));
 
     const isSuperAdmin = hasAccountType(['administrator']);
-    const isAdmin = hasAccountType(['administrator', 'developer', 'collaborator', 'community_manager', 'sale_representative']);
+    const isAdmin = hasAccountType(['administrator', 'developer']);
+    const isDeveloper = hasAccountType(['developer']);
+    const isManager = hasAccountType(['manager']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
-
+    const isMedical = hasAccountType(['nurse', 'caregiver', 'midwife', 'collaborator']);
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
     });
+    const isNurse = hasAccountType(['nurse', 'caregiver', 'midwife']);
+    const isTester = hasAccountType(['tester']);
 
     const isAdminGroup = (groupId: number): boolean => {
         const pivotArray = toRaw(user.value.group_roles);
