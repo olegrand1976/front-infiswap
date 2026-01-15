@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <template>
     <div>
         <!-- Desktop View -->
@@ -105,7 +106,7 @@
 
                         <div class="mt-6 mb-8 border-b border-gray-200" />
 
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             <div class="col-span-2 relative w-full items-center">
                                 <InputIcon
                                     v-model="formData.lastname"
@@ -270,7 +271,10 @@
                                 />
                             </div>
 
-                            <div class="col-span-2">
+                            <div
+                                v-if="formData.accountType != 'institution'"
+                                class="col-span-2"
+                            >
                                 <Select v-model="formData.role">
                                     <SelectTrigger
                                         class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
@@ -298,7 +302,10 @@
                                 </Select>
                             </div>
 
-                            <div class="col-span-2">
+                            <div
+                                v-if="formData.accountType != 'institution'"
+                                class="col-span-2"
+                            >
                                 <Select
                                     v-model="formData.language"
                                     disabled
@@ -424,8 +431,105 @@
                             </div>
 
                             <div
+                                v-if="formData.accountType == 'institution'"
+                                class="mt-6 mb-4 border-b border-gray-200 col-span-4"
+                            />
+
+                            <div
+                                v-if="formData.accountType == 'institution'"
+                                class="flex justify-between gap-4 items-center col-span-4"
+                            >
+                                <h3 class="text-gray-600 font-semibold">
+                                    Services
+                                </h3>
+                                <Button
+                                    variant="ghost"
+                                    class="flex gap-2 items-center text-primary"
+                                    @click="addService"
+                                >
+                                    <PlusIcon class="w-4 h-4" />
+                                    <span>
+                                        Ajouter
+                                    </span>
+                                </Button>
+                            </div>
+
+                            <div
+                                v-for="(service, index) in formData.services"
+                                v-if="formData.accountType == 'institution'"
+                                :key="index"
+                                class="mt-2 col-span-4 grid grid-cols-2 gap-4"
+                            >
+                                <div>
+                                    <InputIcon
+                                        v-model="service.name"
+                                        :icon="BriefcaseIcon"
+                                        size="md"
+                                        placeholder="Nom de service *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.phoneNumber"
+                                        :icon="PhoneIcon"
+                                        size="md"
+                                        placeholder="N° de téléphone"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.street"
+                                        :icon="MapPinIcon"
+                                        size="md"
+                                        placeholder="Rue *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.zipCode"
+                                        :icon="InboxArrowDownIcon"
+                                        size="md"
+                                        placeholder="Code postal *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.city"
+                                        :icon="BuildingOffice2Icon"
+                                        size="md"
+                                        placeholder="Ville *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.additionnalInformation"
+                                        :icon="EllipsisHorizontalCircleIcon"
+                                        size="md"
+                                        placeholder="Complément d'adresse"
+                                    />
+                                </div>
+
+                                <div />
+
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    class="flex gap-2 items-center mt-6 ml-28 max-w-36"
+                                    @click="removeService(index)"
+                                >
+                                    <TrashIcon class="w-4 h-4" />
+                                    <span>Supprimer</span>
+                                </Button>
+                            </div>
+
+                            <div
                                 v-if="formData.accountType != 'institution'"
-                                class="mt-4 col-span-2 lg:col-span-4"
+                                class="mt-4 col-span-2 sm:col-span-4"
                             >
                                 <div class="space-y-4">
                                     <label class="flex items-start cursor-pointer">
@@ -454,7 +558,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-span-2 lg:col-span-4 mt-8 flex justify-center items-center">
+                            <div class="col-span-2 sm:col-span-4 mt-8 flex justify-center items-center">
                                 <Button
                                     class="w-[70%] text-base font-bold"
                                     type="submit"
@@ -547,8 +651,8 @@
 
                     <div class="mt-6 mb-8 border-b border-gray-200" />
 
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="col-span-2 relative w-full items-center">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="col-span-4 relative w-full items-center">
                             <InputIcon
                                 v-model="formData.lastname"
                                 :icon="UserCircleIcon"
@@ -557,7 +661,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2 relative w-full items-center">
+                        <div class="col-span-4 relative w-full items-center">
                             <InputIcon
                                 v-model="formData.firstname"
                                 :icon="UserCircleIcon"
@@ -566,7 +670,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2 relative w-full items-center">
+                        <div class="col-span-4 relative w-full items-center">
                             <InputIcon
                                 v-model="formData.email"
                                 :icon="EnvelopeIcon"
@@ -575,7 +679,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.phoneNumber"
                                 :icon="PhoneIcon"
@@ -584,7 +688,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.password"
                                 :icon="LockClosedIcon"
@@ -594,7 +698,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.passwordConfirmation"
                                 :icon="LockClosedIcon"
@@ -604,7 +708,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <Select v-model="formData.gender">
                                 <SelectTrigger
                                     class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
@@ -635,7 +739,7 @@
                             </Select>
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.address.street"
                                 :icon="MapPinIcon"
@@ -644,7 +748,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.address.zipCode"
                                 :icon="InboxArrowDownIcon"
@@ -653,7 +757,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.address.city"
                                 :icon="BuildingOffice2Icon"
@@ -662,7 +766,7 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <Select v-model="formData.address.country">
                                 <SelectTrigger
                                     class="flex justify-between items-center rounded-full border-2 border-gray-300"
@@ -703,7 +807,7 @@
                             </Select>
                         </div>
 
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.address.additionnalInformation"
                                 :icon="EllipsisHorizontalCircleIcon"
@@ -712,7 +816,10 @@
                             />
                         </div>
 
-                        <div class="col-span-2">
+                        <div
+                            v-if="formData.accountType != 'institution'"
+                            class="col-span-4"
+                        >
                             <Select v-model="formData.role">
                                 <SelectTrigger
                                     class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
@@ -740,7 +847,10 @@
                             </Select>
                         </div>
 
-                        <div class="col-span-2">
+                        <div
+                            v-if="formData.accountType == 'institution'"
+                            class="col-span-4"
+                        >
                             <Select
                                 v-model="formData.language"
                                 disabled
@@ -771,9 +881,7 @@
                             </Select>
                         </div>
 
-                        <br>
-
-                        <div class="col-span-2">
+                        <div class="col-span-4">
                             <label class="text-sm font-medium text-gray-700">
                                 Votre pays de travail
                             </label>
@@ -819,7 +927,7 @@
 
                         <div
                             v-if="formData.accountType != 'institution'"
-                            class="col-span-2"
+                            class="col-span-4"
                         >
                             <label class="text-sm font-medium text-gray-700">
                                 Catégorie professionnel
@@ -855,7 +963,7 @@
                             </Select>
                         </div>
 
-                        <div class="col-span-2 lg:col-span-2">
+                        <div class="col-span-4">
                             <InputIcon
                                 v-model="formData.identifierNumber"
                                 :icon="IdentificationIcon"
@@ -866,7 +974,7 @@
 
                         <div
                             v-if="formData.accountType != 'institution'"
-                            class="mt-4 col-span-2 lg:col-span-4"
+                            class="mt-4 col-span-4"
                         >
                             <div class="space-y-4">
                                 <label class="flex items-start cursor-pointer">
@@ -895,7 +1003,106 @@
                             </div>
                         </div>
 
-                        <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
+                        <div
+                            v-if="formData.accountType == 'institution'"
+                            class="mt-6 mb-4 border-b border-gray-200 col-span-4"
+                        />
+
+                        <div
+                            v-if="formData.accountType == 'institution'"
+                            class="flex justify-between gap-4 items-center col-span-4"
+                        >
+                            <h3 class="text-gray-600 font-semibold">
+                                Services
+                            </h3>
+                            <Button
+                                variant="ghost"
+                                class="flex gap-2 items-center text-primary"
+                                @click="addService"
+                            >
+                                <PlusIcon class="w-4 h-4" />
+                                <span>
+                                    Ajouter
+                                </span>
+                            </Button>
+                        </div>
+
+                        <div
+                            v-for="(service, index) in formData.services"
+                            v-if="formData.accountType == 'institution'"
+                            :key="index"
+                            class="mt-2 col-span-4"
+                        >
+                            <div class="space-y-4">
+                                <div>
+                                    <InputIcon
+                                        v-model="service.name"
+                                        :icon="BriefcaseIcon"
+                                        size="md"
+                                        placeholder="Nom de service *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.phoneNumber"
+                                        :icon="PhoneIcon"
+                                        size="md"
+                                        placeholder="N° de téléphone"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.street"
+                                        :icon="MapPinIcon"
+                                        size="md"
+                                        placeholder="Rue *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.zipCode"
+                                        :icon="InboxArrowDownIcon"
+                                        size="md"
+                                        placeholder="Code postal *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.city"
+                                        :icon="BuildingOffice2Icon"
+                                        size="md"
+                                        placeholder="Ville *"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputIcon
+                                        v-model="service.address.additionnalInformation"
+                                        :icon="EllipsisHorizontalCircleIcon"
+                                        size="md"
+                                        placeholder="Complément d'adresse"
+                                    />
+                                </div>
+
+                                <div />
+
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    class="flex gap-2 items-center mt-6 ml-28 max-w-36"
+                                    @click="removeService(index)"
+                                >
+                                    <TrashIcon class="w-4 h-4" />
+                                    <span>Supprimer</span>
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div class="col-span-4 mt-4 flex justify-center items-center">
                             <Button
                                 class="w-[50%]"
                                 type="submit"
@@ -937,6 +1144,7 @@ import {
     UserGroupIcon,
 } from '@heroicons/vue/24/solid';
 
+import { BriefcaseIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
@@ -1072,6 +1280,18 @@ const formData = reactive({
     professionalCategory: '',
     radiusKm: '',
     groupName: '',
+    services: [
+        {
+            name: '',
+            phoneNumber: '',
+            address: {
+                street: '',
+                city: '',
+                zipCode: '',
+                additionnalInformation: '',
+            },
+        },
+    ],
 });
 
 const identifierLabel = computed(() =>
@@ -1079,6 +1299,23 @@ const identifierLabel = computed(() =>
         ? 'Numéro RPPS'
         : 'Numéro INAMI',
 );
+
+const addService = () => {
+    formData.services.push({
+        name: '',
+        phoneNumber: '',
+        address: {
+            street: '',
+            city: '',
+            zipCode: '',
+            additionnalInformation: '',
+        },
+    });
+};
+
+const removeService = (index) => {
+    formData.services.splice(index, 1);
+};
 
 const route = useRoute();
 const { register } = useAuth();
@@ -1095,6 +1332,11 @@ const { submit, inProgress } = useSubmit(
             zipCodes: formData.zipCodesArray.join(', '),
             cities: formData.citiesArray.join(', '),
         };
+
+        if (formData.services[0].name == '') {
+            delete formDataForBackend.services;
+        }
+
         return register(formDataForBackend);
     },
 );
