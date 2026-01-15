@@ -231,7 +231,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical } = useAuth();
+const { isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
