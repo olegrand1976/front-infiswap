@@ -447,6 +447,11 @@ export type Mission = {
     accepted_candidate?: User;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matching_candidates?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    duration: any;
+    has_timesheet: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    timesheets?: any;
     created_at?: string;
     updated_at?: string;
 };

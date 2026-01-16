@@ -62,7 +62,7 @@
 
                     <Select v-model="formData.service_id">
                         <SelectTrigger
-                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
                             position="right"
                         >
                             <BriefcaseIcon class="text-gray-500 w-9 h-9 sm:w-7 sm:h-7" />
@@ -157,34 +157,38 @@ watch(() => props.mission, (newVal) => {
     Object.assign(formData, newVal);
 }, { deep: true });
 
-function toDatetimeLocal(value?: string | null) {
+function toDateLocal(value?: string | null) {
     if (!value) return null;
 
     const date = new Date(value);
-    return date.toISOString().slice(0, 16);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
-function fromDatetimeLocal(value?: string | null) {
+function fromDateLocal(value?: string | null) {
     if (!value) return null;
 
-    return new Date(value).toISOString();
+    return value;
 }
 
 const startDate = computed({
     get() {
-        return toDatetimeLocal(formData.start_date);
+        return toDateLocal(formData.start_date);
     },
     set(value) {
-        formData.start_date = fromDatetimeLocal(value);
+        formData.start_date = fromDateLocal(value);
     },
 });
 
 const endDate = computed({
     get() {
-        return toDatetimeLocal(formData.end_date);
+        return toDateLocal(formData.end_date);
     },
     set(value) {
-        formData.end_date = fromDatetimeLocal(value);
+        formData.end_date = fromDateLocal(value);
     },
 });
 

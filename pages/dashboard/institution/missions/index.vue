@@ -20,6 +20,16 @@
         <DashboardAdminPageContent>
             <div class="p-4 flex gap-3 items-end overflow-x-auto pb-3 px-4 scrollbar-hide mb-4">
                 <div class="space-y-1">
+                    <label class="font-medium text-gray-500">Filtrer par service</label>
+                    <InputIcon
+                        v-model="option.service"
+                        rounded="md"
+                        class="w-[250px]"
+                        placeholder="Service"
+                        @input="debouncedFilterMissions"
+                    />
+                </div>
+                <div class="space-y-1">
                     <label class="font-medium text-gray-500">Filtrer par date</label>
                     <InputIcon
                         v-model="option.date"
@@ -131,6 +141,7 @@ definePageMeta({
 
 const statusLabel = {
     open: 'Planifiée',
+    assigned: 'Assignée',
     in_progress: 'En cours',
     completed: 'Terminée',
     cancelled: 'Annulée',
@@ -159,6 +170,7 @@ const statusDialog = ref(false);
 const page = ref(1);
 
 const initialFilter = {
+    service: '',
     date: '',
     type: 'institution',
 };
@@ -175,6 +187,7 @@ const filterMissions = async () => {
         page.value,
         perPage.value,
         {
+            service: currentFilter.service,
             date: currentFilter.date,
             type: 'institution',
         });
@@ -367,9 +380,12 @@ const columns: ColumnDef<Mission>[] = [
                     label: 'Voir les candidatures',
                     onClick: () => handleShowCandidacy(mission),
                 },
-                {
-                    label: 'Générer la facture',
-                },
+                ...(mission.has_timesheet
+                    ? [{
+                            label: 'Gérer la présence',
+                            onClick: () => handleShowTimesheet(mission),
+                        }]
+                    : []),
                 {
                     label: 'Supprimer',
                     confirm: true,
@@ -421,6 +437,10 @@ const handleEdit = (mission: Mission) => {
 
 const handleShowCandidacy = (mission: Mission) => {
     router.push(`/dashboard/institution/missions/candidacy/${mission.id}`);
+};
+
+const handleShowTimesheet = (mission: Mission) => {
+    router.push(`/dashboard/institution/missions/timesheet/${mission.id}`);
 };
 
 const handleDelete = async (mission: Mission) => {
