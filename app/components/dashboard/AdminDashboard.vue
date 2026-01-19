@@ -366,7 +366,7 @@ import { useReports } from '~/composables/useReports';
 
 const { reports } = useReports();
 
-const { isAdmin, isCommunityManager } = useAuth();
+const { isAdmin, isCommunityManager, isDeveloper, isManager, isSaleRepresentative } = useAuth();
 const loading = ref(true);
 const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
@@ -454,7 +454,7 @@ const xReplacementMonthFormatter = computed(() => createXFormatter(computed(() =
 const xReplacementWeekYearFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
 const adminReports = computed(() => {
-    if (!isAdmin.value || !isCommunityManager.value || !reports.value) return [];
+    if (!isAdmin.value || !isCommunityManager.value || !isDeveloper.value || !isManager.value || !isSaleRepresentative.value || !reports.value) return [];
 
     return [
         {
