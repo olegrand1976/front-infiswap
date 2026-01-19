@@ -221,7 +221,6 @@ import { getErrorMessage } from '~/lib/utils';
 
 const router = useRouter();
 const { login } = useAuth();
-const { $toast } = useNuxtApp();
 
 const credentials = reactive({
     identifier: null,

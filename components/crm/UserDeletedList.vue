@@ -48,7 +48,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const { edit, restore, forceDelete } = useAuth();
+const { edit, restore, forceDelete, isDeveloper } = useAuth();
 
 const showModal = ref(false);
 const loggedUser = useUser();
@@ -214,13 +214,15 @@ const columnsExUsers: ColumnDef<User>[] = [
                     label: 'Restaurer',
                     confirm: true,
                     onClick: () => handleRestore(user),
+                    hidden: isDeveloper.value,
                 },
                 {
                     label: 'Supprimer définitivement',
                     confirm: true,
                     onClick: () => handleForceDelete(user),
+                    hidden: isDeveloper.value,
                 },
-            ];
+            ].filter(action => !action.hidden);
 
             return h('div', { class: 'flex ml-4' }, [
                 h(DropdownMenuAction, {

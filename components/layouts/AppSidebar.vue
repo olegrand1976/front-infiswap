@@ -231,7 +231,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
+const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -337,108 +337,47 @@ const nurseNavigationItems: NavigationItem[] = [
 ];
 
 const adminNavigationItems: NavigationItem[] = [
-    {
-        label: 'Tableau de bord',
-        route: '/dashboard',
-        icon: SquaresPlusIcon,
-        visible: true,
-    },
-    {
-        label: 'Suivi inscriptions',
-        route: '/dashboard/admin/registrations',
-        icon: ChartBarIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Remplacements',
-        route: '/dashboard/admin/replacements',
-        icon: ArrowPathIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Intérêt pour remplacement',
-        route: '/dashboard/admin/replacements/interest',
-        icon: ListBulletIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Binômes',
-        route: '/dashboard/admin/partners',
-        icon: UsersIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Utilisateurs',
-        route: '/dashboard/admin/users',
-        icon: UserGroupIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Accueil',
-        route: '/dashboard/admin/home-management',
-        icon: WrenchScrewdriverIcon,
-        visible: true,
-    },
-    // {
-    //     label: 'Patients',
-    //     route: '/dashboard/admin/patients',
-    //     icon: HeartIcon,
-    //     visible: !isCollaborator.value,
-    // },
-    {
-        label: 'CRM',
-        route: '/dashboard/admin/users/crm',
-        icon: UsersIcon,
-        visible: true,
-    },
-    {
-        label: 'Type de soins',
-        route: '/dashboard/admin/care-types',
-        icon: ShieldCheckIcon,
-        visible: !isCollaborator.value,
-    },
+    { label: 'Tableau de bord', route: '/dashboard', icon: SquaresPlusIcon, visible: true },
+
+    { label: 'Suivi inscriptions', route: '/dashboard/admin/registrations', icon: ChartBarIcon, visible: true },
+
+    { label: 'Remplacements', route: '/dashboard/admin/replacements', icon: ArrowPathIcon, visible: true },
+
+    { label: 'Intérêt pour remplacement', route: '/dashboard/admin/replacements/interest', icon: ListBulletIcon, visible: true },
+
+    { label: 'Binômes', route: '/dashboard/admin/partners', icon: UsersIcon, visible: true },
+
+    { label: 'Utilisateurs', route: '/dashboard/admin/users', icon: UserGroupIcon, visible: true },
+
+    { label: 'Accueil', route: '/dashboard/admin/home-management', icon: WrenchScrewdriverIcon, visible: true },
+
+    { label: 'CRM', route: '/dashboard/admin/users/crm', icon: UsersIcon, visible: true },
+
+    { label: 'Type de soins', route: '/dashboard/admin/care-types', icon: ShieldCheckIcon, visible: true },
+
     {
         label: 'Contacts',
         route: '/dashboard/admin/contacts/infiswap',
         icon: InboxIcon,
-        visible: !isCollaborator.value,
+        visible: true,
         children: contactChildren.value,
     },
-    {
-        label: 'Contrats NURSTECH',
-        route: '/dashboard/admin/contracts/nurstech',
-        icon: DocumentCurrencyEuroIcon,
-        visible: true,
-    },
-    {
-        label: 'Tutoriels',
-        route: '/dashboard/admin/tutorials',
-        icon: PlayCircleIcon,
-        visible: !isCollaborator.value,
-    },
-    {
-        label: 'Groupement',
-        route: '/dashboard/admin/groups',
-        icon: UserGroupIcon,
-        visible: !isCollaborator.value,
 
-    },
-    {
-        label: 'Produits',
-        route: '/dashboard/admin/products',
-        icon: ShoppingBagIcon,
-        visible: true,
-    },
-    {
-        label: 'Suivi des liens',
-        route: '/dashboard/admin/stats',
-        icon: LinkIcon,
-        visible: true,
-    },
+    { label: 'Contrats NURSTECH', route: '/dashboard/admin/contracts/nurstech', icon: DocumentCurrencyEuroIcon, visible: true },
+
+    { label: 'Tutoriels', route: '/dashboard/admin/tutorials', icon: PlayCircleIcon, visible: true },
+
+    { label: 'Groupement', route: '/dashboard/admin/groups', icon: UserGroupIcon, visible: true },
+
+    { label: 'Produits', route: '/dashboard/admin/products', icon: ShoppingBagIcon, visible: true },
+
+    { label: 'Suivi des liens', route: '/dashboard/admin/stats', icon: LinkIcon, visible: true },
 ];
 
 const role = computed(() => {
-    if (isAdmin.value || isDeveloper.value) return 'admin';
+    if (isSuperAdmin.value) return 'super_admin';
+    if (isAdmin.value) return 'admin';
+    if (isDeveloper.value) return 'developer';
     if (isManager.value) return 'manager';
     if (isCommunityManager.value) return 'community_manager';
     if (isSaleRepresentative.value) return 'sale_representative';
@@ -448,28 +387,42 @@ const role = computed(() => {
 });
 
 const navigationItems = computed(() => {
+    const items = adminNavigationItems.filter(i => i.visible);
+
     switch (role.value) {
+        case 'super_admin':
         case 'admin':
-            return adminNavigationItems.filter(i => i.visible);
+            return items;
+
+        case 'developer':
+            return items.filter(i =>
+                !i.route.includes('/contracts/nurstech'),
+            );
+
         case 'manager':
-            return adminNavigationItems.filter(i => i.visible && (
-                !i.route.includes('crm')
-                && !i.route.includes('care-types')
-            ));
+            return items.filter(i =>
+                !i.route.includes('/users/crm')
+                && !i.route.includes('/care-types'),
+            );
+
         case 'community_manager':
+            return items.filter(i =>
+                i.route === '/dashboard'
+                || i.route.includes('/registrations')
+                || i.route.includes('/replacements')
+                || i.route.includes('/replacements/interest')
+                || i.route.includes('/users/crm'),
+            );
+
         case 'sale_representative':
-            return adminNavigationItems.filter(i => i.visible && (
-                i.route.includes('crm')
-                || i.route.includes('users')
-                || i.route.includes('products')
-                || i.route.includes('stats')
-                || i.route.includes('replacements')
-                || i.route.includes('registrations')
-                || (isSaleRepresentative.value && i.route.includes('contracts'))
-            ));
+            return items.filter(i =>
+                i.route.includes('/users/crm')
+                || i.route.includes('/products')
+                || i.route.includes('/contracts/nurstech'),
+            );
+
         case 'collaborator':
         case 'medical':
-            return nurseNavigationItems;
         default:
             return nurseNavigationItems;
     }

@@ -454,7 +454,7 @@ const xReplacementMonthFormatter = computed(() => createXFormatter(computed(() =
 const xReplacementWeekYearFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
 const adminReports = computed(() => {
-    if (!isAdmin.value || !isCommunityManager.value || !reports.value) return [];
+    if (!isAdmin.value || !reports.value) return [];
 
     return [
         {

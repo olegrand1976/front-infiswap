@@ -69,7 +69,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
+const { users, isSuperAdmin, isManager, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -122,6 +122,10 @@ const resetFilter = async () => {
     await getUsers(page.value, perPage.value, option.value);
 };
 
+const canManageValidation = computed(() =>
+    isSuperAdmin.value || isManager.value,
+);
+
 const columns: ColumnDef<User>[] = [
     {
         id: 'select',
@@ -167,18 +171,20 @@ const columns: ColumnDef<User>[] = [
 
             return h('div', { class: 'flex items-center gap-2 lowercase' }, [
                 h('span', row.getValue('email')),
-                isVerified
-                    ? h('div', { class: '' })
-                    : [
+                !isVerified && canManageValidation.value
+                    ? [
                             h(XCircleIcon, {
                                 class: 'w-4 h-4 text-red-500 cursor-pointer',
                                 title: 'Renvoyer le mail de vérification',
-                                onClick: () => resendEmailVerification(row.original.email),
+                                onClick: () =>
+                                    resendEmailVerification(row.original.email),
                             }),
                             h(ConfirmDialog, {
                                 title: 'Valider l\'email',
-                                description: 'Veux-tu valider cet email manuellement ?',
-                                onConfirm: () => validateEmail(row.original.id),
+                                description:
+                        'Veux-tu valider cet email manuellement ?',
+                                onConfirm: () =>
+                                    validateEmail(row.original.id),
                                 cancelText: 'Non',
                                 confirmText: 'Oui, valider',
                             }, {
@@ -189,7 +195,8 @@ const columns: ColumnDef<User>[] = [
                                         class: 'h-6 text-xs',
                                     }, 'Valider'),
                             }),
-                        ],
+                        ]
+                    : null,
             ]);
         },
     },
@@ -326,9 +333,9 @@ const columns: ColumnDef<User>[] = [
                     : []),
             ];
 
-            if (user.email_verified_at == null) {
+            if (user.email_verified_at === null && isSuperAdmin.value) {
                 actions.push({
-                    label: 'Renvoie mail',
+                    label: 'Renvoi mail',
                     onClick: () => resendEmailVerification(user.email),
                 });
             }
