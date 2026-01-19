@@ -237,6 +237,12 @@ export const useAuth = () => {
         });
     };
 
+    async function softDelete(userId) {
+        return await $apifetch(`/api/users/delete/${userId}`, {
+            method: 'delete',
+        });
+    };
+
     async function deleteAvatar(id) {
         return await $apifetch(`/api/users/${user.value.id}/delete-profil`, {
             method: 'delete',
@@ -539,6 +545,7 @@ export const useAuth = () => {
         deleteAvatar,
         logout,
         deleteAccount,
+        softDelete,
         forgotPassword,
         resetPassword,
         refresh,

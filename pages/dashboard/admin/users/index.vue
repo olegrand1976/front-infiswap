@@ -69,7 +69,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, count, getUsers, forceDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
+const { users, isSuperAdmin, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -77,6 +77,8 @@ const initialFilter = {
     name: null,
     zip: null,
 };
+const selectedUser = ref<User>(null);
+const { $toast } = useNuxtApp();
 const option = ref({ ...initialFilter });
 
 const debounce = (func, delay) => {
@@ -374,7 +376,13 @@ const handleEdit = (user: User) => {
 };
 
 const handleDelete = async (user: User) => {
-    return await forceDelete(user.id).then(async () => {
+    selectedUser.value = user;
+
+    return await softDelete(selectedUser.value.id).then(async () => {
+        $toast({
+            description: 'Utilisateur supprimé avec succès',
+        });
+
         await getUsers(page.value, perPage.value);
     });
 };

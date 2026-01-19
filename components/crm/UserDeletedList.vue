@@ -48,7 +48,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const { edit, restore } = useAuth();
+const { edit, restore, forceDelete } = useAuth();
 
 const showModal = ref(false);
 const loggedUser = useUser();
@@ -215,6 +215,11 @@ const columnsExUsers: ColumnDef<User>[] = [
                     confirm: true,
                     onClick: () => handleRestore(user),
                 },
+                {
+                    label: 'Supprimer définitivement',
+                    confirm: true,
+                    onClick: () => handleForceDelete(user),
+                },
             ];
 
             return h('div', { class: 'flex ml-4' }, [
@@ -237,6 +242,16 @@ const handleRestore = async (user: User) => {
 
     $toast({
         description: response.message,
+    });
+
+    localUsers.value = localUsers.value.filter(u => u.id !== user.id);
+};
+
+const handleForceDelete = async (user: User) => {
+    await forceDelete(user.id);
+
+    $toast({
+        description: 'Utilisateur supprimé définitivement avec succès',
     });
 
     localUsers.value = localUsers.value.filter(u => u.id !== user.id);
