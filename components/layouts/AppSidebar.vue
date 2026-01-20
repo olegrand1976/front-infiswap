@@ -412,8 +412,7 @@ const navigationItems = computed(() => {
                 || i.route.includes('/replacements')
                 || i.route.includes('/replacements/interest')
                 || i.route.includes('/users')
-                || i.route.includes('/users/crm')
-                || i.route.includes('/home-management'),
+                || i.route.includes('/users/crm'),
             );
 
         case 'sale_representative':
