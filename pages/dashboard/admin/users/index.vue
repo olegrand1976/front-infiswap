@@ -5,6 +5,7 @@
             :count="count"
         >
             <template
+                v-if="!isDeveloper || isManager"
                 #action
             >
                 <UsersCreateUserButton />
@@ -71,7 +72,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, isManager, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
+const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -320,10 +321,14 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const user = row.original;
             const actions = [
-                {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(user),
-                },
+                ...(!isDeveloper.value || !isManager.value
+                    ? [
+                            {
+                                label: 'Modifier',
+                                onClick: () => handleEdit(user),
+                            },
+                        ]
+                    : []),
                 ...(isSuperAdmin.value
                     ? [
                             {
