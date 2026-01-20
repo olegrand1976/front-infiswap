@@ -772,7 +772,7 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             const replacement = row.original;
             const actions = [
-                ...(!isCommunityManager.value || !isDeveloper.value
+                ...(!isCommunityManager.value && !isDeveloper.value
                     ? [
                             {
                                 label: 'Modifier',
@@ -780,7 +780,7 @@ const columns: ColumnDef<Replacement>[] = [
                             },
                         ]
                     : []),
-                ...(!isCommunityManager.value || !isDeveloper.value
+                ...(!isCommunityManager.value && !isDeveloper.value
                     ? [
                             {
                                 label: 'Relance',
@@ -788,7 +788,7 @@ const columns: ColumnDef<Replacement>[] = [
                             },
                         ]
                     : []),
-                ...(!isCommunityManager.value || !isDeveloper.value
+                ...(!isCommunityManager.value && !isDeveloper.value
                     ? [
                             {
                                 label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
