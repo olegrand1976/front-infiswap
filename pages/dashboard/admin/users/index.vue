@@ -4,7 +4,9 @@
             title="Des utilisateurs"
             :count="count"
         >
-            <template #action>
+            <template
+                #action
+            >
                 <UsersCreateUserButton />
             </template>
         </DashboardAdminPageHeader>

@@ -5,7 +5,7 @@
         >
             <template #action>
                 <Button
-                    v-if="!isCollaborator"
+                    v-if="isDeveloper && isSuperAdmin"
                     class="rounded"
                     href="/dashboard/admin/products/create"
                 >
@@ -51,7 +51,7 @@ definePageMeta({
 });
 
 const { products, getProducts, count, softDelete } = useProduct();
-const { isCollaborator, isSuperAdmin } = useAuth();
+const { isSuperAdmin, isDeveloper } = useAuth();
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const initialFilter = {
@@ -130,7 +130,7 @@ const columns: ColumnDef<Product>[] = [
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
-    ...(!isCollaborator.value
+    ...(isDeveloper.value || isSuperAdmin.value
         ? [
                 {
                     id: 'actions',

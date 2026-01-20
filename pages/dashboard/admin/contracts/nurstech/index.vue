@@ -366,10 +366,14 @@ const columnsContracts = [
         cell: ({ row }) => {
             const contract = row.original;
             const actions = [
-                {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(contract.id),
-                },
+                ...(isSuperAdmin.value
+                    ? [
+                            {
+                                label: 'Modifier',
+                                onClick: () => handleEdit(contract.id),
+                            },
+                        ]
+                    : []),
                 {
                     label: 'Signer le bon',
                     onClick: () => handleOpenSignModal(contract.id),

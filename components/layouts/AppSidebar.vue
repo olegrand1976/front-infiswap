@@ -337,7 +337,7 @@ const nurseNavigationItems: NavigationItem[] = [
 ];
 
 const adminNavigationItems: NavigationItem[] = [
-    { label: 'Tableau de bord', route: '/dashboard', icon: SquaresPlusIcon, visible: true },
+    { label: 'Tableau de bord', route: '/dashboard', icon: SquaresPlusIcon, visible: !isManager.value },
 
     { label: 'Suivi inscriptions', route: '/dashboard/admin/registrations', icon: ChartBarIcon, visible: true },
 
@@ -363,7 +363,7 @@ const adminNavigationItems: NavigationItem[] = [
         children: contactChildren.value,
     },
 
-    { label: 'Contrats NURSTECH', route: '/dashboard/admin/contracts/nurstech', icon: DocumentCurrencyEuroIcon, visible: true },
+    { label: 'Contrats NURSTECH', route: '/dashboard/admin/contracts/nurstech', icon: DocumentCurrencyEuroIcon, visible: isSuperAdmin.value || isSaleRepresentative.value },
 
     { label: 'Tutoriels', route: '/dashboard/admin/tutorials', icon: PlayCircleIcon, visible: true },
 
@@ -396,7 +396,7 @@ const navigationItems = computed(() => {
 
         case 'developer':
             return items.filter(i =>
-                !i.route.includes('/contracts/nurstech'),
+                !i.route?.includes('/contracts/nurstech'),
             );
 
         case 'manager':
@@ -411,7 +411,9 @@ const navigationItems = computed(() => {
                 || i.route.includes('/registrations')
                 || i.route.includes('/replacements')
                 || i.route.includes('/replacements/interest')
-                || i.route.includes('/users/crm'),
+                || i.route.includes('/users')
+                || i.route.includes('/users/crm')
+                || i.route.includes('/home-management'),
             );
 
         case 'sale_representative':

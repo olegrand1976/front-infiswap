@@ -18,14 +18,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
                 redirectTo = '/dashboard/admin/replacements';
                 break;
 
-            case isCommunityManager.value:
-                redirectTo = '/dashboard/admin/registrations';
-                break;
-
             case isSaleRepresentative.value:
                 redirectTo = '/dashboard/admin/users/crm';
                 break;
-
 
             default:
                 redirectTo = null;
