@@ -468,3 +468,16 @@ export type MissionResponse = {
     created_at?: string;
     updated_at?: string;
 };
+
+export type Notification = {
+    id: number;
+    user_id: number;
+    notifiable_type?: string;
+    notifiable_id?: number;
+    type: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    read_at?: string;
+    created_at?: string;
+    updated_at?: string;
+};
