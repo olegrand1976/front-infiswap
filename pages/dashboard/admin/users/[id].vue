@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DashboardAdminPageHeader title="Mis à jour utilisateur" />
+        <DashboardAdminPageHeader title="Mise à jour utilisateur" />
         <DashboardAdminPageContent class="bg-gray-100">
             <UsersAdminForm :user="user" />
         </DashboardAdminPageContent>
