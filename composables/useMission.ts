@@ -133,6 +133,18 @@ export const useMissionInvoices = () => {
     const error = useState('error', () => null);
     const loading = useState('loading', () => false);
 
+    async function getAll(page = 1, perPage = 25, options = {}) {
+        return await $apifetch('api/institution/mission-invoices/', {
+            params: {
+                page: page,
+                perPage: perPage,
+                ...options,
+            },
+        }).then((response) => {
+            invoices.value = response;
+        });
+    }
+
     async function create(formData) {
         const response = await $apifetch(`/api/institution/mission-invoices`, {
             method: 'post',
@@ -147,5 +159,6 @@ export const useMissionInvoices = () => {
         error,
         loading,
         create,
+        getAll,
     };
 };

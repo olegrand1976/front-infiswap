@@ -262,8 +262,33 @@
 
         <Dialog v-model:open="generateDialog">
             <DialogContent class="max-w-xl">
-                <DialogDescription class="text-center flex items-center gap-4 my-6">
-                    Génération en cours...
+                <DialogDescription
+                    class="flex flex-col items-center justify-center text-center gap-4 my-10"
+                >
+                    <svg
+                        class="animate-spin h-8 w-8 text-primary"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        />
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
+                    </svg>
+
+                    <span class="text-base font-medium animate-pulse">
+                        Génération en cours...
+                    </span>
                 </DialogDescription>
             </DialogContent>
         </Dialog>

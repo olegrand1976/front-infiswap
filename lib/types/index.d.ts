@@ -469,6 +469,24 @@ export type MissionResponse = {
     updated_at?: string;
 };
 
+export type MissionInvoice = {
+    id: number;
+    period_start: string;
+    period_end: string;
+    status: 'draft' | 'sent' | 'paid';
+    mission_id: number;
+    mission: {
+        id: number;
+        service: string;
+        start_date: string;
+        status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+        nurse: User;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    invoice_lines: any;
+    created_at?: string;
+};
+
 export type Notification = {
     id: number;
     user_id: number;
