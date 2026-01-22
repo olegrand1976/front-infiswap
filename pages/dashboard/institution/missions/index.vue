@@ -380,7 +380,7 @@ const columns: ColumnDef<Mission>[] = [
                     label: 'Voir les candidatures',
                     onClick: () => handleShowCandidacy(mission),
                 },
-                ...(mission.has_timesheet
+                ...(mission.has_timesheet && mission.accepted_candidate != null
                     ? [{
                             label: 'Gérer la présence',
                             onClick: () => handleShowTimesheet(mission),

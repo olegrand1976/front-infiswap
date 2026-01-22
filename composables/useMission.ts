@@ -126,3 +126,26 @@ export const useMissionResponses = () => {
         loading,
     };
 };
+
+export const useMissionInvoices = () => {
+    const { $apifetch } = useNuxtApp();
+    const invoices = useState<MissionList>('invoices', () => ({ data: [], meta: {} }));
+    const error = useState('error', () => null);
+    const loading = useState('loading', () => false);
+
+    async function create(formData) {
+        const response = await $apifetch(`/api/institution/mission-invoices`, {
+            method: 'post',
+            body: formData,
+        });
+
+        return response;
+    }
+
+    return {
+        invoices,
+        error,
+        loading,
+        create,
+    };
+};

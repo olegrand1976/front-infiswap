@@ -1,6 +1,16 @@
 <template>
     <div>
-        <DashboardAdminPageHeader title="Feuille de présence" />
+        <DashboardAdminPageHeader title="Feuille de présence">
+            <template #action>
+                <Button
+                    class="rounded-md flex gap-2 items-center"
+                    @click="handleGenerateInvoice"
+                >
+                    <ClipboardDocumentListIcon class="w-4 h-4" />
+                    <span>Générer la facture</span>
+                </Button>
+            </template>
+        </DashboardAdminPageHeader>
 
         <div class="mt-8 grid lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white shadow-lg p-6 rounded-xl">
@@ -249,11 +259,41 @@
                 </Table>
             </div>
         </div>
+
+        <Dialog v-model:open="generateDialog">
+            <DialogContent class="max-w-xl">
+                <DialogDescription class="text-center flex items-center gap-4 my-6">
+                    Génération en cours...
+                </DialogDescription>
+            </DialogContent>
+        </Dialog>
+
+        <Dialog v-model:open="validateDialog">
+            <DialogContent class="max-w-xl">
+                <DialogTitle>
+                    Générer la facture
+                </DialogTitle>
+                <DialogDescription>
+                    Vous avez encore <span class="font-semibold">{{ pendingWorkCount > 1 ? `${pendingWorkCount} jours`: `${pendingWorkCount} jour` }}</span> de travail à valider. Êtes-vous sûr de vouloir poursuivre cette action ?
+                </DialogDescription>
+                <DialogFooter class="mt-6 mb-4 flex gap-4 items-center">
+                    <Button
+                        class="rounded-md bg-gray-100 hover:bg-gray-200 text-gray-800 hover:text-gray-800"
+                        @click="handleCancelGenerate"
+                    >
+                        Non
+                    </Button>
+                    <Button class="rounded-md">
+                        Oui
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, CalendarIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, CalendarIcon, ClipboardDocumentListIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
 import { formatTime, formatToDMY } from '~/composables/useDate';
 import { useRuntimeConfig } from '#app';
 import type { Mission } from '~/lib/types';
@@ -265,6 +305,10 @@ definePageMeta({
     middleware: ['institution'],
 });
 
+const validateDialog = ref(false);
+const generateDialog = ref(false);
+const pendingWorkCount = ref(0);
+
 const { $toast } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
@@ -273,6 +317,7 @@ const id = computed(() => route.params.id);
 
 const { getById } = useMissions();
 const { update } = useTimesheets();
+const { create } = useMissionInvoices();
 
 await getById(Number(id.value)).then((response) => {
     mission.value = response.data;
@@ -359,5 +404,50 @@ const handleUpdateStatus = async (timesheet, force = false) => {
 
         return;
     }
+};
+
+const handleGenerateInvoice = async () => {
+    if (!mission.value.timesheets) return;
+
+    mission.value.timesheets.forEach((ts) => {
+        if (ts.status === 'pending') {
+            pendingWorkCount.value++;
+        }
+    });
+
+    if (pendingWorkCount.value === 0) {
+        generateDialog.value = true;
+
+        try {
+            const response = await create({ mission_id: mission.value.id });
+
+            if (response.mission_invoice) {
+                $toast({
+                    description: response.message,
+                });
+            };
+        }
+        catch (err) {
+            if (err.data?.errors) {
+                const firstError = Object.values(err.data.errors)[0][0];
+                $toast({
+                    description: firstError,
+                    status: 'error',
+                    variant: 'destructive',
+                });
+            }
+        }
+        finally {
+            generateDialog.value = false;
+        }
+    }
+    else {
+        validateDialog.value = true;
+    }
+};
+
+const handleCancelGenerate = () => {
+    validateDialog.value = false;
+    pendingWorkCount.value = 0;
 };
 </script>
