@@ -115,6 +115,20 @@
                                     </DialogDescription>
 
                                     <form class="mt-4 space-y-3">
+                                        <div
+                                            v-if="user.type == 'institution'"
+                                            class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                        >
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Nom de l'institution
+                                            </p>
+                                            <Input
+                                                v-model="formPersonalInfo.institution_name"
+                                                type="text"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                            />
+                                        </div>
+
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
                                                 Nom
@@ -252,6 +266,24 @@
                         </div>
 
                         <div class="mt-4 space-y-3">
+                            <div
+                                v-if="user.type == 'institution'"
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <BuildingOfficeIcon class="w-5" />
+                                        <span>Nom de l'institution</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.institution_name }}
+                                </p>
+                            </div>
+
                             <div
                                 class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
                                 @click="personalInfoDialog = true"
@@ -399,7 +431,10 @@
                         </div>
                     </section>
 
-                    <section class="shadow rounded-lg p-6">
+                    <section
+                        v-if="user.type != 'institution'" 
+                        class="shadow rounded-lg p-6"
+                    >
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <MapPinIcon class="w-6 text-gray-400" />
@@ -642,6 +677,250 @@
                 </div>
 
                 <div class="space-y-12 mt-4 xl:mt-0">
+                    <section
+                        v-if="user.type == 'institution'"
+                        class="shadow rounded-lg p-6 mb-6"
+                    >
+                        <div class="flex justify-between items-center">
+                            <h3 class="flex items-center space-x-4">
+                                <MapPinIcon class="w-6 text-gray-400" />
+                                <span class="text-lg">Adresse</span>
+                            </h3>
+
+                            <PencilSquareIcon
+                                class="w-5 text-black/50 hover:text-primary cursor-pointer"
+                                @click="addressInfoDialog = true"
+                            />
+
+                            <Dialog v-model:open="addressInfoDialog">
+                                <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle class="text-center">
+                                            Mise à jour
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Vous pouvez mettre à jour ici vos informations concernant votre adresse
+                                    </DialogDescription>
+
+                                    <form class="mt-4 space-y-3">
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Rue
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.streetAddress"
+                                                type="text"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                            />
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Ville
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.city"
+                                                type="text"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                            />
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Pays
+                                            </p>
+                                            <Select v-model="formAddress.country">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formAddress.country" />
+                                                </SelectTrigger>
+                                                <SelectContent class="border-none">
+                                                    <template
+                                                        v-for="[key, value] in Object.entries(countries)"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="key">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Pays de travail
+                                            </p>
+                                            <Select v-model="formAddress.workingAt">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formAddress.workingAt" />
+                                                </SelectTrigger>
+                                                <SelectContent class="border-none">
+                                                    <template
+                                                        v-for="(value, key) in ['Belgique', 'France']"
+                                                        :key="key"
+                                                    >
+                                                        <SelectItem :value="value">
+                                                            {{ value }}
+                                                        </SelectItem>
+                                                    </template>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Code postal
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.zipCode"
+                                                type="text"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                            />
+                                        </div>
+
+                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                                Complément
+                                            </p>
+                                            <Input
+                                                v-model="formAddress.additionalInfo"
+                                                type="text"
+                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                                            />
+                                        </div>
+
+                                        <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
+                                            <Button
+                                                variant="secondary"
+                                                class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                                                @click="addressInfoDialog = false"
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                class="w-full sm:w-auto"
+                                                @click="handleUpdateAddress"
+                                            >
+                                                Enregistrer
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+
+                        <div class="mt-4 space-y-3">
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <MapIcon class="w-5" />
+                                        <span>Rue</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.profile?.street_address || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <BuildingOffice2Icon class="w-5" />
+                                        <span>Ville</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.profile?.city || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <FlagIcon class="w-5" />
+                                        <span>Pays</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ formattedCountry || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <BuildingOfficeIcon class="w-5" />
+                                        <span>Pays de travail</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.profile?.working_at || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <EnvelopeOpenIcon class="w-5" />
+                                        <span>Code postal</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.profile?.zip_code || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="addressInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0  truncate text-nowrap"
+                                    >
+                                        <EllipsisHorizontalCircleIcon class="w-5" />
+                                        <span>Complément</span>
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ user.additional_info || ' - ' }}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
                     <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
@@ -834,7 +1113,10 @@
                         </div>
                     </section>
 
-                    <section class="mt-4 xl:mt-0 shadow rounded-lg p-6">
+                    <section
+                        v-if="user.type != 'institution'"
+                        class="mt-4 xl:mt-0 shadow rounded-lg p-6"
+                    >
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <WrenchScrewdriverIcon class="w-6 text-gray-400" />
@@ -912,7 +1194,10 @@
                         </div>
                     </section>
 
-                    <section class="mt-4 xl:mt-0 shadow rounded-lg p-6">
+                    <section
+                        v-if="user.type != 'institution'"
+                        class="mt-4 xl:mt-0 shadow rounded-lg p-6"
+                    >
                         <h3 class="flex items-center space-x-4">
                             <BellAlertIcon class="w-6 text-gray-400" />
                             <span class="text-lg">Notification</span>
@@ -1243,6 +1528,7 @@ const formatDate = (dateString) => {
 
 const formPersonalInfo = reactive({
     id: user.value.id,
+    institution_name: user.value.institution_name,
     lastname: user.value.lastname,
     firstname: user.value.firstname,
     dateOfBirth: formatDate(user.value.date_of_birth),
