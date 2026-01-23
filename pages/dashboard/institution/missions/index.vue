@@ -41,6 +41,7 @@
                 </div>
                 <Button
                     class="rounded-md h-11"
+                    @click="resetFilter"
                 >
                     <ArrowPathIcon class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
@@ -202,6 +203,14 @@ const refreshMissions = async (pge: number) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
+    await filterMissions();
+};
+
+const resetFilter = async () => {
+    option.value.date = '';
+    option.value.service = '';
+
+    page.value = 1;
     await filterMissions();
 };
 

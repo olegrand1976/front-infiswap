@@ -71,13 +71,14 @@ import { Pagination } from './ui/pagination';
 import { PERPAGE } from '~/lib/constants';
 
 const props = defineProps<{
+    internalPerPage?: number;
     defaultPage?: number;
     total?: number;
 }>();
 
 const perPageOptions = [5, 10, 25, 50];
 const currentPage = ref(props.defaultPage ?? 1);
-const internalPerPage = ref(PERPAGE);
+const internalPerPage = ref(props.internalPerPage ?? PERPAGE);
 
 const emit = defineEmits<{
     (e: 'update:page' | 'update:perPage', value: number): void;

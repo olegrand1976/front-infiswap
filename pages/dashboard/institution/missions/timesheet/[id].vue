@@ -140,13 +140,34 @@
         </div>
 
         <div class="mt-12">
-            <div class="flex justify-between gap-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
                 <h1 class="text-xl font-semibold text-primary">
                     Feuille de temps
                 </h1>
+                <div class="flex gap-6 items-center">
+                    <span class="hidden text-gray-600 text-sm min-[450px]:inline text-nowrap">
+                        Rechercher par date :
+                    </span>
+                    <input
+                        v-model="search"
+                        type="date"
+                        class="h-9 w-full rounded-md border border-gray-300 bg-white px-3 text-sm
+           text-gray-700 shadow-sm
+           focus:border-primary outline-none focus:ring-2 focus:ring-primary/40
+           transition-colors"
+                        @input="debouncedFilterTimesheets"
+                    >
+                    <Button
+                        class="rounded-md h-11"
+                        @click="resetFilter"
+                    >
+                        <ArrowPathIcon class="md:mr-2" />
+                        <span class="hidden md:inline-block">Restaurer</span>
+                    </Button>
+                </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-6">
                 <Table class="w-full border rounded-xl overflow-hidden shadow-sm">
                     <TableHeader>
                         <TableRow class="grid grid-cols-4 bg-gray-50 border-b">
@@ -157,7 +178,7 @@
                             <TableHead class="py-4 font-semibold text-gray-600">
                                 Absent
                             </TableHead>
-                            <TableHead class="py-4 font-semibold text-gray-600">
+                            <TableHead class="py-4 font-semibold max-w-64 truncate text-gray-600">
                                 Heures modifiées
                             </TableHead>
                         </TableRow>
@@ -165,12 +186,12 @@
 
                     <TableBody>
                         <TableRow
-                            v-for="timesheet in mission.timesheets"
+                            v-for="timesheet in dataTimesheets"
                             :key="timesheet.id"
                             class="grid grid-cols-4 items-center border-b hover:bg-gray-50 transition py-4"
                         >
                             <TableCell class="text-gray-600 text-center font-medium">
-                                {{ formatToDMY(timesheet.date) }}
+                                {{ formatToDMY(timesheet.work_date) }}
                             </TableCell>
                             <TableCell class="text-center ml-4">
                                 <label class="flex items-center justify-start cursor-pointer">
@@ -250,13 +271,24 @@
                                 </label>
                                 <input
                                     v-model="timesheet.worked_hours"
-                                    class="max-w-20 border border-gray-200 rounded-md py-2 px-2 focus-within:outline-none focus-within:ring-none"
+                                    class="max-w-8 min-[450px]:max-w-20 border border-gray-200 rounded-md py-2 px-2 focus-within:outline-none focus-within:ring-none"
                                     @blur="handleUpdateStatus(timesheet, true)"
                                 >
                             </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
+            </div>
+
+            <div class="mt-6">
+                <CustomPagination
+                    :default-page="page"
+                    :per-page="perPage"
+                    :internal-per-page="5"
+                    :total="timesheets.meta.total"
+                    @update:page="refreshTimesheets"
+                    @update:per-page="handlePerPageChange"
+                />
             </div>
         </div>
 
@@ -318,10 +350,11 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, CalendarIcon, ClipboardDocumentListIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, ArrowPathIcon, CalendarIcon, ClipboardDocumentListIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
 import { formatTime, formatToDMY } from '~/composables/useDate';
 import { useRuntimeConfig } from '#app';
 import type { Mission } from '~/lib/types';
+import { debounce } from '~/lib/utils';
 
 useHead({ title: 'Feuille de présence' });
 
@@ -332,6 +365,7 @@ definePageMeta({
 
 const validateDialog = ref(false);
 const generateDialog = ref(false);
+const search = ref('');
 const pendingWorkCount = ref(0);
 
 const { $toast } = useNuxtApp();
@@ -339,14 +373,19 @@ const route = useRoute();
 const router = useRouter();
 const mission = ref<Mission>(null);
 const id = computed(() => route.params.id);
+const perPage = ref(5);
+const page = ref(1);
 
 const { getById } = useMissions();
-const { update } = useTimesheets();
+const { timesheets, getAll, update } = useTimesheets();
 const { create } = useMissionInvoices();
 
 await getById(Number(id.value)).then((response) => {
     mission.value = response.data;
 });
+
+await getAll(mission.value.id, page.value, perPage.value, { date: search.value });
+const dataTimesheets = computed(() => timesheets.value.data ?? []);
 
 const validatedTimesheetsRatio = computed(() => {
     if (!mission.value?.timesheets?.length) return '0/0';
@@ -356,6 +395,29 @@ const validatedTimesheetsRatio = computed(() => {
 
     return `${validatedCount}/${total}`;
 });
+
+const refreshTimesheets = async (pge: number) => {
+    page.value = pge;
+    await getAll(mission.value.id, page.value, perPage.value, { date: search.value });
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    await getAll(mission.value.id, page.value, perPage.value, { date: search.value });
+};
+
+const filterTimesheets = async () => {
+    await getAll(mission.value.id, page.value, perPage.value, { date: search.value });
+};
+
+const debouncedFilterTimesheets = debounce(filterTimesheets, 100);
+
+const resetFilter = async () => {
+    search.value = '';
+
+    page.value = 1;
+    await filterTimesheets();
+};
 
 const totalModifiedHours = computed(() => {
     if (!mission.value?.timesheets?.length) return 0;
