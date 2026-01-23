@@ -474,6 +474,7 @@ export type MissionInvoice = {
     period_start: string;
     period_end: string;
     status: 'draft' | 'sent' | 'paid';
+    path: string;
     mission_id: number;
     mission: {
         id: number;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useNuxtApp } from '#app';
 
@@ -154,11 +155,88 @@ export const useMissionInvoices = () => {
         return response;
     }
 
+    const viewPdf = async (
+        invoiceId: number,
+        preview: boolean = true,
+    ): Promise<File | void> => {
+        if (!invoiceId) return;
+
+        let newWindow: Window | null = null;
+
+        if (preview) {
+            newWindow = window.open();
+            if (!newWindow) {
+                alert('Impossible d’ouvrir le PDF, vérifiez votre bloqueur de popups.');
+                return;
+            }
+
+            newWindow.document.write(`
+                <html>
+                    <head><title>Chargement PDF...</title></head>
+                    <body style="display:flex;align-items:center;justify-content:center;height:100vh;">
+                        <h3>Chargement du PDF, veuillez patienter...</h3>
+                    </body>
+                </html>
+            `);
+        }
+
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const response = await $apifetch(
+                `/api/institution/mission-invoices/${invoiceId}/view-pdf`,
+                { responseType: 'blob' },
+            );
+
+            const blob = new Blob([response], { type: 'application/pdf' });
+
+            if (!preview) {
+                return new File(
+                    [blob],
+                    `facture-${invoiceId}.pdf`,
+                    { type: 'application/pdf' },
+                );
+            }
+
+            const url = URL.createObjectURL(blob);
+
+            if (newWindow) {
+                newWindow.document.body.innerHTML = `
+                    <iframe src="${url}" frameborder="0" style="width:100%;height:100vh"></iframe>
+                `;
+            }
+        }
+        catch (err: any) {
+            console.error('Erreur lors de la lecture du PDF:', err);
+
+            if (newWindow) {
+                newWindow.document.body.innerHTML = `<h3>Erreur lors du chargement du PDF</h3>`;
+            }
+
+            error.value = err.message || 'Erreur lors de la génération du PDF';
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
+    async function update(id, formData) {
+        const response = await $apifetch(`api/institution/mission-invoices/${id}`, {
+            method: 'put',
+            body: formData,
+        });
+
+        return response;
+    }
+
     return {
         invoices,
         error,
         loading,
         create,
         getAll,
+        viewPdf,
+        update,
     };
 };
