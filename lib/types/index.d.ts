@@ -468,3 +468,35 @@ export type MissionResponse = {
     created_at?: string;
     updated_at?: string;
 };
+
+export type MissionInvoice = {
+    id: number;
+    period_start: string;
+    period_end: string;
+    status: 'draft' | 'sent' | 'paid';
+    path: string;
+    mission_id: number;
+    mission: {
+        id: number;
+        service: string;
+        start_date: string;
+        status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+        nurse: User;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    invoice_lines: any;
+    created_at?: string;
+};
+
+export type Notification = {
+    id: number;
+    user_id: number;
+    notifiable_type?: string;
+    notifiable_id?: number;
+    type: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    read_at?: string;
+    created_at?: string;
+    updated_at?: string;
+};
