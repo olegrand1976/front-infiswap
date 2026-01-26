@@ -385,14 +385,18 @@ const columns: ColumnDef<Mission>[] = [
         cell: ({ row }) => {
             const mission = row.original;
             const actions = [
-                {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(mission),
-                },
-                {
-                    label: 'Changer le statut',
-                    onClick: () => handleOpenStatusDialog(mission),
-                },
+                ...(mission.status != 'completed'
+                    ? [{
+                            label: 'Modifier',
+                            onClick: () => handleEdit(mission),
+                        }]
+                    : []),
+                ...(mission.status != 'completed'
+                    ? [{
+                            label: 'Changer le statut',
+                            onClick: () => handleOpenStatusDialog(mission),
+                        }]
+                    : []),
                 {
                     label: 'Voir les candidatures',
                     onClick: () => handleShowCandidacy(mission),

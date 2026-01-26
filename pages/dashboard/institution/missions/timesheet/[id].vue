@@ -331,16 +331,22 @@
                     Générer la facture
                 </DialogTitle>
                 <DialogDescription>
-                    Vous avez encore <span class="font-semibold">{{ pendingWorkCount > 1 ? `${pendingWorkCount} jours`: `${pendingWorkCount} jour` }}</span> de travail à valider. Êtes-vous sûr de vouloir poursuivre cette action ?
+                    Vous avez encore <span class="font-semibold">{{ pendingWorkCount > 1 ? `${pendingWorkCount} jours`: `${pendingWorkCount} jour` }}</span> de travail à valider. {{ pendingWorkCount > 1 ? '' : 'Êtes-vous sûr de vouloir poursuivre cette action ?' }}
                 </DialogDescription>
-                <DialogFooter class="mt-6 mb-4 flex gap-4 items-center">
+                <DialogFooter
+                    v-if="pendingWorkCount < 1"
+                    class="mt-6 mb-4 flex gap-4 items-center"
+                >
                     <Button
                         class="rounded-md bg-gray-100 hover:bg-gray-200 text-gray-800 hover:text-gray-800"
                         @click="handleCancelGenerate"
                     >
                         Non
                     </Button>
-                    <Button class="rounded-md">
+                    <Button
+                        class="rounded-md"
+                        @click="handleGenerateInvoice"
+                    >
                         Oui
                     </Button>
                 </DialogFooter>
@@ -496,11 +502,9 @@ const handleUpdateStatus = async (timesheet, force = false) => {
 const handleGenerateInvoice = async () => {
     if (!mission.value.timesheets) return;
 
-    mission.value.timesheets.forEach((ts) => {
-        if (ts.status === 'pending') {
-            pendingWorkCount.value++;
-        }
-    });
+    pendingWorkCount.value = mission.value.timesheets.filter(
+        ts => ts.status === 'pending',
+    ).length;
 
     if (pendingWorkCount.value === 0) {
         generateDialog.value = true;
@@ -512,7 +516,7 @@ const handleGenerateInvoice = async () => {
                 $toast({
                     description: response.message,
                 });
-            };
+            }
         }
         catch (err) {
             if (err.data?.errors) {
