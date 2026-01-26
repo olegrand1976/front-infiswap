@@ -109,7 +109,10 @@
                                 <FaceFrownIcon class="w-6 h-6 text-gray-500" />
                             </div>
                             <DropdownMenu>
-                                <DropdownMenuTrigger as-child>
+                                <DropdownMenuTrigger
+                                    v-if="user.type != 'institution'"
+                                    as-child
+                                >
                                     <div
                                         class="relative cursor-pointer"
                                         @click="handleSeen()"
@@ -129,7 +132,7 @@
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent
-                                    v-if="showNotifUI"
+                                    v-if="showNotifUI && user.type != 'institution'"
                                     class="w-56 origin-top-left mr-[11rem]"
                                     :style="{
                                         position: 'absolute',
@@ -148,7 +151,7 @@
                         </div>
 
                         <Dialog
-                            v-if="showNotifUI"
+                            v-if="showNotifUI && user.type != 'institution'"
                             v-model:open="showDialog"
                         >
                             <DialogContent class="sm:max-w-md">
