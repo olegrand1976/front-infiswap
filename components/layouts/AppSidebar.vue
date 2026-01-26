@@ -313,23 +313,6 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Missions',
         route: '/dashboard/missions',
         icon: BriefcaseIcon,
-        children: [
-            {
-                label: 'Offres',
-                route: '/dashboard/missions',
-                icon: MegaphoneIcon,
-            },
-            {
-                label: 'Mes missions',
-                route: '/dashboard/missions/me',
-                icon: BriefcaseIcon,
-            },
-            {
-                label: 'Candidature',
-                route: '/dashboard/missions/candidacy',
-                icon: UserCircleIcon,
-            },
-        ],
     },
     {
         label: 'Binômes',
