@@ -244,7 +244,7 @@ const columns: ColumnDef<Mission>[] = [
                 variant: 'ghost',
             }, () => ['Service', h('', { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
-            const serviceName = row.original.service.name;
+            const serviceName = row.original.service.name || '-';
             return h('div', { class: 'ml-4 w-40 truncate' }, serviceName);
         },
     },
@@ -333,7 +333,15 @@ const columns: ColumnDef<Mission>[] = [
 
         cell: ({ row }) => {
             const user = row.original.accepted_candidate;
-            return h(UsersName, { class: 'ml-4', user: user });
+            if (!user) {
+                return h(
+                    'div',
+                    { class: 'ml-4' },
+                    '-',
+                );
+            }
+
+            return h(UsersName, { class: 'ml-4', user });
         },
     },
     {
@@ -348,7 +356,7 @@ const columns: ColumnDef<Mission>[] = [
                 h('div', {
                     class: 'ml-2 capitalize truncate max-w-[180px] whitespace-nowrap overflow-hidden',
                     title: displayText,
-                }, displayText || ''),
+                }, displayText || '-'),
                 users.length > 0
                 && h(Button, {
                     variant: 'ghost',
@@ -480,6 +488,8 @@ const handleChangeStatus = async () => {
     const formData = {
         institution_id: user.value.id,
         start_date: selectedMission.value.start_date,
+        time_start_at: selectedMission.value.time_start_at,
+        time_end_at: selectedMission.value.time_end_at,
         required_diploma: selectedMission.value.required_diploma,
         status: selectedStatus.value,
     };

@@ -447,6 +447,7 @@ export type Mission = {
     accepted_candidate?: User;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matching_candidates?: any;
+    has_answered: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     duration: any;
     has_timesheet: boolean;

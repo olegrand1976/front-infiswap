@@ -17,7 +17,7 @@
             @submit.prevent="searchMission"
         >
             <div
-                class="flex items-center justify-between w-full col-span-2 2xl:col-span-1 space-x-3 rounded-full bg-primary ps-3 pe-1"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
             >
                 <h5 class="text-xs text-white">
                     <span>Institution</span>
@@ -30,7 +30,7 @@
                 />
             </div>
             <div
-                class="flex items-center justify-between w-full col-span-2 2xl:col-span-1 space-x-3 rounded-full bg-primary ps-3 pe-1"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
             >
                 <h5 class="text-xs text-white">
                     <span>Date</span>
@@ -129,15 +129,15 @@
                         <div class="mt-5">
                             <p
                                 class="text-sm leading-relaxed text-gray-700"
-                                :class="!isExpanded ? 'line-clamp-3': ''"
+                                :class="!expandedMissions[mission.id] ? 'line-clamp-3': ''"
                             >
                                 {{ mission.description }}
                             </p>
                             <button
                                 class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
-                                @click="toggleExpand"
+                                @click="toggleExpand(mission.id)"
                             >
-                                {{ isExpanded ? 'Voir moins' : 'Voir plus' }}
+                                {{ expandedMissions[mission.id] ? 'Voir moins' : 'Voir plus' }}
                             </button>
                         </div>
 
@@ -214,15 +214,15 @@
                         <div class="mt-5">
                             <p
                                 class="text-sm leading-relaxed text-gray-700"
-                                :class="!isExpanded ? 'line-clamp-3': ''"
+                                :class="!expandedMissions[mission.id] ? 'line-clamp-3': ''"
                             >
                                 {{ mission.service }}
                             </p>
                             <button
                                 class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
-                                @click="toggleExpand"
+                                @click="toggleExpand(mission.id)"
                             >
-                                {{ isExpanded ? 'Voir moins' : 'Voir plus' }}
+                                {{ expandedMissions[mission.id] ? 'Voir moins' : 'Voir plus' }}
                             </button>
                         </div>
 
@@ -317,10 +317,10 @@ const searchMission = debounce(async () => {
     isSearching.value = false;
 }, 100);
 
-const isExpanded = ref(false);
+const expandedMissions = ref<Record<number, boolean>>({});
 
-const toggleExpand = () => {
-    isExpanded.value = !isExpanded.value;
+const toggleExpand = (missionId: number) => {
+    expandedMissions.value[missionId] = !expandedMissions.value[missionId];
 };
 
 const reinitializeFilter = async () => {

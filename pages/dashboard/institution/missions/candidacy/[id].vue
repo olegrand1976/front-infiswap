@@ -80,7 +80,7 @@
                                 class="text-gray-900 flex gap-2 items-center hover:transition-all hover:scale-105 hover:duration-300 cursor-pointer"
                                 @click="handleOpenMotivation(response)"
                             >
-                                <p class="w-52 truncate">
+                                <p class="max-w-52 truncate">
                                     {{ response.description }}
                                 </p>
                                 <EyeIcon class="w-4 h-4 hover:text-primary" />

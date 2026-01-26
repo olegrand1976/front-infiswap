@@ -17,7 +17,7 @@
             @submit.prevent="searchMission"
         >
             <div
-                class="flex items-center justify-between w-full col-span-2 2xl:col-span-1 space-x-3 rounded-full bg-primary ps-3 pe-1"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
             >
                 <h5 class="text-xs text-white">
                     <span>Institution</span>
@@ -30,7 +30,7 @@
                 />
             </div>
             <div
-                class="flex items-center justify-between w-full col-span-2 2xl:col-span-1 space-x-3 rounded-full bg-primary ps-3 pe-1"
+                class="flex items-center justify-between w-full col-span-2 space-x-3 rounded-full bg-primary ps-3 pe-1"
             >
                 <h5 class="text-xs text-white">
                     <span>Date</span>
@@ -75,14 +75,16 @@
             <div
                 v-for="(missionResponses, date) in dataResponses"
                 :key="date"
-                class="grid grid-cols-6 gap-8"
+                class="grid grid-cols-6 gap-y-8"
             >
-                <div class="col-span-1 flex gap-8 relative">
+                <div class="col-span-1 flex gap-8">
                     <h3 class="text-sm text-gray-600 font-semibold">
                         {{ formatToDMY(date) }}
                     </h3>
-                    <div class="border-r border-gray-300 gap-8" />
-                    <div class="absolute top-0 right-7 w-6 h-6 rounded-full bg-primary/60" />
+                    <div class="relative border-r border-gray-300">
+                        <div class="border-r border-gray-300 gap-8" />
+                        <div class="absolute top-0 -right-3 w-6 h-6 rounded-full bg-primary/60" />
+                    </div>
                 </div>
 
                 <div class="col-span-5 grid grid-cols-2 gap-4">
@@ -126,15 +128,15 @@
                         <div class="mt-5">
                             <p
                                 class="text-sm leading-relaxed text-gray-700"
-                                :class="!isExpanded ? 'line-clamp-3': ''"
+                                :class="!expandedMissions[response.mission.id] ? 'line-clamp-3': ''"
                             >
                                 {{ response.mission.description }}
                             </p>
                             <button
                                 class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
-                                @click="toggleExpand"
+                                @click="toggleExpand(response.mission.id)"
                             >
-                                {{ isExpanded ? 'Voir moins' : 'Voir plus' }}
+                                {{ expandedMissions[response.mission.id] ? 'Voir moins' : 'Voir plus' }}
                             </button>
                         </div>
 
@@ -260,10 +262,10 @@ const searchMission = debounce(async () => {
     isSearching.value = false;
 }, 100);
 
-const isExpanded = ref(false);
+const expandedMissions = ref<Record<number, boolean>>({});
 
-const toggleExpand = () => {
-    isExpanded.value = !isExpanded.value;
+const toggleExpand = (missionId: number) => {
+    expandedMissions.value[missionId] = !expandedMissions.value[missionId];
 };
 
 const reinitializeFilter = async () => {
