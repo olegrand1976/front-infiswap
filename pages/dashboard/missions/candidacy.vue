@@ -106,13 +106,13 @@
                                         v-else
                                         class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-600"
                                     >
-                                        {{ response.mission.institution.institution_name.charAt(0).toUpperCase() }}
+                                        {{ response.mission.institution_name.charAt(0).toUpperCase() }}
                                     </div>
                                 </div>
 
                                 <div>
                                     <h2 class="text-sm font-semibold text-gray-900">
-                                        {{ response.mission.institution.institution_name }}
+                                        {{ response.mission.institution_name }}
                                     </h2>
                                     <p class="text-xs text-gray-500">
                                         Publié {{ formatRelativeDate(response.mission.created_at) }}

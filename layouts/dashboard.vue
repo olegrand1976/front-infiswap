@@ -26,7 +26,7 @@
                                     v-if="user?.type == 'institution'"
                                     class="font-medium"
                                 >
-                                    {{ user?.institution_name || 'Institution XXX' }}
+                                    {{ user?.institution?.name || 'Institution XXX' }}
                                 </p>
                                 <p
                                     v-else
