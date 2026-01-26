@@ -473,6 +473,11 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: SquaresPlusIcon,
     },
     {
+        label: 'Services',
+        route: '/dashboard/institution/services',
+        icon: BriefcaseIcon,
+    },
+    {
         label: 'Missions',
         route: '/dashboard/institution/missions',
         icon: BriefcaseIcon,

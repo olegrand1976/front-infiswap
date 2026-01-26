@@ -200,8 +200,11 @@ const resetForm = () => {
         time_end_at: '',
         description: '',
         required_diploma: '',
+        service_id: undefined,
     });
 };
+
+const router = useRouter();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
@@ -213,6 +216,7 @@ const { submit, inProgress } = useSubmit(async () => {
             });
 
             resetForm();
+            router.push('/dashboard/institution/missions');
         }
         else {
             await update(formData.id, formData);
