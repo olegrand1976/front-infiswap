@@ -310,10 +310,9 @@
 <script lang="ts" setup>
 import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useRuntimeConfig } from '#app';
-import { getErrorMessage } from '~/lib/utils';
+import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
-import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();

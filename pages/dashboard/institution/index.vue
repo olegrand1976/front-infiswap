@@ -58,13 +58,9 @@
         </div>
 
         <div class="mt-12 grid grid-cols-3 items-center">
-            <div class="col-span-2">
+            <div class="col-span-2" />
 
-            </div>
-
-            <div class="col-span-1 shadow">
-
-            </div>
+            <div class="col-span-1 shadow" />
         </div>
     </div>
 </template>

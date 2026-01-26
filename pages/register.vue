@@ -431,103 +431,6 @@
                             </div>
 
                             <div
-                                v-if="formData.accountType == 'institution'"
-                                class="mt-6 mb-4 border-b border-gray-200 col-span-4"
-                            />
-
-                            <div
-                                v-if="formData.accountType == 'institution'"
-                                class="flex justify-between gap-4 items-center col-span-4"
-                            >
-                                <h3 class="text-gray-600 font-semibold">
-                                    Services
-                                </h3>
-                                <Button
-                                    variant="ghost"
-                                    class="flex gap-2 items-center text-primary"
-                                    @click="addService"
-                                >
-                                    <PlusIcon class="w-4 h-4" />
-                                    <span>
-                                        Ajouter
-                                    </span>
-                                </Button>
-                            </div>
-
-                            <div
-                                v-for="(service, index) in formData.services"
-                                v-if="formData.accountType == 'institution'"
-                                :key="index"
-                                class="mt-2 col-span-4 grid grid-cols-2 gap-4"
-                            >
-                                <div>
-                                    <InputIcon
-                                        v-model="service.name"
-                                        :icon="BriefcaseIcon"
-                                        size="md"
-                                        placeholder="Nom de service *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.phoneNumber"
-                                        :icon="PhoneIcon"
-                                        size="md"
-                                        placeholder="N° de téléphone"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.street"
-                                        :icon="MapPinIcon"
-                                        size="md"
-                                        placeholder="Rue *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.zipCode"
-                                        :icon="InboxArrowDownIcon"
-                                        size="md"
-                                        placeholder="Code postal *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.city"
-                                        :icon="BuildingOffice2Icon"
-                                        size="md"
-                                        placeholder="Ville *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.additionnalInformation"
-                                        :icon="EllipsisHorizontalCircleIcon"
-                                        size="md"
-                                        placeholder="Complément d'adresse"
-                                    />
-                                </div>
-
-                                <div />
-
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    class="flex gap-2 items-center mt-6 ml-28 max-w-36"
-                                    @click="removeService(index)"
-                                >
-                                    <TrashIcon class="w-4 h-4" />
-                                    <span>Supprimer</span>
-                                </Button>
-                            </div>
-
-                            <div
                                 v-if="formData.accountType != 'institution'"
                                 class="mt-4 col-span-2 sm:col-span-4"
                             >
@@ -1003,105 +906,6 @@
                             </div>
                         </div>
 
-                        <div
-                            v-if="formData.accountType == 'institution'"
-                            class="mt-6 mb-4 border-b border-gray-200 col-span-4"
-                        />
-
-                        <div
-                            v-if="formData.accountType == 'institution'"
-                            class="flex justify-between gap-4 items-center col-span-4"
-                        >
-                            <h3 class="text-gray-600 font-semibold">
-                                Services
-                            </h3>
-                            <Button
-                                variant="ghost"
-                                class="flex gap-2 items-center text-primary"
-                                @click="addService"
-                            >
-                                <PlusIcon class="w-4 h-4" />
-                                <span>
-                                    Ajouter
-                                </span>
-                            </Button>
-                        </div>
-
-                        <div
-                            v-for="(service, index) in formData.services"
-                            v-if="formData.accountType == 'institution'"
-                            :key="index"
-                            class="mt-2 col-span-4"
-                        >
-                            <div class="space-y-4">
-                                <div>
-                                    <InputIcon
-                                        v-model="service.name"
-                                        :icon="BriefcaseIcon"
-                                        size="md"
-                                        placeholder="Nom de service *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.phoneNumber"
-                                        :icon="PhoneIcon"
-                                        size="md"
-                                        placeholder="N° de téléphone"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.street"
-                                        :icon="MapPinIcon"
-                                        size="md"
-                                        placeholder="Rue *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.zipCode"
-                                        :icon="InboxArrowDownIcon"
-                                        size="md"
-                                        placeholder="Code postal *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.city"
-                                        :icon="BuildingOffice2Icon"
-                                        size="md"
-                                        placeholder="Ville *"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputIcon
-                                        v-model="service.address.additionnalInformation"
-                                        :icon="EllipsisHorizontalCircleIcon"
-                                        size="md"
-                                        placeholder="Complément d'adresse"
-                                    />
-                                </div>
-
-                                <div />
-
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    class="flex gap-2 items-center mt-6 ml-28 max-w-36"
-                                    @click="removeService(index)"
-                                >
-                                    <TrashIcon class="w-4 h-4" />
-                                    <span>Supprimer</span>
-                                </Button>
-                            </div>
-                        </div>
-
                         <div class="col-span-4 mt-4 flex justify-center items-center">
                             <Button
                                 class="w-[50%]"
@@ -1144,7 +948,6 @@ import {
     UserGroupIcon,
 } from '@heroicons/vue/24/solid';
 
-import { BriefcaseIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
@@ -1280,18 +1083,6 @@ const formData = reactive({
     professionalCategory: '',
     radiusKm: '',
     groupName: '',
-    services: [
-        {
-            name: '',
-            phoneNumber: '',
-            address: {
-                street: '',
-                city: '',
-                zipCode: '',
-                additionnalInformation: '',
-            },
-        },
-    ],
 });
 
 const identifierLabel = computed(() =>
@@ -1299,23 +1090,6 @@ const identifierLabel = computed(() =>
         ? 'Numéro RPPS'
         : 'Numéro INAMI',
 );
-
-const addService = () => {
-    formData.services.push({
-        name: '',
-        phoneNumber: '',
-        address: {
-            street: '',
-            city: '',
-            zipCode: '',
-            additionnalInformation: '',
-        },
-    });
-};
-
-const removeService = (index) => {
-    formData.services.splice(index, 1);
-};
 
 const route = useRoute();
 const { register } = useAuth();
@@ -1332,10 +1106,6 @@ const { submit, inProgress } = useSubmit(
             zipCodes: formData.zipCodesArray.join(', '),
             cities: formData.citiesArray.join(', '),
         };
-
-        if (formData.services[0].name == '') {
-            delete formDataForBackend.services;
-        }
 
         return register(formDataForBackend);
     },
