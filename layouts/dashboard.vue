@@ -96,11 +96,9 @@
                             <EnvelopeIcon class="w-6 text-primary hover:text-primary/80 transition-colors duration-150" />
                         </NuxtLink>
                     </div>
-                    <div
-                        v-else-if="!isAdmin"
-                        class="relative inline-block pr-4"
-                    >
+                    <div class="relative inline-block pr-4">
                         <div class="flex space-x-4 flex-nowrap">
+                            <NotificationsNotificationDropdown />
                             <div
                                 class="cursor-pointer"
                                 title="Signaler un problème"
@@ -108,78 +106,7 @@
                             >
                                 <FaceFrownIcon class="w-6 h-6 text-gray-500" />
                             </div>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger
-                                    v-if="user.type != 'institution'"
-                                    as-child
-                                >
-                                    <div
-                                        class="relative cursor-pointer"
-                                        @click="handleSeen()"
-                                    >
-                                        <BellAlertIcon class="w-6 h-6 text-gray-500" />
-
-                                        <span
-                                            v-if="showSpan"
-                                            class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2
-                                                bg-red-500 text-white text-xs font-bold
-                                                rounded-full h-4 w-4 flex items-center justify-center
-                                                pointer-events-none"
-                                        >
-                                            1
-                                        </span>
-                                    </div>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent
-                                    v-if="showNotifUI && user.type != 'institution'"
-                                    class="w-56 origin-top-left mr-[11rem]"
-                                    :style="{
-                                        position: 'absolute',
-                                        left: '0',
-                                        transform: 'translateX(-20px)',
-                                    }"
-                                >
-                                    <DropdownMenuItem
-                                        class="text-left pl-4 hover:bg-gray-50"
-                                        @click="showDialog = true"
-                                    >
-                                        Désactiver les notifications
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </div>
-
-                        <Dialog
-                            v-if="showNotifUI && user.type != 'institution'"
-                            v-model:open="showDialog"
-                        >
-                            <DialogContent class="sm:max-w-md">
-                                <DialogHeader class="text-left">
-                                    <DialogTitle class="text-left">
-                                        Désactiver les notifications
-                                    </DialogTitle>
-                                    <DialogDescription class="text-left mt-2">
-                                        En désactivant cette option, vous ne serez plus informé par e-mail des nouveaux remplacements dans votre quartier.
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                <div class="mt-4 flex justify-end gap-2">
-                                    <DialogClose as-child>
-                                        <Button class="px-4 py-2 text-sm text-gray-700 rounded bg-white border hover:bg-white">
-                                            Annuler
-                                        </Button>
-                                    </DialogClose>
-
-                                    <Button
-                                        class="px-4 py-2 text-white text-sm rounded hover:bg-primary/90"
-                                        @click="handleDisable"
-                                    >
-                                        Valider
-                                    </Button>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
 
                         <Dialog v-model:open="showReportModal">
                             <DialogContent class="sm:max-w-md">
@@ -231,7 +158,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, EnvelopeIcon, BellAlertIcon, FaceFrownIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, EnvelopeIcon, FaceFrownIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
@@ -243,12 +170,8 @@ const { isAdmin, hasChangedAvatar } = useAuth();
 const roles = ref<AccountType[]>();
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();
-const { logout, getRoles, switchRole, createNotifPreferences } = useAuth();
+const { logout, getRoles, switchRole } = useAuth();
 const { reportProblem } = useMail();
-
-const showDialog = ref(false);
-const showSpan = ref(false);
-const showNotifUI = ref(true);
 
 const showReportModal = ref(false);
 const route = useRoute();
@@ -278,60 +201,17 @@ const submitReport = async () => {
     }
 };
 
-const parsedSettings = computed(() => {
-    try {
-        return user.value.settings ? JSON.parse(user.value.settings) : {};
-    }
-    catch (error) {
-        console.error('Erreur de parsing user.settings :', error);
-        return {};
-    }
-});
+const { getUnreadCount, startPolling, stopPolling } = useNotifications();
 
 onMounted(async () => {
     roles.value = await getRoles();
-    const notif = parsedSettings.value?.notification || {};
-    showNotifUI.value = notif.new_replacement === true;
-    showSpan.value = notif.seen_disable_notification !== true;
+    await getUnreadCount();
+    startPolling(10000);
 });
 
-const handleSeen = async () => {
-    try {
-        const formData = {
-            key: 'notification',
-            value: {
-                seen_disable_notification: true,
-            },
-        };
-        await createNotifPreferences(formData);
-        showSpan.value = false;
-    }
-    catch (error) {
-        console.error('Erreur lors de la mise à jour de seen :', error);
-    }
-};
-
-const handleDisable = async () => {
-    try {
-        const formData = reactive({
-            key: 'notification',
-            value: {
-                new_replacement: false,
-            },
-        });
-
-        await createNotifPreferences(formData);
-        $toast({
-            title: 'Succès',
-            description: 'Notification désactivé avec succès.',
-        });
-        showDialog.value = false;
-        showNotifUI.value = false;
-    }
-    catch (error) {
-        console.error('Erreur lors de la désactivation des notifications :', error);
-    }
-};
+onUnmounted(() => {
+    stopPolling();
+});
 
 definePageMeta({
     ssr: false,

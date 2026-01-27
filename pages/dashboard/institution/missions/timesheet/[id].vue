@@ -516,7 +516,7 @@ const handleGenerateInvoice = async () => {
                 $toast({
                     description: response.message,
                 });
-            }
+            };
         }
         catch (err) {
             if (err.data?.errors) {

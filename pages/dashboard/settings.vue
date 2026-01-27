@@ -432,7 +432,7 @@
                     </section>
 
                     <section
-                        v-if="user.type != 'institution'" 
+                        v-if="user.type != 'institution'"
                         class="shadow rounded-lg p-6"
                     >
                         <div class="flex justify-between items-center">
