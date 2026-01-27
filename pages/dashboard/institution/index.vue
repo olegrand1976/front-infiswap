@@ -1,7 +1,15 @@
 <template>
     <div class="mb-4 space-y-8">
         <div class="grid lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-xl p-8 text-white transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+            <template v-if="isLoading">
+                <div class="lg:col-span-2">
+                    <Skeleton class="h-48 w-full rounded-2xl" />
+                </div>
+            </template>
+            <div
+                v-else
+                class="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-xl p-8 text-white transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+            >
                 <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
                 <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 blur-2xl" />
                 <div class="relative z-10 flex flex-col lg:flex-row gap-6 items-center">
@@ -29,69 +37,82 @@
             </div>
 
             <div class="lg:col-span-1 grid grid-cols-2 gap-4">
-                <div class="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-2">
-                            <BriefcaseIcon class="w-8 h-8 text-white/80" />
-                            <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En cours</span>
-                        </div>
-                        <p class="text-white text-4xl font-bold mb-1">
-                            {{ dataReports?.stats?.mission?.in_progress || 0 }}
-                        </p>
-                        <p class="text-white/80 text-sm font-medium">
-                            Missions actives
-                        </p>
+                <template v-if="isLoading">
+                    <div
+                        v-for="i in 4"
+                        :key="i"
+                        class="rounded-xl shadow-lg p-6"
+                    >
+                        <Skeleton class="h-8 w-8 rounded-lg mb-2" />
+                        <Skeleton class="h-10 w-20 mb-2" />
+                        <Skeleton class="h-4 w-24" />
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-2">
+                                <BriefcaseIcon class="w-8 h-8 text-white/80" />
+                                <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En cours</span>
+                            </div>
+                            <p class="text-white text-4xl font-bold mb-1">
+                                {{ dataReports?.stats?.mission?.in_progress || 0 }}
+                            </p>
+                            <p class="text-white/80 text-sm font-medium">
+                                Missions actives
+                            </p>
+                        </div>
+                    </div>
 
-                <div class="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-2">
-                            <ClipboardDocumentCheckIcon class="w-8 h-8 text-white/80" />
-                            <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">Ouvertes</span>
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-2">
+                                <ClipboardDocumentCheckIcon class="w-8 h-8 text-white/80" />
+                                <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">Ouvertes</span>
+                            </div>
+                            <p class="text-white text-4xl font-bold mb-1">
+                                {{ dataReports?.stats?.mission?.open || 0 }}
+                            </p>
+                            <p class="text-white/80 text-sm font-medium">
+                                À pourvoir
+                            </p>
                         </div>
-                        <p class="text-white text-4xl font-bold mb-1">
-                            {{ dataReports?.stats?.mission?.open || 0 }}
-                        </p>
-                        <p class="text-white/80 text-sm font-medium">
-                            À pourvoir
-                        </p>
                     </div>
-                </div>
 
-                <div class="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div class="absolute inset-0 bg-gradient-to-br from-amber-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-2">
-                            <ClockIcon class="w-8 h-8 text-white/80" />
-                            <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En attente</span>
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-2">
+                                <ClockIcon class="w-8 h-8 text-white/80" />
+                                <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En attente</span>
+                            </div>
+                            <p class="text-white text-4xl font-bold mb-1">
+                                {{ dataReports?.stats?.timesheet_validate || 0 }}
+                            </p>
+                            <p class="text-white/80 text-sm font-medium">
+                                Feuilles de temps
+                            </p>
                         </div>
-                        <p class="text-white text-4xl font-bold mb-1">
-                            {{ dataReports?.stats?.timesheet_validate || 0 }}
-                        </p>
-                        <p class="text-white/80 text-sm font-medium">
-                            Feuilles de temps
-                        </p>
                     </div>
-                </div>
 
-                <div class="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-2">
-                            <DocumentTextIcon class="w-8 h-8 text-white/80" />
-                            <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En attente</span>
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-2">
+                                <DocumentTextIcon class="w-8 h-8 text-white/80" />
+                                <span class="text-xs font-semibold text-white/80 bg-white/20 px-2 py-1 rounded-full">En attente</span>
+                            </div>
+                            <p class="text-white text-4xl font-bold mb-1">
+                                {{ dataReports?.stats?.mission?.invoice_pending || 0 }}
+                            </p>
+                            <p class="text-white/80 text-sm font-medium">
+                                Factures
+                            </p>
                         </div>
-                        <p class="text-white text-4xl font-bold mb-1">
-                            {{ dataReports?.stats?.mission?.invoice_pending || 0 }}
-                        </p>
-                        <p class="text-white/80 text-sm font-medium">
-                            Factures
-                        </p>
                     </div>
-                </div>
+                </template>
             </div>
         </div>
 
@@ -115,16 +136,30 @@
                                 </p>
                             </div>
                         </div>
-                        <Button
-                            variant="ghost"
-                            class="group text-primary font-semibold hover:bg-primary/10 rounded-xl px-5 py-2.5 transition-all duration-300 hover:scale-105 hover:shadow-md border border-transparent hover:border-primary/20"
-                            @click="handleShowMissions"
-                        >
-                            <span class="flex items-center gap-2">
-                                Voir tout
-                                <ArrowRightIcon class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                            </span>
-                        </Button>
+                        <div class="flex items-center gap-3">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="text-gray-600 hover:text-primary hover:bg-primary/10 rounded-xl px-4 py-2 transition-all duration-300"
+                                :disabled="isLoading"
+                                @click="refreshData"
+                            >
+                                <ArrowPathIcon
+                                    class="w-5 h-5 transition-transform duration-300"
+                                    :class="{ 'animate-spin': isLoading }"
+                                />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                class="group text-primary font-semibold hover:bg-primary/10 rounded-xl px-5 py-2.5 transition-all duration-300 hover:scale-105 hover:shadow-md border border-transparent hover:border-primary/20"
+                                @click="handleShowMissions"
+                            >
+                                <span class="flex items-center gap-2">
+                                    Voir tout
+                                    <ArrowRightIcon class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                </span>
+                            </Button>
+                        </div>
                     </div>
 
                     <Tabs
@@ -171,7 +206,62 @@
                         >
                             <div class="hidden lg:block">
                                 <div
-                                    v-if="!dataReports?.missions?.open || dataReports.missions.open.length == 0"
+                                    v-if="isLoading"
+                                    class="overflow-hidden rounded-2xl border border-gray-200/50 shadow-sm bg-white/50 backdrop-blur-sm"
+                                >
+                                    <Table class="w-full">
+                                        <TableHeader>
+                                            <TableRow class="bg-gradient-to-r from-emerald-50/50 to-emerald-50/30 border-b border-emerald-100/50">
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow
+                                                v-for="i in 5"
+                                                :key="i"
+                                                class="border-b border-gray-100/50"
+                                            >
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-16" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                                <div
+                                    v-else-if="!dataReports?.missions?.open || dataReports.missions.open.length == 0"
                                     class="text-center py-20 bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-dashed border-gray-200"
                                 >
                                     <div class="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -348,7 +438,62 @@
                         >
                             <div class="hidden lg:block">
                                 <div
-                                    v-if="!dataReports?.missions?.in_progress || dataReports.missions.in_progress.length == 0"
+                                    v-if="isLoading"
+                                    class="overflow-hidden rounded-2xl border border-gray-200/50 shadow-sm bg-white/50 backdrop-blur-sm"
+                                >
+                                    <Table class="w-full">
+                                        <TableHeader>
+                                            <TableRow class="bg-gradient-to-r from-blue-50/50 to-blue-50/30 border-b border-blue-100/50">
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-5 w-24" />
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow
+                                                v-for="i in 5"
+                                                :key="i"
+                                                class="border-b border-gray-100/50"
+                                            >
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-16" />
+                                                </TableHead>
+                                                <TableHead class="py-5 px-6">
+                                                    <Skeleton class="h-6 w-full" />
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                                <div
+                                    v-else-if="!dataReports?.missions?.in_progress || dataReports.missions.in_progress.length == 0"
                                     class="text-center py-20 bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-dashed border-gray-200"
                                 >
                                     <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -535,7 +680,26 @@
                     </div>
                 </div>
                 <div
-                    v-if="dataReports?.notifications?.missions?.length == 0 && dataReports?.notifications?.timesheets?.length == 0"
+                    v-if="isLoading"
+                    class="space-y-3"
+                >
+                    <div
+                        v-for="i in 3"
+                        :key="i"
+                        class="bg-gray-50 border border-gray-200 rounded-xl p-4"
+                    >
+                        <div class="flex gap-3 items-start">
+                            <Skeleton class="w-10 h-10 rounded-lg" />
+                            <div class="flex-1 space-y-2">
+                                <Skeleton class="h-4 w-3/4" />
+                                <Skeleton class="h-3 w-1/2" />
+                                <Skeleton class="h-3 w-1/4" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    v-else-if="dataReports?.notifications?.missions?.length == 0 && dataReports?.notifications?.timesheets?.length == 0"
                     class="py-12"
                 >
                     <div class="text-center">
@@ -609,6 +773,7 @@ import {
     BellIcon,
     BellSlashIcon,
     ArrowRightIcon,
+    ArrowPathIcon,
     BuildingOffice2Icon,
     CalendarIcon,
     CalendarDaysIcon,
@@ -616,6 +781,7 @@ import {
     UserIcon,
 } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
+import Skeleton from '@/components/ui/skeleton/Skeleton.vue';
 
 useHead({ title: 'Tableau de bord' });
 
@@ -636,7 +802,8 @@ const handleShowMissions = () => {
 
 const { reports, getReports } = useReports();
 const { markAsRead } = useNotifications();
-const dataReports = computed(() => reports?.value || {
+
+const defaultReports = {
     stats: {
         mission: {
             in_progress: 0,
@@ -653,9 +820,45 @@ const dataReports = computed(() => reports?.value || {
         missions: [],
         timesheets: [],
     },
-});
+};
 
-await getReports();
+const dataReports = useState('institutionDashboardReports', () => defaultReports);
+const isLoading = useState('institutionDashboardLoading', () => true);
+
+const loadReports = async () => {
+    try {
+        isLoading.value = true;
+        await getReports();
+        if (reports.value) {
+            dataReports.value = reports.value;
+        }
+    }
+    catch (error) {
+        console.error('Error loading reports:', error);
+    }
+    finally {
+        isLoading.value = false;
+    }
+};
+
+const { $toast } = useNuxtApp();
+
+const refreshData = async () => {
+    await loadReports();
+    $toast({
+        description: 'Données mises à jour avec succès',
+    });
+};
+
+onMounted(() => {
+    if (!reports.value || Object.keys(reports.value).length === 0) {
+        loadReports();
+    }
+    else {
+        dataReports.value = reports.value;
+        isLoading.value = false;
+    }
+});
 
 const activeTab = ref('open');
 const handleTabChange = async (newTab: string) => {
