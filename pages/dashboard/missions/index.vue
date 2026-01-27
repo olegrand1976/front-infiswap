@@ -191,7 +191,7 @@
                                     class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
                                     @click="toggleExpand(mission.id)"
                                 >
-                                    {{ isExpanded[mission.id] ? 'Voir moins' : 'Voir plus' }}
+                                    {{ expandedMissions[mission.id] ? 'Voir moins' : 'Voir plus' }}
                                 </button>
                             </div>
 
@@ -220,10 +220,18 @@
 
                             <div class="mt-6 flex items-center justify-end gap-3">
                                 <Button
-                                    class="bg-primary hover:bg-primary/90"
+                                    v-if="mission.has_answered == false"
                                     @click="handleApply(mission.id)"
                                 >
                                     Postuler
+                                </Button>
+
+                                <Button
+                                    v-else
+                                    disabled
+                                    class="bg-gray-200 text-gray-600 font-semibold cursor-not-allowed hover:bg-gray-200 hover:text-gray-600"
+                                >
+                                    Candidature envoyée
                                 </Button>
                             </div>
                         </div>
@@ -394,10 +402,10 @@
                                             {{ mission.description }}
                                         </p>
                                         <button
-                                            class="mt-2 text-sm text-success font-semibold hover:underline focus:outline-none"
+                                            class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
                                             @click="toggleExpand(mission.id)"
                                         >
-                                            {{ isExpanded[mission.id] ? 'Voir moins' : 'Voir plus' }}
+                                            {{ expandedMissions[mission.id] ? 'Voir moins' : 'Voir plus' }}
                                         </button>
                                     </div>
 
@@ -601,8 +609,10 @@
                                 <h3 class="text-sm text-gray-600 font-semibold">
                                     {{ formatToDMY(date) }}
                                 </h3>
-                                <div class="border-r border-orange-300 gap-8" />
-                                <div class="absolute top-0 right-7 w-6 h-6 rounded-full bg-orange-500/60" />
+                                <div class="relative border-r border-orange-300">
+                                    <div class="border-r border-orange-300" />
+                                    <div class="absolute top-0 -right-3 w-6 h-6 rounded-full bg-orange-500/60" />
+                                </div>
                             </div>
 
                             <div class="col-span-5 grid grid-cols-2 gap-4">
@@ -651,10 +661,10 @@
                                             {{ response.mission.description }}
                                         </p>
                                         <button
-                                            class="mt-2 text-sm text-orange-500 font-semibold hover:underline focus:outline-none"
-                                            @click="toggleExpand(response.id)"
+                                            class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
+                                            @click="toggleExpand(response.mission.id)"
                                         >
-                                            {{ isExpanded[response.id] ? 'Voir moins' : 'Voir plus' }}
+                                            {{ expandedMissions[response.mission.id] ? 'Voir moins' : 'Voir plus' }}
                                         </button>
                                     </div>
 
@@ -786,6 +796,7 @@ const dataMyMissions = computed(() => {
             completed: [],
         };
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (myMissionsState.value.data ?? []).reduce<Record<string, any[]>>(
         (acc, mission) => {
             const status = mission.status || 'in_progress';
@@ -869,6 +880,7 @@ onMounted(async () => {
     ]);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dataResponses = computed<Record<string, any[]>>(() => {
     if (!responses.value?.data) {
         return {};
@@ -883,6 +895,7 @@ const dataResponses = computed<Record<string, any[]>>(() => {
         }
         acc[date].push(response);
         return acc;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as Record<string, any[]>);
 });
 
@@ -899,7 +912,6 @@ const filterMissions = async () => {
 };
 
 const filterMyMissions = async () => {
-    const currentFilter = { ...myMissionsOption.value };
     await loadMyMissions();
 };
 
@@ -958,8 +970,8 @@ const searchCandidacy = debounce(async () => {
     isSearchingCandidacy.value = false;
 }, 100);
 
-const toggleExpand = (id: number) => {
-    isExpanded.value[id] = !isExpanded.value[id];
+const toggleExpand = (missionId: number) => {
+    expandedMissions.value[missionId] = !expandedMissions.value[missionId];
 };
 
 const reinitializeFilter = async () => {

@@ -490,7 +490,7 @@ const handleCloseStatusDialog = () => {
 
 const handleChangeStatus = async () => {
     const formData = {
-        institution_id: user.value.id,
+        institution_id: user.value.institution.id,
         start_date: selectedMission.value.start_date,
         time_start_at: selectedMission.value.time_start_at,
         time_end_at: selectedMission.value.time_end_at,
