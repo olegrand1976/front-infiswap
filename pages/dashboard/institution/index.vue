@@ -1,22 +1,17 @@
 <template>
     <div class="mb-4 space-y-8">
         <div class="grid lg:grid-cols-3 gap-6">
-            <template v-if="isLoading">
-                <div class="lg:col-span-2">
-                    <Skeleton class="h-48 w-full rounded-2xl" />
-                </div>
-            </template>
-            <div
-                v-else
-                class="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-xl p-8 text-white transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-            >
+        
+            <div class="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-xl p-8 text-white transform transition-all duration-300 hover:shadow-xl">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
                 <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 blur-2xl" />
                 <div class="relative z-10 flex flex-col lg:flex-row gap-6 items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+                        <div class="w-20 h-20 bg-white/20 hover:cursor-pointer backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
+                            @click="handleCreateMission"
+                        >
                             <PlusIcon class="w-10 h-10 text-white" />
-                        </div>
+                    </div>
                     </div>
                     <div class="flex-1 text-center lg:text-left">
                         <h2 class="text-2xl font-bold mb-2">
@@ -49,7 +44,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <div class="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-2">
@@ -65,7 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-2">
@@ -81,7 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">
                         <div class="absolute inset-0 bg-gradient-to-br from-amber-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-2">
@@ -97,7 +92,7 @@
                         </div>
                     </div>
 
-                    <div class="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                    <div class="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">
                         <div class="absolute inset-0 bg-gradient-to-br from-purple-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-2">
