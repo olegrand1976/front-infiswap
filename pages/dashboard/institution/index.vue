@@ -120,7 +120,7 @@
 
                                 <TableBody>
                                     <div
-                                        v-if="dataReports.missions.open.length == 0"
+                                        v-if="!dataReports?.missions?.open || dataReports.missions.open.length == 0"
                                         class="text-center mt-12 text-gray-600"
                                     >
                                         Aucune mission pour le moment
@@ -134,7 +134,7 @@
                                             class="grid grid-cols-6 pb-4 border-b"
                                         >
                                             <TableHead class="py-4 truncate text-gray-800">
-                                                {{ mission.service.name || '-' }}
+                                                {{ mission.service?.name || '-' }}
                                             </TableHead>
                                             <TableHead class="py-4 truncate text-gray-800">
                                                 {{ formatToDMY(mission.start_date) }}
@@ -148,7 +148,7 @@
                                                 {{ formatTime(mission.time_end_at) }}
                                             </TableHead>
                                             <TableHead class="py-4 truncate text-gray-800">
-                                                {{ mission.matching_candidates.length }}
+                                                {{ mission.matching_candidates?.length || 0 }}
                                             </TableHead>
                                             <TableHead class="py-4 truncate text-gray-800">
                                                 {{ formatRelativeDate(mission.created_at) }}
@@ -161,13 +161,20 @@
 
                         <div class="lg:hidden mt-4 space-y-4">
                             <div
+                                v-if="!dataReports?.missions?.open || dataReports.missions.open.length == 0"
+                                class="text-center mt-12 text-gray-600"
+                            >
+                                Aucune mission pour le moment
+                            </div>
+                            <div
+                                v-else
                                 v-for="mission in dataReports.missions.open"
                                 :key="mission.id"
                                 class="rounded-md bg-gray-50 p-4"
                             >
                                 <div class="flex justify-between">
                                     <span class="text-sm text-gray-500">Service</span>
-                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
+                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service?.name || '-' }}</span>
                                 </div>
 
                                 <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
@@ -241,7 +248,7 @@
 
                                 <TableBody>
                                     <div
-                                        v-if="dataReports.missions.in_progress.length == 0"
+                                        v-if="!dataReports?.missions?.in_progress || dataReports.missions.in_progress.length == 0"
                                         class="text-center mt-12 text-gray-600"
                                     >
                                         Aucune mission pour le moment
@@ -255,7 +262,7 @@
                                             class="grid grid-cols-6 pb-4 border-b"
                                         >
                                             <TableHead class="py-4 text-gray-800">
-                                                {{ mission.service.name || '-' }}
+                                                {{ mission.service?.name || '-' }}
                                             </TableHead>
                                             <TableHead class="py-4 text-gray-800">
                                                 {{ formatToDMY(mission.start_date) }}
@@ -269,7 +276,7 @@
                                                 {{ formatTime(mission.time_end_at) }}
                                             </TableHead>
                                             <TableHead class="py-4 text-gray-800">
-                                                {{ mission.accepted_candidate.full_name }}
+                                                {{ mission.accepted_candidate?.full_name || '-' }}
                                             </TableHead>
                                             <TableHead class="py-4 text-gray-800">
                                                 {{ formatRelativeDate(mission.created_at) }}
@@ -282,13 +289,20 @@
 
                         <div class="lg:hidden mt-4 space-y-4">
                             <div
+                                v-if="!dataReports?.missions?.in_progress || dataReports.missions.in_progress.length == 0"
+                                class="text-center mt-12 text-gray-600"
+                            >
+                                Aucune mission pour le moment
+                            </div>
+                            <div
+                                v-else
                                 v-for="mission in dataReports.missions.in_progress"
                                 :key="mission.id"
                                 class="rounded-md bg-gray-50 p-4"
                             >
                                 <div class="flex justify-between">
                                     <span class="text-sm text-gray-500">Service</span>
-                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
+                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service?.name || '-' }}</span>
                                 </div>
 
                                 <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
@@ -408,7 +422,24 @@ const handleShowMissions = () => {
 
 const { reports, getReports } = useReports();
 const { markAsRead } = useNotifications();
-const dataReports = computed(() => reports?.value);
+const dataReports = computed(() => reports?.value || {
+    stats: {
+        mission: {
+            in_progress: 0,
+            open: 0,
+            invoice_pending: 0,
+        },
+        timesheet_validate: 0,
+    },
+    missions: {
+        open: [],
+        in_progress: [],
+    },
+    notifications: {
+        missions: [],
+        timesheets: [],
+    },
+});
 
 await getReports();
 
