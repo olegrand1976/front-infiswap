@@ -134,7 +134,7 @@
                                             class="grid grid-cols-6 pb-4 border-b"
                                         >
                                             <TableHead class="py-4 truncate text-gray-800">
-                                                {{ mission.service.name }}
+                                                {{ mission.service.name || '-' }}
                                             </TableHead>
                                             <TableHead class="py-4 truncate text-gray-800">
                                                 {{ formatToDMY(mission.start_date) }}
@@ -167,7 +167,7 @@
                             >
                                 <div class="flex justify-between">
                                     <span class="text-sm text-gray-500">Service</span>
-                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name }}</span>
+                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
                                 </div>
 
                                 <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
@@ -255,7 +255,7 @@
                                             class="grid grid-cols-6 pb-4 border-b"
                                         >
                                             <TableHead class="py-4 text-gray-800">
-                                                {{ mission.service.name }}
+                                                {{ mission.service.name || '-' }}
                                             </TableHead>
                                             <TableHead class="py-4 text-gray-800">
                                                 {{ formatToDMY(mission.start_date) }}
@@ -288,7 +288,7 @@
                             >
                                 <div class="flex justify-between">
                                     <span class="text-sm text-gray-500">Service</span>
-                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name }}</span>
+                                    <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
                                 </div>
 
                                 <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
@@ -338,7 +338,7 @@
                 <h3 class="text-lg font-semibold text-gray-700">
                     Notifications
                 </h3>
-                <div v-if="dataReports.notifications.missions.length == 0 && dataReports.notifications.timesheets.length == 0">
+                <div v-if="dataReports?.notifications?.missions?.length == 0 && dataReports?.notifications?.timesheets?.length == 0">
                     <p class="mt-16 mb-16 lg:mb-0 text-center text-sm text-gray-500">
                         Aucune notification pour le moment
                     </p>
@@ -348,7 +348,7 @@
                     class="mt-4 grid gap-4"
                 >
                     <div
-                        v-for="notification in dataReports.notifications.missions"
+                        v-for="notification in dataReports?.notifications?.missions"
                         :key="notification.id"
                         class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
                         @click="handleReadNotification(notification, 'mission')"
@@ -364,7 +364,7 @@
                         </div>
                     </div>
                     <div
-                        v-for="notification in dataReports.notifications.timesheets"
+                        v-for="notification in dataReports?.notifications?.timesheets"
                         :key="notification.mission_id"
                         class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
                         @click="handleReadNotification(notification, 'timesheet')"
@@ -407,7 +407,7 @@ const handleShowMissions = () => {
 };
 
 const { reports, getReports } = useReports();
-const { read } = useNotifications();
+const { markAsRead } = useNotifications();
 const dataReports = computed(() => reports?.value);
 
 await getReports();
@@ -419,7 +419,7 @@ const handleTabChange = async (newTab: string) => {
 
 const handleReadNotification = async (notification, typeNotif) => {
     if (typeNotif == 'mission') {
-        const response = await read(notification.id, notification);
+        const response = await markAsRead(notification.id);
 
         if (response.data) {
             router.push(`/dashboard/institution/missions/candidacy/${notification.notifiable_id}`);
@@ -427,7 +427,7 @@ const handleReadNotification = async (notification, typeNotif) => {
     }
     else {
         for (const notif of notification.data) {
-            await read(notif.id, notif);
+            await markAsRead(notif.id);
         }
 
         router.push(

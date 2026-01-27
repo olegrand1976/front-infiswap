@@ -123,7 +123,7 @@
                                                 Nom de l'institution
                                             </p>
                                             <Input
-                                                v-model="formPersonalInfo.institution_name"
+                                                v-model="formPersonalInfo.institution.name"
                                                 type="text"
                                                 class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
                                             />
@@ -280,7 +280,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.institution_name }}
+                                    {{ user.institution.name }}
                                 </p>
                             </div>
 
@@ -1528,7 +1528,9 @@ const formatDate = (dateString) => {
 
 const formPersonalInfo = reactive({
     id: user.value.id,
-    institution_name: user.value.institution_name,
+    institution: {
+        name: user.value.institution.name,
+    },
     lastname: user.value.lastname,
     firstname: user.value.firstname,
     dateOfBirth: formatDate(user.value.date_of_birth),

@@ -34,7 +34,10 @@ export type User = {
     identifier_number: string;
     email: string;
     type: 'standard' | 'institution';
-    institution_name?: string | null;
+    institution?: {
+        id: number;
+        name: string;
+    };
     password?: string;
     gender: Gender;
     phone_number?: string | null;
@@ -426,7 +429,7 @@ export type Mission = {
     };
     institution: {
         id: number;
-        institution_name: string;
+        institution_name?: string;
         type: string;
         fullname: string;
         email: string;
@@ -447,6 +450,7 @@ export type Mission = {
     accepted_candidate?: User;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matching_candidates?: any;
+    has_answered: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     duration: any;
     has_timesheet: boolean;

@@ -99,7 +99,6 @@ import {
     BuildingOffice2Icon,
     EllipsisHorizontalCircleIcon,
 } from '@heroicons/vue/24/outline';
-import type { User } from '~/lib/types';
 
 const props = defineProps({
     service: {
@@ -119,7 +118,6 @@ const props = defineProps({
     },
 });
 
-const user = useState<User>('user');
 const { create, update } = useInstitutionServices();
 
 const { $toast } = useNuxtApp();
@@ -180,6 +178,8 @@ const { submit, inProgress } = useSubmit(async () => {
         }
         else {
             await create(payload);
+
+            resetForm();
             $toast({
                 description: 'Service créé avec succès',
             });
