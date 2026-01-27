@@ -169,6 +169,7 @@ const { isAdmin, hasChangedAvatar } = useAuth();
 
 const roles = ref<AccountType[]>();
 const user = useState<User>('user');
+
 const { $toast } = useNuxtApp();
 const { logout, getRoles, switchRole } = useAuth();
 const { reportProblem } = useMail();

@@ -407,7 +407,7 @@ const handleShowMissions = () => {
 };
 
 const { reports, getReports } = useReports();
-const { read } = useNotifications();
+const { markAsRead } = useNotifications();
 const dataReports = computed(() => reports?.value);
 
 await getReports();
@@ -419,7 +419,7 @@ const handleTabChange = async (newTab: string) => {
 
 const handleReadNotification = async (notification, typeNotif) => {
     if (typeNotif == 'mission') {
-        const response = await read(notification.id, notification);
+        const response = await markAsRead(notification.id);
 
         if (response.data) {
             router.push(`/dashboard/institution/missions/candidacy/${notification.notifiable_id}`);
@@ -427,7 +427,7 @@ const handleReadNotification = async (notification, typeNotif) => {
     }
     else {
         for (const notif of notification.data) {
-            await read(notif.id, notif);
+            await markAsRead(notif.id);
         }
 
         router.push(

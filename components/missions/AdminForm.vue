@@ -209,7 +209,7 @@ const router = useRouter();
 const { submit, inProgress } = useSubmit(async () => {
     try {
         if (formData.id == undefined) {
-            formData.institution_id = user.value.id;
+            formData.institution_id = user.value.institution.id;
             await create(formData);
             $toast({
                 description: 'Mission créé avec succès',

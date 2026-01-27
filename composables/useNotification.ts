@@ -3,6 +3,7 @@ import type { Notification } from '~/lib/types';
 
 type NotificationList = {
     data: Notification[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     meta: any;
 };
 
@@ -71,6 +72,7 @@ export const useNotifications = () => {
         window.addEventListener('focus', handleFocus);
 
         const interval = setInterval(poll, intervalMs);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         pollingInterval.value = interval as any;
     }
 

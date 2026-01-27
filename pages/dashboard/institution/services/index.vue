@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
@@ -172,10 +172,11 @@ const columns: ColumnDef<any>[] = [
     },
 ];
 
-const handleEdit = (service: any) => {
+const handleEdit = (service) => {
     router.push(`/dashboard/institution/services/${service.id}`);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleDelete = async (service: any) => {
     return await remove(service.id).then(async () => {
         services.value.data = services.value.data.filter(
