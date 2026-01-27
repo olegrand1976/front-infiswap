@@ -25,7 +25,7 @@
                         Service <span class="text-red-500">*</span>
                     </label>
                     <div class="flex gap-2 items-center">
-                        <Select 
+                        <Select
                             v-model="formData.service_id"
                             :disabled="dataServices.length === 0 && !showServiceModal"
                             class="flex-1"
@@ -66,7 +66,7 @@
                             Nouveau
                         </Button>
                     </div>
-                    <p 
+                    <p
                         v-if="errors.service_id"
                         class="text-sm text-red-500"
                     >
@@ -86,7 +86,7 @@
                             placeholder="Date de début"
                             :class="errors.start_date ? 'border-red-300' : ''"
                         />
-                        <p 
+                        <p
                             v-if="errors.start_date"
                             class="text-sm text-red-500"
                         >
@@ -105,7 +105,7 @@
                             :min="startDate"
                             :class="errors.end_date ? 'border-red-300' : ''"
                         />
-                        <p 
+                        <p
                             v-if="errors.end_date"
                             class="text-sm text-red-500"
                         >
@@ -137,7 +137,7 @@
                             />
                         </div>
                     </div>
-                    <p 
+                    <p
                         v-if="errors.time_start_at || errors.time_end_at"
                         class="text-sm text-red-500"
                     >
@@ -149,7 +149,7 @@
                     <label class="text-gray-500 font-medium">
                         Diplôme requis <span class="text-red-500">*</span>
                     </label>
-                    <Select 
+                    <Select
                         v-model="selectedDiploma"
                         @update:model-value="handleDiplomaChange"
                     >
@@ -186,7 +186,7 @@
                         class="mt-2"
                         :class="errors.required_diploma ? 'border-red-300' : ''"
                     />
-                    <p 
+                    <p
                         v-if="errors.required_diploma"
                         class="text-sm text-red-500"
                     >
@@ -304,8 +304,8 @@
 </template>
 
 <script lang="ts" setup>
-import { 
-    BriefcaseIcon, 
+import {
+    BriefcaseIcon,
     PlusIcon,
     PhoneIcon,
     MapPinIcon,
@@ -365,7 +365,7 @@ const commonDiplomas = [
     'Auxiliaire de puériculture',
     'Sage-femme',
     'Infirmier(e) spécialisé(e)',
-    'Autre'
+    'Autre',
 ];
 
 await getAll(1, 50);
@@ -414,7 +414,8 @@ const getLastUsedService = () => {
         try {
             const parsed = JSON.parse(lastMission);
             return parsed.service_id;
-        } catch {
+        }
+        catch {
             return undefined;
         }
     }
@@ -430,7 +431,8 @@ const getLastUsedTimes = () => {
                 start: parsed.time_start_at || '08:00',
                 end: parsed.time_end_at || '17:00',
             };
-        } catch {
+        }
+        catch {
             return { start: '08:00', end: '17:00' };
         }
     }
@@ -460,15 +462,16 @@ const getInitialDiploma = () => {
 const selectedDiploma = ref(getInitialDiploma());
 
 const showCustomDiploma = computed(() => {
-    return selectedDiploma.value === '__custom__' || 
-           (formData.required_diploma && !commonDiplomas.includes(formData.required_diploma));
+    return selectedDiploma.value === '__custom__'
+        || (formData.required_diploma && !commonDiplomas.includes(formData.required_diploma));
 });
 
 const handleDiplomaChange = (value: string) => {
     if (value === '__custom__') {
         formData.required_diploma = '';
         selectedDiploma.value = '__custom__';
-    } else {
+    }
+    else {
         formData.required_diploma = value;
         selectedDiploma.value = value;
     }
@@ -477,7 +480,8 @@ const handleDiplomaChange = (value: string) => {
 watch(() => formData.required_diploma, (newVal) => {
     if (newVal && commonDiplomas.includes(newVal) && selectedDiploma.value !== newVal) {
         selectedDiploma.value = newVal;
-    } else if (newVal && !commonDiplomas.includes(newVal) && selectedDiploma.value !== '__custom__') {
+    }
+    else if (newVal && !commonDiplomas.includes(newVal) && selectedDiploma.value !== '__custom__') {
         selectedDiploma.value = '__custom__';
     }
 });
@@ -495,7 +499,7 @@ watch(() => dataServices.value, (newServices) => {
 }, { immediate: true });
 
 const validateForm = () => {
-    Object.keys(errors).forEach(key => {
+    Object.keys(errors).forEach((key) => {
         errors[key] = '';
     });
 
@@ -509,7 +513,8 @@ const validateForm = () => {
     if (!formData.start_date) {
         errors.start_date = 'La date de début est requise';
         isValid = false;
-    } else {
+    }
+    else {
         const startDate = new Date(formData.start_date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -576,12 +581,12 @@ const createServiceQuick = async () => {
         };
 
         const newService = await createService(payload);
-        
+
         if (newService?.data) {
             await getAll(1, 50);
             formData.service_id = newService.data.id;
             showServiceModal.value = false;
-            
+
             quickServiceForm.name = '';
             quickServiceForm.phoneNumber = '';
             quickServiceForm.address = {
@@ -596,7 +601,8 @@ const createServiceQuick = async () => {
                 description: 'Service créé avec succès',
             });
         }
-    } catch (err) {
+    }
+    catch (err) {
         if (err.data?.errors) {
             const firstError = Object.values(err.data.errors)[0][0];
             $toast({
@@ -605,7 +611,8 @@ const createServiceQuick = async () => {
                 variant: 'destructive',
             });
         }
-    } finally {
+    }
+    finally {
         isCreatingService.value = false;
     }
 };
@@ -673,7 +680,7 @@ const { submit, inProgress } = useSubmit(async () => {
         if (formData.id == undefined) {
             formData.institution_id = user.value.institution.id;
             const response = await create(formData);
-            
+
             if (response?.data) {
                 localStorage.setItem('lastMission', JSON.stringify({
                     service_id: formData.service_id,
@@ -699,12 +706,12 @@ const { submit, inProgress } = useSubmit(async () => {
     catch (err) {
         if (err.data?.errors) {
             const backendErrors = err.data.errors;
-            Object.keys(backendErrors).forEach(key => {
+            Object.keys(backendErrors).forEach((key) => {
                 if (errors.hasOwnProperty(key)) {
                     errors[key] = backendErrors[key][0];
                 }
             });
-            
+
             const firstError = Object.values(backendErrors)[0][0];
             $toast({
                 description: firstError,
