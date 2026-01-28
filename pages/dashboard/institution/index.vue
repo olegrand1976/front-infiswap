@@ -1,17 +1,17 @@
 <template>
     <div class="mb-4 space-y-8">
         <div class="grid lg:grid-cols-3 gap-6">
-        
             <div class="lg:col-span-2 relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-xl p-8 text-white transform transition-all duration-300 hover:shadow-xl">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
                 <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 blur-2xl" />
                 <div class="relative z-10 flex flex-col lg:flex-row gap-6 items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-20 h-20 bg-white/20 hover:cursor-pointer backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
+                        <div
+                            class="w-20 h-20 bg-white/20 hover:cursor-pointer backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
                             @click="handleCreateMission"
                         >
                             <PlusIcon class="w-10 h-10 text-white" />
-                    </div>
+                        </div>
                     </div>
                     <div class="flex-1 text-center lg:text-left">
                         <h2 class="text-2xl font-bold mb-2">
