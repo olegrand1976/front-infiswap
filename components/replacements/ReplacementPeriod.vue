@@ -2,7 +2,7 @@
     <div :class="cn('relative', props.class)">
         <ReplacementsFormatPeriod :replacement="props.replacement" />
         <span
-            v-show="isClosed(props.replacement)"
+            v-show="isClosed(props.replacement) && !hideStatus"
             class="absolute -top-5 -left-2 text-xs font-bold uppercase bg-primary text-white p-0.5"
         >Fermé</span>
     </div>
@@ -16,5 +16,6 @@ const { isClosed } = useReplacements();
 const props = defineProps<{
     replacement: Replacement;
     class?: string;
+    hideStatus?: boolean;
 }>();
 </script>
