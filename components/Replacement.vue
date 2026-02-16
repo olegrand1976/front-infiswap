@@ -268,6 +268,17 @@
                                             >
                                                 URGENT
                                             </div>
+                                            <div
+                                                v-if="isClosed(replacementGroup)"
+                                                :class="[
+                                                    'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-warning text-red-500',
+                                                    isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                        ? 'top-1 left-[60px]'
+                                                        : 'top-1 left-0 ml-[-2]'
+                                                ]"
+                                            >
+                                                FERMÉ
+                                            </div>
                                             <TableCell
                                                 v-if="props.type === ''"
                                                 class="bg-gray-100 text-xs pt-5"
@@ -625,6 +636,17 @@
                                         >
                                             URGENT
                                         </div>
+                                        <div
+                                            v-if="isClosed(replacementGroup)"
+                                            :class="[
+                                                'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
+                                                isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                    ? '-top-1 left-[60px]'
+                                                    : '-top-1 left-0 -ml-[-2]'
+                                            ]"
+                                        >
+                                            FERMÉ
+                                        </div>
                                         <TableCell
                                             v-if="props.type === ''"
                                             class="bg-gray-100 text-xs pt-5"
@@ -938,6 +960,17 @@
                                             >
                                                 URGENT
                                             </div>
+                                            <div
+                                                v-if="isClosed(replacementGroup)"
+                                                :class="[
+                                                    'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-yellow-400 text-red-600',
+                                                    isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                        ? '-top-1 left-[60px]'
+                                                        : '-top-1 left-0 -ml-[-2]'
+                                                ]"
+                                            >
+                                                FERMÉ
+                                            </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
                                                     <div
@@ -1153,6 +1186,17 @@
                                             )]"
                                         >
                                             URGENT
+                                        </div>
+                                        <div
+                                            v-if="isClosed(replacementGroup)"
+                                            :class="[
+                                                'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
+                                                isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                    ? '-top-1 left-[60px]'
+                                                    : '-top-1 left-0 -ml-[-2]'
+                                            ]"
+                                        >
+                                            FERMÉ
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1751,7 +1795,7 @@ const handleShowInfoUser = (replacementUser) => {
 
 type ProvinceGroups = Record<string, Replacement[]>;
 
-const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
+const { loading, updateReplacement, updateAgainReplacement, isClosed } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 

@@ -742,15 +742,16 @@ const columns: ColumnDef<Replacement>[] = [
         },
         cell: ({ row }) => {
             const type = row.original.type;
+            const status = row.original.status;
 
             const isImmediate = type === 'immediate';
-            const badgeClass = isImmediate
-                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold'
-                : 'bg-transparent text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
+            const isClosed = status === 'closed';
 
-            const displayText = isImmediate ? 'URGENT' : '';
-
-            return h('span', { class: badgeClass }, displayText);
+            return h('div', { class: 'flex gap-2 items-center' }, [
+                isImmediate && h('span', {
+                    class: 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold',
+                }, 'URGENT'),
+            ]);
         },
     },
     {
