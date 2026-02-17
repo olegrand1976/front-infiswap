@@ -1724,6 +1724,18 @@
                 />
             </DialogContent>
         </Dialog>
+
+        <ProposalLocationModal
+            v-model="proposalDialog"
+            v-model:newly-added-value="newlyAddedValue"
+            title="Suggestions de villes"
+            description="Sélectionnez les villes que vous souhaitez utiliser pour votre recherche de remplacements"
+            :initial-zip-codes="formData.postalCodeTags"
+            :initial-cities="formData.cityTags"
+            :is-preference-mode="false"
+            @update:initial-zip-codes="updateZipCodesFromModal"
+            @update:initial-cities="updateCitiesFromModal"
+        />
     </div>
 </template>
 
@@ -1746,6 +1758,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
+import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 
 const { $toast } = useNuxtApp();
 
@@ -1808,7 +1821,7 @@ const pagination = ref({
     total: 0,
     last_page: 1,
 });
-const filterRegionDialog = ref(true);
+const filterRegionDialog = ref(false);
 
 const isMobileView = ref(false);
 const gridColsByType: Record<string, string> = {
@@ -1845,6 +1858,10 @@ const selectReplacement = (replacement) => {
 };
 
 onMounted(async () => {
+    // Ouvrir le modal automatiquement et lancer la recherche en arrière-plan
+    proposalDialog.value = true;
+    await fetchInitialData(page.value, perPage.value);
+
     if (props.type === 'groups') {
         const groupIds = user.value.group_roles.map(g => g.group_id);
         if (groupIds.length > 0) {
@@ -2118,6 +2135,19 @@ watch(
 );
 
 await fetchCareTypes();
+
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
+
+const updateZipCodesFromModal = (zipCodes: string[]) => {
+    formData.postalCodeTags = [...zipCodes];
+};
+
+const updateCitiesFromModal = (cities: string[]) => {
+    formData.cityTags = [...cities];
+    // Déclencher la recherche avec les villes sélectionnées
+    submitSearch();
+};
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
