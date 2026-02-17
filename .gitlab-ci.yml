@@ -70,7 +70,11 @@ build:
     - docker images
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+      variables:
+        IMAGE_NAME: "front-app"
     - if: '$CI_COMMIT_BRANCH == "staging"'
+      variables:
+        IMAGE_NAME: "front-app-staging"
 
 #####################################
 # Déploiement sur FRONT1
@@ -94,14 +98,14 @@ deploy_front1:
     # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
     - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
   script:
-    #- docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    # Récupération de l'image depuis Docker Hub
-    #- docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Copier le fichier docker-compose approprié sur le serveur
+    - >
+      scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $DOCKER_COMPOSE_FILE $SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml
     # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
+        docker pull docker.io/$IMAGE_REPO:latest &&
         docker compose -f $DEPLOY_PATH/docker-compose.prod.yml down &&
         docker compose -f $DEPLOY_PATH/docker-compose.prod.yml up --build -d
       "
@@ -109,6 +113,10 @@ deploy_front1:
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         DEPLOY_PATH: "/srv/front"
+        IMAGE_REPO: "${DOCKERHUB_USERNAME}/front-app"
+        DOCKER_COMPOSE_FILE: "docker-compose.prod.yml"
     - if: '$CI_COMMIT_BRANCH == "staging"'
       variables:
         DEPLOY_PATH: "/srv/test-front"
+        IMAGE_REPO: "${DOCKERHUB_USERNAME}/front-app-staging"
+        DOCKER_COMPOSE_FILE: "docker-compose.prod.staging.yml"

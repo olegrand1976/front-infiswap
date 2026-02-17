@@ -1,0 +1,16 @@
+services:
+  frontend-staging:
+    container_name: infiswap_frontend_staging
+    image: docker.io/${DOCKERHUB_USERNAME}/front-app-staging:latest
+    ports:
+      - "3004:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - infiswap_network
+
+networks:
+  infiswap_network:
+    driver: bridge
