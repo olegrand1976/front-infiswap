@@ -92,22 +92,26 @@ deploy_front1:
     DOCKER_DRIVER: overlay2
   before_script:
     - apk add --no-cache openssh-client sshpass
+    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
     # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
     - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
+    # Substituer DOCKERHUB_USERNAME dans le fichier docker-compose avant de le copier
+    - sed "s|\${DOCKERHUB_USERNAME}|$DOCKERHUB_USERNAME|g" $DOCKER_COMPOSE_FILE > docker-compose.temp.yml
   script:
-    # Copier le fichier docker-compose approprié sur le serveur
+    # Copier le fichier docker-compose approprié sur le serveur (avec DOCKERHUB_USERNAME substitué)
     - >
-      scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $DOCKER_COMPOSE_FILE $SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml
+      scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes docker-compose.temp.yml $SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml
     # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$IMAGE_REPO:latest &&
         docker compose -f $DEPLOY_PATH/docker-compose.prod.yml down &&
-        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml up --build -d
+        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml up -d
       "
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
