@@ -110,7 +110,9 @@ deploy_front1:
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
         docker pull docker.io/$IMAGE_REPO:latest &&
-        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml down &&
+        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml down || true &&
+        docker stop infiswap_frontend || true &&
+        docker rm infiswap_frontend || true &&
         docker compose -f $DEPLOY_PATH/docker-compose.prod.yml up -d
       "
   rules:
