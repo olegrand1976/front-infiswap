@@ -1,9 +1,7 @@
 services:
   frontend-staging:
     container_name: infiswap_frontend_staging
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
+    image: docker.io/${DOCKERHUB_USERNAME}/front-app-staging:latest
     ports:
       - "3004:3000"
     environment:
