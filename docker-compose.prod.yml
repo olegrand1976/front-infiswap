@@ -1,7 +1,9 @@
 services:
   frontend:
     container_name: infiswap_frontend
-    image: docker.io/${DOCKERHUB_USERNAME}/front-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     ports:
       - "3000:3000"
     environment:
