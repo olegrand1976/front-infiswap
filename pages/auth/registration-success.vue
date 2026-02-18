@@ -98,7 +98,7 @@ import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { navigateTo } from '#app';
 
 definePageMeta({
-    layout: 'empty',
+    layout: 'minimal',
     middleware: 'guest',
 });
 
