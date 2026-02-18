@@ -276,10 +276,14 @@
                         </div>
 
                         <div class="col-span-2 lg:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">
+                                Votre {{ identifierLabel }}
+                            </label>
                             <InputIcon
                                 v-model="formData.identifierNumber"
                                 :icon="IdentificationIcon"
                                 size="md"
+                                class="mt-1"
                                 :placeholder="identifierLabel"
                             />
                         </div>
