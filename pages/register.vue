@@ -334,7 +334,7 @@
 
                         <div class="col-span-2">
                             <label class="text-sm font-medium text-gray-700">
-                                Catégorie professionnel
+                                Catégorie professionnel <span class="text-red-500">*</span>
                             </label>
                             <Select v-model="formData.professionalCategory">
                                 <SelectTrigger
@@ -343,7 +343,7 @@
                                 >
                                     <UserGroupIcon class="text-primary w-10 h-10" />
                                     <SelectValue
-                                        placeholder="Catégorie"
+                                        placeholder="Catégorie *"
                                         class="ml-3 block w-full"
                                     />
                                 </SelectTrigger>
@@ -734,7 +734,7 @@
 
                     <div class="col-span-2">
                         <label class="text-sm font-medium text-gray-700">
-                            Catégorie professionnel
+                            Catégorie professionnel <span class="text-red-500">*</span>
                         </label>
                         <Select v-model="formData.professionalCategory">
                             <SelectTrigger
