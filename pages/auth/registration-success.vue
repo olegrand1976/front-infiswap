@@ -130,7 +130,8 @@ const resendEmail = async () => {
             $toast({
                 description: 'Email de confirmation renvoyé avec succès',
             });
-        } catch (error) {
+        }
+        catch (error) {
             $toast({
                 variant: 'destructive',
                 description: 'Erreur lors de l\'envoi de l\'email',

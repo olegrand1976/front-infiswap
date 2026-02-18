@@ -274,7 +274,7 @@
                                                     'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-warning text-red-500',
                                                     isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
                                                         ? 'top-1 left-[60px]'
-                                                        : 'top-1 left-0 ml-[-2]'
+                                                        : 'top-1 left-0 ml-[-2]',
                                                 ]"
                                             >
                                                 FERMÉ
@@ -642,7 +642,7 @@
                                                 'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
                                                 isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
                                                     ? '-top-1 left-[60px]'
-                                                    : '-top-1 left-0 -ml-[-2]'
+                                                    : '-top-1 left-0 -ml-[-2]',
                                             ]"
                                         >
                                             FERMÉ
@@ -966,7 +966,7 @@
                                                     'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-yellow-400 text-red-600',
                                                     isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
                                                         ? '-top-1 left-[60px]'
-                                                        : '-top-1 left-0 -ml-[-2]'
+                                                        : '-top-1 left-0 -ml-[-2]',
                                                 ]"
                                             >
                                                 FERMÉ
@@ -1193,7 +1193,7 @@
                                                 'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
                                                 isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
                                                     ? '-top-1 left-[60px]'
-                                                    : '-top-1 left-0 -ml-[-2]'
+                                                    : '-top-1 left-0 -ml-[-2]',
                                             ]"
                                         >
                                             FERMÉ

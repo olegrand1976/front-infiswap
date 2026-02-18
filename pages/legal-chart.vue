@@ -62,7 +62,7 @@ const { scrollToSection } = useScroll();
 
 const privacyPolicy = [
     {
-        title: "Respect et courtoisie entre confrères",
+        title: 'Respect et courtoisie entre confrères',
         text: `
             <ul class="list-disc  mt-1">
           <p> Faire preuve de professionnalisme, de respect et de courtoisie dans toutes les interactions avec les autres membres de la plateforme.
@@ -72,7 +72,7 @@ const privacyPolicy = [
             </ul>`,
     },
     {
-        title: "Respect de la relation entre l'infirmier titulaire et ses patients",
+        title: 'Respect de la relation entre l\'infirmier titulaire et ses patients',
         text: `
             <ul class="list-disc  mt-1">
                 <p>Assurer une prise en charge respectueuse et conforme aux directives du professionnel remplacé.
@@ -83,7 +83,7 @@ const privacyPolicy = [
                `,
     },
     {
-        title: "Engagement de loyauté et d'éthique professionnelle",
+        title: 'Engagement de loyauté et d\'éthique professionnelle',
         text: `
             <ul class="list-disc mt-1">
                 <p>Interdiction stricte de solliciter ou de récupérer des patients d'un infirmier titulaire à l'issue d'un remplacement.
@@ -92,7 +92,7 @@ const privacyPolicy = [
             </ul>`,
     },
     {
-        title: "Confidentialité et professionnalisme",
+        title: 'Confidentialité et professionnalisme',
         text: `
             <ul class="list-disc  mt-1">
                 <p>Protéger la confidentialité des informations échangées lors des remplacements.
@@ -102,7 +102,7 @@ const privacyPolicy = [
             </ul>`,
     },
     {
-        title: "Application et sanctions",
+        title: 'Application et sanctions',
         text: `
             <ul class="list-disc  mt-1">
                 <p>Tout comportement allant à l'encontre de cette charte pourra faire l'objet d'un signalement et entraîner des mesures adaptées, pouvant aller jusqu'à l'exclusion définitive de la plateforme.

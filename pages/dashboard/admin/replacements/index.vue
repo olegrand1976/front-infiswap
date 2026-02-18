@@ -505,11 +505,13 @@ const columns: ColumnDef<Replacement>[] = [
             const isClosed = status === 'closed';
 
             return h('div', { class: 'flex gap-2 items-center' }, [
-                isClosed ? h('span', {
-                    class: 'bg-warning text-white px-2 py-1 rounded-full text-xs font-bold',
-                }, 'FERMÉ') : h('span', {
-                    class: 'bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold',
-                }, 'OUVERT'),
+                isClosed
+                    ? h('span', {
+                            class: 'bg-warning text-white px-2 py-1 rounded-full text-xs font-bold',
+                        }, 'FERMÉ')
+                    : h('span', {
+                            class: 'bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold',
+                        }, 'OUVERT'),
             ]);
         },
         sortingFn: 'alphanumeric',

@@ -396,7 +396,7 @@
                                         @update:checked="charteAccepted = $event"
                                     />
                                     <span class="text-sm ml-2 font-medium">
-                                        J'accepte la 
+                                        J'accepte la
                                         <NuxtLink
                                             to="/legal-chart"
                                             target="_blank"
@@ -796,7 +796,7 @@
                                     @update:checked="charteAccepted = $event"
                                 />
                                 <span class="text-sm ml-2">
-                                    J'accepte la 
+                                    J'accepte la
                                     <NuxtLink
                                         to="/legal-chart"
                                         target="_blank"
