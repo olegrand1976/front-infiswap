@@ -388,6 +388,25 @@
                                         />
                                     </div>
                                 </transition>
+
+                                <label class="flex items-start cursor-pointer">
+                                    <Checkbox
+                                        :checked="charteAccepted"
+                                        class="mt-1"
+                                        @update:checked="charteAccepted = $event"
+                                    />
+                                    <span class="text-sm ml-2 font-medium">
+                                        J'accepte la 
+                                        <NuxtLink
+                                            to="/legal-chart"
+                                            target="_blank"
+                                            class="text-primary underline font-semibold hover:text-primary/80"
+                                        >
+                                            charte de bonne conduite
+                                        </NuxtLink>
+                                        <span class="text-red-500">*</span>
+                                    </span>
+                                </label>
                             </div>
                         </div>
 
@@ -396,6 +415,7 @@
                                 class="w-[70%] text-base font-bold"
                                 type="submit"
                                 :in-progress="inProgress"
+                                :disabled="!charteAccepted"
                             >
                                 S'inscrire
                             </Button>
@@ -768,6 +788,25 @@
                                     />
                                 </div>
                             </transition>
+
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="charteAccepted"
+                                    class="mt-1"
+                                    @update:checked="charteAccepted = $event"
+                                />
+                                <span class="text-sm ml-2">
+                                    J'accepte la 
+                                    <NuxtLink
+                                        to="/legal-chart"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        charte de bonne conduite
+                                    </NuxtLink>
+                                    <span class="text-red-500">*</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
 
@@ -776,6 +815,7 @@
                             class="w-[50%]"
                             type="submit"
                             :in-progress="inProgress"
+                            :disabled="!charteAccepted"
                         >
                             S'inscrire
                         </Button>
@@ -823,6 +863,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { LANGUAGES } from '~/lib/constants';
 
 const genders = [
@@ -908,6 +949,7 @@ const professionalCategory = [
 const { country } = useCountry();
 
 const representGroup = ref(false);
+const charteAccepted = ref(false);
 
 const formData = reactive({
     lastname: '',
@@ -956,6 +998,7 @@ const { submit, inProgress } = useSubmit(
             ...formData,
             zipCodes: formData.zipCodesArray.join(', '),
             cities: formData.citiesArray.join(', '),
+            charteAccepted: charteAccepted.value ? true : false,
         };
         return register(formDataForBackend);
     },

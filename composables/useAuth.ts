@@ -97,10 +97,13 @@ export const useAuth = () => {
                 });
             })
             .then(() => {
+                const email = credentials.email || '';
                 setTimeout(() => {
-                    // router.push('use-choice');
-                    router.push('legal-chart');
-                }, 2000);
+                    router.push({
+                        path: '/auth/registration-success',
+                        query: { email },
+                    });
+                }, 1500);
                 return refresh();
             })
             .catch((error) => { throw error; });
