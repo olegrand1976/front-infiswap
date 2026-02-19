@@ -213,7 +213,7 @@ export const useReplacements = () => {
     }
 
     function isClosed(replacement: Replacement) {
-        return replacement.replaced_by !== null || replacement.status == 'closed';
+        return replacement.status == 'closed' || replacement.replaced_by !== null;
     }
 
     const data = useState('data', () => []);

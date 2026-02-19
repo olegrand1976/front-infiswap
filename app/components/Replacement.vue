@@ -268,6 +268,17 @@
                                             >
                                                 URGENT
                                             </div>
+                                            <div
+                                                v-if="isClosed(replacementGroup)"
+                                                :class="[
+                                                    'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-warning text-red-500',
+                                                    isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                        ? 'top-1 left-[60px]'
+                                                        : 'top-1 left-0 ml-[-2]',
+                                                ]"
+                                            >
+                                                FERMÉ
+                                            </div>
                                             <TableCell
                                                 v-if="props.type === ''"
                                                 class="bg-gray-100 text-xs pt-5"
@@ -625,6 +636,17 @@
                                         >
                                             URGENT
                                         </div>
+                                        <div
+                                            v-if="isClosed(replacementGroup)"
+                                            :class="[
+                                                'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
+                                                isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                    ? '-top-1 left-[60px]'
+                                                    : '-top-1 left-0 -ml-[-2]',
+                                            ]"
+                                        >
+                                            FERMÉ
+                                        </div>
                                         <TableCell
                                             v-if="props.type === ''"
                                             class="bg-gray-100 text-xs pt-5"
@@ -938,6 +960,17 @@
                                             >
                                                 URGENT
                                             </div>
+                                            <div
+                                                v-if="isClosed(replacementGroup)"
+                                                :class="[
+                                                    'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-yellow-400 text-red-600',
+                                                    isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                        ? '-top-1 left-[60px]'
+                                                        : '-top-1 left-0 -ml-[-2]',
+                                                ]"
+                                            >
+                                                FERMÉ
+                                            </div>
                                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                                 <template v-if="replacementGroup.periods.length > 0">
                                                     <div
@@ -1153,6 +1186,17 @@
                                             )]"
                                         >
                                             URGENT
+                                        </div>
+                                        <div
+                                            v-if="isClosed(replacementGroup)"
+                                            :class="[
+                                                'text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
+                                                isUrgentReplacement(replacementGroup) && replacementGroup.replaced_by !== null
+                                                    ? '-top-1 left-[60px]'
+                                                    : '-top-1 left-0 -ml-[-2]',
+                                            ]"
+                                        >
+                                            FERMÉ
                                         </div>
                                         <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                             <template v-if="replacementGroup.periods.length > 0 && replacementGroup.start_date == null && replacementGroup.end_date == null">
@@ -1680,6 +1724,18 @@
                 />
             </DialogContent>
         </Dialog>
+
+        <ProposalLocationModal
+            v-model="proposalDialog"
+            v-model:newly-added-value="newlyAddedValue"
+            title="Suggestions de villes"
+            description="Sélectionnez les villes que vous souhaitez utiliser pour votre recherche de remplacements"
+            :initial-zip-codes="formData.postalCodeTags"
+            :initial-cities="formData.cityTags"
+            :is-preference-mode="false"
+            @update:initial-zip-codes="updateZipCodesFromModal"
+            @update:initial-cities="updateCitiesFromModal"
+        />
     </div>
 </template>
 
@@ -1703,6 +1759,7 @@ import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
+import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 
 const { $toast } = useNuxtApp();
 
@@ -1752,7 +1809,7 @@ const handleShowInfoUser = (replacementUser) => {
 
 type ProvinceGroups = Record<string, Replacement[]>;
 
-const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
+const { loading, updateReplacement, updateAgainReplacement, isClosed } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
@@ -1765,7 +1822,7 @@ const pagination = ref({
     total: 0,
     last_page: 1,
 });
-const filterRegionDialog = ref(true);
+const filterRegionDialog = ref(false);
 
 const isMobileView = ref(false);
 const gridColsByType: Record<string, string> = {
@@ -1802,6 +1859,10 @@ const selectReplacement = (replacement) => {
 };
 
 onMounted(async () => {
+    // Ouvrir le modal automatiquement et lancer la recherche en arrière-plan
+    proposalDialog.value = true;
+    await fetchInitialData(page.value, perPage.value);
+
     if (props.type === 'groups') {
         const groupIds = user.value.group_roles.map(g => g.group_id);
         if (groupIds.length > 0) {
@@ -2075,6 +2136,19 @@ watch(
 );
 
 await fetchCareTypes();
+
+const proposalDialog = ref(false);
+const newlyAddedValue = ref<string>('');
+
+const updateZipCodesFromModal = (zipCodes: string[]) => {
+    formData.postalCodeTags = [...zipCodes];
+};
+
+const updateCitiesFromModal = (cities: string[]) => {
+    formData.cityTags = [...cities];
+    // Déclencher la recherche avec les villes sélectionnées
+    submitSearch();
+};
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;

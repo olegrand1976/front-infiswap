@@ -60,7 +60,6 @@
                                     <Checkbox
                                         :id="`${zipCode}-${city}-${index}`"
                                         :checked="isSelected(zipCode, city)"
-                                        :value="[zipCode, city]"
                                         class="group-hover:border-white"
                                         @update:checked="toggleLocation(zipCode, city)"
                                     />
@@ -151,11 +150,27 @@ watch(
     { immediate: true, deep: true },
 );
 
+const hasLoadedOnce = ref(false);
+const isInitialLoad = ref(true);
+
 watch(
     () => openDialog.value,
     async (isOpen) => {
-        if (!isOpen) return;
+        // Si le modal se ferme, réinitialiser pour permettre un rechargement lors de la prochaine ouverture
+        if (!isOpen) {
+            // Ne pas réinitialiser hasLoadedOnce si c'est juste une fermeture temporaire
+            // On le réinitialisera seulement si nécessaire
+            return;
+        }
 
+        // Si on a déjà chargé les données une fois et que ce n'est pas le chargement initial, ne pas recharger
+        // Sauf si c'est le premier chargement (ouverture automatique)
+        if (hasLoadedOnce.value && !isInitialLoad.value) {
+            return;
+        }
+
+        hasLoadedOnce.value = true;
+        isInitialLoad.value = false;
         loadingDialog.value = true;
 
         try {
@@ -257,6 +272,7 @@ const cancel = () => {
     tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
         zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
     );
+    // Ne pas réinitialiser hasLoadedOnce pour éviter de recharger si on rouvre le modal
     openDialog.value = false;
     emit('update:newlyAddedValue', '');
 };

@@ -3,19 +3,19 @@
         <DashboardAdminPageHeader title="Des remplacements" />
 
         <DashboardAdminPageContent>
-            <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+            <div class="p-4 flex flex-wrap gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
                 <InputIcon
                     v-model="option.name"
                     rounded="md"
                     placeholder="Filtrer par Nom ou Prénom"
-                    class="w-[250px]"
+                    class="w-full lg:w-[250px]"
                     @input="debouncedFilterReplacements"
                 />
                 <InputIcon
                     v-model="option.zip"
                     rounded="md"
                     placeholder="Code postal"
-                    class="w-[250px]"
+                    class="w-full lg:w-[250px]"
                     type="number"
                     @input="debouncedFilterReplacements"
                 />
@@ -23,7 +23,7 @@
                     v-model="option.city"
                     rounded="md"
                     placeholder="Ville"
-                    class="w-[250px]"
+                    class="w-full lg:w-[250px]"
                     @input="debouncedFilterReplacements"
                 />
                 <Select
@@ -53,7 +53,7 @@
                     v-model="option.role"
                     @update:model-value="debouncedFilterReplacements"
                 >
-                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                    <SelectTrigger class="w-full lg:max-w-sm rounded-md">
                         <span>Rôle</span>
                         <span class="ml-4 font-semibold text-nowrap w-40">
                             {{
@@ -71,6 +71,29 @@
                             </SelectItem>
                             <SelectItem :value="'midwife'">
                                 <span class="ml-2">Sage-femme</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Select
+                    v-model="option.status"
+                    @update:model-value="debouncedFilterReplacements"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Statut</span>
+                        <span class="ml-4 font-semibold text-nowrap w-40">
+                            {{
+                                option.status === 'open' ? 'Ouvert' : option.status === 'closed' ? 'Fermé' : 'tous'
+                            }}
+                        </span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="'open'">
+                                <span class="ml-2">Ouvert</span>
+                            </SelectItem>
+                            <SelectItem :value="'closed'">
+                                <span class="ml-2">Fermé</span>
                             </SelectItem>
                         </SelectGroup>
                     </SelectContent>
@@ -317,6 +340,7 @@ const initialFilter = {
     city: null,
     type: null,
     role: null,
+    status: null,
     country: '',
     province: '',
 };
@@ -443,6 +467,7 @@ const columns: ColumnDef<Replacement>[] = [
             }, [
                 h(ReplacementPeriod, {
                     replacement: row.original,
+                    hideStatus: true,
                 }),
             ]);
         },
@@ -466,6 +491,30 @@ const columns: ColumnDef<Replacement>[] = [
 
             return timeA - timeB;
         },
+    },
+    {
+        accessorKey: 'status',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Statut', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+        },
+        cell: ({ row }) => {
+            const status = row.original.status;
+            const isClosed = status === 'closed';
+
+            return h('div', { class: 'flex gap-2 items-center' }, [
+                isClosed
+                    ? h('span', {
+                            class: 'bg-warning text-white px-2 py-1 rounded-full text-xs font-bold',
+                        }, 'FERMÉ')
+                    : h('span', {
+                            class: 'bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold',
+                        }, 'OUVERT'),
+            ]);
+        },
+        sortingFn: 'alphanumeric',
     },
     {
         accessorKey: 'time_slot',
@@ -742,15 +791,13 @@ const columns: ColumnDef<Replacement>[] = [
         },
         cell: ({ row }) => {
             const type = row.original.type;
-
             const isImmediate = type === 'immediate';
-            const badgeClass = isImmediate
-                ? 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold'
-                : 'bg-transparent text-gray-800 px-2 py-1 rounded-full text-xs font-bold';
 
-            const displayText = isImmediate ? 'URGENT' : '';
-
-            return h('span', { class: badgeClass }, displayText);
+            return h('div', { class: 'flex gap-2 items-center' }, [
+                isImmediate && h('span', {
+                    class: 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold',
+                }, 'URGENT'),
+            ]);
         },
     },
     {
