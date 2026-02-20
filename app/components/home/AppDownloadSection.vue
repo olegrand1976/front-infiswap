@@ -1,6 +1,6 @@
 <template>
-    <div class="relative pt-16 sm:pt-52 lg:pt-16 pb-2">
-        <div class="flex lg:flex-row flex-col-reverse justify-center items-center relative z-20 mx-auto lg:space-x-24 xl:space-x-72">
+    <div class="relative pt-6 lg:py-30 ">  
+        <div class="container z-20 flex items-center justify-between">
             <div>
                 <LayoutsAppImage
                     src="Group_1048.png"
@@ -53,26 +53,23 @@
             </div>
         </div>
 
-        <div class="hidden lg:block absolute z-5 top-0 right-0">
-            <LayoutsAppImage
-                src="Vector_2.png"
-                alt="Vecteur"
-                class="w-166 relative"
-            />
+        <div class="absolute z-0 bottom-0 right-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
+            <div class="w-40 bg-primary w-[100vw] h-full" style="
+                clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            "></div>
         </div>
 
-        <div class="lg:hidden absolute z-5 bottom-0 left-0">
-            <LayoutsAppImage
-                src="triangle_left.png"
-                alt="Vecteur"
-                class="w-80 h-96 sm:w-96 sm:h-104 md:w-md md:h-128 relative"
-            />
+        <div class="absolute lg:hidden z-0 bottom-0 left-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
+            <div class="w-40 bg-primary sm:w-48 md:w-[50vw] h-full" style="
+
+                clip-path: polygon(0 0, 0 100%, 100% 100%);
+            "></div>
         </div>
 
         <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-160 lg:left-132">
             <LayoutsAppImage
                 src="/icons/Unin.png"
-                class="xl:w-32 xl:h-32 lg:w-24 lg:h-24 sm:w-16 sm:h-16 w-10 h-10"
+                class="xl:w-32 xl:h-32 lg:w-24 lg:h-full sm:w-16 sm:h-16 w-10 h-10"
             />
         </div>
     </div>
