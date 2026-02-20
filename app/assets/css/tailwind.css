@@ -40,14 +40,12 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Radius */
   --radius: 0.5rem;
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  /* Breakpoints */
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
@@ -74,7 +72,7 @@
 
     --tertiary: oklch(0.65 0.15 15);
 
-    --muted: oklch(0.97 0 0);
+    --muted: oklch(94.56% 0.049 79.16);
     --muted-foreground: oklch(0.556 0 0);
 
     --accent: oklch(0.97 0 0);
