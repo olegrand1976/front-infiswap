@@ -49,7 +49,7 @@
                     </SelectContent>
                 </Select>
                 <Button
-                    class="rounded-md !mr-4"
+                    class="rounded-md mr-4!"
                     @click="resetFilter"
                 >
                     <ArrowPathIcon class="md:mr-2" />
@@ -72,7 +72,7 @@
             </div>
 
             <Dialog v-model:open="showDialog">
-                <DialogContent class="w-[70vw] h-[30rem]">
+                <DialogContent class="w-[70vw] h-120">
                     <DialogHeader>
                         <DialogTitle>
                             Aperçu
@@ -82,7 +82,7 @@
                     <video
                         v-if="selectedTutorial.media_type == 'video'"
                         controls
-                        class="w-[70vw] h-[24rem]"
+                        class="w-[70vw] h-96"
                     >
                         <source :src="baseUrl + selectedTutorial.media_path">
                         Votre navigateur ne prend pas en charge la vidéo.
@@ -92,13 +92,13 @@
                         v-else-if="selectedTutorial.media_type == 'image'"
                         :src="baseUrl + selectedTutorial.media_path"
                         alt="Ressource media"
-                        class="object-cover w-full h-[24rem]"
+                        class="object-cover w-full h-96"
                     >
 
                     <audio
                         v-else-if="selectedTutorial.media_type == 'audio'"
                         controls
-                        class="w-[70vw] h-[24rem]"
+                        class="w-[70vw] h-96"
                     >
                         <source :src="baseUrl + selectedTutorial.media_path">
                         Votre navigateur ne prend pas en charge l'audio.

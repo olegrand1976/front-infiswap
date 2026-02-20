@@ -39,7 +39,7 @@
                         <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                             Gestion de ma tournée
                         </h3>
-                        <p class="xl:w-[28rem] lg:w-[26rem] md:w-[22rem] sm:w-64 xl:text-base lg:text-sm sm:text-xs">
+                        <p class="xl:w-md lg:w-104 md:w-88 sm:w-64 xl:text-base lg:text-sm sm:text-xs">
                             Optimisez votre tournée en toute simplicité! Avec InfiSwap, planifiez
                             intelligemment vos soins en réduisant les déplacements et en regroupant
                             vos patients par secteur. <br>
@@ -61,7 +61,7 @@
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2520.9860057087326!2d4.262952197233401!3d50.81289797013747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3c6f75b8a8a8d%3A0x8f8a1b1436ea2521!2sH%C3%B4pital%20Erasme%20-%20Cliniques%20universitaires%20de%20Bruxelles!5e0!3m2!1sfr!2smg!4v1737985810191!5m2!1sfr!2smg"
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"
-                            class="w-full h-72 xl:w-[33rem] xl:h-96 lg:w-[27rem] lg:h-72 md:w-72 md:h-64 sm:w-64 sm:h-52 rounded-3xl"
+                            class="w-full h-72 xl:w-132 xl:h-96 lg:w-108 lg:h-72 md:w-72 md:h-64 sm:w-64 sm:h-52 rounded-3xl"
                         >
                             .
                         </iframe>
@@ -88,7 +88,7 @@
                         <LayoutsAppImage
                             src="/home/cc62cd9.png"
                             alt="Image d'un homme âgé avec une infirmière"
-                            class="h-80 w-full xl:w-[33rem] xl:h-[22rem] lg:w-[26rem] lg:h-80 md:w-[22rem] md:h-[14.5rem] rounded-3xl object-cover object-top"
+                            class="h-80 w-full xl:w-132 xl:h-88 lg:w-104 lg:h-80 md:w-88 md:h-58 rounded-3xl object-cover object-top"
                         />
                     </div>
 
@@ -96,7 +96,7 @@
                         <h3 class="xl:text-4xl lg:text-3xl  md:text-2xl xl:w-96 md:w-80 text-primary font-bold">
                             Vos remplacements en toute simplicité
                         </h3>
-                        <p class="xl:w-[28rem] md:w-80 xl:text-base lg:text-sm sm:text-xs">
+                        <p class="xl:w-md md:w-80 xl:text-base lg:text-sm sm:text-xs">
                             Avec InfiSwap, trouvez et gérez vos remplacements facilement. Plus de
                             visibilité sur les annonces, une recherche optimisée par localisation et
                             une mise en relation rapide entre infirmiers. <br>
@@ -133,7 +133,7 @@
                         <h3 class="xl:text-4xl lg:text-3xl md:text-2xl text-primary font-bold">
                             Créez facilement vos tournées
                         </h3>
-                        <div class="xl:w-[28rem] lg:w-[26rem] xl:text-base lg:text-sm sm:text-xs -mt-2">
+                        <div class="xl:w-md lg:w-104 xl:text-base lg:text-sm sm:text-xs -mt-2">
                             <h4 class="font-semibold">
                                 Pour l'infirmière libérale
                             </h4>
@@ -144,7 +144,7 @@
                                 Moins de gestion, plus de temps pour vos patients !
                             </span>
                         </div>
-                        <div class="xl:w-[28rem] lg:w-[26rem] xl:text-base lg:text-sm sm:text-xs -mt-2">
+                        <div class="xl:w-md lg:w-104 xl:text-base lg:text-sm sm:text-xs -mt-2">
                             <h4 class="font-semibold">
                                 Pour le bureau d'infirmiers
                             </h4>
@@ -171,7 +171,7 @@
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2520.9860057087326!2d4.262952197233401!3d50.81289797013747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3c6f75b8a8a8d%3A0x8f8a1b1436ea2521!2sH%C3%B4pital%20Erasme%20-%20Cliniques%20universitaires%20de%20Bruxelles!5e0!3m2!1sfr!2smg!4v1737985810191!5m2!1sfr!2smg"
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"
-                            class="w-full h-72 xl:w-[33rem] xl:h-96 lg:w-[27rem] lg:h-96 md:w-80 md:h-80 sm:w-[16.5rem] sm:h-72 rounded-3xl"
+                            class="w-full h-72 xl:w-132 xl:h-96 lg:w-108 lg:h-96 md:w-80 md:h-80 sm:w-66 sm:h-72 rounded-3xl"
                         >
                             .
                         </iframe>

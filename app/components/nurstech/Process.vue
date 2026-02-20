@@ -15,7 +15,7 @@
                         {{ image.text }}
                     </p>
 
-                    <div class="relative flex-grow flex items-center justify-center">
+                    <div class="relative grow flex items-center justify-center">
                         <LayoutsAppImage
                             :src="image.src"
                             class="w-full h-auto max-h-80 object-contain transition-transform duration-300 group-hover:scale-105"

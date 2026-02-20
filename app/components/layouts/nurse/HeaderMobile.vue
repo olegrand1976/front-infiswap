@@ -14,7 +14,7 @@
         <div class="z-20 relative flex justify-center">
             <LayoutsAppImage
                 :src="imgLogo"
-                class="w-[15rem]"
+                class="w-60"
             />
         </div>
     </div>

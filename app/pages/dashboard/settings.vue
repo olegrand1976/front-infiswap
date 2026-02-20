@@ -37,7 +37,7 @@
                 </div>
 
                 <Dialog v-model:open="profileDialog">
-                    <DialogContent class="sm:max-w-[40rem]">
+                    <DialogContent class="sm:max-w-160">
                         <DialogHeader>
                             <DialogTitle>Modifier la photo de profil</DialogTitle>
                         </DialogHeader>
@@ -745,7 +745,7 @@
                                 />
 
                                 <Dialog v-model:open="twoFactorDialog">
-                                    <DialogContent class="sm:max-w-[40rem]">
+                                    <DialogContent class="sm:max-w-160">
                                         <DialogHeader>
                                             <DialogTitle>Authentification à deux facteurs</DialogTitle>
                                         </DialogHeader>

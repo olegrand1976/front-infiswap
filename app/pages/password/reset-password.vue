@@ -84,7 +84,7 @@
             <LayoutsHeaderMobile />
             <BackButton to="/login" />
 
-            <div class="flex flex-col justify-center items-center px-6 flex-grow py-12">
+            <div class="flex flex-col justify-center items-center px-6 grow py-12">
                 <h1 class="text-lg text-center text-primary mb-8">
                     Réinitialisez votre <span class="font-bold">mot de passe</span>
                 </h1>

@@ -16,7 +16,7 @@
                         class="mt-10 grid grid-cols-1 gap-y-5 place-items-center w-full mx-auto max-w-7xl px-5"
                     >
                         <!-- <div
-                            class="flex flex-col justify-center items-center bg-[#FFF6F3] px-4 h-[126px] w-[100%] md:w-[281px] md:h-[192px] rounded-lg justify-self-center"
+                            class="flex flex-col justify-center items-center bg-[#FFF6F3] px-4 h-[126px] w-full md:w-[281px] md:h-[192px] rounded-lg justify-self-center"
                         >
                             <div class="flex flex-row justify-center items-center">
                                 <svg
@@ -44,7 +44,7 @@
                             </p>
                         </div> -->
                         <!-- <div
-                            class="flex flex-col justify-center items-center bg-[#FFF6F3] px-4 h-[126px] w-[100%] md:w-[281px] md:h-[192px] rounded-lg justify-self-center"
+                            class="flex flex-col justify-center items-center bg-[#FFF6F3] px-4 h-[126px] w-full md:w-[281px] md:h-[192px] rounded-lg justify-self-center"
                         >
                             <div class="flex flex-row justify-center items-center">
                                 <svg

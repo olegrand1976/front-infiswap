@@ -278,7 +278,7 @@
                     <Textarea
                         v-model="comment"
                         disabled
-                        class="w-full h-[9rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
+                        class="w-full h-36 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
                     />
                     <p class="hidden mt-1 text-sm text-gray-500 peer-focus:block">
                         Appuyez sur Entrée pour valider votre commentaire

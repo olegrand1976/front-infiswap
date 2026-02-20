@@ -44,7 +44,7 @@
                             <Separator class="opacity-70 my-4" />
 
                             <FormField name="formData.endDate">
-                                <FormItem class="flex items-center space-x-[3.25rem] text-white">
+                                <FormItem class="flex items-center space-x-13 text-white">
                                     <FormLabel>
                                         Fin
                                     </FormLabel>

@@ -9,7 +9,7 @@
                 'bg-white': !isAdmin,
             })"
         >
-            <header class="flex h-20 shrink-0 items-center px-6 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-20 bg-white shadow-md">
+            <header class="flex h-20 shrink-0 items-center px-6 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-20 bg-white shadow-md">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
                     <Separator
@@ -121,7 +121,7 @@
 
                                 <DropdownMenuContent
                                     v-if="showNotifUI"
-                                    class="w-56 origin-top-left mr-[11rem]"
+                                    class="w-56 origin-top-left mr-44"
                                     :style="{
                                         position: 'absolute',
                                         left: '0',

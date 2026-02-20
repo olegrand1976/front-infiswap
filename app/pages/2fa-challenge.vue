@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-[100vh] lg:h-[50vh] flex flex-col space-y-12 lg:space-y-8 justify-center items-center 2xl:space-y-12">
+            <div class="bg-white container w-full xl:h-screen lg:h-[50vh] flex flex-col space-y-12 lg:space-y-8 justify-center items-center 2xl:space-y-12">
                 <div>
                     <LayoutsLogo class="w-64" />
                 </div>

@@ -57,7 +57,7 @@
                 <LayoutsAppImage
                     src="stetho3.png"
                     alt="Stethoscope"
-                    class="w-[14rem] h-72"
+                    class="w-56 h-72"
                 />
             </div>
 

@@ -57,7 +57,7 @@
             <LayoutsAppImage
                 src="Vector_2.png"
                 alt="Vecteur"
-                class="w-[41.5rem] relative"
+                class="w-166 relative"
             />
         </div>
 
@@ -65,11 +65,11 @@
             <LayoutsAppImage
                 src="triangle_left.png"
                 alt="Vecteur"
-                class="w-80 h-96 sm:w-96 sm:h-[26rem] md:w-[28rem] md:h-[32rem] relative"
+                class="w-80 h-96 sm:w-96 sm:h-104 md:w-md md:h-128 relative"
             />
         </div>
 
-        <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-[40rem] lg:left-[33rem]">
+        <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-160 lg:left-132">
             <LayoutsAppImage
                 src="/icons/Unin.png"
                 class="xl:w-32 xl:h-32 lg:w-24 lg:h-24 sm:w-16 sm:h-16 w-10 h-10"

@@ -2,15 +2,15 @@
     <div class="md:mt-12 mt-24 relative overflow-hidden bg-white lg:bg-tertiary/25 lg:py-40">
         <div class="container">
             <div class="grid grid-cols-2 items-center gap-12">
-                <div class="mx-auto col-span-2 order-2 lg:order-none lg:col-span-1 z-20 mt-6 sm:mt-0">
+                <div class="mx-auto col-span-2 order-2 lg:order-0 lg:col-span-1 z-20 mt-6 sm:mt-0">
                     <LayoutsAppImage
                         src="/home/infirmier_smile.png"
                         alt="Image de planification sur paperasse"
-                        class="rounded-3xl h-[16rem] md:h-[28rem] object-cover"
+                        class="rounded-3xl h-64 md:h-112 object-cover"
                     />
                 </div>
 
-                <div class="col-span-2 order-1 lg:order-none lg:col-span-1 flex flex-col md:space-y-12 space-y-6 text-center lg:text-start">
+                <div class="col-span-2 order-1 lg:order-0 lg:col-span-1 flex flex-col md:space-y-12 space-y-6 text-center lg:text-start">
                     <h2 class="text-3xl lg:text-5xl text-primary">
                         Mon <span class="font-bold">planning</span>
                     </h2>

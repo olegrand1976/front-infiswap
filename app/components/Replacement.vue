@@ -43,7 +43,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:w-64 lg:ml-6 xl:ml-0 xl:w-[22rem] 2xl:ml-16 2xl:w-[26rem]">
+                <div class="col-span-4 md:col-span-2 lg:w-64 lg:ml-6 xl:ml-0 xl:w-88 2xl:ml-16 2xl:w-104">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
@@ -57,7 +57,7 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
-                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-56 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
                                             :class="[Array.isArray(formData.postalCodeTags) && formData.postalCodeTags.length ? 'w-1/2' : 'hidden']"
@@ -67,7 +67,7 @@
                                                 v-for="item in formData.postalCodeTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="shrink-0 max-w-[7.5rem]"
+                                                class="shrink-0 max-w-30"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.postalCodeTags, item)" />
@@ -87,7 +87,7 @@
                         </FormItem>
                     </FormField>
                 </div>
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ml-[6.5rem] xl:-ms-16 lg:w-72 2xl:w-[26rem] 2xl:ml-4">
+                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ml-26 xl:-ms-16 lg:w-72 2xl:w-104 2xl:ml-4">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
@@ -101,7 +101,7 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
-                                        class="w-[14rem] 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
+                                        class="w-56 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border border-none"
                                     >
                                         <div
                                             :class="[Array.isArray(formData.cityTags) && formData.cityTags.length ? 'w-1/2' : 'hidden']"
@@ -111,7 +111,7 @@
                                                 v-for="item in formData.cityTags"
                                                 :key="item"
                                                 :value="item"
-                                                class="shrink-0 max-w-[6rem]"
+                                                class="shrink-0 max-w-24"
                                             >
                                                 <TagsInputItemText class="text-xs" />
                                                 <TagsInputItemDelete @click="() => removeTag(formData.cityTags, item)" />
@@ -1374,7 +1374,7 @@
         </ClientOnly>
 
         <Dialog v-model:open="editDialogOpen">
-            <DialogContent class="sm:max-w-[40rem] h-[70vh] sm:h-[60vh] flex flex-col bg-white rounded-lg shadow-xl p-0 pb-16">
+            <DialogContent class="sm:max-w-160 h-[70vh] sm:h-[60vh] flex flex-col bg-white rounded-lg shadow-xl p-0 pb-16">
                 <div class="flex-1 overflow-y-auto p-6">
                     <DialogHeader>
                         <DialogTitle class="text-xl font-semibold text-primary">
@@ -1480,7 +1480,7 @@
                             </div>
                         </div>
                         <div class="grid sm:grid-cols-2 gap-8 items-center">
-                            <div class="flex flex-col space-y-2 w-[21rem] sm:w-auto">
+                            <div class="flex flex-col space-y-2 w-84 sm:w-auto">
                                 <label class="text-primary font-semibold">
                                     Nombre de patients par jour
                                 </label>
@@ -1499,10 +1499,10 @@
                                     multiple
                                 >
                                     <SelectTrigger
-                                        class="w-[21rem] sm:w-full bg-white rounded-full text-nowrap border border-gray-300 focus:border-primary"
+                                        class="w-84 sm:w-full bg-white rounded-full text-nowrap border border-gray-300 focus:border-primary"
                                         position="right"
                                     >
-                                        <SelectValue class="truncate w-[200rem]">
+                                        <SelectValue class="truncate w-800">
                                             <template v-if="getSelectedCareTypesText(editFormData.careTypes)">
                                                 {{ getSelectedCareTypesText(editFormData.careTypes) }}
                                             </template>

@@ -27,7 +27,7 @@
                         </Button>
                     </div>
                     <div
-                        class="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
                         <span
                             v-for="dotIndex in 4"
@@ -84,7 +84,7 @@
                                         </Button>
                                     </div>
                                     <div
-                                        class="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                     >
                                         <span
                                             v-for="dotIndex in 4"

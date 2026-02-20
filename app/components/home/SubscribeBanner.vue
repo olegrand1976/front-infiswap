@@ -5,7 +5,7 @@
     >
         <div class="flex flex-col sm:h-[275px] justify-center items-center space-y-8 w-96 sm:w-full shadow sm:shadow-none">
             <form
-                class="hidden lg:w-[30rem] sm:w-[25rem] sm:flex justify-between rounded-full h-10"
+                class="hidden lg:w-120 sm:w-100 sm:flex justify-between rounded-full h-10"
                 :class="formClass"
                 @submit.prevent="subscribeNewsletter"
             >

@@ -31,7 +31,7 @@
                     id="description"
                     v-model="form.description"
                     placeholder="Description du produit"
-                    class="mt-[-0.6rem] h-[9rem] p-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
+                    class="mt-[-0.6rem] h-36 p-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
             </div>
         </div>

@@ -135,7 +135,7 @@
                 v-for="group in groupedDetails"
                 :key="group.date"
             >
-                <div class="bg-gray-100 sm:w-[28rem] lg:w-[32rem] 2xl:w-[40rem] space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
+                <div class="bg-gray-100 sm:w-md lg:w-lg 2xl:w-160 space-y-8 sm:space-y-0 space-x-6 p-8 relative rounded-2xl">
                     <div>
                         <div>
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
@@ -156,7 +156,7 @@
                         <div class="mt-8 h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
                                 <ClockIcon class="w-5 h-5 mr-2" />
-                                <p class="w-full truncate overflow-ellipsis pr-2">
+                                <p class="w-full truncate text-ellipsis pr-2">
                                     {{ group.date }}
                                 </p>
                             </h4>
@@ -241,7 +241,7 @@
             v-if="user && replacement.user_id !== user.id && replacement.status != 'closed' && replacement.role_type == user.account_type"
             class="flex justify-center mt-12"
         >
-            <div class="flex flex-row items-center space-x-[8rem]">
+            <div class="flex flex-row items-center space-x-32">
                 <Form
                     v-if="replacement?.candidate == false"
                     class="flex justify-center"

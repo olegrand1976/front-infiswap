@@ -2,7 +2,7 @@
     <div class="bg-tertiary/30 m-auto relative h-screen flex flex-col items-center">
         <div class="container m-auto xl:pt-0 sm:pt-16 flex flex-col space-y-10 justify-center items-center">
             <div>
-                <LayoutsLogo class="md:w-[40rem] md:h-52 sm:w-[32rem] sm:h-36" />
+                <LayoutsLogo class="md:w-160 md:h-52 sm:w-lg sm:h-36" />
             </div>
 
             <div class="flex flex-col justify-center items-center">

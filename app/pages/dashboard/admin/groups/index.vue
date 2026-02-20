@@ -247,7 +247,7 @@ const columns: ColumnDef<User>[] = [
             ]));
         },
         cell: ({ row }) => h('div', {
-            class: 'min-h-[3rem] flex items-center capitalize pl-4',
+            class: 'min-h-12 flex items-center capitalize pl-4',
         }, row.getValue('full_name')),
     },
     {
@@ -263,7 +263,7 @@ const columns: ColumnDef<User>[] = [
             ]));
         },
         cell: ({ row }) => h('div', {
-            class: 'min-h-[3rem] flex items-center pl-4 truncate',
+            class: 'min-h-12 flex items-center pl-4 truncate',
         }, row.getValue('email')),
     },
     {
@@ -279,7 +279,7 @@ const columns: ColumnDef<User>[] = [
             ]));
         },
         cell: ({ row }) => h('div', {
-            class: 'min-h-[3rem] flex items-center capitalize pl-4',
+            class: 'min-h-12 flex items-center capitalize pl-4',
         }, row.getValue('phone_number')),
     },
     {
@@ -297,7 +297,7 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', {
-                class: 'min-h-[3rem] flex items-center justify-center',
+                class: 'min-h-12 flex items-center justify-center',
             }, row.getValue('zip_code'));
         },
     },
@@ -316,7 +316,7 @@ const columns: ColumnDef<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', {
-                class: 'min-h-[3rem] flex items-center justify-center',
+                class: 'min-h-12 flex items-center justify-center',
             }, row.getValue('city'));
         },
     },
@@ -335,7 +335,7 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const date = row.getValue('created_at');
             return h('div', {
-                class: 'min-h-[3rem] flex items-center justify-center',
+                class: 'min-h-12 flex items-center justify-center',
             }, formatRelativeDate(String(date)));
         },
     },

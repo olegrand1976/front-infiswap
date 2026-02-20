@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="mt-5 z-20 relative flex justify-center">
-            <LayoutsLogo class="w-[15rem]" />
+            <LayoutsLogo class="w-60" />
         </div>
     </div>
 </template>

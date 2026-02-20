@@ -41,7 +41,7 @@
         </section>
 
         <section class="container grid grid-cols-[5%_50%_40%] gap-x-12 py-16">
-            <div class="relative bg-primary text-primary w-1 h-[58rem] mt-6">
+            <div class="relative bg-primary text-primary w-1 h-232 mt-6">
                 <div
                     v-for="n in 5"
                     :key="n"

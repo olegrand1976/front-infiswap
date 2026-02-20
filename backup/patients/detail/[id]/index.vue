@@ -90,7 +90,7 @@
                         </Dialog>
 
                         <Dialog v-model:open="isProfileUrlDialogOpen">
-                            <DialogContent class="sm:max-w-[40rem]">
+                            <DialogContent class="sm:max-w-160">
                                 <DialogHeader>
                                     <DialogTitle>Modifier la photo de profil</DialogTitle>
                                 </DialogHeader>
@@ -125,7 +125,7 @@
                     </div>
 
                     <Dialog v-model:open="isOpenDialog">
-                        <DialogContent class="w-full sm:max-w-xl h-[32rem] 2xl:h-[40rem] overflow-y-auto">
+                        <DialogContent class="w-full sm:max-w-xl h-128 2xl:h-160 overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Mise à jour</DialogTitle>
                                 <DialogDescription>
@@ -318,8 +318,8 @@
                     </Dialog>
                 </div>
 
-                <div class="bg-gray-100 rounded-b">
-                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
+                <div class="bg-gray-100 rounded-b-lg">
+                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t-lg">
                         <span class="font-semibold">Informations personnelles</span>
                         <PencilSquareIcon
                             v-if="isOwnPatient"
@@ -417,8 +417,8 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-100 rounded-b">
-                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t">
+                <div class="bg-gray-100 rounded-b-lg">
+                    <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t-lg">
                         <span class="font-semibold">Notes de santé</span>
                         <PlusCircleIcon
                             v-if="isOwnPatient"
@@ -598,7 +598,7 @@
         <section class="mb-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
+                    <h3 class="p-2 bg-primary text-white rounded-t-lg text-center">
                         Date de début d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
@@ -612,7 +612,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="p-2 bg-primary text-white rounded-t text-center">
+                    <h3 class="p-2 bg-primary text-white rounded-t-lg text-center">
                         Date de fin d'intervention
                     </h3>
                     <div class="bg-gray-100 p-4">
@@ -721,7 +721,7 @@
                                         class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                         position="right"
                                     >
-                                        <SelectValue class="truncate w-[35rem]">
+                                        <SelectValue class="truncate w-140">
                                             {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
                                         </SelectValue>
                                     </SelectTrigger>
@@ -834,7 +834,7 @@
                 <Dialog
                     v-model:open="isDocumentDialogOpen"
                 >
-                    <DialogContent class="sm:max-w-[40rem]">
+                    <DialogContent class="sm:max-w-160">
                         <DialogHeader>
                             <DialogTitle>Ajouter un document</DialogTitle>
                         </DialogHeader>

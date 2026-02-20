@@ -130,7 +130,7 @@
 
             <BackButton to="/" />
 
-            <div class="flex flex-col justify-center items-center px-6 flex-grow">
+            <div class="flex flex-col justify-center items-center px-6 grow">
                 <form
                     class="w-full max-w-sm"
                     @submit.prevent="submit"

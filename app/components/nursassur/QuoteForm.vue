@@ -54,7 +54,7 @@
                 </div>
 
                 <Button
-                    class="!mt-12 !mb-4 !rounded-md !w-full"
+                    class="mt-12! mb-4! rounded-md! w-full!"
                     type="submit"
                     :in-progress="inProgress"
                 >

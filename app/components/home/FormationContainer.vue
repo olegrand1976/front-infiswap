@@ -5,7 +5,7 @@
                 <LayoutsAppImage
                     src="/home/formation_pic.jpeg"
                     alt="Formation d'infirmiers"
-                    class="w-[39rem] lg:h-[37rem] sm:h-[32rem] h-[23rem] lg:rounded-2xl rounded-3xl object-cover sm:object-center object-right"
+                    class="w-156 lg:h-148 sm:h-128 h-92 lg:rounded-2xl rounded-3xl object-cover sm:object-center object-right"
                 />
             </div>
 
@@ -15,11 +15,11 @@
                         <LayoutsAppImage
                             src="/home/metier_infirmier_medicalib.jpeg"
                             alt="Groupe d'infirmiers"
-                            class="sm:w-[13rem] sm:h-40 w-52 h-24 rounded-3xl object-cover"
+                            class="sm:w-52 sm:h-40 w-52 h-24 rounded-3xl object-cover"
                         />
                     </div>
                     <div>
-                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-[14rem]">
+                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-56">
                             Un suivi simplifié de vos formations obligatoires ! Avec InfiSwap,
                             suivez vos heures de formation en temps réel, recevez des rappels
                             automatiques et inscrivez-vous facilement en ligne. Assurez votre conformité
@@ -33,11 +33,11 @@
                         <LayoutsAppImage
                             src="/home/infirmier_femme.png"
                             alt="Infirmière"
-                            class="sm:w-[13rem] sm:h-40 w-52 h-24 rounded-3xl object-cover"
+                            class="sm:w-52 sm:h-40 w-52 h-24 rounded-3xl object-cover"
                         />
                     </div>
                     <div>
-                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-[14rem]">
+                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-56">
                             Le module "Formation" de notre plateforme de remplacement infirmier a été spécialement
                             conçu pour accompagner les infirmiers affiliés dans la gestion de leur cycle de formation
                             obligatoire, soit 60 heures de formation sur une période de 4 ans (moyenne annuelle de 15 heures).
@@ -50,11 +50,11 @@
                         <LayoutsAppImage
                             src="/home/infirmier_homme.png"
                             alt="Groupe d'infirmiers"
-                            class="sm:w-[13rem] sm:h-40 w-52 h-24 rounded-3xl object-cover sm:object-center object-top"
+                            class="sm:w-52 sm:h-40 w-52 h-24 rounded-3xl object-cover sm:object-center object-top"
                         />
                     </div>
                     <div>
-                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-[14rem]">
+                        <p class="lg:text-sm text-xs lg:w-72 sm:w-96 w-56">
                             Grâce à ce module, les infirmiers peuvent facilement suivre leurs heures de formation, accéder
                             à des offres adaptées et rester en conformité avec les exigences professionnelles.
                         </p>
@@ -71,13 +71,13 @@
                 <h4 class="text-center lg:text-start font-light lg:mt-4 xl:text-2xl lg:text-xl text-primary sm:w-full w-64 sm:mx-0 mx-auto">
                     Gestion et suivi des formations pour infirmiers
                 </h4>
-                <p class="text-center lg:text-start xl:text-base lg:text-sm text-xs xl:w-[30rem] lg:w-[27rem] sm:w-[35rem] w-80 mx-auto lg:mx-0 xl:mt-8 lg:mt-6">
+                <p class="text-center lg:text-start xl:text-base lg:text-sm text-xs xl:w-120 lg:w-108 sm:w-140 w-80 mx-auto lg:mx-0 xl:mt-8 lg:mt-6">
                     Le module "Formation" de notre plateforme de remplacement infirmier a été
                     spécialement conçu pour accompagner les infirmiers affiliés dans la gestion
                     de leur cycle de formation obligatoire, soit 60 heures de formation sur une
                     période de 4 ans (moyenne annuelle de 15 heures).
                 </p>
-                <p class="text-center lg:text-start xl:text-base lg:text-sm text-xs mt-6 xl:w-[30rem] lg:w-[27rem] sm:w-[35rem] w-80 mx-auto lg:mx-0">
+                <p class="text-center lg:text-start xl:text-base lg:text-sm text-xs mt-6 xl:w-120 lg:w-108 sm:w-140 w-80 mx-auto lg:mx-0">
                     Grâce à ce module, les infirmiers peuvent facilement suivre leurs heures de
                     formation, accéder à des offres adaptées et rester en conformité avec les exigences
                     de formation
@@ -105,7 +105,7 @@
             <div class="lg:absolute lg:-right-24 lg:-top-10">
                 <LayoutsAppImage
                     src="/home/online_medical.webp"
-                    class="xl:w-[48rem] lg:w-[42rem]"
+                    class="xl:w-3xl lg:w-2xl"
                 />
             </div>
 

@@ -53,7 +53,7 @@
                 <LayoutsAppImage
                     src="Vector_2.png"
                     alt="Vector_2"
-                    class="w-64 lg:w-[32rem] relative"
+                    class="w-64 lg:w-lg relative"
                 />
             </div>
             <div class="absolute bottom-[20%] left-2 hidden lg:block z-0">

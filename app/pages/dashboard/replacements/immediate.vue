@@ -168,7 +168,7 @@
                                 class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                 position="right"
                             >
-                                <SelectValue class="truncate w-[200rem]">
+                                <SelectValue class="truncate w-800">
                                     <template v-if="getSelectedCareTypesText(formData.careTypes)">
                                         {{ getSelectedCareTypesText(formData.careTypes) }}
                                     </template>

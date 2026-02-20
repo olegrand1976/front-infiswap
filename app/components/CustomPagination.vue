@@ -43,7 +43,7 @@
                     >
                         <Button
                             :class="[
-                                'w-9 h-9 p-0 rounded-full border-[1px] border-primary',
+                                'w-9 h-9 p-0 rounded-full border border-primary',
                                 {
                                     'text-white': item.value === page,
                                     'text-primary': item.value !== page,

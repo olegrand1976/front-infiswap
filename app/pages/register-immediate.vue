@@ -4,7 +4,7 @@
             <div class="absolute bottom-0 xl:left-32 lg:left-20">
                 <LayoutsAppImage
                     src="/auth/Group_1171.png"
-                    class="xl:w-[24rem] lg:w-[22rem] relative z-20 flex justify-center mx-auto"
+                    class="xl:w-[24rem] lg:w-88 relative z-20 flex justify-center mx-auto"
                 />
             </div>
             <div class="absolute lg:top-36 lg:left-20 md:top-32 sm:top-64 sm:left-12 ">

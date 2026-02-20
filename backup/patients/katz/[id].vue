@@ -54,7 +54,7 @@
                                 'bg-primary text-white': item.selected === choice.value,
                                 'bg-gray-100 text-gray-800': item.selected !== choice.value,
                             }"
-                            class="px-4 py-2 rounded-md cursor-pointer transition duration-300 text-left flex items-center min-h-[4rem]"
+                            class="px-4 py-2 rounded-md cursor-pointer transition duration-300 text-left flex items-center min-h-16"
                             @click="selectChoice(item, choice)"
                         >
                             {{ choice.label }}

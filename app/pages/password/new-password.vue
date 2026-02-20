@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="bg-white container w-full xl:h-[100vh] lg:h-[55vh] flex flex-col space-y-12 justify-center items-center relative">
+            <div class="bg-white container w-full xl:h-screen lg:h-[55vh] flex flex-col space-y-12 justify-center items-center relative">
                 <BackButton to="/login" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />

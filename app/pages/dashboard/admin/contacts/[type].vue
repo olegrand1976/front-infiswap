@@ -256,7 +256,7 @@ const columns: ColumnDef<Contact>[] = [
                 onClick: () => setSort('name'),
             }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'min-h-[2rem] flex items-center capitalize' }, row.getValue('name')),
+        cell: ({ row }) => h('div', { class: 'min-h-8 flex items-center capitalize' }, row.getValue('name')),
     },
     {
         accessorKey: 'email',

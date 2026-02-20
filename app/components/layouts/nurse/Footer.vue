@@ -77,12 +77,12 @@
                         <LayoutsAppImage
                             src="/home/blue_graph.png"
                             alt="Graphique bleu"
-                            class="-mt-2 h-[24rem] w-full object-cover"
+                            class="-mt-2 h-96 w-full object-cover"
                         />
                         <LayoutsAppImage
                             src="/home/nurse_with_phone.png"
                             alt="Infirmière avec téléphone"
-                            class="absolute -top-16 right-[-14rem] h-[16rem] lg:h-[28rem] object-cover max-w-[80%] z-10"
+                            class="absolute -top-16 -right-56 h-64 lg:h-112 object-cover max-w-[80%] z-10"
                         />
                     </div>
                 </div>

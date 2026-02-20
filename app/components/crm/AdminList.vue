@@ -128,7 +128,7 @@
                                     />
                                 </div>
                             </div>
-                            <p class="text-gray-700 w-full break-words whitespace-normal">
+                            <p class="text-gray-700 w-full wrap-break-word whitespace-normal">
                                 {{ comment.body ?? '' }}
                             </p>
                         </div>
@@ -144,7 +144,7 @@
                     </h3>
                     <Textarea
                         v-model="updateFormData.lastComment"
-                        class="w-full h-[4rem] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
+                        class="w-full h-16 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
                     />
                     <Button
                         class="rounded"

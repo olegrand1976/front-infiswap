@@ -11,11 +11,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-primary md:p-3 md:text-sm">
                                     Rechercher un remplacement
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center md:mb-3 text-primary md:text-base">
                                         Rechercher un remplacement
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-primary md:mr-2">•</span>
                                             <span>Vous cherchez à complèter votre tournée.</span>
@@ -37,11 +37,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-success md:p-3 md:text-sm">
                                     Me faire remplacer
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center md:mb-3 text-success md:text-base">
                                         Me faire remplacer
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-success md:mr-2">•</span>
                                             <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
@@ -63,11 +63,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-indigo-600 md:p-3 md:text-sm">
                                     Voir les intéressés
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center text-indigo-600 md:mb-3 md:text-base">
                                         Candidats à mes remplacements
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-indigo-600 md:mr-2">•</span>
                                             <span>Consultez les utilisateurs ayant répondu positivement à vos offres de remplacement.</span>
@@ -89,11 +89,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-orange-700 md:p-3 md:text-sm">
                                     Mes accords de remplacement
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center text-orange-700 md:mb-3 md:text-base">
                                         Accords de remplacement
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-orange-700 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements où vous avez postulés.</span>
@@ -123,11 +123,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-primary md:p-3 md:text-sm">
                                     Rechercher un remplacement
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center md:mb-3 text-primary md:text-base">
                                         Rechercher un remplacement
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-primary md:mr-2">•</span>
                                             <span>Vous cherchez à complèter votre tournée.</span>
@@ -148,11 +148,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-success md:p-3 md:text-sm">
                                     Me faire remplacer
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center md:mb-3 text-success md:text-base">
                                         Me faire remplacer
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-success md:mr-2">•</span>
                                             <span>Vous voulez vous faire remplacer sur votre tournée ?</span>
@@ -173,11 +173,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-indigo-600 md:p-3 md:text-sm">
                                     Voir les intéressés
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center text-indigo-600 md:mb-3 md:text-base">
                                         Candidats à mes remplacements
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-indigo-600 md:mr-2">•</span>
                                             <span>Consultez les utilisateurs ayant répondu positivement à vos offres de remplacement.</span>
@@ -198,11 +198,11 @@
                                 <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-orange-700 md:p-3 md:text-sm">
                                     Mes accords de remplacement
                                 </div>
-                                <div class="flex flex-col flex-grow p-3 text-gray-700 bg-white md:p-5">
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
                                     <p class="mb-2 text-sm font-medium text-center text-orange-700 md:mb-3 md:text-base">
                                         Accords de remplacement
                                     </p>
-                                    <ul class="flex-grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
                                         <li class="flex items-start">
                                             <span class="mr-1 font-bold text-orange-700 md:mr-2">•</span>
                                             <span>Accédez à la liste des remplacements où vous avez postulés.</span>

@@ -19,7 +19,6 @@
 
 <script lang="ts" setup>
 import { useGroup } from '~/composables/useGroup';
-import { useState } from '#imports';
 
 useHead({
     title: 'Ajout utilisateur groupement',

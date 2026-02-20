@@ -6,7 +6,7 @@
                 <div class="xl:absolute z-20 bottom-0 xl:left-32 lg:left-20">
                     <LayoutsAppImage
                         src="/auth/Group_1171.png"
-                        class="xl:w-[24rem] lg:w-[22rem] relative z-20 flex justify-center mx-auto"
+                        class="xl:w-[24rem] lg:w-88 relative z-20 flex justify-center mx-auto"
                     />
                 </div>
                 <div class="absolute lg:top-36 lg:left-20 md:top-32 sm:top-64 sm:left-12 ">
@@ -444,7 +444,7 @@
             <LayoutsHeaderMobile />
             <BackButton to="/login" />
 
-            <div class="flex-grow flex flex-col items-center px-6 py-10 overflow-y-auto">
+            <div class="grow flex flex-col items-center px-6 py-10 overflow-y-auto">
                 <h1 class="mb-8 text-sm text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>!</span>
                     <span> Remplissez le formulaire pour vous inscrire.</span>
