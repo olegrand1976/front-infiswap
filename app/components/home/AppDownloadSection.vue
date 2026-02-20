@@ -1,14 +1,26 @@
 <template>
-    <div class="relative pt-6 lg:py-30 ">  
-        <div class="container z-20 flex items-center justify-between">
-            <div>
+    <div class="relative pt-6 lg:py-30">  
+        <div class="absolute lg:hidden z-[1] bottom-0 left-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
+            <div class="bg-primary w-[100vw] h-full" style="
+                clip-path: polygon(0 0, 0 100%, 100% 100%);
+            "></div>
+        </div>
+
+        <div class="absolute hidden lg:inline z-[1] bottom-0 right-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
+            <div class="w-40 bg-primary w-[70vw] h-full" style="
+                clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            "></div>
+        </div>
+
+        <div class="container relative z-10 flex-col-reverse max-w-4xl lg:flex-row flex items-center justify-between">
+            <div class="relative z-10">
                 <LayoutsAppImage
                     src="Group_1048.png"
                     alt="App Download"
                     class="sm:w-80 w-72 mt-24 sm:mt-0 mb-8 sm:mb-16"
                 />
             </div>
-            <div class="flex flex-col items-center mx-auto">
+            <div class="flex flex-col items-center relative z-10">
                 <div class="sm:-mt-28 flex flex-col items-center mx-auto">
                     <h2 class="lg:text-4xl text-3xl text-center sm:text-start font-bold text-primary">
                         Télécharger
@@ -17,9 +29,9 @@
                         InfiSwap sur
                     </p>
                 </div>
-                <div class="bg-neutral-50 sm:shadow-lg shadow-xl border border-neutral-200 p-8 rounded-xl sm:mt-16 mt-8 lg:mb-0 mb-0 sm:mb-16 flex flex-col space-y-7">
+                <div class="bg-white p-8 shadow-md border border-slate-100 rounded-lg mt-8 space-y-7 relative z-10">
                     <div class="relative">
-                        <div class="absolute flex items-center gap-2 left-1/2 -translate-x-1/2 bottom-full mb-2 w-max px-3 py-2 text-white bg-primary rounded-lg animate-bounce-fade duration-&lsqb;5s&rsqb;">
+                        <div class="absolute flex items-center gap-2 left-1/2 -translate-x-1/2 bottom-full mb-2 w-max px-3 py-2 text-white bg-primary rounded-lg animate-bounce-fade duration-&lsqb;5s&rsqb; z-20">
                             <ClockIcon class="size-5" /> <span>Bientôt disponible</span>
                         </div>
                     </div>
@@ -53,20 +65,7 @@
             </div>
         </div>
 
-        <div class="absolute z-0 bottom-0 right-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
-            <div class="w-40 bg-primary w-[100vw] h-full" style="
-                clip-path: polygon(100% 0, 100% 100%, 0 100%);
-            "></div>
-        </div>
-
-        <div class="absolute lg:hidden z-0 bottom-0 left-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
-            <div class="w-40 bg-primary sm:w-48 md:w-[50vw] h-full" style="
-
-                clip-path: polygon(0 0, 0 100%, 100% 100%);
-            "></div>
-        </div>
-
-        <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-160 lg:left-132">
+        <div class="absolute top-20 sm:top-24 sm:left-36 xl:top-16 left-6 xl:left-160 lg:left-132 z-20">
             <LayoutsAppImage
                 src="/icons/Unin.png"
                 class="xl:w-32 xl:h-32 lg:w-24 lg:h-full sm:w-16 sm:h-16 w-10 h-10"
