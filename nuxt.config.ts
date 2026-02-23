@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
     modules: [
@@ -144,6 +144,6 @@ export default defineNuxtConfig({
          * Directory that the component lives in.
          * @default "./components/ui"
          */
-        componentDir: './components/ui'
+        componentDir: './components/ui',
     },
 });

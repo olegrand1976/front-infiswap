@@ -111,21 +111,21 @@
                                 </FormItem>
                             </FormField>
 
-                        <div class="pt-8">
-                            <h4 class="font-light text-xs text-center px-4">
-                                Saisissez votre adresse éléctronique et nous vous enverrons un code
-                                pour réinitialiser votre mot de passe
-                            </h4>
-                        </div>
+                            <div class="pt-8">
+                                <h4 class="font-light text-xs text-center px-4">
+                                    Saisissez votre adresse éléctronique et nous vous enverrons un code
+                                    pour réinitialiser votre mot de passe
+                                </h4>
+                            </div>
 
-                        <div class="flex justify-center items-center mx-auto pt-8">
-                            <Button
-                                type="submit"
-                                class="font-bold px-12 text-xs"
-                            >
-                                Réinitialiser
-                            </Button>
-                        </div>
+                            <div class="flex justify-center items-center mx-auto pt-8">
+                                <Button
+                                    type="submit"
+                                    class="font-bold px-12 text-xs"
+                                >
+                                    Réinitialiser
+                                </Button>
+                            </div>
                         </form>
                     </Form>
                 </div>

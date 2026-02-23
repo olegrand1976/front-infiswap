@@ -1,15 +1,21 @@
 <template>
-    <div class="relative pt-6 lg:py-30">  
+    <div class="relative pt-6 lg:py-30">
         <div class="absolute lg:hidden z-[1] bottom-0 left-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
-            <div class="bg-primary w-[100vw] h-full" style="
+            <div
+                class="bg-primary w-[100vw] h-full"
+                style="
                 clip-path: polygon(0 0, 0 100%, 100% 100%);
-            "></div>
+            "
+            />
         </div>
 
         <div class="absolute hidden lg:inline z-[1] bottom-0 right-0 h-96 sm:h-104 md:h-128 lg:h-full overflow-hidden pointer-events-none">
-            <div class="w-40 bg-primary w-[70vw] h-full" style="
+            <div
+                class="w-40 bg-primary w-[70vw] h-full"
+                style="
                 clip-path: polygon(100% 0, 100% 100%, 0 100%);
-            "></div>
+            "
+            />
         </div>
 
         <div class="container relative z-10 flex-col-reverse max-w-5xl lg:flex-row flex items-center justify-between">
