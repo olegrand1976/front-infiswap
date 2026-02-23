@@ -373,6 +373,8 @@
 import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { getPeriodsFromTimeSlot, cn } from '~/lib/utils';
 import type { Replacement } from '~/lib/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const rawProps = defineProps({
     replacements: {

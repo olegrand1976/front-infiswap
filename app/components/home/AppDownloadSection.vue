@@ -77,4 +77,5 @@
 
 <script lang="ts" setup>
 import { ClockIcon } from '@heroicons/vue/24/solid';
+import { Button } from '@/components/ui/button';
 </script>

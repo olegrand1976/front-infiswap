@@ -99,6 +99,7 @@ import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
 import type { Replacement } from '~/lib/types';
+import { Button } from '@/components/ui/button';
 
 const { isAdmin } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();

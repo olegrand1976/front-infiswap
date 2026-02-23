@@ -48,7 +48,7 @@
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
-                            <template v-if="roles.length>1">
+                            <template v-if="roles && roles.length > 1">
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     v-for="(role, index) in roles.filter((role) => role!==user.account_type)"
@@ -228,7 +228,7 @@ import { getRole } from '~/lib/utils';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
 
-const roles = ref<AccountType[]>();
+const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();
 const { logout, getRoles, switchRole, createNotifPreferences } = useAuth();
