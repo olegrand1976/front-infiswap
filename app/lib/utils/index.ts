@@ -1,14 +1,9 @@
-// lib/utils/index.ts
+import { twMerge } from 'tailwind-merge';
+import type { ClassValue } from 'clsx';
+import { clsx } from 'clsx';
 
-/**
- * Combine plusieurs chaînes de caractères en une seule chaîne de classes
- * en filtrant les valeurs falsy.
- *
- * @param classes - Une liste de classes (string, undefined, null ou boolean)
- * @returns La chaîne de classes combinées.
- */
-export function cn(...classes: (string | undefined | null | boolean)[]): string {
-    return classes.filter(Boolean).join(' ');
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
 }
 
-// Exportez également d'autres fonctions ou modules si nécessaire
+export * from '../utils';

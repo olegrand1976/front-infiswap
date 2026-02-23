@@ -135,4 +135,15 @@ export default defineNuxtConfig({
         host: '0.0.0.0',
         port: 3000,
     },
+    shadcn: {
+        /**
+         * Prefix for all the imported component
+         */
+        prefix: '',
+        /**
+         * Directory that the component lives in.
+         * @default "./components/ui"
+         */
+        componentDir: './components/ui'
+    },
 });
