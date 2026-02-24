@@ -2,7 +2,7 @@
     <div>
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
             <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted">
                     <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
@@ -47,18 +47,17 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de cette semaine-ci
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || registrationDailyChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
                 </div>
                 <div
-                    v-else-if="registrationDailyChartData.data.length > 0"
+                    v-else
                     class="mt-3 bg-white rounded-sm shadow-md"
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.daily"
                             :data="registrationDailyChartData.data"
                             index="name"
                             :categories="['count']"
@@ -69,16 +68,7 @@
                             :legend-labels="registrationDailyChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
-                </div>
-                <div
-                    v-else
-                    class="mt-3 bg-white rounded-sm shadow-md p-8 text-center text-gray-500"
-                >
-                    Aucune donnée disponible
                 </div>
             </div>
 
@@ -86,7 +76,7 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de cette semaine-ci
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || replacementDailyChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -97,7 +87,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.daily"
                             :data="replacementDailyChartData.data"
                             index="name"
                             :categories="['count', 'accepted']"
@@ -108,9 +97,6 @@
                             :legend-labels="replacementDailyChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -119,7 +105,7 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de ce mois-ci
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || registrationMonthlyChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -130,7 +116,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.monthly"
                             :data="registrationMonthlyChartData.data"
                             index="name"
                             :categories="['count']"
@@ -141,9 +126,6 @@
                             :legend-labels="registrationMonthlyChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -152,7 +134,7 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de ce mois-ci
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || replacementMonthlyChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -163,7 +145,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.monthly"
                             :data="replacementMonthlyChartData.data"
                             index="name"
                             :categories="['count', 'accepted']"
@@ -174,9 +155,6 @@
                             :legend-labels="replacementMonthlyChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -185,7 +163,7 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de l'année
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || registrationChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -196,7 +174,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.yearly"
                             :data="registrationChartData.data"
                             index="name"
                             :categories="['count']"
@@ -207,9 +184,6 @@
                             :legend-labels="registrationChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -218,7 +192,7 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de l'année
                 </p>
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || replacementChartData.data.length === 0">
                     <div class="mt-3 bg-white rounded-sm shadow-md">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -229,7 +203,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.yearly"
                             :data="replacementChartData.data"
                             index="name"
                             :categories="['count', 'accepted']"
@@ -240,9 +213,6 @@
                             :legend-labels="replacementChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -265,7 +235,6 @@
                 >
                     <ClientOnly>
                         <BarChart
-                            v-if="chartsLoaded.yearly"
                             :data="deletedUserChartData.data"
                             index="name"
                             :categories="['count']"
@@ -276,9 +245,6 @@
                             :legend-labels="deletedUserChartData.legendLabels"
                             class="w-full"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -316,7 +282,7 @@
                     </div>
                 </div>
 
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || userByProvince.length === 0">
                     <div class="mt-6 bg-white rounded-sm shadow-md p-4">
                         <Skeleton class="w-full h-[300px] bg-gray-200 rounded-sm" />
                     </div>
@@ -327,7 +293,6 @@
                 >
                     <ClientOnly>
                         <LineChart
-                            v-if="chartsLoaded.provinces"
                             index="name"
                             :data="userByProvince"
                             :categories="['inscrits']"
@@ -337,9 +302,6 @@
                             class="pb-8 w-full"
                             :legend-labels="{ inscrits: 'Inscrits' }"
                         />
-                        <div v-else class="w-full h-[300px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -377,7 +339,7 @@
                     </div>
                 </div>
 
-                <div v-if="loading">
+                <div v-if="loading || !isDataFormatted || userByZipCode.length === 0">
                     <div class="mt-6 bg-white rounded-sm shadow-md p-4">
                         <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
                     </div>
@@ -388,7 +350,6 @@
                 >
                     <ClientOnly>
                         <AreaChart
-                            v-if="chartsLoaded.zipCodes"
                             index="name"
                             :data="userByZipCode"
                             :categories="['inscrits']"
@@ -398,9 +359,6 @@
                             class="pb-8 w-full"
                             :legend-labels="{ inscrits: 'Inscrits' }"
                         />
-                        <div v-else class="w-full h-[400px] flex items-center justify-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
                     </ClientOnly>
                 </div>
             </div>
@@ -420,16 +378,192 @@
 <script lang="ts" setup>
 import { UserGroupIcon, ArrowPathIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
+import { useReports } from '~/composables/useReports';
 
 const BarChart = defineAsyncComponent(() => import('@/components/ui/chart-bar').then(m => m.BarChart));
 const AreaChart = defineAsyncComponent(() => import('@/components/ui/chart-area').then(m => m.AreaChart));
 const LineChart = defineAsyncComponent(() => import('@/components/ui/chart-line').then(m => m.LineChart));
-import { useReports } from '~/composables/useReports';
 
 const { reports, loading } = useReports();
 
 const { isAdmin, isCommunityManager, isDeveloper, isManager, isSaleRepresentative } = useAuth();
 const { mapWeeklyStatistics, mapDailyStatistics, yFormatter } = useChart();
+
+// State pour stocker les données formatées
+const chartDataState = useState('adminDashboardChartData', () => ({
+    registrationDaily: { data: [], legendLabels: ['Total'] },
+    registrationMonthly: { data: [], legendLabels: ['Total'] },
+    registrationYearly: { data: [], legendLabels: ['Total'] },
+    deletedUsers: { data: [], legendLabels: ['Total'] },
+    replacementDaily: { data: [], legendLabels: ['Total', 'Acceptés'] },
+    replacementMonthly: { data: [], legendLabels: ['Total', 'Acceptés'] },
+    replacementYearly: { data: [], legendLabels: ['Total', 'Acceptés'] },
+    userByProvince: [],
+    userByZipCode: [],
+    adminReports: [],
+    userBelgianCount: 0,
+    userFrenchCount: 0,
+}));
+
+const selectedCountryForProvince = ref('be');
+const selectedCountryForZipCode = ref('be');
+
+// Fonction pour formater et stocker toutes les données dans le state
+const formatAndStoreData = () => {
+    if (!reports.value) return;
+
+    const regStats = reports.value.registration_statistics;
+    const repStats = reports.value.replacement_statistics;
+    const acceptedStats = reports.value.accepted_replacement_statistics;
+    const responseStats = reports.value.replacement_response_statistics;
+
+    if (regStats) {
+        chartDataState.value.userBelgianCount = regStats.total_belgian ?? 0;
+        chartDataState.value.userFrenchCount = regStats.total_french ?? 0;
+
+        if (regStats.week) {
+            chartDataState.value.registrationDaily = mapDailyStatistics(regStats.week, '', ['Total']);
+        }
+        if (regStats.month) {
+            chartDataState.value.registrationMonthly = mapWeeklyStatistics(regStats.month, 'Semaine', ['Total']);
+        }
+        if (regStats.weeks_year) {
+            chartDataState.value.registrationYearly = mapWeeklyStatistics(regStats.weeks_year, 'Semaine', ['Total']);
+        }
+        if (regStats.total_deleted) {
+            chartDataState.value.deletedUsers = mapWeeklyStatistics(regStats.total_deleted, 'Semaine', ['Total']);
+        }
+
+        if (regStats.group_by_province) {
+            const countryName = selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France';
+            const countryData = regStats.group_by_province.find(item => item.country === countryName)?.data ?? [];
+            chartDataState.value.userByProvince = countryData.map((item: { province: string; total: number }) => ({
+                name: item.province,
+                inscrits: item.total,
+            }));
+        }
+
+        if (regStats.group_by_zip_code) {
+            const countryName = selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France';
+            const countryData = regStats.group_by_zip_code.find(item => item.country === countryName)?.data ?? [];
+            chartDataState.value.userByZipCode = countryData.map((item: { zip_code: string; total: number }) => ({
+                name: item.zip_code,
+                inscrits: item.total,
+            }));
+        }
+    }
+
+    if (repStats) {
+        if (repStats.week) {
+            chartDataState.value.replacementDaily = mapDailyStatistics(repStats.week, '', ['Total', 'Acceptés'], ['accepted']);
+        }
+        if (repStats.month) {
+            chartDataState.value.replacementMonthly = mapWeeklyStatistics(repStats.month, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
+        }
+        if (repStats.weeks_year) {
+            chartDataState.value.replacementYearly = mapWeeklyStatistics(repStats.weeks_year, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
+        }
+    }
+
+    if (isAdmin.value && regStats && acceptedStats && responseStats) {
+        chartDataState.value.adminReports = [
+            {
+                title: 'Utilisateur(s)',
+                items: [
+                    {
+                        value: (regStats.today || 0) + (regStats.yesterday || 0),
+                        label: `Ce jour `,
+                        colorClass: 'bg-indigo-600',
+                        icon: UserGroupIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: regStats.last_30_days || 0,
+                        label: 'Mois glissant',
+                        colorClass: 'bg-orange-700',
+                        icon: UserGroupIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: regStats.total || 0,
+                        label: 'Total ',
+                        colorClass: 'bg-pink-600',
+                        icon: UserGroupIcon,
+                        containerClass: 'string',
+                    },
+                ],
+            },
+            {
+                title: 'Remplacement(s) acceptée(s)',
+                items: [
+                    {
+                        value: (acceptedStats?.today || 0) + (acceptedStats?.yesterday || 0),
+                        label: `Ce jour `,
+                        colorClass: 'bg-indigo-600',
+                        icon: ArrowPathIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: acceptedStats?.last_30_days || 0,
+                        label: 'Mois glissant',
+                        colorClass: 'bg-orange-700',
+                        icon: ArrowPathIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: acceptedStats?.total || 0,
+                        label: 'Total ',
+                        colorClass: 'bg-pink-600',
+                        icon: ArrowPathIcon,
+                        containerClass: 'string',
+                    },
+                ],
+            },
+            {
+                title: 'Réponse(s) remplacement(s)',
+                items: [
+                    {
+                        value: (responseStats?.today || 0) + (responseStats?.yesterday || 0),
+                        label: `Ce jour `,
+                        colorClass: 'bg-indigo-600',
+                        icon: PaperAirplaneIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: responseStats?.last_30_days || 0,
+                        label: 'Mois glissant',
+                        colorClass: 'bg-orange-700',
+                        icon: PaperAirplaneIcon,
+                        containerClass: 'string',
+                    },
+                    {
+                        value: responseStats?.total || 0,
+                        label: 'Total ',
+                        colorClass: 'bg-pink-600',
+                        icon: PaperAirplaneIcon,
+                        containerClass: 'string',
+                    },
+                ],
+            },
+        ];
+    }
+};
+
+watch([reports, selectedCountryForProvince, selectedCountryForZipCode], () => {
+    if (reports.value) {
+        formatAndStoreData();
+    }
+}, { immediate: true });
+
+const isDataFormatted = computed(() => {
+    if (loading.value) {
+        const hasCachedData = chartDataState.value.registrationDaily.data.length > 0
+            || chartDataState.value.registrationMonthly.data.length > 0
+            || chartDataState.value.userBelgianCount > 0;
+        return hasCachedData;
+    }
+    return !!reports.value;
+});
 
 useHead({ title: 'Tableau de bord' });
 
@@ -438,83 +572,11 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 
-const selectedCountryForProvince = ref('be');
-const selectedCountryForZipCode = ref('be');
+const userBelgianCount = computed(() => chartDataState.value.userBelgianCount);
+const userFrenchCount = computed(() => chartDataState.value.userFrenchCount);
 
-// Lazy loading pour les graphiques - charger progressivement
-const chartsLoaded = ref({
-    daily: false,
-    monthly: false,
-    yearly: false,
-    provinces: false,
-    zipCodes: false,
-});
-
-// Utiliser requestIdleCallback si disponible, sinon setTimeout pour optimiser le chargement
-const scheduleLoad = (callback: () => void, delay: number) => {
-    if (typeof requestIdleCallback !== 'undefined') {
-        requestIdleCallback(callback, { timeout: delay });
-    } else {
-        setTimeout(callback, delay);
-    }
-};
-
-// Charger les graphiques visibles avec un délai minimum pour que les loaders soient visibles
-onMounted(() => {
-    // Attendre que les données soient chargées avant d'afficher les graphiques
-    watchEffect(() => {
-        if (!loading.value && reports.value) {
-            // Charger les graphiques de la première ligne après un court délai
-            scheduleLoad(() => {
-                chartsLoaded.value.daily = true;
-            }, 200);
-            
-            // Charger les autres graphiques avec un délai pour éviter de bloquer le rendu
-            scheduleLoad(() => {
-                chartsLoaded.value.monthly = true;
-            }, 300);
-            
-            scheduleLoad(() => {
-                chartsLoaded.value.yearly = true;
-            }, 400);
-            
-            scheduleLoad(() => {
-                chartsLoaded.value.provinces = true;
-                chartsLoaded.value.zipCodes = true;
-            }, 500);
-        }
-    });
-});
-
-const userBelgianCount = computed(() => reports.value.registration_statistics?.total_belgian);
-const userFrenchCount = computed(() => reports.value.registration_statistics?.total_french);
-
-// Utiliser shallowRef pour éviter les recalculs profonds
-const userByProvince = computed(() => {
-    if (!reports.value?.registration_statistics?.group_by_province) return [];
-
-    const userByProvinces = reports.value.registration_statistics.group_by_province;
-    const countryName = selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France';
-    const countryData = userByProvinces.find(item => item.country === countryName)?.data ?? [];
-
-    return countryData.map((item: { province: string; total: number }) => ({
-        name: item.province,
-        inscrits: item.total,
-    }));
-});
-
-const userByZipCode = computed(() => {
-    if (!reports.value?.registration_statistics?.group_by_zip_code) return [];
-
-    const userByZipCodes = reports.value.registration_statistics.group_by_zip_code;
-    const countryName = selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France';
-    const countryData = userByZipCodes.find(item => item.country === countryName)?.data ?? [];
-
-    return countryData.map((item: { zip_code: string; total: number }) => ({
-        name: item.zip_code,
-        inscrits: item.total,
-    }));
-});
+const userByProvince = computed(() => chartDataState.value.userByProvince);
+const userByZipCode = computed(() => chartDataState.value.userByZipCode);
 
 const chartLineColors = computed(() => {
     return [selectedCountryForProvince.value === 'be' ? 'var(--primary)' : 'var(--success)'];
@@ -524,43 +586,14 @@ const chartAreaColors = computed(() => {
     return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
 
-// Utiliser shallowRef pour éviter les recalculs profonds
-const registrationDailyChartData = computed(() => {
-    if (!reports.value?.registration_statistics?.week) return { data: [], legendLabels: ['Total'] };
-    return mapDailyStatistics(reports.value.registration_statistics.week, '', ['Total']);
-});
+const registrationDailyChartData = computed(() => chartDataState.value.registrationDaily);
+const registrationMonthlyChartData = computed(() => chartDataState.value.registrationMonthly);
+const registrationChartData = computed(() => chartDataState.value.registrationYearly);
+const deletedUserChartData = computed(() => chartDataState.value.deletedUsers);
+const replacementDailyChartData = computed(() => chartDataState.value.replacementDaily);
+const replacementMonthlyChartData = computed(() => chartDataState.value.replacementMonthly);
+const replacementChartData = computed(() => chartDataState.value.replacementYearly);
 
-const registrationMonthlyChartData = computed(() => {
-    if (!reports.value?.registration_statistics?.month) return { data: [], legendLabels: ['Total'] };
-    return mapWeeklyStatistics(reports.value.registration_statistics.month, 'Semaine', ['Total']);
-});
-
-const registrationChartData = computed(() => {
-    if (!reports.value?.registration_statistics?.weeks_year) return { data: [], legendLabels: ['Total'] };
-    return mapWeeklyStatistics(reports.value.registration_statistics.weeks_year, 'Semaine', ['Total']);
-});
-
-const deletedUserChartData = computed(() => {
-    if (!reports.value?.registration_statistics?.total_deleted) return { data: [], legendLabels: ['Total'] };
-    return mapWeeklyStatistics(reports.value.registration_statistics.total_deleted, 'Semaine', ['Total']);
-});
-
-const replacementDailyChartData = computed(() => {
-    if (!reports.value?.replacement_statistics?.week) return { data: [], legendLabels: ['Total', 'Acceptés'] };
-    return mapDailyStatistics(reports.value.replacement_statistics.week, '', ['Total', 'Acceptés'], ['accepted']);
-});
-
-const replacementMonthlyChartData = computed(() => {
-    if (!reports.value?.replacement_statistics?.month) return { data: [], legendLabels: ['Total', 'Acceptés'] };
-    return mapWeeklyStatistics(reports.value.replacement_statistics.month, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
-});
-
-const replacementChartData = computed(() => {
-    if (!reports.value?.replacement_statistics?.weeks_year) return { data: [], legendLabels: ['Total', 'Acceptés'] };
-    return mapWeeklyStatistics(reports.value.replacement_statistics.weeks_year, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
-});
-
-// Optimiser les formatters - éviter les computed imbriqués
 const xRegistrationDayFormatter = computed(() => {
     const data = registrationDailyChartData.value.data;
     return (tick: number) => data[tick]?.name || '';
@@ -597,88 +630,8 @@ const xReplacementWeekYearFormatter = computed(() => {
 });
 
 const adminReports = computed(() => {
-    if (!isAdmin.value || !reports.value) return [];
-
-    return [
-        {
-            title: 'Utilisateur(s)',
-            items: [
-                {
-                    value: reports.value.registration_statistics.today + reports.value.registration_statistics.yesterday,
-                    label: `Ce jour `,
-                    colorClass: 'bg-indigo-600',
-                    icon: UserGroupIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.registration_statistics.last_30_days,
-                    label: 'Mois glissant',
-                    colorClass: 'bg-orange-700',
-                    icon: UserGroupIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.registration_statistics.total,
-                    label: 'Total ',
-                    colorClass: 'bg-pink-600',
-                    icon: UserGroupIcon,
-                    containerClass: 'string',
-                },
-            ],
-        },
-        {
-            title: 'Remplacement(s) acceptée(s)',
-            items: [
-                {
-                    value: reports.value.accepted_replacement_statistics.today + reports.value.accepted_replacement_statistics.yesterday,
-                    label: `Ce jour `,
-                    colorClass: 'bg-indigo-600',
-                    icon: ArrowPathIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.accepted_replacement_statistics.last_30_days,
-                    label: 'Mois glissant',
-                    colorClass: 'bg-orange-700',
-                    icon: ArrowPathIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.accepted_replacement_statistics.total,
-                    label: 'Total ',
-                    colorClass: 'bg-pink-600',
-                    icon: ArrowPathIcon,
-                    containerClass: 'string',
-                },
-            ],
-        },
-        {
-            title: 'Réponse(s) remplacement(s)',
-            items: [
-                {
-                    value: reports.value.replacement_response_statistics.today + reports.value.replacement_response_statistics.yesterday,
-                    label: `Ce jour `,
-                    colorClass: 'bg-indigo-600',
-                    icon: PaperAirplaneIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.replacement_response_statistics.last_30_days,
-                    label: 'Mois glissant',
-                    colorClass: 'bg-orange-700',
-                    icon: PaperAirplaneIcon,
-                    containerClass: 'string',
-                },
-                {
-                    value: reports.value.replacement_response_statistics.total,
-                    label: 'Total ',
-                    colorClass: 'bg-pink-600',
-                    icon: PaperAirplaneIcon,
-                    containerClass: 'string',
-                },
-            ],
-        },
-    ];
+    if (!isAdmin.value) return [];
+    return chartDataState.value.adminReports;
 });
 </script>
 

@@ -1,15 +1,5 @@
 <template>
-    <div class="mb-4 relative">
-        <div
-            v-if="loading"
-            class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center"
-        >
-            <div class="flex flex-col items-center gap-4">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                <p class="text-sm text-gray-600 font-medium">Chargement des données...</p>
-            </div>
-        </div>
-
+    <div class="mb-4">
         <div
             v-if="isAdmin || isDeveloper || isManager || isCommunityManager || isSaleRepresentative"
             class="space-y-8 mb-4"
@@ -45,7 +35,6 @@ definePageMeta({
     middleware: ['auth', 'institution'],
     ssr: false,
 });
-
 
 onMounted(async () => {
     if (!reports.value) {
