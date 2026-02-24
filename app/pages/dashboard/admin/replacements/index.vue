@@ -329,7 +329,7 @@ definePageMeta({
 
 const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
-const { isSuperAdmin } = useAuth();
+const { isSuperAdmin, isCommunityManager, isDeveloper } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -819,20 +819,32 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             const replacement = row.original;
             const actions = [
-                {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(replacement),
-                },
-                {
-                    label: 'Relance',
-                    onClick: () => openConfirmDialog(replacement),
-                },
-                {
-                    label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
-                    onClick: () => replacement.status === 'closed'
-                        ? handleOpen(replacement)
-                        : handleClosed(replacement),
-                },
+                ...(!isCommunityManager.value && !isDeveloper.value
+                    ? [
+                            {
+                                label: 'Modifier',
+                                onClick: () => handleEdit(replacement),
+                            },
+                        ]
+                    : []),
+                ...(!isCommunityManager.value && !isDeveloper.value
+                    ? [
+                            {
+                                label: 'Relance',
+                                onClick: () => openConfirmDialog(replacement),
+                            },
+                        ]
+                    : []),
+                ...(!isCommunityManager.value && !isDeveloper.value
+                    ? [
+                            {
+                                label: replacement.status === 'closed' ? 'Ouvrir' : 'Fermer',
+                                onClick: () => replacement.status === 'closed'
+                                    ? handleOpen(replacement)
+                                    : handleClosed(replacement),
+                            },
+                        ]
+                    : []),
                 ...(isSuperAdmin.value
                     ? [
                             {
@@ -855,6 +867,7 @@ const columns: ColumnDef<Replacement>[] = [
 
 const excludedColumnsForModal = ['user_owner', 'substitute_user'];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 columns.forEach((col: any) => {
     if (col.id !== 'actions') {
         const originalCell = col.cell;

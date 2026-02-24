@@ -4,7 +4,10 @@
             title="Des utilisateurs"
             :count="count"
         >
-            <template #action>
+            <template
+                v-if="!isDeveloper || isManager"
+                #action
+            >
                 <UsersCreateUserButton />
             </template>
         </DashboardAdminPageHeader>
@@ -69,7 +72,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, count, getUsers, forceDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
+const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 
 const perPage = ref(PERPAGE);
 const page = ref(1);
@@ -77,6 +80,8 @@ const initialFilter = {
     name: null,
     zip: null,
 };
+const selectedUser = ref<User>(null);
+const { $toast } = useNuxtApp();
 const option = ref({ ...initialFilter });
 
 const debounce = (func, delay) => {
@@ -119,6 +124,10 @@ const resetFilter = async () => {
     page.value = 1;
     await getUsers(page.value, perPage.value, option.value);
 };
+
+const canManageValidation = computed(() =>
+    isSuperAdmin.value || isManager.value,
+);
 
 const columns: ColumnDef<User>[] = [
     {
@@ -165,18 +174,20 @@ const columns: ColumnDef<User>[] = [
 
             return h('div', { class: 'flex items-center gap-2 lowercase' }, [
                 h('span', row.getValue('email')),
-                isVerified
-                    ? h('div', { class: '' })
-                    : [
+                !isVerified && canManageValidation.value
+                    ? [
                             h(XCircleIcon, {
                                 class: 'w-4 h-4 text-red-500 cursor-pointer',
                                 title: 'Renvoyer le mail de vérification',
-                                onClick: () => resendEmailVerification(row.original.email),
+                                onClick: () =>
+                                    resendEmailVerification(row.original.email),
                             }),
                             h(ConfirmDialog, {
                                 title: 'Valider l\'email',
-                                description: 'Veux-tu valider cet email manuellement ?',
-                                onConfirm: () => validateEmail(row.original.id),
+                                description:
+                        'Veux-tu valider cet email manuellement ?',
+                                onConfirm: () =>
+                                    validateEmail(row.original.id),
                                 cancelText: 'Non',
                                 confirmText: 'Oui, valider',
                             }, {
@@ -187,7 +198,8 @@ const columns: ColumnDef<User>[] = [
                                         class: 'h-6 text-xs',
                                     }, 'Valider'),
                             }),
-                        ],
+                        ]
+                    : null,
             ]);
         },
     },
@@ -309,10 +321,14 @@ const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const user = row.original;
             const actions = [
-                {
-                    label: 'Modifier',
-                    onClick: () => handleEdit(user),
-                },
+                ...(!isDeveloper.value || !isManager.value
+                    ? [
+                            {
+                                label: 'Modifier',
+                                onClick: () => handleEdit(user),
+                            },
+                        ]
+                    : []),
                 ...(isSuperAdmin.value
                     ? [
                             {
@@ -324,9 +340,9 @@ const columns: ColumnDef<User>[] = [
                     : []),
             ];
 
-            if (user.email_verified_at == null) {
+            if (user.email_verified_at === null && isSuperAdmin.value) {
                 actions.push({
-                    label: 'Renvoie mail',
+                    label: 'Renvoi mail',
                     onClick: () => resendEmailVerification(user.email),
                 });
             }
@@ -374,7 +390,13 @@ const handleEdit = (user: User) => {
 };
 
 const handleDelete = async (user: User) => {
-    return await forceDelete(user.id).then(async () => {
+    selectedUser.value = user;
+
+    return await softDelete(selectedUser.value.id).then(async () => {
+        $toast({
+            description: 'Utilisateur supprimé avec succès',
+        });
+
         await getUsers(page.value, perPage.value);
     });
 };
