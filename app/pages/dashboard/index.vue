@@ -8,8 +8,8 @@
         </div>
         <div v-else>
             <DashboardNurseInformation
-                :reports="reports.replacement"
-                :tours="reports.tours"
+                :reports="reports?.replacement"
+                :tours="reports?.tours"
             />
         </div>
     </div>

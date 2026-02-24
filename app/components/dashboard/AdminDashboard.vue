@@ -48,10 +48,12 @@
                     Évolution des inscriptions de cette semaine-ci
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
-                    v-else
+                    v-else-if="registrationDailyChartData.data.length > 0"
                     class="mt-3 bg-white rounded-sm shadow-md"
                 >
                     <ClientOnly>
@@ -62,11 +64,17 @@
                             :x-formatter="xRegistrationDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-1)']"
                             :legend-labels="registrationDailyChartData.legendLabels"
                             class="w-full"
                         />
                     </ClientOnly>
+                </div>
+                <div
+                    v-else
+                    class="mt-3 bg-white rounded-sm shadow-md p-8 text-center text-gray-500"
+                >
+                    Aucune donnée disponible
                 </div>
             </div>
 
@@ -75,7 +83,9 @@
                     Évolution des remplacements de cette semaine-ci
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -89,7 +99,7 @@
                             :x-formatter="xReplacementDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementDailyChartData.legendLabels"
                             class="w-full"
                         />
@@ -102,7 +112,9 @@
                     Évolution des inscriptions de ce mois-ci
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -116,7 +128,7 @@
                             :x-formatter="xRegistrationMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-1)']"
                             :legend-labels="registrationMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -129,7 +141,9 @@
                     Évolution des remplacements de ce mois-ci
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -143,7 +157,7 @@
                             :x-formatter="xReplacementMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -156,7 +170,9 @@
                     Évolution des inscriptions de l'année
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -170,7 +186,7 @@
                             :x-formatter="xRegistrationWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-1)']"
                             :legend-labels="registrationChartData.legendLabels"
                             class="w-full"
                         />
@@ -183,7 +199,9 @@
                     Évolution des remplacements de l'année
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -197,7 +215,7 @@
                             :x-formatter="xReplacementWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementChartData.legendLabels"
                             class="w-full"
                         />
@@ -213,7 +231,9 @@
                     Évolution des utilisateurs perdus
                 </p>
                 <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-3 bg-white rounded-sm shadow-md">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -227,7 +247,7 @@
                             :x-formatter="xDeletedUsersFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-5)']"
                             :legend-labels="deletedUserChartData.legendLabels"
                             class="w-full"
                         />
@@ -269,7 +289,9 @@
                 </div>
 
                 <div v-if="loading">
-                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
+                    <div class="mt-6 bg-white rounded-sm shadow-md p-4">
+                        <Skeleton class="w-full h-[300px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -324,7 +346,9 @@
                 </div>
 
                 <div v-if="loading">
-                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-96" />
+                    <div class="mt-6 bg-white rounded-sm shadow-md p-4">
+                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
+                    </div>
                 </div>
                 <div
                     v-else
@@ -364,10 +388,9 @@ import { BarChart } from '@/components/ui/chart-bar';
 import { AreaChart } from '@/components/ui/chart-area';
 import { useReports } from '~/composables/useReports';
 
-const { reports } = useReports();
+const { reports, loading } = useReports();
 
 const { isAdmin, isCommunityManager, isDeveloper, isManager, isSaleRepresentative } = useAuth();
-const loading = ref(true);
 const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
 useHead({ title: 'Tableau de bord' });
@@ -375,10 +398,6 @@ useHead({ title: 'Tableau de bord' });
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
-});
-
-onMounted(() => {
-    loading.value = false;
 });
 
 const selectedCountryForProvince = ref('be');
@@ -410,11 +429,11 @@ const userByZipCode = computed(() => {
 });
 
 const chartLineColors = computed(() => {
-    return [selectedCountryForProvince.value === 'be' ? 'hsl(var(--primary))' : 'hsl(var(--success))'];
+    return [selectedCountryForProvince.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
 
 const chartAreaColors = computed(() => {
-    return [selectedCountryForZipCode.value === 'be' ? 'hsl(var(--primary))' : 'hsl(var(--success))'];
+    return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
 
 const registrationDailyChartData = computed(() => {
