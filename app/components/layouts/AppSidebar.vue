@@ -424,7 +424,7 @@ const role = computed(() => {
     if (isSaleRepresentative.value) return 'sale_representative';
     if (isCollaborator.value) return 'collaborator';
     if (isMedical.value) return 'medical';
-    //if (isInstitution.value) return 'institution';
+    // if (isInstitution.value) return 'institution';
     return 'nurse';
 });
 
