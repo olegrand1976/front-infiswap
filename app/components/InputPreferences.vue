@@ -21,6 +21,7 @@
                             type="text"
                             :placeholder="user.profile.country === 'fr' ? '75000' : '1000'"
                             class="border-none flex-1 w-full"
+                            :input-class="true"
                             @input="onZipInput(i - 1)"
                         />
                         <Button
@@ -52,7 +53,8 @@
                             v-model="cityInputs[i - 1]"
                             type="text"
                             :placeholder="user.profile.country === 'fr' ? 'Paris' : 'Bruxelles'"
-                            class="border-none flex-1 w-full"
+                            class="border-none flex-1 w-full bg-transparent"
+                            :input-class="true"
                             @input="onCityInput(i - 1)"
                         />
                         <Button

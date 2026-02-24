@@ -33,7 +33,7 @@ useHead({ title: 'Tableau de bord' });
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'institution'],
 });
 
 await getReports();

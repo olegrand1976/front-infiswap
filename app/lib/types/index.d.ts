@@ -33,6 +33,11 @@ export type User = {
     full_name: string;
     identifier_number: string;
     email: string;
+    type: 'standard' | 'institution';
+    institution?: {
+        id: number;
+        name: string;
+    };
     password?: string;
     gender: Gender;
     phone_number?: string | null;
@@ -410,4 +415,92 @@ export type Stat = {
     web_site_name: string;
     count: number;
     last_count: string;
+};
+
+export type Mission = {
+    id: number;
+    institution_id: number;
+    service_id?: number;
+    service?: {
+        id: number;
+        institution_id: number;
+        name: string;
+        phone_number?: string;
+    };
+    institution: {
+        id: number;
+        institution_name?: string;
+        type: string;
+        fullname: string;
+        email: string;
+        phone_number: string;
+        street_address: string | null;
+        city: string | null;
+        zip_code: string | null;
+        country: string | null;
+        profil_url: string | null;
+    };
+    start_date: string;
+    end_date?: string;
+    time_start_at: string;
+    time_end_at: string;
+    description: string;
+    status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+    required_diploma: string;
+    accepted_candidate?: User;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    matching_candidates?: any;
+    has_answered: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    duration: any;
+    has_timesheet: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    timesheets?: any;
+    created_at?: string;
+    updated_at?: string;
+};
+
+export type MissionResponse = {
+    id: number;
+    mission_id: number;
+    mission: Mission;
+    responded_by: number;
+    responder: User;
+    description?: string;
+    status: 'pending' | 'accepted' | 'rejected';
+    responded_at?: string;
+    created_at?: string;
+    updated_at?: string;
+};
+
+export type MissionInvoice = {
+    id: number;
+    period_start: string;
+    period_end: string;
+    status: 'draft' | 'sent' | 'paid';
+    path: string;
+    mission_id: number;
+    mission: {
+        id: number;
+        service: string;
+        start_date: string;
+        status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+        nurse: User;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    invoice_lines: any;
+    created_at?: string;
+};
+
+export type Notification = {
+    id: number;
+    user_id: number;
+    notifiable_type?: string;
+    notifiable_id?: number;
+    type: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    read_at?: string;
+    created_at?: string;
+    updated_at?: string;
 };

@@ -21,7 +21,10 @@ export function isFuture(dateString: string | null): boolean {
     return new Date(dateString).getTime() > Date.now();
 }
 
-export function formatToDMY(dateStr: string | null): string {
+export function formatToDMY(
+    dateStr: string | null,
+    withTime: boolean | null = null,
+): string {
     if (dateStr == null) {
         return '';
     }
@@ -36,5 +39,18 @@ export function formatToDMY(dateStr: string | null): string {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear().toString();
 
-    return `${day}/${month}/${year}`;
+    let formattedDate = `${day}/${month}/${year}`;
+
+    if (withTime === true) {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        formattedDate += ` à ${hours}:${minutes}`;
+    }
+
+    return formattedDate;
+}
+
+export function formatTime(time) {
+    return time.split(':').slice(0, 2).join(':');
 }

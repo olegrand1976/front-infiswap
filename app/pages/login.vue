@@ -217,11 +217,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import Button from '~/components/ui/button/Button.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
-import { getErrorMessage } from '~/lib/utils';
 
 const router = useRouter();
 const { login } = useAuth();
-const { $toast } = useNuxtApp();
 
 const credentials = reactive({
     identifier: null,

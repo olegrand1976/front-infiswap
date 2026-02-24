@@ -121,7 +121,10 @@
                 </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup class="hover:cursor-pointer">
-                <div class="flex justify-between items-center mx-auto">
+                <div
+                    v-if="user.type != 'institution'"
+                    class="flex justify-between items-center mx-auto"
+                >
                     <CopyButton
                         variant="none"
                         label="Inviter vos collègues"
@@ -218,6 +221,10 @@ import {
     ShoppingBagIcon,
     ChartBarIcon,
     LinkIcon,
+    BriefcaseIcon,
+    DocumentTextIcon,
+    MegaphoneIcon,
+    UserCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -231,7 +238,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
+const { isAdmin,isMedical, logout, isCollaborator, isInstitution } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -301,6 +308,11 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Mes réponses reçues',
         route: '/dashboard/replacements/responses',
         icon: UsersIcon,
+    },
+    {
+        label: 'Missions',
+        route: '/dashboard/missions',
+        icon: BriefcaseIcon,
     },
     {
         label: 'Binômes',
@@ -437,11 +449,38 @@ const adminNavigationItems: NavigationItem[] = [
     },
 ];
 
+const institutionNavigationItems: NavigationItem[] = [
+    {
+        label: 'Tableau de bord',
+        route: '/dashboard/institution',
+        icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Services',
+        route: '/dashboard/institution/services',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Missions',
+        route: '/dashboard/institution/missions',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Factures',
+        route: '/dashboard/institution/invoices',
+        icon: DocumentTextIcon,
+        visible: true,
+    },
+    {
+        label: 'Paramètres',
+        route: '/dashboard/settings',
+        icon: Cog8ToothIcon,
+    },
+];
+
 const role = computed(() => {
-    if (isAdmin.value || isDeveloper.value) return 'admin';
-    if (isManager.value) return 'manager';
-    if (isCommunityManager.value) return 'community_manager';
-    if (isSaleRepresentative.value) return 'sale_representative';
+    if (isAdmin.value) return 'admin';
+    if (isInstitution.value) return 'institution';
     if (isCollaborator.value) return 'collaborator';
     if (isMedical.value) return 'medical';
     return 'nurse';
@@ -451,25 +490,8 @@ const navigationItems = computed(() => {
     switch (role.value) {
         case 'admin':
             return adminNavigationItems.filter(i => i.visible);
-        case 'manager':
-            return adminNavigationItems.filter(i => i.visible && (
-                !i.route.includes('crm')
-                && !i.route.includes('care-types')
-            ));
-        case 'community_manager':
-        case 'sale_representative':
-            return adminNavigationItems.filter(i => i.visible && (
-                i.route.includes('crm')
-                || i.route.includes('users')
-                || i.route.includes('products')
-                || i.route.includes('stats')
-                || i.route.includes('replacements')
-                || i.route.includes('registrations')
-                || (isSaleRepresentative.value && i.route.includes('contracts'))
-            ));
-        case 'collaborator':
-        case 'medical':
-            return nurseNavigationItems;
+        case 'institution':
+            return institutionNavigationItems;
         default:
             return nurseNavigationItems;
     }

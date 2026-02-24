@@ -23,6 +23,10 @@ export const useAuth = () => {
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
     const isMedical = hasAccountType(['nurse', 'caregiver', 'midwife', 'collaborator']);
+    const isInstitution = computed((): boolean => {
+        return user.value?.type === 'institution';
+    });
+
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
     });
@@ -518,6 +522,7 @@ export const useAuth = () => {
         isLoggedIn,
         isSuperAdmin,
         isAdmin,
+        isInstitution,
         isCommunityManager,
         isSaleRepresentative,
         isCollaborator,
