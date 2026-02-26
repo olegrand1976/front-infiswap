@@ -36,11 +36,8 @@ definePageMeta({
     ssr: false,
 });
 
-onMounted(async () => {
-    if (!reports.value) {
-        await getReports();
-    }
-});
+await getReports();
+
 </script>
 
 <style scoped>
