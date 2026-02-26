@@ -5,7 +5,7 @@
         fill="none"
         stroke="currentColor"
         stroke-width="2"
-        class="w-12 h-12"
+        class="w-6 h-6"
         aria-hidden="true"
     >
 

@@ -223,8 +223,6 @@ import {
     LinkIcon,
     BriefcaseIcon,
     DocumentTextIcon,
-    MegaphoneIcon,
-    UserCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -238,7 +236,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
+const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, isInstitution, logout } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -416,6 +414,7 @@ const institutionNavigationItems: NavigationItem[] = [
 ];
 
 const role = computed(() => {
+    if (isInstitution.value) return 'institution';
     if (isSuperAdmin.value) return 'super_admin';
     if (isAdmin.value) return 'admin';
     if (isDeveloper.value) return 'developer';
@@ -424,13 +423,11 @@ const role = computed(() => {
     if (isSaleRepresentative.value) return 'sale_representative';
     if (isCollaborator.value) return 'collaborator';
     if (isMedical.value) return 'medical';
-    // if (isInstitution.value) return 'institution';
     return 'nurse';
 });
 
 const navigationItems = computed(() => {
     const items = adminNavigationItems.filter(i => i.visible);
-
     switch (role.value) {
         case 'super_admin':
         case 'admin':
