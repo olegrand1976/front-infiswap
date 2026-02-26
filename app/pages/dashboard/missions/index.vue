@@ -489,7 +489,9 @@
                                             class="text-sm leading-relaxed text-gray-700"
                                             :class="!isExpanded[mission.id] ? 'line-clamp-3': ''"
                                         >
-                                            {{ mission.service }}
+                                            {{ mission.service?.name }}
+                                            <br/>
+                                            {{ mission.description }}
                                         </p>
                                     </div>
 
