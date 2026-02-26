@@ -1,15 +1,15 @@
 <template>
     <div class="mb-4">
         <div
-            v-if="isAdmin || isDeveloper || isManager || isCommunityManager || isSaleRepresentative"
+            v-if="isAdmin"
             class="space-y-8 mb-4"
         >
             <DashboardAdminDashboard />
         </div>
         <div v-else>
             <DashboardNurseInformation
-                :reports="reports?.replacement"
-                :tours="reports?.tours"
+                :reports="reports.replacement"
+                :tours="reports.tours"
             />
         </div>
     </div>
@@ -18,26 +18,18 @@
 <script lang="ts" setup>
 import { useReports } from '~/composables/useReports';
 
-const { reports, loading, getReports } = useReports();
+const { reports, getReports } = useReports();
 
-const {
-    isAdmin,
-    isDeveloper,
-    isManager,
-    isCommunityManager,
-    isSaleRepresentative,
-} = useAuth();
+const { isAdmin } = useAuth();
 
 useHead({ title: 'Tableau de bord' });
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'institution'],
-    ssr: false,
+    middleware: ['auth', 'verified'],
 });
 
 await getReports();
-
 </script>
 
 <style scoped>
