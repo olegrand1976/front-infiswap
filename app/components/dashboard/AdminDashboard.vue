@@ -2,7 +2,7 @@
     <div>
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
             <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
-                <div v-if="loading || !isDataFormatted">
+                <div v-if="loading">
                     <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
@@ -47,10 +47,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de cette semaine-ci
                 </p>
-                <div v-if="loading || !isDataFormatted || registrationDailyChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -64,7 +62,7 @@
                             :x-formatter="xRegistrationDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--chart-1)']"
+                            :colors="['hsl(var(--tertiary))']"
                             :legend-labels="registrationDailyChartData.legendLabels"
                             class="w-full"
                         />
@@ -76,10 +74,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de cette semaine-ci
                 </p>
-                <div v-if="loading || !isDataFormatted || replacementDailyChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -93,7 +89,7 @@
                             :x-formatter="xReplacementDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--primary)', 'var(--success)']"
+                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
                             :legend-labels="replacementDailyChartData.legendLabels"
                             class="w-full"
                         />
@@ -105,10 +101,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de ce mois-ci
                 </p>
-                <div v-if="loading || !isDataFormatted || registrationMonthlyChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -122,7 +116,7 @@
                             :x-formatter="xRegistrationMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--chart-1)']"
+                            :colors="['hsl(var(--tertiary))']"
                             :legend-labels="registrationMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -134,10 +128,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de ce mois-ci
                 </p>
-                <div v-if="loading || !isDataFormatted || replacementMonthlyChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -151,7 +143,7 @@
                             :x-formatter="xReplacementMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--primary)', 'var(--success)']"
+                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
                             :legend-labels="replacementMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -163,10 +155,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions de l'année
                 </p>
-                <div v-if="loading || !isDataFormatted || registrationChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -180,7 +170,7 @@
                             :x-formatter="xRegistrationWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--chart-1)']"
+                            :colors="['hsl(var(--tertiary))']"
                             :legend-labels="registrationChartData.legendLabels"
                             class="w-full"
                         />
@@ -192,10 +182,8 @@
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des remplacements de l'année
                 </p>
-                <div v-if="loading || !isDataFormatted || replacementChartData.data.length === 0">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -209,7 +197,7 @@
                             :x-formatter="xReplacementWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--primary)', 'var(--success)']"
+                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
                             :legend-labels="replacementChartData.legendLabels"
                             class="w-full"
                         />
@@ -225,9 +213,7 @@
                     Évolution des utilisateurs perdus
                 </p>
                 <div v-if="loading">
-                    <div class="mt-3 bg-white rounded-sm shadow-md">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -241,7 +227,7 @@
                             :x-formatter="xDeletedUsersFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['var(--chart-5)']"
+                            :colors="['hsl(var(--tertiary))']"
                             :legend-labels="deletedUserChartData.legendLabels"
                             class="w-full"
                         />
@@ -282,10 +268,8 @@
                     </div>
                 </div>
 
-                <div v-if="loading || !isDataFormatted || userByProvince.length === 0">
-                    <div class="mt-6 bg-white rounded-sm shadow-md p-4">
-                        <Skeleton class="w-full h-[300px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
                 </div>
                 <div
                     v-else
@@ -339,10 +323,8 @@
                     </div>
                 </div>
 
-                <div v-if="loading || !isDataFormatted || userByZipCode.length === 0">
-                    <div class="mt-6 bg-white rounded-sm shadow-md p-4">
-                        <Skeleton class="w-full h-[400px] bg-gray-200 rounded-sm" />
-                    </div>
+                <div v-if="loading">
+                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-96" />
                 </div>
                 <div
                     v-else
@@ -378,192 +360,15 @@
 <script lang="ts" setup>
 import { UserGroupIcon, ArrowPathIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
 import { DashboardStatCardAdminGroup } from '#components';
+import { BarChart } from '@/components/ui/chart-bar';
+import { AreaChart } from '@/components/ui/chart-area';
 import { useReports } from '~/composables/useReports';
 
-const BarChart = defineAsyncComponent(() => import('@/components/ui/chart-bar').then(m => m.BarChart));
-const AreaChart = defineAsyncComponent(() => import('@/components/ui/chart-area').then(m => m.AreaChart));
-const LineChart = defineAsyncComponent(() => import('@/components/ui/chart-line').then(m => m.LineChart));
+const { reports } = useReports();
 
-const { reports, loading } = useReports();
-
-const { isAdmin, isCommunityManager, isDeveloper, isManager, isSaleRepresentative } = useAuth();
-const { mapWeeklyStatistics, mapDailyStatistics, yFormatter } = useChart();
-
-// State pour stocker les données formatées
-const chartDataState = useState('adminDashboardChartData', () => ({
-    registrationDaily: { data: [], legendLabels: ['Total'] },
-    registrationMonthly: { data: [], legendLabels: ['Total'] },
-    registrationYearly: { data: [], legendLabels: ['Total'] },
-    deletedUsers: { data: [], legendLabels: ['Total'] },
-    replacementDaily: { data: [], legendLabels: ['Total', 'Acceptés'] },
-    replacementMonthly: { data: [], legendLabels: ['Total', 'Acceptés'] },
-    replacementYearly: { data: [], legendLabels: ['Total', 'Acceptés'] },
-    userByProvince: [],
-    userByZipCode: [],
-    adminReports: [],
-    userBelgianCount: 0,
-    userFrenchCount: 0,
-}));
-
-const selectedCountryForProvince = ref('be');
-const selectedCountryForZipCode = ref('be');
-
-// Fonction pour formater et stocker toutes les données dans le state
-const formatAndStoreData = () => {
-    if (!reports.value) return;
-
-    const regStats = reports.value.registration_statistics;
-    const repStats = reports.value.replacement_statistics;
-    const acceptedStats = reports.value.accepted_replacement_statistics;
-    const responseStats = reports.value.replacement_response_statistics;
-
-    if (regStats) {
-        chartDataState.value.userBelgianCount = regStats.total_belgian ?? 0;
-        chartDataState.value.userFrenchCount = regStats.total_french ?? 0;
-
-        if (regStats.week) {
-            chartDataState.value.registrationDaily = mapDailyStatistics(regStats.week, '', ['Total']);
-        }
-        if (regStats.month) {
-            chartDataState.value.registrationMonthly = mapWeeklyStatistics(regStats.month, 'Semaine', ['Total']);
-        }
-        if (regStats.weeks_year) {
-            chartDataState.value.registrationYearly = mapWeeklyStatistics(regStats.weeks_year, 'Semaine', ['Total']);
-        }
-        if (regStats.total_deleted) {
-            chartDataState.value.deletedUsers = mapWeeklyStatistics(regStats.total_deleted, 'Semaine', ['Total']);
-        }
-
-        if (regStats.group_by_province) {
-            const countryName = selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France';
-            const countryData = regStats.group_by_province.find(item => item.country === countryName)?.data ?? [];
-            chartDataState.value.userByProvince = countryData.map((item: { province: string; total: number }) => ({
-                name: item.province,
-                inscrits: item.total,
-            }));
-        }
-
-        if (regStats.group_by_zip_code) {
-            const countryName = selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France';
-            const countryData = regStats.group_by_zip_code.find(item => item.country === countryName)?.data ?? [];
-            chartDataState.value.userByZipCode = countryData.map((item: { zip_code: string; total: number }) => ({
-                name: item.zip_code,
-                inscrits: item.total,
-            }));
-        }
-    }
-
-    if (repStats) {
-        if (repStats.week) {
-            chartDataState.value.replacementDaily = mapDailyStatistics(repStats.week, '', ['Total', 'Acceptés'], ['accepted']);
-        }
-        if (repStats.month) {
-            chartDataState.value.replacementMonthly = mapWeeklyStatistics(repStats.month, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
-        }
-        if (repStats.weeks_year) {
-            chartDataState.value.replacementYearly = mapWeeklyStatistics(repStats.weeks_year, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
-        }
-    }
-
-    if (isAdmin.value && regStats && acceptedStats && responseStats) {
-        chartDataState.value.adminReports = [
-            {
-                title: 'Utilisateur(s)',
-                items: [
-                    {
-                        value: (regStats.today || 0) + (regStats.yesterday || 0),
-                        label: `Ce jour `,
-                        colorClass: 'bg-indigo-600',
-                        icon: UserGroupIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: regStats.last_30_days || 0,
-                        label: 'Mois glissant',
-                        colorClass: 'bg-orange-700',
-                        icon: UserGroupIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: regStats.total || 0,
-                        label: 'Total ',
-                        colorClass: 'bg-pink-600',
-                        icon: UserGroupIcon,
-                        containerClass: 'string',
-                    },
-                ],
-            },
-            {
-                title: 'Remplacement(s) acceptée(s)',
-                items: [
-                    {
-                        value: (acceptedStats?.today || 0) + (acceptedStats?.yesterday || 0),
-                        label: `Ce jour `,
-                        colorClass: 'bg-indigo-600',
-                        icon: ArrowPathIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: acceptedStats?.last_30_days || 0,
-                        label: 'Mois glissant',
-                        colorClass: 'bg-orange-700',
-                        icon: ArrowPathIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: acceptedStats?.total || 0,
-                        label: 'Total ',
-                        colorClass: 'bg-pink-600',
-                        icon: ArrowPathIcon,
-                        containerClass: 'string',
-                    },
-                ],
-            },
-            {
-                title: 'Réponse(s) remplacement(s)',
-                items: [
-                    {
-                        value: (responseStats?.today || 0) + (responseStats?.yesterday || 0),
-                        label: `Ce jour `,
-                        colorClass: 'bg-indigo-600',
-                        icon: PaperAirplaneIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: responseStats?.last_30_days || 0,
-                        label: 'Mois glissant',
-                        colorClass: 'bg-orange-700',
-                        icon: PaperAirplaneIcon,
-                        containerClass: 'string',
-                    },
-                    {
-                        value: responseStats?.total || 0,
-                        label: 'Total ',
-                        colorClass: 'bg-pink-600',
-                        icon: PaperAirplaneIcon,
-                        containerClass: 'string',
-                    },
-                ],
-            },
-        ];
-    }
-};
-
-watch([reports, selectedCountryForProvince, selectedCountryForZipCode], () => {
-    if (reports.value) {
-        formatAndStoreData();
-    }
-}, { immediate: true });
-
-const isDataFormatted = computed(() => {
-    if (loading.value) {
-        const hasCachedData = chartDataState.value.registrationDaily.data.length > 0
-            || chartDataState.value.registrationMonthly.data.length > 0
-            || chartDataState.value.userBelgianCount > 0;
-        return hasCachedData;
-    }
-    return !!reports.value;
-});
+const { isAdmin } = useAuth();
+const loading = ref(true);
+const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
 useHead({ title: 'Tableau de bord' });
 
@@ -572,11 +377,37 @@ definePageMeta({
     middleware: ['auth', 'verified'],
 });
 
-const userBelgianCount = computed(() => chartDataState.value.userBelgianCount);
-const userFrenchCount = computed(() => chartDataState.value.userFrenchCount);
+onMounted(() => {
+    loading.value = false;
+});
 
-const userByProvince = computed(() => chartDataState.value.userByProvince);
-const userByZipCode = computed(() => chartDataState.value.userByZipCode);
+const selectedCountryForProvince = ref('be');
+const selectedCountryForZipCode = ref('be');
+
+const userBelgianCount = computed(() => reports.value.registration_statistics?.total_belgian);
+const userFrenchCount = computed(() => reports.value.registration_statistics?.total_french);
+
+const userByProvince = computed(() => {
+    const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
+
+    const countryData = userByProvinces.find(item => item.country === (selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+
+    return countryData.map((item: { province: string; total: number }) => ({
+        name: item.province,
+        inscrits: item.total,
+    }));
+});
+
+const userByZipCode = computed(() => {
+    const userByZipCodes = reports.value?.registration_statistics?.group_by_zip_code ?? [];
+
+    const countryData = userByZipCodes.find(item => item.country === (selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+
+    return countryData.map((item: { zip_code: string; total: number }) => ({
+        name: item.zip_code,
+        inscrits: item.total,
+    }));
+});
 
 const chartLineColors = computed(() => {
     return [selectedCountryForProvince.value === 'be' ? 'var(--primary)' : 'var(--success)'];
@@ -585,53 +416,126 @@ const chartLineColors = computed(() => {
 const chartAreaColors = computed(() => {
     return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
-
-const registrationDailyChartData = computed(() => chartDataState.value.registrationDaily);
-const registrationMonthlyChartData = computed(() => chartDataState.value.registrationMonthly);
-const registrationChartData = computed(() => chartDataState.value.registrationYearly);
-const deletedUserChartData = computed(() => chartDataState.value.deletedUsers);
-const replacementDailyChartData = computed(() => chartDataState.value.replacementDaily);
-const replacementMonthlyChartData = computed(() => chartDataState.value.replacementMonthly);
-const replacementChartData = computed(() => chartDataState.value.replacementYearly);
-
-const xRegistrationDayFormatter = computed(() => {
-    const data = registrationDailyChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+    
+const registrationDailyChartData = computed(() => {
+    return mapDailyStatistics(reports.value?.registration_statistics?.week, '', ['Total']);
 });
 
-const xRegistrationMonthFormatter = computed(() => {
-    const data = registrationMonthlyChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const registrationMonthlyChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.month, 'Semaine', ['Total']);
 });
 
-const xRegistrationWeekYearFormatter = computed(() => {
-    const data = registrationChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const registrationChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks_year, 'Semaine', ['Total']);
 });
 
-const xDeletedUsersFormatter = computed(() => {
-    const data = deletedUserChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const deletedUserChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.registration_statistics?.total_deleted, 'Semaine', ['Total']);
 });
 
-const xReplacementDayFormatter = computed(() => {
-    const data = replacementDailyChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const replacementDailyChartData = computed(() => {
+    return mapDailyStatistics(reports.value?.replacement_statistics?.week, '', ['Total', 'Acceptés'], ['accepted']);
 });
 
-const xReplacementMonthFormatter = computed(() => {
-    const data = replacementMonthlyChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const replacementMonthlyChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.replacement_statistics?.month, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
 
-const xReplacementWeekYearFormatter = computed(() => {
-    const data = replacementChartData.value.data;
-    return (tick: number) => data[tick]?.name || '';
+const replacementChartData = computed(() => {
+    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks_year, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
+
+const xRegistrationDayFormatter = computed(() => createXFormatter(computed(() => registrationDailyChartData.value.data)));
+const xRegistrationMonthFormatter = computed(() => createXFormatter(computed(() => registrationMonthlyChartData.value.data)));
+const xRegistrationWeekYearFormatter = computed(() => createXFormatter(computed(() => registrationChartData.value.data)));
+const xDeletedUsersFormatter = computed(() => createXFormatter(computed(() => deletedUserChartData.value.data)));
+const xReplacementDayFormatter = computed(() => createXFormatter(computed(() => replacementDailyChartData.value.data)));
+const xReplacementMonthFormatter = computed(() => createXFormatter(computed(() => replacementMonthlyChartData.value.data)));
+const xReplacementWeekYearFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
 
 const adminReports = computed(() => {
-    if (!isAdmin.value) return [];
-    return chartDataState.value.adminReports;
+    if (!isAdmin.value || !reports.value) return [];
+
+    return [
+        {
+            title: 'Utilisateur(s)',
+            items: [
+                {
+                    value: reports.value.registration_statistics.today + reports.value.registration_statistics.yesterday,
+                    label: `Ce jour `,
+                    colorClass: 'bg-indigo-600',
+                    icon: UserGroupIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.registration_statistics.last_30_days,
+                    label: 'Mois glissant',
+                    colorClass: 'bg-orange-700',
+                    icon: UserGroupIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.registration_statistics.total,
+                    label: 'Total ',
+                    colorClass: 'bg-pink-600',
+                    icon: UserGroupIcon,
+                    containerClass: 'string',
+                },
+            ],
+        },
+        {
+            title: 'Remplacement(s) acceptée(s)',
+            items: [
+                {
+                    value: reports.value.accepted_replacement_statistics.today + reports.value.accepted_replacement_statistics.yesterday,
+                    label: `Ce jour `,
+                    colorClass: 'bg-indigo-600',
+                    icon: ArrowPathIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.accepted_replacement_statistics.last_30_days,
+                    label: 'Mois glissant',
+                    colorClass: 'bg-orange-700',
+                    icon: ArrowPathIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.accepted_replacement_statistics.total,
+                    label: 'Total ',
+                    colorClass: 'bg-pink-600',
+                    icon: ArrowPathIcon,
+                    containerClass: 'string',
+                },
+            ],
+        },
+        {
+            title: 'Réponse(s) remplacement(s)',
+            items: [
+                {
+                    value: reports.value.replacement_response_statistics.today + reports.value.replacement_response_statistics.yesterday,
+                    label: `Ce jour `,
+                    colorClass: 'bg-indigo-600',
+                    icon: PaperAirplaneIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.replacement_response_statistics.last_30_days,
+                    label: 'Mois glissant',
+                    colorClass: 'bg-orange-700',
+                    icon: PaperAirplaneIcon,
+                    containerClass: 'string',
+                },
+                {
+                    value: reports.value.replacement_response_statistics.total,
+                    label: 'Total ',
+                    colorClass: 'bg-pink-600',
+                    icon: PaperAirplaneIcon,
+                    containerClass: 'string',
+                },
+            ],
+        },
+    ];
 });
 </script>
 
