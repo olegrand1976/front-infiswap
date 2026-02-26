@@ -66,7 +66,7 @@
                                                 @click="handleFetchCareType(item.id)"
                                             >
                                                 <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
+                                                    <div class="shrink-0">
                                                         <img
                                                             v-if="item.profile?.profil_url"
                                                             :src="$config.public.API_URL + '/storage/' + item.profile.profil_url"
@@ -131,7 +131,7 @@
                         <div class="grid grid-cols-1 lg:grid-cols-[32.5%_32.5%_35%] gap-2 w-full">
                             <div class="w-full">
                                 <div class="flex items-center bg-primary text-white p-4 rounded-lg">
-                                    <div class="flex-shrink-0">
+                                    <div class="shrink-0">
                                         <img
                                             v-if="selectedPatient.profile?.profil_url"
                                             :src="$config.public.API_URL + '/storage/' + selectedPatient.profile.profil_url"
@@ -143,7 +143,7 @@
                                             class="size-20"
                                         />
                                     </div>
-                                    <div class="ml-4 flex flex-grow justify-between items-center">
+                                    <div class="ml-4 flex grow justify-between items-center">
                                         <div class="text-lg">
                                             <span class="font-semibold">{{ selectedPatient.firstname }}</span> {{ selectedPatient.lastname }}
                                         </div>

@@ -1,7 +1,8 @@
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
     modules: [
-        '@nuxtjs/tailwindcss',
-        '@zadigetvoltaire/nuxt-gtm',
+        '@saslavik/nuxt-gtm',
         'nuxt-gtag',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
@@ -54,7 +55,7 @@ export default defineNuxtConfig({
         },
     },
     css: [
-        '~/assets/css/tailwind.css',
+        './app/assets/css/tailwind.css',
     ],
     runtimeConfig: {
         public: {
@@ -103,6 +104,9 @@ export default defineNuxtConfig({
     },
 
     vite: {
+        plugins: [
+            tailwindcss(),
+        ],
         css: {
             devSourcemap: false,
         },
@@ -132,7 +136,14 @@ export default defineNuxtConfig({
         port: 3000,
     },
     shadcn: {
+        /**
+         * Prefix for all the imported component
+         */
         prefix: '',
-        componentDir: './components/ui',
+        /**
+         * Directory that the component lives in.
+         * @default "./app/components/ui"
+         */
+        componentDir: './app/components/ui',
     },
 });

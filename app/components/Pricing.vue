@@ -1,0 +1,183 @@
+<template>
+    <div class="flex flex-col justify-center items-center">
+        <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
+            <p class="mt-4 font-medium text-center text-gray-500 dark:text-gray-300">
+                Obtenez un accès complet en choisissant votre formule !
+            </p>
+        </div>
+
+        <div
+            v-if="loading && Object.keys(plans ?? {}).length == 0"
+            class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0"
+        >
+            <div class="container grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-4">
+                <div
+                    v-for="(_, index) in [1, 2, 3]"
+                    :key="index"
+                    class="flex flex-col space-y-3"
+                >
+                    <Skeleton class="h-[180px] w-full lg:w-[700px] max-w-xs rounded-xl bg-gray-200" />
+                    <div class="space-y-2">
+                        <Skeleton class="h-10 w-full lg:w-[700px] max-w-xs  bg-gray-200" />
+                        <Skeleton class="h-10 w-full lg:w-[700px] max-w-xs  bg-gray-200" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            v-else
+            class="flex-1 xl:mx-8"
+        >
+            <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
+                <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
+                    <div class="p-6">
+                        <h1 class="text-xl text-center font-medium text-success capitalize lg:text-2xl dark:text-white">
+                            Hebdomadaire
+                        </h1>
+
+                        <p class="mt-4 text-gray-500 dark:text-gray-300">
+                            Donnez un nouvel élan à votre activité grâce à notre abonnement hebdomadaire ! Profitez chaque semaine d’un accès exclusif pour optimiser et faciliter la gestion de vos remplacements, pour seulement {{ plans?.weekly.amount }} € par semaine.
+                        </p>
+
+                        <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                            {{ plans?.weekly.amount }} €<span class="text-base font-medium">/semaine</span>
+                        </h2>
+
+                        <Button
+                            v-if="user?.trial_ends_at == null"
+                            class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-success-300/10"
+                            :in-progress="trialLoading"
+                            @click="startingTrial"
+                        >
+                            <span>Commencez maintenant</span>
+                        </Button>
+                        <div
+                            v-else
+                            class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-success-300/10"
+                        >
+                            <span v-show="isFuture(user.trial_ends_at)">Active</span>
+                            <span v-show="!isFuture(user.trial_ends_at)">Expiré le {{ formatToDMY(user.trial_ends_at) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-sm mx-auto h-full border rounded-lg md:mx-4 dark:border-gray-700">
+                    <div class="p-6">
+                        <h1 class="text-xl text-center font-medium text-success capitalize lg:text-2xl dark:text-white">
+                            Mensuel
+                        </h1>
+
+                        <p class="mt-4 text-gray-500 dark:text-gray-300">
+                            Un abonnement flexible pour gérer vos remplacements et tournées sans engagement. Payez au mois et profitez de toutes les fonctionnalités essentielles.
+                        </p>
+
+                        <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                            {{ plans?.monthly.amount }} €<span class="text-base font-medium">/mois</span>
+                        </h2>
+
+                        <Button
+                            class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-success-300/10"
+                            :in-progress="loading && plan.stripe_price_id == plans?.monthly.stripe_price_id"
+                            @click="handleSelectPlan(plans.monthly)"
+                        >
+                            Commencez maintenant
+                        </Button>
+                    </div>
+                </div>
+
+                <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                    <div class="p-6">
+                        <h1 class="text-xl text-center text-success font-bold capitalize lg:text-2xl dark:text-white">
+                            Annuel
+                        </h1>
+
+                        <p class="mt-4 text-gray-500 dark:text-gray-300">
+                            Économisez en choisissant un abonnement annuel ! Profitez de toutes les fonctionnalités tout en réduisant vos coûts sur l’année.
+                        </p>
+
+                        <h2 class="mt-4 text-2xl text-center font-semibold text-gray-700 sm:text-3xl dark:text-gray-300">
+                            {{ plans?.yearly.amount }} €<span class="text-base font-medium">/an</span>
+                        </h2>
+                        <Button
+                            class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-300 transform bg-success rounded-md hover:bg-success-500 focus:outline-none focus:bg-success-500 focus:ring focus:ring-success-300 focus:ring-success-300/10"
+                            :in-progress="loading && plan.stripe_price_id == plans?.yearly.stripe_price_id"
+                            @click="handleSelectPlan(plans.yearly)"
+                        >
+                            Commencez maintenant
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-12 ml-5 lg:ml-12 font-medium text-gray-500 dark:text-gray-300 mb-14">
+                <ul class="font-bold pl-5 md:pl-20 text-sm md:text-base">
+                    <li>Profitez de toute la plateforme infiswap:</li>
+                </ul>
+                <br>
+                <ul class="list-[circle] pl-8 md:pl-32 mt-2 md:mt-1 space-y-2 text-sm md:text-base">
+                    <li>Créer vos remplacements</li>
+                    <li>Recherchez des remplacements</li>
+                    <li>Consultez vos remplacements</li>
+                    <li>Recevez les notifications de remplacements disponibles par rapport à vos préférences</li>
+                    <li>Recevez les informations des tournées sélectionnées</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { useSubscription, type Plan } from '~/composables/useSubscription';
+import { isFuture, formatToDMY } from '~/composables/useDate';
+
+const {
+    plans,
+    getPlans,
+    plan,
+    selectPlan,
+    loading,
+    create,
+    startTrial,
+} = useSubscription();
+
+const user = useUser();
+definePageMeta({
+    layout: 'dashboard',
+    middleware: ['auth', 'verified'],
+});
+
+const trialLoading = ref(false);
+
+useHead({
+    title: 'Abonnements',
+});
+
+const handleSelectPlan = async (product: Plan) => {
+    selectPlan(product);
+    const response = await create(product.stripe_price_id).catch((error,
+    ) => {
+        console.log(error.message);
+    });
+
+    if (response?.url) {
+        window.location.href = response.url;
+    }
+};
+
+const startingTrial = async () => {
+    try {
+        trialLoading.value = true;
+        await startTrial();
+
+        navigateTo('/dashboard/subscriptions');
+    }
+    catch (error) {
+        console.error(error);
+    }
+    finally {
+        trialLoading.value = false;
+    }
+};
+await getPlans();
+
+console.log(plans.value);
+</script>

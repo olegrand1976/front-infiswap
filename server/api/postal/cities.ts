@@ -1,5 +1,5 @@
-import { getCitiesFromPostalCode } from '~/server/utils/location';
-import type { CountryCode } from '~/lib/types';
+import { getCitiesFromPostalCode } from '../../utils/location';
+import type { CountryCode } from '../../../app/lib/types';
 
 export default defineEventHandler((event) => {
     const query = getQuery(event);

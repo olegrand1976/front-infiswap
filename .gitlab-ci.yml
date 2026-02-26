@@ -68,8 +68,13 @@ build:
     - echo -n "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
     - docker push docker.io/$DOCKERHUB_USERNAME/front-app:latest
     - docker images
-  only:
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      variables:
+        IMAGE_NAME: "front-app"
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+      variables:
+        IMAGE_NAME: "front-app-staging"
 
 #####################################
 # Déploiement sur FRONT1
@@ -87,22 +92,37 @@ deploy_front1:
     DOCKER_DRIVER: overlay2
   before_script:
     - apk add --no-cache openssh-client sshpass
+    - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
+    - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
     - echo "$SSH_PRIVATE_KEY" > id_rsa
     - chmod 600 id_rsa
     - echo "$SSH_KNOWN_HOSTS" > known_hosts
     # Ajoute la clé SSH de FRONT1 (IP_FRONT_1 doit être défini avec l'adresse IP accessible)
     - if [ -n "$SSH_HOST" ]; then ssh-keyscan -t ed25519 $SSH_HOST >> known_hosts; else echo "SSH_HOST is not set"; fi
+    # Substituer DOCKERHUB_USERNAME dans le fichier docker-compose avant de le copier
+    - sed "s|\${DOCKERHUB_USERNAME}|$DOCKERHUB_USERNAME|g" $DOCKER_COMPOSE_FILE > docker-compose.temp.yml
   script:
-    #- docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-    # Récupération de l'image depuis Docker Hub
-    #- docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest
+    # Copier le fichier docker-compose approprié sur le serveur (avec DOCKERHUB_USERNAME substitué)
+    - >
+      scp -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes docker-compose.temp.yml $SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml
     # Connexion SSH sur FRONT1 pour déployer via docker-compose
     - >
       ssh -i id_rsa -o UserKnownHostsFile=known_hosts -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-        docker pull docker.io/$DOCKERHUB_USERNAME/front-app:latest &&
-        docker compose -f /srv/front/docker-compose.prod.yml down &&
-        docker compose -f /srv/front/docker-compose.prod.yml up --build -d
+        docker pull docker.io/$IMAGE_REPO:latest &&
+        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml down || true &&
+        docker stop infiswap_frontend || true &&
+        docker rm infiswap_frontend || true &&
+        docker compose -f $DEPLOY_PATH/docker-compose.prod.yml up -d
       "
-  only:
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      variables:
+        DEPLOY_PATH: "/srv/front"
+        IMAGE_REPO: "${DOCKERHUB_USERNAME}/front-app"
+        DOCKER_COMPOSE_FILE: "docker-compose.prod.yml"
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+      variables:
+        DEPLOY_PATH: "/srv/test-front"
+        IMAGE_REPO: "${DOCKERHUB_USERNAME}/front-app-staging"
+        DOCKER_COMPOSE_FILE: "docker-compose.prod.staging.yml"

@@ -1,0 +1,480 @@
+<template>
+    <Sidebar>
+        <SidebarContent class="p-2 bg-white flex flex-col gap-8 justify-between sidebar-content min-w-[260px] w-[260px]">
+            <SidebarGroup
+                :class="cn('rounded-xl pb-6', {
+                    'bg-white': isAdmin,
+                    'bg-gray-100': !isAdmin,
+                })"
+            >
+                <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
+                    <LayoutsLogo class="w-36" />
+                </SidebarHeader>
+
+                <SidebarGroupContent
+                    class="mt-2 mx-auto flex flex-col gap-4"
+                    :class="collapsed ? 'w-10' : 'lg:w-44 xl:w-52'"
+                >
+                    <SidebarMenu>
+                        <section
+                            v-for="(item, index) in navigationItems"
+                            :key="index"
+                        >
+                            <SidebarMenuItem v-if="item?.children?.length > 0">
+                                <Collapsible class="group/collapsible transition-all duration-500">
+                                    <CollapsibleTrigger as-child>
+                                        <SidebarMenuButton
+                                            class="h-12 w-full"
+                                            :class="{
+                                                'bg-primary text-white font-bold': route.path.startsWith(item.route),
+                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !route.path.startsWith(item.route),
+                                            }"
+                                        >
+                                            <NuxtLink
+                                                :href="item.route"
+                                                class="w-full flex items-center justify-between"
+                                            >
+                                                <div class="flex space-x-2 items-center">
+                                                    <component
+                                                        :is="item.icon"
+                                                        class="w-6 opacity-80"
+                                                    />
+                                                    <span>{{ item.label }}</span>
+                                                </div>
+                                                <div>
+                                                    <ChevronRightIcon
+                                                        class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90"
+                                                    />
+                                                </div>
+                                            </NuxtLink>
+                                        </SidebarMenuButton>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <SidebarMenuSub class="w-full">
+                                            <SidebarMenuSubItem
+                                                v-for="(subItem, subIndex) in item.children"
+                                                :key="subIndex"
+                                                class="h-10 rounded w-full"
+                                                :class="{
+                                                    'bg-primary/90 text-white': isActiveRoute(subItem.route),
+                                                    'text-neutral-700 hover:bg-primary/20': !isActiveRoute(subItem.route),
+                                                }"
+                                                :onclick="closeSidebar"
+                                            >
+                                                <SidebarMenuButton class="w-full h-full p-0">
+                                                    <NuxtLink
+                                                        :href="subItem.route"
+                                                        class="flex items-center h-full w-full p-2"
+                                                        onclick="clicked"
+                                                    >
+                                                        <component
+                                                            :is="subItem.icon"
+                                                            class="w-4 mr-2 opacity-80"
+                                                        />
+
+                                                        <span>
+                                                            {{ subItem.label }}
+                                                        </span>
+                                                    </NuxtLink>
+                                                </SidebarMenuButton>
+                                            </SidebarMenuSubItem>
+                                        </SidebarMenuSub>
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem
+                                v-else
+                                :onclick="closeSidebar"
+                            >
+                                <SidebarMenuButton
+                                    as-child
+                                    class="h-12"
+                                >
+                                    <NuxtLink
+                                        :href="item.route"
+                                        class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
+                                        :class="{
+                                            'bg-primary text-white font-bold': isActiveRoute(item.route),
+                                            'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
+                                        }"
+                                        :target="item.external ? '_blank': ''"
+                                    >
+                                        <div class="flex space-x-2 items-center">
+                                            <component
+                                                :is="item.icon"
+                                                class="w-6 opacity-80"
+                                            />
+                                            <span>{{ item.label }}</span>
+                                        </div>
+
+                                        <Badge
+                                            v-if="item.route === '/dashboard/admin/contacts'"
+                                            class="ml-2 bg-primary text-white"
+                                        >
+                                            5
+                                        </Badge>
+                                    </NuxtLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </section>
+                    </SidebarMenu>
+                </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarGroup class="hover:cursor-pointer">
+                <div
+                    v-if="user.type != 'institution'"
+                    class="flex justify-between items-center mx-auto"
+                >
+                    <CopyButton
+                        variant="none"
+                        label="Inviter vos collègues"
+                        class="text-primary"
+                        :show-label="true"
+                        :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                        success-message="Lien copié avec succès"
+                    />
+
+                    <QuestionMarkCircleIcon
+                        class="w-4 text-blue-500 cursor-pointer"
+                        @click="referralDialog = true"
+                    />
+                </div>
+
+                <Dialog v-model:open="referralDialog">
+                    <DialogContent class="max-w-xl">
+                        <DialogHeader>
+                            <DialogTitle class="text-primary">
+                                Inviter vos collègues
+                            </DialogTitle>
+                        </DialogHeader>
+                        <p>
+                            Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                        </p>
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="mt-4">
+                                {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
+                            </p>
+
+                            <CopyButton
+                                variant="none"
+                                class="text-primary mt-3"
+                                :show-label="false"
+                                :content="`${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`"
+                                success-message="Lien copié avec succès"
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                <NuxtLink
+                    to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
+                    target="_blank"
+                    class="text-center flex flex-col gap-1"
+                >
+                    <div class="flex justify-center text-yellow-400">
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                        <StarIcon class="h-5" />
+                    </div>
+                    <p class="text-sm font-bold">Évaluez-nous sur</p>
+                    <LayoutsAppImage
+                        src="/google-brand.svg"
+                        class="w-32 mx-auto"
+                    />
+                </NuxtLink>
+                <Button
+                    class="w-full mt-4 rounded flex space-x-2 items-center justify-arround"
+                    @click="logout"
+                >
+                    <PowerIcon class="w-6 opacity-80" />
+                    <span>Déconnexion</span>
+                </Button>
+            </SidebarGroup>
+        </SidebarContent>
+    </Sidebar>
+</template>
+
+<script lang="ts" setup>
+import { useRoute } from 'vue-router';
+import {
+    SquaresPlusIcon,
+    ArrowPathIcon,
+    UserGroupIcon,
+    ChevronRightIcon,
+    ListBulletIcon,
+    PowerIcon,
+    PlusIcon,
+    DocumentMagnifyingGlassIcon,
+    MagnifyingGlassIcon,
+    UsersIcon,
+    Cog8ToothIcon,
+    DocumentCurrencyEuroIcon,
+    WrenchScrewdriverIcon,
+    ChatBubbleLeftEllipsisIcon,
+    ShieldCheckIcon,
+    InboxIcon,
+    QuestionMarkCircleIcon,
+    PlayCircleIcon,
+    ShoppingBagIcon,
+    ChartBarIcon,
+    LinkIcon,
+    BriefcaseIcon,
+    DocumentTextIcon,
+    MegaphoneIcon,
+    UserCircleIcon,
+} from '@heroicons/vue/24/outline';
+import { StarIcon } from '@heroicons/vue/24/solid';
+import type { FunctionalComponent } from 'vue';
+import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
+import { useSidebar } from '../ui/sidebar';
+import { cn } from '@/lib/utils';
+import { useRuntimeConfig } from '#app';
+import { PERPAGE } from '~/lib/constants';
+
+defineProps({
+    collapsed: Boolean,
+});
+
+const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, logout } = useAuth();
+const config = useRuntimeConfig();
+const user = useUser();
+const { setOpenMobile, isMobile } = useSidebar();
+const referralDialog = ref(false);
+const closeSidebar = () => {
+    if (isMobile.value) {
+        setOpenMobile(false);
+    }
+};
+const perPage = ref(PERPAGE);
+const page = ref(1);
+const { products, getProducts } = useProduct();
+await getProducts(page.value, perPage.value);
+
+interface NavigationItem {
+    label: string;
+    route: string;
+    icon: Component | FunctionalComponent | VNode;
+    isActive?: boolean;
+    children?: NavigationItem[];
+    visible?: boolean;
+    external?: boolean;
+}
+
+const contactChildren = computed(() => {
+    return [
+        {
+            label: 'Infiswap',
+            route: '/dashboard/admin/contacts/infiswap',
+            icon: InboxIcon,
+        },
+        ...products.value.map(p => ({
+            label: p.name,
+            route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
+            icon: InboxIcon,
+        })),
+    ];
+});
+
+const nurseNavigationItems: NavigationItem[] = [
+    {
+        label: 'Informations',
+        route: '/dashboard',
+        icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Remplacement rapide',
+        route: '/dashboard/replacements/immediate',
+        icon: QuickReplacementIcon,
+    },
+    {
+        label: 'Demander un(e) remplaçant(e)',
+        route: '/dashboard/replacements/create',
+        icon: ArrowPathIcon,
+    },
+    {
+        label: 'Mes remplacements',
+        route: '/dashboard/replacements/me',
+        icon: ListBulletIcon,
+    },
+    {
+        label: 'Chercher un remplacement',
+        route: '/dashboard/replacements',
+        icon: DocumentMagnifyingGlassIcon,
+    },
+    {
+        label: 'Mes réponses reçues',
+        route: '/dashboard/replacements/responses',
+        icon: UsersIcon,
+    },
+    {
+        label: 'Missions',
+        route: '/dashboard/missions',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Binômes',
+        route: '/dashboard/partners',
+        icon: UserGroupIcon,
+        children: [
+            {
+                label: 'Rechercher',
+                route: '/dashboard/partners',
+                icon: MagnifyingGlassIcon,
+            },
+            {
+                label: 'Demander',
+                route: '/dashboard/partners/create',
+                icon: PlusIcon,
+            },
+            {
+                label: 'Réponses',
+                route: '/dashboard/partners/responses',
+                icon: ChatBubbleLeftEllipsisIcon,
+            },
+        ],
+    },
+    {
+        label: 'Mon groupement',
+        route: '/dashboard/group',
+        icon: UserGroupIcon,
+    },
+    {
+        label: 'Paramètres',
+        route: '/dashboard/settings',
+        icon: Cog8ToothIcon,
+    },
+];
+
+const adminNavigationItems: NavigationItem[] = [
+    { label: 'Tableau de bord', route: '/dashboard', icon: SquaresPlusIcon, visible: !isManager.value },
+
+    { label: 'Suivi inscriptions', route: '/dashboard/admin/registrations', icon: ChartBarIcon, visible: true },
+
+    { label: 'Remplacements', route: '/dashboard/admin/replacements', icon: ArrowPathIcon, visible: true },
+
+    { label: 'Intérêt pour remplacement', route: '/dashboard/admin/replacements/interest', icon: ListBulletIcon, visible: true },
+
+    { label: 'Binômes', route: '/dashboard/admin/partners', icon: UsersIcon, visible: true },
+
+    { label: 'Utilisateurs', route: '/dashboard/admin/users', icon: UserGroupIcon, visible: true },
+
+    { label: 'Accueil', route: '/dashboard/admin/home-management', icon: WrenchScrewdriverIcon, visible: true },
+
+    { label: 'CRM', route: '/dashboard/admin/users/crm', icon: UsersIcon, visible: true },
+
+    { label: 'Type de soins', route: '/dashboard/admin/care-types', icon: ShieldCheckIcon, visible: true },
+
+    {
+        label: 'Contacts',
+        route: '/dashboard/admin/contacts/infiswap',
+        icon: InboxIcon,
+        visible: true,
+        children: contactChildren.value,
+    },
+
+    { label: 'Contrats NURSTECH', route: '/dashboard/admin/contracts/nurstech', icon: DocumentCurrencyEuroIcon, visible: isSuperAdmin.value || isSaleRepresentative.value },
+
+    { label: 'Tutoriels', route: '/dashboard/admin/tutorials', icon: PlayCircleIcon, visible: true },
+
+    { label: 'Groupement', route: '/dashboard/admin/groups', icon: UserGroupIcon, visible: true },
+
+    { label: 'Produits', route: '/dashboard/admin/products', icon: ShoppingBagIcon, visible: true },
+
+    { label: 'Suivi des liens', route: '/dashboard/admin/stats', icon: LinkIcon, visible: true },
+];
+
+const institutionNavigationItems: NavigationItem[] = [
+    {
+        label: 'Tableau de bord',
+        route: '/dashboard/institution',
+        icon: SquaresPlusIcon,
+    },
+    {
+        label: 'Services',
+        route: '/dashboard/institution/services',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Missions',
+        route: '/dashboard/institution/missions',
+        icon: BriefcaseIcon,
+    },
+    {
+        label: 'Factures',
+        route: '/dashboard/institution/invoices',
+        icon: DocumentTextIcon,
+        visible: true,
+    },
+    {
+        label: 'Paramètres',
+        route: '/dashboard/settings',
+        icon: Cog8ToothIcon,
+    },
+];
+
+const role = computed(() => {
+    if (isSuperAdmin.value) return 'super_admin';
+    if (isAdmin.value) return 'admin';
+    if (isDeveloper.value) return 'developer';
+    if (isManager.value) return 'manager';
+    if (isCommunityManager.value) return 'community_manager';
+    if (isSaleRepresentative.value) return 'sale_representative';
+    if (isCollaborator.value) return 'collaborator';
+    if (isMedical.value) return 'medical';
+    // if (isInstitution.value) return 'institution';
+    return 'nurse';
+});
+
+const navigationItems = computed(() => {
+    const items = adminNavigationItems.filter(i => i.visible);
+
+    switch (role.value) {
+        case 'super_admin':
+        case 'admin':
+            return adminNavigationItems.filter(i => i.visible);
+        case 'institution':
+            return institutionNavigationItems;
+            return items;
+
+        case 'developer':
+            return items.filter(i =>
+                !i.route?.includes('/contracts/nurstech'),
+            );
+
+        case 'manager':
+            return items.filter(i =>
+                !i.route.includes('/users/crm')
+                && !i.route.includes('/care-types'),
+            );
+
+        case 'community_manager':
+            return items.filter(i =>
+                i.route === '/dashboard'
+                || i.route.includes('/registrations')
+                || i.route.includes('/replacements')
+                || i.route.includes('/replacements/interest')
+                || i.route.includes('/users')
+                || i.route.includes('/users/crm')
+                || i.route.includes('/home-management'),
+            );
+
+        case 'sale_representative':
+            return items.filter(i =>
+                i.route.includes('/users/crm')
+                || i.route.includes('/products')
+                || i.route.includes('/contracts/nurstech'),
+            );
+
+        case 'collaborator':
+        case 'medical':
+        default:
+            return nurseNavigationItems;
+    }
+});
+
+const route = useRoute();
+const isActiveRoute = (routePath: string) => route.path === routePath;
+</script>

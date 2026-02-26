@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { CountryCode } from '~/lib/types';
+import type { CountryCode } from '../../app/lib/types';
 
 type Entry = {
     postalCode: string;

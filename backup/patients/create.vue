@@ -5,7 +5,7 @@
                 <div class="space-y-8 md:space-y-6">
                     <div class="flex flex-col gap-4 md:flex-row">
                         <div class="w-full">
-                            <h3 class="p-2 bg-primary text-white rounded-t text-center">
+                            <h3 class="p-2 bg-primary text-white rounded-t-lg text-center">
                                 Date de début d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="w-full">
-                            <h3 class="p-2 bg-primary text-white rounded-t text-center">
+                            <h3 class="p-2 bg-primary text-white rounded-t-lg text-center">
                                 Date de fin d'intervention
                             </h3>
                             <div class="bg-gray-100 p-4">
@@ -361,7 +361,7 @@
                                                 class="w-full bg-white shadow rounded-full text-nowrap border border-none"
                                                 position="right"
                                             >
-                                                <SelectValue class="truncate w-[200rem]">
+                                                <SelectValue class="truncate w-800">
                                                     <template v-if="getSelectedCareTypesText(timeSlot.careTypeId)">
                                                         {{ getSelectedCareTypesText(timeSlot.careTypeId) }}
                                                     </template>

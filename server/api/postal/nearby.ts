@@ -1,5 +1,5 @@
-import type { CountryCode } from '~/lib/types';
-import { findNearbyCodes } from '~/server/utils/location';
+import type { CountryCode } from '../../../app/lib/types';
+import { findNearbyCodes } from '../../utils/location';
 
 export default defineEventHandler((event) => {
     const query = getQuery(event);
