@@ -3,7 +3,7 @@ import { type BulletLegendItemInterface, CurveType, Area, Axis, Line } from '@un
 import { VisArea, VisAxis, VisLine, VisXYContainer } from '@unovis/vue';
 import { useMounted } from '@vueuse/core';
 import { useId } from 'reka-ui';
-import { type Component, computed, ref } from 'vue';
+import { type Component, computed, ref, watch } from 'vue';
 import type { BaseChartProps } from '.';
 import { cn } from '@/lib/utils';
 import { ChartCrosshair, ChartLegend, defaultColors } from '@/components/ui/chart';
@@ -23,10 +23,22 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
    * @default true
    */
     /**
-   * Customized legends
-   */
+     * Customized legends
+     */
     legendLabels?: Record<string, string>;
     showGradiant?: boolean;
+    /**
+     * Number of ticks to display on X axis. If not provided, will show all data points.
+     */
+    numTicksX?: number;
+    /**
+     * Number of ticks to display on Y axis
+     */
+    numTicksY?: number;
+    /**
+     * Show all X axis ticks
+     */
+    showAllXTicks?: boolean;
 }>(), {
     curveType: CurveType.MonotoneX,
     filterOpacity: 0.2,
@@ -37,6 +49,7 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
     showLegend: true,
     showGridLine: true,
     showGradiant: true,
+    showAllXTicks: false,
 });
 
 const emits = defineEmits<{
@@ -67,6 +80,31 @@ watch(legendItems, (newItems) => {
 
 const isMounted = useMounted();
 
+// Compute x-axis ticks based on showAllXTicks prop
+const xTicks = computed(() => {
+    if (!props.data?.length || !Array.isArray(props.data)) return [];
+    if (props.showAllXTicks) {
+        return Array.from({ length: props.data.length }, (_, i) => i);
+    }
+    const numTicks = props.numTicksX ?? Math.min(props.data.length, 10);
+    const step = Math.max(1, Math.floor(props.data.length / numTicks));
+    return Array.from({ length: Math.ceil(props.data.length / step) }, (_, i) => i * step);
+});
+
+// Format x-axis tick labels
+const xTickFormat = computed(() => {
+    return (tick: number) => {
+        if (props.xFormatter) {
+            return props.xFormatter(tick, tick, xTicks.value);
+        }
+        const dataItem = props.data[tick];
+        if (dataItem && index.value) {
+            return String(dataItem[index.value] ?? tick);
+        }
+        return String(tick);
+    };
+});
+
 function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
     emits('legendItemClick', d, i);
 }
@@ -83,7 +121,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
 
         <VisXYContainer
             :style="{ height: isMounted ? '100%' : 'auto' }"
-            :margin="{ left: 20, right: 20 }"
+            :margin="{ left: 20, right: 20, bottom: 40 }"
             :data="data"
         >
             <svg
@@ -168,27 +206,52 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
             <VisAxis
                 v-if="showXAxis"
                 type="x"
-                :tick-format="xFormatter ?? ((v: number) => data[v]?.[index])"
+                :ticks="xTicks"
+                :tick-format="xTickFormat"
                 :grid-line="false"
-                :tick-line="false"
-                tick-text-color="hsl(var(--foreground))"
+                :tick-line="true"
+                :domain-line="true"
+                :tick-text-font-size="12"
+                tick-text-color="var(--axis-text-color, #333)"
+                tick-margin="10"
             />
             <VisAxis
                 v-if="showYAxis"
                 type="y"
-                :tick-line="false"
-                :tick-format="yFormatter"
-                :domain-line="false"
+                :tick-line="true"
+                :tick-format="yFormatter ?? ((v: number) => v.toString())"
+                :domain-line="true"
                 :grid-line="showGridLine"
+                :num-ticks="numTicksY ?? 6"
+                :tick-text-font-size="12"
                 :attributes="{
                     [Axis.selectors.grid]: {
                         class: 'text-black/30',
                     },
                 }"
-                tick-text-color="hsl(var(--foreground))"
+                tick-text-color="var(--axis-text-color, #333)"
             />
 
             <slot />
         </VisXYContainer>
     </div>
 </template>
+
+<style scoped>
+:deep(.unovis-axis text) {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  fill: var(--axis-text-color, #333);
+  opacity: 1 !important;
+}
+
+:deep(.unovis-axis line) {
+  stroke: var(--axis-line-color, rgba(0, 0, 0, 0.2));
+  stroke-width: 1px;
+}
+
+:deep(.unovis-axis .domain) {
+  stroke: var(--axis-line-color, rgba(0, 0, 0, 0.2));
+  stroke-width: 1px;
+}
+</style>

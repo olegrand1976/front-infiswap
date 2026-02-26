@@ -65,7 +65,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
         />
 
         <VisXYContainer
-            :margin="{ left: 20, right: 20 }"
+            :margin="{ top: 0, bottom: 0, left: 0, right: 0 }"
             :data="data"
             :style="{ height: isMounted ? '90%' : 'auto' }"
         >
@@ -99,25 +99,49 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
                 type="x"
                 :tick-format="xFormatter ?? ((v: number) => data[v]?.[index])"
                 :grid-line="false"
-                :tick-line="false"
-                tick-text-color="hsl(var(--foreground))"
+                :tick-line="true"
+                :domain-line="true"
+                :tick-text-font-size="12"
+                tick-text-color="var(--axis-text-color, #333)"
+                tick-margin="10"
             />
             <VisAxis
                 v-if="showYAxis"
                 type="y"
-                :tick-line="false"
-                :tick-format="yFormatter"
-                :domain-line="false"
+                :tick-line="true"
+                :tick-format="yFormatter ?? ((v: number) => v.toString())"
+                :domain-line="true"
                 :grid-line="showGridLine"
+                :num-ticks="6"
+                :tick-text-font-size="12"
                 :attributes="{
                     [Axis.selectors.grid]: {
                         class: 'text-black/30',
                     },
                 }"
-                tick-text-color="hsl(var(--foreground))"
+                tick-text-color="var(--axis-text-color, #333)"
             />
 
             <slot />
         </VisXYContainer>
     </div>
 </template>
+
+<style scoped>
+:deep(.unovis-axis text) {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  fill: var(--axis-text-color, #333);
+  opacity: 1 !important;
+}
+
+:deep(.unovis-axis line) {
+  stroke: var(--axis-line-color, rgba(0, 0, 0, 0.2));
+  stroke-width: 1px;
+}
+
+:deep(.unovis-axis .domain) {
+  stroke: var(--axis-line-color, rgba(0, 0, 0, 0.2));
+  stroke-width: 1px;
+}
+</style>
