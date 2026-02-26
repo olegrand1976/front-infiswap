@@ -62,7 +62,7 @@
                             :x-formatter="xRegistrationDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-2)']"
                             :legend-labels="registrationDailyChartData.legendLabels"
                             class="w-full"
                         />
@@ -89,7 +89,7 @@
                             :x-formatter="xReplacementDayFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementDailyChartData.legendLabels"
                             class="w-full"
                         />
@@ -116,7 +116,7 @@
                             :x-formatter="xRegistrationMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-2)']"
                             :legend-labels="registrationMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -143,7 +143,7 @@
                             :x-formatter="xReplacementMonthFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementMonthlyChartData.legendLabels"
                             class="w-full"
                         />
@@ -170,7 +170,7 @@
                             :x-formatter="xRegistrationWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-2)']"
                             :legend-labels="registrationChartData.legendLabels"
                             class="w-full"
                         />
@@ -197,7 +197,7 @@
                             :x-formatter="xReplacementWeekYearFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--primary))', 'hsl(var(--success))']"
+                            :colors="['var(--primary)', 'var(--success)']"
                             :legend-labels="replacementChartData.legendLabels"
                             class="w-full"
                         />
@@ -227,7 +227,7 @@
                             :x-formatter="xDeletedUsersFormatter"
                             :y-formatter="yFormatter"
                             :show-all-x-ticks="true"
-                            :colors="['hsl(var(--tertiary))']"
+                            :colors="['var(--chart-2)']"
                             :legend-labels="deletedUserChartData.legendLabels"
                             class="w-full"
                         />
@@ -338,11 +338,6 @@
                             :y-formatter="yFormatter"
                             :rounded-corners="4"
                             :colors="chartAreaColors"
-                            :show-legend="true"
-                            :show-tooltip="true"
-                            :show-x-axis="true"
-                            :show-y-axis="true"
-                            :show-grid-line="true"
                             class="pb-8 w-full"
                             :legend-labels="{ inscrits: 'Inscrits' }"
                         />
@@ -419,9 +414,9 @@ const chartLineColors = computed(() => {
 });
 
 const chartAreaColors = computed(() => {
-    return [selectedCountryForZipCode.value === 'be' ? 'var(--chart-1)' : 'var(--chart-2)'];
+    return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
-    
+
 const registrationDailyChartData = computed(() => {
     return mapDailyStatistics(reports.value?.registration_statistics?.week, '', ['Total']);
 });
