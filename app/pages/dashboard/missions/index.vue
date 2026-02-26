@@ -388,7 +388,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        <Badge class="bg-success text-white">
+                                        <Badge class="bg-success text-white !whitespace-nowrap !w-auto !min-w-fit px-2 py-1 text-xs">
                                             En cours
                                         </Badge>
                                     </div>
@@ -479,7 +479,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        <Badge class="bg-gray-400 text-white">
+                                        <Badge class="bg-success text-white !whitespace-nowrap !w-auto !min-w-fit px-2 py-1 text-xs">
                                             Terminé
                                         </Badge>
                                     </div>
