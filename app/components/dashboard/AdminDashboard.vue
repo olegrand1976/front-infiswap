@@ -280,6 +280,7 @@
                             index="name"
                             :data="userByProvince"
                             :categories="['inscrits']"
+                            :x-formatter="xProvinceFormatter"
                             :y-formatter="yFormatter"
                             :rounded-corners="4"
                             :colors="chartLineColors"
@@ -334,7 +335,9 @@
                         <AreaChart
                             index="name"
                             :data="userByZipCode"
+                            :show-all-x-ticks="true"
                             :categories="['inscrits']"
+                            :x-formatter="xZipCodeFormatter"
                             :y-formatter="yFormatter"
                             :rounded-corners="4"
                             :colors="chartAreaColors"
@@ -452,6 +455,8 @@ const xDeletedUsersFormatter = computed(() => createXFormatter(computed(() => de
 const xReplacementDayFormatter = computed(() => createXFormatter(computed(() => replacementDailyChartData.value.data)));
 const xReplacementMonthFormatter = computed(() => createXFormatter(computed(() => replacementMonthlyChartData.value.data)));
 const xReplacementWeekYearFormatter = computed(() => createXFormatter(computed(() => replacementChartData.value.data)));
+const xZipCodeFormatter = computed(() => createXFormatter(computed(() => userByZipCode.value)));
+const xProvinceFormatter = computed(() => createXFormatter(computed(() => userByProvince.value)));
 
 const adminReports = computed(() => {
     if (!isAdmin.value || !reports.value) return [];
