@@ -338,6 +338,11 @@
                             :y-formatter="yFormatter"
                             :rounded-corners="4"
                             :colors="chartAreaColors"
+                            :show-legend="true"
+                            :show-tooltip="true"
+                            :show-x-axis="true"
+                            :show-y-axis="true"
+                            :show-grid-line="true"
                             class="pb-8 w-full"
                             :legend-labels="{ inscrits: 'Inscrits' }"
                         />
@@ -414,7 +419,7 @@ const chartLineColors = computed(() => {
 });
 
 const chartAreaColors = computed(() => {
-    return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
+    return [selectedCountryForZipCode.value === 'be' ? 'var(--chart-1)' : 'var(--chart-2)'];
 });
     
 const registrationDailyChartData = computed(() => {
