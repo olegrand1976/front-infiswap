@@ -5,7 +5,7 @@
                 to="/login"
             />
             <div class="w-1/2 bg-tertiary/30 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-0 overflow-hidden flex flex-col">
-                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto text-center mt-4 sm:mt-6 lg:mt-8 xl:mt-10 text-center">
+                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-6 lg:mt-8 xl:mt-10 text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -29,11 +29,11 @@
                 <div class="hidden lg:block mb-2 lg:mb-4 xl:mb-6">
                     <LayoutsAppImage
                         src="logo.png"
-                        class="h-14 lg:h-28"
+                        class="h-14 lg:h-20"
                     />
                 </div>
 
-                <p class="text-center text-4xl text-primary font-bold -mt-2 sm:-mt-1 lg:mt-0 xl:mt-2">
+                <p class="text-center text-3xl 2xl:text-4xl text-primary font-bold -mt-2 sm:-mt-1 lg:mt-0 xl:-mt-4">
                     Inscription
                 </p>
 
@@ -43,7 +43,7 @@
                         @submit.prevent="submit"
                     >
                         <div>
-                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
+                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
                                 Quel type de compte souhaitez-vous choisir ?
                             </h2>
                             <div class="px-8 mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
@@ -75,7 +75,7 @@
                                                     v-if="formData.accountType === account.value"
                                                     class="absolute -top-2 -right-2 bg-primary rounded-full p-1 transition-all duration-300"
                                                 >
-                                                    <CheckIcon class="w-5 h-5 text-white" />
+                                                    <CheckIcon class="size-3 text-white" />
                                                 </div>
                                             </div>
                                             <span
