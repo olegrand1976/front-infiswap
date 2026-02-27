@@ -55,18 +55,8 @@
                     <LayoutsLogo class="w-36 h-11" />
                 </div>
                 <div class="flex flex-row items-center space-x-4">
-                    <!-- <Button
-                        v-if="!isLoggedIn"
-                        class="hidden sm:block font-semibold md:text-[0.7em] lg:text-xs"
-                        href="/login"
-                    >
-                        Connexion
-                    </Button> -->
                     <div>
                         <LayoutsDropdownLang />
-                    </div>
-                    <div class="relative my-auto">
-                        <LayoutsSheetMenu />
                     </div>
                 </div>
             </div>

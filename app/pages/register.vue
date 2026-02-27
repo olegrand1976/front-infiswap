@@ -591,7 +591,7 @@
             <LayoutsHeaderMobile />
             <BackButton to="/login" />
 
-            <div class="flex-grow flex flex-col items-center px-6 py-10 overflow-y-auto">
+            <div class="flex-grow flex flex-col items-center px-6 py-10 pb-20 overflow-y-auto">
                 <h1 class="mt-8 mb-8 text-sm text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>

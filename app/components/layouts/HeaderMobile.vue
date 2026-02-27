@@ -10,9 +10,6 @@
             <div>
                 <LayoutsDropdownLang />
             </div>
-            <div>
-                <LayoutsSheetMenu />
-            </div>
         </div>
         <div class="mt-5 z-20 relative flex justify-center">
             <LayoutsLogo class="w-60" />

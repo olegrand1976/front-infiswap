@@ -17,12 +17,13 @@
                     <LayoutsLogo class="h-20 lg:h-24" />
                 </div>
             </div>
-            <main class="flex-1 md:my-14 lg:mt-16">
+            <main class="flex-1 md:my-14 lg:mt-16 pb-16 lg:pb-0">
                 <slot />
             </main>
             <footer>
                 <LayoutsFooter />
             </footer>
+            <LayoutsBottomTabsMenu />
         </div>
     </div>
 </template>

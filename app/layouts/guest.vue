@@ -13,11 +13,12 @@
                 </div>
             </div> -->
         </header>
-        <main class="flex-1">
+        <main class="flex-1 pb-16 lg:pb-0">
             <slot />
         </main>
         <footer>
             <LayoutsFooter />
         </footer>
+        <LayoutsBottomTabsMenu />
     </div>
 </template>
