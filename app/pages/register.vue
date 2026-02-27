@@ -459,11 +459,33 @@
                                 </div>
                             </div>
 
+                            <div class="col-span-2 sm:col-span-4 mt-4 relative z-50">
+                                <label class="flex items-start cursor-pointer">
+                                    <Checkbox
+                                        :checked="charteAccepted"
+                                        class="mt-1"
+                                        @update:checked="charteAccepted = $event"
+                                    />
+                                    <span class="text-sm ml-2 font-medium">
+                                        J'accepte la
+                                        <NuxtLink
+                                            to="/legal-chart"
+                                            target="_blank"
+                                            class="text-primary underline font-semibold hover:text-primary/80"
+                                        >
+                                            charte de bonne conduite
+                                        </NuxtLink>
+                                        <span class="text-red-500">*</span>
+                                    </span>
+                                </label>
+                            </div>
+
                             <div class="col-span-2 sm:col-span-4 mt-8 flex justify-center items-center">
                                 <Button
                                     class="w-[70%] text-base font-bold"
                                     type="submit"
                                     :in-progress="inProgress"
+                                    :disabled="!charteAccepted"
                                 >
                                     S'inscrire
                                 </Button>
