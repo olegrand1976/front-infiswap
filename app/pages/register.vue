@@ -5,7 +5,8 @@
                 to="/login"
             />
             <div class="w-1/2 bg-tertiary/30 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-0 overflow-hidden flex flex-col">
-                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-6 lg:mt-8 xl:mt-10 text-center">
+                <div class="flex-1 lg:hidden" />
+                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-8 xl:mt-10 text-center px-6 lg:px-0">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -16,7 +17,7 @@
                         class="relative z-20 flex justify-center mx-auto"
                     />
                 </div>
-                <div class="absolute lg:top-1/3 lg:left-20 md:top-32 sm:top-64 sm:left-12 ">
+                <div class="absolute sm:top-1/2 sm:-translate-y-1/2 lg:top-1/3 lg:translate-y-0 lg:left-20 sm:left-12">
                     <LayoutsAppImage
                         src="/icons/plus.png"
                         class="xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-16 md:h-16 sm:w-11 sm:h-11"

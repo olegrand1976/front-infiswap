@@ -80,6 +80,13 @@ export default defineNuxtConfig({
         '/': { prerender: false },
     },
 
+    devServer: {
+        host: '0.0.0.0',
+        port: 3000,
+    },
+
+    compatibilityDate: '2025-01-10',
+
     nitro: {
         sourceMap: false,
         prerender: {
@@ -94,8 +101,6 @@ export default defineNuxtConfig({
             ],
         },
     },
-
-    compatibilityDate: '2025-01-10',
 
     vite: {
         plugins: [
@@ -124,11 +129,6 @@ export default defineNuxtConfig({
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
-    },
-
-    devServer: {
-        host: '0.0.0.0',
-        port: 3000,
     },
     shadcn: {
         /**
