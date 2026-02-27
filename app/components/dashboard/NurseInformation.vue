@@ -330,7 +330,7 @@
                                 :data="formattedData"
                                 index="month"
                                 :categories="['annonces']"
-                                :colors="['hsl(var(--primary))']"
+                                :colors="['var(--primary)']"
                                 :y-formatter="(tick) => `${tick}`"
                             />
                         </ClientOnly>

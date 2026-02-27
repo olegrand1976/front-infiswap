@@ -34,7 +34,7 @@ export default defineNuxtConfig({
                 {
                     name: 'description',
                     content:
-              'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
+                        'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
                 },
                 {
                     name: 'keywords',
@@ -72,36 +72,28 @@ export default defineNuxtConfig({
         },
     },
 
-    // Autres optimisations de build (minification, etc.)
     build: {
-        optimization: {
-            minimize: true,
-            terserOptions: {
-                compress: {
-                    drop_console: true,
-                    drop_debugger: true,
-                },
-            },
-        },
-        // sourcemap: process.env.NODE_ENV !== 'production', // Optionnel
+        transpile: [],
     },
 
     routeRules: {
         '/': { prerender: true },
     },
 
-    compatibilityDate: '2025-01-10',
-
     nitro: {
         prerender: {
+            concurrency: 1,
+            interval: 100,
+            failOnError: false,
             routes: [
                 '/',
                 '/about',
                 '/contact',
             ],
-            failOnError: false,
         },
     },
+
+    compatibilityDate: '2025-01-10',
 
     vite: {
         plugins: [
@@ -131,7 +123,7 @@ export default defineNuxtConfig({
         devtools: process.env.NODE_ENV !== 'production',
     },
 
-    server: {
+    devServer: {
         host: '0.0.0.0',
         port: 3000,
     },
