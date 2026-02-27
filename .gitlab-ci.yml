@@ -13,6 +13,7 @@ build:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
+    DOCKER_API_VERSION: "1.43"
     NODE_ENV: production
   cache:
     key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"

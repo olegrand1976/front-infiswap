@@ -81,9 +81,9 @@ export default defineNuxtConfig({
     },
 
     nitro: {
-        sourcemap: false,
+        sourceMap: false,
         prerender: {
-            crawlLinks: false, // INDISPENSABLE : évite d'explorer tout le site
+            crawlLinks: false,
             concurrency: 1,
             interval: 100,
             failOnError: false,
