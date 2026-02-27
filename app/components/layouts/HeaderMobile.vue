@@ -7,7 +7,7 @@
             />
         </div>
         <div
-            :class="cn('flex z-20 pt-2 relative justify-between px-4', { 'bg-white': isHomePage })"
+            class="flex z-20 pt-2 relative justify-between px-4"
         >
             <a
                 v-show="isHomePage"
@@ -15,11 +15,11 @@
                 class="flex items-center"
             >
                 <div class="flex items-center gap-1">
-                    <span class="text-xs">Contactez-nous au :</span>
+                    <span class="text-xs text-foreground/70">Contactez-nous au :</span>
                     <span class="text-sm font-bold text-primary">(+32) 478 02 33 77</span>
                 </div>
             </a>
-            <div class="ml-auto">
+            <div class="hidden ml-auto">
                 <LayoutsDropdownLang />
             </div>
         </div>
