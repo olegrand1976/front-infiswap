@@ -70,7 +70,7 @@
         </section>
 
         <div
-            class="fixed right-0 z-30 w-48 bottom-16 sm:bottom-0 sm:top-32 sm:w-64"
+            class="hidden lg:block fixed right-0 z-30 w-48 lg:top-32 lg:w-64"
         >
             <a
                 href="tel:+32478023377"
@@ -90,18 +90,28 @@
                 </div>
             </a>
         </div>
+
+        <!-- Bouton flottant Inscription - Mobile uniquement -->
+        <NuxtLink
+            v-if="!isLoggedIn"
+            to="/register"
+            class="lg:hidden fixed bottom-20 right-0 z-40 bg-primary text-white rounded-l-full shadow-lg px-4 py-3 flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+        >
+            <UserPlusIcon class="w-5 h-5" />
+            <span class="text-sm font-semibold">Inscription</span>
+        </NuxtLink>
     </div>
 </template>
 
 <script setup lang="ts">
-import { PlusCircleIcon, SparklesIcon, PhoneIcon } from '@heroicons/vue/24/solid';
+import { PlusCircleIcon, SparklesIcon, PhoneIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
 import type { Replacement } from '~/lib/types';
 import { Button } from '@/components/ui/button';
 
-const { isAdmin } = useAuth();
+const { isAdmin, isLoggedIn } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();
 const replacements = ref<Replacement[]>([]);
 
