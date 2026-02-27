@@ -94,7 +94,7 @@
                 </Button>
             </form>
 
-            <section class="grid lg:grid-cols-4 grid-cols-2 container sm:w-[70%] lg:w-[55%] gap-4 my-12">
+            <section class="grid grid-cols-1 lg:grid-cols-4 container sm:w-[70%] lg:w-[55%] gap-4 my-12">
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <EnvelopeIcon class="w-6 h-6" />
