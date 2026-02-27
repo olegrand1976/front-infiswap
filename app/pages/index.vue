@@ -74,10 +74,7 @@
         >
             <a
                 href="tel:+32478023377"
-                :class="[
-                    'block rounded-l-md text-center shadow-lg bg-gray-50 p-2 transition-transform duration-500 ease-in-out',
-                    showContact ? 'translate-x-0' : 'translate-x-[105%]',
-                ]"
+                class="block rounded-l-md text-center shadow-lg bg-gray-50 p-2 transition-transform duration-500 ease-in-out"
             >
                 <h5 class="mb-2 text-sm font-bold">
                     Contactez-nous au
@@ -114,12 +111,6 @@ import { Button } from '@/components/ui/button';
 const { isAdmin, isLoggedIn } = useAuth();
 const { loading, getAccordingReplacements } = useReplacements();
 const replacements = ref<Replacement[]>([]);
-
-const showContact = ref(false);
-
-setTimeout(() => {
-    showContact.value = true;
-}, 100);
 
 const data = await getAccordingReplacements();
 replacements.value = (data ?? []) as Replacement[];

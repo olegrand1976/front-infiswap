@@ -7,15 +7,14 @@
             />
         </div>
         <div
-            class="flex z-20 pt-2 relative justify-between px-4"
-            :class="{ 'bg-white': isHomePage }"
+            :class="cn('flex z-20 pt-2 relative justify-between px-4', { 'bg-white': isHomePage })"
         >
             <a
-                v-if="isHomePage"
+                v-show="isHomePage"
                 href="tel:+32478023377"
-                class="flex items-center gap-2"
+                class="flex items-center"
             >
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1">
                     <span class="text-xs">Contactez-nous au :</span>
                     <span class="text-sm font-bold text-primary">(+32) 478 02 33 77</span>
                 </div>
@@ -33,6 +32,7 @@
 <script lang="ts" setup>
 import { PhoneIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
+import { cn } from '~/lib/utils';
 
 const route = useRoute();
 const isHomePage = computed(() => route.path === '/');
