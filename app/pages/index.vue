@@ -70,7 +70,7 @@
         </section>
 
         <div
-            class="hidden lg:block fixed right-0 z-30 w-48 lg:top-32 lg:w-64"
+            class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64 lg:translate-x-full"
         >
             <a
                 href="tel:+32478023377"
