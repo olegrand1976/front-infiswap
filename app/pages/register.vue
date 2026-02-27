@@ -3,10 +3,9 @@
         <div class="hidden sm:flex flex-row h-screen overflow-hidden">
             <BackButton
                 to="/login"
-                class="text-white"
             />
-            <div class="w-1/2 bg-tertiary/50 pt-14 pb-0 overflow-hidden flex flex-col">
-                <h1 class="mb-6 text-lg max-w-xl mx-auto text-center mt-8 text-center">
+            <div class="w-1/2 bg-tertiary/30 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-0 overflow-hidden flex flex-col">
+                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto text-center mt-4 sm:mt-6 lg:mt-8 xl:mt-10 text-center">
                     <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
                     <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                 </h1>
@@ -17,25 +16,37 @@
                         class="relative z-20 flex justify-center mx-auto"
                     />
                 </div>
+                <div class="absolute lg:top-1/3 lg:left-20 md:top-32 sm:top-64 sm:left-12 ">
+                    <LayoutsAppImage
+                        src="/icons/plus.png"
+                        class="xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-16 md:h-16 sm:w-11 sm:h-11"
+                    />
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-20 bg-primary" />
             </div>
 
-            <div class="w-1/2 bg-white overflow-y-auto overflow-x-hidden flex flex-col items-center relative py-14">
-                <div class="hidden lg:block mb-8">
+            <div class="w-1/2 bg-white overflow-y-auto overflow-x-hidden flex flex-col items-center relative py-8 sm:py-10 lg:py-12 xl:py-14">
+                <div class="hidden lg:block mb-2 lg:mb-4 xl:mb-6">
                     <LayoutsAppImage
                         src="logo.png"
                         class="h-14 lg:h-28"
                     />
                 </div>
 
-                <div class="w-full max-w-5xl px-8 font-light">
+                <p class="text-center text-4xl text-primary font-bold -mt-2 sm:-mt-1 lg:mt-0 xl:mt-2">
+                    Inscription
+                </p>
+
+                <div class="w-full max-w-5xl px-8 font-light mt-4 sm:mt-6 lg:mt-8 xl:mt-10">
                     <form
-                        class="grid gap-6"
+                        class="grid gap-4 sm:gap-5 lg:gap-6 xl:gap-8"
                         @submit.prevent="submit"
                     >
                         <div>
-                            <h2 class="mt-1 text-lg text-center max-w-xl mx-auto text-gray-500 mb-4">
-                                Quel type de compte souhaitez-vous choisir ?                            </h2>
-                            <div class="px-8 mb-4">
+                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
+                                Quel type de compte souhaitez-vous choisir ?
+                            </h2>
+                            <div class="px-8 mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
                                 <div class="grid grid-cols-2 gap-6">
                                     <div
                                         v-for="account in accountOptions"
@@ -80,7 +91,7 @@
                                 </div>
                                 <div
                                     v-if="formData.accountType == 'institution'"
-                                    class="mt-4 relative w-full items-center"
+                                    class="mt-3 sm:mt-4 lg:mt-5 relative w-full items-center"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         Nom de l'institution <span class="text-red-500">*</span>
@@ -96,7 +107,7 @@
                         </div>
 
                         <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 block">
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
                                 Informations personnelles
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -187,7 +198,7 @@
                         </div>
 
                         <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 block">
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
                                 Informations de connexion
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -222,7 +233,7 @@
                         </div>
 
                         <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 block">
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
                                 Adresses
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -322,7 +333,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 block">
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
                                 Informations professionnelles
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -442,10 +453,7 @@
                                         </Select>
                                     </div>
 
-                                    <div
-                                        class="col-span-2 lg:col-span-2"
-                                        :class="formData.accountType == 'institution' ? 'mt-6' : ''"
-                                    >
+                                    <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             {{ identifierLabel }} <span class="text-red-500">*</span>
                                         </label>
@@ -462,10 +470,10 @@
 
                         <div
                             v-if="formData.accountType != 'institution'"
-                            class="mt-4"
+                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
-                        <label class="text-md font-medium text-gray-500 mb-1 block">
-                            Catégorie professionnel
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                                Catégorie professionnel
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <Select v-model="formData.professionalCategory">
