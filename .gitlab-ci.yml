@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: docker:24.0.5
+  image: node:20-alpine
   services:
     - name: docker:24-dind
       alias: docker
@@ -20,7 +20,7 @@ build:
       - node_modules/
       - .npm/
   before_script:
-    - apk add --no-cache nodejs npm bash python3 build-base git curl
+    - apk add --no-cache docker-cli bash python3 build-base git curl
     - |
       cat > .env << EOF
       NODE_ENV=${NODE_ENV}
@@ -29,36 +29,24 @@ build:
       PORT=${PORT}
       OPENAI_API_KEY=${OPENAI_API_KEY}
       EOF
-    - cat .env # Afficher pour vérification (attention aux secrets)
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ]; then echo "DOCKERHUB_USERNAME is not set"; exit 1; fi
     - if [ -z "$DOCKERHUB_PASSWORD" ]; then echo "DOCKERHUB_PASSWORD is not set"; exit 1; fi
     - rm -rf node_modules
-    - if [ ! -f package-lock.json ]; then npm install --package-lock-only; fi
-    - npm install
-    - export NODE_OPTIONS=--max_old_space_size=8192
-    - NODE_ENV=production npm run build
-    # Copier le .env dans l'image Docker
+    # Important: Tailwind 4 a besoin des devDependencies pour builder
+    - npm install --include=dev
+    # On limite à 4GB pour la stabilité du runner
+    - export NODE_OPTIONS=--max_old_space_size=4096
+    - npm run build
+    # Créer un Dockerfile qui utilise le build déjà fait et injecte le .env
     - |
-      # Créer un Dockerfile temporaire qui inclut .env
       cat > Dockerfile.temp << 'EOF'
       FROM node:20.18.0-slim
       WORKDIR /app
-      COPY . .
-      # Ajouter le fichier .env créé pendant le CI/CD
+      COPY .output ./.output
+      COPY package.json ./package.json
+      # On rajoute le .env généré pour le runtime
       COPY .env .env
-      # Le reste du Dockerfile
-      RUN npm install && \
-        NODE_ENV=production npm run build && \
-        npm prune --production && \
-        if ! getent group www-data >/dev/null 2>&1; then \
-        groupadd -r www-data; \
-        fi && \
-        if ! id -u www-data >/dev/null 2>&1; then \
-        useradd -r -g www-data www-data; \
-        fi && \
-        chown -R www-data:www-data /app
-      USER www-data
       ENV NODE_ENV=production
       ENV PORT=3000
       EXPOSE 3000

@@ -77,11 +77,13 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { prerender: true },
+        '/': { prerender: false },
     },
 
     nitro: {
+        sourcemap: false,
         prerender: {
+            crawlLinks: false, // INDISPENSABLE : évite d'explorer tout le site
             concurrency: 1,
             interval: 100,
             failOnError: false,
@@ -103,6 +105,7 @@ export default defineNuxtConfig({
             devSourcemap: false,
         },
         build: {
+            sourcemap: false, // Désactive les sourcemaps pour réduire la RAM
             minify: 'esbuild',
         },
     },
