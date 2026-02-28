@@ -1,7 +1,7 @@
 <template>
     <div class="mb-4">
         <div
-            v-if="isAdmin"
+            v-if="isAdmin || isCommunityManager"
             class="space-y-8 mb-4"
         >
             <DashboardAdminDashboard />
@@ -20,7 +20,7 @@ import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
 
-const { isAdmin } = useAuth();
+const { isAdmin, isCommunityManager } = useAuth();
 
 useHead({ title: 'Tableau de bord' });
 
