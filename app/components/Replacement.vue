@@ -1859,8 +1859,6 @@ const selectReplacement = (replacement) => {
 };
 
 onMounted(async () => {
-    // Ouvrir le modal automatiquement et lancer la recherche en arrière-plan
-    proposalDialog.value = true;
     await fetchInitialData(page.value, perPage.value);
 
     if (props.type === 'groups') {
