@@ -280,7 +280,7 @@
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.institution.name }}
+                                    {{ user.institution?.name || '' }}
                                 </p>
                             </div>
 
@@ -1529,7 +1529,7 @@ const formatDate = (dateString) => {
 const formPersonalInfo = reactive({
     id: user.value.id,
     institution: {
-        name: user.value.institution.name,
+        name: user.value.institution?.name ?? '',
     },
     lastname: user.value.lastname,
     firstname: user.value.firstname,
@@ -1554,14 +1554,17 @@ const updateInfoUser = async () => {
     try {
         await updateUser(formPersonalInfo);
 
-        user.value.lastname = formPersonalInfo.lastname;
-        user.value.firstname = formPersonalInfo.firstname;
-        user.value.date_of_birth = formPersonalInfo.dateOfBirth;
-        user.value.email = formPersonalInfo.email;
-        user.value.identifier_number = formPersonalInfo.identifierNumber;
-        user.value.phone_number = formPersonalInfo.phoneNumber;
-        user.value.gender = formPersonalInfo.gender;
-        user.value.professional_category = formPersonalInfo.professionalCategory;
+        user.value = {
+            ...user.value,
+            lastname: formPersonalInfo.lastname,
+            firstname: formPersonalInfo.firstname,
+            date_of_birth: formPersonalInfo.dateOfBirth,
+            email: formPersonalInfo.email,
+            identifier_number: formPersonalInfo.identifierNumber,
+            phone_number: formPersonalInfo.phoneNumber,
+            gender: formPersonalInfo.gender,
+            professional_category: formPersonalInfo.professionalCategory,
+        };
 
         $toast({
             description: 'Mise à jour effectué avec succès',
@@ -1588,12 +1591,17 @@ const handleUpdateAddress = async () => {
     try {
         await updateAddressUser(formAddress).then(() => {
             addressInfoDialog.value = false;
-            user.value.profile.street_address = formAddress.streetAddress;
-            user.value.profile.city = formAddress.city;
-            user.value.profile.country = formAddress.country;
-            user.value.profile.zip_code = formAddress.zipCode;
-            user.value.profile.additional_info = formAddress.additionalInfo;
-            user.value.profile.working_at = formAddress.workingAt;
+            if (user.value.profile) {
+                user.value.profile = {
+                    ...user.value.profile,
+                    street_address: formAddress.streetAddress,
+                    city: formAddress.city,
+                    country: formAddress.country,
+                    zip_code: formAddress.zipCode,
+                    additional_info: formAddress.additionalInfo,
+                    working_at: formAddress.workingAt,
+                };
+            }
 
             $toast({
                 description: 'Mise à jour effectué avec succès',
@@ -1692,7 +1700,12 @@ const { submit } = useSubmit(
 
             const response = await updateAvatarUser(formData);
 
-            user.value.profile.profil_url = response.user.profile.profil_url;
+            if (user.value.profile) {
+                user.value.profile = {
+                    ...user.value.profile,
+                    profil_url: response.user.profile.profil_url,
+                };
+            }
 
             $toast({
                 description: 'Photo mise à jour',
@@ -1713,7 +1726,12 @@ const handleDeleteAvatar = async () => {
     try {
         await deleteAvatar(user.value.id);
 
-        user.value.profile.profil_url = null;
+        if (user.value.profile) {
+            user.value.profile = {
+                ...user.value.profile,
+                profil_url: null,
+            };
+        }
 
         $toast({
             description: 'Photo supprimée',
