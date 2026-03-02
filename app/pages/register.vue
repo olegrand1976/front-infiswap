@@ -414,7 +414,7 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Votre pays de travail
+                                            Pays de recherche
                                         </label>
                                         <Select v-model="formData.address.workingAt">
                                             <SelectTrigger
@@ -937,7 +937,7 @@
 
                         <div class="col-span-4">
                             <label class="text-sm font-medium text-gray-700">
-                                Votre pays de travail
+                                Pays de recherche
                             </label>
                             <Select v-model="formData.address.workingAt">
                                 <SelectTrigger
