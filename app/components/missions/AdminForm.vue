@@ -246,7 +246,7 @@
                     <InputIcon
                         v-model="quickServiceForm.phoneNumber"
                         rounded="md"
-                        label="Téléphone"
+                        label="Téléphone *"
                         placeholder="Optionnel"
                         :icon="PhoneIcon"
                     />
