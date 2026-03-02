@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (!user.value) return navigateTo('/login', { replace: true });
 
-    const { isAdmin, isDeveloper, isManager, isCommunityManager, isSaleRepresentative } = useAuth();
+    const { isAdmin, isDeveloper, isManager, isCommunityManager, isSaleRepresentative, isInstitution } = useAuth();
 
     const isStaff = isAdmin.value || isDeveloper?.value || isManager?.value || isCommunityManager?.value || isSaleRepresentative?.value;
 
@@ -18,6 +18,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
         let redirectTo: string | null = null;
 
         switch (true) {
+            case isInstitution.value:
+                redirectTo = '/dashboard/institution';
+                break;
+
             case isManager.value:
                 redirectTo = '/dashboard/admin/replacements';
                 break;
