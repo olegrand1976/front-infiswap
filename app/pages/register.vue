@@ -42,6 +42,7 @@
                     <form
                         class="grid gap-4 sm:gap-5 lg:gap-6 xl:gap-8"
                         @submit.prevent="submit"
+                        autocomplete="off"
                     >
                         <div>
                             <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
@@ -146,6 +147,7 @@
                                             :icon="EnvelopeIcon"
                                             size="md"
                                             placeholder="Email *"
+                                            autocomplete="off"
                                         />
                                     </div>
 
@@ -600,6 +602,7 @@
                 <form
                     class="grid gap-4"
                     @submit.prevent="submit"
+                    autocomplete="off"
                 >
                     <div class="space-y-6">
                         <div>
@@ -679,6 +682,7 @@
                                 :icon="EnvelopeIcon"
                                 size="md"
                                 placeholder="Email *"
+                                autocomplete="off"
                             />
                         </div>
 
