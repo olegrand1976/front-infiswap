@@ -254,6 +254,7 @@
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
             display-mode="cards"
+            :available-missions="availableMissions"
         />
     </div>
 </template>
@@ -264,9 +265,16 @@ import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
+import { useMissions } from '~/composables/useMission';
+import { PERPAGE } from '~/lib/constants';
 
 const user = useState<User>('user');
 const selectedCountry = ref(user.value.profile.country);
+
+const { getAll: getMissions, missions } = useMissions();
+const availableMissions = computed(() => missions.value.data ?? []);
+
+await getMissions(1, PERPAGE, { type: 'nurse' });
 
 const countries = {
     be: 'Belgique',

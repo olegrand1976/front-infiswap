@@ -142,91 +142,11 @@
                         v-else-if="dataMissions.length !== 0"
                         class="mt-8 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 md:gap-6"
                     >
-                        <div
+                        <MissionCard
                             v-for="mission in dataMissions"
                             :key="mission.id"
-                            class="group relative rounded-lg border-2 border-gray-100 bg-white p-4 md:p-6 shadow transition hover:shadow-lg hover:border-primary/30"
-                        >
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-center gap-3 md:gap-4 min-w-0">
-                                    <div class="shrink-0">
-                                        <img
-                                            v-if="mission.institution?.profil_url"
-                                            :src="mission.institution?.profil_url"
-                                            alt="Institution Logo"
-                                            class="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover ring-2 ring-primary/20"
-                                        >
-                                        <div
-                                            v-else
-                                            class="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary"
-                                        >
-                                            {{ mission.institution.institution_name.charAt(0).toUpperCase() }}
-                                        </div>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <h2 class="text-sm font-semibold text-gray-900 truncate">
-                                            {{ mission.institution.institution_name }} {{ mission.service != 'null' ? `- ${mission.service.name}` : '' }}
-                                        </h2>
-                                        <p class="text-xs text-gray-500">
-                                            Publié {{ formatRelativeDate(mission.created_at) }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 md:mt-5">
-                                <p
-                                    class="text-sm leading-relaxed text-gray-700 text-wrap"
-                                    :class="!isExpanded[mission.id] ? 'line-clamp-3': ''"
-                                >
-                                    {{ mission.description }}
-                                </p>
-                                <button
-                                    class="mt-2 text-sm text-primary font-semibold hover:underline focus:outline-none"
-                                    @click="toggleExpand(mission.id)"
-                                >
-                                    {{ expandedMissions[mission.id] ? 'Voir moins' : 'Voir plus' }}
-                                </button>
-                            </div>
-
-                            <div class="mt-3 md:mt-4 flex items-center gap-2 text-sm text-gray-500">
-                                <CalendarIcon class="h-4 w-4 text-gray-400 shrink-0" />
-                                <span>
-                                    {{ formatToDMY(mission.start_date) }}
-                                    <span class="mx-1 text-gray-300">→</span>
-                                    {{ formatToDMY(mission.end_date) }}
-                                </span>
-                            </div>
-                            <div class="mt-2 md:mt-3 flex items-center gap-2 text-sm text-gray-500">
-                                <ClockIcon class="h-4 w-4 text-gray-400 shrink-0" />
-                                <span>
-                                    {{ formatTime(mission.time_start_at) }}
-                                    <span class="mx-1 text-gray-300">→</span>
-                                    {{ formatTime(mission.time_end_at) }}
-                                </span>
-                            </div>
-                            <div class="mt-2 md:mt-3 flex items-center gap-2 text-sm text-gray-500">
-                                <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
-                                <span>{{ mission.required_diploma }}</span>
-                            </div>
-
-                            <div class="mt-4 md:mt-6 flex items-center justify-end gap-3">
-                                <Button
-                                    v-if="mission.has_answered == false"
-                                    class="w-full sm:w-auto"
-                                    @click="handleApply(mission.id)"
-                                >
-                                    Postuler
-                                </Button>
-                                <Button
-                                    v-else
-                                    disabled
-                                    class="w-full sm:w-auto bg-gray-200 text-gray-600 font-semibold cursor-not-allowed hover:bg-gray-200 hover:text-gray-600"
-                                >
-                                    Candidature envoyée
-                                </Button>
-                            </div>
-                        </div>
+                            :mission="mission"
+                        />
                     </div>
 
                     <div v-else>
@@ -748,6 +668,7 @@
 import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, BriefcaseIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon, MegaphoneIcon, UserCircleIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
+import MissionCard from '@/components/missions/MissionCard.vue';
 import { debounce, goBack } from '~/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';

@@ -152,6 +152,23 @@
 
         <ClientOnly>
             <div class="grid my-8">
+                <!-- Missions disponibles au début -->
+                <div
+                    v-if="isCardMode && filteredMissions.length > 0"
+                    class="mb-8"
+                >
+                    <h2 class="font-semibold text-black/70 mb-4">
+                        Missions disponibles ({{ filteredMissions.length }})
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        <MissionCard
+                            v-for="mission in filteredMissions"
+                            :key="`mission-${mission.id}`"
+                            :mission="mission"
+                        />
+                    </div>
+                </div>
+
                 <div class="hidden lg:block">
                     <template v-if="props.groupByProvince && Object.keys(groupsByProvince).length > 0">
                         <div
@@ -176,7 +193,7 @@
                                 <template v-else>
                                     <ReplacementCard
                                         v-for="replacementGroup in group"
-                                        :key="replacementGroup.id"
+                                        :key="`replacement-${replacementGroup.id}`"
                                         :replacement="formatReplacementForCard(replacementGroup)"
                                     />
                                 </template>
@@ -285,8 +302,13 @@
                                         <template v-else>
                                             <ReplacementCard
                                                 v-for="replacementGroup in group"
-                                                :key="replacementGroup.id"
+                                                :key="`replacement-${replacementGroup.id}`"
                                                 :replacement="formatReplacementForCard(replacementGroup)"
+                                            />
+                                            <MissionCard
+                                                v-for="mission in filteredMissions"
+                                                :key="`mission-${mission.id}`"
+                                                :mission="mission"
                                             />
                                         </template>
                                     </div>
@@ -583,8 +605,13 @@
                             <template v-else>
                                 <ReplacementCard
                                     v-for="replacementGroup in currentReplacements"
-                                    :key="replacementGroup.id"
+                                    :key="`replacement-${replacementGroup.id}`"
                                     :replacement="formatReplacementForCard(replacementGroup)"
+                                />
+                                <MissionCard
+                                    v-for="mission in filteredMissions"
+                                    :key="`mission-${mission.id}`"
+                                    :mission="mission"
                                 />
                             </template>
                         </div>
@@ -968,6 +995,22 @@
                 </div>
 
                 <div class="lg:hidden">
+                    <div
+                        v-if="isCardMode && filteredMissions.length > 0"
+                        class="mb-8"
+                    >
+                        <h2 class="font-semibold text-black/70 mb-4">
+                            Missions disponibles ({{ filteredMissions.length }})
+                        </h2>
+                        <div class="grid grid-cols-1 gap-6 mt-6">
+                            <MissionCard
+                                v-for="mission in filteredMissions"
+                                :key="`mission-${mission.id}`"
+                                :mission="mission"
+                            />
+                        </div>
+                    </div>
+
                     <template v-if="props.groupByProvince && Object.keys(groupsByProvince).length > 0">
                         <div
                             v-for="(group, province) in groupsByProvince"
@@ -991,7 +1034,7 @@
                                 <template v-else>
                                     <ReplacementCard
                                         v-for="replacementGroup in group"
-                                        :key="replacementGroup.id"
+                                        :key="`replacement-${replacementGroup.id}`"
                                         :replacement="formatReplacementForCard(replacementGroup)"
                                     />
                                 </template>
@@ -1856,6 +1899,7 @@ import { toRaw } from 'vue';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
+import MissionCard from '@/components/missions/MissionCard.vue';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
@@ -1884,6 +1928,7 @@ interface ReplacementProps {
     groupByProvince: boolean;
     filteredProvinces?: any[];
     selectedCountry?: string;
+    availableMissions?: any[];
 }
 
 const props = withDefaults(defineProps<ReplacementProps>(), {
@@ -1896,9 +1941,20 @@ const props = withDefaults(defineProps<ReplacementProps>(), {
     displayMode: 'cards' as const,
     filteredProvinces: () => [],
     selectedCountry: 'be',
+    availableMissions: () => [],
 });
 
 const isCardMode = computed<boolean>(() => (props.displayMode ?? 'cards') === 'cards');
+
+// Filtrer les missions disponibles (ouvertes et non postulées)
+const filteredMissions = computed(() => {
+    if (!props.availableMissions || props.availableMissions.length === 0) {
+        return [];
+    }
+    return props.availableMissions.filter(mission => 
+        mission.status === 'open' && !mission.has_answered
+    );
+});
 
 const selectedUser = ref(null);
 const showInfoUser = ref(false);
@@ -2125,6 +2181,28 @@ const initialReplacements = ref({
     },
 });
 const currentReplacements = ref([]);
+
+// Mélanger les remplacements et les missions pour l'affichage en cartes
+const mixedItems = computed(() => {
+    const items = [];
+    
+    // Ajouter les remplacements
+    currentReplacements.value.forEach(replacement => {
+        items.push({ type: 'replacement', data: replacement });
+    });
+    
+    // Ajouter les missions disponibles (ouvertes et non postulées)
+    if (props.availableMissions && props.availableMissions.length > 0) {
+        const openMissions = props.availableMissions.filter(mission => 
+            mission.status === 'open' && !mission.has_answered
+        );
+        openMissions.forEach(mission => {
+            items.push({ type: 'mission', data: mission });
+        });
+    }
+    
+    return items;
+});
 
 const groupsByProvince = computed<ProvinceGroups>(() => {
     const groups: ProvinceGroups = {};

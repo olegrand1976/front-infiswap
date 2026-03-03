@@ -184,7 +184,7 @@
 
             <Button
                 size="sm"
-                :href="`/dashboard/replacements/${replacement.id}`"
+                :href="`/dashboard/replacements/detail/${replacement.id}`"
                 class="shrink-0"
             >
                 <span>Voir détail</span>
@@ -235,7 +235,7 @@ const periods = computed(() => {
     if (!props.replacement.periods || props.replacement.periods.length === 0) {
         return ['Aucune période définie'];
     }
-    return props.replacement.periods.map(period => {
+    return props.replacement.periods.map((period) => {
         const start = formatDate(period.start_date);
         const end = formatDate(period.end_date);
         return `${start} → ${end}`;
@@ -271,7 +271,6 @@ const careTypes = computed(() => {
 
 const displayedCareTypes = computed(() => careTypes.value);
 
-
 const timeSlotsText = computed(() => {
     const slots: string[] = [];
     const timeSlot = props.replacement.time_slot;
@@ -291,25 +290,24 @@ const timeSlotsText = computed(() => {
 });
 
 const isUrgent = computed(() => {
-    return props.replacement.type === 'immediate' && 
-           props.replacement.details && 
-           props.replacement.details.length > 0;
+    return props.replacement.type === 'immediate'
+        && props.replacement.details
+        && props.replacement.details.length > 0;
 });
 
 const isClosed = computed(() => {
-    return props.replacement.status === 'closed' || 
-           props.replacement.replaced_by !== null;
+    return props.replacement.status === 'closed'
+        || props.replacement.replaced_by !== null;
 });
 
 const statusText = computed(() => {
     if (isClosed.value) {
         return 'Fermé';
     }
-    
+
     if (isUrgent.value) {
         return 'Urgent';
     }
-    
 
     const status = props.replacement.status?.toLowerCase();
     switch (status) {
@@ -335,12 +333,12 @@ const statusBadgeClass = computed(() => {
     if (isClosed.value) {
         return 'bg-red-100 text-red-700';
     }
-    
+
     // Priorité 2: Urgent
     if (isUrgent.value) {
         return 'bg-orange-100 text-orange-700 animate-pulse';
     }
-    
+
     // Priorité 3: Statut normal
     const status = props.replacement.status?.toLowerCase();
     switch (status) {
