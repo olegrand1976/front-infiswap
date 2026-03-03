@@ -456,15 +456,30 @@
                                         </Select>
                                     </div>
 
-                                    <div class="col-span-2">
+                                    <div 
+                                        v-if="formData.accountType !== 'institution'"
+                                     class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            {{ identifierLabel }} <span class="text-red-500">*</span>
+                                            {{ identifierLabel }}
                                         </label>
                                         <InputIcon
                                             v-model="formData.identifierNumber"
                                             :icon="IdentificationIcon"
                                             size="md"
                                             :placeholder="identifierLabel"
+                                        />
+                                    </div>
+                                    <div 
+                                        v-else
+                                     class="col-span-2">
+                                        <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                            Numéro d'entreprise
+                                        </label>
+                                        <InputIcon
+                                            v-model="formData.companyNumber"
+                                            :icon="IdentificationIcon"
+                                            size="md"
+                                            placeholder="Numéro d'entreprise"
                                         />
                                     </div>
                                 </div>
@@ -922,7 +937,9 @@
                             </Select>
                         </div>
 
-                        <div class="col-span-4">
+                        <div
+                        v-if="formData.accountType == 'institution'"
+                        class="col-span-4">
                             <label class="text-sm font-medium text-gray-700">
                                 Votre {{ identifierLabel }}
                             </label>
@@ -934,7 +951,21 @@
                                 :placeholder="identifierLabel"
                             />
                         </div>
-
+                        <div
+                        v-else
+                        class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700">
+                                Numéro d'entreprise
+                            </label>
+                            <InputIcon
+                                v-model="formData.companyNumber"
+                                :icon="IdentificationIcon"
+                                size="md"
+                                class="mt-1"
+                                placeholder="Numéro d'entreprise"
+                            />
+                        </div>
+                        
                         <div class="col-span-4">
                             <label class="text-sm font-medium text-gray-700">
                                 Pays de recherche
@@ -1229,6 +1260,7 @@ const formData = reactive({
     email: '',
     accountType: accountOptions[0].value,
     institutionName: '',
+    companyNumber: '',
     password: '',
     role: roleOptions[0].value,
     passwordConfirmation: '',
@@ -1236,6 +1268,7 @@ const formData = reactive({
     language: LANGUAGES[0].value,
     phoneNumber: undefined,
     identifierNumber: '',
+
     address: {
         street: '',
         city: '',
@@ -1253,7 +1286,7 @@ const formData = reactive({
 });
 
 const identifierLabel = computed(() =>
-    formData.address.workingAt === 'France'
+        formData.address.workingAt === 'France'
         ? 'Numéro RPPS'
         : 'Numéro INAMI',
 );
