@@ -253,6 +253,7 @@
             :selected-country="selectedCountry"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
+            display-mode="cards"
         />
     </div>
 </template>

@@ -41,8 +41,8 @@
                 <div class="w-full max-w-5xl px-8 font-light mt-4 sm:mt-6 lg:mt-8 xl:mt-10">
                     <form
                         class="grid gap-4 sm:gap-5 lg:gap-6 xl:gap-8"
-                        @submit.prevent="submit"
                         autocomplete="off"
+                        @submit.prevent="submit"
                     >
                         <div>
                             <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
@@ -601,8 +601,8 @@
 
                 <form
                     class="grid gap-4"
-                    @submit.prevent="submit"
                     autocomplete="off"
+                    @submit.prevent="submit"
                 >
                     <div class="space-y-6">
                         <div>

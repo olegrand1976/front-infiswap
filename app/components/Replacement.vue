@@ -162,7 +162,27 @@
                             <h2 class="font-semibold text-black/70 mb-4">
                                 {{ province }} ({{ group.length }})
                             </h2>
-                            <Table>
+                            <!-- Mode Cartes pour groupByProvince -->
+                            <div
+                                v-if="isCardMode"
+                                class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6 mt-6"
+                            >
+                                <template v-if="loading || loadingSearch">
+                                    <ReplacementCardSkeleton
+                                        v-for="(_, index) in Array.from({ length: 6 })"
+                                        :key="`skeleton-${index}`"
+                                    />
+                                </template>
+                                <template v-else>
+                                    <ReplacementCard
+                                        v-for="replacementGroup in group"
+                                        :key="replacementGroup.id"
+                                        :replacement="formatReplacementForCard(replacementGroup)"
+                                    />
+                                </template>
+                            </div>
+                            <!-- Mode Tableau -->
+                            <Table v-else>
                                 <TableHeader class="w-full">
                                     <TableRow
                                         :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
@@ -251,6 +271,26 @@
                                             Aucun résultat n'est trouvé
                                         </p>
                                     </div>
+                                    <!-- Mode Cartes -->
+                                    <div
+                                        v-else-if="isCardMode"
+                                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+                                    >
+                                        <template v-if="loading || loadingSearch">
+                                            <ReplacementCardSkeleton
+                                                v-for="(_, index) in Array.from({ length: 6 })"
+                                                :key="`skeleton-${index}`"
+                                            />
+                                        </template>
+                                        <template v-else>
+                                            <ReplacementCard
+                                                v-for="replacementGroup in group"
+                                                :key="replacementGroup.id"
+                                                :replacement="formatReplacementForCard(replacementGroup)"
+                                            />
+                                        </template>
+                                    </div>
+                                    <!-- Mode Tableau -->
                                     <div v-else>
                                         <TableRow
                                             v-for="replacementGroup in group"
@@ -530,7 +570,26 @@
                         </div>
                     </template>
                     <template v-else>
-                        <Table>
+                        <div
+                            v-if="isCardMode"
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+                        >
+                            <template v-if="loading || loadingSearch">
+                                <ReplacementCardSkeleton
+                                    v-for="(_, index) in Array.from({ length: 6 })"
+                                    :key="`skeleton-${index}`"
+                                />
+                            </template>
+                            <template v-else>
+                                <ReplacementCard
+                                    v-for="replacementGroup in currentReplacements"
+                                    :key="replacementGroup.id"
+                                    :replacement="formatReplacementForCard(replacementGroup)"
+                                />
+                            </template>
+                        </div>
+                        <!-- Mode Tableau -->
+                        <Table v-else>
                             <TableHeader class="w-full">
                                 <TableRow
                                     :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none',
@@ -619,6 +678,18 @@
                                         Aucun résultat n'est trouvé
                                     </p>
                                 </div>
+                                <!-- Mode Cartes -->
+                                <div
+                                    v-else-if="isCardMode"
+                                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+                                >
+                                    <ReplacementCard
+                                        v-for="replacementGroup in currentReplacements"
+                                        :key="replacementGroup.id"
+                                        :replacement="formatReplacementForCard(replacementGroup)"
+                                    />
+                                </div>
+                                <!-- Mode Tableau -->
                                 <div v-else>
                                     <TableRow
                                         v-for="replacementGroup in currentReplacements"
@@ -906,7 +977,27 @@
                             <h2 class="font-semibold text-black/70 mb-4">
                                 {{ province }} ({{ group.length }})
                             </h2>
-                            <Table>
+                            <!-- Mode Cartes pour mobile -->
+                            <div
+                                v-if="isCardMode"
+                                class="grid grid-cols-1 gap-6 mt-6"
+                            >
+                                <template v-if="loading || loadingSearch">
+                                    <ReplacementCardSkeleton
+                                        v-for="(_, index) in Array.from({ length: 3 })"
+                                        :key="`skeleton-mobile-${index}`"
+                                    />
+                                </template>
+                                <template v-else>
+                                    <ReplacementCard
+                                        v-for="replacementGroup in group"
+                                        :key="replacementGroup.id"
+                                        :replacement="formatReplacementForCard(replacementGroup)"
+                                    />
+                                </template>
+                            </div>
+                            <!-- Mode Tableau pour mobile -->
+                            <Table v-else>
                                 <TableHeader class="w-full">
                                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
                                         <TableHead
@@ -1133,7 +1224,27 @@
                         </div>
                     </template>
                     <template v-else>
-                        <Table>
+                        <!-- Mode Cartes pour mobile -->
+                        <div
+                            v-if="isCardMode"
+                            class="grid grid-cols-1 gap-6 mt-6"
+                        >
+                            <template v-if="loading || loadingSearch">
+                                <ReplacementCardSkeleton
+                                    v-for="(_, index) in Array.from({ length: 3 })"
+                                    :key="`skeleton-mobile-${index}`"
+                                />
+                            </template>
+                            <template v-else>
+                                <ReplacementCard
+                                    v-for="replacementGroup in currentReplacements"
+                                    :key="replacementGroup.id"
+                                    :replacement="formatReplacementForCard(replacementGroup)"
+                                />
+                            </template>
+                        </div>
+                        <!-- Mode Tableau pour mobile -->
+                        <Table v-else>
                             <TableHeader class="w-full">
                                 <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
                                     <TableHead
@@ -1743,6 +1854,8 @@
 import { MagnifyingGlassIcon, CheckCircleIcon, EyeIcon, ArrowPathIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { toRaw } from 'vue';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
+import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
 import { cn } from '@/lib/utils';
@@ -1763,41 +1876,29 @@ import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 
 const { $toast } = useNuxtApp();
 
-const props = defineProps({
-    selectedRegions: {
-        type: Array as PropType<string[]>,
-        required: false,
-        default: () => [],
-    },
-    type: {
-        type: String,
-        required: false,
-        default: '',
-    },
-    filters: {
-        type: Object as PropType<{ type: string; role: string }>,
-        required: false,
-        default: () => ({
-            type: 'all',
-            role: 'all',
-        }),
-    },
-    groupByProvince: {
-        type: Boolean,
-        required: true,
-        default: true,
-    },
-    filteredProvinces: {
-        type: Array,
-        required: false,
-        default: () => [],
-    },
-    selectedCountry: {
-        type: String,
-        required: false,
-        default: 'be',
-    },
+interface ReplacementProps {
+    selectedRegions?: string[];
+    type?: string;
+    filters?: { type: string; role: string };
+    displayMode?: 'table' | 'cards';
+    groupByProvince: boolean;
+    filteredProvinces?: any[];
+    selectedCountry?: string;
+}
+
+const props = withDefaults(defineProps<ReplacementProps>(), {
+    selectedRegions: () => [],
+    type: '',
+    filters: () => ({
+        type: 'all',
+        role: 'all',
+    }),
+    displayMode: 'cards' as const,
+    filteredProvinces: () => [],
+    selectedCountry: 'be',
 });
+
+const isCardMode = computed<boolean>(() => (props.displayMode ?? 'cards') === 'cards');
 
 const selectedUser = ref(null);
 const showInfoUser = ref(false);
@@ -1901,6 +2002,47 @@ const formatDate = (isoString) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+};
+
+const formatReplacementForCard = (replacementGroup) => {
+    const cities = typeof replacementGroup.cities === 'string'
+        ? JSON.parse(replacementGroup.cities)
+        : replacementGroup.cities || [];
+
+    const zipCodes = typeof replacementGroup.zip_codes === 'string'
+        ? JSON.parse(replacementGroup.zip_codes)
+        : replacementGroup.zip_codes || [];
+
+    const timeSlot = typeof replacementGroup.timeSlot === 'string'
+        ? JSON.parse(replacementGroup.timeSlot)
+        : replacementGroup.timeSlot || {};
+
+    return {
+        id: replacementGroup.id,
+        creator_name: replacementGroup.user?.full_name || replacementGroup.user?.name,
+        periods: replacementGroup.periods?.map(p => ({
+            start_date: p.start_date,
+            end_date: p.end_date,
+        })) || [],
+        cities: cities,
+        zip_codes: zipCodes,
+        care_types: replacementGroup.care_types || [],
+        comment: replacementGroup.comment || replacementGroup.description,
+        time_slot: {
+            morning: timeSlot.morning || (timeSlot.start_at && timeSlot.end_at
+                ? {
+                        start_at: timeSlot.start_at,
+                        end_at: timeSlot.end_at,
+                    }
+                : {}),
+            evening: timeSlot.evening || {},
+        },
+        patient_count: replacementGroup.patient_count,
+        status: replacementGroup.status || (replacementGroup.replaced_by ? 'filled' : 'available'),
+        type: replacementGroup.type,
+        details: replacementGroup.details || [],
+        replaced_by: replacementGroup.replaced_by,
+    };
 };
 
 const normalizeTime = (time) => {
