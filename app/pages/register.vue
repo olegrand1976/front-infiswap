@@ -456,9 +456,10 @@
                                         </Select>
                                     </div>
 
-                                    <div 
+                                    <div
                                         v-if="formData.accountType !== 'institution'"
-                                     class="col-span-2">
+                                        class="col-span-2"
+                                    >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             {{ identifierLabel }}
                                         </label>
@@ -469,9 +470,10 @@
                                             :placeholder="identifierLabel"
                                         />
                                     </div>
-                                    <div 
+                                    <div
                                         v-else
-                                     class="col-span-2">
+                                        class="col-span-2"
+                                    >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             Numéro d'entreprise
                                         </label>
@@ -938,8 +940,9 @@
                         </div>
 
                         <div
-                        v-if="formData.accountType == 'institution'"
-                        class="col-span-4">
+                            v-if="formData.accountType == 'institution'"
+                            class="col-span-4"
+                        >
                             <label class="text-sm font-medium text-gray-700">
                                 Votre {{ identifierLabel }}
                             </label>
@@ -952,8 +955,9 @@
                             />
                         </div>
                         <div
-                        v-else
-                        class="col-span-4">
+                            v-else
+                            class="col-span-4"
+                        >
                             <label class="text-sm font-medium text-gray-700">
                                 Numéro d'entreprise
                             </label>
@@ -965,7 +969,7 @@
                                 placeholder="Numéro d'entreprise"
                             />
                         </div>
-                        
+
                         <div class="col-span-4">
                             <label class="text-sm font-medium text-gray-700">
                                 Pays de recherche
@@ -1286,7 +1290,7 @@ const formData = reactive({
 });
 
 const identifierLabel = computed(() =>
-        formData.address.workingAt === 'France'
+    formData.address.workingAt === 'France'
         ? 'Numéro RPPS'
         : 'Numéro INAMI',
 );

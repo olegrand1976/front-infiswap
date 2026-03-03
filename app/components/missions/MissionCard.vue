@@ -24,7 +24,7 @@
                     <div class="flex-1 min-w-0">
                         <h2 class="text-base font-semibold text-gray-900 group-hover:text-primary transition-colors truncate">
                             {{ mission.institution?.institution_name ?? '' }}
-                            <span v-if="mission.service && mission.service !== 'null'">
+                            <span v-if="mission.service && mission.service !== null">
                                 - {{ mission.service.name }}
                             </span>
                         </h2>
@@ -57,9 +57,6 @@
                     <p v-if="mission.end_date">
                         Au {{ formatToDMY(mission.end_date) }}
                     </p>
-                    <p v-else-if="mission.start_date">
-                        Date unique
-                    </p>
                 </div>
             </div>
 
@@ -79,7 +76,6 @@
                 </div>
             </div>
 
-            <!-- Diplôme requis -->
             <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
                     <span class="text-base">🎓</span>
@@ -110,7 +106,7 @@
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1">
                 <div class="flex items-center gap-1">
                     <BuildingOfficeIcon class="w-3.5 h-3.5 text-primary" />
-                    <span>{{ mission.institution?.city ?? '' }}</span>
+                    <span>{{ mission.institution?.city ?? 'Mission' }}</span>
                 </div>
                 <div
                     v-if="mission.institution?.zip_code"
@@ -127,15 +123,6 @@
                 :href="`/dashboard/missions/${mission.id}/apply`"
             >
                 <span>Postuler</span>
-                <ChevronRightIcon class="w-3.5 h-3.5" />
-            </Button>
-            <Button
-                v-else
-                size="sm"
-                variant="outline"
-                :href="`/dashboard/missions/${mission.id}`"
-            >
-                <span>Voir détail</span>
                 <ChevronRightIcon class="w-3.5 h-3.5" />
             </Button>
         </div>
