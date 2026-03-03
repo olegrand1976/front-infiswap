@@ -400,12 +400,12 @@ const institutionNavigationItems: NavigationItem[] = [
         route: '/dashboard/institution/missions',
         icon: BriefcaseIcon,
     },
-    {
-        label: 'Factures',
-        route: '/dashboard/institution/invoices',
-        icon: DocumentTextIcon,
-        visible: true,
-    },
+    // {
+    //     label: 'Factures',
+    //     route: '/dashboard/institution/invoices',
+    //     icon: DocumentTextIcon,
+    //     visible: true,
+    // },
     {
         label: 'Paramètres',
         route: '/dashboard/settings',
