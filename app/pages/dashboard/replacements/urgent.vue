@@ -1,11 +1,13 @@
 <template>
-    <div class="space-y-6">
-        <div class="bg-gray-100 flex px-9 rounded-lg items-center w-full h-12">
-            <h1 class="text-primary">
-                Liste des remplacements urgentes
-                <strong>
-                    pour aujourd'hui
-                </strong>
+    <div class="lg:ml-20 xl:ml-0 space-y-6">
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary font-bold">
+                Liste des remplacements urgentes <strong>pour aujourd'hui</strong>
             </h1>
         </div>
 
@@ -85,7 +87,7 @@
 
 <script setup lang="ts">
 import { useNearbyReplacements } from '~/composables/useReplacements';
-import { getErrorMessage } from '~/lib/utils';
+import { getErrorMessage, goBack } from '~/lib/utils';
 
 const user = useUser();
 const { $apifetch, $toast } = useNuxtApp();

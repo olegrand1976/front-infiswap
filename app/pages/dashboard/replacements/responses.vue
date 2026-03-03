@@ -1,14 +1,15 @@
 <template>
-    <div>
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary mt-4"
-            title="Retour"
-            @click="goBack"
-        />
-
-        <h1 class="mt-6 p-3 text-primary mb-4 rounded-lg font-bold">
-            Historique de mes réponses
-        </h1>
+    <div class="lg:ml-20 xl:ml-0">
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary font-bold">
+                Historique de mes <strong>réponses</strong>
+            </h1>
+        </div>
 
         <template v-if="listResponse.length === 0">
             <p class="text-black/50 mt-16 text-center">

@@ -1,15 +1,16 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary"
-            title="Retour"
-            @click="goBack"
-        />
-
         <div class="mt-6 flex items-center justify-between w-full">
-            <h1 class="py-3 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] sm:px-9 rounded-lg">
-                Mes <strong>remplacements</strong>
-            </h1>
+            <div class="flex items-center gap-2 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] px-2 rounded-lg">
+                <ArrowLeftIcon
+                    class="size-5 cursor-pointer hover:text-primary"
+                    title="Retour"
+                    @click="goBack"
+                />
+                <h1 class="py-3 text-lg">
+                    Mes <strong>remplacements</strong>
+                </h1>
+            </div>
 
             <div class="flex justify-end gap-x-4 sm:gap-x-8 items-center">
                 <DropdownMenu>

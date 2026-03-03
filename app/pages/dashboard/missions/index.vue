@@ -1,13 +1,13 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex items-center justify-between w-full">
-            <h1 class="flex items-center w-full py-3 rounded-lg text-primary sm:bg-gray-100 mx-2">
-                <ArrowLeftIcon
-                    class="size-5 cursor-pointer hover:text-primary shrink-0"
-                    title="Retour"
-                    @click="goBack"
-                />
-                <span class="ml-1 font-semibold">Missions</span>
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary font-bold">
+                <strong>Missions</strong>
             </h1>
         </div>
 

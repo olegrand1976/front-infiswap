@@ -1,12 +1,17 @@
 <template>
-    <div class="space-y-6">
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary"
-            title="Retour"
-            @click="goBack"
-        />
+    <div class="lg:ml-20 xl:ml-0 space-y-6">
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary font-medium">
+                Remplacement immédiat <strong>pour aujourd'hui</strong>
+            </h1>
+        </div>
 
-        <div class="mt-6 bg-gray-100 flex items-center px-6 rounded-lg w-full h-12">
+        <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
             <LayoutsAppImage
                 src="/home/help_me.png"
                 class="h-10 w-10 object-contain mr-3"

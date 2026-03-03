@@ -1,16 +1,15 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary"
-            title="Retour"
-            @click="goBack"
-        />
-
         <div class="mt-6 flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
             <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
-                <span>
+                <div class="flex items-center gap-2">
+                    <ArrowLeftIcon
+                        class="size-5 cursor-pointer hover:text-primary"
+                        title="Retour"
+                        @click="goBack"
+                    />
                     Chercher <strong>un remplacement</strong>
-                </span>
+                </div>
 
                 <div
                     class="sm:hidden items-center space-x-4 cursor-pointer"

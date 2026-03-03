@@ -1,8 +1,15 @@
 <template>
-    <div>
-        <h1 class="py-3 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            Les remplacements <strong>auxquels j'ai répondu</strong>
-        </h1>
+    <div class="lg:ml-20 xl:ml-0">
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary">
+                Les remplacements <strong>auxquels j'ai répondu</strong>
+            </h1>
+        </div>
         <template v-if="!listApply || listApply.length === 0">
             <p class="text-black/50 mt-16 text-center">
                 Aucune donnée à afficher pour le moment
@@ -77,6 +84,7 @@
 <script lang="ts" setup>
 import { useListResponse } from '~/composables/useReplacements';
 import type { User } from '~/lib/types';
+import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
 const { listApply, getReplacementApply } = useListResponse(user.value.id);

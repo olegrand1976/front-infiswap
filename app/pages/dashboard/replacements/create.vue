@@ -3,13 +3,18 @@
         class="lg:ml-20 xl:ml-0"
         @submit.prevent="submit"
     >
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary mt-4"
-            title="Retour"
-            @click="goBack"
-        />
+        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+            <ArrowLeftIcon
+                class="size-5 cursor-pointer hover:text-primary"
+                title="Retour"
+                @click="goBack"
+            />
+            <h1 class="py-3 text-primary font-bold">
+                Créer un <strong>remplacement</strong>
+            </h1>
+        </div>
 
-        <section class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24">
+        <section class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24">
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow pb-8">
                     <h2 class="text-white font-medium text-center bg-primary lg:px-2 px-0 py-4 rounded-t-lg">
