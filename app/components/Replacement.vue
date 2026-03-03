@@ -152,17 +152,16 @@
 
         <ClientOnly>
             <div class="grid my-8">
-                <!-- Missions disponibles au début -->
                 <div
-                    v-if="isCardMode && filteredMissions.length > 0"
+                    v-if="isCardMode && availableMissions.length > 0"
                     class="mb-8"
                 >
                     <h2 class="font-semibold text-black/70 mb-4">
-                        Missions disponibles ({{ filteredMissions.length }})
+                        Missions disponibles ({{ availableMissions.length }})
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                         <MissionCard
-                            v-for="mission in filteredMissions"
+                            v-for="mission in availableMissions"
                             :key="`mission-${mission.id}`"
                             :mission="mission"
                         />
@@ -306,7 +305,7 @@
                                                 :replacement="formatReplacementForCard(replacementGroup)"
                                             />
                                             <MissionCard
-                                                v-for="mission in filteredMissions"
+                                                v-for="mission in availableMissions"
                                                 :key="`mission-${mission.id}`"
                                                 :mission="mission"
                                             />
@@ -425,7 +424,7 @@
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
-                                                                        {{ zipCode }}{{ index < JSON.parse(replacementGroup.zip_codes as string).length - 1 ? ',' : '' }}
+                                                                        {{ zipCode }}{{ index < Number(JSON.parse(replacementGroup.zip_codes as string).length - 1) ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
@@ -435,7 +434,7 @@
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(replacementGroup.zip_codes as string).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < Number(JSON.parse(replacementGroup.zip_codes as string).length - 1) ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -453,7 +452,7 @@
                                                                         :key="index"
                                                                         :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                     >
-                                                                        {{ city }}{{ index < JSON.parse(replacementGroup.cities as string).length - 1 ? ',' : '' }}
+                                                                        {{ city }}{{ Number(index) < Number(JSON.parse(replacementGroup.cities as string).length - 1) ? ',' : '' }}
                                                                     </span>
                                                                 </p>
                                                             </TooltipTrigger>
@@ -463,7 +462,7 @@
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                 >
-                                                                    {{ city }}{{ index < JSON.parse(replacementGroup.cities as string).length - 1 ? ',' : '' }}
+                                                                    {{ city }}{{ index < Number(JSON.parse(replacementGroup.cities as string).length - 1) ? ',' : '' }}
                                                                 </span>
                                                             </TooltipContent>
                                                         </Tooltip>
@@ -609,7 +608,7 @@
                                     :replacement="formatReplacementForCard(replacementGroup)"
                                 />
                                 <MissionCard
-                                    v-for="mission in filteredMissions"
+                                    v-for="mission in availableMissions"
                                     :key="`mission-${mission.id}`"
                                     :mission="mission"
                                 />
@@ -827,7 +826,7 @@
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                 >
-                                                                    {{ zipCode }}{{ index < JSON.parse(String(replacementGroup.zip_codes)).length - 1 ? ',' : '' }}
+                                                                    {{ zipCode }}{{ index < Number(JSON.parse(String(replacementGroup.zip_codes)).length - 1) ? ',' : '' }}
                                                                 </span>
                                                             </p>
                                                         </TooltipTrigger>
@@ -837,7 +836,7 @@
                                                                 :key="index"
                                                                 :class="[cn('mr-1', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                             >
-                                                                {{ zipCode }}{{ index < JSON.parse(String(replacementGroup.zip_codes)).length - 1 ? ',' : '' }}
+                                                                {{ zipCode }}{{ index < Number(JSON.parse(String(replacementGroup.zip_codes)).length - 1) ? ',' : '' }}
                                                             </span>
                                                         </TooltipContent>
                                                     </Tooltip>
@@ -855,7 +854,7 @@
                                                                     :key="index"
                                                                     :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                                 >
-                                                                    {{ city }}{{ index < JSON.parse(replacementGroup.cities).length - 1 ? ',' : '' }}
+                                                                    {{ city }}{{ index < Number(JSON.parse(replacementGroup.cities).length - 1) ? ',' : '' }}
                                                                 </span>
                                                             </p>
                                                         </TooltipTrigger>
@@ -865,7 +864,7 @@
                                                                 :key="index"
                                                                 :class="[cn('mr-1', { 'text-success font-bold': hasMatchingCityFromUnique(city) })]"
                                                             >
-                                                                {{ city }}{{ index < JSON.parse(replacementGroup.cities).length - 1 ? ',' : '' }}
+                                                                {{ city }}{{ index < Number(JSON.parse(replacementGroup.cities).length - 1) ? ',' : '' }}
                                                             </span>
                                                         </TooltipContent>
                                                     </Tooltip>
@@ -996,15 +995,15 @@
 
                 <div class="lg:hidden">
                     <div
-                        v-if="isCardMode && filteredMissions.length > 0"
+                        v-if="isCardMode && availableMissions.length > 0"
                         class="mb-8"
                     >
                         <h2 class="font-semibold text-black/70 mb-4">
-                            Missions disponibles ({{ filteredMissions.length }})
+                            Missions disponibles ({{ availableMissions.length }})
                         </h2>
                         <div class="grid grid-cols-1 gap-6 mt-6">
                             <MissionCard
-                                v-for="mission in filteredMissions"
+                                v-for="mission in availableMissions"
                                 :key="`mission-${mission.id}`"
                                 :mission="mission"
                             />
@@ -1173,7 +1172,7 @@
                                                                         :key="'tooltip-' + index"
                                                                         :class="[cn('text-xs', { 'text-success font-bold': isZipCodeHighlighted(zipCode) })]"
                                                                     >
-                                                                        {{ zipCode }}{{ index < (typeof replacementGroup.zip_codes === 'string' ? JSON.parse(replacementGroup.zip_codes) : []).length - 1 ? ',' : '' }}
+                                                                        {{ zipCode }}{{ index < Number((typeof replacementGroup.zip_codes === 'string' ? JSON.parse(replacementGroup.zip_codes) : []).length - 1) ? ',' : '' }}
                                                                     </span>
                                                                 </div>
                                                             </TooltipContent>
@@ -1946,16 +1945,6 @@ const props = withDefaults(defineProps<ReplacementProps>(), {
 
 const isCardMode = computed<boolean>(() => (props.displayMode ?? 'cards') === 'cards');
 
-// Filtrer les missions disponibles (ouvertes et non postulées)
-const filteredMissions = computed(() => {
-    if (!props.availableMissions || props.availableMissions.length === 0) {
-        return [];
-    }
-    return props.availableMissions.filter(mission => 
-        mission.status === 'open' && !mission.has_answered
-    );
-});
-
 const selectedUser = ref(null);
 const showInfoUser = ref(false);
 
@@ -2185,22 +2174,22 @@ const currentReplacements = ref([]);
 // Mélanger les remplacements et les missions pour l'affichage en cartes
 const mixedItems = computed(() => {
     const items = [];
-    
+
     // Ajouter les remplacements
-    currentReplacements.value.forEach(replacement => {
+    currentReplacements.value.forEach((replacement) => {
         items.push({ type: 'replacement', data: replacement });
     });
-    
+
     // Ajouter les missions disponibles (ouvertes et non postulées)
     if (props.availableMissions && props.availableMissions.length > 0) {
-        const openMissions = props.availableMissions.filter(mission => 
-            mission.status === 'open' && !mission.has_answered
+        const openMissions = props.availableMissions.filter(mission =>
+            mission.status === 'open' && !mission.has_answered,
         );
-        openMissions.forEach(mission => {
+        openMissions.forEach((mission) => {
             items.push({ type: 'mission', data: mission });
         });
     }
-    
+
     return items;
 });
 
