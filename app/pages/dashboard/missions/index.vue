@@ -16,26 +16,7 @@
             class="mt-8"
             @update:model-value="handleTabChange"
         >
-            <TabsList class="grid w-full grid-cols-3 gap-1 sm:gap-2 bg-gray-100 p-1 rounded-lg">
-                <TabsTrigger
-                    value="offers"
-                    class="flex flex-col items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3
-                           data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
-                >
-                    <div class="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
-                        <MegaphoneIcon class="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
-                        <span class="font-medium text-xs sm:text-sm">Offres</span>
-                        <Badge
-                            v-if="offersCount > 0"
-                            class="ml-0 sm:ml-1 bg-primary text-white text-xs px-1.5"
-                        >
-                            {{ offersCount }}
-                        </Badge>
-                    </div>
-                    <span class="text-xs text-gray-500 hidden sm:block text-center leading-tight">
-                        Nouvelles missions disponibles
-                    </span>
-                </TabsTrigger>
+            <TabsList class="grid w-full grid-cols-2 gap-1 sm:gap-2 bg-gray-100 p-1 rounded-lg">
 
                 <TabsTrigger
                     value="my-missions"
@@ -695,7 +676,7 @@ const statusClasses: Record<string, string> = {
     rejected: 'bg-red-500 text-white',
 };
 
-const activeTab = ref('offers');
+const activeTab = ref('my-missions');
 const myMissionsStatusTab = ref('in_progress');
 const isSearching = ref(false);
 const isSearchingMyMissions = ref(false);
@@ -772,19 +753,6 @@ const myMissionsCount = computed(() => {
 });
 const candidacyCount = computed(() => responses.value.meta?.total || 0);
 
-async function loadOffers() {
-    isLoadingOffers.value = true;
-    try {
-        await getAll(page.value, perPage.value, option.value);
-    }
-    catch (error) {
-        console.error('Error loading offers:', error);
-    }
-    finally {
-        isLoadingOffers.value = false;
-    }
-}
-
 async function loadMyMissions() {
     isLoadingMyMissions.value = true;
     try {
@@ -825,7 +793,6 @@ async function loadCandidacy() {
 
 onMounted(async () => {
     await Promise.all([
-        loadOffers(),
         loadMyMissions(),
         loadCandidacy(),
     ]);
@@ -948,10 +915,7 @@ const reinitializeCandidacyFilter = async () => {
 
 const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
-    if (newTab === 'offers' && !missions.value.data.length) {
-        await loadOffers();
-    }
-    else if (newTab === 'my-missions' && !myMissionsState.value.data.length) {
+    if (newTab === 'my-missions' && !myMissionsState.value.data.length) {
         await loadMyMissions();
     }
     else if (newTab === 'candidacy' && !responses.value.data.length) {
