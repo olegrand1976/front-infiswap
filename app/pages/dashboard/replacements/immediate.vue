@@ -11,23 +11,9 @@
             </h1>
         </div>
 
-        <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
-            <LayoutsAppImage
-                src="/home/help_me.png"
-                class="h-10 w-10 object-contain mr-3"
-                alt="Aide"
-            />
-            <h1 class="text-primary text-sm font-medium">
-                Remplacement immédiat
-                <strong class="font-semibold">
-                    pour aujourd'hui
-                </strong>
-            </h1>
-        </div>
-
         <Form @submit="submit">
             <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
-                <h3 class="text-center text-lg text-primary py-4 font-bold">
+                <h3 class="text-center text-lg text-primary py-4 mb-2 font-bold">
                     Besoin d’aide rapidement ? Rien de plus simple !
                 </h3>
                 <div class="space-y-4">
