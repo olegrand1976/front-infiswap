@@ -117,6 +117,9 @@
                 </div>
             </div>
 
+            <Button size="sm" variant="outline" :href="`/dashboard/missions/${mission.id}`" class="text-xs border-gray-200 text-gray-600 hover:border-primary hover:text-primary">
+                <EyeIcon class="w-3.5 h-3.5 mr-1" /> Détails
+            </Button>
             <Button
                 v-if="!mission.has_answered"
                 size="sm"
@@ -130,7 +133,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronRightIcon, BuildingOfficeIcon } from '@heroicons/vue/24/outline';
+import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import type { Mission } from '~/lib/types';
 
