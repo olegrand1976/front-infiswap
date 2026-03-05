@@ -369,7 +369,7 @@ import { useReports } from '~/composables/useReports';
 
 const { reports } = useReports();
 
-const { isAdmin } = useAuth();
+const { isAdmin, isCommunityManager } = useAuth();
 const loading = ref(true);
 const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
@@ -459,7 +459,7 @@ const xZipCodeFormatter = computed(() => createXFormatter(computed(() => userByZ
 const xProvinceFormatter = computed(() => createXFormatter(computed(() => userByProvince.value)));
 
 const adminReports = computed(() => {
-    if (!isAdmin.value || !reports.value) return [];
+    if (!(isAdmin.value || isCommunityManager) || !reports.value) return [];
 
     return [
         {
