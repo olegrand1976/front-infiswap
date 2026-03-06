@@ -1,7 +1,5 @@
 <template>
     <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative overflow-hidden">
-
-        <!-- ✅ AJOUT 1 : Ruban diagonal "FERMÉ" rouge en haut à droite -->
         <div
             v-if="isClosed"
             class="absolute top-3 -right-8 bg-red-500 text-white text-[10px] font-bold py-0.5 px-10 rotate-45 shadow-sm z-10 tracking-widest pointer-events-none"
