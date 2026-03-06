@@ -69,10 +69,13 @@ export const useInstitutionServices = () => {
 
 export const useInstitutions = () => {
     const { $apifetch, $toast } = useNuxtApp();
+    const config = useRuntimeConfig();
 
     const institutions = useState<Institution[]>('institutions', () => []);
+    const currentInstitution = useState<any>('currentInstitution', () => null);
     const error = useState<string | null>('institutionsError', () => null);
     const loading = useState<boolean>('institutionsLoading', () => false);
+    const saving = useState<boolean>('institutionsSaving', () => false);
     const count = useState<number>('institutionsCount', () => 0);
 
     async function getInstitutions(page = 1, perPage = 15, options: Record<string, unknown> = {}) {
@@ -92,7 +95,112 @@ export const useInstitutions = () => {
         return await $apifetch(`api/admin/institutions/${id}`);
     }
 
-    async function createOrUpdate(institution: Partial<Institution>) {
+    /**
+     * Get current user's institution settings
+     */
+    async function getSettings() {
+        try {
+            loading.value = true;
+            const response = await $apifetch('/api/institution/settings', {
+                method: 'GET',
+            });
+            currentInstitution.value = response.data;
+            return response.data;
+        } catch (error: any) {
+            console.error('Erreur lors du chargement de l\'institution:', error);
+            $toast({
+                title: 'Erreur',
+                description: 'Impossible de charger les informations de l\'institution',
+                variant: 'destructive',
+            });
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    /**
+     * Get the full URL for an institution logo
+     */
+    function getLogoUrl(logoPath: string | null | undefined): string | null {
+        if (!logoPath) return null;
+
+        if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
+            return logoPath;
+        }
+
+        return `${config.public.API_URL}/storage/${logoPath}`;
+    }
+
+    /**
+     * Delete institution logo
+     */
+    async function deleteLogo() {
+        try {
+            await $apifetch('/api/institution/settings/logo', {
+                method: 'DELETE',
+            });
+            if (currentInstitution.value) {
+                currentInstitution.value.logo = null;
+            }
+            $toast({
+                title: 'Succès',
+                description: 'Logo supprimé avec succès',
+            });
+        } catch (error: any) {
+            console.error('Erreur lors de la suppression du logo:', error);
+            $toast({
+                title: 'Erreur',
+                description: 'Impossible de supprimer le logo',
+                variant: 'destructive',
+            });
+            throw error;
+        }
+    }
+
+    async function createOrUpdate(institution: Partial<Institution> | FormData) {
+        if (institution instanceof FormData) {
+            try {
+                saving.value = true;
+                // Log des données envoyées
+                const formDataEntries: Record<string, any> = {};
+                for (const [key, value] of institution.entries()) {
+                    if (value instanceof File) {
+                        formDataEntries[key] = `File: ${value.name} (${value.size} bytes)`;
+                    } else {
+                        formDataEntries[key] = value;
+                    }
+                }
+
+                const response = await $apifetch('/api/institution/settings', {
+                    method: 'PUT',
+                    body: institution,
+                });
+
+                currentInstitution.value = response.data;
+                $toast({
+                    title: 'Succès',
+                    description: 'Paramètres de l\'institution mis à jour avec succès',
+                });
+                return response.data;
+            } catch (error: any) {
+
+
+                const errorMessage = error?.data?.message || 
+                                   error?.data?.errors || 
+                                   error?.message || 
+                                   'Impossible de mettre à jour les paramètres';
+                $toast({
+                    title: 'Erreur',
+                    description: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
+                    variant: 'destructive',
+                });
+                throw error;
+            } finally {
+                saving.value = false;
+            }
+        }
+
         const dataToSend: Partial<Institution> = {};
         if (institution.name) dataToSend.name = institution.name;
 
@@ -143,12 +251,17 @@ export const useInstitutions = () => {
 
     return {
         institutions,
+        currentInstitution,
         error,
         loading,
+        saving,
         count,
         get,
         getInstitutions,
+        getSettings,
         createOrUpdate,
+        deleteLogo,
+        getLogoUrl,
         syncServices,
         syncUsers,
         forceDelete,

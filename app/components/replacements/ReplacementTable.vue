@@ -57,6 +57,12 @@
                         >
                             Catégorie
                         </TableHead>
+                        <TableHead
+                            v-if="type === ''"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
+                            Institution
+                        </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Action
                         </TableHead>
@@ -257,6 +263,30 @@
                             >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                     {{ roles[r.role_type] }}
+                                </div>
+                            </TableCell>
+
+                            <TableCell
+                                v-if="type === ''"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
+                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] flex items-center justify-center px-3">
+                                    <template v-if="r.user?.institution">
+                                        <LayoutsAppImage
+                                            v-if="r.user.institution.logo"
+                                            :src="r.user.institution.logo"
+                                            :alt="r.user.institution.name"
+                                            class="w-8 h-8 object-contain rounded"
+                                        />
+                                        <span
+                                            v-else
+                                            class="text-xs truncate"
+                                            :title="r.user.institution.name"
+                                        >
+                                            {{ r.user.institution.name }}
+                                        </span>
+                                    </template>
+                                    <span v-else class="text-gray-400">—</span>
                                 </div>
                             </TableCell>
 
@@ -589,7 +619,7 @@ const openCloseDialog = (r: Replacement) => {
 const gridColsByType: Record<string, string> = {
     'groups': 'grid-cols-8',
     'me': 'grid-cols-6',
-    '': 'grid-cols-9',
+    '': 'grid-cols-10',
 };
 const gridClass = computed(() => gridColsByType[props.type] ?? 'grid-cols-8');
 

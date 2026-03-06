@@ -402,6 +402,16 @@ const institutionNavigationItems: NavigationItem[] = [
         route: '/dashboard/institution/missions',
         icon: BriefcaseIcon,
     },
+    {
+        label: 'Chercher un remplacement',
+        route: '/dashboard/institution/replacements',
+        icon: DocumentMagnifyingGlassIcon,
+    },
+    {
+        label: 'Paramètres institution',
+        route: '/dashboard/institution/settings',
+        icon: Cog8ToothIcon,
+    },
     // {
     //     label: 'Factures',
     //     route: '/dashboard/institution/invoices',
