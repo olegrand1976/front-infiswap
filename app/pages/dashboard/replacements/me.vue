@@ -33,9 +33,7 @@
                     </DropdownMenuTrigger>
                     <DropdownMenuContent class="w-64">
                         <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                                Type de remplacement
-                            </DropdownMenuLabel>
+                            <DropdownMenuLabel>Type de remplacement</DropdownMenuLabel>
                             <DropdownMenuRadioGroup v-model="selectedFilters.type">
                                 <DropdownMenuRadioItem
                                     v-for="(label, key) in replacementTypeFilters"
@@ -48,9 +46,7 @@
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                                Rôle
-                            </DropdownMenuLabel>
+                            <DropdownMenuLabel>Rôle</DropdownMenuLabel>
                             <DropdownMenuRadioGroup v-model="selectedFilters.role">
                                 <DropdownMenuRadioItem
                                     v-for="(label, key) in replacementRoleFilters"
@@ -64,24 +60,43 @@
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div
-                    class="flex items-center space-x-4 cursor-pointer"
-                    @click="toggleIcon"
-                >
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <button
+                                class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 shadow hover:bg-gray-50 transition-colors"
+                                @click="toggleGroupByProvince"
+                            >
                                 <component
-                                    :is="currentIcon"
-                                    class="w-6 hover:text-primary"
+                                    :is="MapIcon"
+                                    class="w-5 text-black/70 hover:text-primary"
                                 />
-                                <TooltipContent>
-                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par province' }}</p>
-                                </TooltipContent>
-                            </TooltipTrigger>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par province' }}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <button
+                                class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 shadow hover:bg-gray-50 transition-colors"
+                                @click="toggleDisplayMode"
+                            >
+                                <component
+                                    :is="displayMode === 'cards' ? QueueListIcon : Squares2X2Icon"
+                                    class="w-5 text-black/70 hover:text-primary"
+                                />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{{ displayMode === 'cards' ? 'Vue tableau' : 'Vue cartes' }}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
         </div>
 
@@ -105,32 +120,36 @@
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
+
             <Replacement
                 v-if="selectedType === 'me'"
                 type="me"
                 :filters="selectedFilters"
                 :group-by-province="groupByProvince"
+                :display-mode="displayMode"
             />
-
             <Replacement
                 v-else-if="selectedType === 'groups'"
                 type="groups"
                 :filters="selectedFilters"
                 :group-by-province="groupByProvince"
+                :display-mode="displayMode"
             />
         </template>
+
         <template v-else>
             <Replacement
                 type="me"
                 :filters="selectedFilters"
                 :group-by-province="groupByProvince"
+                :display-mode="displayMode"
             />
         </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon, MapIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
@@ -155,16 +174,18 @@ const selectedFilters = ref({
 });
 
 const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
-    default: () => ({
-        type: 'all',
-        role: 'all',
-    }),
+    default: () => ({ type: 'all', role: 'all' }),
 });
+
+const displayModeCookie = useCookie<'cards' | 'table'>('displayMode', {
+    default: () => 'cards',
+});
+const displayMode = ref<'cards' | 'table'>(displayModeCookie.value);
 
 const groupByProvince = ref(false);
 const { groups, myGroups } = useGroup();
 
-const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
+// const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
 
 const activeFiltersCount = computed(() => {
     let count = 0;
@@ -173,7 +194,12 @@ const activeFiltersCount = computed(() => {
     return count;
 });
 
-const toggleIcon = () => {
+const toggleDisplayMode = () => {
+    displayMode.value = displayMode.value === 'cards' ? 'table' : 'cards';
+    displayModeCookie.value = displayMode.value;
+};
+
+const toggleGroupByProvince = () => {
     groupByProvince.value = !groupByProvince.value;
 };
 

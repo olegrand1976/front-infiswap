@@ -1,49 +1,30 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex flex-col lg:flex-row lg:gap-8 lg:items-center lg:justify-between w-full">
-            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-[35%] xl:w-[45%] 2xl:w-[55%] sm:px-9 rounded-lg">
-                <div class="flex items-center gap-2">
+        <div class="mt-6 flex flex-col lg:flex-row lg:gap-4 lg:items-center w-full">
+            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-auto lg:shrink-0 sm:px-6 rounded-lg">
+                <div class="flex items-center gap-2 text-base">
                     <ArrowLeftIcon
-                        class="size-5 cursor-pointer hover:text-primary"
+                        class="size-5 cursor-pointer hover:text-primary shrink-0"
                         title="Retour"
                         @click="goBack"
                     />
                     Chercher <strong>un remplacement</strong>
                 </div>
-
-                <div
-                    class="sm:hidden items-center space-x-4 cursor-pointer"
-                    @click="toggleIcon"
-                >
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <component
-                                    :is="currentIcon"
-                                    class="w-6 text-black hover:text-primary"
-                                />
-                                <TooltipContent>
-                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par région' }}</p>
-                                </TooltipContent>
-                            </TooltipTrigger>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
             </h1>
 
-            <div class="mt-6 lg:mt-0 flex justify-between lg:justify-end gap-x-2 xl:gap-x-8 items-center">
+            <div class="mt-4 lg:mt-0 flex flex-wrap lg:flex-nowrap justify-start items-center gap-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button
                             variant="outline"
-                            class="flex gap-3 items-center border-gray-200 font-normal shadow text-black/90 h-10"
+                            class="flex gap-2 items-center border-gray-200 font-normal shadow text-black/90 h-9 text-xs px-3"
                         >
-                            <FunnelIcon class="w-5" />
+                            <FunnelIcon class="w-4 h-4 shrink-0" />
                             <span>
                                 Filtrer
                                 <span
                                     v-if="activeFiltersCount > 0"
-                                    class="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full"
+                                    class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-primary rounded-full"
                                 >
                                     {{ activeFiltersCount }}
                                 </span>
@@ -52,9 +33,7 @@
                     </DropdownMenuTrigger>
                     <DropdownMenuContent class="w-64">
                         <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                                Type de remplacement
-                            </DropdownMenuLabel>
+                            <DropdownMenuLabel>Type de remplacement</DropdownMenuLabel>
                             <DropdownMenuRadioGroup
                                 :model-value="selectedFilters.type"
                                 @update:model-value="selectedFilters.type = $event"
@@ -70,9 +49,7 @@
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                                Rôle
-                            </DropdownMenuLabel>
+                            <DropdownMenuLabel>Rôle</DropdownMenuLabel>
                             <DropdownMenuRadioGroup
                                 :model-value="selectedFilters.role"
                                 @update:model-value="selectedFilters.role = $event"
@@ -89,160 +66,132 @@
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div
-                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
-                >
-                    <h5 class="text-sm">
-                        Pays
-                    </h5>
-                    <Select v-model="selectedCountry">
-                        <SelectTrigger
-                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
-                            position="right"
-                        >
-                            <SelectValue
-                                :placeholder="countries[selectedCountry]"
-                                class="text-xs text-black w-[200%] truncate"
-                            />
-                        </SelectTrigger>
-                        <SelectContent class="border border-none">
-                            <SelectGroup class="w-32 truncate">
-                                <SelectItem
-                                    v-for="[code, label] in Object.entries(countries)"
-                                    :key="code"
-                                    :value="code"
-                                >
-                                    <div class="flex flex-nowrap gap-2 items-center">
-                                        <LayoutsAppImage
-                                            v-if="code === 'fr'"
-                                            :src="'/icons/fr.png'"
-                                            alt="France flag"
-                                            class="w-3"
-                                        />
-                                        <LayoutsAppImage
-                                            v-else-if="code === 'be'"
-                                            :src="'/icons/belgium.png'"
-                                            alt="Belgium flag"
-                                        />
-                                        <span>{{ label }}</span>
-                                    </div>
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+                <Select v-model="selectedCountry">
+                    <SelectTrigger
+                        class="bg-white h-9 w-46 text-xs rounded-lg shadow border border-gray-200"
+                        position="right"
+                    >
+                        <SelectValue
+                            :placeholder="countries[selectedCountry]"
+                            class="text-xs"
+                        />
+                    </SelectTrigger>
+                    <SelectContent class="border-none">
+                        <SelectGroup class="w-46">
+                            <SelectItem
+                                v-for="[code, label] in Object.entries(countries)"
+                                :key="code"
+                                :value="code"
+                            >
+                                <div class="flex gap-2 items-center">
+                                    <LayoutsAppImage
+                                        v-if="code === 'fr'"
+                                        :src="'/icons/fr.png'"
+                                        alt="France"
+                                        class="w-3"
+                                    />
+                                    <LayoutsAppImage
+                                        v-else-if="code === 'be'"
+                                        :src="'/icons/belgium.png'"
+                                        alt="Belgique"
+                                        class="w-3"
+                                    />
+                                    <span>{{ label }}</span>
+                                </div>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
 
-                <div
-                    v-if="selectedCountry != 'fr'"
-                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
-                >
-                    <h5 class="text-sm">
-                        Provinces
-                    </h5>
-                    <Select>
-                        <SelectTrigger
-                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
-                            position="right"
-                        >
-                            <SelectValue
-                                :placeholder="selectedProvincesPlaceholder"
-                                class="text-xs text-black w-[200%] truncate"
-                            />
-                        </SelectTrigger>
-                        <SelectContent class="border border-none">
-                            <SelectGroup class="w-32 truncate">
-                                <div class="flex items-center space-2 mb-2">
-                                    <Checkbox
-                                        id="tous"
-                                        :checked="isAllSelected"
-                                        class="mr-2"
-                                        @update:checked="toggleAllRegions($event)"
-                                    />
-                                    <label class="text-xs text-nowrap truncate">Tous</label>
-                                </div>
-                                <div
-                                    v-for="(region, index) in regions"
-                                    :key="index"
-                                    class="flex items-center space-2 mb-2"
-                                >
-                                    <Checkbox
-                                        :id="region"
-                                        :checked="selectedRegions.includes(region)"
-                                        :value="region"
-                                        class="mr-2"
-                                        @update:checked="updateRegionSelection(region, $event)"
-                                    />
-                                    <label class="text-xs text-nowrap truncate">{{ region }}</label>
-                                </div>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div
-                    v-else
-                    class="flex space-x-3 rounded items-center justify-between ps-3 pe-1"
-                >
-                    <h5 class="text-sm">
-                        Départements
-                    </h5>
-                    <Select>
-                        <SelectTrigger
-                            class="bg-white w-28 sm:w-36 overflow-x-hidden my-0.5 rounded-lg shadow flex space-x-1 lg:space-x-2 border border-gray-300 lg:text-sm md:text-xs"
-                            position="right"
-                        >
-                            <SelectValue
-                                :placeholder="selectedProvincesPlaceholder"
-                                class="text-xs text-black w-[200%] truncate"
-                            />
-                        </SelectTrigger>
-                        <SelectContent class="border border-none">
-                            <SelectGroup class="w-32 truncate">
-                                <div class="flex items-center space-2 mb-2">
-                                    <Checkbox
-                                        id="tous"
-                                        :checked="isAllSelected"
-                                        class="mr-2"
-                                        @update:checked="toggleAllRegions($event)"
-                                    />
-                                    <label class="text-xs text-nowrap truncate">Tous</label>
-                                </div>
-                                <div
-                                    v-for="(region, index) in departments"
-                                    :key="index"
-                                    class="flex items-center space-2 mb-2"
-                                >
-                                    <Checkbox
-                                        :id="region"
-                                        :checked="selectedRegions.includes(region)"
-                                        :value="region"
-                                        class="mr-2"
-                                        @update:checked="updateRegionSelection(region, $event)"
-                                    />
-                                    <label class="text-xs text-nowrap truncate">{{ region }}</label>
-                                </div>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div
-                    class="hidden sm:flex items-center space-x-4 cursor-pointer"
-                    @click="toggleIcon"
-                >
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <component
-                                    :is="currentIcon"
-                                    class="w-6 hover:text-primary"
+                <Select>
+                    <SelectTrigger
+                        class="bg-white h-9 w-46 text-xs rounded-lg shadow border border-gray-200"
+                        position="right"
+                    >
+                        <SelectValue
+                            :placeholder="selectedProvincesPlaceholder"
+                            class="text-xs truncate"
+                        />
+                    </SelectTrigger>
+                    <SelectContent class="border-none">
+                        <SelectGroup class="w-46">
+                            <div class="flex items-center gap-2 mb-2 px-1">
+                                <Checkbox
+                                    id="tous"
+                                    :checked="isAllSelected"
+                                    @update:checked="toggleAllRegions($event)"
                                 />
-                                <TooltipContent>
-                                    <p>{{ groupByProvince ? 'Organiser par défaut' : 'Organiser par région' }}</p>
-                                </TooltipContent>
-                            </TooltipTrigger>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
+                                <label
+                                    for="tous"
+                                    class="text-xs cursor-pointer"
+                                >Tous</label>
+                            </div>
+                            <div
+                                v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
+                                :key="index"
+                                class="flex items-center gap-2 mb-2 px-1"
+                            >
+                                <Checkbox
+                                    :id="region"
+                                    :checked="selectedRegions.includes(region)"
+                                    :value="region"
+                                    @update:checked="updateRegionSelection(region, $event)"
+                                />
+                                <label
+                                    :for="region"
+                                    class="text-xs truncate cursor-pointer"
+                                >{{ region }}</label>
+                            </div>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <div class="hidden sm:block w-px h-6 bg-gray-200" />
+
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <button
+                                class="flex items-center justify-center w-9 h-9 rounded-lg border shadow transition-colors"
+                                :class="groupByProvince
+                                    ? 'bg-primary/10 border-primary'
+                                    : 'bg-white border-gray-200 hover:bg-gray-50'"
+                                @click="toggleGroupByProvince"
+                            >
+                                <MapIcon
+                                    class="w-4 h-4 transition-colors"
+                                    :class="groupByProvince ? 'text-primary' : 'text-black/60'"
+                                />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{{ groupByProvince ? 'Désactiver la vue par province' : 'Vue par province' }}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <button
+                                class="flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 bg-white shadow hover:bg-gray-50 transition-colors text-xs font-medium text-black/70"
+                                @click="toggleDisplayMode"
+                            >
+                                <Squares2X2Icon
+                                    v-if="displayMode === 'table'"
+                                    class="w-5 h-5 shrink-0"
+                                />
+                                <TableCellsIcon
+                                    v-else
+                                    class="w-5 h-5 shrink-0"
+                                />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{{ displayMode === 'cards' ? 'Passer en vue tableau' : 'Passer en vue cartes' }}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
         </div>
 
@@ -252,14 +201,14 @@
             :selected-country="selectedCountry"
             :group-by-province="groupByProvince"
             :filtered-provinces="selectedRegions"
-            display-mode="cards"
+            :display-mode="displayMode"
             :available-missions="availableMissions"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { Squares2X2Icon, TableCellsIcon, FunnelIcon, ArrowLeftIcon, MapIcon } from '@heroicons/vue/24/outline';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
@@ -302,11 +251,13 @@ const selectedFilters = ref({
 });
 
 const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
-    default: () => ({
-        type: 'all',
-        role: 'all',
-    }),
+    default: () => ({ type: 'all', role: 'all' }),
 });
+
+const displayModeCookie = useCookie<'cards' | 'table'>('displayMode', {
+    default: () => 'cards',
+});
+const displayMode = ref<'cards' | 'table'>(displayModeCookie.value);
 
 const groupByProvince = ref(true);
 
@@ -317,16 +268,17 @@ const activeFiltersCount = computed(() => {
     return count;
 });
 
-const currentIcon = computed(() => (groupByProvince.value ? QueueListIcon : Squares2X2Icon));
+const toggleDisplayMode = () => {
+    displayMode.value = displayMode.value === 'cards' ? 'table' : 'cards';
+    displayModeCookie.value = displayMode.value;
+};
 
-const toggleIcon = () => {
+const toggleGroupByProvince = () => {
     groupByProvince.value = !groupByProvince.value;
 };
 
 const toggleAllRegions = (checked: boolean) => {
-    if (checked) {
-        selectedRegions.value = [];
-    }
+    if (checked) selectedRegions.value = [];
 };
 
 const updateRegionSelection = (region: string, checked: boolean) => {
@@ -341,10 +293,8 @@ const updateRegionSelection = (region: string, checked: boolean) => {
 };
 
 const selectedProvincesPlaceholder = computed(() => {
-    if (isAllSelected.value || selectedRegions.value.length === 0) {
-        return 'Tous';
-    }
-    return selectedRegions.value.map(region => region).join(', ');
+    if (isAllSelected.value || selectedRegions.value.length === 0) return 'Tous';
+    return selectedRegions.value.join(', ');
 });
 
 onMounted(() => {

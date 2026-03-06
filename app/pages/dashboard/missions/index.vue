@@ -258,6 +258,18 @@
                                 <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
                                 <span>{{ mission.required_diploma }}</span>
                             </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex justify-end">
+                                <NuxtLink :href="`/dashboard/missions/${mission.id}`">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        class="text-xs border-gray-200 text-gray-600 hover:border-success hover:text-success"
+                                    >
+                                        <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                        Voir les détails
+                                    </Button>
+                                </NuxtLink>
+                            </div>
                         </div>
                     </div>
                     <div v-else>
@@ -411,6 +423,18 @@
                                             <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
                                             <span>{{ response.mission.required_diploma }}</span>
                                         </div>
+                                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-end">
+                                            <NuxtLink :href="`/dashboard/missions/${response.mission.id}`">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    class="text-xs border-gray-200 text-gray-600 hover:border-orange-400 hover:text-orange-500"
+                                                >
+                                                    <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                                    Voir les détails
+                                                </Button>
+                                            </NuxtLink>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -469,6 +493,18 @@
                                         <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
                                         <span>{{ response.mission.required_diploma }}</span>
                                     </div>
+                                    <div class="mt-3 pt-3 border-t border-gray-100 flex justify-end">
+                                        <NuxtLink :href="`/dashboard/missions/${response.mission.id}`">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                class="text-xs border-gray-200 text-gray-600 hover:border-orange-400 hover:text-orange-500"
+                                            >
+                                                <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                                Voir les détails
+                                            </Button>
+                                        </NuxtLink>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -503,7 +539,7 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, BriefcaseIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon, MegaphoneIcon, UserCircleIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, BriefcaseIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon, MegaphoneIcon, UserCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

@@ -504,3 +504,35 @@ export type Notification = {
     created_at?: string;
     updated_at?: string;
 };
+
+export interface InstitutionService {
+    id: number;
+    institution_id: number;
+    name: string;
+    phone_number?: string | null;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface InstitutionUserRole {
+    id: number;
+    institution_id: number;
+    user_id: number;
+    role_id: number;
+    created_at?: string;
+    updated_at?: string;
+    user?: User;
+    role?: Role;
+}
+
+export interface Institution {
+    id: number;
+    name: string;
+    services?: InstitutionService[];
+    userRoles?: InstitutionUserRole[];
+    services_count?: number;
+    users_count?: number;
+    created_at?: string;
+    updated_at?: string;
+    deleted_at?: string | null;
+}
