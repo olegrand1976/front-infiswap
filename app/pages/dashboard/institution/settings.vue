@@ -102,7 +102,8 @@ const fetchInstitution = async () => {
 
             logoFile.value = logoUrl || null;
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Erreur lors du chargement:', error);
     }
 };
@@ -112,7 +113,8 @@ const handleDeleteLogo = async () => {
         await deleteLogo();
         logoFile.value = null;
         imageUploadKey.value += 1;
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Erreur lors de la suppression:', error);
     }
 };
@@ -127,16 +129,17 @@ const handleSubmit = async () => {
     try {
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
-        
+
         formDataToSend.append('company_number', formData.company_number || '');
         if (logoFile.value instanceof File) {
             formDataToSend.append('logo', logoFile.value);
         }
 
         const response = await createOrUpdate(formDataToSend);
-        
+
         imageUploadKey.value += 1;
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Erreur lors de la mise à jour:', error);
     }
 };

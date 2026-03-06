@@ -50,6 +50,11 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
             if (!(options.body instanceof FormData)) {
                 headers['Content-Type'] = 'application/json';
             }
+            else {
+                if (options.body instanceof FormData) {
+                    options.body = options.body as any;
+                }
+            }
 
             if (import.meta.server) {
                 const cookieString = event

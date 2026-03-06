@@ -286,7 +286,10 @@
                                             {{ r.user.institution.name }}
                                         </span>
                                     </template>
-                                    <span v-else class="text-gray-400">—</span>
+                                    <span
+                                        v-else
+                                        class="text-gray-400"
+                                    >—</span>
                                 </div>
                             </TableCell>
 

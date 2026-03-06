@@ -106,7 +106,8 @@ export const useInstitutions = () => {
             });
             currentInstitution.value = response.data;
             return response.data;
-        } catch (error: any) {
+        }
+        catch (error: any) {
             console.error('Erreur lors du chargement de l\'institution:', error);
             $toast({
                 title: 'Erreur',
@@ -114,7 +115,8 @@ export const useInstitutions = () => {
                 variant: 'destructive',
             });
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     }
@@ -147,7 +149,8 @@ export const useInstitutions = () => {
                 title: 'Succès',
                 description: 'Logo supprimé avec succès',
             });
-        } catch (error: any) {
+        }
+        catch (error: any) {
             console.error('Erreur lors de la suppression du logo:', error);
             $toast({
                 title: 'Erreur',
@@ -162,18 +165,20 @@ export const useInstitutions = () => {
         if (institution instanceof FormData) {
             try {
                 saving.value = true;
-                // Log des données envoyées
                 const formDataEntries: Record<string, any> = {};
                 for (const [key, value] of institution.entries()) {
                     if (value instanceof File) {
                         formDataEntries[key] = `File: ${value.name} (${value.size} bytes)`;
-                    } else {
+                    }
+                    else {
                         formDataEntries[key] = value;
                     }
                 }
 
+                institution.append('_method', 'PUT');
+
                 const response = await $apifetch('/api/institution/settings', {
-                    method: 'PUT',
+                    method: 'POST',
                     body: institution,
                 });
 
@@ -183,20 +188,20 @@ export const useInstitutions = () => {
                     description: 'Paramètres de l\'institution mis à jour avec succès',
                 });
                 return response.data;
-            } catch (error: any) {
-
-
-                const errorMessage = error?.data?.message || 
-                                   error?.data?.errors || 
-                                   error?.message || 
-                                   'Impossible de mettre à jour les paramètres';
+            }
+            catch (error: any) {
+                const errorMessage = error?.data?.message
+                    || error?.data?.errors
+                    || error?.message
+                    || 'Impossible de mettre à jour les paramètres';
                 $toast({
                     title: 'Erreur',
                     description: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
                     variant: 'destructive',
                 });
                 throw error;
-            } finally {
+            }
+            finally {
                 saving.value = false;
             }
         }
