@@ -1,5 +1,14 @@
 <template>
-    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group">
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative overflow-hidden">
+
+        <!-- ✅ AJOUT 1 : Ruban diagonal "FERMÉ" rouge en haut à droite -->
+        <div
+            v-if="isClosed"
+            class="absolute top-3 -right-8 bg-red-500 text-white text-[10px] font-bold py-0.5 px-10 rotate-45 shadow-sm z-10 tracking-widest pointer-events-none"
+        >
+            FERMÉ
+        </div>
+
         <div class="flex justify-between items-start">
             <div class="flex-1">
                 <h2 class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors">
@@ -16,6 +25,7 @@
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+            <!-- Périodes -->
             <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
                     <span class="text-base">📅</span>
@@ -182,24 +192,91 @@
                 </div>
             </div>
 
-            <Button
-                size="sm"
-                :href="`/dashboard/replacements/detail/${replacement.id}`"
-                class="shrink-0"
-            >
-                <span>Voir détail</span>
-                <ChevronRightIcon class="w-3.5 h-3.5" />
-            </Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        class="shrink-0 gap-1.5 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all font-medium"
+                    >
+                        <EllipsisHorizontalIcon class="w-4 h-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    align="end"
+                    class="w-48"
+                >
+                    <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
+                        Actions
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem as-child>
+                        <NuxtLink
+                            :href="`/dashboard/replacements/detail/${replacement.id}`"
+                            class="flex items-center gap-2 text-sm cursor-pointer"
+                        >
+                            <EyeIcon class="w-4 h-4 text-gray-500" />
+                            <span>Voir le détail</span>
+                        </NuxtLink>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator v-if="canClose" />
+
+                    <DropdownMenuItem
+                        v-if="canClose"
+                        class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
+                        @click="closeDialog = true"
+                    >
+                        <LockClosedIcon class="w-4 h-4" />
+                        <span>Fermer</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
+
+        <Dialog v-model:open="closeDialog">
+            <DialogContent class="sm:max-w-lg overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle>Fermer le remplacement</DialogTitle>
+                    <DialogDescription class="mt-3 mb-6">
+                        Êtes-vous sûr de vouloir fermer ce remplacement ? Cette action est irréversible.
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
+                    <Button
+                        variant="secondary"
+                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                        @click="closeDialog = false"
+                    >
+                        Non
+                    </Button>
+                    <Button
+                        variant="default"
+                        class="px-8 bg-red-600 hover:bg-red-700 text-white"
+                        :disabled="isClosing"
+                        @click="handleCloseReplacement"
+                    >
+                        <span v-if="isClosing">Fermeture...</span>
+                        <span v-else>Oui, fermer</span>
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
+import { useReplacements } from '~/composables/useReplacements';
+import type { User } from '~/lib/types';
 
 interface Replacement {
     id: number;
     creator_name?: string;
+    user_id: number;
     periods?: Array<{ start_date: string; end_date: string }>;
     cities?: string[];
     zip_codes?: string[];
@@ -220,10 +297,48 @@ const props = defineProps<{
     replacement: Replacement;
 }>();
 
+const emit = defineEmits<{
+    (e: 'closed'): void;
+}>();
+
+const { $toast } = useNuxtApp();
+const { updateReplacement } = useReplacements();
+const user = useState<User>('user');
+
 const showAllPeriods = ref(false);
 const showAllCities = ref(false);
 const showAllZipCodes = ref(false);
 const showAllCareTypes = ref(false);
+const closeDialog = ref(false);
+const isClosing = ref(false);
+
+const localClosed = ref(false);
+
+const canClose = computed(() => {
+    return user.value?.id === props.replacement.user_id
+        && !isClosed.value;
+});
+
+const handleCloseReplacement = async () => {
+    isClosing.value = true;
+    try {
+        const payload = { ...props.replacement, status: 'closed' };
+        const response = await updateReplacement(payload);
+        if (response) {
+            $toast({ description: response.message ?? 'Remplacement fermé avec succès.' });
+            closeDialog.value = false;
+            localClosed.value = true;
+            emit('closed');
+        }
+    }
+    catch (error) {
+        console.error(error);
+        $toast({ description: 'Une erreur est survenue.' });
+    }
+    finally {
+        isClosing.value = false;
+    }
+};
 
 const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -296,18 +411,14 @@ const isUrgent = computed(() => {
 });
 
 const isClosed = computed(() => {
-    return props.replacement.status === 'closed'
+    return localClosed.value
+        || props.replacement.status === 'closed'
         || props.replacement.replaced_by !== null;
 });
 
 const statusText = computed(() => {
-    if (isClosed.value) {
-        return 'Fermé';
-    }
-
-    if (isUrgent.value) {
-        return 'Urgent';
-    }
+    if (isClosed.value) return 'Fermé';
+    if (isUrgent.value) return 'Urgent';
 
     const status = props.replacement.status?.toLowerCase();
     switch (status) {
@@ -329,17 +440,9 @@ const statusText = computed(() => {
 });
 
 const statusBadgeClass = computed(() => {
-    // Priorité 1: Fermé
-    if (isClosed.value) {
-        return 'bg-red-100 text-red-700';
-    }
+    if (isClosed.value) return 'bg-red-100 text-red-700';
+    if (isUrgent.value) return 'bg-orange-100 text-orange-700 animate-pulse';
 
-    // Priorité 2: Urgent
-    if (isUrgent.value) {
-        return 'bg-orange-100 text-orange-700 animate-pulse';
-    }
-
-    // Priorité 3: Statut normal
     const status = props.replacement.status?.toLowerCase();
     switch (status) {
         case 'available':

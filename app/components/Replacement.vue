@@ -2064,6 +2064,7 @@ const formatReplacementForCard = (replacementGroup) => {
 
     return {
         id: replacementGroup.id,
+        user_id: replacementGroup.user_id,
         creator_name: replacementGroup.user?.full_name || replacementGroup.user?.name,
         periods: replacementGroup.periods?.map(p => ({
             start_date: p.start_date,
