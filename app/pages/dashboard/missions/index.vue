@@ -91,6 +91,49 @@
                             type="date"
                             class="w-full lg:w-[250px]"
                         />
+                        <div class="w-full lg:w-[250px]">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Pays de travail
+                            </label>
+                            <div class="border-2 border-gray-300 rounded-md p-3 min-h-[48px] flex items-center">
+                                <div class="flex flex-wrap gap-3 w-full">
+                                    <div
+                                        v-for="workingAt in countryOfWork"
+                                        :key="workingAt.value"
+                                        class="flex items-center gap-2"
+                                    >
+                                        <Checkbox
+                                            :checked="myMissionsOption.workingAt.includes(workingAt.value)"
+                                            @update:checked="(checked) => {
+                                                if (checked) {
+                                                    if (!myMissionsOption.workingAt.includes(workingAt.value)) {
+                                                        myMissionsOption.workingAt.push(workingAt.value);
+                                                    }
+                                                }
+                                                else {
+                                                    myMissionsOption.workingAt = myMissionsOption.workingAt.filter(c => c !== workingAt.value);
+                                                }
+                                            }"
+                                        />
+                                        <div class="flex items-center gap-2">
+                                            <LayoutsAppImage
+                                                :src="workingAt.icon"
+                                                :alt="workingAt.name"
+                                                class="w-4 h-3"
+                                                format="png"
+                                            />
+                                            <span class="text-sm">{{ workingAt.label }}</span>
+                                        </div>
+                                    </div>
+                                    <span
+                                        v-if="myMissionsOption.workingAt.length === 0"
+                                        class="text-gray-400 text-sm ml-2"
+                                    >
+                                        Tous les pays
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <Button
                                 class="flex-1 sm:flex-none rounded-md bg-success hover:bg-success/90 text-white"
@@ -466,6 +509,7 @@ import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 
 useHead({
     title: 'Missions',
@@ -501,7 +545,22 @@ const myMissionsState = useState('myMissions', () => ({ data: [], meta: {} }));
 const candidacyPerPage = ref(PERPAGE);
 const candidacyPage = ref(1);
 
-const myMissionsOption = ref({ institutionName: '', date: '' });
+const countryOfWork = [
+    {
+        value: 'Belgique',
+        label: 'Belgique',
+        name: 'belgique',
+        icon: '/icons/belgium.png',
+    },
+    {
+        value: 'France',
+        label: 'France',
+        name: 'france',
+        icon: '/icons/fr.png',
+    },
+];
+
+const myMissionsOption = ref({ institutionName: '', date: '', workingAt: [] as string[] });
 const candidacyOption = ref({ institutionName: '', responseDate: '' });
 
 const dataAllMyMissions = computed(() => myMissionsState.value?.data ?? []);
@@ -513,10 +572,18 @@ async function loadMyMissions() {
     isLoadingMyMissions.value = true;
     try {
         const { $apifetch } = useNuxtApp();
+        const params: Record<string, any> = {
+            institutionName: myMissionsOption.value.institutionName,
+            date: myMissionsOption.value.date,
+        };
+
+        // Ajouter workingAt seulement si des pays sont sélectionnés
+        if (myMissionsOption.value.workingAt.length > 0) {
+            params.workingAt = myMissionsOption.value.workingAt;
+        }
+
         const response = await $apifetch('api/institution/missions/', {
-            params: {
-                ...myMissionsOption.value,
-            },
+            params,
         });
         myMissionsState.value = response;
     }
@@ -613,6 +680,7 @@ const searchCandidacy = debounce(async () => {
 const reinitializeMyMissionsFilter = async () => {
     myMissionsOption.value.date = '';
     myMissionsOption.value.institutionName = '';
+    myMissionsOption.value.workingAt = [];
     await filterMissions();
 };
 
