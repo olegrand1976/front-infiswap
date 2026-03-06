@@ -412,48 +412,47 @@
                                         </Select>
                                     </div>
 
-                                    <div class="col-span-2">
-                                        <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                    <div class="col-span-4">
+                                        <div class="text-sm font-medium text-gray-700 mb-4 block">
                                             Pays de recherche
-                                        </label>
-                                        <Select v-model="formData.address.workingAt">
-                                            <SelectTrigger
-                                                class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                                position="right"
+                                            <span
+                                                v-if="formData.address.workingAt.length === 0"
+                                                class="text-gray-400 text-sm ml-2 font-light"
                                             >
-                                                <LayoutsAppImage
-                                                    src="/icons/plus.png"
-                                                    class="h-4 ml-2"
+                                                (Sélectionnez un ou plusieurs pays)
+                                            </span>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                                            <div
+                                                v-for="workingAt in countryOfWork"
+                                                :key="workingAt.value"
+                                                class="flex items-center gap-2"
+                                            >
+                                                <Checkbox
+                                                    :checked="formData.address.workingAt.includes(workingAt.value)"
+                                                    @update:checked="(checked) => {
+                                                        if (checked) {
+                                                            if (!formData.address.workingAt.includes(workingAt.value)) {
+                                                                formData.address.workingAt.push(workingAt.value);
+                                                            }
+                                                        }
+                                                        else {
+                                                            formData.address.workingAt = formData.address.workingAt.filter(c => c !== workingAt.value);
+                                                        }
+                                                    }"
                                                 />
-                                                <SelectValue
-                                                    placeholder="Pays"
-                                                    class="ml-3 block w-full"
-                                                />
-                                            </SelectTrigger>
-                                            <SelectContent class="border border-none w-full">
-                                                <SelectGroup>
-                                                    <div
-                                                        v-for="workingAt in countryOfWork"
-                                                        :key="workingAt.value"
-                                                        class="flex justify-center items-center -ms-3 w-full"
-                                                    >
-                                                        <SelectItem :value="workingAt.value">
-                                                            <div class="flex w-full">
-                                                                <LayoutsAppImage
-                                                                    :src="workingAt.icon"
-                                                                    :alt="workingAt.name"
-                                                                    class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
-                                                                    format="png"
-                                                                />
-                                                                <div class="sm:text-xs xl:text-sm">
-                                                                    {{ workingAt.label }}
-                                                                </div>
-                                                            </div>
-                                                        </SelectItem>
-                                                    </div>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                                <div class="flex items-center gap-2">
+                                                    <LayoutsAppImage
+                                                        :src="workingAt.icon"
+                                                        :alt="workingAt.name"
+                                                        class="xl:w-4 xl:h-3 sm:w-3 sm:h-2"
+                                                        format="png"
+                                                    />
+                                                    <span class="sm:text-xs xl:text-sm">{{ workingAt.label }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div
@@ -472,7 +471,7 @@
                                     </div>
                                     <div
                                         v-else
-                                        class="col-span-2"
+                                        class="col-span-4"
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             Numéro d'entreprise
@@ -971,47 +970,45 @@
                         </div>
 
                         <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700">
+                            <div class="text-sm font-medium mb-2 text-gray-700">
                                 Pays de recherche
-                            </label>
-                            <Select v-model="formData.address.workingAt">
-                                <SelectTrigger
-                                    class="flex justify-between items-center rounded-full border-2 border-gray-300 mt-1"
-                                    position="right"
+                                <span
+                                    v-if="formData.address.workingAt.length === 0"
+                                    class="text-gray-400 text-sm ml-2 font-light"
                                 >
-                                    <LayoutsAppImage
-                                        src="/icons/plus.png"
-                                        class="h-4 ml-2"
+                                    Sélectionnez un ou plusieurs pays
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 w-full">
+                                <div
+                                    v-for="workingAt in countryOfWork"
+                                    :key="workingAt.value"
+                                    class="flex items-center gap-2"
+                                >
+                                    <Checkbox
+                                        :checked="formData.address.workingAt.includes(workingAt.value)"
+                                        @update:checked="(checked) => {
+                                            if (checked) {
+                                                if (!formData.address.workingAt.includes(workingAt.value)) {
+                                                    formData.address.workingAt.push(workingAt.value);
+                                                }
+                                            }
+                                            else {
+                                                formData.address.workingAt = formData.address.workingAt.filter(c => c !== workingAt.value);
+                                            }
+                                        }"
                                     />
-                                    <SelectValue
-                                        placeholder="Pays"
-                                        class="ml-3 block w-full"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none w-full">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="workingAt in countryOfWork"
-                                            :key="workingAt.value"
-                                            class="flex justify-center items-center -ms-3 w-full"
-                                        >
-                                            <SelectItem :value="workingAt.value">
-                                                <div class="flex w-full">
-                                                    <LayoutsAppImage
-                                                        :src="workingAt.icon"
-                                                        :alt="workingAt.name"
-                                                        class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
-                                                        format="png"
-                                                    />
-                                                    <div class="sm:text-xs xl:text-sm">
-                                                        {{ workingAt.label }}
-                                                    </div>
-                                                </div>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                                    <div class="flex items-center gap-2">
+                                        <LayoutsAppImage
+                                            :src="workingAt.icon"
+                                            :alt="workingAt.name"
+                                            class="xl:w-4 xl:h-3 sm:w-3 sm:h-2"
+                                            format="png"
+                                        />
+                                        <span class="sm:text-xs xl:text-sm">{{ workingAt.label }}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div
@@ -1212,7 +1209,14 @@ const countries = [
     },
 ];
 
-const countryOfWork = [
+type CountryOfWork = {
+    value: 'Belgique' | 'France';
+    label: string;
+    name: string;
+    icon: string;
+};
+
+const countryOfWork: CountryOfWork[] = [
     {
         value: 'Belgique',
         label: 'Belgique',
@@ -1278,7 +1282,7 @@ const formData = reactive({
         city: '',
         zipCode: '',
         country: countries[0].value,
-        workingAt: country.value,
+        workingAt: country.value ? [country.value as 'Belgique' | 'France'] : [] as ('Belgique' | 'France')[],
         additionnalInformation: '',
     },
     referralSource: '',
@@ -1289,11 +1293,18 @@ const formData = reactive({
     groupName: '',
 });
 
-const identifierLabel = computed(() =>
-    formData.address.workingAt === 'France'
-        ? 'Numéro RPPS'
-        : 'Numéro INAMI',
-);
+const identifierLabel = computed(() => {
+    const hasFrance = formData.address.workingAt.includes('France');
+    const hasBelgique = formData.address.workingAt.includes('Belgique');
+
+    if (hasFrance && hasBelgique) {
+        return 'Numéro RPPS / Numéro INAMI';
+    }
+    if (hasFrance) {
+        return 'Numéro RPPS';
+    }
+    return 'Numéro INAMI';
+});
 
 const route = useRoute();
 const { register } = useAuth();

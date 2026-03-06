@@ -363,6 +363,8 @@ const adminNavigationItems: NavigationItem[] = [
 
     { label: 'CRM', route: '/dashboard/admin/users/crm', icon: UsersIcon, visible: true },
 
+    { label: 'Institutions', route: '/dashboard/admin/institutions', icon: DocumentTextIcon, visible: true },
+
     { label: 'Type de soins', route: '/dashboard/admin/care-types', icon: ShieldCheckIcon, visible: true },
 
     {
