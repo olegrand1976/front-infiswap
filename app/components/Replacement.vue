@@ -8,13 +8,18 @@
                         <FormItem>
                             <FormControl>
                                 <div class="flex bg-primary space-x-3 rounded-full items-center justify-between ps-3 pe-1">
-                                    <h5 class="text-white text-xs">Jours</h5>
+                                    <h5 class="text-white text-xs">
+                                        Jours
+                                    </h5>
                                     <Select>
                                         <SelectTrigger
                                             class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full border-none text-xs"
                                             position="right"
                                         >
-                                            <SelectValue :placeholder="selectedDaysPlaceholder" class="text-xs truncate" />
+                                            <SelectValue
+                                                :placeholder="selectedDaysPlaceholder"
+                                                class="text-xs truncate"
+                                            />
                                         </SelectTrigger>
                                         <SelectContent class="border-none">
                                             <SelectGroup class="w-32">
@@ -92,7 +97,9 @@
                                     class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
                                     title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
                                 >
-                                    <h5 class="text-white text-xs">Ville(s)</h5>
+                                    <h5 class="text-white text-xs">
+                                        Ville(s)
+                                    </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
                                         class="w-56 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border-none"
@@ -228,11 +235,6 @@
                                     v-for="r in currentReplacements"
                                     :key="`r-${r.id}`"
                                     :replacement="formatReplacementForCard(r)"
-                                />
-                                <MissionCard
-                                    v-for="mission in availableMissions"
-                                    :key="`mission-${mission.id}`"
-                                    :mission="mission"
                                 />
                             </template>
                         </div>
@@ -535,7 +537,10 @@
                 </DialogHeader>
                 <template v-if="selectedCountry === 'fr'">
                     <div class="py-4">
-                        <InputIcon v-model="searchQuery" placeholder="Entrer un département" />
+                        <InputIcon
+                            v-model="searchQuery"
+                            placeholder="Entrer un département"
+                        />
                         <div class="grid sm:grid-cols-2 gap-4 mt-8">
                             <div
                                 v-for="region in filteredDepartments"

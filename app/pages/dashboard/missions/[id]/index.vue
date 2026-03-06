@@ -11,7 +11,10 @@
             </h1>
         </div>
 
-        <div v-if="loading" class="mt-32 flex flex-col items-center gap-3 text-gray-400">
+        <div
+            v-if="loading"
+            class="mt-32 flex flex-col items-center gap-3 text-gray-400"
+        >
             <ArrowPathIcon class="w-6 h-6 animate-spin text-primary" />
             <p class="text-sm">
                 Chargement...

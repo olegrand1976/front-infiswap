@@ -117,7 +117,12 @@
                 </div>
             </div>
 
-            <Button size="sm" variant="outline" :href="`/dashboard/missions/${mission.id}`" class="text-xs border-gray-200 text-gray-600 hover:border-primary hover:text-primary">
+            <Button
+                size="sm"
+                variant="outline"
+                :href="`/dashboard/missions/${mission.id}`"
+                class="text-xs border-gray-200 text-gray-600 hover:border-primary hover:text-primary"
+            >
                 <EyeIcon class="w-3.5 h-3.5 mr-1" /> Détails
             </Button>
             <Button

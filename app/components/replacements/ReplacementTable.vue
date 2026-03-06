@@ -4,19 +4,31 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none', gridClass]">
-                        <TableHead v-if="type === ''" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === ''"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Nom complet
                         </TableHead>
-                        <TableHead v-if="type === ''" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === ''"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Téléphone
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
                         <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
-                            <div class="text-center">Matin</div>
-                            <div class="text-center">Midi</div>
-                            <div class="text-center">Soir</div>
+                            <div class="text-center">
+                                Matin
+                            </div>
+                            <div class="text-center">
+                                Midi
+                            </div>
+                            <div class="text-center">
+                                Soir
+                            </div>
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Codes postaux
@@ -27,13 +39,22 @@
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Types de soins
                         </TableHead>
-                        <TableHead v-if="type === 'groups'" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === 'groups'"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Créateur
                         </TableHead>
-                        <TableHead v-if="type === 'groups'" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === 'groups'"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Groupe
                         </TableHead>
-                        <TableHead v-if="type === ''" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === ''"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Catégorie
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -43,9 +64,16 @@
                 </TableHeader>
 
                 <TableBody class="rounded-b-lg">
-                    <ReplacementTableSkeleton v-if="loading" :type="type" :count="10" />
+                    <ReplacementTableSkeleton
+                        v-if="loading"
+                        :type="type"
+                        :count="10"
+                    />
 
-                    <div v-else-if="replacements.length === 0" class="text-center text-gray-500 py-8">
+                    <div
+                        v-else-if="replacements.length === 0"
+                        class="text-center text-gray-500 py-8"
+                    >
                         Aucun résultat n'est trouvé
                     </div>
 
@@ -58,19 +86,22 @@
                             <div
                                 v-if="isUrgentReplacement(r) && r.replaced_by !== null"
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                    { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
+                                            { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
-                                    isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
+                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
 
-                            <TableCell v-if="type === ''" class="bg-gray-100 text-xs pt-5">
+                            <TableCell
+                                v-if="type === ''"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
                                 <div
                                     class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
                                     @click="emit('show-info-user', r.user)"
@@ -79,7 +110,10 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell v-if="type === ''" class="bg-gray-100 text-xs pt-5">
+                            <TableCell
+                                v-if="type === ''"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                     {{ r.user.phone_number }}
                                 </div>
@@ -100,7 +134,10 @@
                                             <span>{{ formatDate(period.end_date) }}</span>
                                         </div>
                                     </div>
-                                    <div class="mt-1 text-xs font-semibold text-primary cursor-pointer" @click="emit('show-periods', r.periods)">
+                                    <div
+                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                        @click="emit('show-periods', r.periods)"
+                                    >
                                         Voir tout
                                     </div>
                                 </template>
@@ -116,9 +153,24 @@
                             </TableCell>
 
                             <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
-                                <div><CheckCircleIcon v-if="hasShift(r, 'morning')" class="h-6 text-green-500" /></div>
-                                <div><CheckCircleIcon v-if="hasShift(r, 'afternoon')" class="h-6 text-green-500" /></div>
-                                <div><CheckCircleIcon v-if="hasShift(r, 'evening')" class="h-6 text-green-500" /></div>
+                                <div>
+                                    <CheckCircleIcon
+                                        v-if="hasShift(r, 'morning')"
+                                        class="h-6 text-green-500"
+                                    />
+                                </div>
+                                <div>
+                                    <CheckCircleIcon
+                                        v-if="hasShift(r, 'afternoon')"
+                                        class="h-6 text-green-500"
+                                    />
+                                </div>
+                                <div>
+                                    <CheckCircleIcon
+                                        v-if="hasShift(r, 'evening')"
+                                        class="h-6 text-green-500"
+                                    />
+                                </div>
                             </TableCell>
 
                             <TableCell class="bg-[#F1F2F7] text-xs">
@@ -182,18 +234,27 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell v-if="type === 'groups'" class="bg-gray-100 text-xs pt-5">
+                            <TableCell
+                                v-if="type === 'groups'"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                     {{ getCreatorInfo(r, 'name') || '—' }}
                                 </div>
                             </TableCell>
-                            <TableCell v-if="type === 'groups'" class="bg-gray-100 text-xs pt-5">
+                            <TableCell
+                                v-if="type === 'groups'"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-start px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                     {{ getCreatorInfo(r, 'group') || '—' }}
                                 </div>
                             </TableCell>
 
-                            <TableCell v-if="type === ''" class="bg-gray-100 text-xs pt-5">
+                            <TableCell
+                                v-if="type === ''"
+                                class="bg-gray-100 text-xs pt-5"
+                            >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
                                     {{ roles[r.role_type] }}
                                 </div>
@@ -207,12 +268,18 @@
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent class="w-48">
                                             <DropdownMenuItem as-child>
-                                                <NuxtLink :href="`/dashboard/replacements/detail/${r.id}`" class="flex items-center space-x-2 text-sm">
+                                                <NuxtLink
+                                                    :href="`/dashboard/replacements/detail/${r.id}`"
+                                                    class="flex items-center space-x-2 text-sm"
+                                                >
                                                     <EyeIcon class="h-4 w-4" />
                                                     <span>Voir</span>
                                                 </NuxtLink>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem class="flex items-center space-x-2 text-sm" @click="emit('open-edit', r)">
+                                            <DropdownMenuItem
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="emit('open-edit', r)"
+                                            >
                                                 <PencilSquareIcon class="h-4 w-4" />
                                                 <span>Modifier</span>
                                             </DropdownMenuItem>
@@ -255,13 +322,19 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
-                        <TableHead v-if="type === ''" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === ''"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Nom complet
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Date
                         </TableHead>
-                        <TableHead v-if="type === 'me'" class="bg-primary w-full flex justify-center items-center text-white text-xs">
+                        <TableHead
+                            v-if="type === 'me'"
+                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
+                        >
                             Localité
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
@@ -271,9 +344,16 @@
                 </TableHeader>
 
                 <TableBody class="rounded-b-lg">
-                    <ReplacementTableSkeleton v-if="loading" :type="type" :count="10" />
+                    <ReplacementTableSkeleton
+                        v-if="loading"
+                        :type="type"
+                        :count="10"
+                    />
 
-                    <div v-else-if="replacements.length === 0" class="text-center text-gray-500 py-8">
+                    <div
+                        v-else-if="replacements.length === 0"
+                        class="text-center text-gray-500 py-8"
+                    >
                         Aucun résultat n'est trouvé
                     </div>
 
@@ -286,21 +366,25 @@
                             <div
                                 v-if="isUrgentReplacement(r) && r.replaced_by !== null"
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
-                                    { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
+                                            { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-yellow-400 text-red-600',
-                                    isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
+                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
 
                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                 <template v-if="r.periods.length > 0 && r.start_date == null && r.end_date == null">
-                                    <div v-for="(period, idx) in r.periods.slice(0, 1)" :key="idx" class="flex flex-col items-center mb-2">
+                                    <div
+                                        v-for="(period, idx) in r.periods.slice(0, 1)"
+                                        :key="idx"
+                                        class="flex flex-col items-center mb-2"
+                                    >
                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(period.start_date) }}</span>
                                         </div>
@@ -309,7 +393,10 @@
                                             <span>{{ formatDate(period.end_date) }}</span>
                                         </div>
                                     </div>
-                                    <div class="mt-1 text-xs font-semibold text-primary cursor-pointer" @click="emit('show-periods', r.periods)">
+                                    <div
+                                        class="mt-1 text-xs font-semibold text-primary cursor-pointer"
+                                        @click="emit('show-periods', r.periods)"
+                                    >
                                         Voir tout
                                     </div>
                                 </template>
@@ -323,7 +410,10 @@
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <div class="flex h-full w-full justify-center items-center" style="min-height: 3rem;">
+                                    <div
+                                        class="flex h-full w-full justify-center items-center"
+                                        style="min-height: 3rem;"
+                                    >
                                         <span class="bg-[#E4E7F4] rounded px-2 py-1">{{ formatDate(r.start_date) }}</span>
                                     </div>
                                 </template>
@@ -340,7 +430,10 @@
                                                         :key="zi"
                                                         :class="[cn('text-xs leading-snug', { 'text-success font-bold': isZipCodeHighlighted(zip) })]"
                                                     >{{ zip }}</span>
-                                                    <span v-if="parseJson(r.zip_codes).length > 3" class="text-xs text-gray-500">...</span>
+                                                    <span
+                                                        v-if="parseJson(r.zip_codes).length > 3"
+                                                        class="text-xs text-gray-500"
+                                                    >...</span>
                                                 </div>
                                             </TooltipTrigger>
                                             <TooltipContent class="text-sm max-w-[200px]">
@@ -366,12 +459,18 @@
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent class="w-48">
                                                 <DropdownMenuItem as-child>
-                                                    <NuxtLink :href="`/dashboard/replacements/detail/${r.id}`" class="flex items-center space-x-2 text-sm">
+                                                    <NuxtLink
+                                                        :href="`/dashboard/replacements/detail/${r.id}`"
+                                                        class="flex items-center space-x-2 text-sm"
+                                                    >
                                                         <EyeIcon class="h-4 w-4" />
                                                         <span>Voir</span>
                                                     </NuxtLink>
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem class="flex items-center space-x-2 text-sm" @click="emit('open-edit', r)">
+                                                <DropdownMenuItem
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="emit('open-edit', r)"
+                                                >
                                                     <PencilSquareIcon class="h-4 w-4" />
                                                     <span>Modifier</span>
                                                 </DropdownMenuItem>
@@ -420,7 +519,11 @@
                     </DialogDescription>
                 </DialogHeader>
                 <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
-                    <Button variant="secondary" class="bg-gray-200 hover:bg-gray-300 px-8" @click="closeReplacementDialog = false">
+                    <Button
+                        variant="secondary"
+                        class="bg-gray-200 hover:bg-gray-300 px-8"
+                        @click="closeReplacementDialog = false"
+                    >
                         Non
                     </Button>
                     <Button
@@ -484,8 +587,8 @@ const openCloseDialog = (r: Replacement) => {
 };
 
 const gridColsByType: Record<string, string> = {
-    groups: 'grid-cols-8',
-    me: 'grid-cols-6',
+    'groups': 'grid-cols-8',
+    'me': 'grid-cols-6',
     '': 'grid-cols-9',
 };
 const gridClass = computed(() => gridColsByType[props.type] ?? 'grid-cols-8');
