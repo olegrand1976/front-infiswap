@@ -222,40 +222,8 @@
                     </Select>
                 </div>
 
-                <!-- Type de remplacement pour institution avec RadioGroup -->
                 <div
-                    v-if="isInstitution"
-                    class="flex flex-col space-y-2"
-                >
-                    <label class="text-primary font-semibold">
-                        Type de remplacement
-                    </label>
-                    <RadioGroup
-                        v-model="selectedReplacementType"
-                        class="flex flex-col gap-4 sm:flex-row sm:gap-12 lg:gap-8 2xl:gap-12 sm:items-center"
-                    >
-                        <div
-                            v-for="type in replacementTypes"
-                            :key="type.value"
-                            class="flex items-center space-x-2"
-                        >
-                            <RadioGroupItem
-                                :id="type.value"
-                                :value="type.value"
-                            />
-                            <label
-                                :for="type.value"
-                                class="text-sm font-medium leading-none cursor-pointer"
-                            >
-                                {{ type.label }}
-                            </label>
-                        </div>
-                    </RadioGroup>
-                </div>
-
-                <!-- Choix pour infirmière avec plusieurs rôles -->
-                <div
-                    v-else-if="hasMultipleValidRoles"
+                    v-if="hasMultipleValidRoles"
                     class="flex flex-col space-y-2"
                 >
                     <label class="text-primary font-semibold">
@@ -345,7 +313,6 @@ import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
@@ -358,13 +325,7 @@ const router = useRouter();
 const { $toast } = useNuxtApp();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
-const replacementTypes = [
-    { value: 'nurse', label: 'Infirmier(ère)' },
-    { value: 'caregiver', label: 'Aide soignant(e)' },
-    { value: 'midwife', label: 'Sage-femme' },
-];
 const selectedRole = ref(null);
-const selectedReplacementType = ref<string | null>(null);
 
 const roleType = computed(() => {
     return user.value.roles.find(role => validRoles.includes(role));
@@ -381,11 +342,10 @@ onMounted(() => {
         isMobile.value = window.innerWidth <= 1024;
     }
     if (isInstitution.value) {
-        selectedReplacementType.value = null;
-        formData.replacementType = null;
-        formData.roleType = null;
+        router.push('/dashboard/institution');
+        return;
     }
-    else if (hasMultipleValidRoles.value) {
+    if (hasMultipleValidRoles.value) {
         selectedRole.value = null;
         formData.roleType = null;
     }
@@ -406,7 +366,6 @@ const formData = reactive({
     ],
     patientCount: null as number | null,
     roleType: roleType.value,
-    replacementType: null as string | null,
     zipCodes: [] as string[],
     cities: [] as string[],
     careTypes: [] as number[],
@@ -431,15 +390,6 @@ watch(selectedRole, (newVal) => {
     }
 });
 
-watch(selectedReplacementType, (newVal) => {
-    if (newVal) {
-        formData.replacementType = newVal;
-        formData.roleType = newVal;
-    } else {
-        formData.replacementType = null;
-        formData.roleType = null;
-    }
-});
 
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');

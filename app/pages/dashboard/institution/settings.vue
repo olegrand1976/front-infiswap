@@ -55,6 +55,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-3 gap-4 lg:gap-8 mb-4 lg:mb-5">
+                    <div class="p-4 hidden lg:block">
+                        <h1 class="font-semibold text-gray-600">
+                            Permissions
+                        </h1>
+                        <p class="mt-2 text-md text-gray-500">
+                            Paramètres de postulation
+                        </p>
+                    </div>
+
+                    <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
+                        <div class="flex items-center space-x-2">
+                            <Checkbox
+                                :id="'can_apply_replacements'"
+                                :checked="formData.can_apply_replacements"
+                                @update:checked="formData.can_apply_replacements = $event"
+                            />
+                            <label
+                                :for="'can_apply_replacements'"
+                                class="text-sm font-medium text-gray-700 cursor-pointer"
+                            >
+                                Autoriser la postulation aux remplacements
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-span-3 grid place-content-center">
                     <Button
                         type="submit"
@@ -71,6 +99,7 @@
 
 <script setup lang="ts">
 import FileUpload from '@/components/ui/file-upload/FileUpload.vue';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useInstitutions } from '@/composables/useInstitution';
 
 const {
@@ -90,6 +119,7 @@ const formData = reactive({
     name: '',
     company_number: '',
     logo: null,
+    can_apply_replacements: false,
 });
 
 const fetchInstitution = async () => {
@@ -98,6 +128,7 @@ const fetchInstitution = async () => {
         if (institution.value) {
             formData.name = institution.value.name || '';
             formData.company_number = institution.value.company_number || '';
+            formData.can_apply_replacements = institution.value.can_apply_replacements || false;
             const logoUrl = getLogoUrl(institution.value?.logo);
 
             logoFile.value = logoUrl || null;
@@ -131,6 +162,7 @@ const handleSubmit = async () => {
         formDataToSend.append('name', formData.name);
 
         formDataToSend.append('company_number', formData.company_number || '');
+        formDataToSend.append('can_apply_replacements', formData.can_apply_replacements ? '1' : '0');
         if (logoFile.value instanceof File) {
             formDataToSend.append('logo', logoFile.value);
         }

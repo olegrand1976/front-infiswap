@@ -238,7 +238,7 @@
         </section>
 
         <div
-            v-if="user && replacement.user_id !== user.id && replacement.status != 'closed' && replacement.role_type == user.account_type"
+            v-if="user && replacement.user_id !== user.id && replacement.status != 'closed' && ((isInstitution && canApplyReplacements) || replacement.role_type == user.account_type)"
             class="flex justify-center mt-12"
         >
             <div class="flex flex-row items-center space-x-32">
@@ -338,6 +338,7 @@ import {
 } from '@heroicons/vue/24/solid';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
+import { useInstitutions } from '~/composables/useInstitution';
 
 const user = useState('user');
 const route = useRoute();
@@ -346,7 +347,15 @@ const replacementId = route.params.id;
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
 const { isDisabled } = sendResponse();
-const { isAdminGroup } = useAuth();
+const { isAdminGroup, isInstitution } = useAuth();
+const { currentInstitution } = useInstitutions();
+
+const canApplyReplacements = computed(() => {
+    if (!isInstitution.value || !currentInstitution.value) {
+        return false;
+    }
+    return currentInstitution.value.can_apply_replacements === true || currentInstitution.value.can_apply_replacements === 1;
+});
 const { fetchGroupMembers } = useGroup();
 
 const periodDialog = ref(false);
@@ -485,8 +494,15 @@ const {
     async () => {
         const payload = {
             ...formData,
-            respondedBy: user.value?.id ?? user.value?.id ?? null,
         };
+
+        if (isInstitution.value && user.value?.institution_id) {
+            payload.institutionId = user.value.institution_id;
+            payload.respondedBy = null;
+        } else {
+            payload.respondedBy = user.value?.id ?? null;
+            payload.institutionId = null;
+        }
 
         await sendResponse().submitResponse(payload);
     },
