@@ -272,12 +272,16 @@
                             >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] flex items-center justify-center px-3">
                                     <template v-if="r.institution || r.user?.institution">
-                                        <LayoutsAppImage
+                                        <div
                                             v-if="getInstitutionLogoUrl(r)"
-                                            :src="getInstitutionLogoUrl(r)"
-                                            :alt="getInstitutionName(r)"
-                                            class="w-8 h-8 object-contain rounded"
-                                        />
+                                            class="w-8 h-8 rounded bg-white flex items-center justify-center"
+                                        >
+                                            <img
+                                                :src="getInstitutionLogoUrl(r)"
+                                                :alt="getInstitutionName(r)"
+                                                class="max-w-full max-h-full object-contain"
+                                            >
+                                        </div>
                                         <span
                                             v-else
                                             class="text-xs truncate"

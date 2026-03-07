@@ -4,13 +4,13 @@
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1">
                     <div
-                        v-if="mission.institution?.profil_url"
-                        class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"
+                        v-if="institutionLogoUrl"
+                        class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center"
                     >
                         <img
-                            :src="mission.institution.profil_url"
-                            :alt="mission.institution.institution_name"
-                            class="w-full h-full object-cover"
+                            :src="institutionLogoUrl"
+                            :alt="mission.institution?.institution_name || mission.institution?.name"
+                            class="w-full h-full object-contain"
                         >
                     </div>
                     <div
@@ -18,7 +18,7 @@
                         class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0"
                     >
                         <span class="text-primary font-semibold text-xs">
-                            {{ mission.institution?.institution_name?.charAt(0).toUpperCase() ?? 'M' }}
+                            {{ institutionInitial }}
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -140,6 +140,7 @@
 <script lang="ts" setup>
 import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
+import { useInstitutions } from '~/composables/useInstitution';
 import type { Mission } from '~/lib/types';
 
 interface MissionCardProps {
@@ -148,6 +149,7 @@ interface MissionCardProps {
 
 const props = defineProps<MissionCardProps>();
 
+const { getLogoUrl } = useInstitutions();
 const showFullDescription = ref(false);
 
 const formatToDMY = (dateString: string) => {
@@ -205,6 +207,30 @@ const statusBadgeClass = computed(() => {
         default:
             return 'bg-green-100 text-green-700';
     }
+});
+
+const institutionLogoUrl = computed(() => {
+    const institution = props.mission.institution;
+    if (!institution) return null;
+    
+    // Vérifier d'abord le logo, puis profil_url en fallback
+    const logo = institution.logo || institution.profil_url;
+    if (!logo) return null;
+    
+    // Si c'est déjà une URL complète, la retourner telle quelle
+    if (typeof logo === 'string' && (logo.startsWith('http://') || logo.startsWith('https://'))) {
+        return logo;
+    }
+    
+    // Sinon, utiliser getLogoUrl pour construire l'URL complète
+    return getLogoUrl(logo);
+});
+
+const institutionInitial = computed(() => {
+    const institution = props.mission.institution;
+    const name = institution?.institution_name || institution?.name || '';
+    if (!name) return 'M';
+    return name.charAt(0).toUpperCase();
 });
 </script>
 

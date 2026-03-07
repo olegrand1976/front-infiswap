@@ -3,20 +3,24 @@
         <div class="flex justify-between items-start">
             <div class="flex-1 flex items-center gap-2">
                 <div
-                    v-if="replacement.institution"
+                    v-if="replacement.institution || rawReplacement?.institution || rawReplacement?.user?.institution"
                     class="flex items-center gap-2"
                 >
-                    <LayoutsAppImage
+                    <div
                         v-if="institutionLogoUrl"
-                        :src="institutionLogoUrl"
-                        :alt="replacement.institution.name"
-                        class="w-8 h-8 object-contain rounded"
-                    />
+                        class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center flex-shrink-0"
+                    >
+                        <img
+                            :src="institutionLogoUrl"
+                            :alt="institutionName"
+                            class="max-w-full max-h-full object-contain"
+                        >
+                    </div>
                     <span
-                        v-else
+                        v-else-if="institutionName"
                         class="text-xs font-medium text-gray-600"
                     >
-                        {{ replacement.institution.name }}
+                        {{ institutionName }}
                     </span>
                 </div>
                 <h2
@@ -25,13 +29,6 @@
                 >
                     {{ replacement.creator_name }}
                 </h2>
-                <span
-                    v-if="replacement.replacement_type"
-                    class="px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap"
-                    :class="replacementTypeBadgeClass"
-                >
-                    {{ replacementTypeLabel }}
-                </span>
             </div>
 
             <span
@@ -195,6 +192,15 @@
             {{ replacement.comment }}
         </p>
 
+        <div>
+            <span
+                v-if="replacement.replacement_type"
+                class="px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap"
+                :class="replacementTypeBadgeClass"
+            >
+                {{ replacementTypeLabel }}
+            </span>
+        </div>
         <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1">
                 <div class="flex items-center gap-1">
@@ -208,6 +214,7 @@
                     <UserGroupIcon class="w-3.5 h-3.5 text-primary" />
                     <span>{{ replacement.patient_count }} patient(s)/jour</span>
                 </div>
+                
             </div>
 
             <template v-if="!isOwner">
@@ -537,8 +544,21 @@ const replacementTypeBadgeClass = computed(() => {
 });
 
 const institutionLogoUrl = computed(() => {
-    if (!props.replacement.institution?.logo) return null;
-    return getLogoUrl(props.replacement.institution.logo);
+    const institution = props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution;
+    if (!institution || !institution.logo) return null;
+    
+    const logo = institution.logo;
+    if (logo.startsWith('http://') || logo.startsWith('https://')) {
+        return logo;
+    }
+    
+    const logoUrl = getLogoUrl(logo);
+    return logoUrl;
+});
+
+const institutionName = computed(() => {
+    const institution = props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution;
+    return institution?.name || '';
 });
 </script>
 
