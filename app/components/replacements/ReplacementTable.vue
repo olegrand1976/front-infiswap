@@ -271,19 +271,19 @@
                                 class="bg-gray-100 text-xs pt-5"
                             >
                                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] flex items-center justify-center px-3">
-                                    <template v-if="r.user?.institution">
+                                    <template v-if="r.institution || r.user?.institution">
                                         <LayoutsAppImage
-                                            v-if="r.user.institution.logo"
-                                            :src="r.user.institution.logo"
-                                            :alt="r.user.institution.name"
+                                            v-if="getInstitutionLogoUrl(r)"
+                                            :src="getInstitutionLogoUrl(r)"
+                                            :alt="getInstitutionName(r)"
                                             class="w-8 h-8 object-contain rounded"
                                         />
                                         <span
                                             v-else
                                             class="text-xs truncate"
-                                            :title="r.user.institution.name"
+                                            :title="getInstitutionName(r)"
                                         >
-                                            {{ r.user.institution.name }}
+                                            {{ getInstitutionName(r) }}
                                         </span>
                                     </template>
                                     <span
@@ -580,6 +580,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import ReplacementTableSkeleton from '@/components/replacements/ReplacementTableSkeleton.vue';
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import { useInstitutions } from '~/composables/useInstitution';
 import type { Replacement } from '~/lib/types';
 
 interface Props {
@@ -693,5 +694,19 @@ const getCreatorInfo = (r: Replacement, field: 'name' | 'group') => {
     return field === 'name'
         ? `${m.firstname ?? ''} ${m.lastname ?? ''}`.trim()
         : m.group_name ?? '';
+};
+
+const { getLogoUrl } = useInstitutions();
+
+const getInstitutionName = (r: Replacement): string => {
+    if (r.institution) return r.institution.name;
+    if (r.user?.institution) return r.user.institution.name;
+    return '';
+};
+
+const getInstitutionLogoUrl = (r: Replacement): string | null => {
+    const logo = r.institution?.logo || r.user?.institution?.logo;
+    if (!logo) return null;
+    return getLogoUrl(logo);
 };
 </script>

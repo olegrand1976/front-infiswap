@@ -8,10 +8,37 @@
         </div>
 
         <div class="flex justify-between items-start">
-            <div class="flex-1">
-                <h2 class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors">
-                    {{ replacement.creator_name ?? '' }}
+            <div class="flex-1 flex items-center gap-2">
+                <div
+                    v-if="replacement.institution"
+                    class="flex items-center gap-2"
+                >
+                    <LayoutsAppImage
+                        v-if="institutionLogoUrl"
+                        :src="institutionLogoUrl"
+                        :alt="replacement.institution.name"
+                        class="w-8 h-8 object-contain rounded"
+                    />
+                    <span
+                        v-else
+                        class="text-xs font-medium text-gray-600"
+                    >
+                        {{ replacement.institution.name }}
+                    </span>
+                </div>
+                <h2
+                    v-else-if="replacement.creator_name"
+                    class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors"
+                >
+                    {{ replacement.creator_name }}
                 </h2>
+                <span
+                    v-if="replacement.replacement_type"
+                    class="px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap"
+                    :class="replacementTypeBadgeClass"
+                >
+                    {{ replacementTypeLabel }}
+                </span>
             </div>
 
             <span
@@ -269,12 +296,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { useReplacements } from '~/composables/useReplacements';
+import { useInstitutions } from '~/composables/useInstitution';
 import type { User } from '~/lib/types';
 
 interface Replacement {
     id: number;
-    creator_name?: string;
+    creator_name?: string | null;
     user_id: number;
+    institution_id?: number | null;
+    replacement_type?: string | null;
+    institution?: {
+        id: number;
+        name: string;
+        logo: string | null;
+    } | null;
     periods?: Array<{ start_date: string; end_date: string }>;
     cities?: string[];
     zip_codes?: string[];
@@ -301,7 +336,9 @@ const emit = defineEmits<{
 
 const { $toast } = useNuxtApp();
 const { updateReplacement } = useReplacements();
+const { getLogoUrl } = useInstitutions();
 const user = useState<User>('user');
+const config = useRuntimeConfig();
 
 const showAllPeriods = ref(false);
 const showAllCities = ref(false);
@@ -458,6 +495,26 @@ const statusBadgeClass = computed(() => {
         default:
             return 'bg-green-100 text-green-700';
     }
+});
+
+const replacementTypeLabel = computed(() => {
+    const type = props.replacement.replacement_type;
+    if (!type) return '';
+    const labels: Record<string, string> = {
+        nurse: 'Infirmier(ère)',
+        caregiver: 'Aide soignant(e)',
+        midwife: 'Sage-femme',
+    };
+    return labels[type] || type;
+});
+
+const replacementTypeBadgeClass = computed(() => {
+    return 'bg-blue-100 text-blue-700';
+});
+
+const institutionLogoUrl = computed(() => {
+    if (!props.replacement.institution?.logo) return null;
+    return getLogoUrl(props.replacement.institution.logo);
 });
 </script>
 

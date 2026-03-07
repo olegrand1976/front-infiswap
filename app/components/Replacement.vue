@@ -807,7 +807,10 @@ const toggleDay = (day: string) => {
 const formatReplacementForCard = (r: any) => ({
     id: r.id,
     user_id: r.user_id,
-    creator_name: r.user?.full_name || r.user?.name,
+    institution_id: r.institution_id,
+    replacement_type: r.replacement_type,
+    creator_name: r.institution_id ? null : (r.user?.full_name || r.user?.name),
+    institution: r.institution || r.user?.institution || null,
     periods: r.periods?.map((p: any) => ({ start_date: p.start_date, end_date: p.end_date })) || [],
     cities: typeof r.cities === 'string' ? JSON.parse(r.cities) : r.cities || [],
     zip_codes: typeof r.zip_codes === 'string' ? JSON.parse(r.zip_codes) : r.zip_codes || [],

@@ -403,6 +403,16 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: BriefcaseIcon,
     },
     {
+        label: 'Mes remplacements',
+        route: '/dashboard/institution/my-replacements',
+        icon: ListBulletIcon,
+    },
+    {
+        label: 'Créer un remplacement',
+        route: '/dashboard/replacements/create',
+        icon: PlusIcon,
+    },
+    {
         label: 'Chercher un remplacement',
         route: '/dashboard/institution/replacements',
         icon: DocumentMagnifyingGlassIcon,
