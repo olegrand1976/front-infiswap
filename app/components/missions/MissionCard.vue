@@ -9,8 +9,9 @@
                     >
                         <img
                             :src="institutionLogoUrl"
-                            :alt="mission.institution?.institution_name || mission.institution?.name"
+                            :alt="(mission.institution as any)?.institution_name || (mission.institution as any)?.name || 'Institution'"
                             class="w-full h-full object-contain"
+                            @error="handleImageError"
                         >
                     </div>
                     <div
@@ -211,24 +212,34 @@ const statusBadgeClass = computed(() => {
 
 const institutionLogoUrl = computed(() => {
     const institution = props.mission.institution;
-    if (!institution) return null;
+    if (!institution) {
+        return null;
+    }
     
-    // Vérifier d'abord le logo, puis profil_url en fallback
-    const logo = institution.logo || institution.profil_url;
-    if (!logo) return null;
+    const institutionAny = institution as any;
+    const logo = institutionAny.logo || institution.profil_url;
+    if (!logo) {
+        return null;
+    }
     
-    // Si c'est déjà une URL complète, la retourner telle quelle
     if (typeof logo === 'string' && (logo.startsWith('http://') || logo.startsWith('https://'))) {
         return logo;
     }
     
-    // Sinon, utiliser getLogoUrl pour construire l'URL complète
     return getLogoUrl(logo);
 });
 
+const handleImageError = (event: Event) => {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+        img.style.display = 'none';
+    }
+};
+
 const institutionInitial = computed(() => {
     const institution = props.mission.institution;
-    const name = institution?.institution_name || institution?.name || '';
+    const institutionAny = institution as any;
+    const name = institutionAny?.institution_name || institutionAny?.name || '';
     if (!name) return 'M';
     return name.charAt(0).toUpperCase();
 });
