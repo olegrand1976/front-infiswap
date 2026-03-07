@@ -381,21 +381,25 @@ export const sendResponse = () => {
     const isDisabled = useState('isDisabled', () => false);
 
     const submitResponse = async (formData) => {
-        return await $apifetch('/api/replacement-responses/send', {
-            method: 'POST',
-            body: formData,
-        }).then(() => {
+        try {
+            await $apifetch('/api/replacement-responses/send', {
+                method: 'POST',
+                body: formData,
+            });
             isDisabled.value = true;
             $toast({
                 description: 'Réponse envoyée avec succès',
             });
-        }).catch((e) => {
+            return true; // Succès
+        } catch (e) {
             isDisabled.value = false;
+            const errorMessage = e?.data?.message || e?.message || 'Une erreur est survenue lors de l\'envoi de la réponse';
             $toast({
                 variant: 'destructive',
-                description: e.data.message,
+                description: errorMessage,
             });
-        });
+            throw e; 
+        }
     };
 
     return {

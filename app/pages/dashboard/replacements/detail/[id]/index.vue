@@ -348,13 +348,19 @@ const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 
 const { isDisabled } = sendResponse();
 const { isAdminGroup, isInstitution } = useAuth();
-const { currentInstitution } = useInstitutions();
+const { currentInstitution, getSettings } = useInstitutions();
+
+// Charger les paramètres de l'institution pour avoir can_apply_replacements
+if (isInstitution.value) {
+    getSettings();
+}
 
 const canApplyReplacements = computed(() => {
     if (!isInstitution.value || !currentInstitution.value) {
         return false;
     }
-    return currentInstitution.value.can_apply_replacements === true || currentInstitution.value.can_apply_replacements === 1;
+    const canApply = currentInstitution.value.can_apply_replacements;
+    return canApply === true || canApply === 1 || canApply === '1';
 });
 const { fetchGroupMembers } = useGroup();
 
@@ -504,11 +510,17 @@ const {
             payload.institutionId = null;
         }
 
-        await sendResponse().submitResponse(payload);
+        const success = await sendResponse().submitResponse(payload);
+        if (!success) {
+            throw new Error('Échec de l\'envoi de la réponse');
+        }
     },
     {
         onSuccess: () => {
             replacement.value.candidate = true;
+        },
+        onError: (error) => {
+            console.error('Erreur lors de l\'envoi de la réponse:', error);
         },
     },
 );
