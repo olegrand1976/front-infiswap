@@ -193,6 +193,9 @@
                                         v-for="r in group"
                                         :key="`r-${r.id}`"
                                         :replacement="formatReplacementForCard(r)"
+                                        :raw-replacement="r"
+                                        @open-edit="openEditDialog"
+                                        @closed="refreshReplacements(page)"
                                     />
                                 </template>
                             </div>
@@ -215,7 +218,7 @@
                                 @show-user-info="handleShowInfoUser"
                                 @show-periods="handleShowPeriods"
                                 @open-edit="openEditDialog"
-                                @select-close="selectReplacement"
+                                @select-replacement="selectReplacement"
                             />
                         </template>
                     </div>
@@ -235,6 +238,9 @@
                                     v-for="r in currentReplacements"
                                     :key="`r-${r.id}`"
                                     :replacement="formatReplacementForCard(r)"
+                                    :raw-replacement="r"
+                                    @open-edit="openEditDialog"
+                                    @closed="refreshReplacements(page)"
                                 />
                             </template>
                         </div>
@@ -257,7 +263,7 @@
                             @show-user-info="handleShowInfoUser"
                             @show-periods="handleShowPeriods"
                             @open-edit="openEditDialog"
-                            @select-close="selectReplacement"
+                            @select-replacement="selectReplacement"
                         />
                     </template>
                 </template>
@@ -384,7 +390,7 @@
                                 </div>
                             </div>
                         </template>
-                        <div class="flex flex-col space-y-2">
+                        <!-- <div class="flex flex-col space-y-2">
                             <label class="text-primary font-semibold">Créneau horaire</label>
                             <div class="flex justify-between gap-4 sm:gap-8 items-center">
                                 <InputTime
@@ -397,7 +403,7 @@
                                     input-class="rounded-full border border-gray-300 focus:border-primary"
                                 />
                             </div>
-                        </div>
+                        </div> -->
                         <div class="grid sm:grid-cols-2 gap-8 items-center">
                             <div class="flex flex-col space-y-2 w-84 sm:w-auto">
                                 <label class="text-primary font-semibold">Nombre de patients par jour</label>
@@ -650,7 +656,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { InputTime } from '@/components/ui/input-time';
+// import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
@@ -658,15 +664,33 @@ import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 
 const { $toast } = useNuxtApp();
 
+interface EditFormData {
+    id: number | null;
+    userId: number;
+    replacedBy: number | null;
+    visibility: string;
+    type: string;
+    periods: Period[];
+    startDate: string;
+    endDate: string;
+    patientCount: number | null;
+    zipCodes: string[];
+    cities: string[];
+    careTypes: number[];
+    timeSlot: TimeSlot;
+    status: string;
+    comment: string;
+}
+
 interface ReplacementProps {
     selectedRegions?: string[];
     type?: string;
     filters?: { type: string; role: string };
     displayMode?: 'table' | 'cards';
     groupByProvince: boolean;
-    filteredProvinces?: any[];
+    filteredProvinces?: string[];
     selectedCountry?: string;
-    availableMissions?: any[];
+    availableMissions?: string[];
 }
 
 const props = withDefaults(defineProps<ReplacementProps>(), {
@@ -703,7 +727,7 @@ const displayedDepartments = ref([]);
 
 type ProvinceGroups = Record<string, Replacement[]>;
 
-const { loading, updateReplacement, updateAgainReplacement, isClosed } = useReplacements();
+const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
 const { loadingSearch, fetchReplacements } = useSearchReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
@@ -724,7 +748,6 @@ const emit = defineEmits(['update:selectedRegions']);
 const initialReplacements = ref({ replacements: { data: [], current_page: 1, per_page: 10, total: 0, last_page: 1 } });
 const currentReplacements = ref<Replacement[]>([]);
 
-// Helper : exclut les remplacements de l'utilisateur connecté sur la page de recherche (type === '')
 const filterOutCurrentUser = (data: any[]) => {
     if (props.type === '') {
         return data.filter((r: any) => r.user_id !== user.value.id);
@@ -909,18 +932,30 @@ const reinitializeFilter = () => {
 
 const refreshReplacements = async (newPage: number) => {
     page.value = newPage;
-    isSubmitted.value ? await submitSearch() : await fetchInitialData(newPage, perPage.value);
+    if (isSubmitted.value) {
+        await submitSearch();
+    }
+    else {
+        await fetchInitialData(newPage, perPage.value);
+    }
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     page.value = 1;
-    isSubmitted.value ? await submitSearch() : await fetchInitialData(1, value);
+    if (isSubmitted.value) {
+        await submitSearch();
+    }
+    else {
+        await fetchInitialData(1, value);
+    }
 };
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     internalUpdate = true;
-    if (checked) { if (!newRegions.includes(region)) newRegions.push(region); }
+    if (checked) {
+        if (!newRegions.includes(region)) newRegions.push(region);
+    }
     else { newRegions = newRegions.filter(r => r !== region); }
     emit('update:selectedRegions', newRegions);
 };
@@ -964,7 +999,10 @@ const handleCloseReplacement = async (replacement: Replacement) => {
     catch (error) { console.error(error); }
 };
 
-const updateZipCodesFromModal = (zipCodes: string[]) => { formData.postalCodeTags = [...zipCodes]; };
+const updateZipCodesFromModal = (zipCodes: string[]): void => {
+    formData.postalCodeTags = [...zipCodes];
+};
+
 const updateCitiesFromModal = (cities: string[]) => {
     formData.cityTags = [...cities];
     submitSearch();
@@ -1045,13 +1083,25 @@ const openEditDialog = (replacement: any) => {
     editDialogOpen.value = true;
 };
 
-const handleCloseEditDialog = () => { resetEditFormData(); editDialogOpen.value = false; };
-const addPeriod = () => editFormData.periods.push({ start_date: '', end_date: '' });
-const removePeriod = (index: number) => { if (index > 0) editFormData.periods.splice(index, 1); };
+const handleCloseEditDialog = (): void => {
+    resetEditFormData();
+    editDialogOpen.value = false;
+};
 
-const handleCareTypeClick = (fd: typeof editFormData, careTypeId: number) => {
+const addPeriod = () => editFormData.periods.push({ start_date: '', end_date: '' });
+
+const removePeriod = (index: number): void => {
+    if (index > 0) editFormData.periods.splice(index, 1);
+};
+
+const handleCareTypeClick = (fd: EditFormData, careTypeId: number): void => {
     const idx = fd.careTypes.indexOf(careTypeId);
-    idx === -1 ? fd.careTypes.push(careTypeId) : fd.careTypes.splice(idx, 1);
+    if (idx === -1) {
+        fd.careTypes.push(careTypeId);
+    }
+    else {
+        fd.careTypes.splice(idx, 1);
+    }
     fd.careTypes = [...fd.careTypes];
 };
 
@@ -1085,7 +1135,10 @@ watch(() => props.selectedCountry, (newCountry) => {
 watch(() => props.filteredProvinces, (newProvinces, oldProvinces) => {
     if (newProvinces !== oldProvinces) {
         newRegions = [...newProvinces as string[]];
-        if (internalUpdate) { internalUpdate = false; return; }
+        if (internalUpdate) {
+            internalUpdate = false;
+            return;
+        }
         fetchInitialData(page.value, perPage.value);
     }
 }, { deep: true });
@@ -1094,7 +1147,6 @@ watch(
     [() => formData.postalCodeTags, () => formData.cityTags, () => formData.selectedDays],
     ([newPostalCodes, newCities, newDays]) => {
         if (!newPostalCodes.length && !newCities.length && !newDays.length) {
-            // ✅ FIX : exclure les remplacements de l'utilisateur connecté lors de la réinitialisation
             currentReplacements.value = [...filterOutCurrentUser(initialReplacements.value.replacements.data)];
             pagination.value = {
                 current_page: initialReplacements.value.replacements.current_page,

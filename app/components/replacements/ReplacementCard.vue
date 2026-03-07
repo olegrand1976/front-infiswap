@@ -1,12 +1,5 @@
 <template>
     <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative overflow-hidden">
-        <div
-            v-if="isClosed"
-            class="absolute top-3 -right-8 bg-red-500 text-white text-[10px] font-bold py-0.5 px-10 rotate-45 shadow-sm z-10 tracking-widest pointer-events-none"
-        >
-            FERMÉ
-        </div>
-
         <div class="flex justify-between items-start">
             <div class="flex-1 flex items-center gap-2">
                 <div
@@ -217,46 +210,66 @@
                 </div>
             </div>
 
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        class="shrink-0 gap-1.5 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all font-medium"
-                    >
-                        <EllipsisHorizontalIcon class="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                    align="end"
-                    class="w-48"
+            <template v-if="!isOwner">
+                <Button
+                    size="sm"
+                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                    class="shrink-0 gap-1.5"
                 >
-                    <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
-                        Actions
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem as-child>
-                        <NuxtLink
-                            :href="`/dashboard/replacements/detail/${replacement.id}`"
-                            class="flex items-center gap-2 text-sm cursor-pointer"
+                    <span>Voir détail</span>
+                    <ChevronRightIcon class="w-3.5 h-3.5" />
+                </Button>
+            </template>
+
+            <template v-else>
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            class="shrink-0 gap-1.5 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all font-medium"
                         >
-                            <EyeIcon class="w-4 h-4 text-gray-500" />
-                            <span>Voir le détail</span>
-                        </NuxtLink>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator v-if="canClose" />
-
-                    <DropdownMenuItem
-                        v-if="canClose"
-                        class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
-                        @click="closeDialog = true"
+                            <EllipsisHorizontalIcon class="w-4 h-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                        align="end"
+                        class="w-48"
                     >
-                        <LockClosedIcon class="w-4 h-4" />
-                        <span>Fermer</span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                        <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
+                            Actions
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem as-child>
+                            <NuxtLink
+                                :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                class="flex items-center gap-2 text-sm cursor-pointer"
+                            >
+                                <EyeIcon class="w-4 h-4 text-gray-500" />
+                                <span>Voir le détail</span>
+                            </NuxtLink>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            class="flex items-center gap-2 text-sm cursor-pointer"
+                            @click="emit('open-edit', props.rawReplacement ?? replacement)"
+                        >
+                            <PencilSquareIcon class="w-4 h-4 text-gray-500" />
+                            <span>Modifier</span>
+                        </DropdownMenuItem>
+                        <template v-if="canClose">
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
+                                @click="closeDialog = true"
+                            >
+                                <LockClosedIcon class="w-4 h-4" />
+                                <span>Fermer</span>
+                            </DropdownMenuItem>
+                        </template>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </template>
         </div>
 
         <Dialog v-model:open="closeDialog">
@@ -291,13 +304,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDownIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { useReplacements } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { User } from '~/lib/types';
+
+interface CareTypeItem {
+    name: string;
+}
+
+interface TimeSlotPeriod {
+    start_at?: string;
+    end_at?: string;
+}
 
 interface Replacement {
     id: number;
@@ -313,25 +335,27 @@ interface Replacement {
     periods?: Array<{ start_date: string; end_date: string }>;
     cities?: string[];
     zip_codes?: string[];
-    care_types?: Array<{ name: string }>;
+    care_types?: CareTypeItem[];
     comment?: string;
     time_slot?: {
-        morning?: { start_at?: string; end_at?: string };
-        evening?: { start_at?: string; end_at?: string };
+        morning?: TimeSlotPeriod;
+        evening?: TimeSlotPeriod;
     };
     patient_count?: number;
     status?: string;
     type?: string;
-    details?: any[];
+    details?: Record<string, unknown>[];
     replaced_by?: number | null;
 }
 
 const props = defineProps<{
     replacement: Replacement;
+    rawReplacement?: Record<string, any>;
 }>();
 
 const emit = defineEmits<{
     (e: 'closed'): void;
+    (e: 'open-edit', replacement: Replacement): void;
 }>();
 
 const { $toast } = useNuxtApp();
@@ -346,15 +370,21 @@ const showAllZipCodes = ref(false);
 const showAllCareTypes = ref(false);
 const closeDialog = ref(false);
 const isClosing = ref(false);
-
 const localClosed = ref(false);
 
-const canClose = computed(() => {
-    return user.value?.id === props.replacement.user_id
-        && !isClosed.value;
-});
+const isOwner = computed(() =>
+    Number(user.value?.id) === Number(props.replacement.user_id),
+);
 
-const handleCloseReplacement = async () => {
+const isClosed = computed(() =>
+    localClosed.value
+    || props.replacement.status === 'closed'
+    || props.replacement.replaced_by !== null,
+);
+
+const canClose = computed(() => isOwner.value && !isClosed.value);
+
+const handleCloseReplacement = async (): Promise<void> => {
     isClosing.value = true;
     try {
         const payload = { ...props.replacement, status: 'closed' };
@@ -443,12 +473,6 @@ const isUrgent = computed(() => {
     return props.replacement.type === 'immediate'
         && props.replacement.details
         && props.replacement.details.length > 0;
-});
-
-const isClosed = computed(() => {
-    return localClosed.value
-        || props.replacement.status === 'closed'
-        || props.replacement.replaced_by !== null;
 });
 
 const statusText = computed(() => {

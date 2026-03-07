@@ -91,15 +91,15 @@
                         >
                             <div
                                 v-if="isUrgentReplacement(r) && r.replaced_by !== null"
-                                :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
                                             { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
-                                :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-gray-600 text-white',
-                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
+                                :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-gray-600 text-white',
+                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
@@ -398,15 +398,15 @@
                         >
                             <div
                                 v-if="isUrgentReplacement(r) && r.replaced_by !== null"
-                                :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] animate-pulse shadow-md',
+                                :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
                                             { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
-                                :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-[2px] rounded-br-[4px] shadow-md bg-yellow-400 text-red-600',
-                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-[60px]' : '-top-1 left-0']"
+                                :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-yellow-400 text-red-600',
+                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
@@ -469,7 +469,7 @@
                                                     >...</span>
                                                 </div>
                                             </TooltipTrigger>
-                                            <TooltipContent class="text-sm max-w-[200px]">
+                                            <TooltipContent class="text-sm max-w-50">
                                                 <div class="flex flex-wrap gap-1">
                                                     <span
                                                         v-for="(zip, zi) in parseJson(r.zip_codes)"
@@ -587,7 +587,6 @@ interface Props {
     replacements: Replacement[];
     loading?: boolean;
     type?: string;
-    currentUserId?: number;
     groupMembers?: any[];
     isSubmitted?: boolean;
     searchZipCodes?: string[];
@@ -597,12 +596,14 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     loading: false,
     type: '',
-    currentUserId: 0,
     groupMembers: () => [],
     isSubmitted: false,
     searchZipCodes: () => [],
     searchCities: () => [],
 });
+
+const user = useState<{ id: number }>('user');
+const currentUserId = computed(() => Number(user.value?.id ?? 0));
 
 const emit = defineEmits<{
     (e: 'show-periods', periods: any[]): void;
@@ -642,7 +643,9 @@ const formatDate = (isoString: string) => {
 const parseJson = (value: any): any[] => {
     if (!value) return [];
     if (Array.isArray(value)) return value;
-    try { return JSON.parse(value); }
+    try {
+        return JSON.parse(value);
+    }
     catch { return []; }
 };
 
