@@ -390,7 +390,6 @@ watch(selectedRole, (newVal) => {
     }
 });
 
-
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
 

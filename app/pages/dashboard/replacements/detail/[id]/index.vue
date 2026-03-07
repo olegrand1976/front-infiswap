@@ -505,7 +505,8 @@ const {
         if (isInstitution.value && user.value?.institution_id) {
             payload.institutionId = user.value.institution_id;
             payload.respondedBy = null;
-        } else {
+        }
+        else {
             payload.respondedBy = user.value?.id ?? null;
             payload.institutionId = null;
         }

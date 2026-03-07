@@ -214,7 +214,6 @@
                     <UserGroupIcon class="w-3.5 h-3.5 text-primary" />
                     <span>{{ replacement.patient_count }} patient(s)/jour</span>
                 </div>
-                
             </div>
 
             <template v-if="!isOwner">
@@ -546,12 +545,12 @@ const replacementTypeBadgeClass = computed(() => {
 const institutionLogoUrl = computed(() => {
     const institution = props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution;
     if (!institution || !institution.logo) return null;
-    
+
     const logo = institution.logo;
     if (logo.startsWith('http://') || logo.startsWith('https://')) {
         return logo;
     }
-    
+
     const logoUrl = getLogoUrl(logo);
     return logoUrl;
 });

@@ -391,14 +391,15 @@ export const sendResponse = () => {
                 description: 'Réponse envoyée avec succès',
             });
             return true; // Succès
-        } catch (e) {
+        }
+        catch (e) {
             isDisabled.value = false;
             const errorMessage = e?.data?.message || e?.message || 'Une erreur est survenue lors de l\'envoi de la réponse';
             $toast({
                 variant: 'destructive',
                 description: errorMessage,
             });
-            throw e; 
+            throw e;
         }
     };
 

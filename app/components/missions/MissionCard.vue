@@ -215,17 +215,17 @@ const institutionLogoUrl = computed(() => {
     if (!institution) {
         return null;
     }
-    
+
     const institutionAny = institution as any;
     const logo = institutionAny.logo || institution.profil_url;
     if (!logo) {
         return null;
     }
-    
+
     if (typeof logo === 'string' && (logo.startsWith('http://') || logo.startsWith('https://'))) {
         return logo;
     }
-    
+
     return getLogoUrl(logo);
 });
 
