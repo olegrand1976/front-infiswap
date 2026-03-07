@@ -8,6 +8,7 @@ import {
     useRequestEvent,
     useRequestHeaders,
     defineNuxtPlugin,
+    navigateTo,
     type NuxtApp,
 } from '#app';
 

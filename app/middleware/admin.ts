@@ -1,7 +1,15 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app';
-import { useAuth } from '~/composables/useAuth';
+import { useAuth, useUser } from '~/composables/useAuth';
 
 export default defineNuxtRouteMiddleware(async (to) => {
+    const user = useUser();
+    
+    if (!user.value) return navigateTo('/login', { replace: true });
+    
+    if (!user.value.email_verified_at) {
+        return navigateTo('/auth/verify-email', { replace: true });
+    }
+    
     const { isAdmin, isDeveloper, isManager, isCommunityManager, isSaleRepresentative } = useAuth();
 
     const isStaff = isAdmin.value || isDeveloper?.value || isManager?.value || isCommunityManager?.value || isSaleRepresentative?.value;

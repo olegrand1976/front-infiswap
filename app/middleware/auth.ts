@@ -6,6 +6,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (!user.value) return navigateTo('/login', { replace: true });
 
+    if (!user.value.email_verified_at) {
+        return navigateTo('/auth/verify-email', { replace: true });
+    }
+
     const { isAdmin, isDeveloper, isManager, isCommunityManager, isSaleRepresentative, isInstitution } = useAuth();
 
     const isStaff = isAdmin.value || isDeveloper?.value || isManager?.value || isCommunityManager?.value || isSaleRepresentative?.value;

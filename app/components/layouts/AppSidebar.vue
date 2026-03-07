@@ -249,7 +249,10 @@ const closeSidebar = () => {
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const { products, getProducts } = useProduct();
-await getProducts(page.value, perPage.value);
+// Only fetch products for non-institution users (institutions don't need products in sidebar)
+if (!isInstitution.value) {
+    await getProducts(page.value, perPage.value);
+}
 
 interface NavigationItem {
     label: string;
