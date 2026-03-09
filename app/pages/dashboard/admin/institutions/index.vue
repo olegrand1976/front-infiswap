@@ -146,7 +146,7 @@ watch(
 );
 
 const handleEdit = (institution: Institution) => {
-    navigateTo(`/dashboard/admin/institutions/${institution.id}`);
+    navigateTo(`/dashboard/admin/institutions/${institution.id}/show`);
 };
 
 const handleDelete = async (institution: Institution) => {
@@ -177,7 +177,6 @@ const handleReject = async (institution: Institution) => {
         }
     }
 };
-
 
 const columns: ColumnDef<Institution>[] = [
     {
@@ -233,6 +232,39 @@ const columns: ColumnDef<Institution>[] = [
             ),
     },
     {
+        accessorKey: 'main_user.email',
+        header: () => h('div', { class: 'text-center' }, 'Email'),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const email = institution.main_user?.email || '—';
+            return h('div', { class: 'text-center text-sm' }, email);
+        },
+    },
+    {
+        id: 'validation',
+        header: () => h('div', { class: 'text-center' }, 'Validé'),
+        enableHiding: false,
+        cell: ({ row }) => {
+            const institution = row.original;
+            const mainUser = institution.main_user;
+            const isUserValidated = mainUser && mainUser.validate_at !== null && mainUser.validate_at !== undefined && mainUser.validate_at !== '';
+
+            return h('div', { class: 'flex justify-center items-center' }, [
+                h(Checkbox, {
+                    checked: isUserValidated,
+                    onUpdateChecked: async (checked: boolean) => {
+                        if (checked && !isUserValidated) {
+                            await handleValidate(institution);
+                        }
+                    },
+                    disabled: !mainUser,
+                    class: 'w-5 h-5',
+                    title: isUserValidated ? 'Institution validée' : 'Cliquez pour valider',
+                }),
+            ]);
+        },
+    },
+    {
         accessorKey: 'created_at',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('created_at') }, () => [
@@ -253,10 +285,10 @@ const columns: ColumnDef<Institution>[] = [
         cell: ({ row }) => {
             const institution = row.original;
             const mainUser = institution.main_user;
-            
+
             const validateAt = mainUser?.validate_at;
             const isUserValidated = mainUser && validateAt !== null && validateAt !== undefined && validateAt !== '';
-            
+
             return h('div', { class: 'flex justify-center items-center gap-2' }, [
                 h(Button, {
                     variant: 'ghost',
@@ -265,30 +297,36 @@ const columns: ColumnDef<Institution>[] = [
                     onClick: () => handleEdit(institution),
                     title: 'Modifier',
                 }, () => h(PencilIcon, { class: 'w-4 h-4' })),
-                
-                !isUserValidated ? h(Button, {
-                    variant: 'ghost',
-                    size: 'sm',
-                    class: 'w-8 h-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50',
-                    onClick: () => handleValidate(institution),
-                    title: 'Valider',
-                }, () => h(CheckIcon, { class: 'w-4 h-4' })) : null,
-                
-                !isUserValidated ? h(Button, {
-                    variant: 'ghost',
-                    size: 'sm',
-                    class: 'w-8 h-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50',
-                    onClick: () => handleReject(institution),
-                    title: 'Rejeter',
-                }, () => h(XMarkIcon, { class: 'w-4 h-4' })) : null,
-                
-                isSuperAdmin.value ? h(Button, {
-                    variant: 'ghost',
-                    size: 'sm',
-                    class: 'w-8 h-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50',
-                    onClick: () => handleDelete(institution),
-                    title: 'Supprimer',
-                }, () => h(TrashIcon, { class: 'w-4 h-4' })) : null,
+
+                !isUserValidated
+                    ? h(Button, {
+                            variant: 'ghost',
+                            size: 'sm',
+                            class: 'w-8 h-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50',
+                            onClick: () => handleValidate(institution),
+                            title: 'Valider',
+                        }, () => h(CheckIcon, { class: 'w-4 h-4' }))
+                    : null,
+
+                !isUserValidated
+                    ? h(Button, {
+                            variant: 'ghost',
+                            size: 'sm',
+                            class: 'w-8 h-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50',
+                            onClick: () => handleReject(institution),
+                            title: 'Rejeter',
+                        }, () => h(XMarkIcon, { class: 'w-4 h-4' }))
+                    : null,
+
+                isSuperAdmin.value
+                    ? h(Button, {
+                            variant: 'ghost',
+                            size: 'sm',
+                            class: 'w-8 h-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50',
+                            onClick: () => handleDelete(institution),
+                            title: 'Supprimer',
+                        }, () => h(TrashIcon, { class: 'w-4 h-4' }))
+                    : null,
             ]);
         },
     },

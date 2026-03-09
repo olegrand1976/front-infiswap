@@ -89,10 +89,10 @@ export const useInstitutions = () => {
                     ...options,
                 },
             });
-            
+
             institutions.value = response.institutions || [];
             count.value = response.count || 0;
-            
+
             return response;
         }
         catch (error: any) {
@@ -212,11 +212,24 @@ export const useInstitutions = () => {
             ? `api/admin/institutions/${institution.id}`
             : 'api/admin/institutions';
 
-        return await $apifetch(url, {
-            method,
-            body: dataToSend,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        try {
+            const response = await $apifetch(url, {
+                method,
+                body: dataToSend,
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (isUpdate) {
+                toast.success('Institution modifiée avec succès');
+            }
+
+            return response;
+        }
+        catch (error: any) {
+            const errorMessage = error?.data?.message || error?.message || 'Erreur lors de l\'opération';
+            toast.error(errorMessage);
+            throw error;
+        }
     }
 
     async function syncUsers(institutionId: number, users: { user_id: number; role_id: number }[]) {

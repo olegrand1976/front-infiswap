@@ -528,9 +528,14 @@ export interface InstitutionUserRole {
 export interface InstitutionUser {
     id: number;
     institution_id: number;
+    email?: string;
+    firstname?: string;
+    lastname?: string;
+    phone_number?: string | null;
     validate_at?: string | null;
     validated_by?: number | null;
     email_verified_at?: string | null;
+    created_at?: string;
 }
 
 export interface Institution {
