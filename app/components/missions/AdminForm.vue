@@ -656,17 +656,6 @@ const validateForm = () => {
         isValid = false;
     }
 
-    if (formData.time_start_at && formData.time_end_at) {
-        const [startHour, startMin] = formData.time_start_at.split(':').map(Number);
-        const [endHour, endMin] = formData.time_end_at.split(':').map(Number);
-        const startMinutes = startHour * 60 + startMin;
-        const endMinutes = endHour * 60 + endMin;
-        if (endMinutes <= startMinutes) {
-            errors.time_end_at = 'L\'heure de fin doit être après l\'heure de début';
-            isValid = false;
-        }
-    }
-
     if (!formData.required_diploma || formData.required_diploma.trim() === '') {
         errors.required_diploma = 'Le diplôme requis est obligatoire';
         isValid = false;
@@ -914,10 +903,8 @@ const { submit, inProgress } = useSubmit(async () => {
                 description: 'Mission créée avec succès',
             });
 
-            // Si la checkbox "Enregistrer comme template" est cochée, ouvrir le modal
             if (saveAsTemplate.value) {
                 showSaveTemplateModal.value = true;
-                // Ne pas reset le formulaire ni naviguer, attendre la sauvegarde du template
             }
             else {
                 resetForm();
