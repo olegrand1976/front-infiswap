@@ -696,426 +696,427 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 mb-8 border-b border-gray-200" />
-
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="col-span-4 relative w-full items-center">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Nom <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.lastname"
-                                :icon="UserCircleIcon"
-                                size="md"
-                                placeholder="Nom *"
-                            />
-                        </div>
-
-                        <div class="col-span-4 relative w-full items-center">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Prénom <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.firstname"
-                                :icon="UserCircleIcon"
-                                size="md"
-                                placeholder="Prénoms *"
-                            />
-                        </div>
-
-                        <div class="col-span-4 relative w-full items-center">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Email <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.email"
-                                :icon="EnvelopeIcon"
-                                size="md"
-                                placeholder="Email *"
-                                autocomplete="off"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                N° de téléphone <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.phoneNumber"
-                                :icon="PhoneIcon"
-                                size="md"
-                                placeholder="N° de téléphone"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Mot de passe <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.password"
-                                :icon="LockClosedIcon"
-                                size="md"
-                                type="password"
-                                placeholder="Mot de passe *"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Confirmation mot de passe <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.passwordConfirmation"
-                                :icon="LockClosedIcon"
-                                size="md"
-                                type="password"
-                                placeholder="Mot de passe *"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Sexe <span class="text-red-500">*</span>
-                            </label>
-                            <Select v-model="formData.gender">
-                                <SelectTrigger
-                                    class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
-                                    position="right"
-                                >
-                                    <LayoutsAppImage
-                                        src="/icons/gender.png"
-                                        class="h-5"
+                    <div>
+                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                            Informations personnelles
+                        </label>
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div class="col-span-2 relative w-full items-center">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Nom <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.lastname"
+                                        :icon="UserCircleIcon"
+                                        size="md"
+                                        placeholder="Nom *"
                                     />
-                                    <SelectValue
-                                        placeholder="Sexe"
-                                        class="ml-3"
+                                </div>
+
+                                <div class="col-span-2 relative w-full items-center">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Prénom <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.firstname"
+                                        :icon="UserCircleIcon"
+                                        size="md"
+                                        placeholder="Prénoms *"
                                     />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="gender in genders"
-                                            :key="gender.value"
-                                            class="flex justify-center items-center -ms-3"
+                                </div>
+
+                                <div class="col-span-2 relative w-full items-center">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.email"
+                                        :icon="EnvelopeIcon"
+                                        size="md"
+                                        placeholder="Email *"
+                                        autocomplete="off"
+                                    />
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        N° de téléphone
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.phoneNumber"
+                                        :icon="PhoneIcon"
+                                        size="md"
+                                        placeholder="N° de téléphone"
+                                    />
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Sexe
+                                    </label>
+                                    <Select v-model="formData.gender">
+                                        <SelectTrigger
+                                            class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
+                                            position="right"
                                         >
-                                            <SelectItem :value="gender.value">
-                                                <span class="text-sm">{{ gender.label }}</span>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Rue <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.address.street"
-                                :icon="MapPinIcon"
-                                size="md"
-                                placeholder="Rue *"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Code postal <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.address.zipCode"
-                                :icon="InboxArrowDownIcon"
-                                size="md"
-                                placeholder="Code postal *"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Ville <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.address.city"
-                                :icon="BuildingOffice2Icon"
-                                size="md"
-                                placeholder="Ville *"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Pays <span class="text-red-500">*</span>
-                            </label>
-                            <Select v-model="formData.address.country">
-                                <SelectTrigger
-                                    class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                    position="right"
-                                >
-                                    <LayoutsAppImage
-                                        src="/icons/flag.png"
-                                        class="h-4 ml-2"
-                                    />
-                                    <SelectValue
-                                        placeholder="Pays"
-                                        class="ml-3 block w-full"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none w-full">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="c in countries"
-                                            :key="c.value"
-                                            class="flex justify-center items-center -ms-3 w-full"
-                                        >
-                                            <SelectItem :value="c.value">
-                                                <div class="flex w-full">
-                                                    <LayoutsAppImage
-                                                        :src="c.icon"
-                                                        :alt="c.name"
-                                                        class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
-                                                        format="png"
-                                                    />
-                                                    <div class="sm:text-xs xl:text-sm">
-                                                        {{ c.label }}
-                                                    </div>
+                                            <LayoutsAppImage
+                                                src="/icons/gender.png"
+                                                class="h-5"
+                                            />
+                                            <SelectValue
+                                                placeholder="Sexe"
+                                                class="ml-3"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="gender in genders"
+                                                    :key="gender.value"
+                                                    class="flex justify-center items-center -ms-3"
+                                                >
+                                                    <SelectItem :value="gender.value">
+                                                        <span class="text-sm">{{ gender.label }}</span>
+                                                    </SelectItem>
                                                 </div>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div class="col-span-4">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Complément d'addresse <span class="text-red-500">*</span>
-                            </label>
-                            <InputIcon
-                                v-model="formData.address.additionnalInformation"
-                                :icon="EllipsisHorizontalCircleIcon"
-                                size="md"
-                                placeholder="Complément d'adresse"
-                            />
-                        </div>
-
-                        <div
-                            v-if="formData.accountType != 'institution'"
-                            class="col-span-4"
-                        >
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Compte <span class="text-red-500">*</span>
-                            </label>
-                            <Select v-model="formData.role">
-                                <SelectTrigger
-                                    class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
-                                    position="right"
-                                >
-                                    <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
-                                    <SelectValue
-                                        placeholder="Compte"
-                                        class="text-nowrap w-full text-sm ml-3 my-auto"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="accountOption in roleOptions"
-                                            :key="accountOption.value"
-                                            class="flex justify-center items-center -ms-3"
-                                        >
-                                            <SelectItem :value="accountOption.value">
-                                                <span class="xl:text-sm sm:text-xs">{{ accountOption.label }}</span>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div
-                            v-if="formData.accountType != 'institution'"
-                            class="col-span-4"
-                        >
-                            <Select
-                                v-model="formData.language"
-                                disabled
-                            >
-                                <SelectTrigger
-                                    class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
-                                    position="right"
-                                >
-                                    <LanguageIcon class="text-primary w-6 h-6" />
-                                    <SelectValue
-                                        placeholder="Langue"
-                                        class="text-sm ml-3 my-auto"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="language in LANGUAGES"
-                                            :key="language.value"
-                                            class="flex justify-center items-center -ms-3"
-                                        >
-                                            <SelectItem :value="language.value">
-                                                <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div
-                            v-if="formData.accountType == 'institution'"
-                            class="col-span-4"
-                        >
-                            <Select
-                                v-model="formData.language"
-                                disabled
-                            >
-                                <SelectTrigger
-                                    class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
-                                    position="right"
-                                >
-                                    <LanguageIcon class="text-primary w-6 h-6" />
-                                    <SelectValue
-                                        placeholder="Langue"
-                                        class="text-sm ml-3 my-auto"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="language in LANGUAGES"
-                                            :key="language.value"
-                                            class="flex justify-center items-center -ms-3"
-                                        >
-                                            <SelectItem :value="language.value">
-                                                <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div
-                            v-if="formData.accountType == 'institution'"
-                            class="col-span-4"
-                        >
-                            <label class="text-sm font-medium text-gray-700">
-                                Votre {{ identifierLabel }}
-                            </label>
-                            <InputIcon
-                                v-model="formData.identifierNumber"
-                                :icon="IdentificationIcon"
-                                size="md"
-                                class="mt-1"
-                                :placeholder="identifierLabel"
-                            />
-                        </div>
-                        <div
-                            v-else
-                            class="col-span-4"
-                        >
-                            <label class="text-sm font-medium text-gray-700">
-                                Numéro d'entreprise
-                            </label>
-                            <InputIcon
-                                v-model="formData.companyNumber"
-                                :icon="IdentificationIcon"
-                                size="md"
-                                class="mt-1"
-                                placeholder="Numéro d'entreprise"
-                            />
-                        </div>
-
-                        <div class="col-span-4">
-                            <div class="text-sm font-medium mb-2 text-gray-700">
-                                Pays de recherche
-                                <span
-                                    v-if="formData.address.workingAt.length === 0"
-                                    class="text-gray-400 text-sm ml-2 font-light"
-                                >
-                                    Sélectionnez un ou plusieurs pays
-                                </span>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-3 w-full">
-                                <div
-                                    v-for="workingAt in countryOfWork"
-                                    :key="workingAt.value"
-                                    class="flex items-center gap-2"
-                                >
-                                    <Checkbox
-                                        :checked="formData.address.workingAt.includes(workingAt.value)"
-                                        @update:checked="(checked) => {
-                                            if (checked) {
-                                                if (!formData.address.workingAt.includes(workingAt.value)) {
-                                                    formData.address.workingAt.push(workingAt.value);
-                                                }
-                                            }
-                                            else {
-                                                formData.address.workingAt = formData.address.workingAt.filter(c => c !== workingAt.value);
-                                            }
-                                        }"
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                            Informations de connexion
+                        </label>
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Mot de passe <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.password"
+                                        :icon="LockClosedIcon"
+                                        size="md"
+                                        type="password"
+                                        placeholder="Mot de passe *"
                                     />
-                                    <div class="flex items-center gap-2">
-                                        <LayoutsAppImage
-                                            :src="workingAt.icon"
-                                            :alt="workingAt.name"
-                                            class="xl:w-4 xl:h-3 sm:w-3 sm:h-2"
-                                            format="png"
-                                        />
-                                        <span class="sm:text-xs xl:text-sm">{{ workingAt.label }}</span>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Confirmation mot de passe <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.passwordConfirmation"
+                                        :icon="LockClosedIcon"
+                                        size="md"
+                                        type="password"
+                                        placeholder="Confirmation mot de passe *"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                            Adresses
+                        </label>
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Rue <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.address.street"
+                                        :icon="MapPinIcon"
+                                        size="md"
+                                        placeholder="Rue *"
+                                    />
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Code postal <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.address.zipCode"
+                                        :icon="InboxArrowDownIcon"
+                                        size="md"
+                                        placeholder="Code postal *"
+                                    />
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Ville <span class="text-red-500">*</span>
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.address.city"
+                                        :icon="BuildingOffice2Icon"
+                                        size="md"
+                                        placeholder="Ville *"
+                                    />
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Pays <span class="text-red-500">*</span>
+                                    </label>
+                                    <Select v-model="formData.address.country">
+                                        <SelectTrigger
+                                            class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                            position="right"
+                                        >
+                                            <LayoutsAppImage
+                                                src="/icons/flag.png"
+                                                class="h-4 ml-2"
+                                            />
+                                            <SelectValue
+                                                placeholder="Pays"
+                                                class="ml-3 block w-full"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none w-full">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="c in countries"
+                                                    :key="c.value"
+                                                    class="flex justify-center items-center -ms-3 w-full"
+                                                >
+                                                    <SelectItem :value="c.value">
+                                                        <div class="flex w-full">
+                                                            <LayoutsAppImage
+                                                                :src="c.icon"
+                                                                :alt="c.name"
+                                                                class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
+                                                                format="png"
+                                                            />
+                                                            <div class="sm:text-xs xl:text-sm">
+                                                                {{ c.label }}
+                                                            </div>
+                                                        </div>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Complément d'adresse
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.address.additionnalInformation"
+                                        :icon="EllipsisHorizontalCircleIcon"
+                                        size="md"
+                                        placeholder="Complément d'adresse"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                            Informations professionnelles
+                        </label>
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div
+                                    v-if="formData.accountType != 'institution'"
+                                    class="col-span-2"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Compte
+                                    </label>
+                                    <Select v-model="formData.role">
+                                        <SelectTrigger
+                                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                                            position="right"
+                                        >
+                                            <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
+                                            <SelectValue
+                                                placeholder="Compte"
+                                                class="text-nowrap w-full text-sm ml-3 my-auto"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="accountOption in roleOptions"
+                                                    :key="accountOption.value"
+                                                    class="flex justify-center items-center -ms-3"
+                                                >
+                                                    <SelectItem :value="accountOption.value">
+                                                        <span class="xl:text-sm sm:text-xs">{{ accountOption.label }}</span>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div
+                                    v-if="formData.accountType != 'institution'"
+                                    class="col-span-4"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Langue
+                                    </label>
+                                    <Select
+                                        v-model="formData.language"
+                                        disabled
+                                    >
+                                        <SelectTrigger
+                                            class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
+                                            position="right"
+                                        >
+                                            <LanguageIcon class="text-primary w-6 h-6" />
+                                            <SelectValue
+                                                placeholder="Langue"
+                                                class="text-sm ml-3 my-auto"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="language in LANGUAGES"
+                                                    :key="language.value"
+                                                    class="flex justify-center items-center -ms-3"
+                                                >
+                                                    <SelectItem :value="language.value">
+                                                        <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div class="col-span-4">
+                                    <div class="text-sm font-medium text-gray-700 mb-4 block">
+                                        Pays de recherche
+                                        <span
+                                            v-if="formData.address.workingAt.length === 0"
+                                            class="text-gray-400 text-sm ml-2 font-light"
+                                        >
+                                            (Sélectionnez un ou plusieurs pays)
+                                        </span>
                                     </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                                        <div
+                                            v-for="workingAt in countryOfWork"
+                                            :key="workingAt.value"
+                                            class="flex items-center gap-2"
+                                        >
+                                            <Checkbox
+                                                :checked="formData.address.workingAt.includes(workingAt.value)"
+                                                @update:checked="(checked) => {
+                                                    if (checked) {
+                                                        if (!formData.address.workingAt.includes(workingAt.value)) {
+                                                            formData.address.workingAt.push(workingAt.value);
+                                                        }
+                                                    }
+                                                    else {
+                                                        formData.address.workingAt = formData.address.workingAt.filter(c => c !== workingAt.value);
+                                                    }
+                                                }"
+                                            />
+                                            <div class="flex items-center gap-2">
+                                                <LayoutsAppImage
+                                                    :src="workingAt.icon"
+                                                    :alt="workingAt.name"
+                                                    class="xl:w-4 xl:h-3 sm:w-3 sm:h-2"
+                                                    format="png"
+                                                />
+                                                <span class="sm:text-xs xl:text-sm">{{ workingAt.label }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    v-if="formData.accountType !== 'institution'"
+                                    class="col-span-4"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        {{ identifierLabel }}
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.identifierNumber"
+                                        :icon="IdentificationIcon"
+                                        size="md"
+                                        :placeholder="identifierLabel"
+                                    />
+                                </div>
+                                <div
+                                    v-else
+                                    class="col-span-4"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        Numéro d'entreprise
+                                    </label>
+                                    <InputIcon
+                                        v-model="formData.companyNumber"
+                                        :icon="IdentificationIcon"
+                                        size="md"
+                                        placeholder="Numéro d'entreprise"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <div
                             v-if="formData.accountType != 'institution'"
-                            class="col-span-4"
+                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
-                            <label class="text-sm font-medium text-gray-700">
-                                Catégorie professionnel <span class="text-red-500">*</span>
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                                Catégorie professionnel
                             </label>
-                            <Select v-model="formData.professionalCategory">
-                                <SelectTrigger
-                                    class="flex justify-between items-center rounded-full border-2 border-gray-300 mt-1"
-                                    position="right"
-                                >
-                                    <UserGroupIcon class="text-primary w-10 h-10" />
-                                    <SelectValue
-                                        placeholder="Catégorie *"
-                                        class="ml-3 block w-full"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none w-full">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="category in professionalCategory"
-                                            :key="category.value"
-                                            class="flex justify-center items-center -ms-3 w-full"
-                                        >
-                                            <SelectItem :value="category.value">
-                                                <div class="flex w-full">
-                                                    <div class="sm:text-xs xl:text-sm">
-                                                        {{ category.label }}
+                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                                <Select v-model="formData.professionalCategory">
+                                    <SelectTrigger
+                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                        position="right"
+                                    >
+                                        <UserGroupIcon class="text-primary w-10 h-10" />
+                                        <SelectValue
+                                            placeholder="Catégorie"
+                                            class="ml-3 block w-full"
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent class="border border-none w-full">
+                                        <SelectGroup>
+                                            <div
+                                                v-for="category in professionalCategory"
+                                                :key="category.value"
+                                                class="flex justify-center items-center -ms-3 w-full"
+                                            >
+                                                <SelectItem :value="category.value">
+                                                    <div class="flex w-full">
+                                                        <div class="sm:text-xs xl:text-sm">
+                                                            {{ category.label }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </SelectItem>
-                                        </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                                                </SelectItem>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
                         <div
                             v-if="formData.accountType != 'institution'"
-                            class="mt-4 col-span-4"
+                            class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
                         >
                             <div class="space-y-4">
                                 <label class="flex items-start cursor-pointer">
@@ -1124,7 +1125,7 @@
                                         class="mt-1 accent-red-600"
                                         @update:checked="representGroup = $event"
                                     />
-                                    <span class="text-sm ml-2">
+                                    <span class="text-sm ml-2 font-medium">
                                         Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
                                     </span>
                                 </label>
@@ -1144,7 +1145,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-4 col-span-4">
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                             <label class="flex items-start cursor-pointer">
                                 <Checkbox
                                     :checked="charteAccepted"
@@ -1165,9 +1166,9 @@
                             </label>
                         </div>
 
-                        <div class="col-span-4 mt-4 flex justify-center items-center">
+                        <div class="flex justify-center items-center">
                             <Button
-                                class="w-[50%]"
+                                class="w-[70%] text-base font-bold"
                                 type="submit"
                                 :in-progress="inProgress"
                                 :disabled="!charteAccepted"
@@ -1227,7 +1228,7 @@ const accountOptions = [
     {
         value: 'standard',
         label: 'Infirmier(ère)',
-        description: 'Professionnel de santé indépendant',
+        description: 'Professionnel de santé',
     },
     {
         value: 'institution',

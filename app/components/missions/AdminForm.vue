@@ -401,6 +401,7 @@ import {
     BuildingOffice2Icon,
     BookmarkIcon,
 } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
 import {
     Dialog,
@@ -418,7 +419,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { toast } from 'vue-sonner';
 
 const props = defineProps({
     mission: {
