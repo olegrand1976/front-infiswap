@@ -128,7 +128,7 @@ const fetchInstitution = async () => {
         if (institution.value) {
             formData.name = institution.value.name || '';
             formData.company_number = institution.value.company_number || '';
-            formData.can_apply_replacements = institution.value.can_apply_replacements || false;
+            formData.can_apply_replacements = !!institution.value.can_apply_replacements;
             const logoUrl = getLogoUrl(institution.value?.logo);
 
             logoFile.value = logoUrl || null;
