@@ -530,7 +530,7 @@ const { submit, inProgress } = useSubmit(async () => {
     await submitReplacement(formData);
 }, {
     onSuccess: () => {
-        toast('Création effectuée');
+        toast.success('Création effectuée');
         resetForm();
         setTimeout(() => {
             router.push('/dashboard/replacements/me');

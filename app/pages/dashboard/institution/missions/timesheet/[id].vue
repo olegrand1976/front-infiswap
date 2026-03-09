@@ -475,7 +475,7 @@ const handleUpdateStatus = async (timesheet, force = false) => {
         });
 
         if (response.data) {
-            toast('Horaire du jour ajusté');
+            toast.success('Horaire du jour ajusté');
 
             const updatedTimesheet = response.data;
 

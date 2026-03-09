@@ -254,7 +254,7 @@ export const useInstitutions = () => {
             method: 'DELETE',
         })
             .then(() => {
-                toast('Suppression réussie.');
+                toast.success('Suppression réussie.');
             })
             .catch(() => {
                 toast.error('Une erreur est survenue lors de la suppression.');

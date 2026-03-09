@@ -470,7 +470,7 @@ const handleDelete = async (mission: Mission) => {
             m => m.id !== mission.id,
         );
 
-        toast('Mission supprimée avec succès.');
+        toast.success('Mission supprimée avec succès.');
     });
 };
 
@@ -500,7 +500,7 @@ const handleChangeStatus = async () => {
         const response = await update(selectedMission.value.id, formData);
 
         if (response.data) {
-            toast('Mission mis à jour avec succès');
+            toast.success('Mission mis à jour avec succès');
 
             const updatedMission = response.data;
 

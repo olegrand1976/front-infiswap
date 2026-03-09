@@ -180,7 +180,7 @@ export const useReplacements = () => {
         await $apifetch(`/api/replacements/${replacement}`, {
             method: 'DELETE',
         }).then(() => {
-            toast('Suppression réussie.');
+            toast.success('Suppression réussie.');
         })
             .catch(() => {
                 toast.error('Une erreur est survenue lors de la suppression.');
@@ -191,7 +191,7 @@ export const useReplacements = () => {
         await $apifetch(`/api/replacements/${replacement}/release`, {
             method: 'PUT',
         }).then(() => {
-            toast('Remplacement libéré avec succès.');
+            toast.success('Remplacement libéré avec succès.');
         })
             .catch(() => {
                 toast.error('Une erreur est survenue lors de la libération.');
@@ -373,7 +373,7 @@ export const sendResponse = () => {
                 body: formData,
             });
             isDisabled.value = true;
-            toast('Réponse envoyée avec succès');
+            toast.success('Réponse envoyée avec succès');
             return true; // Succès
         }
         catch (e) {
@@ -421,7 +421,7 @@ export const changeStatusReplacement = () => {
         return await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
             method: 'PUT',
         }).then(() => {
-            toast('Mise à jour effectuée');
+            toast.success('Mise à jour effectuée');
         }).catch(() => {
             toast.error('Une erreur est survenue lors de la mise à jour.');
         });
