@@ -525,14 +525,25 @@ export interface InstitutionUserRole {
     role?: Role;
 }
 
+export interface InstitutionUser {
+    id: number;
+    institution_id: number;
+    validate_at?: string | null;
+    validated_by?: number | null;
+    email_verified_at?: string | null;
+}
+
 export interface Institution {
     id: number;
     name: string;
     services?: InstitutionService[];
     userRoles?: InstitutionUserRole[];
+    users?: InstitutionUser[];
+    main_user?: InstitutionUser | null;
     services_count?: number;
     users_count?: number;
     created_at?: string;
     updated_at?: string;
     deleted_at?: string | null;
+    status?: 'pending' | 'active' | 'rejected';
 }

@@ -1,5 +1,19 @@
 <template>
     <div class="mb-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-start gap-3">
+                <InformationCircleIcon class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div class="flex-1">
+                    <p class="text-sm text-blue-900">
+                        <strong>Votre compte a été validé !</strong> Vous pouvez maintenant utiliser toutes les fonctionnalités de la plateforme.
+                    </p>
+                    <p class="text-xs text-blue-700 mt-1">
+                        Pour toute question, contactez-nous au <strong>0478 02 33 77</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid md:grid-cols-2 gap-8">
             <div class="md:col-span-1 bg-white shadow rounded-lg p-8 flex gap-8 items-center">
                 <LayoutsAppImage
@@ -386,7 +400,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ClipboardDocumentListIcon, UserPlusIcon } from '@heroicons/vue/24/outline';
+import { ClipboardDocumentListIcon, UserPlusIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 
 useHead({ title: 'Tableau de bord' });

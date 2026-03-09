@@ -30,7 +30,14 @@
                 </Button>
             </div>
 
+            <div
+                v-if="loading"
+                class="flex justify-center items-center py-12"
+            >
+                <RollingLoader :loading="loading" />
+            </div>
             <DataTable
+                v-else
                 :data="dataInstitutions"
                 :columns="columns"
             />
@@ -51,11 +58,12 @@
 <script setup lang="ts">
 import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
+import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
-import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import type { Institution } from '~/lib/types';
+import RollingLoader from '~/components/RollingLoader.vue';
 
 useHead({ title: 'Gestion des institutions' });
 
@@ -64,7 +72,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { institutions, getInstitutions, count, forceDelete } = useInstitutions();
+const { institutions, getInstitutions, count, forceDelete, validateInstitution, rejectInstitution, loading } = useInstitutions();
 const { isSuperAdmin } = useAuth();
 
 const perPage = ref(PERPAGE);
@@ -142,9 +150,34 @@ const handleEdit = (institution: Institution) => {
 };
 
 const handleDelete = async (institution: Institution) => {
-    await forceDelete(institution.id);
-    await getInstitutions(page.value, perPage.value, option.value);
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette institution ?')) {
+        await forceDelete(institution.id);
+        await getInstitutions(page.value, perPage.value, option.value);
+    }
 };
+
+const handleValidate = async (institution: Institution) => {
+    try {
+        await validateInstitution(institution.id);
+        await getInstitutions(page.value, perPage.value, option.value);
+    }
+    catch (error) {
+        console.error('Erreur lors de la validation:', error);
+    }
+};
+
+const handleReject = async (institution: Institution) => {
+    if (confirm('Êtes-vous sûr de vouloir rejeter cette institution ?')) {
+        try {
+            await rejectInstitution(institution.id);
+            await getInstitutions(page.value, perPage.value, option.value);
+        }
+        catch (error) {
+            console.error('Erreur lors du rejet:', error);
+        }
+    }
+};
+
 
 const columns: ColumnDef<Institution>[] = [
     {
@@ -215,27 +248,47 @@ const columns: ColumnDef<Institution>[] = [
     },
     {
         id: 'actions',
-        header: () => h('div', { class: 'mx-2' }, 'Actions'),
+        header: () => h('div', { class: 'mx-2 text-center' }, 'Actions'),
         enableHiding: false,
         cell: ({ row }) => {
             const institution = row.original;
-            const actions = [
-                {
-                    label: 'Modifier',
+            const mainUser = institution.main_user;
+            
+            const validateAt = mainUser?.validate_at;
+            const isUserValidated = mainUser && validateAt !== null && validateAt !== undefined && validateAt !== '';
+            
+            return h('div', { class: 'flex justify-center items-center gap-2' }, [
+                h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    class: 'w-8 h-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50',
                     onClick: () => handleEdit(institution),
-                },
-                ...(isSuperAdmin.value
-                    ? [
-                            {
-                                label: 'Supprimer',
-                                confirm: true,
-                                onClick: () => handleDelete(institution),
-                            },
-                        ]
-                    : []),
-            ];
-            return h('div', { class: 'flex justify-start ml-4' }, [
-                h(DropdownMenuAction, { actions }),
+                    title: 'Modifier',
+                }, () => h(PencilIcon, { class: 'w-4 h-4' })),
+                
+                !isUserValidated ? h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    class: 'w-8 h-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50',
+                    onClick: () => handleValidate(institution),
+                    title: 'Valider',
+                }, () => h(CheckIcon, { class: 'w-4 h-4' })) : null,
+                
+                !isUserValidated ? h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    class: 'w-8 h-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50',
+                    onClick: () => handleReject(institution),
+                    title: 'Rejeter',
+                }, () => h(XMarkIcon, { class: 'w-4 h-4' })) : null,
+                
+                isSuperAdmin.value ? h(Button, {
+                    variant: 'ghost',
+                    size: 'sm',
+                    class: 'w-8 h-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50',
+                    onClick: () => handleDelete(institution),
+                    title: 'Supprimer',
+                }, () => h(TrashIcon, { class: 'w-4 h-4' })) : null,
             ]);
         },
     },

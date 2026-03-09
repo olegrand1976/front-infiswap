@@ -23,7 +23,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
         switch (true) {
             case isInstitution.value:
-                redirectTo = '/dashboard/institution';
+                if (user.value.validate_at) {
+                    redirectTo = '/dashboard/institution';
+                }
                 break;
 
             case isManager.value:

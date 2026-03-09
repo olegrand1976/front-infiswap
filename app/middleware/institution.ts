@@ -12,7 +12,20 @@ export default defineNuxtRouteMiddleware((to) => {
 
     const { isInstitution } = useAuth();
 
-    if (isInstitution.value && to.path === '/dashboard') {
-        return navigateTo('/dashboard/institution', { replace: true });
+    if (isInstitution.value) {
+        if (user.value.validate_at && to.path === '/dashboard/institution/pending-validation') {
+            return navigateTo('/dashboard/institution', { replace: true });
+        }
+
+        if (!user.value.validate_at) {
+            if (to.path !== '/dashboard/institution/pending-validation') {
+                return navigateTo('/dashboard/institution/pending-validation', { replace: true });
+            }
+            return;
+        }
+
+        if (to.path === '/dashboard') {
+            return navigateTo('/dashboard/institution', { replace: true });
+        }
     }
 });

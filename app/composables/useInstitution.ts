@@ -80,16 +80,30 @@ export const useInstitutions = () => {
     const count = useState<number>('institutionsCount', () => 0);
 
     async function getInstitutions(page = 1, perPage = 15, options: Record<string, unknown> = {}) {
-        return await $apifetch('api/admin/institutions', {
-            params: {
-                page,
-                perPage,
-                ...options,
-            },
-        }).then((response: any) => {
-            institutions.value = response.institutions;
-            count.value = response.count;
-        });
+        try {
+            loading.value = true;
+            const response = await $apifetch('api/admin/institutions', {
+                params: {
+                    page,
+                    perPage,
+                    ...options,
+                },
+            });
+            
+            institutions.value = response.institutions || [];
+            count.value = response.count || 0;
+            
+            return response;
+        }
+        catch (error: any) {
+            console.error('Erreur lors de la récupération des institutions:', error);
+            institutions.value = [];
+            count.value = 0;
+            throw error;
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function get(id: number) {
@@ -234,6 +248,34 @@ export const useInstitutions = () => {
             });
     }
 
+    async function validateInstitution(id: number) {
+        try {
+            const response = await $apifetch(`api/admin/institutions/${id}/validate`, {
+                method: 'POST',
+            });
+            toast.success('Institution validée avec succès');
+            return response;
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Erreur lors de la validation');
+            throw error;
+        }
+    }
+
+    async function rejectInstitution(id: number) {
+        try {
+            const response = await $apifetch(`api/admin/institutions/${id}/reject`, {
+                method: 'POST',
+            });
+            toast.success('Institution rejetée');
+            return response;
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Erreur lors du rejet');
+            throw error;
+        }
+    }
+
     return {
         institutions,
         currentInstitution,
@@ -250,5 +292,7 @@ export const useInstitutions = () => {
         syncServices,
         syncUsers,
         forceDelete,
+        validateInstitution,
+        rejectInstitution,
     };
 };
