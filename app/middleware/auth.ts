@@ -18,16 +18,21 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return navigateTo('/dashboard', { replace: true });
     }
 
+    if (isInstitution.value) {
+        if (to.path === '/dashboard' || (to.path.startsWith('/dashboard') && !to.path.startsWith('/dashboard/institution'))) {
+            if (user.value.validate_at) {
+                return navigateTo('/dashboard/institution', { replace: true });
+            }
+            else {
+                return navigateTo('/dashboard/institution/pending-validation', { replace: true });
+            }
+        }
+    }
+
     if (to.path === '/dashboard') {
         let redirectTo: string | null = null;
 
         switch (true) {
-            case isInstitution.value:
-                if (user.value.validate_at) {
-                    redirectTo = '/dashboard/institution';
-                }
-                break;
-
             case isManager.value:
                 redirectTo = '/dashboard/admin/replacements';
                 break;

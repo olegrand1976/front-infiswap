@@ -20,14 +20,24 @@ import { useReports } from '~/composables/useReports';
 
 const { reports, getReports } = useReports();
 
-const { isAdmin, isCommunityManager } = useAuth();
+const { isAdmin, isCommunityManager, isInstitution } = useAuth();
+const user = useUser();
 
 useHead({ title: 'Tableau de bord' });
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified'],
+    middleware: ['auth', 'verified', 'institution'],
 });
+
+if (isInstitution.value) {
+    if (user.value?.validate_at) {
+        await navigateTo('/dashboard/institution', { replace: true });
+    }
+    else {
+        await navigateTo('/dashboard/institution/pending-validation', { replace: true });
+    }
+}
 
 await getReports();
 </script>
