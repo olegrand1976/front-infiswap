@@ -809,6 +809,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Rue <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.address.street"
                                 :icon="MapPinIcon"
@@ -818,6 +821,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Code postal <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.address.zipCode"
                                 :icon="InboxArrowDownIcon"
@@ -827,6 +833,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Ville <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.address.city"
                                 :icon="BuildingOffice2Icon"
@@ -836,6 +845,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Pays <span class="text-red-500">*</span>
+                            </label>
                             <Select v-model="formData.address.country">
                                 <SelectTrigger
                                     class="flex justify-between items-center rounded-full border-2 border-gray-300"
@@ -877,6 +889,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Complément d'addresse <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.address.additionnalInformation"
                                 :icon="EllipsisHorizontalCircleIcon"
@@ -889,6 +904,9 @@
                             v-if="formData.accountType != 'institution'"
                             class="col-span-4"
                         >
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Compte <span class="text-red-500">*</span>
+                            </label>
                             <Select v-model="formData.role">
                                 <SelectTrigger
                                     class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
