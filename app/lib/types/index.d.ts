@@ -37,6 +37,7 @@ export type User = {
     institution?: {
         id: number;
         name: string;
+        status?: 'pending' | 'active' | 'rejected';
     };
     password?: string;
     gender: Gender;
