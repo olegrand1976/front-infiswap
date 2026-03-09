@@ -364,7 +364,7 @@ const emit = defineEmits<{
     (e: 'open-edit', replacement: Replacement): void;
 }>();
 
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const { updateReplacement } = useReplacements();
 const { getLogoUrl } = useInstitutions();
 const user = useState<User>('user');
@@ -396,7 +396,7 @@ const handleCloseReplacement = async (): Promise<void> => {
         const payload = { ...props.replacement, status: 'closed' };
         const response = await updateReplacement(payload);
         if (response) {
-            $toast({ description: response.message ?? 'Remplacement fermé avec succès.' });
+            toast(response.message ?? 'Remplacement fermé avec succès.');
             closeDialog.value = false;
             localClosed.value = true;
             emit('closed');
@@ -404,7 +404,7 @@ const handleCloseReplacement = async (): Promise<void> => {
     }
     catch (error) {
         console.error(error);
-        $toast({ description: 'Une erreur est survenue.' });
+        toast.error('Une erreur est survenue.');
     }
     finally {
         isClosing.value = false;

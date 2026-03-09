@@ -254,7 +254,7 @@ definePageMeta({
     middleware: ['institution'],
 });
 
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const route = useRoute();
 const id = computed(() => route.params.id);
 
@@ -324,19 +324,13 @@ const handleChangeStatusCandidacy = async (response: MissionResponse, status: st
                 ),
             };
 
-            $toast({
-                description: status == 'accepted' ? 'Candidature acceptée' : 'Candidature rejetée',
-            });
+            toast(status == 'accepted' ? 'Candidature acceptée' : 'Candidature rejetée');
         };
     }
     catch (err) {
         if (err.data?.errors) {
             const firstError = Object.values(err.data.errors)[0][0];
-            $toast({
-                description: firstError,
-                status: 'error',
-                variant: 'destructive',
-            });
+            toast.error(firstError);
         }
     }
 };

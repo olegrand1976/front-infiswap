@@ -322,7 +322,7 @@ const { getCitiesFomZipCode } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);
@@ -530,7 +530,7 @@ const { submit, inProgress } = useSubmit(async () => {
     await submitReplacement(formData);
 }, {
     onSuccess: () => {
-        $toast({ description: 'Création effectuée' });
+        toast('Création effectuée');
         resetForm();
         setTimeout(() => {
             router.push('/dashboard/replacements/me');

@@ -86,11 +86,12 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner';
 import { useNearbyReplacements } from '~/composables/useReplacements';
 import { getErrorMessage, goBack } from '~/lib/utils';
 
 const user = useUser();
-const { $apifetch, $toast } = useNuxtApp();
+const { $apifetch } = useNuxtApp();
 const { replacements, fetchNearbyreplacements, pagination } = useNearbyReplacements();
 
 const interestedReplacements = ref<number[]>([]);
@@ -123,17 +124,10 @@ const handleInterest = async (replacementId, nurseId) => {
             },
         });
         interestedReplacements.value.push(replacementId);
-        $toast({
-            title: 'Succès',
-            description: 'Intérêt marqué avec succès !',
-        });
+        toast.success('Intérêt marqué avec succès !');
     }
     catch (error) {
-        $toast({
-            title: 'Oups !',
-            description: getErrorMessage(error),
-            variant: 'destructive',
-        });
+        toast.error(getErrorMessage(error));
     }
 };
 

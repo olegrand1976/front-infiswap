@@ -374,7 +374,7 @@ const generateDialog = ref(false);
 const search = ref('');
 const pendingWorkCount = ref(0);
 
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const route = useRoute();
 const router = useRouter();
 const mission = ref<Mission>(null);
@@ -447,9 +447,7 @@ const handleUpdateStatus = async (timesheet, force = false) => {
         });
 
         if (response.data) {
-            $toast({
-                description: response.data.status == 'absent' ? 'Jour marqué comme absent' : 'Jour marqué comme présent',
-            });
+            toast(response.data.status == 'absent' ? 'Jour marqué comme absent' : 'Jour marqué comme présent');
 
             const updatedTimesheet = response.data;
 
@@ -478,9 +476,7 @@ const handleUpdateStatus = async (timesheet, force = false) => {
         });
 
         if (response.data) {
-            $toast({
-                description: 'Horaire du jour ajusté',
-            });
+            toast('Horaire du jour ajusté');
 
             const updatedTimesheet = response.data;
 
@@ -513,19 +509,13 @@ const handleGenerateInvoice = async () => {
             const response = await create({ mission_id: mission.value.id });
 
             if (response.mission_invoice) {
-                $toast({
-                    description: response.message,
-                });
+                toast(response.message);
             };
         }
         catch (err) {
             if (err.data?.errors) {
                 const firstError = Object.values(err.data.errors)[0][0];
-                $toast({
-                    description: firstError,
-                    status: 'error',
-                    variant: 'destructive',
-                });
+                toast.error(firstError);
             }
         }
         finally {

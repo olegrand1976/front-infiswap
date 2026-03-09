@@ -3,11 +3,12 @@
     <NuxtLayout class="overflow-x-hidden">
         <NuxtPage />
     </NuxtLayout>
-    <Toaster />
+    <Toaster position="top-center"/>
 </template>
 
 <script setup lang="ts">
-import Toaster from '@/components/ui/toast/Toaster.vue';
+import 'vue-sonner/style.css'
+import { Toaster } from '@/components/ui/sonner'
 
 useHead({
     title: 'InfiSwap',

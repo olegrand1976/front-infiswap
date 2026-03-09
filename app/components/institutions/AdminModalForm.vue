@@ -121,7 +121,7 @@ const props = defineProps({
     },
 });
 
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const { createOrUpdate, syncServices } = useInstitutions();
 
 const isEditMode = computed(() => !!props.institution?.id);
@@ -161,12 +161,9 @@ const { submit, inProgress } = useSubmit(async () => {
             await syncServices(institutionId, services);
         }
 
-        $toast({
-            title: 'Succès !',
-            description: isEditMode.value
-                ? 'Institution mise à jour avec succès'
-                : 'Institution créée avec succès',
-        });
+        toast.success(isEditMode.value
+            ? 'Institution mise à jour avec succès'
+            : 'Institution créée avec succès');
 
         if (!isEditMode.value) {
             resetForm();
@@ -179,11 +176,7 @@ const { submit, inProgress } = useSubmit(async () => {
         console.error(err);
         if (err?.data?.errors) {
             const firstError = Object.values(err.data.errors)[0] as string[];
-            $toast({
-                description: firstError[0],
-                status: 'error',
-                variant: 'destructive',
-            });
+            toast.error(firstError[0]);
         }
     }
 });

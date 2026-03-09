@@ -130,7 +130,7 @@ import type { Mission, User } from '~/lib/types';
 import { debounce } from '~/lib/utils';
 import { formatTime } from '~/composables/useDate';
 
-const { $toast } = useNuxtApp();
+import { toast } from 'vue-sonner';
 const { getAll, missions, update, remove } = useMissions();
 
 useHead({ title: 'Mission' });
@@ -470,9 +470,7 @@ const handleDelete = async (mission: Mission) => {
             m => m.id !== mission.id,
         );
 
-        $toast({
-            description: 'Mission supprimée avec succès.',
-        });
+        toast('Mission supprimée avec succès.');
     });
 };
 
@@ -502,9 +500,7 @@ const handleChangeStatus = async () => {
         const response = await update(selectedMission.value.id, formData);
 
         if (response.data) {
-            $toast({
-                description: 'Mission mis à jour avec succès',
-            });
+            toast('Mission mis à jour avec succès');
 
             const updatedMission = response.data;
 
@@ -523,11 +519,7 @@ const handleChangeStatus = async () => {
     catch (err) {
         if (err.data?.errors) {
             const firstError = Object.values(err.data.errors)[0][0];
-            $toast({
-                description: firstError,
-                status: 'error',
-                variant: 'destructive',
-            });
+            toast.error(firstError);
         }
     }
 };

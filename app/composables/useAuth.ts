@@ -1,3 +1,4 @@
+import { toast } from 'vue-sonner';
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { AUTH_TOKEN } from '~/lib/constants';
 import type { AccountType, Address, Pagination, User } from '~/lib/types';
@@ -8,7 +9,7 @@ export const useUser = () => {
 
 export const useAuth = () => {
     const router = useRouter();
-    const { $apifetch, $fetchCurrentUser, $toast } = useNuxtApp();
+    const { $apifetch, $fetchCurrentUser } = useNuxtApp();
     const user = useUser();
     const users = useState<Pagination<User> | null>('users', () => null);
     const count = useState<number>('userCount', () => 0);
@@ -100,9 +101,7 @@ export const useAuth = () => {
                 useCookie(AUTH_TOKEN).value = response.token;
             })
             .then(() => {
-                $toast({
-                    description: 'Inscription réussie',
-                });
+                toast('Inscription réussie');
             })
             .then(() => {
                 const email = credentials.email || '';
@@ -125,17 +124,12 @@ export const useAuth = () => {
                 method: 'POST',
             });
 
-            $toast({
-                description: 'Compte validé avec succès.',
-            });
+            toast('Compte validé avec succès.');
 
             return true;
         }
         catch (err) {
-            $toast({
-                variant: 'destructive',
-                description: 'Une erreur s’est produite lors de la validation de votre compte. Merci de réessayer plus tard.',
-            });
+            toast.error('Une erreur s\'est produite lors de la validation de votre compte. Merci de réessayer plus tard.');
 
             throw new Error(err);
         }
@@ -156,9 +150,7 @@ export const useAuth = () => {
                 useCookie(AUTH_TOKEN).value = response.token;
             })
             .then(() => {
-                $toast({
-                    description: 'Inscription rapide réussie',
-                });
+                toast('Inscription rapide réussie');
             })
             .catch((error) => { throw error; });
     }
@@ -168,9 +160,7 @@ export const useAuth = () => {
             method: 'post',
             body: { email: email },
         }).then(() => {
-            $toast({
-                description: 'E-mail envoyé avec succès.',
-            });
+            toast('E-mail envoyé avec succès.');
         });
     }
 
@@ -268,10 +258,7 @@ export const useAuth = () => {
             router.push('/');
         }
         catch {
-            $toast({
-                variant: 'destructive',
-                description: 'Erreur lors de la déconnexion.',
-            });
+            toast.error('Erreur lors de la déconnexion.');
         }
         finally {
             loading.value = false;
@@ -370,15 +357,10 @@ export const useAuth = () => {
         await $apifetch(`/api/users/${user}`, {
             method: 'DELETE',
         }).then(() => {
-            $toast({
-                description: 'Suppression réussie.',
-            });
+            toast('Suppression réussie.');
         })
             .catch(() => {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Une erreur est survenue lors de la suppression.',
-                });
+                toast.error('Une erreur est survenue lors de la suppression.');
             });
     }
 
@@ -388,17 +370,12 @@ export const useAuth = () => {
                 method: 'PUT',
             });
 
-            $toast({
-                description: 'Validation réussie.',
-            });
+            toast('Validation réussie.');
 
             return response.user;
         }
         catch {
-            $toast({
-                variant: 'destructive',
-                description: 'Une erreur est survenue lors de la validation.',
-            });
+            toast.error('Une erreur est survenue lors de la validation.');
         }
     }
 
@@ -433,14 +410,9 @@ export const useAuth = () => {
 
     const createPreferences = async (formData) => {
         await $apifetch('/api/users/settings', { method: 'POST', body: formData }).then(() => {
-            $toast({
-                description: 'Succès',
-            });
+            toast('Succès');
         }).catch(() => {
-            $toast({
-                variant: 'destructive',
-                description: 'Une erreur est survenue lors de l\'enregistrement',
-            });
+            toast.error('Une erreur est survenue lors de l\'enregistrement');
         });
     };
 
@@ -458,16 +430,11 @@ export const useAuth = () => {
         try {
             await createPreferences(formData);
             user.value.settings = JSON.stringify(currentSettings);
-            $toast({
-                description: 'Rayon de recherche mis à jour avec succès',
-            });
+            toast('Rayon de recherche mis à jour avec succès');
         }
         catch (error) {
-            console.log(error);
-            $toast({
-                variant: 'destructive',
-                description: 'Erreur lors de la mise à jour du rayon de recherche',
-            });
+
+            toast.error('Erreur lors de la mise à jour du rayon de recherche');
         }
     };
 

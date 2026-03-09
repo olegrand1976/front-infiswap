@@ -1,10 +1,10 @@
+import { toast } from 'vue-sonner';
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, Replacement } from '~/lib/types';
 import { PERPAGE } from '~/lib/constants';
 
 export const useReplacements = () => {
     const { $apifetch } = useNuxtApp();
-    const { $toast } = useNuxtApp();
 
     const myReplacements = useState('myReplacements', () => []);
     const replacements = useState<Pagination<Replacement> | null>('replacements', () => null);
@@ -143,11 +143,7 @@ export const useReplacements = () => {
                 const firstField = Object.keys(backendErrors)[0];
                 const firstMessage = backendErrors[firstField][0];
 
-                $toast({
-                    description: firstMessage,
-                    status: 'error',
-                    variant: 'destructive',
-                });
+                toast.error(firstMessage);
             }
 
             error.value = err;
@@ -184,15 +180,10 @@ export const useReplacements = () => {
         await $apifetch(`/api/replacements/${replacement}`, {
             method: 'DELETE',
         }).then(() => {
-            $toast({
-                description: 'Suppression réussie.',
-            });
+            toast('Suppression réussie.');
         })
             .catch(() => {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Une erreur est survenue lors de la suppression.',
-                });
+                toast.error('Une erreur est survenue lors de la suppression.');
             });
     }
 
@@ -200,15 +191,10 @@ export const useReplacements = () => {
         await $apifetch(`/api/replacements/${replacement}/release`, {
             method: 'PUT',
         }).then(() => {
-            $toast({
-                description: 'Remplacement libéré avec succès.',
-            });
+            toast('Remplacement libéré avec succès.');
         })
             .catch(() => {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Une erreur est survenue lors de la libération.',
-                });
+                toast.error('Une erreur est survenue lors de la libération.');
             });
     }
 
@@ -387,18 +373,13 @@ export const sendResponse = () => {
                 body: formData,
             });
             isDisabled.value = true;
-            $toast({
-                description: 'Réponse envoyée avec succès',
-            });
+            toast('Réponse envoyée avec succès');
             return true; // Succès
         }
         catch (e) {
             isDisabled.value = false;
             const errorMessage = e?.data?.message || e?.message || 'Une erreur est survenue lors de l\'envoi de la réponse';
-            $toast({
-                variant: 'destructive',
-                description: errorMessage,
-            });
+            toast.error(errorMessage);
             throw e;
         }
     };
@@ -435,19 +416,14 @@ export const useListResponse = (id) => {
 };
 
 export const changeStatusReplacement = () => {
-    const { $apifetch, $toast } = useNuxtApp();
+    const { $apifetch } = useNuxtApp();
     const changeStatus = async (responseId: number, status: string) => {
         return await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
             method: 'PUT',
         }).then(() => {
-            $toast({
-                description: 'Mise à jour effectuée',
-            });
+            toast('Mise à jour effectuée');
         }).catch(() => {
-            $toast({
-                variant: 'destructive',
-                description: 'Une erreur est survenue lors de la mise à jour.',
-            });
+            toast.error('Une erreur est survenue lors de la mise à jour.');
         });
     };
 

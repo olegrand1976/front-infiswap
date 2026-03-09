@@ -67,8 +67,10 @@ export const useInstitutionServices = () => {
     };
 };
 
+import { toast } from 'vue-sonner';
+
 export const useInstitutions = () => {
-    const { $apifetch, $toast } = useNuxtApp();
+    const { $apifetch } = useNuxtApp();
     const config = useRuntimeConfig();
 
     const institutions = useState<Institution[]>('institutions', () => []);
@@ -109,11 +111,7 @@ export const useInstitutions = () => {
         }
         catch (error: any) {
             console.error('Erreur lors du chargement de l\'institution:', error);
-            $toast({
-                title: 'Erreur',
-                description: 'Impossible de charger les informations de l\'institution',
-                variant: 'destructive',
-            });
+            toast.error('Impossible de charger les informations de l\'institution');
             throw error;
         }
         finally {
@@ -145,18 +143,11 @@ export const useInstitutions = () => {
             if (currentInstitution.value) {
                 currentInstitution.value.logo = null;
             }
-            $toast({
-                title: 'Succès',
-                description: 'Logo supprimé avec succès',
-            });
+            toast.success('Logo supprimé avec succès');
         }
         catch (error: any) {
             console.error('Erreur lors de la suppression du logo:', error);
-            $toast({
-                title: 'Erreur',
-                description: 'Impossible de supprimer le logo',
-                variant: 'destructive',
-            });
+            toast.error('Impossible de supprimer le logo');
             throw error;
         }
     }
@@ -183,10 +174,7 @@ export const useInstitutions = () => {
                 });
 
                 currentInstitution.value = response.data;
-                $toast({
-                    title: 'Succès',
-                    description: 'Paramètres de l\'institution mis à jour avec succès',
-                });
+                toast.success('Paramètres de l\'institution mis à jour avec succès');
                 return response.data;
             }
             catch (error: any) {
@@ -194,11 +182,7 @@ export const useInstitutions = () => {
                     || error?.data?.errors
                     || error?.message
                     || 'Impossible de mettre à jour les paramètres';
-                $toast({
-                    title: 'Erreur',
-                    description: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
-                    variant: 'destructive',
-                });
+                toast.error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
                 throw error;
             }
             finally {
@@ -244,13 +228,10 @@ export const useInstitutions = () => {
             method: 'DELETE',
         })
             .then(() => {
-                $toast({ description: 'Suppression réussie.' });
+                toast('Suppression réussie.');
             })
             .catch(() => {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Une erreur est survenue lors de la suppression.',
-                });
+                toast.error('Une erreur est survenue lors de la suppression.');
             });
     }
 
