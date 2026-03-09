@@ -48,7 +48,7 @@
                             <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
                                 Quel type de compte souhaitez-vous choisir ?
                             </h2>
-                            <div class="px-8 mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
+                            <div class="px-8 mb- lg:mb-5 xl:mb-6">
                                 <div class="grid grid-cols-2 gap-6">
                                     <div
                                         v-for="account in accountOptions"
@@ -65,10 +65,10 @@
                                                 ? 'border-primary bg-primary/5 shadow-lg'
                                                 : 'border-gray-300 hover:border-gray-400'"
                                         >
-                                            <div class="relative w-full">
+                                            <div class="relative w-full h-16">
                                                 <component
                                                     :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
-                                                    class="w-12 h-12 mx-auto mb-3"
+                                                    class="size-12 mx-auto mb-3"
                                                     :class="formData.accountType === account.value
                                                         ? 'text-primary'
                                                         : 'text-gray-400'"
@@ -87,6 +87,12 @@
                                                     : 'text-gray-700'"
                                             >
                                                 {{ account.label }}
+                                            </span>
+                                            <span
+                                                v-if="account.description"
+                                                class="text-xs mt-1 text-gray-500 text-center"
+                                            >
+                                                {{ account.description }}
                                             </span>
                                         </div>
                                     </div>
@@ -622,38 +628,57 @@
                 >
                     <div class="space-y-6">
                         <div>
-                            <label class="text-sm font-medium text-gray-700">
-                                Type de compte
-                            </label>
-                            <Select v-model="formData.accountType">
-                                <SelectTrigger
-                                    class="w-full flex justify-between items-center rounded-full border-2 border-gray-300 mt-1"
-                                    position="right"
+                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
+                                Quel type de compte souhaitez-vous choisir ?
+                            </h2>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div
+                                    v-for="account in accountOptions"
+                                    :key="account.value"
+                                    class="relative cursor-pointer transition-all duration-300"
+                                    :class="formData.accountType === account.value
+                                        ? 'transform scale-105'
+                                        : 'hover:scale-102'"
+                                    @click="formData.accountType = account.value"
                                 >
-                                    <IdentificationIcon class="text-primary w-10 h-10" />
-                                    <SelectValue
-                                        placeholder="Type de compte"
-                                        class="ml-3 block w-full"
-                                    />
-                                </SelectTrigger>
-                                <SelectContent class="border border-none w-full">
-                                    <SelectGroup>
-                                        <div
-                                            v-for="account in accountOptions"
-                                            :key="account.value"
-                                            class="flex justify-center items-center -ms-3 w-full"
-                                        >
-                                            <SelectItem :value="account.value">
-                                                <div class="flex w-full">
-                                                    <div class="sm:text-xs xl:text-sm">
-                                                        {{ account.label }}
-                                                    </div>
-                                                </div>
-                                            </SelectItem>
+                                    <div
+                                        class="border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300"
+                                        :class="formData.accountType === account.value
+                                            ? 'border-primary bg-primary/5 shadow-lg'
+                                            : 'border-gray-300 hover:border-gray-400'"
+                                    >
+                                        <div class="relative w-full">
+                                            <component
+                                                :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
+                                                class="w-10 h-10 mx-auto mb-2"
+                                                :class="formData.accountType === account.value
+                                                    ? 'text-primary'
+                                                    : 'text-gray-400'"
+                                            />
+                                            <div
+                                                v-if="formData.accountType === account.value"
+                                                class="absolute -top-1 -right-1 bg-primary rounded-full p-1 transition-all duration-300"
+                                            >
+                                                <CheckIcon class="size-3 text-white" />
+                                            </div>
                                         </div>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                                        <span
+                                            class="text-sm font-medium text-center"
+                                            :class="formData.accountType === account.value
+                                                ? 'text-primary'
+                                                : 'text-gray-700'"
+                                        >
+                                            {{ account.label }}
+                                        </span>
+                                        <span
+                                            v-if="account.description"
+                                            class="text-xs mt-1 text-gray-500 text-center"
+                                        >
+                                            {{ account.description }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div
                             v-if="formData.accountType == 'institution'"
@@ -675,6 +700,9 @@
 
                     <div class="grid grid-cols-4 gap-4">
                         <div class="col-span-4 relative w-full items-center">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Nom <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.lastname"
                                 :icon="UserCircleIcon"
@@ -684,6 +712,9 @@
                         </div>
 
                         <div class="col-span-4 relative w-full items-center">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Prénom <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.firstname"
                                 :icon="UserCircleIcon"
@@ -693,6 +724,9 @@
                         </div>
 
                         <div class="col-span-4 relative w-full items-center">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Email <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.email"
                                 :icon="EnvelopeIcon"
@@ -703,6 +737,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                N° de téléphone <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.phoneNumber"
                                 :icon="PhoneIcon"
@@ -712,6 +749,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Mot de passe <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.password"
                                 :icon="LockClosedIcon"
@@ -722,6 +762,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Confirmation mot de passe <span class="text-red-500">*</span>
+                            </label>
                             <InputIcon
                                 v-model="formData.passwordConfirmation"
                                 :icon="LockClosedIcon"
@@ -732,6 +775,9 @@
                         </div>
 
                         <div class="col-span-4">
+                            <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                Sexe <span class="text-red-500">*</span>
+                            </label>
                             <Select v-model="formData.gender">
                                 <SelectTrigger
                                     class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
@@ -1162,11 +1208,13 @@ import { LANGUAGES } from '~/lib/constants';
 const accountOptions = [
     {
         value: 'standard',
-        label: 'Personnel',
+        label: 'Infirmier(ère)',
+        description: 'Professionnel de santé indépendant',
     },
     {
         value: 'institution',
         label: 'Institution',
+        description: '(maison de repos, hôpital, groupement infirmiers)',
     },
 ];
 
