@@ -77,7 +77,7 @@
                                 :for="'can_apply_replacements'"
                                 class="text-sm font-medium text-gray-700 cursor-pointer"
                             >
-                                Autoriser la postulation aux remplacements
+                                Poster des remplacements
                             </label>
                         </div>
                     </div>
