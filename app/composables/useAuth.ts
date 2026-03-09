@@ -433,7 +433,6 @@ export const useAuth = () => {
             toast('Rayon de recherche mis à jour avec succès');
         }
         catch (error) {
-
             toast.error('Erreur lors de la mise à jour du rayon de recherche');
         }
     };

@@ -311,6 +311,7 @@
 
 <script lang="ts" setup>
 import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
@@ -363,8 +364,6 @@ const emit = defineEmits<{
     (e: 'closed'): void;
     (e: 'open-edit', replacement: Replacement): void;
 }>();
-
-import { toast } from 'vue-sonner';
 const { updateReplacement } = useReplacements();
 const { getLogoUrl } = useInstitutions();
 const user = useState<User>('user');

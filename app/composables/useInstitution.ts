@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { toast } from 'vue-sonner';
 import { useState, useNuxtApp } from '#app';
 import type { Institution, InstitutionService } from '~/lib/types';
 
@@ -66,8 +67,6 @@ export const useInstitutionServices = () => {
         remove,
     };
 };
-
-import { toast } from 'vue-sonner';
 
 export const useInstitutions = () => {
     const { $apifetch } = useNuxtApp();

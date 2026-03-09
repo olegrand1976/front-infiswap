@@ -121,6 +121,7 @@
 <script lang="ts" setup>
 import type { ColumnDef } from '@tanstack/vue-table';
 import { PlusIcon, ArrowPathIcon, ChevronUpDownIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';
 import UsersName from '@/components/users/Name.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -130,7 +131,6 @@ import type { Mission, User } from '~/lib/types';
 import { debounce } from '~/lib/utils';
 import { formatTime } from '~/composables/useDate';
 
-import { toast } from 'vue-sonner';
 const { getAll, missions, update, remove } = useMissions();
 
 useHead({ title: 'Mission' });

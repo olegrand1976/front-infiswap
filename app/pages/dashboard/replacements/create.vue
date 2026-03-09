@@ -308,6 +308,7 @@
 <script lang="ts" setup>
 import { XMarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { InputTime } from '@/components/ui/input-time';
 import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
@@ -322,7 +323,6 @@ const { getCitiesFomZipCode } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
-import { toast } from 'vue-sonner';
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);

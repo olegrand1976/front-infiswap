@@ -32,7 +32,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             };
         }
 
-        const toastTitle = title || description || 'Notification';
+        const toastTitle = title || '';
 
         switch (toastType) {
             case 'success':
@@ -45,7 +45,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             case 'info':
                 return toast.info(toastTitle, toastOptions);
             default:
-                return toast(toastTitle, toastOptions);
+                return toast.success(toastTitle, toastOptions);
         }
     };
 

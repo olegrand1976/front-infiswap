@@ -20,6 +20,40 @@
             </div>
 
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-6">
+                <div class="space-y-3 border-b pb-4">
+                    <label class="text-gray-500 font-medium">
+                        Template de mission <span class="text-gray-400 text-sm">(optionnel)</span>
+                    </label>
+                    <div class="flex gap-2 items-center">
+                        <Select
+                            v-model="selectedTemplateId"
+                            class="flex-1"
+                            @update:model-value="loadTemplate"
+                        >
+                            <SelectTrigger
+                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300"
+                                position="right"
+                            >
+                                <SelectValue
+                                    placeholder="Sélectionner un template ou saisir manuellement"
+                                    class="text-nowrap w-full text-sm ml-3 my-auto"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border border-none">
+                                <SelectGroup>
+                                    <SelectItem
+                                        v-for="template in missionTemplates"
+                                        :key="template.id"
+                                        :value="template.id"
+                                    >
+                                        <span class="xl:text-sm sm:text-xs">{{ template.name }}</span>
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
                 <div class="space-y-3">
                     <label class="text-gray-500 font-medium">
                         Service <span class="text-red-500">*</span>
@@ -212,16 +246,70 @@
                     <p class="text-xs text-gray-400">
                         * Champs obligatoires
                     </p>
-                    <Button
-                        type="submit"
-                        class="rounded-md px-8"
-                        :in-progress="inProgress"
-                    >
-                        {{ mission?.id ? 'Mettre à jour' : 'Publier la mission' }}
-                    </Button>
+                    <div class="flex items-center gap-4">
+                        <label
+                            v-if="!mission?.id && canSaveAsTemplate"
+                            class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+                        >
+                            <Checkbox
+                                id="save-as-template"
+                                v-model:checked="saveAsTemplate"
+                            />
+                            <span class="flex items-center gap-1">
+                                <BookmarkIcon class="w-4 h-4" />
+                                Enregistrer comme template
+                            </span>
+                        </label>
+                        <Button
+                            type="submit"
+                            class="rounded-md px-8"
+                            :in-progress="inProgress"
+                        >
+                            {{ mission?.id ? 'Mettre à jour' : 'Publier la mission' }}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <Dialog v-model:open="showSaveTemplateModal">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Enregistrer comme template</DialogTitle>
+                    <DialogDescription>
+                        Donnez un nom à ce template pour le réutiliser plus tard.
+                    </DialogDescription>
+                </DialogHeader>
+                <form
+                    class="mt-4 space-y-4"
+                    @submit.prevent="saveTemplate"
+                >
+                    <InputIcon
+                        v-model="templateName"
+                        rounded="md"
+                        label="Nom du template *"
+                        placeholder="Ex: Mission soins à domicile"
+                        :icon="BookmarkIcon"
+                        required
+                    />
+                    <div class="flex justify-end gap-3 mt-6">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            @click="showSaveTemplateModal = false; templateName = ''"
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            type="submit"
+                            :in-progress="isSavingTemplate"
+                        >
+                            Enregistrer
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
 
         <Dialog v-model:open="showServiceModal">
             <DialogContent class="max-w-2xl">
@@ -311,6 +399,7 @@ import {
     MapPinIcon,
     InboxArrowDownIcon,
     BuildingOffice2Icon,
+    BookmarkIcon,
 } from '@heroicons/vue/24/outline';
 import type { Mission, User } from '~/lib/types';
 import {
@@ -328,6 +417,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'vue-sonner';
 
 const props = defineProps({
     mission: {
@@ -350,10 +441,25 @@ const props = defineProps({
 const user = useState<User>('user');
 const { create, update } = useMissions();
 const { getAll, services, create: createService } = useInstitutionServices();
+const { getAll: getAllTemplates, templates: templatesState, create: createTemplate, getById: getTemplateById } = useMissionTemplates();
 
 const dataServices = computed(() => services.value.data ?? []);
+const missionTemplates = computed(() => {
+    if (Array.isArray(templatesState.value)) {
+        return templatesState.value;
+    }
+    if (templatesState.value?.data && Array.isArray(templatesState.value.data)) {
+        return templatesState.value.data;
+    }
+    return [];
+});
 const showServiceModal = ref(false);
 const isCreatingService = ref(false);
+const selectedTemplateId = ref<string | number | null>(null);
+const showSaveTemplateModal = ref(false);
+const templateName = ref('');
+const isSavingTemplate = ref(false);
+const saveAsTemplate = ref(false);
 
 const commonDiplomas = [
     'IDE (Infirmier Diplômé d\'État)',
@@ -369,6 +475,7 @@ const commonDiplomas = [
 ];
 
 await getAll(1, 50);
+await getAllTemplates();
 
 const { $toast } = useNuxtApp();
 
@@ -409,6 +516,9 @@ const getDefaultTime = () => {
 };
 
 const getLastUsedService = () => {
+    if (typeof window === 'undefined' || !window.localStorage) {
+        return undefined;
+    }
     const lastMission = localStorage.getItem('lastMission');
     if (lastMission) {
         try {
@@ -423,6 +533,9 @@ const getLastUsedService = () => {
 };
 
 const getLastUsedTimes = () => {
+    if (typeof window === 'undefined' || !window.localStorage) {
+        return { start: '08:00', end: '17:00' };
+    }
     const lastMission = localStorage.getItem('lastMission');
     if (lastMission) {
         try {
@@ -652,6 +765,113 @@ const endDate = computed({
     },
 });
 
+const canSaveAsTemplate = computed(() => {
+    return !props.mission?.id && formData.service_id && formData.time_start_at && formData.time_end_at && formData.required_diploma;
+});
+
+const loadTemplate = async (templateId: string | number | null) => {
+    if (!templateId) {
+        return;
+    }
+
+    try {
+        const response = await getTemplateById(Number(templateId));
+        const template = response?.data || response;
+
+        if (template) {
+            formData.service_id = template.service_id || formData.service_id;
+            formData.time_start_at = template.time_start_at || formData.time_start_at;
+            formData.time_end_at = template.time_end_at || formData.time_end_at;
+            formData.description = template.description || '';
+            formData.required_diploma = template.required_diploma || '';
+
+            // Update selected diploma
+            if (template.required_diploma && commonDiplomas.includes(template.required_diploma)) {
+                selectedDiploma.value = template.required_diploma;
+            }
+            else if (template.required_diploma) {
+                selectedDiploma.value = '__custom__';
+            }
+
+            toast.success('Template chargé avec succès');
+        }
+    }
+    catch (err: any) {
+        console.error('Erreur lors du chargement du template:', err);
+        $toast({
+            description: err?.message || 'Erreur lors du chargement du template',
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+};
+
+const saveTemplate = async () => {
+    if (!templateName.value.trim()) {
+        $toast({
+            description: 'Le nom du template est requis',
+            status: 'error',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    if (!canSaveAsTemplate.value) {
+        $toast({
+            description: 'Veuillez remplir les champs obligatoires avant de sauvegarder comme template',
+            status: 'error',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    isSavingTemplate.value = true;
+    try {
+        const templateData = {
+            name: templateName.value.trim(),
+            service_id: formData.service_id,
+            time_start_at: formData.time_start_at,
+            time_end_at: formData.time_end_at,
+            description: formData.description || null,
+            required_diploma: formData.required_diploma || null,
+        };
+
+        await createTemplate(templateData);
+
+        $toast({
+            description: 'Template enregistré avec succès',
+        });
+
+        showSaveTemplateModal.value = false;
+        templateName.value = '';
+        selectedTemplateId.value = null;
+        saveAsTemplate.value = false;
+
+        resetForm();
+        await navigateTo('/dashboard/institution/missions');
+    }
+    catch (err: any) {
+        if (err.data?.errors) {
+            const firstError = Object.values(err.data.errors)[0][0];
+            $toast({
+                description: firstError,
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
+        else {
+            $toast({
+                description: 'Erreur lors de l\'enregistrement du template',
+                status: 'error',
+                variant: 'destructive',
+            });
+        }
+    }
+    finally {
+        isSavingTemplate.value = false;
+    }
+};
+
 const resetForm = () => {
     Object.assign(formData, {
         start_date: '',
@@ -662,6 +882,7 @@ const resetForm = () => {
         required_diploma: '',
         service_id: undefined,
     });
+    selectedTemplateId.value = null;
 };
 
 const router = useRouter();
@@ -681,7 +902,7 @@ const { submit, inProgress } = useSubmit(async () => {
             formData.institution_id = user.value.institution.id;
             const response = await create(formData);
 
-            if (response?.data) {
+            if (response?.data && typeof window !== 'undefined' && window.localStorage) {
                 localStorage.setItem('lastMission', JSON.stringify({
                     service_id: formData.service_id,
                     time_start_at: formData.time_start_at,
@@ -693,8 +914,15 @@ const { submit, inProgress } = useSubmit(async () => {
                 description: 'Mission créée avec succès',
             });
 
-            resetForm();
-            await navigateTo('/dashboard/institution/missions');
+            // Si la checkbox "Enregistrer comme template" est cochée, ouvrir le modal
+            if (saveAsTemplate.value) {
+                showSaveTemplateModal.value = true;
+                // Ne pas reset le formulaire ni naviguer, attendre la sauvegarde du template
+            }
+            else {
+                resetForm();
+                await navigateTo('/dashboard/institution/missions');
+            }
         }
         else {
             await update(formData.id, formData);

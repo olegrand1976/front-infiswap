@@ -108,6 +108,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 import { TrashIcon, PlusCircleIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';
 import type { Institution, InstitutionService } from '~/lib/types';
 
@@ -120,8 +121,6 @@ const props = defineProps({
         }),
     },
 });
-
-import { toast } from 'vue-sonner';
 const { createOrUpdate, syncServices } = useInstitutions();
 
 const isEditMode = computed(() => !!props.institution?.id);

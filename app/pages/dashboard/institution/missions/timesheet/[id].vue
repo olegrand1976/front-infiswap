@@ -357,6 +357,7 @@
 
 <script lang="ts" setup>
 import { AcademicCapIcon, ArrowPathIcon, CalendarIcon, ClipboardDocumentListIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { formatTime, formatToDMY } from '~/composables/useDate';
 import { useRuntimeConfig } from '#app';
 import type { Mission } from '~/lib/types';
@@ -373,8 +374,6 @@ const validateDialog = ref(false);
 const generateDialog = ref(false);
 const search = ref('');
 const pendingWorkCount = ref(0);
-
-import { toast } from 'vue-sonner';
 const route = useRoute();
 const router = useRouter();
 const mission = ref<Mission>(null);

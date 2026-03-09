@@ -241,6 +241,7 @@
 
 <script lang="ts" setup>
 import { CheckIcon, EyeIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { toast } from 'vue-sonner';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';
 import { formatToDMY } from '~/composables/useDate';
@@ -253,8 +254,6 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['institution'],
 });
-
-import { toast } from 'vue-sonner';
 const route = useRoute();
 const id = computed(() => route.params.id);
 

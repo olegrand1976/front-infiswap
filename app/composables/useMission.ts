@@ -240,3 +240,117 @@ export const useMissionInvoices = () => {
         update,
     };
 };
+
+export const useMissionTemplates = () => {
+    const { $apifetch } = useNuxtApp();
+    const templates = useState<any[]>('missionTemplates', () => []);
+    const error = useState('missionTemplatesError', () => null);
+    const loading = useState('missionTemplatesLoading', () => false);
+
+    async function getAll() {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await $apifetch('/api/institution/mission-templates', {
+                method: 'GET',
+            });
+            templates.value = response.data || [];
+            return response;
+        }
+        catch (err: any) {
+            error.value = err.message || 'Erreur lors du chargement des templates';
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function create(formData: any) {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await $apifetch('/api/institution/mission-templates', {
+                method: 'POST',
+                body: formData,
+            });
+            await getAll();
+            return response;
+        }
+        catch (err: any) {
+            error.value = err.message || 'Erreur lors de la création du template';
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function getById(id: number) {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await $apifetch(`/api/institution/mission-templates/${id}`, {
+                method: 'GET',
+            });
+            return response;
+        }
+        catch (err: any) {
+            error.value = err.message || 'Erreur lors du chargement du template';
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function update(id: number, formData: any) {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await $apifetch(`/api/institution/mission-templates/${id}`, {
+                method: 'PUT',
+                body: formData,
+            });
+            await getAll();
+            return response;
+        }
+        catch (err: any) {
+            error.value = err.message || 'Erreur lors de la mise à jour du template';
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function remove(id: number) {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await $apifetch(`/api/institution/mission-templates/${id}`, {
+                method: 'DELETE',
+            });
+            await getAll();
+            return response;
+        }
+        catch (err: any) {
+            error.value = err.message || 'Erreur lors de la suppression du template';
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    return {
+        templates,
+        error,
+        loading,
+        getAll,
+        create,
+        getById,
+        update,
+        remove,
+    };
+};
