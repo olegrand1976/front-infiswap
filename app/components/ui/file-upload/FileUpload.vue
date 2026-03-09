@@ -178,7 +178,10 @@ const fileName = computed(() => {
                     v-if="!props.disabled"
                     class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                    <UploadCloud class="w-10 h-10 text-white" />
+                    <Icon
+                        name="UploadCloud"
+                        class="w-10 h-10 text-white"
+                    />
                 </div>
             </template>
             <template v-else>
