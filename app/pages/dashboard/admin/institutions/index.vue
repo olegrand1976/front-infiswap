@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
-import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -72,7 +72,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { institutions, getInstitutions, count, forceDelete, validateInstitution, rejectInstitution, loading } = useInstitutions();
+const { institutions, getInstitutions, count, forceDelete, updateStatus, loading } = useInstitutions();
 const { isSuperAdmin } = useAuth();
 
 const perPage = ref(PERPAGE);
@@ -81,8 +81,17 @@ const page = ref(1);
 const initialFilter = { name: '' };
 const option = ref({ ...initialFilter });
 
+const sort = reactive<{ order: 'ASC' | 'DESC'; by: string | null }>({
+    order: 'ASC',
+    by: 'name',
+});
+
 onMounted(async () => {
-    await getInstitutions(page.value, perPage.value, option.value);
+    await getInstitutions(page.value, perPage.value, {
+        ...option.value,
+        sortKey: sort.by,
+        sortOrder: sort.order,
+    });
 });
 
 const dataInstitutions = computed(() => institutions.value ?? []);
@@ -91,20 +100,29 @@ const refreshInstitutions = async (newPage: number) => {
     page.value = newPage;
     await getInstitutions(newPage, perPage.value, {
         ...option.value,
-        sortOrder: sort.order,
         sortKey: sort.by,
+        sortOrder: sort.order,
     });
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getInstitutions(page.value, value, option.value);
+    await getInstitutions(page.value, value, {
+        ...option.value,
+        sortKey: sort.by,
+        sortOrder: sort.order,
+    });
 };
 
 const resetFilter = async () => {
     option.value = { ...initialFilter };
+    sort.by = 'name';
+    sort.order = 'ASC';
     page.value = 1;
-    await getInstitutions(1, perPage.value, {});
+    await getInstitutions(1, perPage.value, {
+        sortKey: sort.by,
+        sortOrder: sort.order,
+    });
 };
 
 let debounceTimer: ReturnType<typeof setTimeout>;
@@ -112,24 +130,25 @@ const debouncedFilter = () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(async () => {
         page.value = 1;
-        await getInstitutions(1, perPage.value, option.value);
+        await getInstitutions(1, perPage.value, {
+            ...option.value,
+            sortKey: sort.by,
+            sortOrder: sort.order,
+        });
     }, 350);
 };
-
-const sort = reactive<{ order: string; by: string | null }>({
-    order: 'DESC',
-    by: null,
-});
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
 };
 
 const setSort = (columnKey: string) => {
-    if (sort.by === columnKey) toggleSort();
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
     else {
         sort.by = columnKey;
-        sort.order = 'DESC';
+        sort.order = 'ASC';
     }
 };
 
@@ -138,8 +157,8 @@ watch(
     async (newVal) => {
         await getInstitutions(page.value, perPage.value, {
             ...option.value,
-            sortOrder: newVal.order,
             sortKey: newVal.by,
+            sortOrder: newVal.order,
         });
     },
     { deep: true },
@@ -152,29 +171,51 @@ const handleEdit = (institution: Institution) => {
 const handleDelete = async (institution: Institution) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette institution ?')) {
         await forceDelete(institution.id);
-        await getInstitutions(page.value, perPage.value, option.value);
+        await getInstitutions(page.value, perPage.value, {
+            ...option.value,
+            sortKey: sort.by,
+            sortOrder: sort.order,
+        });
     }
 };
 
-const handleValidate = async (institution: Institution) => {
+const handleStatusChange = async (institution: Institution, newStatus: 'pending' | 'active' | 'rejected') => {
     try {
-        await validateInstitution(institution.id);
-        await getInstitutions(page.value, perPage.value, option.value);
+        await updateStatus(institution.id, newStatus);
+        await getInstitutions(page.value, perPage.value, {
+            ...option.value,
+            sortKey: sort.by,
+            sortOrder: sort.order,
+        });
     }
     catch (error) {
-        console.error('Erreur lors de la validation:', error);
+        console.error('Erreur lors de la mise à jour du statut:', error);
     }
 };
 
-const handleReject = async (institution: Institution) => {
-    if (confirm('Êtes-vous sûr de vouloir rejeter cette institution ?')) {
-        try {
-            await rejectInstitution(institution.id);
-            await getInstitutions(page.value, perPage.value, option.value);
-        }
-        catch (error) {
-            console.error('Erreur lors du rejet:', error);
-        }
+const getStatusLabel = (status: string | null | undefined) => {
+    switch (status) {
+        case 'active':
+            return 'Active';
+        case 'pending':
+            return 'En attente';
+        case 'rejected':
+            return 'Rejetée';
+        default:
+            return '—';
+    }
+};
+
+const getStatusColor = (status: string | null | undefined) => {
+    switch (status) {
+        case 'active':
+            return 'bg-green-100 text-green-800';
+        case 'pending':
+            return 'bg-yellow-100 text-yellow-800';
+        case 'rejected':
+            return 'bg-red-100 text-red-800';
+        default:
+            return 'bg-gray-100 text-gray-800';
     }
 };
 
@@ -206,77 +247,84 @@ const columns: ColumnDef<Institution>[] = [
         accessorKey: 'name',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('name') }, () => [
-                'Nom',
-                h(ArrowsUpDownIcon, { class: '' }),
+                'Nom de l\'institution',
+                h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' }),
             ]),
-        cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('name')),
+        cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('name') || '—'),
     },
     {
-        accessorKey: 'services_count',
-        header: () => h('div', { class: 'text-center' }, 'Services'),
-        cell: ({ row }) =>
-            h(
-                'div',
-                { class: 'text-center' },
-                row.getValue('services_count') ?? '—',
-            ),
-    },
-    {
-        accessorKey: 'users_count',
-        header: () => h('div', { class: 'text-center' }, 'Utilisateurs'),
-        cell: ({ row }) =>
-            h(
-                'div',
-                { class: 'text-center' },
-                row.getValue('users_count') ?? '—',
-            ),
-    },
-    {
-        accessorKey: 'main_user.email',
-        header: () => h('div', { class: 'text-center' }, 'Email'),
+        accessorKey: 'company_number',
+        header: () => h('div', { class: 'text-center' }, 'Numéro d\'entreprise'),
         cell: ({ row }) => {
             const institution = row.original;
-            const email = institution.main_user?.email || '—';
-            return h('div', { class: 'text-center text-sm' }, email);
+            return h('div', { class: 'text-center text-sm' }, institution.company_number || '—');
         },
     },
     {
-        id: 'validation',
-        header: () => h('div', { class: 'text-center' }, 'Validé'),
-        enableHiding: false,
+        id: 'status',
+        header: () => h('div', { class: 'text-center' }, 'Statut'),
         cell: ({ row }) => {
             const institution = row.original;
-            const mainUser = institution.main_user;
-            const isUserValidated = mainUser && mainUser.validate_at !== null && mainUser.validate_at !== undefined && mainUser.validate_at !== '';
+            const currentStatus = institution.status || 'pending';
 
-            return h('div', { class: 'flex justify-center items-center' }, [
-                h(Checkbox, {
-                    checked: isUserValidated,
-                    onUpdateChecked: async (checked: boolean) => {
-                        if (checked && !isUserValidated) {
-                            await handleValidate(institution);
-                        }
+            return h('div', { class: 'flex justify-center' }, [
+                h('select', {
+                    value: currentStatus,
+                    class: `px-3 py-1.5 rounded-md text-sm font-medium border-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 ${getStatusColor(currentStatus)}`,
+                    onChange: (e: Event) => {
+                        const target = e.target as HTMLSelectElement;
+                        handleStatusChange(institution, target.value as 'pending' | 'active' | 'rejected');
                     },
-                    disabled: !mainUser,
-                    class: 'w-5 h-5',
-                    title: isUserValidated ? 'Institution validée' : 'Cliquez pour valider',
-                }),
+                }, [
+                    h('option', { value: 'pending' }, 'En attente'),
+                    h('option', { value: 'active' }, 'Active'),
+                    h('option', { value: 'rejected' }, 'Rejetée'),
+                ]),
             ]);
         },
     },
     {
-        accessorKey: 'created_at',
-        header: () =>
-            h(Button, { variant: 'ghost', onClick: () => setSort('created_at') }, () => [
-                'Création',
-                h(ArrowsUpDownIcon, { class: '' }),
-            ]),
-        cell: ({ row }) =>
-            h(
-                'div',
-                { class: 'flex items-center justify-center' },
-                formatRelativeDate(row.getValue('created_at')),
-            ),
+        id: 'contact',
+        header: () => h('div', { class: 'text-center' }, 'Contact'),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const contact = institution.contact;
+            if (!contact) return h('div', { class: 'text-center text-sm' }, '—');
+
+            const fullName = [contact.firstname, contact.lastname].filter(Boolean).join(' ') || '—';
+            return h('div', { class: 'text-sm' }, [
+                h('div', { class: 'font-medium' }, fullName),
+                h('div', { class: 'text-gray-500 text-xs mt-1' }, contact.email || '—'),
+            ]);
+        },
+    },
+    {
+        id: 'phone',
+        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const phone = institution.contact?.phone_number;
+            return h('div', { class: 'text-center text-sm' }, phone || '—');
+        },
+    },
+    {
+        id: 'address',
+        header: () => h('div', { class: 'text-center' }, 'Adresse'),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const address = institution.address;
+            if (!address || (!address.street_address && !address.city && !address.zip_code)) {
+                return h('div', { class: 'text-center text-sm' }, '—');
+            }
+
+            const parts = [
+                address.street_address,
+                address.zip_code ? `${address.zip_code} ${address.city || ''}`.trim() : address.city,
+                address.country,
+            ].filter(Boolean);
+
+            return h('div', { class: 'text-sm' }, parts.join(', ') || '—');
+        },
     },
     {
         id: 'actions',
@@ -284,10 +332,6 @@ const columns: ColumnDef<Institution>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const institution = row.original;
-            const mainUser = institution.main_user;
-
-            const validateAt = mainUser?.validate_at;
-            const isUserValidated = mainUser && validateAt !== null && validateAt !== undefined && validateAt !== '';
 
             return h('div', { class: 'flex justify-center items-center gap-2' }, [
                 h(Button, {
@@ -297,26 +341,6 @@ const columns: ColumnDef<Institution>[] = [
                     onClick: () => handleEdit(institution),
                     title: 'Modifier',
                 }, () => h(PencilIcon, { class: 'w-4 h-4' })),
-
-                !isUserValidated
-                    ? h(Button, {
-                            variant: 'ghost',
-                            size: 'sm',
-                            class: 'w-8 h-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50',
-                            onClick: () => handleValidate(institution),
-                            title: 'Valider',
-                        }, () => h(CheckIcon, { class: 'w-4 h-4' }))
-                    : null,
-
-                !isUserValidated
-                    ? h(Button, {
-                            variant: 'ghost',
-                            size: 'sm',
-                            class: 'w-8 h-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50',
-                            onClick: () => handleReject(institution),
-                            title: 'Rejeter',
-                        }, () => h(XMarkIcon, { class: 'w-4 h-4' }))
-                    : null,
 
                 isSuperAdmin.value
                     ? h(Button, {

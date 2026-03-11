@@ -542,10 +542,23 @@ export interface InstitutionUser {
 export interface Institution {
     id: number;
     name: string;
+    company_number?: string | null;
     services?: InstitutionService[];
     userRoles?: InstitutionUserRole[];
     users?: InstitutionUser[];
     main_user?: InstitutionUser | null;
+    contact?: {
+        firstname?: string | null;
+        lastname?: string | null;
+        email?: string | null;
+        phone_number?: string | null;
+    };
+    address?: {
+        street_address?: string | null;
+        city?: string | null;
+        zip_code?: string | null;
+        country?: string | null;
+    };
     services_count?: number;
     users_count?: number;
     created_at?: string;
