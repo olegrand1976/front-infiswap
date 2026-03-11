@@ -334,3 +334,56 @@ export function getErrorMessage(error: any): string {
         || 'Une erreur est survenue lors de la communication avec le serveur'
     );
 }
+
+export function resolveProvinceFromZip(zipCode: string | null | undefined, country: string = 'be'): string | null {
+    if (!zipCode) return null;
+    const zip = parseInt(zipCode.replace(/\D/g, ''), 10);
+    if (isNaN(zip)) return null;
+
+    if (country === 'fr') {
+        if (zip >= 97100 && zip <= 97680) {
+            const prefix = Math.floor(zip / 100);
+            const domMap: Record<number, string> = {
+                971: 'Guadeloupe', 972: 'Martinique', 973: 'Guyane',
+                974: 'La Réunion', 976: 'Mayotte',
+            };
+            return domMap[prefix] ?? null;
+        }
+        const deptNum = Math.floor(zip / 1000);
+        const deptIndexMap: Record<number, number> = {
+            1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 9,
+            11: 10, 12: 11, 13: 12, 14: 13, 15: 14, 16: 15, 17: 16, 18: 17,
+            19: 18,
+            20: 19,
+            21: 21, 22: 22, 23: 23, 24: 24, 25: 25, 26: 26, 27: 27, 28: 28,
+            29: 29, 30: 30, 31: 31, 32: 32, 33: 33, 34: 34, 35: 35, 36: 36,
+            37: 37, 38: 38, 39: 39, 40: 40, 41: 41, 42: 42, 43: 43, 44: 44,
+            45: 45, 46: 46, 47: 47, 48: 48, 49: 49, 50: 50, 51: 51, 52: 52,
+            53: 53, 54: 54, 55: 55, 56: 56, 57: 57, 58: 58, 59: 59, 60: 60,
+            61: 61, 62: 62, 63: 63, 64: 64, 65: 65, 66: 66, 67: 67, 68: 68,
+            69: 69, 70: 70, 71: 71, 72: 72, 73: 73, 74: 74,
+            75: 75, // Paris
+            76: 76, 77: 77, 78: 78, 79: 79, 80: 80, 81: 81, 82: 82, 83: 83,
+            84: 84, 85: 85, 86: 86, 87: 87, 88: 88, 89: 89,
+            90: 90, 91: 91, 92: 92, 93: 93, 94: 94, 95: 95,
+        };
+        const idx = deptIndexMap[deptNum];
+        return idx !== undefined ? departments[idx] : null;
+    }
+
+    // Belgique
+    if (zip >= 1000 && zip <= 1299) return regions[0];
+    if (zip >= 1300 && zip <= 1499) return regions[1];
+    if (zip >= 1500 && zip <= 1999) return regions[2];
+    if (zip >= 2000 && zip <= 2999) return regions[3];
+    if (zip >= 3000 && zip <= 3499) return regions[2];
+    if (zip >= 3500 && zip <= 3999) return regions[5];
+    if (zip >= 4000 && zip <= 4999) return regions[6];
+    if (zip >= 5000 && zip <= 5999) return regions[7];
+    if (zip >= 6000 && zip <= 6599) return regions[8];
+    if (zip >= 6600 && zip <= 6999) return regions[9];
+    if (zip >= 7000 && zip <= 7999) return regions[8];
+    if (zip >= 8000 && zip <= 8999) return regions[10];
+    if (zip >= 9000 && zip <= 9999) return regions[11];
+    return null;
+}
