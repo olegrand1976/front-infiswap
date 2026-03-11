@@ -289,6 +289,22 @@ export const useInstitutions = () => {
         }
     }
 
+    async function updateStatus(id: number, status: 'pending' | 'active' | 'rejected') {
+        try {
+            const response = await $apifetch(`api/admin/institutions/${id}/status`, {
+                method: 'PUT',
+                body: { status },
+                headers: { 'Content-Type': 'application/json' },
+            });
+            toast.success('Statut mis à jour avec succès');
+            return response;
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Erreur lors de la mise à jour du statut');
+            throw error;
+        }
+    }
+
     return {
         institutions,
         currentInstitution,
@@ -307,5 +323,6 @@ export const useInstitutions = () => {
         forceDelete,
         validateInstitution,
         rejectInstitution,
+        updateStatus,
     };
 };
