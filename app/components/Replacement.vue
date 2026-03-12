@@ -155,16 +155,51 @@
         <ClientOnly>
             <div class="grid my-8">
                 <div
-                    v-if="isCardMode && availableMissions.length > 0"
+                    v-if="isCardMode && ungroupedMissions.length > 0"
                     class="mb-8"
                 >
                     <h2 class="font-semibold text-black/70 mb-4">
-                        Missions disponibles ({{ availableMissions.length }})
+                        Missions disponibles ({{ ungroupedMissions.length }})
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         <MissionCard
-                            v-for="mission in availableMissions"
-                            :key="`mission-${mission.id}`"
+                            v-for="mission in ungroupedMissions"
+                            :key="`mission-ungrouped-${mission.id}`"
+                            :mission="mission"
+                        />
+                    </div>
+                </div>
+
+                <template v-if="isCardMode && props.groupByProvince && Object.keys(groupedMissions).length > 0">
+                    <div
+                        v-for="(missions, province) in groupedMissions"
+                        :key="`province-missions-${province}`"
+                        class="mb-8"
+                    >
+                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                            {{ province }} — Missions ({{ missions.length }})
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <MissionCard
+                                v-for="mission in missions"
+                                :key="`mission-grouped-${mission.id}`"
+                                :mission="mission"
+                            />
+                        </div>
+                    </div>
+                </template>
+
+                <div
+                    v-else-if="isCardMode && !props.groupByProvince && flatMissions.length > 0"
+                    class="mb-8"
+                >
+                    <h2 class="font-semibold text-black/70 mb-4">
+                        Missions disponibles ({{ flatMissions.length }})
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <MissionCard
+                            v-for="mission in flatMissions"
+                            :key="`mission-flat-${mission.id}`"
                             :mission="mission"
                         />
                     </div>
@@ -647,7 +682,7 @@ import ReplacementTableSkeleton from '@/components/replacements/ReplacementTable
 import MissionCard from '@/components/missions/MissionCard.vue';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
 import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
-import { regions, departments, selectDays } from '~/lib/utils';
+import { regions, departments, selectDays, resolveProvinceFromZip } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -1161,6 +1196,31 @@ watch(
         }
     },
     { deep: true },
+);
+
+const allMissions = computed(() => props.availableMissions ?? []);
+
+const ungroupedMissions = computed(() =>
+    allMissions.value.filter((m: any) => !m.institution?.zip_code),
+);
+
+const groupedMissions = computed<Record<string, any[]>>(() => {
+    if (!props.groupByProvince) return {};
+    return allMissions.value
+        .filter((m: any) => !!m.institution?.zip_code)
+        .reduce((acc: Record<string, any[]>, mission: any) => {
+            const province = resolveProvinceFromZip(
+                mission.institution?.zip_code,
+                mission.institution?.country ?? 'be',
+            ) ?? 'Autres';
+            if (!acc[province]) acc[province] = [];
+            acc[province].push(mission);
+            return acc;
+        }, {});
+});
+
+const flatMissions = computed(() =>
+    allMissions.value.filter((m: any) => !!m.institution?.zip_code),
 );
 
 definePageMeta({
