@@ -1,73 +1,15 @@
 <template>
     <div class="relative mt-16 sm:mt-0">
         <div class="flex flex-col">
-            <HomeBanner />
+            <HomeNewBanner />
             <div class="container mt-12">
-                <NurstechPresentation />
+                <HomePlatform />
             </div>
-            <HomeSearchNurseContainer />
-        </div>
-        <div
-            v-if="replacements?.length > 0"
-            class="container flex flex-col items-start w-full gap-4 mt-4 lg:mt-0"
-        >
-            <div class="flex items-center justify-between w-full text-primary">
-                <h3 class="hidden text-xl md:block xl:text-xl lg:text-xl md:text-xl sm:text-xl">
-                    <span>Découvrez les remplacements </span> <span class="font-bold">les plus récents</span>
-                </h3>
-                <h3 class="flex items-center gap-2 text-xl font-bold md:hidden">
-                    <SparklesIcon class="size-5" /> Des remplacements
-                </h3>
-                <NuxtLink
-                    to="/dashboard/replacements/immediate"
-                    class="flex items-center"
-                >
-                    <Button class="hidden text-sm md:inline-block bg-primary">
-                        <span>Créer remplacement</span>
-                    </Button>
-                    <PlusCircleIcon class="inline-block w-8 h-8 md:hidden text-primary" />
-                </NuxtLink>
-            </div>
-            <div class="w-full">
-                <ReplacementHome
-                    :replacements="replacements"
-                    :loading="loading"
-                />
-                <div class="flex justify-center w-full">
-                    <NuxtLink
-                        v-if="isAdmin"
-                        to="/dashboard/admin/replacements"
-                    >
-                        <Button class="px-16 py-3 text-base bg-primary lg:mb-4">
-                            Voir plus
-                        </Button>
-                    </NuxtLink>
-                    <NuxtLink
-                        v-else
-                        to="/dashboard/replacements"
-                    >
-                        <Button class="px-16 py-3 text-base bg-primary lg:mb-4">
-                            Voir plus
-                        </Button>
-                    </NuxtLink>
-                </div>
-            </div>
+            <HomeInstitutionBanner />
         </div>
         <div>
-            <HomeReplaceMeContainer />
+            <HomeJoinBanner />
         </div>
-        <section class="lg:container lg:mx-auto lg:px-32">
-            <HomeServiceContainer />
-        </section>
-        <!-- <section class="container lg:mx-auto lg:px-32">
-            <HomeCounterStat />
-        </section> -->
-        <!-- <section>
-            <HomePlanningContainer />
-        </section> -->
-        <section>
-            <HomeAppDownloadSection />
-        </section>
 
         <div
             class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64 lg:translate-x-full"
@@ -88,7 +30,6 @@
             </a>
         </div>
 
-        <!-- Bouton flottant Inscription - Mobile uniquement -->
         <NuxtLink
             v-if="!isLoggedIn"
             to="/register"
@@ -101,15 +42,13 @@
 </template>
 
 <script setup lang="ts">
-import { PlusCircleIcon, SparklesIcon, PhoneIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
-import ReplacementHome from '~/components/ReplacementHome.vue';
+import { PhoneIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
 import type { Replacement } from '~/lib/types';
-import { Button } from '@/components/ui/button';
 
-const { isAdmin, isLoggedIn } = useAuth();
-const { loading, getAccordingReplacements } = useReplacements();
+const { isLoggedIn } = useAuth();
+const { getAccordingReplacements } = useReplacements();
 const replacements = ref<Replacement[]>([]);
 
 const data = await getAccordingReplacements();
