@@ -479,6 +479,20 @@ export const useAuth = () => {
         });
     }
 
+    async function switchView(type: 'standard' | 'institution') {
+        const response = await $apifetch('/api/users/switch-view', {
+            method: 'PUT',
+            body: { type },
+        });
+
+        const currentUser = useState<User>('user');
+        if (currentUser.value) {
+            currentUser.value.type = type;
+        }
+
+        return response;
+    }
+
     return {
         user,
         users,
@@ -538,5 +552,6 @@ export const useAuth = () => {
         validateEmail,
         restore,
         loading,
+        switchView,
     };
 };
