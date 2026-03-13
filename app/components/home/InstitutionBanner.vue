@@ -9,7 +9,7 @@
 
             <div class="flex flex-col items-center gap-3 px-8 pb-8">
                 <Button
-                    class="bg-white text-primary font-bold px-6 py-6 rounded-full w-full text-sm leading-tight hover:scale-105 transition-transform duration-300 shadow-md"
+                    class="bg-white text-primary font-bold px-6 py-6 rounded-full w-full text-sm leading-tight hover:bg-white hover:scale-105 transition-transform duration-300 shadow-md"
                 >
                     Trouver rapidement du personnel<br>infirmier qualifié
                 </Button>
