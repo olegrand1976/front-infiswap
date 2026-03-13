@@ -11,8 +11,11 @@
             <HomeJoinBanner />
         </div>
 
-        <div
+        <!-- <div
             class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64 lg:translate-x-full"
+        > -->
+        <div
+            class="hidden"
         >
             <a
                 href="tel:+32478023377"
