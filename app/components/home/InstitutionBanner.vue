@@ -42,13 +42,13 @@
 
             <div
                 class="relative w-full"
-                style="aspect-ratio: 16/9; max-height: 700px;"
+                style="aspect-ratio: 16/9; max-height: 750px;"
             >
                 <LayoutsAppImage
                     src="/home/nurse_with_elder.png"
                     alt="Infirmier avec personne âgée"
                     class="absolute inset-0 w-full h-full"
-                    style="object-fit: cover; object-position: center 15%;"
+                    style="object-fit: cover; object-position: center 0%;"
                 />
 
                 <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-4 pb-16 z-10">
