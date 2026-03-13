@@ -154,62 +154,102 @@
 
         <ClientOnly>
             <div class="grid my-8">
-                <div
-                    v-if="isCardMode && availableMissions.length > 0"
-                    class="mb-8"
-                >
-                    <h2 class="font-semibold text-black/70 mb-4">
-                        Missions disponibles ({{ availableMissions.length }})
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <MissionCard
-                            v-for="mission in availableMissions"
-                            :key="`mission-${mission.id}`"
-                            :mission="mission"
-                        />
+                <template v-if="isCardMode && missionsWithoutProvince.length > 0">
+                    <div class="mb-8">
+                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                Missions
+                            </span>
+                            Missions disponibles ({{ missionsWithoutProvince.length }})
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <MissionCard
+                                v-for="mission in missionsWithoutProvince"
+                                :key="`mission-top-${mission.id}`"
+                                :mission="mission"
+                            />
+                        </div>
                     </div>
-                </div>
+                </template>
 
-                <template v-if="props.groupByProvince && Object.keys(groupsByProvince).length > 0">
+                <template v-if="isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
                     <div
-                        v-for="(group, province) in groupsByProvince"
-                        :key="province"
+                        v-for="(items, province) in groupsByProvince"
+                        :key="`province-${province}`"
                         class="mb-8"
                     >
-                        <h2 class="font-semibold text-black/70 mb-4">
-                            {{ province }} ({{ group.length }})
+                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                            {{ province }}
+                            <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <template
+                                v-for="item in items"
+                                :key="`card-${item.record_type}-${item.id}`"
+                            >
+                                <MissionCard
+                                    v-if="item.record_type === 'mission'"
+                                    :mission="item"
+                                />
+                                <ReplacementCard
+                                    v-else
+                                    :replacement="formatReplacementForCard(item)"
+                                    :raw-replacement="item"
+                                    @open-edit="openEditDialog"
+                                    @closed="refreshItems(page)"
+                                />
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="isCardMode && !props.groupByProvince">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <template v-if="loading || loadingSearch">
+                            <ReplacementCardSkeleton
+                                v-for="i in 6"
+                                :key="`sk-${i}`"
+                            />
+                        </template>
+                        <template v-else>
+                            <template
+                                v-for="item in currentItems.filter(i => !(i.record_type === 'mission' && !i.province))"
+                                :key="`card-flat-${item.record_type}-${item.id}`"
+                            >
+                                <MissionCard
+                                    v-if="item.record_type === 'mission'"
+                                    :mission="item"
+                                />
+                                <ReplacementCard
+                                    v-else
+                                    :replacement="formatReplacementForCard(item)"
+                                    :raw-replacement="item"
+                                    @open-edit="openEditDialog"
+                                    @closed="refreshItems(page)"
+                                />
+                            </template>
+                        </template>
+                    </div>
+                </template>
+
+                <template v-else-if="!isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
+                    <div
+                        v-for="(items, province) in groupsByProvince"
+                        :key="`table-province-${province}`"
+                        class="mb-8"
+                    >
+                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                            {{ province }}
+                            <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
                         </h2>
 
-                        <template v-if="isCardMode">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                                <template v-if="loading || loadingSearch">
-                                    <ReplacementCardSkeleton
-                                        v-for="i in 6"
-                                        :key="`sk-${i}`"
-                                    />
-                                </template>
-                                <template v-else>
-                                    <ReplacementCard
-                                        v-for="r in group"
-                                        :key="`r-${r.id}`"
-                                        :replacement="formatReplacementForCard(r)"
-                                        :raw-replacement="r"
-                                        @open-edit="openEditDialog"
-                                        @closed="refreshReplacements(page)"
-                                    />
-                                </template>
-                            </div>
-                        </template>
-
+                        <ReplacementTableSkeleton
+                            v-if="loading || loadingSearch"
+                            :type="props.type"
+                            :count="6"
+                        />
                         <template v-else>
-                            <ReplacementTableSkeleton
-                                v-if="loading || loadingSearch"
-                                :type="props.type"
-                                :count="6"
-                            />
                             <ReplacementTable
-                                v-else
-                                :replacements="group"
+                                :replacements="items.filter(i => i.record_type === 'replacement')"
                                 :type="props.type"
                                 :user-id="user.id"
                                 :group-members="groupMembers"
@@ -220,41 +260,33 @@
                                 @open-edit="openEditDialog"
                                 @select-replacement="selectReplacement"
                             />
+                            <template v-if="items.some(i => i.record_type === 'mission')">
+                                <Table>
+                                    <TableBody>
+                                        <MissionTable
+                                            v-for="mission in items.filter(i => i.record_type === 'mission')"
+                                            :key="`mission-row-${mission.id}`"
+                                            :mission="mission"
+                                            :type="props.type"
+                                            :grid-class="gridClass"
+                                        />
+                                    </TableBody>
+                                </Table>
+                            </template>
                         </template>
                     </div>
                 </template>
 
-                <template v-else>
-                    <template v-if="isCardMode">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                            <template v-if="loading || loadingSearch">
-                                <ReplacementCardSkeleton
-                                    v-for="i in 6"
-                                    :key="`sk-${i}`"
-                                />
-                            </template>
-                            <template v-else>
-                                <ReplacementCard
-                                    v-for="r in currentReplacements"
-                                    :key="`r-${r.id}`"
-                                    :replacement="formatReplacementForCard(r)"
-                                    :raw-replacement="r"
-                                    @open-edit="openEditDialog"
-                                    @closed="refreshReplacements(page)"
-                                />
-                            </template>
-                        </div>
-                    </template>
-
+                <template v-else-if="!isCardMode && !props.groupByProvince">
+                    <ReplacementTableSkeleton
+                        v-if="loading || loadingSearch"
+                        :type="props.type"
+                        :count="8"
+                    />
                     <template v-else>
-                        <ReplacementTableSkeleton
-                            v-if="loading || loadingSearch"
-                            :type="props.type"
-                            :count="8"
-                        />
                         <ReplacementTable
-                            v-else
-                            :replacements="currentReplacements"
+                            v-if="currentItems.some(i => i.record_type === 'replacement')"
+                            :replacements="currentItems.filter(i => i.record_type === 'replacement')"
                             :type="props.type"
                             :user-id="user.id"
                             :group-members="groupMembers"
@@ -265,6 +297,19 @@
                             @open-edit="openEditDialog"
                             @select-replacement="selectReplacement"
                         />
+                        <template v-if="currentItems.some(i => i.record_type === 'mission')">
+                            <Table>
+                                <TableBody>
+                                    <MissionTable
+                                        v-for="mission in currentItems.filter(i => i.record_type === 'mission')"
+                                        :key="`mission-row-flat-${mission.id}`"
+                                        :mission="mission"
+                                        :type="props.type"
+                                        :grid-class="gridClass"
+                                    />
+                                </TableBody>
+                            </Table>
+                        </template>
                     </template>
                 </template>
 
@@ -274,7 +319,7 @@
                         :default-page="page"
                         :per-page="perPage"
                         :total="pagination.total"
-                        @update:page="refreshReplacements"
+                        @update:page="refreshItems"
                         @update:per-page="handlePerPageChange"
                     />
                 </div>
@@ -645,9 +690,10 @@ import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSk
 import ReplacementTable from '@/components/replacements/ReplacementTable.vue';
 import ReplacementTableSkeleton from '@/components/replacements/ReplacementTableSkeleton.vue';
 import MissionCard from '@/components/missions/MissionCard.vue';
+import MissionTable from '@/components/replacements/MissionTable.vue';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
-import { useReplacements, useSearchReplacements } from '~/composables/useReplacements';
-import { regions, departments, selectDays } from '~/lib/utils';
+import { useMergedSearch, type MergedItem, type MergedPagination } from '~/composables/useMergedSearch';
+import { regions, departments } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -656,31 +702,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-// import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
+import { useReplacements } from '~/composables/useReplacements';
 
 const { $toast } = useNuxtApp();
-
-interface EditFormData {
-    id: number | null;
-    userId: number;
-    replacedBy: number | null;
-    visibility: string;
-    type: string;
-    periods: Period[];
-    startDate: string;
-    endDate: string;
-    patientCount: number | null;
-    zipCodes: string[];
-    cities: string[];
-    careTypes: number[];
-    timeSlot: TimeSlot;
-    status: string;
-    comment: string;
-}
 
 interface ReplacementProps {
     selectedRegions?: string[];
@@ -690,7 +718,6 @@ interface ReplacementProps {
     groupByProvince: boolean;
     filteredProvinces?: string[];
     selectedCountry?: string;
-    availableMissions?: string[];
 }
 
 const props = withDefaults(defineProps<ReplacementProps>(), {
@@ -700,10 +727,10 @@ const props = withDefaults(defineProps<ReplacementProps>(), {
     displayMode: 'cards' as const,
     filteredProvinces: () => [],
     selectedCountry: 'be',
-    availableMissions: () => [],
 });
 
 const isCardMode = computed<boolean>(() => (props.displayMode ?? 'cards') === 'cards');
+const user = useState<User>('user');
 
 const selectedUser = ref(null);
 const showInfoUser = ref(false);
@@ -725,15 +752,57 @@ const newlyAddedValue = ref<string>('');
 const searchQuery = ref('');
 const displayedDepartments = ref([]);
 
-type ProvinceGroups = Record<string, Replacement[]>;
+const cachedItems = useState<MergedItem[]>('replacement-cached-items', () => []);
+const cachedPagination = useState<MergedPagination>('replacement-cached-pagination', () => ({
+    current_page: 1,
+    per_page: PERPAGE,
+    total: 0,
+    last_page: 1,
+}));
+const cachedSearchParams = useState<string>('replacement-cached-search-params', () => '');
 
-const { loading, updateReplacement, updateAgainReplacement } = useReplacements();
-const { loadingSearch, fetchReplacements } = useSearchReplacements();
+const currentItems = ref<MergedItem[]>(cachedItems.value);
+const initialItems = ref<MergedItem[]>([]);
+
+const isMission = (item: MergedItem) => item.record_type === 'mission';
+
+const missionsWithoutProvince = computed<MergedItem[]>(() =>
+    currentItems.value.filter(
+        item => item.record_type === 'mission' && !item.province,
+    ),
+);
+
+const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
+    if (!props.groupByProvince) return {};
+
+    const groups: Record<string, MergedItem[]> = {};
+
+    currentItems.value.forEach((item) => {
+        if (isCardMode.value && item.record_type === 'mission' && !item.province) return;
+
+        const province = item.province || 'Autres';
+        if (!groups[province]) groups[province] = [];
+        groups[province].push(item);
+    });
+
+    const sorted: Record<string, MergedItem[]> = {};
+    Object.keys(groups)
+        .sort((a, b) => {
+            if (a === 'Autres') return 1;
+            if (b === 'Autres') return -1;
+            return a.localeCompare(b, 'fr');
+        })
+        .forEach((key) => { sorted[key] = groups[key]; });
+
+    return sorted;
+});
+
+const { loading, fetchMerged } = useMergedSearch();
+const loadingSearch = ref(false);
+const { loading: loadingUpdate, updateReplacement, updateAgainReplacement } = useReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
-const user = useState<User>('user');
-const { fetchGroupMembers } = useGroup();
-const groupMembers = ref([]);
+await fetchCareTypes();
 
 const localFilters = reactive({
     type: props.filters.type,
@@ -742,29 +811,7 @@ const localFilters = reactive({
 
 let newRegions = [...props.selectedRegions];
 let internalUpdate = false;
-
 const emit = defineEmits(['update:selectedRegions']);
-
-const initialReplacements = ref({ replacements: { data: [], current_page: 1, per_page: 10, total: 0, last_page: 1 } });
-const currentReplacements = ref<Replacement[]>([]);
-
-const filterOutCurrentUser = (data: any[]) => {
-    if (props.type === '') {
-        return data.filter((r: any) => r.user_id !== user.value.id);
-    }
-    return data;
-};
-
-const groupsByProvince = computed<ProvinceGroups>(() => {
-    if (!props.groupByProvince) return {};
-    const groups: ProvinceGroups = {};
-    currentReplacements.value.forEach((r: any) => {
-        const province = r.province || 'Autres';
-        if (!groups[province]) groups[province] = [];
-        groups[province].push(r);
-    });
-    return groups;
-});
 
 const formData = reactive({
     postalCodeTags: [] as string[],
@@ -775,57 +822,164 @@ const formData = reactive({
     filters: localFilters,
 });
 
-onMounted(async () => {
-    if (import.meta.client) {
-        isMobileView.value = window.innerWidth <= 1024;
-    }
-    if (user.value.profile.country === 'fr') {
-        displayedDepartments.value = getRandomItems(departments, 6);
-    }
-    await fetchInitialData(page.value, perPage.value);
+const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry, useCache = true) => {
+    try {
+        const searchParamsKey = JSON.stringify({
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            type: props.type,
+            country,
+            filters: localFilters,
+            provinces: newRegions,
+            page: p,
+            perPage: pp,
+        });
 
-    if (props.type === 'groups') {
-        const groupIds = user.value.group_roles.map((g: any) => g.group_id);
-        if (groupIds.length > 0) {
-            const result = await fetchGroupMembers(groupIds);
-            groupMembers.value = result ?? [];
-            const userIds = groupMembers.value.map((u: any) => u.user_id);
-            currentReplacements.value = currentReplacements.value.filter((r: any) => userIds.includes(r.user_id));
+        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+
+        const result = await fetchMerged({
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            type: props.type,
+            country,
+            filters: localFilters,
+            provinces: newRegions,
+            page: p,
+            perPage: pp,
+            groupByProvince: props.groupByProvince,
+        });
+
+        const filtered = props.type === ''
+            ? result.items.filter(item => item.user_id !== user.value.id)
+            : result.items;
+
+        currentItems.value = filtered;
+        initialItems.value = filtered;
+        pagination.value = result.pagination;
+
+        cachedItems.value = filtered;
+        cachedPagination.value = result.pagination;
+        cachedSearchParams.value = searchParamsKey;
+    }
+    catch (err) {
+        console.error(err);
+        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
         }
     }
-});
+};
 
-await fetchCareTypes();
+const submitSearch = async () => {
+    isSubmitted.value = true;
+    try {
+        loadingSearch.value = true;
+
+        const searchParamsKey = JSON.stringify({
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+            country: props.selectedCountry,
+            filters: toRaw(formData.filters),
+            provinces: newRegions,
+            page: page.value,
+            perPage: perPage.value,
+        });
+
+        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+
+        const result = await fetchMerged({
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+            country: props.selectedCountry,
+            filters: toRaw(formData.filters),
+            provinces: newRegions,
+            page: page.value,
+            perPage: perPage.value,
+            groupByProvince: props.groupByProvince,
+        });
+
+        const filtered = props.type === ''
+            ? result.items.filter(item => item.user_id !== user.value.id)
+            : result.items;
+
+        currentItems.value = filtered;
+        pagination.value = result.pagination;
+
+        cachedItems.value = filtered;
+        cachedPagination.value = result.pagination;
+        cachedSearchParams.value = searchParamsKey;
+    }
+    catch (err) {
+        console.error(err);
+
+        const searchParamsKey = JSON.stringify({
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+            country: props.selectedCountry,
+            filters: toRaw(formData.filters),
+            provinces: newRegions,
+            page: page.value,
+            perPage: perPage.value,
+        });
+        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+    }
+    finally { loadingSearch.value = false; }
+};
+
+const reinitializeFilter = () => {
+    formData.postalCodeTags = [];
+    formData.cityTags = [];
+    formData.selectedDays = [];
+    page.value = 1;
+    isSubmitted.value = false;
+    fetchData(1, perPage.value);
+};
+
+const refreshItems = async (newPage: number) => {
+    page.value = newPage;
+    if (isSubmitted.value) await submitSearch();
+    else await fetchData(newPage, perPage.value);
+};
+
+const handlePerPageChange = async (value: number) => {
+    perPage.value = value;
+    page.value = 1;
+    if (isSubmitted.value) await submitSearch();
+    else await fetchData(1, value);
+};
 
 const formatDate = (isoString: string) => {
     if (!isoString) return '—';
-    const date = new Date(isoString);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    const d = new Date(isoString);
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
 };
 
-const getRandomItems = (array: any[], count: number) => {
-    return [...array].sort(() => 0.5 - Math.random()).slice(0, count);
-};
+const gridClass = computed(() => {
+    const map: Record<string, string> = {
+        'groups': 'grid-cols-8',
+        'me': 'grid-cols-6',
+        '': 'grid-cols-10',
+    };
 
-const filteredDepartments = computed(() => {
-    if (!searchQuery.value) return displayedDepartments.value;
-    return departments.filter(dep => dep.toLowerCase().includes(searchQuery.value.toLowerCase()));
+    return map[props.type ?? ''] ?? 'grid-cols-8';
 });
-
-const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
-const frenchDays: Record<string, string> = {
-    monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi', thursday: 'Jeudi',
-    friday: 'Vendredi', saturday: 'Samedi', sunday: 'Dimanche', all: 'Tous',
-};
-
-const selectedDaysPlaceholder = computed(() => {
-    if (!formData.selectedDays.length) return 'Sélectionner';
-    return formData.selectedDays.map(d => frenchDays[d]).join(', ');
-});
-
-const toggleDay = (day: string) => {
-    formData.selectedDays = selectDays(day, formData.selectedDays);
-};
 
 const formatReplacementForCard = (r: any) => ({
     id: r.id,
@@ -853,6 +1007,30 @@ const formatReplacementForCard = (r: any) => ({
     replaced_by: r.replaced_by,
 });
 
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
+const frenchDays: Record<string, string> = {
+    monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi', thursday: 'Jeudi',
+    friday: 'Vendredi', saturday: 'Samedi', sunday: 'Dimanche', all: 'Tous',
+};
+
+const selectedDaysPlaceholder = computed(() =>
+    !formData.selectedDays.length ? 'Sélectionner' : formData.selectedDays.map(d => frenchDays[d]).join(', '),
+);
+
+const _selectDays = (day: string, arr: string[]) => {
+    if (day === 'all') {
+        if (arr.includes('all')) return [];
+        return ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
+    }
+    const withoutAll = arr.filter(d => d !== 'all');
+    const idx = withoutAll.indexOf(day);
+    return idx === -1 ? [...withoutAll, day] : withoutAll.filter(d => d !== day);
+};
+
+const toggleDay = (day: string) => {
+    formData.selectedDays = _selectDays(day, formData.selectedDays);
+};
+
 const addTagFromInput = (inputValue: string, tagsArray: string[], clearFn: (v: string) => string) => {
     const value = inputValue.trim();
     if (value && !tagsArray.includes(value)) {
@@ -860,152 +1038,39 @@ const addTagFromInput = (inputValue: string, tagsArray: string[], clearFn: (v: s
         clearFn(value);
     }
 };
-
 const removeTag = (tagsArray: string[], tagToRemove: string) => {
     const idx = tagsArray.indexOf(tagToRemove);
     if (idx !== -1) tagsArray.splice(idx, 1);
 };
-
 const handleBlur = (event: FocusEvent) => {
-    const inputEl = event.target as HTMLElement;
-    inputEl.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true, cancelable: true }));
+    (event.target as HTMLElement).dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true, cancelable: true }),
+    );
 };
 
-const fetchInitialData = async (p = 1, pp = PERPAGE, country = props.selectedCountry) => {
-    try {
-        const response = await fetchReplacements({
-            postalCode: [], cities: [], selectedDays: [],
-            type: props.type, country, filters: localFilters,
-            provinces: newRegions, page: p, perPage: pp,
-        });
-        initialReplacements.value = response;
-        currentReplacements.value = [...filterOutCurrentUser(response.replacements.data)];
-        pagination.value = {
-            current_page: response.replacements.current_page,
-            per_page: response.replacements.per_page,
-            total: response.replacements.total,
-            last_page: response.replacements.last_page,
-        };
-    }
-    catch (error) { console.error(error); }
-};
-
-const submitSearch = async () => {
-    isSubmitted.value = true;
-    const hasSearchCriteria = formData.selectedDays.length > 0
-        || formData.postalCodeTags.length > 0
-        || formData.cityTags.length > 0;
-
-    if (hasSearchCriteria) {
-        try {
-            const response = await fetchReplacements({
-                selectedDays: toRaw(formData.selectedDays),
-                postalCode: toRaw(formData.postalCodeTags),
-                cities: toRaw(formData.cityTags),
-                type: toRaw(formData.type),
-                filters: toRaw(formData.filters),
-                page: page.value, perPage: perPage.value,
-            });
-            currentReplacements.value = [...filterOutCurrentUser(response.replacements.data)];
-            pagination.value = {
-                current_page: response.replacements.current_page,
-                per_page: response.replacements.per_page,
-                total: response.replacements.total,
-                last_page: response.replacements.last_page,
-            };
-        }
-        catch (error) { console.error(error); }
-    }
-    else {
-        await fetchInitialData(page.value, perPage.value);
-    }
-};
-
-const reinitializeFilter = () => {
-    formData.postalCodeTags = [];
-    formData.cityTags = [];
-    formData.selectedDays = [];
-    page.value = 1;
-    isSubmitted.value = false;
-    fetchInitialData(page.value, perPage.value);
-};
-
-const refreshReplacements = async (newPage: number) => {
-    page.value = newPage;
-    if (isSubmitted.value) {
-        await submitSearch();
-    }
-    else {
-        await fetchInitialData(newPage, perPage.value);
-    }
-};
-
-const handlePerPageChange = async (value: number) => {
-    perPage.value = value;
-    page.value = 1;
-    if (isSubmitted.value) {
-        await submitSearch();
-    }
-    else {
-        await fetchInitialData(1, value);
-    }
-};
-
-const updateRegionSelection = (region: string, checked: boolean) => {
-    internalUpdate = true;
-    if (checked) {
-        if (!newRegions.includes(region)) newRegions.push(region);
-    }
-    else { newRegions = newRegions.filter(r => r !== region); }
-    emit('update:selectedRegions', newRegions);
-};
-
-const validateSelection = async () => {
-    filterRegionDialog.value = false;
-    await fetchInitialData(page.value, perPage.value);
-    emit('update:selectedRegions', props.selectedRegions);
-};
-
-const cancelSelection = () => {
-    emit('update:selectedRegions', []);
-    filterRegionDialog.value = false;
-};
-
-const handleShowInfoUser = (replacementUser: any) => {
-    selectedUser.value = replacementUser;
+const handleShowInfoUser = (u: any) => {
+    selectedUser.value = u;
     showInfoUser.value = true;
 };
 
-const handleShowPeriods = (periods: any[]) => {
-    selectedPeriods.value = periods;
+const handleShowPeriods = (p: any[]) => {
+    selectedPeriods.value = p;
     periodDialog.value = true;
 };
 
-const selectReplacement = (replacement: Replacement) => {
-    selectedReplacement.value = replacement;
+const selectReplacement = (r: Replacement) => {
+    selectedReplacement.value = r;
     closeReplacementDialog.value = true;
 };
 
-const handleCloseReplacement = async (replacement: Replacement) => {
-    (replacement as any).status = 'closed';
-    try {
-        const response = await updateReplacement(replacement);
-        if (response) {
-            $toast({ description: response.message });
-            closeReplacementDialog.value = false;
-            fetchInitialData(page.value, perPage.value);
-        }
+const handleCloseReplacement = async (r: Replacement) => {
+    (r as any).status = 'closed';
+    const res = await updateReplacement(r);
+    if (res) {
+        $toast({ description: res.message });
+        closeReplacementDialog.value = false;
+        fetchData(page.value, perPage.value);
     }
-    catch (error) { console.error(error); }
-};
-
-const updateZipCodesFromModal = (zipCodes: string[]): void => {
-    formData.postalCodeTags = [...zipCodes];
-};
-
-const updateCitiesFromModal = (cities: string[]) => {
-    formData.cityTags = [...cities];
-    submitSearch();
 };
 
 const editFormData = reactive({
@@ -1027,43 +1092,33 @@ const editFormData = reactive({
 });
 
 const resetEditFormData = () => {
-    editFormData.id = null;
-    editFormData.userId = user.value.id;
-    editFormData.replacedBy = null;
-    editFormData.visibility = '';
-    editFormData.type = '';
-    editFormData.periods = [];
-    editFormData.startDate = '';
-    editFormData.endDate = '';
-    editFormData.patientCount = null;
-    editFormData.zipCodes = [];
-    editFormData.cities = [];
-    editFormData.careTypes = [];
-    editFormData.timeSlot = { start_at: '', end_at: '' };
-    editFormData.status = '';
-    editFormData.comment = '';
+    Object.assign(editFormData, {
+        id: null, userId: user.value.id, replacedBy: null, visibility: '', type: '',
+        periods: [], startDate: '', endDate: '', patientCount: null,
+        zipCodes: [], cities: [], careTypes: [], timeSlot: { start_at: '', end_at: '' },
+        status: '', comment: '',
+    });
 };
 
 const openEditDialog = (replacement: any) => {
     const fmtDate = (d: string) => d ? new Date(d).toISOString().split('T')[0] : '';
     const fmtTime = (t: string) => t ? t.split(':').slice(0, 2).join(':') : '';
 
-    editFormData.id = replacement.id;
-    editFormData.userId = replacement.user_id;
-    editFormData.replacedBy = replacement.replaced_by ?? null;
-    editFormData.visibility = replacement.visibility;
-    editFormData.status = replacement.status;
-    editFormData.type = replacement.type;
-    editFormData.startDate = fmtDate(replacement.start_date);
-    editFormData.endDate = fmtDate(replacement.end_date);
-    editFormData.patientCount = replacement.patient_count;
-    editFormData.zipCodes = Array.isArray(replacement.zip_codes)
-        ? replacement.zip_codes
-        : JSON.parse(replacement.zip_codes || '[]');
-    editFormData.cities = Array.isArray(replacement.cities)
-        ? replacement.cities
-        : JSON.parse(replacement.cities || '[]');
-    editFormData.careTypes = replacement.care_types?.map((ct: any) => ct.id) || [];
+    Object.assign(editFormData, {
+        id: replacement.id,
+        userId: replacement.user_id,
+        replacedBy: replacement.replaced_by ?? null,
+        visibility: replacement.visibility,
+        status: replacement.status,
+        type: replacement.type,
+        startDate: fmtDate(replacement.start_date),
+        endDate: fmtDate(replacement.end_date),
+        patientCount: replacement.patient_count,
+        zipCodes: Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes || '[]'),
+        cities: Array.isArray(replacement.cities) ? replacement.cities : JSON.parse(replacement.cities || '[]'),
+        careTypes: replacement.care_types?.map((ct: any) => ct.id) || [],
+        comment: replacement.comment || '',
+    });
 
     if (replacement.periods?.length > 0) {
         editFormData.periods = replacement.periods.map((p: any) => ({
@@ -1072,88 +1127,121 @@ const openEditDialog = (replacement: any) => {
         }));
     }
 
-    const ts = replacement.timeSlot
-        ? (typeof replacement.timeSlot === 'string' ? JSON.parse(replacement.timeSlot) : replacement.timeSlot)
-        : replacement.details?.length > 0
-            ? { start_at: replacement.details.at(-1).start_at, end_at: replacement.details.at(-1).end_at }
-            : {};
-    editFormData.timeSlot.start_at = fmtTime(ts.start_at);
-    editFormData.timeSlot.end_at = fmtTime(ts.end_at);
-    editFormData.comment = replacement.comment || '';
     editDialogOpen.value = true;
 };
 
-const handleCloseEditDialog = (): void => {
+const handleCloseEditDialog = () => {
     resetEditFormData();
     editDialogOpen.value = false;
 };
-
 const addPeriod = () => editFormData.periods.push({ start_date: '', end_date: '' });
-
-const removePeriod = (index: number): void => {
-    if (index > 0) editFormData.periods.splice(index, 1);
+const removePeriod = (i: number) => {
+    if (i > 0) editFormData.periods.splice(i, 1);
 };
-
-const handleCareTypeClick = (fd: EditFormData, careTypeId: number): void => {
-    const idx = fd.careTypes.indexOf(careTypeId);
+const handleCareTypeClick = (fd: any, id: number) => {
+    const idx = fd.careTypes.indexOf(id);
     if (idx === -1) {
-        fd.careTypes.push(careTypeId);
+        fd.careTypes.push(id);
     }
     else {
         fd.careTypes.splice(idx, 1);
     }
     fd.careTypes = [...fd.careTypes];
 };
-
-const getSelectedCareTypesText = (selectedIds: number[]) =>
-    careTypes.value.filter(ct => selectedIds.includes(ct.id)).map(ct => ct.name).join(', ');
+const getSelectedCareTypesText = (ids: number[]) =>
+    careTypes.value.filter(ct => ids.includes(ct.id)).map(ct => ct.name).join(', ');
 
 const { submit } = useSubmit(async () => {
-    try {
-        const response = await updateAgainReplacement(editFormData);
-        if (response) {
-            editDialogOpen.value = false;
-            $toast({ description: 'Remplacement mis à jour' });
-            await refreshReplacements(page.value);
-        }
+    const res = await updateAgainReplacement(editFormData);
+    if (res) {
+        editDialogOpen.value = false;
+        $toast({ description: 'Remplacement mis à jour' });
+        await refreshItems(page.value);
     }
-    catch (error) { console.error(error); }
 });
 
-watch(() => props.filters, (newFilters) => {
-    if (newFilters) {
-        localFilters.type = newFilters.type;
-        localFilters.role = newFilters.role;
-        fetchInitialData(page.value, perPage.value);
+const updateRegionSelection = (region: string, checked: boolean) => {
+    internalUpdate = true;
+    if (checked) {
+        if (!newRegions.includes(region)) newRegions.push(region);
+    }
+    else { newRegions = newRegions.filter(r => r !== region); }
+    emit('update:selectedRegions', newRegions);
+};
+const validateSelection = async () => {
+    filterRegionDialog.value = false;
+    await fetchData(page.value, perPage.value);
+    emit('update:selectedRegions', props.selectedRegions);
+};
+const cancelSelection = () => {
+    emit('update:selectedRegions', []);
+    filterRegionDialog.value = false;
+};
+
+const updateZipCodesFromModal = (zips: string[]) => {
+    formData.postalCodeTags = [...zips];
+};
+
+const updateCitiesFromModal = (cities: string[]) => {
+    formData.cityTags = [...cities];
+    submitSearch();
+};
+
+const { fetchGroupMembers } = useGroup();
+const groupMembers = ref([]);
+const filteredDepartments = computed(() =>
+    searchQuery.value ? departments.filter(d => d.toLowerCase().includes(searchQuery.value.toLowerCase())) : displayedDepartments.value,
+);
+const getRandomItems = (arr: any[], n: number) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
+
+onMounted(async () => {
+    if (import.meta.client) isMobileView.value = window.innerWidth <= 1024;
+    if (user.value.profile.country === 'fr') displayedDepartments.value = getRandomItems(departments, 6);
+
+    await fetchData(page.value, perPage.value);
+
+    if (props.type === 'groups') {
+        const groupIds = user.value.group_roles.map((g: any) => g.group_id);
+        if (groupIds.length > 0) {
+            const result = await fetchGroupMembers(groupIds);
+            groupMembers.value = result ?? [];
+            const userIds = groupMembers.value.map((u: any) => u.user_id);
+            currentItems.value = currentItems.value.filter(item =>
+                isMission(item) ? true : userIds.includes(item.user_id),
+            );
+        }
+    }
+});
+
+watch(() => props.filters, (nf) => {
+    if (nf) {
+        localFilters.type = nf.type;
+        localFilters.role = nf.role;
+        fetchData(page.value, perPage.value);
     }
 }, { deep: true });
 
-watch(() => props.selectedCountry, (newCountry) => {
-    if (newCountry) fetchInitialData(page.value, perPage.value, newCountry);
+watch(() => props.selectedCountry, (nc) => {
+    if (nc)
+        fetchData(page.value, perPage.value, nc);
 });
 
-watch(() => props.filteredProvinces, (newProvinces, oldProvinces) => {
-    if (newProvinces !== oldProvinces) {
-        newRegions = [...newProvinces as string[]];
+watch(() => props.filteredProvinces, (nv, ov) => {
+    if (nv !== ov) {
+        newRegions = [...nv as string[]];
         if (internalUpdate) {
             internalUpdate = false;
             return;
         }
-        fetchInitialData(page.value, perPage.value);
+        fetchData(page.value, perPage.value);
     }
 }, { deep: true });
 
 watch(
     [() => formData.postalCodeTags, () => formData.cityTags, () => formData.selectedDays],
-    ([newPostalCodes, newCities, newDays]) => {
-        if (!newPostalCodes.length && !newCities.length && !newDays.length) {
-            currentReplacements.value = [...filterOutCurrentUser(initialReplacements.value.replacements.data)];
-            pagination.value = {
-                current_page: initialReplacements.value.replacements.current_page,
-                per_page: initialReplacements.value.replacements.per_page,
-                total: initialReplacements.value.replacements.total,
-                last_page: initialReplacements.value.replacements.last_page,
-            };
+    ([np, nc, nd]) => {
+        if (!np.length && !nc.length && !nd.length) {
+            currentItems.value = [...initialItems.value];
             isSubmitted.value = false;
         }
         else if (isSubmitted.value) {
