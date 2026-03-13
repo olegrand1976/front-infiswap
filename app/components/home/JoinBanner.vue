@@ -2,9 +2,9 @@
     <div class="relative w-full bg-white flex flex-col lg:flex-row items-center justify-center px-6 lg:px-16 pt-10 gap-8">
         <div class="hidden lg:flex w-full lg:w-1/2 justify-center">
             <LayoutsAppImage
-                src="/home/two_nurses_tablet.png"
+                src="/home/two_nurses-girls.png"
                 alt="Infirmiers avec tablette"
-                class="w-full max-w-xl h-auto block"
+                class="w-full max-w-lg h-auto block"
             />
         </div>
 
