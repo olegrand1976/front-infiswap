@@ -27,6 +27,15 @@
         <td class="px-4 py-3 text-right">
             <Skeleton class="h-8 w-24 rounded-lg ml-auto" />
         </td>
+        <td class="px-4 py-3 text-right">
+            <Skeleton class="h-8 w-24 rounded-lg ml-auto" />
+        </td>
+        <td class="px-4 py-3 text-right">
+            <Skeleton class="h-8 w-24 rounded-lg ml-auto" />
+        </td>
+        <td class="px-4 py-3 text-right">
+            <Skeleton class="h-8 w-24 rounded-lg ml-auto" />
+        </td>
     </tr>
 </template>
 
