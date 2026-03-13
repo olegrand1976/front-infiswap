@@ -692,7 +692,7 @@ import ReplacementTableSkeleton from '@/components/replacements/ReplacementTable
 import MissionCard from '@/components/missions/MissionCard.vue';
 import MissionTable from '@/components/replacements/MissionTable.vue';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemText, TagsInputItemDelete } from '@/components/ui/tags-input';
-import { useMergedSearch, type MergedItem } from '~/composables/useMergedSearch';
+import { useMergedSearch, type MergedItem, type MergedPagination } from '~/composables/useMergedSearch';
 import { regions, departments } from '~/lib/utils';
 import { PERPAGE } from '~/lib/constants';
 import type { User, Replacement } from '~/lib/types';
@@ -752,10 +752,18 @@ const newlyAddedValue = ref<string>('');
 const searchQuery = ref('');
 const displayedDepartments = ref([]);
 
-const currentItems = ref<MergedItem[]>([]);
+const cachedItems = useState<MergedItem[]>('replacement-cached-items', () => []);
+const cachedPagination = useState<MergedPagination>('replacement-cached-pagination', () => ({
+    current_page: 1,
+    per_page: PERPAGE,
+    total: 0,
+    last_page: 1,
+}));
+const cachedSearchParams = useState<string>('replacement-cached-search-params', () => '');
+
+const currentItems = ref<MergedItem[]>(cachedItems.value);
 const initialItems = ref<MergedItem[]>([]);
 
-// const isReplacement = (item: MergedItem) => item.record_type === 'replacement';
 const isMission = (item: MergedItem) => item.record_type === 'mission';
 
 const missionsWithoutProvince = computed<MergedItem[]>(() =>
@@ -784,7 +792,7 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
             if (b === 'Autres') return -1;
             return a.localeCompare(b, 'fr');
         })
-        .forEach(key => { sorted[key] = groups[key]; });
+        .forEach((key) => { sorted[key] = groups[key]; });
 
     return sorted;
 });
@@ -814,12 +822,29 @@ const formData = reactive({
     filters: localFilters,
 });
 
-const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry) => {
+const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry, useCache = true) => {
     try {
+        const searchParamsKey = JSON.stringify({
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            type: props.type,
+            country,
+            filters: localFilters,
+            provinces: newRegions,
+            page: p,
+            perPage: pp,
+        });
+
+        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+
         const result = await fetchMerged({
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
-            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'), 
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
             type: props.type,
             country,
             filters: localFilters,
@@ -836,14 +861,42 @@ const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry) =
         currentItems.value = filtered;
         initialItems.value = filtered;
         pagination.value = result.pagination;
+
+        cachedItems.value = filtered;
+        cachedPagination.value = result.pagination;
+        cachedSearchParams.value = searchParamsKey;
     }
-    catch (err) { console.error(err); }
+    catch (err) {
+        console.error(err);
+        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+    }
 };
 
 const submitSearch = async () => {
     isSubmitted.value = true;
     try {
         loadingSearch.value = true;
+
+        const searchParamsKey = JSON.stringify({
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+            country: props.selectedCountry,
+            filters: toRaw(formData.filters),
+            provinces: newRegions,
+            page: page.value,
+            perPage: perPage.value,
+        });
+
+        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+
         const result = await fetchMerged({
             selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
             postalCode: toRaw(formData.postalCodeTags),
@@ -863,8 +916,30 @@ const submitSearch = async () => {
 
         currentItems.value = filtered;
         pagination.value = result.pagination;
+
+        cachedItems.value = filtered;
+        cachedPagination.value = result.pagination;
+        cachedSearchParams.value = searchParamsKey;
     }
-    catch (err) { console.error(err); }
+    catch (err) {
+        console.error(err);
+
+        const searchParamsKey = JSON.stringify({
+            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+            postalCode: toRaw(formData.postalCodeTags),
+            cities: toRaw(formData.cityTags),
+            type: toRaw(formData.type),
+            country: props.selectedCountry,
+            filters: toRaw(formData.filters),
+            provinces: newRegions,
+            page: page.value,
+            perPage: perPage.value,
+        });
+        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
+            currentItems.value = cachedItems.value;
+            pagination.value = cachedPagination.value;
+        }
+    }
     finally { loadingSearch.value = false; }
 };
 
@@ -939,7 +1014,7 @@ const frenchDays: Record<string, string> = {
 };
 
 const selectedDaysPlaceholder = computed(() =>
-    !formData.selectedDays.length ? 'Sélectionner' : formData.selectedDays.map(d => frenchDays[d]).join(', ')
+    !formData.selectedDays.length ? 'Sélectionner' : formData.selectedDays.map(d => frenchDays[d]).join(', '),
 );
 
 const _selectDays = (day: string, arr: string[]) => {
@@ -1067,7 +1142,8 @@ const handleCareTypeClick = (fd: any, id: number) => {
     const idx = fd.careTypes.indexOf(id);
     if (idx === -1) {
         fd.careTypes.push(id);
-    } else {
+    }
+    else {
         fd.careTypes.splice(idx, 1);
     }
     fd.careTypes = [...fd.careTypes];
@@ -1114,7 +1190,7 @@ const updateCitiesFromModal = (cities: string[]) => {
 const { fetchGroupMembers } = useGroup();
 const groupMembers = ref([]);
 const filteredDepartments = computed(() =>
-    searchQuery.value ? departments.filter(d => d.toLowerCase().includes(searchQuery.value.toLowerCase())) : displayedDepartments.value
+    searchQuery.value ? departments.filter(d => d.toLowerCase().includes(searchQuery.value.toLowerCase())) : displayedDepartments.value,
 );
 const getRandomItems = (arr: any[], n: number) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
 
@@ -1130,7 +1206,7 @@ onMounted(async () => {
             const result = await fetchGroupMembers(groupIds);
             groupMembers.value = result ?? [];
             const userIds = groupMembers.value.map((u: any) => u.user_id);
-            currentItems.value = currentItems.value.filter((item) =>
+            currentItems.value = currentItems.value.filter(item =>
                 isMission(item) ? true : userIds.includes(item.user_id),
             );
         }
