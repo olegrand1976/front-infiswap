@@ -249,7 +249,6 @@
                         />
                         <template v-else>
                             <ReplacementTable
-                                v-if="items.some(i => i.record_type === 'replacement')"
                                 :replacements="items.filter(i => i.record_type === 'replacement')"
                                 :type="props.type"
                                 :user-id="user.id"
