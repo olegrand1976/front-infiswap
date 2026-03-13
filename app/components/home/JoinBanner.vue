@@ -14,6 +14,7 @@
             </h2>
             <Button
                 class="bg-primary text-white text-sm font-medium rounded-full px-12 py-5 hover:bg-primary/80 hover:scale-105 transition-transform duration-300"
+                href="/about"
             >
                 En savoir plus
             </Button>
