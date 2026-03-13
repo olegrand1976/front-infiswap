@@ -35,7 +35,7 @@
                         Professionnels<br>de terrain
                     </p>
                     <Button
-                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:scale-105 transition-transform duration-300"
+                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
                         href="/dashboard"
                     >
                         En savoir plus
@@ -58,7 +58,7 @@
                         Me faire<br>remplacer
                     </p>
                     <Button
-                        class="bg-white text-primary font-bold rounded-xl px-5 py-2.5 self-start text-sm hover:scale-105 transition-transform duration-300"
+                        class="bg-white text-primary font-bold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
                         href="/dashboard/replacements/create"
                     >
                         En savoir plus
@@ -81,7 +81,7 @@
                         Trouver un<br>remplacement
                     </p>
                     <Button
-                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:scale-105 transition-transform duration-300"
+                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
                         href="/dashboard/replacements"
                     >
                         En savoir plus

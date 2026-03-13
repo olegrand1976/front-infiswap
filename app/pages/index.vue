@@ -1,5 +1,5 @@
 <template>
-    <div class="relative mt-16 sm:mt-0">
+    <div class="relative mt-6 sm:mt-0">
         <div class="flex flex-col">
             <HomeNewBanner />
             <div class="container mt-12">
@@ -11,11 +11,8 @@
             <HomeJoinBanner />
         </div>
 
-        <!-- <div
-            class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64 lg:translate-x-full"
-        > -->
         <div
-            class="hidden"
+            class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64"
         >
             <a
                 href="tel:+32478023377"
