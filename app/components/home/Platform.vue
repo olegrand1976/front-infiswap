@@ -36,7 +36,7 @@
                     </p>
                     <Button
                         class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/dashboard"
+                        href="/about"
                     >
                         En savoir plus
                     </Button>
@@ -59,7 +59,7 @@
                     </p>
                     <Button
                         class="bg-white text-primary font-bold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/dashboard/replacements/create"
+                        href="/about"
                     >
                         En savoir plus
                     </Button>
@@ -82,7 +82,7 @@
                     </p>
                     <Button
                         class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/dashboard/replacements"
+                        href="/about"
                     >
                         En savoir plus
                     </Button>
@@ -91,15 +91,14 @@
         </div>
 
         <div class="hidden lg:flex items-center justify-center gap-6 lg:gap-8">
-            <div class="border border-gray-200 bg-white rounded-2xl shadow-md flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90">
+            <div class="border border-gray-200 bg-white rounded-2xl shadow-md flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90 transition-all duration-300">
                 <div
-                    class="hidden lg:flex w-full bg-primary rounded-xl overflow-hidden mb-4 items-center justify-center"
-                    style="height: 300px;"
+                    class="hidden lg:flex w-full bg-primary rounded-xl overflow-hidden mb-4 relative transition-all duration-300 h-80"
                 >
                     <LayoutsAppImage
                         src="/home/nurse_with_phone3.png"
                         alt="Professionnels de terrain"
-                        class="block -mb-4"
+                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
                     />
                 </div>
                 <p class="text-center text-primary px-2 mb-4 leading-snug">
@@ -107,7 +106,7 @@
                 </p>
                 <Button
                     class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    href="/dashboard"
+                    href="/about"
                 >
                     En savoir plus
                 </Button>
@@ -115,8 +114,7 @@
 
             <div class="bg-primary rounded-2xl shadow-xl flex flex-col items-center overflow-hidden pb-6 p-4 w-95 min-w-95 max-w-95">
                 <div
-                    class="w-full bg-white rounded-xl overflow-hidden mb-5 p-4"
-                    style="height: 340px;"
+                    class="w-full bg-white rounded-xl overflow-hidden mb-5 p-4 h-86"
                 >
                     <LayoutsAppImage
                         src="/home/nurse_with_phone2.png"
@@ -129,21 +127,20 @@
                 </p>
                 <Button
                     class="bg-white text-primary font-medium rounded-lg px-6 py-2 hover:bg-white lg:mt-10 w-75 hover:scale-105 transition-transform duration-300"
-                    href="/dashboard/replacements/create"
+                    href="/about"
                 >
                     En savoir plus
                 </Button>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90 transition-all duration-300">
                 <div
-                    class="w-full bg-primary rounded-xl overflow-hidden mb-4"
-                    style="height: 300px;"
+                    class="hidden lg:flex w-full bg-primary rounded-xl overflow-hidden mb-4 relative transition-all duration-300 h-80"
                 >
                     <LayoutsAppImage
                         src="/home/three_nurses.png"
                         alt="Je cherche un remplacement"
-                        class="w-full h-auto block"
+                        class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
                     />
                 </div>
                 <p class="text-center text-primary px-2 mb-4 leading-snug">
@@ -151,7 +148,7 @@
                 </p>
                 <Button
                     class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    href="/dashboard/replacements"
+                    href="/about"
                 >
                     En savoir plus
                 </Button>
