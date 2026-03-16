@@ -42,6 +42,7 @@
                     <p class="mx-auto text-sm text-center md:hidden w-80 md:text-xs lg:text-sm">
                         Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
                     </p>
+
                     <form
                         class="flex flex-row items-center justify-between mx-auto rounded-full md:mx-0 bg-primary h-9"
                         @submit.prevent="subscribeNewsletter"
@@ -52,8 +53,9 @@
                                 v-model="email"
                                 variant="transparent"
                                 placeholder="Email"
-                                class="text-sm text-white w-44 md:w-52 lg:w-full"
+                                class="text-sm text-white w-44 md:w-52 lg:w-full border-0 placeholder:text-white/70"
                             />
+                            
                         </div>
                         <Button
                             :disabled="isLoading"
