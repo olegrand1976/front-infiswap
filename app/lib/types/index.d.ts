@@ -39,6 +39,7 @@ export type User = {
         name: string;
         status?: 'pending' | 'active' | 'rejected';
     };
+    institution_id?: number | null;
     password?: string;
     gender: Gender;
     phone_number?: string | null;
