@@ -479,6 +479,16 @@ export const useAuth = () => {
         });
     }
 
+    async function switchView(type: 'standard' | 'institution') {
+        return await $apifetch('/api/users/switch-view', {
+            method: 'PUT',
+            body: { type },
+        }).then(async () => {
+            await refresh();
+            router.push(type === 'institution' ? '/dashboard/institution' : '/dashboard');
+        });
+    }
+
     return {
         user,
         users,
@@ -538,5 +548,6 @@ export const useAuth = () => {
         validateEmail,
         restore,
         loading,
+        switchView,
     };
 };

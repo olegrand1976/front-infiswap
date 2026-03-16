@@ -67,6 +67,14 @@
                                     Passer en {{ getRole(role) }}
                                 </DropdownMenuItem>
                             </template>
+
+                            <template v-if="canSwitchView">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem @click="handleSwitchView">
+                                    {{ user?.type === 'institution' ? 'Passer en Infirmier(e)' : 'Passer en Institution' }}
+                                </DropdownMenuItem>
+                            </template>
+
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
@@ -208,13 +216,24 @@ const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
 
 const { $toast } = useNuxtApp();
-const { logout, getRoles, switchRole } = useAuth();
+const { logout, getRoles, switchRole, switchView } = useAuth();
 const { reportProblem } = useMail();
 
 const showReportModal = ref(false);
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
 const reportDescription = ref('');
+
+const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
+const canSwitchView = computed(() =>
+    !!user.value?.institution_id
+    && user.value?.roles?.some((r: string) => MEDICAL_ROLES.includes(r)),
+);
+
+const handleSwitchView = async () => {
+    const newType = user.value?.type === 'institution' ? 'standard' : 'institution';
+    await switchView(newType);
+};
 
 const submitReport = async () => {
     try {
