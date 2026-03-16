@@ -233,7 +233,6 @@ const canSwitchView = computed(() =>
 const handleSwitchView = async () => {
     const newType = user.value?.type === 'institution' ? 'standard' : 'institution';
     await switchView(newType);
-    await navigateTo(newType === 'institution' ? '/dashboard/institution' : '/dashboard');
 };
 
 const submitReport = async () => {

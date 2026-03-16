@@ -480,17 +480,13 @@ export const useAuth = () => {
     }
 
     async function switchView(type: 'standard' | 'institution') {
-        const response = await $apifetch('/api/users/switch-view', {
+        return await $apifetch('/api/users/switch-view', {
             method: 'PUT',
             body: { type },
+        }).then(async () => {
+            await refresh();
+            router.push(type === 'institution' ? '/dashboard/institution' : '/dashboard');
         });
-
-        const currentUser = useState<User>('user');
-        if (currentUser.value) {
-            currentUser.value.type = type;
-        }
-
-        return response;
     }
 
     return {
