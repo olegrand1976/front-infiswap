@@ -42,6 +42,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-span-1 lg:col-span-2">
+                <DashboardStatCardAdminGroup
+                    v-for="(report, index) in adminReports"
+                    :key="index"
+                    :title="report.title"
+                    :items="report.items"
+                    :loading="loading"
+                />
+            </div>
 
             <div>
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
@@ -348,15 +357,6 @@
                 </div>
             </div>
         </section>
-
-        <DashboardStatCardAdminGroup
-            v-for="(report, index) in adminReports"
-            :key="index"
-            :title="report.title"
-            :items="report.items"
-            :loading="loading"
-            class="mt-8"
-        />
     </div>
 </template>
 

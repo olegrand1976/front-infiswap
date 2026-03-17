@@ -55,7 +55,6 @@
                                 placeholder="Email"
                                 class="text-sm text-white w-44 md:w-52 lg:w-full border-0 placeholder:text-white/70"
                             />
-                            
                         </div>
                         <Button
                             :disabled="isLoading"
