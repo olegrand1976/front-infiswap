@@ -91,49 +91,6 @@
                             type="date"
                             class="w-full lg:w-[250px]"
                         />
-                        <div class="w-full lg:w-[250px]">
-                            <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                Pays de travail
-                            </label>
-                            <div class="border-2 border-gray-300 rounded-md p-3 min-h-[48px] flex items-center">
-                                <div class="flex flex-wrap gap-3 w-full">
-                                    <div
-                                        v-for="workingAt in countryOfWork"
-                                        :key="workingAt.value"
-                                        class="flex items-center gap-2"
-                                    >
-                                        <Checkbox
-                                            :checked="myMissionsOption.workingAt.includes(workingAt.value)"
-                                            @update:checked="(checked) => {
-                                                if (checked) {
-                                                    if (!myMissionsOption.workingAt.includes(workingAt.value)) {
-                                                        myMissionsOption.workingAt.push(workingAt.value);
-                                                    }
-                                                }
-                                                else {
-                                                    myMissionsOption.workingAt = myMissionsOption.workingAt.filter(c => c !== workingAt.value);
-                                                }
-                                            }"
-                                        />
-                                        <div class="flex items-center gap-2">
-                                            <LayoutsAppImage
-                                                :src="workingAt.icon"
-                                                :alt="workingAt.name"
-                                                class="w-4 h-3"
-                                                format="png"
-                                            />
-                                            <span class="text-sm">{{ workingAt.label }}</span>
-                                        </div>
-                                    </div>
-                                    <span
-                                        v-if="myMissionsOption.workingAt.length === 0"
-                                        class="text-gray-400 text-sm ml-2"
-                                    >
-                                        Tous les pays
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <Button
                                 class="flex-1 sm:flex-none rounded-md bg-success hover:bg-success/90 text-white"
@@ -203,7 +160,7 @@
                                             {{ mission.institution.institution_name }}
                                         </h2>
                                         <p class="text-xs text-gray-500">
-                                            {{ mission.status === 'completed' ? 'Terminé' : 'En cours' }}
+                                            {{ missionStatusLabel(mission.status) }}
                                             {{ formatRelativeDate(mission.status === 'completed' ? mission.updated_at : mission.created_at) }}
                                         </p>
                                     </div>
@@ -211,12 +168,10 @@
                                 <Badge
                                     :class="[
                                         '!whitespace-nowrap !w-auto !min-w-fit px-2 py-1 text-xs shrink-0',
-                                        mission.status === 'completed'
-                                            ? 'bg-gray-400 text-white'
-                                            : 'bg-success text-white',
+                                        missionStatusBadgeClass(mission.status),
                                     ]"
                                 >
-                                    {{ mission.status === 'completed' ? 'Terminé' : 'En cours' }}
+                                    {{ missionStatusLabel(mission.status) }}
                                 </Badge>
                             </div>
 
@@ -569,6 +524,34 @@ const statusClasses: Record<string, string> = {
     rejected: 'bg-red-500 text-white',
 };
 
+const user = useState<any>('user');
+
+const MISSION_STATUS_LABELS: Record<string, string> = {
+    open: 'Ouverte',
+    assigned: 'Assignée',
+    in_progress: 'En cours',
+    completed: 'Terminée',
+    cancelled: 'Annulée',
+};
+
+const MISSION_STATUS_BADGE_CLASSES: Record<string, string> = {
+    open: 'bg-emerald-100 text-emerald-800',
+    assigned: 'bg-indigo-100 text-indigo-800',
+    in_progress: 'bg-blue-100 text-blue-800',
+    completed: 'bg-gray-400 text-white',
+    cancelled: 'bg-red-100 text-red-700',
+};
+
+const missionStatusLabel = (status?: string) => {
+    const key = (status ?? '').toLowerCase();
+    return MISSION_STATUS_LABELS[key] ?? 'Ouverte';
+};
+
+const missionStatusBadgeClass = (status?: string) => {
+    const key = (status ?? '').toLowerCase();
+    return MISSION_STATUS_BADGE_CLASSES[key] ?? 'bg-emerald-100 text-emerald-800';
+};
+
 const activeTab = ref('my-missions');
 const isSearchingMyMissions = ref(false);
 const isSearchingCandidacy = ref(false);
@@ -581,22 +564,7 @@ const myMissionsState = useState('myMissions', () => ({ data: [], meta: {} }));
 const candidacyPerPage = ref(PERPAGE);
 const candidacyPage = ref(1);
 
-const countryOfWork = [
-    {
-        value: 'Belgique',
-        label: 'Belgique',
-        name: 'belgique',
-        icon: '/icons/belgium.png',
-    },
-    {
-        value: 'France',
-        label: 'France',
-        name: 'france',
-        icon: '/icons/fr.png',
-    },
-];
-
-const myMissionsOption = ref({ institutionName: '', date: '', workingAt: [] as string[] });
+const myMissionsOption = ref({ institutionName: '', date: '' });
 const candidacyOption = ref({ institutionName: '', responseDate: '' });
 
 const dataAllMyMissions = computed(() => myMissionsState.value?.data ?? []);
@@ -611,12 +579,8 @@ async function loadMyMissions() {
         const params: Record<string, any> = {
             institutionName: myMissionsOption.value.institutionName,
             date: myMissionsOption.value.date,
+            type: user.value?.type === 'institution' ? 'institution' : 'me',
         };
-
-        // Ajouter workingAt seulement si des pays sont sélectionnés
-        if (myMissionsOption.value.workingAt.length > 0) {
-            params.workingAt = myMissionsOption.value.workingAt;
-        }
 
         const response = await $apifetch('api/institution/missions/', {
             params,
@@ -716,7 +680,6 @@ const searchCandidacy = debounce(async () => {
 const reinitializeMyMissionsFilter = async () => {
     myMissionsOption.value.date = '';
     myMissionsOption.value.institutionName = '';
-    myMissionsOption.value.workingAt = [];
     await filterMissions();
 };
 
