@@ -421,11 +421,6 @@ const institutionNavigationItems: NavigationItem[] = [
     //     icon: DocumentTextIcon,
     //     visible: true,
     // },
-    {
-        label: 'Paramètres',
-        route: '/dashboard/settings',
-        icon: Cog8ToothIcon,
-    },
 ];
 
 const role = computed(() => {
