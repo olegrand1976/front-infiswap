@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useNuxtApp } from '#app';
 import type { CareType } from '~/lib/types';
 

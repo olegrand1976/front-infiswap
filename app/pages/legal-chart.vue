@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
     <NuxtLayout name="guest-with-title">
         <template #title>

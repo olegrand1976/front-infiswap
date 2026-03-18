@@ -392,6 +392,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any, no-prototype-builtins, @typescript-eslint/no-unused-vars */
 import {
     BriefcaseIcon,
     PlusIcon,

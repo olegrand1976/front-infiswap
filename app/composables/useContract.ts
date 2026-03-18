@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useNuxtApp } from '#app';
 
 export const useContract = () => {

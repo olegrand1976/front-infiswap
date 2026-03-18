@@ -494,6 +494,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, BriefcaseIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon, MegaphoneIcon, UserCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
@@ -619,7 +620,6 @@ onMounted(async () => {
     ]);
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dataResponses = computed<Record<string, any[]>>(() => {
     if (!responses.value?.data) {
         return {};
@@ -634,7 +634,6 @@ const dataResponses = computed<Record<string, any[]>>(() => {
         }
         acc[date].push(response);
         return acc;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as Record<string, any[]>);
 });
 

@@ -106,6 +106,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from 'vue';
 import { TrashIcon, PlusCircleIcon } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';

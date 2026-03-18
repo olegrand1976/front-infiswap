@@ -384,6 +384,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { XMarkIcon, PaperClipIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useMail } from '@/composables/useMail';

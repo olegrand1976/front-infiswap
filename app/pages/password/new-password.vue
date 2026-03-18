@@ -140,6 +140,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';

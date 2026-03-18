@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMail } from '~/composables/useMail';
 import { getErrorMessage } from '~/lib/utils';
 

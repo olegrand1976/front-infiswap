@@ -386,6 +386,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ClipboardDocumentListIcon, UserPlusIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 

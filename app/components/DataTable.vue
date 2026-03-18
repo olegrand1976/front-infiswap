@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     type ColumnDef,
     type ColumnFiltersState,

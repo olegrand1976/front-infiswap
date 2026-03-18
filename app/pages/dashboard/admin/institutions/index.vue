@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ColumnDef } from '@tanstack/vue-table';
 import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';

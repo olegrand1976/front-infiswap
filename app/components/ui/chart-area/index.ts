@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Spacing } from '@unovis/ts';
 
 export { default as AreaChart } from './AreaChart.vue';

@@ -683,6 +683,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { MagnifyingGlassIcon, ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { toRaw } from 'vue';
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';

@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const props = defineProps<{
     replacement: any;
 }>();

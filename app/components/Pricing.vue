@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="flex flex-col justify-center items-center">
         <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">

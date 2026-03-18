@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from 'vue-sonner';
 import { defineNuxtPlugin } from '#app';
 

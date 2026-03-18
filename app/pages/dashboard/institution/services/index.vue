@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from '@tanstack/vue-table';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
@@ -176,7 +177,6 @@ const handleEdit = (service) => {
     router.push(`/dashboard/institution/services/${service.id}`);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleDelete = async (service: any) => {
     return await remove(service.id).then(async () => {
         services.value.data = services.value.data.filter(

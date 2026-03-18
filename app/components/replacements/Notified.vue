@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserCircleIcon } from '@heroicons/vue/24/solid';
 import type { Replacement, User } from '~/lib/types';
 

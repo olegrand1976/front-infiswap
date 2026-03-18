@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PhoneIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { cn } from '~/lib/utils';

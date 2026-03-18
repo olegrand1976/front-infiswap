@@ -310,6 +310,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';

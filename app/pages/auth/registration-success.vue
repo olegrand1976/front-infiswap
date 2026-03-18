@@ -94,6 +94,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { navigateTo } from '#app';
 

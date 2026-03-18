@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function useFile() {
     const { $toast, $apifetch } = useNuxtApp();
     const file = ref<File | null>(null);

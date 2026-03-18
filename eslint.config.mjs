@@ -12,7 +12,7 @@ export default createConfigForNuxt({
     },
     rules: {
         'no-explicit-any': 'off',
-        '@typescript-eslint/no-explicit-any': 'true',
+        '@typescript-eslint/no-explicit-any': 'error',
 
         'no-unused-vars': 'warn',
         'no-undef': 'warn',
@@ -25,4 +25,6 @@ export default createConfigForNuxt({
         'vue/html-indent': ['error', 4],
         'indent': ['error', 4],
     },
+}).append({
+    ignores: ['backup/**'],
 });

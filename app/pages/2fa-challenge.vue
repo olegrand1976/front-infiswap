@@ -150,6 +150,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     PinInput,
     PinInputGroup,

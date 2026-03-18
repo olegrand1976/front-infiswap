@@ -139,6 +139,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';

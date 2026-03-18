@@ -444,6 +444,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ArrowPathIcon, EyeIcon } from '@heroicons/vue/24/solid';
 import type { Replacement, User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';

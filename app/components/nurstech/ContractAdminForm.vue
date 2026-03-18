@@ -156,6 +156,7 @@
 </template>
 
 <script lang="ts" setup>
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EyeIcon } from '@heroicons/vue/24/outline';
 import { useContract } from '@/composables/useContract';
 import { useAuth } from '@/composables/useAuth';

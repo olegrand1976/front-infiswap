@@ -68,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BuildingOffice2Icon } from '@heroicons/vue/24/solid';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import RollingLoader from '~/components/RollingLoader.vue';

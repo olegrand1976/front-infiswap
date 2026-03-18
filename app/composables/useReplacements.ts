@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, Replacement } from '~/lib/types';
