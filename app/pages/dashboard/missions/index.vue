@@ -200,7 +200,13 @@
                                 class="mt-2 md:mt-3 flex items-center gap-2 text-sm text-gray-500"
                             >
                                 <ClockIcon class="h-4 w-4 text-gray-400 shrink-0" />
-                                <span>
+                                <span
+                                    v-if="mission.is_long_term"
+                                    class="font-medium text-gray-600"
+                                >
+                                    Disponibilités (long terme)
+                                </span>
+                                <span v-else>
                                     {{ formatTime(mission.time_start_at) }}
                                     <span class="mx-1 text-gray-300">→</span>
                                     {{ formatTime(mission.time_end_at) }}

@@ -1,11 +1,11 @@
 <template>
-    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group">
+    <div class="bg-linear-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group">
         <div class="flex justify-between items-start">
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1">
                     <div
                         v-if="institutionLogoUrl"
-                        class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center"
+                        class="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-gray-100 flex items-center justify-center"
                     >
                         <img
                             :src="institutionLogoUrl"
@@ -16,7 +16,7 @@
                     </div>
                     <div
                         v-else
-                        class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0"
+                        class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0"
                     >
                         <span class="text-primary font-semibold text-xs">
                             {{ institutionInitial }}
@@ -62,13 +62,28 @@
             </div>
 
             <!-- Horaires -->
-            <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
+            <div
+                class="space-y-1 bg-gray-50/50 rounded-lg p-2"
+                :class="{ 'md:col-span-2': mission.is_long_term }"
+            >
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
                     <span class="text-base">🕐</span>
-                    <span>Horaires</span>
+                    <span>{{ mission.is_long_term ? 'Disponibilités (long terme)' : 'Horaires' }}</span>
                 </p>
-                <div class="text-gray-600 text-xs">
-                    <p v-if="mission.time_start_at && mission.time_end_at">
+                <div class="text-gray-600 text-xs text-nowrap">
+                    <div
+                        v-if="mission.is_long_term && mission.availabilities && mission.availabilities.length > 0"
+                        class="flex flex-wrap gap-1 mt-1"
+                    >
+                        <span
+                            v-for="(av, i) in mission.availabilities"
+                            :key="i"
+                            class="bg-white border border-gray-200 rounded px-1.5 py-0.5"
+                        >
+                            <span class="font-medium">{{ av.day }}</span> : {{ formatTime(av.start_time) }} - {{ formatTime(av.end_time) }}
+                        </span>
+                    </div>
+                    <p v-else-if="mission.time_start_at && mission.time_end_at">
                         {{ formatTime(mission.time_start_at) }} - {{ formatTime(mission.time_end_at) }}
                     </p>
                     <p v-else>

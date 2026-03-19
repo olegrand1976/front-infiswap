@@ -34,25 +34,32 @@
                 </div>
             </TableCell>
 
-            <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
-                <div>
-                    <CheckCircleIcon
-                        v-if="hasMorning"
-                        class="h-6 text-green-500"
-                    />
-                </div>
-                <div>
-                    <CheckCircleIcon
-                        v-if="hasAfternoon"
-                        class="h-6 text-green-500"
-                    />
-                </div>
-                <div>
-                    <CheckCircleIcon
-                        v-if="hasEvening"
-                        class="h-6 text-green-500"
-                    />
-                </div>
+            <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center relative">
+                <template v-if="mission.is_long_term">
+                    <div class="col-span-3 text-center w-full font-medium text-blue-700 bg-blue-100/50 py-1 rounded text-[10px] leading-tight flex items-center justify-center min-h-[24px]">
+                        Long terme
+                    </div>
+                </template>
+                <template v-else>
+                    <div>
+                        <CheckCircleIcon
+                            v-if="hasMorning"
+                            class="h-6 text-green-500"
+                        />
+                    </div>
+                    <div>
+                        <CheckCircleIcon
+                            v-if="hasAfternoon"
+                            class="h-6 text-green-500"
+                        />
+                    </div>
+                    <div>
+                        <CheckCircleIcon
+                            v-if="hasEvening"
+                            class="h-6 text-green-500"
+                        />
+                    </div>
+                </template>
             </TableCell>
 
             <TableCell class="bg-[#F1F2F7] text-xs">

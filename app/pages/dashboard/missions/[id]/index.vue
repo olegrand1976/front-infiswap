@@ -84,9 +84,24 @@
                                 </div>
                                 <div>
                                     <p class="text-[11px] text-gray-400 font-medium">
-                                        Horaires
+                                        {{ mission.is_long_term ? 'Disponibilités (long terme)' : 'Horaires' }}
                                     </p>
-                                    <p class="text-sm font-semibold text-gray-800 mt-0.5">
+                                    <div
+                                        v-if="mission.is_long_term && mission.availabilities && mission.availabilities.length > 0"
+                                        class="mt-2 flex flex-col gap-1.5"
+                                    >
+                                        <div
+                                            v-for="(avail, idx) in mission.availabilities"
+                                            :key="idx"
+                                            class="text-sm font-semibold text-gray-800 bg-gray-50 border border-gray-100 rounded px-2.5 py-1 w-fit"
+                                        >
+                                            {{ avail.day }} : {{ formatTime(avail.start_time) }} – {{ formatTime(avail.end_time) }}
+                                        </div>
+                                    </div>
+                                    <p
+                                        v-else
+                                        class="text-sm font-semibold text-gray-800 mt-0.5"
+                                    >
                                         {{ mission.time_start_at ? `${formatTime(mission.time_start_at)} – ${formatTime(mission.time_end_at ?? '')}` : 'Non défini' }}
                                     </p>
                                 </div>

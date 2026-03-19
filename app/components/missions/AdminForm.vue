@@ -148,7 +148,98 @@
                     </div>
                 </div>
 
-                <div class="space-y-2">
+                <div class="flex items-center space-x-2 mt-4 pb-2">
+                    <Checkbox
+                        id="is_long_term"
+                        v-model:checked="formData.is_long_term"
+                    />
+                    <label
+                        for="is_long_term"
+                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700 select-none cursor-pointer"
+                    >
+                        Disponibilité sur le long terme (ajouter des jours et horaires spécifiques)
+                    </label>
+                </div>
+
+                <div
+                    v-if="formData.is_long_term"
+                    class="space-y-4 w-full bg-gray-50 rounded-md p-4 border"
+                >
+                    <label class="text-gray-500 font-medium lg:mr-2">Jours et horaires de la mission <span class="text-red-500">*</span></label>
+                    <div
+                        v-for="(availability, index) in formData.availabilities"
+                        :key="index"
+                        class="w-full flex gap-2 items-center mb-2 flex-wrap sm:flex-nowrap"
+                    >
+                        <Select v-model="availability.day">
+                            <SelectTrigger class="w-full sm:w-[150px] rounded-md bg-white border-2">
+                                <SelectValue placeholder="Jour" />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectItem value="Lundi">
+                                    Lundi
+                                </SelectItem>
+                                <SelectItem value="Mardi">
+                                    Mardi
+                                </SelectItem>
+                                <SelectItem value="Mercredi">
+                                    Mercredi
+                                </SelectItem>
+                                <SelectItem value="Jeudi">
+                                    Jeudi
+                                </SelectItem>
+                                <SelectItem value="Vendredi">
+                                    Vendredi
+                                </SelectItem>
+                                <SelectItem value="Samedi">
+                                    Samedi
+                                </SelectItem>
+                                <SelectItem value="Dimanche">
+                                    Dimanche
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <InputTime
+                            v-model="availability.start_time"
+                            class="w-full sm:w-32 bg-white"
+                            input-class="rounded-md"
+                        />
+                        <span class="text-gray-500 hidden sm:inline">à</span>
+                        <InputTime
+                            v-model="availability.end_time"
+                            class="w-full sm:w-32 bg-white"
+                            input-class="rounded-md"
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            class="text-red-500 border-red-200 hover:bg-red-50"
+                            @click="formData.availabilities.splice(index, 1)"
+                        >
+                            <TrashIcon class="size-4" />
+                        </Button>
+                    </div>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        @click="formData.availabilities.push({ day: 'Lundi', start_time: '08:00', end_time: '17:00' })"
+                    >
+                        <PlusIcon class="size-4 mr-1" /> Ajouter un jour
+                    </Button>
+                    <p
+                        v-if="errors.availabilities"
+                        class="text-sm text-red-500"
+                    >
+                        {{ errors.availabilities }}
+                    </p>
+                </div>
+
+                <div
+                    v-else
+                    class="space-y-2"
+                >
                     <label class="text-gray-500 font-medium">
                         Horaire <span class="text-red-500">*</span>
                     </label>
@@ -401,6 +492,7 @@ import {
     InboxArrowDownIcon,
     BuildingOffice2Icon,
     BookmarkIcon,
+    TrashIcon,
 } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
@@ -435,6 +527,8 @@ const props = defineProps({
             description: '',
             status: '',
             required_diploma: '',
+            is_long_term: false,
+            availabilities: [],
         }),
     },
 });
@@ -487,6 +581,7 @@ const errors = reactive({
     time_start_at: '',
     time_end_at: '',
     required_diploma: '',
+    availabilities: '',
 });
 
 const quickServiceForm = reactive({
@@ -563,6 +658,8 @@ const formData = reactive({
     time_end_at: props.mission?.time_end_at || lastTimes.end,
     service_id: props.mission?.service_id || lastServiceId || (dataServices.value.length === 1 ? dataServices.value[0].id : undefined),
     required_diploma: props.mission?.required_diploma || '',
+    is_long_term: props.mission?.is_long_term || false,
+    availabilities: props.mission?.availabilities ? [...props.mission.availabilities] : [],
 });
 
 const getInitialDiploma = () => {
@@ -647,14 +744,29 @@ const validateForm = () => {
         }
     }
 
-    if (!formData.time_start_at) {
-        errors.time_start_at = 'L\'heure de début est requise';
-        isValid = false;
+    if (formData.is_long_term) {
+        if (!formData.availabilities || formData.availabilities.length === 0) {
+            errors.availabilities = 'Veuillez ajouter au moins un jour de disponibilité';
+            isValid = false;
+        }
+        else {
+            const allValid = formData.availabilities.every((a: any) => a.day && a.start_time && a.end_time);
+            if (!allValid) {
+                errors.availabilities = 'Veuillez remplir correctement tous les jours et horaires';
+                isValid = false;
+            }
+        }
     }
+    else {
+        if (!formData.time_start_at) {
+            errors.time_start_at = 'L\'heure de début est requise';
+            isValid = false;
+        }
 
-    if (!formData.time_end_at) {
-        errors.time_end_at = 'L\'heure de fin est requise';
-        isValid = false;
+        if (!formData.time_end_at) {
+            errors.time_end_at = 'L\'heure de fin est requise';
+            isValid = false;
+        }
     }
 
     if (!formData.required_diploma || formData.required_diploma.trim() === '') {
@@ -888,6 +1000,20 @@ const { submit, inProgress } = useSubmit(async () => {
     }
 
     try {
+        if (formData.is_long_term) {
+            if (formData.availabilities && formData.availabilities.length > 0) {
+                formData.time_start_at = formData.availabilities[0].start_time;
+                formData.time_end_at = formData.availabilities[0].end_time;
+            }
+            else {
+                formData.time_start_at = '00:00';
+                formData.time_end_at = '00:00';
+            }
+        }
+        else {
+            formData.availabilities = []; // Empty availabilities if not long term
+        }
+
         if (formData.id == undefined) {
             formData.institution_id = user.value.institution.id;
             const response = await create(formData);
@@ -919,18 +1045,18 @@ const { submit, inProgress } = useSubmit(async () => {
             });
         }
     }
-    catch (err) {
+    catch (err: any) {
         if (err.data?.errors) {
             const backendErrors = err.data.errors;
             Object.keys(backendErrors).forEach((key) => {
                 if (errors.hasOwnProperty(key)) {
-                    errors[key] = backendErrors[key][0];
+                    (errors as any)[key] = backendErrors[key][0];
                 }
             });
 
-            const firstError = Object.values(backendErrors)[0][0];
+            const firstError = Object.values(backendErrors)[0] as string[];
             $toast({
-                description: firstError,
+                description: firstError[0],
                 status: 'error',
                 variant: 'destructive',
             });
