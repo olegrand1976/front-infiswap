@@ -215,7 +215,13 @@ watch(selectedFilters, (newFilters) => {
     filterCookies.value = newFilters;
 });
 
-await myGroups();
+try {
+    await myGroups();
+}
+catch (e) {
+    // groups may be empty or API unavailable — not a blocking error
+    console.warn('[me.vue] myGroups failed:', e);
+}
 
 useHead({
     title: 'Mes remplacements',

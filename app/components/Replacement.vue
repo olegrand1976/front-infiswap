@@ -154,6 +154,31 @@
 
         <ClientOnly>
             <div class="grid my-8">
+                <div
+                    v-if="isEmpty"
+                    class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
+                >
+                    <div class="bg-white rounded-full p-5 shadow-sm mb-5 border border-gray-100">
+                        <MagnifyingGlassIcon class="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        Aucun résultat trouvé
+                    </h3>
+                    <p class="text-gray-500 max-w-sm mx-auto mb-8 text-sm leading-relaxed">
+                        {{ isAnyFilterActive
+                            ? "Désolé, nous n'avons trouvé aucun remplacement correspondant à vos critères de recherche. Essayez d'ajuster vos filtres."
+                            : "Il n'y a pas encore de remplacements disponibles dans cette section."
+                        }}
+                    </p>
+                    <Button
+                        v-if="isAnyFilterActive"
+                        variant="outline"
+                        class="rounded-full px-8 hover:bg-primary hover:text-white transition-all duration-300"
+                        @click="reinitializeFilter"
+                    >
+                        Réinitialiser les filtres
+                    </Button>
+                </div>
                 <template v-if="isCardMode && missionsWithoutProvince.length > 0">
                     <div class="mb-8">
                         <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
@@ -353,199 +378,6 @@
             </DialogContent>
         </Dialog>
 
-        <Dialog v-model:open="editDialogOpen">
-            <DialogContent class="sm:max-w-160 h-[70vh] sm:h-[60vh] flex flex-col bg-white rounded-lg shadow-xl p-0 pb-16">
-                <div class="flex-1 overflow-y-auto p-6">
-                    <DialogHeader>
-                        <DialogTitle class="text-xl font-semibold text-primary">
-                            Modifier le remplacement
-                        </DialogTitle>
-                        <DialogDescription class="mt-2 text-gray-600">
-                            Modifiez les détails du remplacement ci-dessous.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <form
-                        class="mt-6 space-y-6"
-                        @submit.prevent="submit"
-                    >
-                        <template v-if="editFormData.periods.length > 0">
-                            <h4 class="text-black/80 font-semibold">
-                                Période de remplacement
-                            </h4>
-                            <div
-                                v-for="(period, index) in editFormData.periods"
-                                :key="index"
-                                class="mb-3"
-                            >
-                                <div class="grid grid-cols-2 items-center relative gap-8">
-                                    <div class="flex flex-col space-y-2">
-                                        <label class="text-primary font-semibold">Date de début</label>
-                                        <Input
-                                            v-model="editFormData.periods[index].start_date"
-                                            type="date"
-                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                        />
-                                    </div>
-                                    <div class="flex flex-col space-y-2">
-                                        <label class="text-primary font-semibold">Date de fin</label>
-                                        <Input
-                                            v-model="editFormData.periods[index].end_date"
-                                            type="date"
-                                            class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                        />
-                                    </div>
-                                    <div
-                                        v-if="index > 0"
-                                        class="absolute right-0 top-0"
-                                    >
-                                        <XMarkIcon
-                                            class="w-5 text-primary cursor-pointer"
-                                            @click="removePeriod(index)"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="mt-6 cursor-pointer flex justify-center mx-auto items-center gap-3 text-primary"
-                                @click="addPeriod"
-                            >
-                                <PlusIcon class="w-4" />
-                                <p class="text-xs">
-                                    Ajouter une période
-                                </p>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="grid grid-cols-2 items-center gap-8">
-                                <div class="flex flex-col space-y-2">
-                                    <label class="text-primary font-semibold">Date de début</label>
-                                    <Input
-                                        v-model="editFormData.startDate"
-                                        type="date"
-                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                    />
-                                </div>
-                                <div class="flex flex-col space-y-2">
-                                    <label class="text-primary font-semibold">Date de fin</label>
-                                    <Input
-                                        v-model="editFormData.endDate"
-                                        type="date"
-                                        class="rounded-full w-full outline-gray-300 focus:border-primary"
-                                    />
-                                </div>
-                            </div>
-                        </template>
-                        <!-- <div class="flex flex-col space-y-2">
-                            <label class="text-primary font-semibold">Créneau horaire</label>
-                            <div class="flex justify-between gap-4 sm:gap-8 items-center">
-                                <InputTime
-                                    v-model="editFormData.timeSlot.start_at"
-                                    input-class="rounded-full border border-gray-300 focus:border-primary"
-                                />
-                                <p>à</p>
-                                <InputTime
-                                    v-model="editFormData.timeSlot.end_at"
-                                    input-class="rounded-full border border-gray-300 focus:border-primary"
-                                />
-                            </div>
-                        </div> -->
-                        <div class="grid sm:grid-cols-2 gap-8 items-center">
-                            <div class="flex flex-col space-y-2 w-84 sm:w-auto">
-                                <label class="text-primary font-semibold">Nombre de patients par jour</label>
-                                <InputIcon
-                                    v-model="editFormData.patientCount"
-                                    placeholder="Entrer un nombre"
-                                    class="border border-gray-300 rounded-full focus:border-primary"
-                                />
-                            </div>
-                            <div class="flex flex-col space-y-2">
-                                <label class="text-primary font-semibold">Type de soins</label>
-                                <Select
-                                    v-model="editFormData.careTypes"
-                                    multiple
-                                >
-                                    <SelectTrigger
-                                        class="w-84 sm:w-full bg-white rounded-full text-nowrap border border-gray-300 focus:border-primary"
-                                        position="right"
-                                    >
-                                        <SelectValue class="truncate w-800">
-                                            <template v-if="getSelectedCareTypesText(editFormData.careTypes)">
-                                                {{ getSelectedCareTypesText(editFormData.careTypes) }}
-                                            </template>
-                                            <template v-else>
-                                                <span class="text-black/60">Sélectionner</span>
-                                            </template>
-                                        </SelectValue>
-                                    </SelectTrigger>
-                                    <SelectContent class="border-none bg-white shadow-lg">
-                                        <SelectGroup class="w-32">
-                                            <div
-                                                v-for="careType in careTypes"
-                                                :key="careType.id"
-                                                class="flex items-center space-x-2 mb-2 px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                                                @click="handleCareTypeClick(editFormData, careType.id)"
-                                            >
-                                                <Checkbox
-                                                    :checked="editFormData.careTypes.includes(careType.id)"
-                                                    class="mr-2"
-                                                />
-                                                <label class="text-xs text-nowrap cursor-pointer">{{ careType.name }}</label>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-8 items-center">
-                            <InputTagManager
-                                v-model="editFormData.zipCodes"
-                                label="Codes postaux"
-                                placeholder="6565, 4561, 1237"
-                                :is-mobile="isMobileView"
-                                :comma-validation="false"
-                                :count="4"
-                                @keydown.enter.prevent
-                            />
-                            <InputTagManager
-                                v-model="editFormData.cities"
-                                label="Villes"
-                                placeholder="Anvers, Bruges, Gand"
-                                :is-mobile="isMobileView"
-                                :comma-validation="true"
-                                :no-space-validation="true"
-                                @keydown.enter.prevent
-                            />
-                        </div>
-                        <div class="flex flex-col space-y-2">
-                            <label class="text-primary font-semibold">Commentaire</label>
-                            <Textarea
-                                v-model="editFormData.comment"
-                                placeholder="Écrivez un commentaire"
-                                rows="6"
-                                class="w-full border border-gray-400 focus:border-primary rounded-lg"
-                            />
-                        </div>
-                    </form>
-                </div>
-                <div class="fixed w-full bottom-0 bg-white border-t border-gray-100 p-4 flex justify-end space-x-4">
-                    <Button
-                        variant="secondary"
-                        class="bg-gray-200 hover:bg-gray-300 px-8"
-                        @click="handleCloseEditDialog"
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        type="submit"
-                        class="bg-primary hover:bg-primary/90 text-white px-8"
-                        @click="submit"
-                    >
-                        Enregistrer
-                    </Button>
-                </div>
-            </DialogContent>
-        </Dialog>
-
         <Dialog v-model:open="periodDialog">
             <DialogContent class="max-w-md">
                 <DialogHeader>
@@ -684,8 +516,9 @@
 
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { MagnifyingGlassIcon, ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
+import { ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { toRaw } from 'vue';
+import { CheckCircleIcon, EyeIcon, EllipsisHorizontalIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
 import ReplacementTable from '@/components/replacements/ReplacementTable.vue';
@@ -743,7 +576,6 @@ const filterRegionDialog = ref(false);
 const isMobileView = ref(false);
 const isSubmitted = ref(false);
 const closeReplacementDialog = ref(false);
-const editDialogOpen = ref(false);
 const periodDialog = ref(false);
 const selectedPeriods = ref([]);
 const postalCodeInput = ref('');
@@ -753,14 +585,15 @@ const newlyAddedValue = ref<string>('');
 const searchQuery = ref('');
 const displayedDepartments = ref([]);
 
-const cachedItems = useState<MergedItem[]>('replacement-cached-items', () => []);
-const cachedPagination = useState<MergedPagination>('replacement-cached-pagination', () => ({
+const cacheType = props.type || 'public';
+const cachedItems = useState<MergedItem[]>(`replacement-cached-items-${cacheType}`, () => []);
+const cachedPagination = useState<MergedPagination>(`replacement-cached-pagination-${cacheType}`, () => ({
     current_page: 1,
     per_page: PERPAGE,
     total: 0,
     last_page: 1,
 }));
-const cachedSearchParams = useState<string>('replacement-cached-search-params', () => '');
+const cachedSearchParams = useState<string>(`replacement-cached-search-params-${cacheType}`, () => '');
 
 const currentItems = ref<MergedItem[]>(cachedItems.value);
 const initialItems = ref<MergedItem[]>([]);
@@ -796,6 +629,19 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
         .forEach((key) => { sorted[key] = groups[key]; });
 
     return sorted;
+});
+
+const isAnyFilterActive = computed(() =>
+    formData.postalCodeTags.length > 0
+    || formData.cityTags.length > 0
+    || formData.selectedDays.length > 0
+    || localFilters.type !== 'all'
+    || localFilters.role !== 'all',
+);
+
+const isEmpty = computed(() => {
+    if (loading.value || loadingSearch.value) return false;
+    return currentItems.value.length === 0;
 });
 
 const { loading, fetchMerged } = useMergedSearch();
@@ -1074,71 +920,10 @@ const handleCloseReplacement = async (r: Replacement) => {
     }
 };
 
-const editFormData = reactive({
-    id: null as number | null,
-    userId: user.value.id,
-    replacedBy: null,
-    visibility: '',
-    type: '',
-    periods: [] as { start_date: string; end_date: string }[],
-    startDate: '',
-    endDate: '',
-    patientCount: null as number | null,
-    zipCodes: [] as string[],
-    cities: [] as string[],
-    careTypes: [] as number[],
-    timeSlot: { start_at: '', end_at: '' },
-    status: '',
-    comment: '',
-});
-
-const resetEditFormData = () => {
-    Object.assign(editFormData, {
-        id: null, userId: user.value.id, replacedBy: null, visibility: '', type: '',
-        periods: [], startDate: '', endDate: '', patientCount: null,
-        zipCodes: [], cities: [], careTypes: [], timeSlot: { start_at: '', end_at: '' },
-        status: '', comment: '',
-    });
-};
-
 const openEditDialog = (replacement: any) => {
-    const fmtDate = (d: string) => d ? new Date(d).toISOString().split('T')[0] : '';
-    const fmtTime = (t: string) => t ? t.split(':').slice(0, 2).join(':') : '';
-
-    Object.assign(editFormData, {
-        id: replacement.id,
-        userId: replacement.user_id,
-        replacedBy: replacement.replaced_by ?? null,
-        visibility: replacement.visibility,
-        status: replacement.status,
-        type: replacement.type,
-        startDate: fmtDate(replacement.start_date),
-        endDate: fmtDate(replacement.end_date),
-        patientCount: replacement.patient_count,
-        zipCodes: Array.isArray(replacement.zip_codes) ? replacement.zip_codes : JSON.parse(replacement.zip_codes || '[]'),
-        cities: Array.isArray(replacement.cities) ? replacement.cities : JSON.parse(replacement.cities || '[]'),
-        careTypes: replacement.care_types?.map((ct: any) => ct.id) || [],
-        comment: replacement.comment || '',
-    });
-
-    if (replacement.periods?.length > 0) {
-        editFormData.periods = replacement.periods.map((p: any) => ({
-            start_date: fmtDate(p.start_date),
-            end_date: fmtDate(p.end_date),
-        }));
-    }
-
-    editDialogOpen.value = true;
+    navigateTo(`/dashboard/replacements/${replacement.id}/edit`);
 };
 
-const handleCloseEditDialog = () => {
-    resetEditFormData();
-    editDialogOpen.value = false;
-};
-const addPeriod = () => editFormData.periods.push({ start_date: '', end_date: '' });
-const removePeriod = (i: number) => {
-    if (i > 0) editFormData.periods.splice(i, 1);
-};
 const handleCareTypeClick = (fd: any, id: number) => {
     const idx = fd.careTypes.indexOf(id);
     if (idx === -1) {
@@ -1151,15 +936,6 @@ const handleCareTypeClick = (fd: any, id: number) => {
 };
 const getSelectedCareTypesText = (ids: number[]) =>
     careTypes.value.filter(ct => ids.includes(ct.id)).map(ct => ct.name).join(', ');
-
-const { submit } = useSubmit(async () => {
-    const res = await updateAgainReplacement(editFormData);
-    if (res) {
-        editDialogOpen.value = false;
-        $toast({ description: 'Remplacement mis à jour' });
-        await refreshItems(page.value);
-    }
-});
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     internalUpdate = true;
