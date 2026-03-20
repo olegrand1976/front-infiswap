@@ -451,6 +451,7 @@ export type Mission = {
     required_diploma: string;
     is_long_term?: boolean;
     availabilities?: { day: string; start_time: string; end_time: string }[];
+    pool_id?: number | null;
     accepted_candidate?: User;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     matching_candidates?: any;

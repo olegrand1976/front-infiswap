@@ -411,6 +411,11 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: DocumentMagnifyingGlassIcon,
     },
     {
+        label: 'Mes Favoris',
+        route: '/dashboard/institution/favorites',
+        icon: UsersIcon,
+    },
+    {
         label: 'Paramètres institution',
         route: '/dashboard/institution/settings',
         icon: Cog8ToothIcon,

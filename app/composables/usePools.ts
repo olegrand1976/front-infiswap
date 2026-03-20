@@ -1,0 +1,140 @@
+import { ref } from 'vue';
+
+export interface Pool {
+    id: number;
+    institution_id: number;
+    name: string;
+    description: string | null;
+    users_count?: number;
+    users?: any[];
+    created_at: string;
+    updated_at: string;
+}
+
+export const usePools = () => {
+    const pools = ref<{ data: Pool[] }>({ data: [] });
+    const pool = ref<Pool | null>(null);
+    const loading = ref(false);
+
+    const { $api } = useNuxtApp();
+
+    const getAll = async () => {
+        loading.value = true;
+        try {
+            const response = await $api.get('/institution/pools');
+            pools.value = response;
+            return response;
+        } catch (error) {
+            console.error('Error fetching pools:', error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const getById = async (id: number) => {
+        loading.value = true;
+        try {
+            const response = await $api.get(`/institution/pools/${id}`);
+            pool.value = response.data;
+            return response;
+        } catch (error) {
+            console.error(`Error fetching pool ${id}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const create = async (data: Partial<Pool> & { user_ids?: number[] }) => {
+        loading.value = true;
+        try {
+            const response = await $api.post('/institution/pools', data);
+            return response;
+        } catch (error) {
+            console.error('Error creating pool:', error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const update = async (id: number, data: Partial<Pool> & { user_ids?: number[] }) => {
+        loading.value = true;
+        try {
+            const response = await $api.put(`/institution/pools/${id}`, data);
+            return response;
+        } catch (error) {
+            console.error(`Error updating pool ${id}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const remove = async (id: number) => {
+        loading.value = true;
+        try {
+            const response = await $api.delete(`/institution/pools/${id}`);
+            return response;
+        } catch (error) {
+            console.error(`Error deleting pool ${id}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const addUsers = async (poolId: number, userIds: number[]) => {
+        loading.value = true;
+        try {
+            const response = await $api.post(`/institution/pools/${poolId}/users`, { user_ids: userIds });
+            return response;
+        } catch (error) {
+            console.error(`Error adding users to pool ${poolId}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const removeUsers = async (poolId: number, userIds: number[]) => {
+        loading.value = true;
+        try {
+            const response = await $api.delete(`/institution/pools/${poolId}/users`, { user_ids: userIds });
+            return response;
+        } catch (error) {
+            console.error(`Error removing users from pool ${poolId}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const updateStars = async (poolId: number, userId: number, stars: number) => {
+        loading.value = true;
+        try {
+            const response = await $api.put(`/institution/pools/${poolId}/users/${userId}/stars`, { stars });
+            return response;
+        } catch (error) {
+            console.error(`Error updating stars for user ${userId} in pool ${poolId}:`, error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    return {
+        pools,
+        pool,
+        loading,
+        getAll,
+        getById,
+        create,
+        update,
+        remove,
+        addUsers,
+        removeUsers,
+        updateStars
+    };
+};

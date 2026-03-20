@@ -70,10 +70,23 @@
                                     src="icons/user-circle.png"
                                     class="w-10 h-10 rounded-full opacity-40"
                                 />
-                                <UsersName
-                                    :user="response.responder"
-                                    class="font-medium text-gray-700"
-                                />
+                                <div class="flex flex-col">
+                                    <UsersName
+                                        :user="response.responder"
+                                        class="font-medium text-gray-700"
+                                    />
+                                    <div 
+                                        v-if="response.responder.stars > 0"
+                                        class="flex items-center gap-0.5 mt-0.5"
+                                    >
+                                        <StarIcon 
+                                            v-for="i in 5" 
+                                            :key="i"
+                                            class="w-3 h-3"
+                                            :class="i <= response.responder.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'"
+                                        />
+                                    </div>
+                                </div>
                             </TableCell>
 
                             <TableCell
@@ -156,10 +169,19 @@
                             class="w-12 h-12 rounded-full opacity-40"
                         />
                         <div>
-                            <UsersName
-                                :user="response.responder"
-                                class="font-semibold text-gray-800"
-                            />
+                            <div class="flex items-center gap-2">
+                                <UsersName
+                                    :user="response.responder"
+                                    class="font-semibold text-gray-800"
+                                />
+                                <div 
+                                    v-if="response.responder.stars > 0"
+                                    class="flex items-center gap-0.5"
+                                >
+                                    <StarIcon class="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                    <span class="text-[10px] font-bold text-yellow-600">{{ response.responder.stars }}</span>
+                                </div>
+                            </div>
                             <p class="text-xs text-gray-500">
                                 {{ formatToDMY(response.responded_at) }}
                             </p>
@@ -241,6 +263,7 @@
 
 <script lang="ts" setup>
 import { CheckIcon, EyeIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { StarIcon } from '@heroicons/vue/24/solid';
 import { toast } from 'vue-sonner';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';
@@ -267,7 +290,15 @@ const selectedResponse = ref<MissionResponse>(null);
 const motivationDialog = ref(false);
 
 await getByMission(Number(id.value), page.value, perPage.value, { name: search.value });
-const dataResponses = computed(() => responses.value.data ?? []);
+const dataResponses = computed(() => {
+    if (!responses.value?.data) return [];
+    return [...responses.value.data].sort((a, b) => {
+        const starsA = a.responder?.stars || 0;
+        const starsB = b.responder?.stars || 0;
+        if (starsA !== starsB) return starsB - starsA;
+        return new Date(b.responded_at).getTime() - new Date(a.responded_at).getTime();
+    });
+});
 
 const filterResponses = async () => {
     await getByMission(

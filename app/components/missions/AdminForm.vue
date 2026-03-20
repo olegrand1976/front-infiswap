@@ -72,21 +72,29 @@
                                 <BriefcaseIcon class="text-gray-500 w-5 h-5" />
                                 <SelectValue
                                     :placeholder="dataServices.length === 0 ? 'Aucun service disponible' : 'Sélectionner un service'"
-                                    class="text-nowrap w-full text-sm ml-3 my-auto"
                                 />
+                                <span class="text-nowrap text-xs ml-3 my-auto">
+                                    {{ dataServices.find(s => s.id == formData.service_id)?.name || 'Sélectionner un service' }}
+                                </span>
                             </SelectTrigger>
                             <SelectContent class="border border-none">
                                 <SelectGroup>
-                                    <div
+                                    <SelectItem
                                         v-for="service in dataServices"
                                         :key="service.id"
-                                        class="flex justify-center items-center -ms-3"
+                                        :value="service.id.toString()"
                                     >
-                                        <SelectItem :value="service.id">
-                                            <span class="xl:text-sm sm:text-xs">{{ service.name }}</span>
-                                        </SelectItem>
-                                    </div>
+                                        <span class="xl:text-sm sm:text-xs">{{ service.name }}</span>
+                                    </SelectItem>
                                 </SelectGroup>
+                                <Separator class="my-1" />
+                                <div
+                                    class="flex items-center gap-2 p-2 px-3 text-xs text-primary hover:bg-gray-100 cursor-pointer"
+                                    @click="showServiceModal = true"
+                                >
+                                    <PlusIcon class="w-4 h-4" />
+                                    Nouveau service
+                                </div>
                             </SelectContent>
                         </Select>
                         <Button
@@ -106,6 +114,31 @@
                     >
                         {{ errors.service_id }}
                     </p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-gray-500 font-medium">
+                        Envoyer au pool de favoris (optionnel)
+                    </label>
+                    <Select v-model="formData.pool_id">
+                        <SelectTrigger class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300">
+                            <SelectValue :placeholder="missionPools.find(p => p.id == formData.pool_id)?.name || 'Sélectionner un pool (optionnel)'" class="text-nowrap w-full text-sm ml-3 my-auto" />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <SelectItem value="none">
+                                    <span class="text-gray-400">Aucun (envoi public)</span>
+                                </SelectItem>
+                                <SelectItem
+                                    v-for="pool in missionPools"
+                                    :key="pool.id"
+                                    :value="pool.id.toString()"
+                                >
+                                    <span class="xl:text-sm sm:text-xs">{{ pool.name }} ({{ pool.users_count }} membres)</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
@@ -493,6 +526,7 @@ import {
     BuildingOffice2Icon,
     BookmarkIcon,
     TrashIcon,
+    UsersIcon,
 } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
@@ -529,6 +563,7 @@ const props = defineProps({
             required_diploma: '',
             is_long_term: false,
             availabilities: [],
+            pool_id: undefined,
         }),
     },
 });
@@ -537,8 +572,10 @@ const user = useState<User>('user');
 const { create, update } = useMissions();
 const { getAll, services, create: createService } = useInstitutionServices();
 const { getAll: getAllTemplates, templates: templatesState, create: createTemplate, getById: getTemplateById } = useMissionTemplates();
+const { getAll: getAllPools, pools: poolsState } = usePools();
 
 const dataServices = computed(() => services.value.data ?? []);
+const missionPools = computed(() => poolsState.value.data ?? []);
 const missionTemplates = computed(() => {
     if (Array.isArray(templatesState.value)) {
         return templatesState.value;
@@ -571,6 +608,7 @@ const commonDiplomas = [
 
 await getAll(1, 50);
 await getAllTemplates();
+await getAllPools();
 
 const { $toast } = useNuxtApp();
 
@@ -660,6 +698,7 @@ const formData = reactive({
     required_diploma: props.mission?.required_diploma || '',
     is_long_term: props.mission?.is_long_term || false,
     availabilities: props.mission?.availabilities ? [...props.mission.availabilities] : [],
+    pool_id: props.mission?.pool_id || undefined,
 });
 
 const getInitialDiploma = () => {
