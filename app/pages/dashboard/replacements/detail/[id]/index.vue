@@ -1,11 +1,5 @@
 <template>
     <div class="pt-2">
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary"
-            title="Retour"
-            @click="goBack"
-        />
-
         <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
                 :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
@@ -350,7 +344,6 @@ const { isDisabled } = sendResponse();
 const { isAdminGroup, isInstitution } = useAuth();
 const { currentInstitution, getSettings } = useInstitutions();
 
-// Charger les paramètres de l'institution pour avoir can_apply_replacements
 if (isInstitution.value) {
     getSettings();
 }
