@@ -9,11 +9,17 @@ export function useGroup() {
     const count = ref(0);
 
     async function myGroups() {
-        const data = await $apifetch('/api/groups/me');
-        groups.value = data.groups ?? [];
+        try {
+            const data = await $apifetch('/api/groups/me');
+            groups.value = data.groups ?? [];
 
-        if (groups.value.length > 0) {
-            await getGroupDetails(groups.value[0].id);
+            if (groups.value.length > 0) {
+                await getGroupDetails(groups.value[0].id);
+            }
+        }
+        catch (e) {
+            console.warn('[useGroup] myGroups error:', e);
+            groups.value = [];
         }
     }
 

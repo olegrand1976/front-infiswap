@@ -753,14 +753,15 @@ const newlyAddedValue = ref<string>('');
 const searchQuery = ref('');
 const displayedDepartments = ref([]);
 
-const cachedItems = useState<MergedItem[]>('replacement-cached-items', () => []);
-const cachedPagination = useState<MergedPagination>('replacement-cached-pagination', () => ({
+const cacheType = props.type || 'public';
+const cachedItems = useState<MergedItem[]>(`replacement-cached-items-${cacheType}`, () => []);
+const cachedPagination = useState<MergedPagination>(`replacement-cached-pagination-${cacheType}`, () => ({
     current_page: 1,
     per_page: PERPAGE,
     total: 0,
     last_page: 1,
 }));
-const cachedSearchParams = useState<string>('replacement-cached-search-params', () => '');
+const cachedSearchParams = useState<string>(`replacement-cached-search-params-${cacheType}`, () => '');
 
 const currentItems = ref<MergedItem[]>(cachedItems.value);
 const initialItems = ref<MergedItem[]>([]);
