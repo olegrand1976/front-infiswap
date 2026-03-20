@@ -154,6 +154,31 @@
 
         <ClientOnly>
             <div class="grid my-8">
+                <div
+                    v-if="isEmpty"
+                    class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
+                >
+                    <div class="bg-white rounded-full p-5 shadow-sm mb-5 border border-gray-100">
+                        <MagnifyingGlassIcon class="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        Aucun résultat trouvé
+                    </h3>
+                    <p class="text-gray-500 max-w-sm mx-auto mb-8 text-sm leading-relaxed">
+                        {{ isAnyFilterActive
+                            ? "Désolé, nous n'avons trouvé aucun remplacement correspondant à vos critères de recherche. Essayez d'ajuster vos filtres."
+                            : "Il n'y a pas encore de remplacements disponibles dans cette section."
+                        }}
+                    </p>
+                    <Button
+                        v-if="isAnyFilterActive"
+                        variant="outline"
+                        class="rounded-full px-8 hover:bg-primary hover:text-white transition-all duration-300"
+                        @click="reinitializeFilter"
+                    >
+                        Réinitialiser les filtres
+                    </Button>
+                </div>
                 <template v-if="isCardMode && missionsWithoutProvince.length > 0">
                     <div class="mb-8">
                         <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
@@ -353,7 +378,6 @@
             </DialogContent>
         </Dialog>
 
-
         <Dialog v-model:open="periodDialog">
             <DialogContent class="max-w-md">
                 <DialogHeader>
@@ -492,8 +516,9 @@
 
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { MagnifyingGlassIcon, ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
+import { ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { toRaw } from 'vue';
+import { CheckCircleIcon, EyeIcon, EllipsisHorizontalIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
 import ReplacementTable from '@/components/replacements/ReplacementTable.vue';
@@ -604,6 +629,19 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
         .forEach((key) => { sorted[key] = groups[key]; });
 
     return sorted;
+});
+
+const isAnyFilterActive = computed(() =>
+    formData.postalCodeTags.length > 0
+    || formData.cityTags.length > 0
+    || formData.selectedDays.length > 0
+    || localFilters.type !== 'all'
+    || localFilters.role !== 'all',
+);
+
+const isEmpty = computed(() => {
+    if (loading.value || loadingSearch.value) return false;
+    return currentItems.value.length === 0;
 });
 
 const { loading, fetchMerged } = useMergedSearch();
@@ -882,13 +920,9 @@ const handleCloseReplacement = async (r: Replacement) => {
     }
 };
 
-
-
 const openEditDialog = (replacement: any) => {
     navigateTo(`/dashboard/replacements/${replacement.id}/edit`);
 };
-
-
 
 const handleCareTypeClick = (fd: any, id: number) => {
     const idx = fd.careTypes.indexOf(id);
@@ -902,8 +936,6 @@ const handleCareTypeClick = (fd: any, id: number) => {
 };
 const getSelectedCareTypesText = (ids: number[]) =>
     careTypes.value.filter(ct => ids.includes(ct.id)).map(ct => ct.name).join(', ');
-
-
 
 const updateRegionSelection = (region: string, checked: boolean) => {
     internalUpdate = true;

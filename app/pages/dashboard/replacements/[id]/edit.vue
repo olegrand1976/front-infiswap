@@ -65,7 +65,7 @@
                                 </div>
                             </div>
 
-                        <Button
+                            <Button
                                 class="mt-4 mx-auto rounded-full flex space-x-1 items-center cursor-pointer"
                                 size="sm"
                                 type="button"
@@ -324,17 +324,20 @@ const loadReplacement = async () => {
                 start_date: fmtDate(p.start_date),
                 end_date: fmtDate(p.end_date),
             }));
-        } else {
+        }
+        else {
             formData.periods = [{
                 start_date: fmtDate(r.start_date),
                 end_date: fmtDate(r.end_date),
             }];
         }
-    } catch (e) {
+    }
+    catch (e) {
         console.error('Impossible de charger le remplacement:', e);
         toast.error('Impossible de charger le remplacement.');
         router.push('/dashboard/replacements/me');
-    } finally {
+    }
+    finally {
         loadingReplacement.value = false;
     }
 };
@@ -361,10 +364,12 @@ const submit = async () => {
         await updateAgainReplacement(formData);
         toast.success('Remplacement mis à jour avec succès.');
         router.push('/dashboard/replacements/me');
-    } catch (e: any) {
+    }
+    catch (e: any) {
         const msg = e?.data?.message || 'Une erreur est survenue.';
         toast.error(msg);
-    } finally {
+    }
+    finally {
         inProgress.value = false;
     }
 };
