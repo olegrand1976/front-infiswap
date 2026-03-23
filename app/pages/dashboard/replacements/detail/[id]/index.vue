@@ -1,11 +1,5 @@
 <template>
     <div class="pt-2">
-        <ArrowLeftIcon
-            class="size-6 cursor-pointer hover:text-primary"
-            title="Retour"
-            @click="goBack"
-        />
-
         <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
                 :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
@@ -147,7 +141,7 @@
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
                                     <span>Nom : {{ replacement.user.full_name }}</span>
                                 </div>
-                                <div class="bg-gray-200 text-sm py-2 rounded px-3">
+                                <div v-show="replacement?.candidate" class="bg-gray-200 text-sm py-2 rounded px-3">
                                     <span>Téléphone : {{ replacement.user.phone_number }}</span>
                                 </div>
                             </div>
@@ -350,7 +344,6 @@ const { isDisabled } = sendResponse();
 const { isAdminGroup, isInstitution } = useAuth();
 const { currentInstitution, getSettings } = useInstitutions();
 
-// Charger les paramètres de l'institution pour avoir can_apply_replacements
 if (isInstitution.value) {
     getSettings();
 }
@@ -384,7 +377,7 @@ const goBack = () => {
         window.history.back();
     }
     else {
-        navigateTo('/dashboard/replacements');
+        navigateTo(isInstitution.value ? '/dashboard/institution/replacements' : '/dashboard/replacements');
     }
 };
 

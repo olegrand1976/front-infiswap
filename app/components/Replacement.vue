@@ -152,8 +152,7 @@
             </Form>
         </div>
 
-        <ClientOnly>
-            <div class="grid my-8">
+        <div class="grid my-8">
                 <div
                     v-if="isEmpty"
                     class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
@@ -348,8 +347,7 @@
                         @update:per-page="handlePerPageChange"
                     />
                 </div>
-            </div>
-        </ClientOnly>
+        </div>
 
         <Dialog v-model:open="closeReplacementDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
@@ -585,17 +583,7 @@ const newlyAddedValue = ref<string>('');
 const searchQuery = ref('');
 const displayedDepartments = ref([]);
 
-const cacheType = props.type || 'public';
-const cachedItems = useState<MergedItem[]>(`replacement-cached-items-${cacheType}`, () => []);
-const cachedPagination = useState<MergedPagination>(`replacement-cached-pagination-${cacheType}`, () => ({
-    current_page: 1,
-    per_page: PERPAGE,
-    total: 0,
-    last_page: 1,
-}));
-const cachedSearchParams = useState<string>(`replacement-cached-search-params-${cacheType}`, () => '');
-
-const currentItems = ref<MergedItem[]>(cachedItems.value);
+const currentItems = ref<MergedItem[]>([]);
 const initialItems = ref<MergedItem[]>([]);
 
 const isMission = (item: MergedItem) => item.record_type === 'mission';
@@ -649,12 +637,13 @@ const loadingSearch = ref(false);
 const { loading: loadingUpdate, updateReplacement, updateAgainReplacement } = useReplacements();
 const { careTypes, fetchCareTypes } = useCareTypes();
 
-await fetchCareTypes();
-
 const localFilters = reactive({
     type: props.filters.type,
     role: props.filters.role,
 });
+
+// Track whether onMounted fetch has run, to avoid double-fetch from watchers
+const mountedFetchDone = ref(false);
 
 let newRegions = [...props.selectedRegions];
 let internalUpdate = false;
@@ -669,25 +658,23 @@ const formData = reactive({
     filters: localFilters,
 });
 
-const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry, useCache = true) => {
+const searchParamsParams = computed(() => {
+    return {
+        postalCode: toRaw(formData.postalCodeTags),
+        cities: toRaw(formData.cityTags),
+        selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
+        type: props.type,
+        country: props.selectedCountry,
+        filters: localFilters,
+        provinces: newRegions,
+        page: page.value,
+        perPage: perPage.value,
+        groupByProvince: props.groupByProvince,
+    };
+});
+
+const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry) => {
     try {
-        const searchParamsKey = JSON.stringify({
-            postalCode: toRaw(formData.postalCodeTags),
-            cities: toRaw(formData.cityTags),
-            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
-            type: props.type,
-            country,
-            filters: localFilters,
-            provinces: newRegions,
-            page: p,
-            perPage: pp,
-        });
-
-        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
-            currentItems.value = cachedItems.value;
-            pagination.value = cachedPagination.value;
-        }
-
         const result = await fetchMerged({
             postalCode: toRaw(formData.postalCodeTags),
             cities: toRaw(formData.cityTags),
@@ -701,24 +688,20 @@ const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry, u
             groupByProvince: props.groupByProvince,
         });
 
-        const filtered = props.type === ''
+        const isPublicNurseView = props.type === '' && !user.value?.institution;
+        const filtered = isPublicNurseView
             ? result.items.filter(item => item.user_id !== user.value.id)
             : result.items;
 
         currentItems.value = filtered;
         initialItems.value = filtered;
         pagination.value = result.pagination;
-
-        cachedItems.value = filtered;
-        cachedPagination.value = result.pagination;
-        cachedSearchParams.value = searchParamsKey;
     }
     catch (err) {
         console.error(err);
-        if (useCache && cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
-            currentItems.value = cachedItems.value;
-            pagination.value = cachedPagination.value;
-        }
+        currentItems.value = [];
+        initialItems.value = [];
+        pagination.value = { current_page: 1, per_page: PERPAGE, total: 0, last_page: 1 };
     }
 };
 
@@ -726,66 +709,7 @@ const submitSearch = async () => {
     isSubmitted.value = true;
     try {
         loadingSearch.value = true;
-
-        const searchParamsKey = JSON.stringify({
-            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
-            postalCode: toRaw(formData.postalCodeTags),
-            cities: toRaw(formData.cityTags),
-            type: toRaw(formData.type),
-            country: props.selectedCountry,
-            filters: toRaw(formData.filters),
-            provinces: newRegions,
-            page: page.value,
-            perPage: perPage.value,
-        });
-
-        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
-            currentItems.value = cachedItems.value;
-            pagination.value = cachedPagination.value;
-        }
-
-        const result = await fetchMerged({
-            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
-            postalCode: toRaw(formData.postalCodeTags),
-            cities: toRaw(formData.cityTags),
-            type: toRaw(formData.type),
-            country: props.selectedCountry,
-            filters: toRaw(formData.filters),
-            provinces: newRegions,
-            page: page.value,
-            perPage: perPage.value,
-            groupByProvince: props.groupByProvince,
-        });
-
-        const filtered = props.type === ''
-            ? result.items.filter(item => item.user_id !== user.value.id)
-            : result.items;
-
-        currentItems.value = filtered;
-        pagination.value = result.pagination;
-
-        cachedItems.value = filtered;
-        cachedPagination.value = result.pagination;
-        cachedSearchParams.value = searchParamsKey;
-    }
-    catch (err) {
-        console.error(err);
-
-        const searchParamsKey = JSON.stringify({
-            selectedDays: toRaw(formData.selectedDays).filter(d => d !== 'all'),
-            postalCode: toRaw(formData.postalCodeTags),
-            cities: toRaw(formData.cityTags),
-            type: toRaw(formData.type),
-            country: props.selectedCountry,
-            filters: toRaw(formData.filters),
-            provinces: newRegions,
-            page: page.value,
-            perPage: perPage.value,
-        });
-        if (cachedItems.value.length > 0 && cachedSearchParams.value === searchParamsKey) {
-            currentItems.value = cachedItems.value;
-            pagination.value = cachedPagination.value;
-        }
+        await fetchData(page.value, perPage.value);
     }
     finally { loadingSearch.value = false; }
 };
@@ -971,11 +895,28 @@ const filteredDepartments = computed(() =>
 );
 const getRandomItems = (arr: any[], n: number) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
 
+const { data: asyncData } = await useAsyncData(
+    `merged-search-${props.type}-${page.value}`,
+    () => fetchMerged(searchParamsParams.value)
+);
+
+if (asyncData.value) {
+    const isPublicNurseView = props.type === '' && !user.value?.institution;
+    const filtered = isPublicNurseView
+        ? asyncData.value.items.filter(item => item.user_id !== user.value.id)
+        : asyncData.value.items;
+        
+    currentItems.value = filtered;
+    initialItems.value = filtered;
+    pagination.value = asyncData.value.pagination;
+}
+
 onMounted(async () => {
     if (import.meta.client) isMobileView.value = window.innerWidth <= 1024;
     if (user.value.profile.country === 'fr') displayedDepartments.value = getRandomItems(departments, 6);
 
-    await fetchData(page.value, perPage.value);
+    await fetchCareTypes();
+    mountedFetchDone.value = true;
 
     if (props.type === 'groups') {
         const groupIds = user.value.group_roles.map((g: any) => g.group_id);
@@ -990,12 +931,13 @@ onMounted(async () => {
     }
 });
 
-watch(() => props.filters, (nf) => {
-    if (nf) {
-        localFilters.type = nf.type;
-        localFilters.role = nf.role;
-        fetchData(page.value, perPage.value);
-    }
+watch(() => props.filters, (nf, old) => {
+    if (!nf) return;
+    localFilters.type = nf.type;
+    localFilters.role = nf.role;
+    if (!mountedFetchDone.value) return;
+    if (old && nf.type === old.type && nf.role === old.role) return;
+    fetchData(page.value, perPage.value);
 }, { deep: true });
 
 watch(() => props.selectedCountry, (nc) => {

@@ -203,7 +203,6 @@
             :filtered-provinces="selectedRegions"
             :display-mode="displayMode"
             :available-missions="[]"
-            :type="''"
         />
     </div>
 </template>
@@ -290,16 +289,6 @@ const selectedProvincesPlaceholder = computed(() => {
     if (isAllSelected.value || selectedRegions.value.length === 0) return 'Tous';
     return selectedRegions.value.join(', ');
 });
-
-onMounted(() => {
-    if (filterCookies.value) {
-        selectedFilters.value = filterCookies.value;
-    }
-});
-
-watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
-}, { deep: true });
 
 watch(selectedCountry, () => {
     selectedRegions.value = [];
