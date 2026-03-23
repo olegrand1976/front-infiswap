@@ -197,7 +197,6 @@
 
         <Replacement
             v-model:selected-regions="selectedRegions"
-            type="search"
             :filters="selectedFilters"
             :selected-country="selectedCountry"
             :group-by-province="groupByProvince"
