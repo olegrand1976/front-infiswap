@@ -16,13 +16,13 @@ export const usePools = () => {
     const pool = ref<Pool | null>(null);
     const loading = ref(false);
 
-    const { $api } = useNuxtApp();
+    const { $apifetch } = useNuxtApp();
 
     const getAll = async () => {
         loading.value = true;
         try {
-            const response = await $api.get('/institution/pools');
-            pools.value = response;
+            const response = await $apifetch('/api/institution/pools');
+            pools.value = response.data ?? response;
             return response;
         } catch (error) {
             console.error('Error fetching pools:', error);
@@ -35,8 +35,8 @@ export const usePools = () => {
     const getById = async (id: number) => {
         loading.value = true;
         try {
-            const response = await $api.get(`/institution/pools/${id}`);
-            pool.value = response.data;
+            const response = await $apifetch(`/api/institution/pools/${id}`);
+            pool.value = response.data ?? response;
             return response;
         } catch (error) {
             console.error(`Error fetching pool ${id}:`, error);
@@ -49,7 +49,10 @@ export const usePools = () => {
     const create = async (data: Partial<Pool> & { user_ids?: number[] }) => {
         loading.value = true;
         try {
-            const response = await $api.post('/institution/pools', data);
+            const response = await $apifetch('/api/institution/pools', {
+                method: 'POST',
+                body: data,
+            });
             return response;
         } catch (error) {
             console.error('Error creating pool:', error);
@@ -62,7 +65,10 @@ export const usePools = () => {
     const update = async (id: number, data: Partial<Pool> & { user_ids?: number[] }) => {
         loading.value = true;
         try {
-            const response = await $api.put(`/institution/pools/${id}`, data);
+            const response = await $apifetch(`/api/institution/pools/${id}`, {
+                method: 'PUT',
+                body: data,
+            });
             return response;
         } catch (error) {
             console.error(`Error updating pool ${id}:`, error);
@@ -75,7 +81,9 @@ export const usePools = () => {
     const remove = async (id: number) => {
         loading.value = true;
         try {
-            const response = await $api.delete(`/institution/pools/${id}`);
+            const response = await $apifetch(`/api/institution/pools/${id}`, {
+                method: 'DELETE',
+            });
             return response;
         } catch (error) {
             console.error(`Error deleting pool ${id}:`, error);
@@ -88,7 +96,10 @@ export const usePools = () => {
     const addUsers = async (poolId: number, userIds: number[]) => {
         loading.value = true;
         try {
-            const response = await $api.post(`/institution/pools/${poolId}/users`, { user_ids: userIds });
+            const response = await $apifetch(`/api/institution/pools/${poolId}/users`, {
+                method: 'POST',
+                body: { user_ids: userIds },
+            });
             return response;
         } catch (error) {
             console.error(`Error adding users to pool ${poolId}:`, error);
@@ -101,7 +112,10 @@ export const usePools = () => {
     const removeUsers = async (poolId: number, userIds: number[]) => {
         loading.value = true;
         try {
-            const response = await $api.delete(`/institution/pools/${poolId}/users`, { user_ids: userIds });
+            const response = await $apifetch(`/api/institution/pools/${poolId}/users`, {
+                method: 'DELETE',
+                body: { user_ids: userIds },
+            });
             return response;
         } catch (error) {
             console.error(`Error removing users from pool ${poolId}:`, error);
@@ -114,7 +128,10 @@ export const usePools = () => {
     const updateStars = async (poolId: number, userId: number, stars: number) => {
         loading.value = true;
         try {
-            const response = await $api.put(`/institution/pools/${poolId}/users/${userId}/stars`, { stars });
+            const response = await $apifetch(`/api/institution/pools/${poolId}/users/${userId}/stars`, {
+                method: 'PUT',
+                body: { stars },
+            });
             return response;
         } catch (error) {
             console.error(`Error updating stars for user ${userId} in pool ${poolId}:`, error);
