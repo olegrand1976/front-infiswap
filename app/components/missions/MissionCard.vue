@@ -142,6 +142,16 @@
                 <EyeIcon class="w-3.5 h-3.5 mr-1" /> Détails
             </Button>
             <Button
+                v-if="isOwner"
+                size="sm"
+                variant="outline"
+                class="text-xs border-gray-200 text-primary hover:border-primary hover:bg-primary/5"
+                title="Reposter cette mission"
+                @click="duplicateMission"
+            >
+                <ArrowPathIcon class="w-3.5 h-3.5 mr-1" /> Reposter
+            </Button>
+            <Button
                 v-if="!mission.has_answered"
                 size="sm"
                 :href="`/dashboard/missions/${mission.id}/apply`"
@@ -155,7 +165,7 @@
 
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { Mission } from '~/lib/types';
@@ -168,6 +178,15 @@ const props = defineProps<MissionCardProps>();
 
 const { getLogoUrl } = useInstitutions();
 const showFullDescription = ref(false);
+
+const user = useState<any>('user');
+const isOwner = computed(() => {
+    return user.value?.institution?.id && user.value.institution.id === props.mission.institution_id;
+});
+
+const duplicateMission = () => {
+    navigateTo(`/dashboard/institution/missions/create?duplicate_id=${props.mission.id}`);
+};
 
 const formatToDMY = (dateString: string) => {
     if (!dateString) return '';

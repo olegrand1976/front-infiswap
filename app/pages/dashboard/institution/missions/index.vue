@@ -408,6 +408,10 @@ const columns: ColumnDef<Mission>[] = [
                         }]
                     : []),
                 {
+                    label: 'Reposter cette mission',
+                    onClick: () => handleDuplicate(mission),
+                },
+                {
                     label: 'Supprimer',
                     confirm: true,
                     onClick: () => handleDelete(mission),
@@ -454,6 +458,10 @@ watch(
 
 const handleEdit = (mission: Mission) => {
     router.push(`/dashboard/institution/missions/${mission.id}`);
+};
+
+const handleDuplicate = (mission: Mission) => {
+    router.push(`/dashboard/institution/missions/create?duplicate_id=${mission.id}`);
 };
 
 const handleShowCandidacy = (mission: Mission) => {

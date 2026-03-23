@@ -270,6 +270,78 @@
                 </div>
 
                 <div
+                    v-if="!mission?.id && !formData.is_long_term"
+                    class="space-y-4"
+                >
+                    <div class="flex items-center space-x-2 mt-2">
+                        <Checkbox
+                            id="is_recurring"
+                            v-model:checked="isRecurring"
+                        />
+                        <label
+                            for="is_recurring"
+                            class="text-sm font-medium leading-none text-gray-700 select-none cursor-pointer flex items-center gap-1"
+                        >
+                            <ArrowPathIcon class="w-4 h-4 text-primary" />
+                            Répéter cette mission (récurrence)
+                        </label>
+                    </div>
+
+                    <div
+                        v-if="isRecurring"
+                        class="space-y-4 w-full bg-blue-50/30 rounded-md p-4 border border-blue-100 animate-in fade-in slide-in-from-top-2 duration-300"
+                    >
+                        <div class="space-y-2">
+                            <label class="text-xs font-medium text-gray-500">Jours de la semaine</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    v-for="day in daysOfWeek"
+                                    :key="day.value"
+                                    type="button"
+                                    class="w-9 h-9 rounded-full border flex items-center justify-center text-[10px] font-bold transition-all duration-200"
+                                    :class="selectedDays.includes(day.value) ? 'bg-primary text-white border-primary shadow-sm scale-110' : 'bg-white text-gray-500 border-gray-200 hover:border-primary hover:text-primary'"
+                                    @click="toggleDay(day.value)"
+                                >
+                                    {{ day.label }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500">Répéter toutes les</label>
+                                <div class="flex items-center gap-2">
+                                    <Input
+                                        v-model="recurrenceInterval"
+                                        type="number"
+                                        min="1"
+                                        max="12"
+                                        class="w-20 bg-white border-2 border-gray-300"
+                                    />
+                                    <span class="text-sm text-gray-600">semaine(s)</span>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-gray-500">Nombre d'occurrences total</label>
+                                <div class="flex items-center gap-2">
+                                    <Input
+                                        v-model="recurrenceCount"
+                                        type="number"
+                                        min="2"
+                                        max="24"
+                                        class="w-20 bg-white border-2 border-gray-300"
+                                    />
+                                    <span class="text-sm text-gray-600">fois</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-blue-600 italic">
+                            * {{ recurrenceCount }} missions distinctes seront créées, réparties sur les jours sélectionnés, espacées de {{ recurrenceInterval }} semaine(s).
+                        </p>
+                    </div>
+                </div>
+
+                <div
                     v-else
                     class="space-y-2"
                 >
@@ -527,6 +599,7 @@ import {
     BookmarkIcon,
     TrashIcon,
     UsersIcon,
+    ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
@@ -605,6 +678,32 @@ const commonDiplomas = [
     'Infirmier(e) spécialisé(e)',
     'Autre',
 ];
+
+const isRecurring = ref(false);
+const recurrenceCount = ref(4);
+const recurrenceInterval = ref(1);
+
+const daysOfWeek = [
+    { label: 'Lun', value: 1 },
+    { label: 'Mar', value: 2 },
+    { label: 'Mer', value: 3 },
+    { label: 'Jeu', value: 4 },
+    { label: 'Ven', value: 5 },
+    { label: 'Sam', value: 6 },
+    { label: 'Dim', value: 0 },
+];
+const selectedDays = ref<number[]>([]);
+
+const toggleDay = (dayValue: number) => {
+    const index = selectedDays.value.indexOf(dayValue);
+    if (index > -1) {
+        selectedDays.value.splice(index, 1);
+    }
+    else {
+        selectedDays.value.push(dayValue);
+    }
+};
+
 
 await getAll(1, 50);
 await getAllTemplates();
@@ -699,6 +798,20 @@ const formData = reactive({
     is_long_term: props.mission?.is_long_term || false,
     availabilities: props.mission?.availabilities ? [...props.mission.availabilities] : [],
     pool_id: props.mission?.pool_id || undefined,
+});
+
+watch(() => formData.start_date, (newDate) => {
+    if (newDate && isRecurring.value && selectedDays.value.length === 0) {
+        const date = new Date(newDate);
+        selectedDays.value = [date.getDay()];
+    }
+}, { immediate: true });
+
+watch(isRecurring, (newVal) => {
+    if (newVal && formData.start_date && selectedDays.value.length === 0) {
+        const date = new Date(formData.start_date);
+        selectedDays.value = [date.getDay()];
+    }
 });
 
 const getInitialDiploma = () => {
@@ -1055,18 +1168,67 @@ const { submit, inProgress } = useSubmit(async () => {
 
         if (formData.id == undefined) {
             formData.institution_id = user.value.institution.id;
-            const response = await create(formData);
 
-            if (response?.data && typeof window !== 'undefined' && window.localStorage) {
-                localStorage.setItem('lastMission', JSON.stringify({
-                    service_id: formData.service_id,
-                    time_start_at: formData.time_start_at,
-                    time_end_at: formData.time_end_at,
-                }));
+            if (isRecurring.value && !formData.is_long_term) {
+                const baseStartDate = new Date(formData.start_date);
+                const targetDays = selectedDays.value.length > 0 ? selectedDays.value : [baseStartDate.getDay()];
+
+                let missionsCreated = 0;
+                let currentWeekOffset = 0;
+
+                while (missionsCreated < recurrenceCount.value) {
+                    if (currentWeekOffset % recurrenceInterval.value === 0) {
+                        const sortedDays = [...targetDays].sort((a, b) => {
+                            const dayA = a === 0 ? 7 : a;
+                            const dayB = b === 0 ? 7 : b;
+                            return dayA - dayB;
+                        });
+
+                        for (const day of sortedDays) {
+                            const occDate = new Date(baseStartDate);
+                            const currentDayIdx = occDate.getDay();
+                            
+                            const diff = day - currentDayIdx;
+                            occDate.setDate(occDate.getDate() + diff + (currentWeekOffset * 7));
+
+                            if (occDate >= baseStartDate) {
+                                if (missionsCreated < recurrenceCount.value) {
+                                    const payload = {
+                                        ...formData,
+                                        start_date: occDate.toISOString().split('T')[0],
+                                    };
+                                    
+                                    if (formData.end_date) {
+                                        const baseEndDate = new Date(formData.end_date);
+                                        const durationMs = baseEndDate.getTime() - baseStartDate.getTime();
+                                        const occEndDate = new Date(occDate.getTime() + durationMs);
+                                        payload.end_date = occEndDate.toISOString().split('T')[0];
+                                    }
+                                    
+                                    await create(payload);
+                                    missionsCreated++;
+                                }
+                            }
+                        }
+                    }
+                    currentWeekOffset++;
+                    if (currentWeekOffset > 500) break;
+                }
+            }
+            else {
+                const response = await create(formData);
+
+                if (response?.data && typeof window !== 'undefined' && window.localStorage) {
+                    localStorage.setItem('lastMission', JSON.stringify({
+                        service_id: formData.service_id,
+                        time_start_at: formData.time_start_at,
+                        time_end_at: formData.time_end_at,
+                    }));
+                }
             }
 
             $toast({
-                description: 'Mission créée avec succès',
+                description: isRecurring.value ? 'Missions créées avec succès' : 'Mission créée avec succès',
             });
 
             if (saveAsTemplate.value) {

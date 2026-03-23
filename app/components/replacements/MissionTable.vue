@@ -140,6 +140,14 @@
                 >
                     <EyeIcon class="h-6 mt-1" />
                 </Button>
+                <Button
+                    v-if="isOwner"
+                    class="inline-block rounded bg-[#E4E7F4] text-primary hover:bg-primary hover:text-white mx-auto justify-center items-center ml-2"
+                    title="Reposter cette mission"
+                    @click="duplicateMission"
+                >
+                    <ArrowPathIcon class="h-6 mt-1" />
+                </Button>
             </TableCell>
 
             <span class="bg-white h-[0.01em]" />
@@ -175,6 +183,13 @@
                 >
                     <EyeIcon class="h-6 mt-1" />
                 </Button>
+                <Button
+                    v-if="isOwner"
+                    class="inline-block rounded bg-[#E4E7F4] text-primary hover:bg-primary hover:text-white justify-center items-center ml-2"
+                    @click="duplicateMission"
+                >
+                    <ArrowPathIcon class="h-6 mt-1" />
+                </Button>
             </TableCell>
 
             <span class="bg-white h-[0.01em]" />
@@ -184,7 +199,7 @@
 
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { MergedItem } from '~/composables/useMergedSearch';
@@ -217,6 +232,15 @@ const timePeriods = computed(() => {
 const hasMorning = computed(() => timePeriods.value.has('morning'));
 const hasAfternoon = computed(() => timePeriods.value.has('afternoon'));
 const hasEvening = computed(() => timePeriods.value.has('evening'));
+
+const user = useState<any>('user');
+const isOwner = computed(() => {
+    return user.value?.institution?.id && user.value.institution.id === props.mission.institution_id;
+});
+
+const duplicateMission = () => {
+    navigateTo(`/dashboard/institution/missions/create?duplicate_id=${props.mission.id}`);
+};
 
 const institutionLogoUrl = computed(() => {
     const logo = (props.mission as any).institution?.logo || (props.mission as any).institution?.profil_url;
