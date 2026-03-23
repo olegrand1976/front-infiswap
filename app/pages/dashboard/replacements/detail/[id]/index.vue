@@ -377,7 +377,7 @@ const goBack = () => {
         window.history.back();
     }
     else {
-        navigateTo('/dashboard/replacements');
+        navigateTo(isInstitution.value ? '/dashboard/institution/replacements' : '/dashboard/replacements');
     }
 };
 

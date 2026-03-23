@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if (isInstitution.value) {
-        if (to.path === '/dashboard' || (to.path.startsWith('/dashboard') && !to.path.startsWith('/dashboard/institution'))) {
+        if (to.path === '/dashboard' || (to.path.startsWith('/dashboard') && !to.path.startsWith('/dashboard/institution') && !to.path.startsWith('/dashboard/replacements/detail/'))) {
             if (user.value.validate_at) {
                 return navigateTo('/dashboard/institution', { replace: true });
             }
