@@ -373,9 +373,9 @@ export const sendResponse = () => {
                 method: 'POST',
                 body: formData,
             });
-            isDisabled.value = true;
+            isDisabled.value = false;
             toast.success('Réponse envoyée avec succès');
-            return true; // Succès
+            return true;
         }
         catch (e) {
             isDisabled.value = false;
