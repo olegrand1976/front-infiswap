@@ -438,14 +438,14 @@
 
                 <Separator class="my-2" />
 
-                <div class="flex justify-between items-center">
+                <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
                     <p class="text-xs text-gray-400">
                         * Champs obligatoires
                     </p>
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center gap-4">
                         <label
                             v-if="!mission?.id && canSaveAsTemplate"
-                            class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+                            class=" flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
                         >
                             <Checkbox
                                 id="save-as-template"
