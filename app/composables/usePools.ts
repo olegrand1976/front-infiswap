@@ -22,7 +22,7 @@ export const usePools = () => {
         loading.value = true;
         try {
             const response = await $apifetch('/api/institution/pools');
-            pools.value = response.data ?? response;
+            pools.value = response.data ? response : { data: response };
             return response;
         } catch (error) {
             console.error('Error fetching pools:', error);

@@ -109,10 +109,21 @@
                                 class="bg-gray-100 text-xs pt-5"
                             >
                                 <div
-                                    class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis"
+                                    class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap text-ellipsis"
                                     @click="emit('show-info-user', r.user)"
                                 >
-                                    {{ r.user.full_name }}
+                                    <span>{{ r.user.full_name }}</span>
+                                    <div
+                                        v-if="r.user.is_favorited"
+                                        class="flex items-center gap-0.5 shrink-0"
+                                        title="Infirmier favori"
+                                    >
+                                        <StarIconSolid class="w-3 h-3 text-yellow-400" />
+                                        <span
+                                            v-if="r.user.stars > 0"
+                                            class="text-[10px] text-gray-400 font-medium"
+                                        >({{ r.user.stars }})</span>
+                                    </div>
                                 </div>
                             </TableCell>
 
@@ -579,6 +590,7 @@
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/unified-signatures */
 import { CheckCircleIcon, EyeIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/vue/24/solid';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

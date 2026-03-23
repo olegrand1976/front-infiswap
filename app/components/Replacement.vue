@@ -758,6 +758,8 @@ const formatReplacementForCard = (r: any) => ({
     institution_id: r.institution_id,
     replacement_type: r.replacement_type,
     creator_name: r.institution_id ? null : (r.user?.full_name || r.user?.name),
+    stars: r.user?.stars || 0,
+    is_favorited: r.user?.is_favorited || false,
     institution: r.institution || r.user?.institution || null,
     periods: r.periods?.map((p: any) => ({ start_date: p.start_date, end_date: p.end_date })) || [],
     cities: typeof r.cities === 'string' ? JSON.parse(r.cities) : r.cities || [],

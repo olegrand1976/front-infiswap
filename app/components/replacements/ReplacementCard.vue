@@ -23,12 +23,29 @@
                         {{ institutionName }}
                     </span>
                 </div>
-                <h2
+                <div
                     v-else-if="replacement.creator_name"
-                    class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors"
+                    class="flex flex-col"
                 >
-                    {{ replacement.creator_name }}
-                </h2>
+                    <h2
+                        class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors flex items-center gap-2"
+                    >
+                        {{ replacement.creator_name }}
+                        <div
+                            v-if="replacement.is_favorited"
+                            class="flex items-center gap-0.5"
+                            title="Infirmier favori"
+                        >
+                            <StarIcon
+                                class="w-4 h-4 text-yellow-400"
+                            />
+                            <span
+                                v-if="replacement.stars > 0"
+                                class="text-[10px] text-gray-400 font-medium"
+                            >({{ replacement.stars }})</span>
+                        </div>
+                    </h2>
+                </div>
             </div>
 
             <span
@@ -311,7 +328,8 @@
 
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon, StarIcon as StarIconOutline } from '@heroicons/vue/24/outline';
+import { StarIcon } from '@heroicons/vue/24/solid';
 import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -354,6 +372,8 @@ interface Replacement {
     type?: string;
     details?: Record<string, unknown>[];
     replaced_by?: number | null;
+    stars?: number;
+    is_favorited?: boolean;
 }
 
 const props = defineProps<{

@@ -57,7 +57,6 @@
             </div>
         </div>
 
-        <!-- Create/Edit Modal -->
         <Dialog v-model:open="showCreateModal">
             <DialogContent class="max-w-md">
                 <DialogHeader>
@@ -85,7 +84,6 @@
             </DialogContent>
         </Dialog>
 
-        <!-- Pool Members Modal -->
         <Dialog v-model:open="showMembersModal">
             <DialogContent class="max-w-3xl max-h-[90vh] flex flex-col">
                 <DialogHeader>
@@ -96,7 +94,6 @@
                 </DialogHeader>
 
                 <div class="mt-4 space-y-6 overflow-y-auto pr-2">
-                    <!-- Add member section -->
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <h4 class="text-sm font-semibold text-gray-900 mb-3">Ajouter un infirmier au pool</h4>
                         <div class="flex gap-2">
@@ -133,7 +130,6 @@
                         </div>
                     </div>
 
-                    <!-- Members list -->
                     <div>
                         <h4 class="text-sm font-semibold text-gray-900 mb-3">Membres actuels ({{ selectedPool?.users?.length || 0 }})</h4>
                         <div v-if="!selectedPool?.users?.length" class="text-center py-8 text-gray-500 italic border rounded-lg">
@@ -177,7 +173,6 @@
             </DialogContent>
         </Dialog>
 
-        <!-- Delete confirmation -->
         <Dialog v-model:open="showDeleteDialog">
             <DialogContent class="max-w-md">
                 <DialogHeader>
@@ -217,7 +212,6 @@ import {
     DialogTitle 
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { InputIcon } from '@/components/ui/input-icon';
 import { Textarea } from '@/components/ui/textarea';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { debounce } from '~/lib/utils';
@@ -225,7 +219,6 @@ import { debounce } from '~/lib/utils';
 const { pools, loading, getAll, getById, create, update, remove, addUsers, removeUsers, updateStars } = usePools();
 const { $apifetch } = useNuxtApp();
 
-// State
 const showCreateModal = ref(false);
 const showMembersModal = ref(false);
 const showDeleteDialog = ref(false);
@@ -244,9 +237,6 @@ const searchQuery = ref('');
 const isSearching = ref(false);
 const searchResults = ref<any[]>([]);
 
-onMounted(async () => {
-    await getAll();
-});
 
 const closeModal = () => {
     showCreateModal.value = false;
@@ -258,7 +248,6 @@ const closeModal = () => {
 const openPool = async (p: any) => {
     await getById(p.id);
     selectedPool.value = pools.value.data.find(item => item.id === p.id) || p;
-    // For show, we need the loaded version with users
     const res = await getById(p.id);
     selectedPool.value = res.data;
     showMembersModal.value = true;
@@ -276,8 +265,8 @@ const savePool = async () => {
             await create(poolForm);
             toast.success('Pool créé');
         }
-        await getAll();
         closeModal();
+        await getAll();
     } catch (err) {
         toast.error('Une erreur est survenue');
     } finally {
@@ -315,14 +304,12 @@ const searchUsers = debounce(async () => {
     
     isSearching.value = true;
     try {
-        // We look for nurses (medical roles)
         const data = await $apifetch('api/users/search', {
             params: { 
                 query: searchQuery.value,
                 roles: 'nurse,midwife,caregiver'
             },
         });
-        // Filter out already added
         const currentIds = selectedPool.value?.users?.map((u: any) => u.id) || [];
         searchResults.value = data.filter((u: any) => !currentIds.includes(u.id));
     } catch (err) {
@@ -336,12 +323,10 @@ const addNurse = async (user: any) => {
     try {
         await addUsers(selectedPool.value.id, [user.id]);
         toast.success(`${user.firstname} ajouté au pool`);
-        // Refresh local data
         const res = await getById(selectedPool.value.id);
         selectedPool.value = res.data;
         searchQuery.value = '';
         searchResults.value = [];
-        // Update counts in list
         await getAll();
     } catch (err) {
         toast.error('Erreur lors de l\'ajout');
@@ -352,10 +337,8 @@ const removeNurse = async (userId: number) => {
     try {
         await removeUsers(selectedPool.value.id, [userId]);
         toast.success('Utilisateur retiré');
-        // Refresh local data
         const res = await getById(selectedPool.value.id);
         selectedPool.value = res.data;
-        // Update counts in list
         await getAll();
     } catch (err) {
         toast.error('Erreur lors du retrait');
@@ -373,7 +356,6 @@ const sortedMembers = computed(() => {
 });
 
 const setStars = async (member: any, count: number) => {
-    // If clicking the same number of stars, we can toggle to 0 or leave it
     const newStars = member.pivot?.stars === count ? 0 : count;
     
     try {
@@ -388,4 +370,8 @@ const setStars = async (member: any, count: number) => {
         toast.error('Erreur lors de la notation');
     }
 };
+
+onMounted(() => {
+    getAll();
+});
 </script>
