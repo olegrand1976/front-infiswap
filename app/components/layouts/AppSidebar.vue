@@ -236,7 +236,7 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, isInstitution, logout } = useAuth();
+const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, isInstitution, isInstitutionAdmin, logout } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -399,6 +399,12 @@ const institutionNavigationItems: NavigationItem[] = [
         label: 'Services',
         route: '/dashboard/institution/services',
         icon: BriefcaseIcon,
+    },
+    {
+        label: 'Membres',
+        route: '/dashboard/institution/members',
+        icon: UsersIcon,
+        visible: isInstitutionAdmin.value,
     },
     {
         label: 'Missions',

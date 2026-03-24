@@ -28,6 +28,14 @@ export const useAuth = () => {
     const isInstitution = computed((): boolean => {
         return user.value?.type === 'institution';
     });
+    const isInstitutionAdmin = computed(() => {
+        if (!isInstitution.value || !user.value) return false;
+        return (user.value.institution_roles || []).some(p => p.role_name === 'administrator');
+    });
+    const isInstitutionManager = computed(() => {
+        if (!isInstitution.value || !user.value) return false;
+        return (user.value.institution_roles || []).some(p => p.role_name === 'manager');
+    });
 
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
@@ -506,6 +514,8 @@ export const useAuth = () => {
         isSuperAdmin,
         isAdmin,
         isInstitution,
+        isInstitutionAdmin,
+        isInstitutionManager,
         isCommunityManager,
         isSaleRepresentative,
         isCollaborator,

@@ -326,3 +326,152 @@ export const useInstitutions = () => {
         updateStatus,
     };
 };
+
+export const useInstitutionMembers = () => {
+    const { $apifetch } = useNuxtApp();
+    const members = useState<any[]>('institutionMembers', () => []);
+    const roles = useState<any[]>('institutionRoles', () => []);
+    const loading = useState<boolean>('institutionMembersLoading', () => false);
+    const saving = useState<boolean>('institutionMembersSaving', () => false);
+
+    async function getMembers() {
+        try {
+            loading.value = true;
+            const response = await $apifetch('/api/institution/members');
+            members.value = response.data;
+            return response.data;
+        }
+        catch (error: any) {
+            console.error('Erreur lors du chargement des membres:', error);
+            throw error;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function getAvailableRoles() {
+        try {
+            const response = await $apifetch('/api/institution/members/roles');
+            roles.value = response.data;
+            return response.data;
+        }
+        catch (error: any) {
+            console.error('Erreur lors du chargement des rôles:', error);
+            throw error;
+        }
+    }
+
+    async function addMember(email: string, role: string, firstname?: string, lastname?: string, gender?: string) {
+        try {
+            saving.value = true;
+            const response = await $apifetch('/api/institution/members', {
+                method: 'POST',
+                body: { email, role, firstname, lastname, gender },
+            });
+            toast.success('Membre ajouté avec succès');
+            await getMembers();
+            return response;
+        }
+        catch (error: any) {
+            const message = error?.data?.message || 'Erreur lors de l\'ajout du membre';
+            toast.error(message);
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
+    async function updateMemberRole(userId: number | string, role: string) {
+        try {
+            saving.value = true;
+            const response = await $apifetch(`/api/institution/members/${userId}`, {
+                method: 'PUT',
+                body: { role },
+            });
+            toast.success('Rôle mis à jour');
+            const index = members.value.findIndex(m => m.id === userId);
+            if (index !== -1) {
+                members.value[index].institution_user_roles = [{ 
+                    role: { name: role } 
+                }];
+            }
+            return response;
+        }
+        catch (error: any) {
+            toast.error('Erreur lors de la mise à jour du rôle');
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
+    async function getMember(userId: number | string) {
+        try {
+            const response = await $apifetch(`/api/institution/members/${userId}`);
+            return response.data;
+        }
+        catch (error: any) {
+            toast.error('Erreur lors de la récupération du membre');
+            throw error;
+        }
+    }
+
+    async function updateMember(userId: number | string, data: any) {
+        try {
+            saving.value = true;
+            const response = await $apifetch(`/api/institution/members/${userId}`, {
+                method: 'PUT',
+                body: data,
+            });
+            toast.success('Membre mis à jour avec succès');
+            await getMembers();
+            return response;
+        }
+        catch (error: any) {
+            const message = error?.data?.message || 'Erreur lors de la mise à jour';
+            toast.error(message);
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
+    async function removeMember(userId: number) {
+        try {
+            saving.value = true;
+            const response = await $apifetch(`/api/institution/members/${userId}`, {
+                method: 'DELETE',
+            });
+            toast.success('Membre retiré');
+            
+            members.value = members.value.filter(m => m.id !== userId);
+            return response;
+        }
+        catch (error: any) {
+            const message = error?.data?.message || 'Erreur lors de la suppression';
+            toast.error(message);
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
+    return {
+        members,
+        roles,
+        loading,
+        saving,
+        getMembers,
+        getAvailableRoles,
+        addMember,
+        updateMemberRole,
+        removeMember,
+        getMember,
+        updateMember,
+    };
+};

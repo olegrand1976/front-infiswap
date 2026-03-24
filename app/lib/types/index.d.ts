@@ -11,6 +11,12 @@ type GroupRole = {
     created_at: string;
 };
 
+type InstitutionRole = {
+    institution_id: number;
+    role_id: number | null;
+    role_name: string | null;
+};
+
 type CrmUser = {
     id: number;
     user_id: number;
@@ -93,6 +99,7 @@ export type User = {
     contact_date?: string;
     contact_method?: string;
     group_roles?: GroupRole[];
+    institution_roles?: InstitutionRole[];
     crm?: CrmUser;
     last_product_modifications?: LastProductModifications[];
     product_activity_summary?: ProductActivitySummary[];
