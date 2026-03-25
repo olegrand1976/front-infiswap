@@ -187,7 +187,6 @@
                                 <span>mission{{ allMissions.length > 1 ? 's' : '' }}</span>
                             </div>
                         </div>
-                       
                     </h2>
                     <div
                         v-if="isCardMode"
@@ -293,7 +292,6 @@
                             @open-edit="openEditDialog"
                             @select-replacement="selectReplacement"
                         />
-
                     </template>
                 </div>
             </template>
@@ -318,7 +316,6 @@
                         @open-edit="openEditDialog"
                         @select-replacement="selectReplacement"
                     />
-
                 </template>
             </template>
 

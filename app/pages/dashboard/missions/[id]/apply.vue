@@ -41,13 +41,11 @@
                         </div>
                     </div>
 
-                    <!-- Details Body -->
                     <div class="p-5 sm:p-6 flex flex-col gap-6">
                         <p class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary/70">
                             Informations clés
                         </p>
 
-                        <!-- Période -->
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                 <CalendarIcon class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
@@ -69,7 +67,6 @@
                             </div>
                         </div>
 
-                        <!-- Horaires -->
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
                                 <ClockIcon class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
@@ -115,7 +112,6 @@
                             </div>
                         </div>
 
-                        <!-- Diplôme -->
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
                                 <AcademicCapIcon class="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
@@ -138,7 +134,6 @@
                 </div>
             </div>
 
-            <!-- Formulaire candidature -->
             <form
                 class="lg:col-span-7 flex flex-col h-full"
                 @submit.prevent="submit"

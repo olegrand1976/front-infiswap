@@ -4,26 +4,63 @@
             <BackButton
                 to="/login"
             />
-            <div class="w-1/2 bg-tertiary/30 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 pb-0 overflow-hidden flex flex-col">
-                <div class="flex-1 lg:hidden" />
-                <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-8 xl:mt-10 text-center px-6 lg:px-0">
-                    <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
-                    <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
-                </h1>
-                <div class="flex-1" />
-                <div class="rounded-2xl max-w-md mx-auto">
-                    <LayoutsAppImage
-                        src="/auth/Group_1171.png"
-                        class="relative z-20 flex justify-center mx-auto"
-                    />
-                </div>
-                <div class="absolute sm:top-1/2 sm:-translate-y-1/2 lg:top-1/3 lg:translate-y-0 lg:left-20 sm:left-12">
-                    <LayoutsAppImage
-                        src="/icons/plus.png"
-                        class="xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-16 md:h-16 sm:w-11 sm:h-11"
-                    />
-                </div>
-                <div class="absolute bottom-0 left-0 w-full h-20 bg-primary" />
+            <div
+                :class="cn(
+                    'w-1/2 flex flex-col relative h-screen overflow-hidden',
+                )"
+            >
+                <transition
+                    name="fade"
+                    mode="out-in"
+                >
+                    <div
+                        v-if="formData.accountType === 'standard'"
+                        key="standard"
+                        :class="cn(
+                            'bg-tertiary/30 flex-1 flex flex-col pt-8 sm:pt-10 lg:pt-12 xl:pt-14 relative',
+                        )"
+                    >
+                        <div class="flex-1 lg:hidden" />
+                        <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-8 xl:mt-10 text-center px-6 lg:px-0 text-foreground/90">
+                            <span>Bienvenue sur <span class="font-bold">InfiSwap</span>, la plateforme pour vos remplacements!</span>
+                            <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
+                        </h1>
+                        <div class="flex-1" />
+                        <div class="rounded-2xl max-w-md mx-auto">
+                            <LayoutsAppImage
+                                src="/auth/Group_1171.png"
+                                class="relative z-20 flex justify-center mx-auto"
+                            />
+                        </div>
+                        <div class="absolute sm:top-1/2 sm:-translate-y-1/2 lg:top-1/3 lg:translate-y-0 lg:left-20 sm:left-12">
+                            <LayoutsAppImage
+                                src="/icons/plus.png"
+                                class="xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-16 md:h-16 sm:w-11 sm:h-11"
+                            />
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-20 bg-primary" />
+                    </div>
+                    <div
+                        v-else
+                        key="institution"
+                        ref="leftPanelScroll"
+                        class="bg-primary shadow-2xl flex-1 overflow-y-auto custom-scrollbar relative"
+                        @scroll="handleLeftPanelScroll"
+                    >
+                        <InstitutionPricing />
+                    </div>
+                </transition>
+                <!-- Scroll Indicator Arrow (Fixed overlay) -->
+                <transition name="fade">
+                    <div
+                        v-if="formData.accountType === 'institution' && !hasScrolledToBottom"
+                        class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer animate-bounce text-white drop-shadow-xl z-30 group"
+                        @click="scrollLeftPanelDown"
+                    >
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-black/20 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 group-hover:bg-black/40 transition-colors">Découvrir nos avantages</span>
+                        <CircleChevronDown class="size-8" />
+                    </div>
+                </transition>
             </div>
 
             <div class="w-1/2 bg-white overflow-y-auto overflow-x-hidden flex flex-col items-center relative py-8 sm:py-10 lg:py-12 xl:py-14">
@@ -610,25 +647,53 @@
             </div>
         </div>
 
-        <!-- Mobile View -->
-        <div class="sm:hidden min-h-screen w-screen flex flex-col relative overflow-x-hidden bg-white">
+        <div
+            :class="cn(
+                'sm:hidden min-h-screen w-screen flex flex-col relative overflow-x-hidden transition-colors duration-500',
+                formData.accountType === 'institution' ? 'bg-primary institution-mode-mobile' : 'bg-white'
+            )"
+        >
             <LayoutsHeaderMobile />
             <BackButton to="/login" />
 
-            <div class="flex-grow flex flex-col items-center px-6 py-10 pb-20 overflow-y-auto">
-                <h1 class="mt-8 mb-8 text-sm text-center">
-                    <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
-                    <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
-                </h1>
+            <div class="grow flex flex-col items-center px-6 py-10 pb-20 overflow-y-auto">
+                <div v-if="formData.accountType === 'standard'">
+                    <h1 class="mt-8 mb-8 text-sm text-center">
+                        <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
+                        <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
+                    </h1>
+                </div>
+                <NuxtLink
+                    v-else
+                    to="/institution/pricing"
+                    class="w-full mt-12 mb-8 bg-primary rounded-3xl p-6 shadow-xl flex items-center justify-between group overflow-hidden relative"
+                >
+                    <div class="z-10">
+                        <h3 class="text-white font-bold text-lg mb-1 leading-tight">Infiswap Institutional</h3>
+                        <p class="text-white/80 text-sm">Reprenez le contrôle sur vos coûts RH</p>
+                        <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
+                             Découvrir les avantages
+                             <ArrowRightIcon class="size-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </div>
+                    <div class="absolute -right-4 -bottom-4 opacity-20">
+                         <BuildingOffice2Icon class="size-24 text-white rotate-12" />
+                    </div>
+                </NuxtLink>
 
                 <form
-                    class="grid gap-4"
+                    class="grid gap-4 transition-all duration-00"
                     autocomplete="off"
                     @submit.prevent="submit"
                 >
                     <div class="space-y-6">
                         <div>
-                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
+                            <h2
+                                :class="cn(
+                                    'mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto mb-3 sm:mb-4 transition-colors',
+                                    formData.accountType === 'institution' ? 'text-white' : 'text-gray-500'
+                                )"
+                            >
                                 Quel type de compte souhaitez-vous choisir ?
                             </h2>
                             <div class="grid grid-cols-2 gap-4">
@@ -642,37 +707,48 @@
                                     @click="formData.accountType = account.value"
                                 >
                                     <div
-                                        class="border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300"
-                                        :class="formData.accountType === account.value
-                                            ? 'border-primary bg-primary/5 shadow-lg'
-                                            : 'border-gray-300 hover:border-gray-400'"
+                                        :class="cn(
+                                            'border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm',
+                                            formData.accountType === account.value
+                                                ? (formData.accountType === 'institution' ? 'border-white bg-white/20 shadow-xl scale-105' : 'border-primary bg-primary/5 shadow-lg')
+                                                : (formData.accountType === 'institution' ? 'border-white/30 bg-white/5 hover:border-white/50' : 'border-gray-300 hover:border-gray-400')
+                                        )"
                                     >
                                         <div class="relative w-full">
                                             <component
                                                 :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
-                                                class="w-10 h-10 mx-auto mb-2"
-                                                :class="formData.accountType === account.value
-                                                    ? 'text-primary'
-                                                    : 'text-gray-400'"
+                                                :class="cn(
+                                                    'w-10 h-10 mx-auto mb-2 transition-colors duration-300',
+                                                    formData.accountType === account.value
+                                                        ? (formData.accountType === 'institution' ? 'text-white' : 'text-primary')
+                                                        : (formData.accountType === 'institution' ? 'text-white/60' : 'text-gray-400')
+                                                )"
                                             />
                                             <div
                                                 v-if="formData.accountType === account.value"
-                                                class="absolute -top-1 -right-1 bg-primary rounded-full p-1 transition-all duration-300"
+                                                class="absolute -top-1 -right-1 rounded-full p-1 transition-all duration-300"
+                                                :class="formData.accountType === 'institution' ? 'bg-white shadow-lg' : 'bg-primary'"
                                             >
-                                                <CheckIcon class="size-3 text-white" />
+                                                <CheckIcon 
+                                                    class="size-3"
+                                                    :class="formData.accountType === 'institution' ? 'text-primary' : 'text-white'"
+                                                />
                                             </div>
                                         </div>
                                         <span
-                                            class="text-sm font-medium text-center"
-                                            :class="formData.accountType === account.value
-                                                ? 'text-primary'
-                                                : 'text-gray-700'"
+                                            class="text-sm font-medium text-center transition-colors duration-300"
+                                            :class="[
+                                                formData.accountType === account.value
+                                                    ? (formData.accountType === 'institution' ? 'text-white' : 'text-primary')
+                                                    : (formData.accountType === 'institution' ? 'text-white/80' : 'text-gray-700')
+                                            ]"
                                         >
                                             {{ account.label }}
                                         </span>
                                         <span
                                             v-if="account.description"
-                                            class="text-xs mt-1 text-gray-500 text-center"
+                                            class="text-[10px] mt-1 text-center transition-opacity"
+                                            :class="formData.accountType === 'institution' ? 'text-white/60' : 'text-gray-500'"
                                         >
                                             {{ account.description }}
                                         </span>
@@ -1114,7 +1190,8 @@
                             </div>
                         </div>
 
-                        <div
+                    </div>
+                    <div
                             v-if="formData.accountType != 'institution'"
                             class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
                         >
@@ -1144,38 +1221,36 @@
                                 </transition>
                             </div>
                         </div>
+                    <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                        <label class="flex items-start cursor-pointer">
+                            <Checkbox
+                                :checked="charteAccepted"
+                                class="mt-1"
+                                @update:checked="charteAccepted = $event"
+                            />
+                            <span class="text-sm ml-2 font-medium">
+                                J'accepte la
+                                <NuxtLink
+                                    to="/legal-chart"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold hover:text-primary/80"
+                                >
+                                    charte de bonne conduite
+                                </NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                    </div>
 
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
-                            <label class="flex items-start cursor-pointer">
-                                <Checkbox
-                                    :checked="charteAccepted"
-                                    class="mt-1"
-                                    @update:checked="charteAccepted = $event"
-                                />
-                                <span class="text-sm ml-2 font-medium">
-                                    J'accepte la
-                                    <NuxtLink
-                                        to="/legal-chart"
-                                        target="_blank"
-                                        class="text-primary underline font-semibold hover:text-primary/80"
-                                    >
-                                        charte de bonne conduite
-                                    </NuxtLink>
-                                    <span class="text-red-500">*</span>
-                                </span>
-                            </label>
-                        </div>
-
-                        <div class="flex justify-center items-center">
-                            <Button
-                                class="w-[70%] text-base font-bold"
-                                type="submit"
-                                :in-progress="inProgress"
-                                :disabled="!charteAccepted"
-                            >
-                                S'inscrire
-                            </Button>
-                        </div>
+                    <div class="flex justify-center items-center">
+                        <Button
+                            class="w-[70%] text-base font-bold"
+                            type="submit"
+                            :in-progress="inProgress"
+                            :disabled="!charteAccepted"
+                        >
+                            S'inscrire
+                        </Button>
                     </div>
                 </form>
 
@@ -1207,9 +1282,12 @@ import {
     MapPinIcon,
     InboxArrowDownIcon,
     UserGroupIcon,
+    ArrowRightIcon,
     CheckIcon,
 } from '@heroicons/vue/24/solid';
 
+import { CircleChevronDown } from 'lucide-vue-next';
+import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
@@ -1223,6 +1301,24 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { LANGUAGES } from '~/lib/constants';
+import { cn } from '~/lib/utils';
+
+const leftPanelScroll = ref<HTMLElement | null>(null);
+const hasScrolledToBottom = ref(false);
+
+const handleLeftPanelScroll = (e: Event) => {
+    const target = e.target as HTMLElement;
+    hasScrolledToBottom.value = target.scrollTop + target.clientHeight >= target.scrollHeight - 50;
+};
+
+const scrollLeftPanelDown = () => {
+    if (leftPanelScroll.value) {
+        leftPanelScroll.value.scrollBy({
+            top: 400,
+            behavior: 'smooth',
+        });
+    }
+};
 
 const accountOptions = [
     {
@@ -1360,6 +1456,16 @@ const formData = reactive({
     groupName: '',
 });
 
+watch(
+    () => formData.accountType,
+    () => {
+        if (leftPanelScroll.value) {
+            leftPanelScroll.value.scrollTop = 0;
+            hasScrolledToBottom.value = false;
+        }
+    },
+);
+
 const identifierLabel = computed(() => {
     const hasFrance = formData.address.workingAt.includes('France');
     const hasBelgique = formData.address.workingAt.includes('Belgique');
@@ -1410,3 +1516,61 @@ useHead({
     ],
 });
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 640px) {
+  .institution-mode-mobile h2,
+  .institution-mode-mobile h3,
+  .institution-mode-mobile p,
+  .institution-mode-mobile span:not(.text-primary) {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+  
+  .institution-mode-mobile .text-gray-500,
+  .institution-mode-mobile .text-gray-700,
+  .institution-mode-mobile .text-gray-400 {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .institution-mode-mobile input,
+  .institution-mode-mobile select,
+  .institution-mode-mobile [role="combobox"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    backdrop-filter: blur(8px);
+  }
+
+  .institution-mode-mobile input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+  }
+
+  .institution-mode-mobile .text-primary {
+    color: white !important;
+  }
+}
+</style>
