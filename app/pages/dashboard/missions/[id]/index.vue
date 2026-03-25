@@ -73,6 +73,12 @@
                                     <p class="text-sm font-semibold text-gray-800 mt-0.5">
                                         {{ formatToDMY(mission.start_date) }} → {{ formatToDMY(mission.end_date) }}
                                     </p>
+                                    <p
+                                        v-if="mission.days_per_month"
+                                        class="text-sm font-semibold text-primary mt-1"
+                                    >
+                                        {{ mission.days_per_month }} jours / mois
+                                    </p>
                                 </div>
                             </div>
 
@@ -82,7 +88,7 @@
                                 <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
                                     <ClockIcon class="w-4 h-4 text-gray-500" />
                                 </div>
-                                <div>
+                                <div class="w-full">
                                     <p class="text-[11px] text-gray-400 font-medium">
                                         {{ mission.is_long_term ? 'Disponibilités (long terme)' : 'Horaires' }}
                                     </p>
@@ -93,14 +99,36 @@
                                         <div
                                             v-for="(avail, idx) in mission.availabilities"
                                             :key="idx"
-                                            class="text-sm font-semibold text-gray-800 bg-gray-50 border border-gray-100 rounded px-2.5 py-1 w-fit"
+                                            class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm font-semibold text-gray-800 bg-gray-50 border border-gray-100 rounded px-2.5 py-1.5 w-fit"
                                         >
-                                            {{ avail.day }} : {{ formatTime(avail.start_time) }} – {{ formatTime(avail.end_time) }}
+                                            <span class="w-16">{{ avail.day }} :</span>
+                                            <div class="flex flex-wrap gap-x-4 gap-y-1">
+                                                <span v-if="avail.morning_start_at">Matin : {{ formatTime(avail.morning_start_at) }} – {{ formatTime(avail.morning_end_at) }}</span>
+                                                <span v-if="avail.afternoon_start_at">A-M : {{ formatTime(avail.afternoon_start_at) }} – {{ formatTime(avail.afternoon_end_at) }}</span>
+                                                <span v-if="!avail.morning_start_at && !avail.afternoon_start_at && avail.start_time">{{ formatTime(avail.start_time) }} – {{ formatTime(avail.end_time) }}</span>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div
+                                        v-else-if="mission.morning_start_at || mission.afternoon_start_at"
+                                        class="mt-1.5 flex flex-col gap-1"
+                                    >
+                                        <p
+                                            v-if="mission.morning_start_at && mission.morning_end_at"
+                                            class="text-sm font-semibold text-gray-800"
+                                        >
+                                            Matin : {{ formatTime(mission.morning_start_at) }} <span class="mx-0.5 text-gray-400">→</span> {{ formatTime(mission.morning_end_at) }}
+                                        </p>
+                                        <p
+                                            v-if="mission.afternoon_start_at && mission.afternoon_end_at"
+                                            class="text-sm font-semibold text-gray-800"
+                                        >
+                                            Après-midi : {{ formatTime(mission.afternoon_start_at) }} <span class="mx-0.5 text-gray-400">→</span> {{ formatTime(mission.afternoon_end_at) }}
+                                        </p>
                                     </div>
                                     <p
                                         v-else
-                                        class="text-sm font-semibold text-gray-800 mt-0.5"
+                                        class="text-sm font-semibold text-gray-800 mt-1"
                                     >
                                         {{ mission.time_start_at ? `${formatTime(mission.time_start_at)} – ${formatTime(mission.time_end_at ?? '')}` : 'Non défini' }}
                                     </p>

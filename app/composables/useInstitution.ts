@@ -393,8 +393,8 @@ export const useInstitutionMembers = () => {
             toast.success('Rôle mis à jour');
             const index = members.value.findIndex(m => m.id === userId);
             if (index !== -1) {
-                members.value[index].institution_user_roles = [{ 
-                    role: { name: role } 
+                members.value[index].institution_user_roles = [{
+                    role: { name: role },
                 }];
             }
             return response;
@@ -447,7 +447,7 @@ export const useInstitutionMembers = () => {
                 method: 'DELETE',
             });
             toast.success('Membre retiré');
-            
+
             members.value = members.value.filter(m => m.id !== userId);
             return response;
         }

@@ -5,7 +5,7 @@
             :count="members.length"
         >
             <template #action>
-                <Button 
+                <Button
                     as-child
                     href="/dashboard/institution/members/create"
                     class="rounded-md"
@@ -17,14 +17,21 @@
         </DashboardAdminPageHeader>
 
         <DashboardAdminPageContent class="flex flex-col min-h-[500px]">
-            <div v-if="loading" class="flex flex-col gap-6 justify-center items-center flex-1 text-center">
+            <div
+                v-if="loading"
+                class="flex flex-col gap-6 justify-center items-center flex-1 text-center"
+            >
                 <div class="relative">
-                    <div class="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
-                    <div class="absolute top-0 w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <div class="w-16 h-16 border-4 border-primary/20 rounded-full" />
+                    <div class="absolute top-0 w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
                 <div class="space-y-2">
-                    <p class="text-muted-foreground animate-pulse text-xl font-semibold italic">Récupération des membres...</p>
-                    <p class="text-xs text-muted-foreground/60 uppercase tracking-widest">Veuillez patienter quelques instants</p>
+                    <p class="text-muted-foreground animate-pulse text-xl font-semibold italic">
+                        Récupération des membres...
+                    </p>
+                    <p class="text-xs text-muted-foreground/60 uppercase tracking-widest">
+                        Veuillez patienter quelques instants
+                    </p>
                 </div>
             </div>
             <DataTable
@@ -35,7 +42,10 @@
             />
         </DashboardAdminPageContent>
 
-        <Dialog :open="isDeleteModalOpen" @update:open="isDeleteModalOpen = $event">
+        <Dialog
+            :open="isDeleteModalOpen"
+            @update:open="isDeleteModalOpen = $event"
+        >
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Retirer le membre</DialogTitle>
@@ -44,8 +54,19 @@
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant="outline" @click="isDeleteModalOpen = false">Annuler</Button>
-                    <Button variant="destructive" :in-progress="saving" @click="confirmDelete">Retirer</Button>
+                    <Button
+                        variant="outline"
+                        @click="isDeleteModalOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        :in-progress="saving"
+                        @click="confirmDelete"
+                    >
+                        Retirer
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -54,6 +75,7 @@
 
 <script lang="ts" setup>
 import { PlusIcon } from '@heroicons/vue/24/outline';
+import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -71,16 +93,16 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
-import type { ColumnDef } from '@tanstack/vue-table';
-const { 
-    members, 
-    roles, 
-    loading, 
-    saving, 
-    getMembers, 
-    getAvailableRoles, 
-    updateMemberRole, 
-    removeMember 
+
+const {
+    members,
+    roles,
+    loading,
+    saving,
+    getMembers,
+    getAvailableRoles,
+    updateMemberRole,
+    removeMember,
 } = useInstitutionMembers();
 
 useHead({ title: 'Membres' });
@@ -100,7 +122,6 @@ onMounted(async () => {
     ]);
 });
 
-
 const handleDeleteClick = (member: any) => {
     memberToDelete.value = member;
     isDeleteModalOpen.value = true;
@@ -112,14 +133,16 @@ const confirmDelete = async () => {
             await removeMember(memberToDelete.value.id);
             isDeleteModalOpen.value = false;
             memberToDelete.value = null;
-        } catch (e) {}
+        }
+        catch (e) {}
     }
 };
 
 const handleRoleChange = async (member: any, newRole: string) => {
     try {
         await updateMemberRole(member.id, newRole);
-    } catch (e) {}
+    }
+    catch (e) {}
 };
 
 const columns: ColumnDef<any>[] = [
@@ -141,19 +164,19 @@ const columns: ColumnDef<any>[] = [
         cell: ({ row }) => {
             const member = row.original;
             const currentRole = member.institution_user_roles?.[0]?.role?.name || '';
-            
+
             return h('div', { class: 'ml-4' }, [
                 h(Select, {
-                    modelValue: currentRole,
+                    'modelValue': currentRole,
                     'onUpdate:modelValue': (val: string) => handleRoleChange(member, val),
                 }, () => [
                     h(SelectTrigger, { class: 'w-[180px] rounded-md' }, () => [
-                        h(SelectValue, { placeholder: 'Rôle' })
+                        h(SelectValue, { placeholder: 'Rôle' }),
                     ]),
-                    h(SelectContent, () => roles.value.map(role => 
-                        h(SelectItem, { value: role.name, key: role.id }, () => role.name === 'administrator' ? 'Administrateur' : 'Gestionnaire')
-                    ))
-                ])
+                    h(SelectContent, () => roles.value.map(role =>
+                        h(SelectItem, { value: role.name, key: role.id }, () => role.name === 'administrator' ? 'Administrateur' : 'Gestionnaire'),
+                    )),
+                ]),
             ]);
         },
     },
@@ -175,7 +198,7 @@ const columns: ColumnDef<any>[] = [
             ];
 
             return h('div', { class: 'ml-4' }, [
-                h(DropdownMenuAction, { actions })
+                h(DropdownMenuAction, { actions }),
             ]);
         },
     },

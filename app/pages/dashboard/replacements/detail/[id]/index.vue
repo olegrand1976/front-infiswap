@@ -141,7 +141,10 @@
                                 <div class="bg-gray-200 text-sm py-2 rounded px-3">
                                     <span>Nom : {{ replacement.user.full_name }}</span>
                                 </div>
-                                <div v-show="replacement?.candidate" class="bg-gray-200 text-sm py-2 rounded px-3">
+                                <div
+                                    v-show="replacement?.candidate"
+                                    class="bg-gray-200 text-sm py-2 rounded px-3"
+                                >
                                     <span>Téléphone : {{ replacement.user.phone_number }}</span>
                                 </div>
                             </div>

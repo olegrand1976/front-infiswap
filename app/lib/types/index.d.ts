@@ -453,11 +453,16 @@ export type Mission = {
     end_date?: string;
     time_start_at: string;
     time_end_at: string;
+    morning_start_at?: string;
+    morning_end_at?: string;
+    afternoon_start_at?: string;
+    afternoon_end_at?: string;
+    days_per_month?: number;
     description: string;
     status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
     is_long_term?: boolean;
-    availabilities?: { day: string; start_time: string; end_time: string }[];
+    availabilities?: { day: string; start_time?: string; end_time?: string; morning_start_at?: string; morning_end_at?: string; afternoon_start_at?: string; afternoon_end_at?: string }[];
     pool_id?: number | null;
     accepted_candidate?: User;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

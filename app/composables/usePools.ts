@@ -24,10 +24,12 @@ export const usePools = () => {
             const response = await $apifetch('/api/institution/pools');
             pools.value = response.data ? response : { data: response };
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error('Error fetching pools:', error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -38,10 +40,12 @@ export const usePools = () => {
             const response = await $apifetch(`/api/institution/pools/${id}`);
             pool.value = response.data ?? response;
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error fetching pool ${id}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -54,10 +58,12 @@ export const usePools = () => {
                 body: data,
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error('Error creating pool:', error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -70,10 +76,12 @@ export const usePools = () => {
                 body: data,
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error updating pool ${id}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -85,10 +93,12 @@ export const usePools = () => {
                 method: 'DELETE',
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error deleting pool ${id}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -101,10 +111,12 @@ export const usePools = () => {
                 body: { user_ids: userIds },
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error adding users to pool ${poolId}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -117,10 +129,12 @@ export const usePools = () => {
                 body: { user_ids: userIds },
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error removing users from pool ${poolId}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -133,10 +147,12 @@ export const usePools = () => {
                 body: { stars },
             });
             return response;
-        } catch (error) {
+        }
+        catch (error) {
             console.error(`Error updating stars for user ${userId} in pool ${poolId}:`, error);
             throw error;
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     };
@@ -152,6 +168,6 @@ export const usePools = () => {
         remove,
         addUsers,
         removeUsers,
-        updateStars
+        updateStars,
     };
 };

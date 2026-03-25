@@ -24,7 +24,7 @@ definePageMeta({
 useHead({
     title: 'Mes Favoris',
     meta: [
-        { name: 'description', content: 'Gérez vos pools d\'infirmiers favoris pour un recrutement prioritaire.' }
-    ]
+        { name: 'description', content: 'Gérez vos pools d\'infirmiers favoris pour un recrutement prioritaire.' },
+    ],
 });
 </script>

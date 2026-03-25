@@ -153,164 +153,127 @@
         </div>
 
         <div class="grid my-8">
-                <div
-                    v-if="isEmpty"
-                    class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
-                >
-                    <div class="bg-white rounded-full p-5 shadow-sm mb-5 border border-gray-100">
-                        <MagnifyingGlassIcon class="w-10 h-10 text-gray-400" />
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">
-                        Aucun résultat trouvé
-                    </h3>
-                    <p class="text-gray-500 max-w-sm mx-auto mb-8 text-sm leading-relaxed">
-                        {{ isAnyFilterActive
-                            ? "Désolé, nous n'avons trouvé aucun remplacement correspondant à vos critères de recherche. Essayez d'ajuster vos filtres."
-                            : "Il n'y a pas encore de remplacements disponibles dans cette section."
-                        }}
-                    </p>
-                    <Button
-                        v-if="isAnyFilterActive"
-                        variant="outline"
-                        class="rounded-full px-8 hover:bg-primary hover:text-white transition-all duration-300"
-                        @click="reinitializeFilter"
-                    >
-                        Réinitialiser les filtres
-                    </Button>
+            <div
+                v-if="isEmpty"
+                class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
+            >
+                <div class="bg-white rounded-full p-5 shadow-sm mb-5 border border-gray-100">
+                    <MagnifyingGlassIcon class="w-10 h-10 text-gray-400" />
                 </div>
-                <template v-if="isCardMode && missionsWithoutProvince.length > 0">
-                    <div class="mb-8">
-                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                                Missions
-                            </span>
-                            Missions disponibles ({{ missionsWithoutProvince.length }})
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <MissionCard
-                                v-for="mission in missionsWithoutProvince"
-                                :key="`mission-top-${mission.id}`"
-                                :mission="mission"
-                            />
-                        </div>
-                    </div>
-                </template>
-
-                <template v-if="isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
-                    <div
-                        v-for="(items, province) in groupsByProvince"
-                        :key="`province-${province}`"
-                        class="mb-8"
-                    >
-                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
-                            {{ province }}
-                            <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <template
-                                v-for="item in items"
-                                :key="`card-${item.record_type}-${item.id}`"
-                            >
-                                <MissionCard
-                                    v-if="item.record_type === 'mission'"
-                                    :mission="item"
-                                />
-                                <ReplacementCard
-                                    v-else
-                                    :replacement="formatReplacementForCard(item)"
-                                    :raw-replacement="item"
-                                    @open-edit="openEditDialog"
-                                    @closed="refreshItems(page)"
-                                />
-                            </template>
-                        </div>
-                    </div>
-                </template>
-                <template v-else-if="isCardMode && !props.groupByProvince">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <template v-if="loading || loadingSearch">
-                            <ReplacementCardSkeleton
-                                v-for="i in 6"
-                                :key="`sk-${i}`"
-                            />
-                        </template>
-                        <template v-else>
-                            <template
-                                v-for="item in currentItems.filter(i => !(i.record_type === 'mission' && !i.province))"
-                                :key="`card-flat-${item.record_type}-${item.id}`"
-                            >
-                                <MissionCard
-                                    v-if="item.record_type === 'mission'"
-                                    :mission="item"
-                                />
-                                <ReplacementCard
-                                    v-else
-                                    :replacement="formatReplacementForCard(item)"
-                                    :raw-replacement="item"
-                                    @open-edit="openEditDialog"
-                                    @closed="refreshItems(page)"
-                                />
-                            </template>
-                        </template>
-                    </div>
-                </template>
-
-                <template v-else-if="!isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
-                    <div
-                        v-for="(items, province) in groupsByProvince"
-                        :key="`table-province-${province}`"
-                        class="mb-8"
-                    >
-                        <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
-                            {{ province }}
-                            <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
-                        </h2>
-
-                        <ReplacementTableSkeleton
-                            v-if="loading || loadingSearch"
-                            :type="props.type"
-                            :count="6"
+                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                    Aucun résultat trouvé
+                </h3>
+                <p class="text-gray-500 max-w-sm mx-auto mb-8 text-sm leading-relaxed">
+                    {{ isAnyFilterActive
+                        ? "Désolé, nous n'avons trouvé aucun remplacement correspondant à vos critères de recherche. Essayez d'ajuster vos filtres."
+                        : "Il n'y a pas encore de remplacements disponibles dans cette section."
+                    }}
+                </p>
+                <Button
+                    v-if="isAnyFilterActive"
+                    variant="outline"
+                    class="rounded-full px-8 hover:bg-primary hover:text-white transition-all duration-300"
+                    @click="reinitializeFilter"
+                >
+                    Réinitialiser les filtres
+                </Button>
+            </div>
+            <template v-if="isCardMode && missionsWithoutProvince.length > 0">
+                <div class="mb-8">
+                    <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                            Missions
+                        </span>
+                        Missions disponibles ({{ missionsWithoutProvince.length }})
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <MissionCard
+                            v-for="mission in missionsWithoutProvince"
+                            :key="`mission-top-${mission.id}`"
+                            :mission="mission"
                         />
-                        <template v-else>
-                            <ReplacementTable
-                                :replacements="items.filter(i => i.record_type === 'replacement')"
-                                :type="props.type"
-                                :user-id="user.id"
-                                :group-members="groupMembers"
-                                :highlighted-zip-codes="isSubmitted ? formData.postalCodeTags : []"
-                                :highlighted-cities="isSubmitted ? formData.cityTags : []"
-                                @show-user-info="handleShowInfoUser"
-                                @show-periods="handleShowPeriods"
-                                @open-edit="openEditDialog"
-                                @select-replacement="selectReplacement"
+                    </div>
+                </div>
+            </template>
+
+            <template v-if="isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
+                <div
+                    v-for="(items, province) in groupsByProvince"
+                    :key="`province-${province}`"
+                    class="mb-8"
+                >
+                    <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                        {{ province }}
+                        <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <template
+                            v-for="item in items"
+                            :key="`card-${item.record_type}-${item.id}`"
+                        >
+                            <MissionCard
+                                v-if="item.record_type === 'mission'"
+                                :mission="item"
                             />
-                            <template v-if="items.some(i => i.record_type === 'mission')">
-                                <Table>
-                                    <TableBody>
-                                        <MissionTable
-                                            v-for="mission in items.filter(i => i.record_type === 'mission')"
-                                            :key="`mission-row-${mission.id}`"
-                                            :mission="mission"
-                                            :type="props.type"
-                                            :grid-class="gridClass"
-                                        />
-                                    </TableBody>
-                                </Table>
-                            </template>
+                            <ReplacementCard
+                                v-else
+                                :replacement="formatReplacementForCard(item)"
+                                :raw-replacement="item"
+                                @open-edit="openEditDialog"
+                                @closed="refreshItems(page)"
+                            />
                         </template>
                     </div>
-                </template>
+                </div>
+            </template>
+            <template v-else-if="isCardMode && !props.groupByProvince">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <template v-if="loading || loadingSearch">
+                        <ReplacementCardSkeleton
+                            v-for="i in 6"
+                            :key="`sk-${i}`"
+                        />
+                    </template>
+                    <template v-else>
+                        <template
+                            v-for="item in currentItems.filter(i => !(i.record_type === 'mission' && !i.province))"
+                            :key="`card-flat-${item.record_type}-${item.id}`"
+                        >
+                            <MissionCard
+                                v-if="item.record_type === 'mission'"
+                                :mission="item"
+                            />
+                            <ReplacementCard
+                                v-else
+                                :replacement="formatReplacementForCard(item)"
+                                :raw-replacement="item"
+                                @open-edit="openEditDialog"
+                                @closed="refreshItems(page)"
+                            />
+                        </template>
+                    </template>
+                </div>
+            </template>
 
-                <template v-else-if="!isCardMode && !props.groupByProvince">
+            <template v-else-if="!isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
+                <div
+                    v-for="(items, province) in groupsByProvince"
+                    :key="`table-province-${province}`"
+                    class="mb-8"
+                >
+                    <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
+                        {{ province }}
+                        <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
+                    </h2>
+
                     <ReplacementTableSkeleton
                         v-if="loading || loadingSearch"
                         :type="props.type"
-                        :count="8"
+                        :count="6"
                     />
                     <template v-else>
                         <ReplacementTable
-                            v-if="currentItems.some(i => i.record_type === 'replacement')"
-                            :replacements="currentItems.filter(i => i.record_type === 'replacement')"
+                            :replacements="items.filter(i => i.record_type === 'replacement')"
                             :type="props.type"
                             :user-id="user.id"
                             :group-members="groupMembers"
@@ -321,12 +284,12 @@
                             @open-edit="openEditDialog"
                             @select-replacement="selectReplacement"
                         />
-                        <template v-if="currentItems.some(i => i.record_type === 'mission')">
+                        <template v-if="items.some(i => i.record_type === 'mission')">
                             <Table>
                                 <TableBody>
                                     <MissionTable
-                                        v-for="mission in currentItems.filter(i => i.record_type === 'mission')"
-                                        :key="`mission-row-flat-${mission.id}`"
+                                        v-for="mission in items.filter(i => i.record_type === 'mission')"
+                                        :key="`mission-row-${mission.id}`"
                                         :mission="mission"
                                         :type="props.type"
                                         :grid-class="gridClass"
@@ -335,18 +298,55 @@
                             </Table>
                         </template>
                     </template>
-                </template>
-
-                <div class="mt-4">
-                    <CustomPagination
-                        v-if="pagination.total > 5"
-                        :default-page="page"
-                        :per-page="perPage"
-                        :total="pagination.total"
-                        @update:page="refreshItems"
-                        @update:per-page="handlePerPageChange"
-                    />
                 </div>
+            </template>
+
+            <template v-else-if="!isCardMode && !props.groupByProvince">
+                <ReplacementTableSkeleton
+                    v-if="loading || loadingSearch"
+                    :type="props.type"
+                    :count="8"
+                />
+                <template v-else>
+                    <ReplacementTable
+                        v-if="currentItems.some(i => i.record_type === 'replacement')"
+                        :replacements="currentItems.filter(i => i.record_type === 'replacement')"
+                        :type="props.type"
+                        :user-id="user.id"
+                        :group-members="groupMembers"
+                        :highlighted-zip-codes="isSubmitted ? formData.postalCodeTags : []"
+                        :highlighted-cities="isSubmitted ? formData.cityTags : []"
+                        @show-user-info="handleShowInfoUser"
+                        @show-periods="handleShowPeriods"
+                        @open-edit="openEditDialog"
+                        @select-replacement="selectReplacement"
+                    />
+                    <template v-if="currentItems.some(i => i.record_type === 'mission')">
+                        <Table>
+                            <TableBody>
+                                <MissionTable
+                                    v-for="mission in currentItems.filter(i => i.record_type === 'mission')"
+                                    :key="`mission-row-flat-${mission.id}`"
+                                    :mission="mission"
+                                    :type="props.type"
+                                    :grid-class="gridClass"
+                                />
+                            </TableBody>
+                        </Table>
+                    </template>
+                </template>
+            </template>
+
+            <div class="mt-4">
+                <CustomPagination
+                    v-if="pagination.total > 5"
+                    :default-page="page"
+                    :per-page="perPage"
+                    :total="pagination.total"
+                    @update:page="refreshItems"
+                    @update:per-page="handlePerPageChange"
+                />
+            </div>
         </div>
 
         <Dialog v-model:open="closeReplacementDialog">
@@ -899,7 +899,7 @@ const getRandomItems = (arr: any[], n: number) => [...arr].sort(() => 0.5 - Math
 
 const { data: asyncData } = await useAsyncData(
     `merged-search-${props.type}-${page.value}`,
-    () => fetchMerged(searchParamsParams.value)
+    () => fetchMerged(searchParamsParams.value),
 );
 
 if (asyncData.value) {
@@ -907,7 +907,7 @@ if (asyncData.value) {
     const filtered = isPublicNurseView
         ? asyncData.value.items.filter(item => item.user_id !== user.value.id)
         : asyncData.value.items;
-        
+
     currentItems.value = filtered;
     initialItems.value = filtered;
     pagination.value = asyncData.value.pagination;

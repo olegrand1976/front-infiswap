@@ -58,6 +58,12 @@
                     <p v-if="mission.end_date">
                         Au {{ formatToDMY(mission.end_date) }}
                     </p>
+                    <p
+                        v-if="mission.days_per_month"
+                        class="mt-1 font-medium text-primary"
+                    >
+                        {{ mission.days_per_month }} jours / mois
+                    </p>
                 </div>
             </div>
 
@@ -82,6 +88,17 @@
                         >
                             <span class="font-medium">{{ av.day }}</span> : {{ formatTime(av.start_time) }} - {{ formatTime(av.end_time) }}
                         </span>
+                    </div>
+                    <div
+                        v-else-if="mission.morning_start_at || mission.afternoon_start_at"
+                        class="space-y-1"
+                    >
+                        <p v-if="mission.morning_start_at && mission.morning_end_at">
+                            Matin: {{ formatTime(mission.morning_start_at) }} - {{ formatTime(mission.morning_end_at) }}
+                        </p>
+                        <p v-if="mission.afternoon_start_at && mission.afternoon_end_at">
+                            A-M: {{ formatTime(mission.afternoon_start_at) }} - {{ formatTime(mission.afternoon_end_at) }}
+                        </p>
                     </div>
                     <p v-else-if="mission.time_start_at && mission.time_end_at">
                         {{ formatTime(mission.time_start_at) }} - {{ formatTime(mission.time_end_at) }}

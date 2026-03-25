@@ -6,16 +6,13 @@
     >
         <Separator class="my-4 lg:my-10" />
 
-        <div class="mt-8 grid grid-cols-3 gap-4 lg:gap-8">
+        <div class="lg:mt-8 grid grid-cols-3 gap-4 lg:gap-8">
             <div class="p-4 hidden lg:block">
                 <h1 class="font-semibold text-gray-600">
                     {{ mission?.id ? 'Mettre à jour la mission' : 'Nouvelle mission' }}
                 </h1>
                 <p class="mt-2 text-md text-gray-500">
                     Les informations essentielles
-                </p>
-                <p class="mt-4 text-xs text-gray-400">
-                    💡 Astuce : Ctrl+Entrée pour publier rapidement
                 </p>
             </div>
 
@@ -27,16 +24,16 @@
                     <div class="flex gap-2 items-center">
                         <Select
                             v-model="selectedTemplateId"
-                            class="flex-1"
+                            class="w-full flex-1"
                             @update:model-value="loadTemplate"
                         >
                             <SelectTrigger
-                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300"
+                                class="flex w-full space-x-2 sm:space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300 overflow-hidden"
                                 position="right"
                             >
                                 <SelectValue
-                                    placeholder="Sélectionner un template ou saisir manuellement"
-                                    class="text-nowrap w-full text-sm ml-3 my-auto"
+                                    placeholder="Sélectionner un template (optionnel)"
+                                    class="truncate w-full text-sm ml-1 sm:ml-3 my-auto min-w-0"
                                 />
                             </SelectTrigger>
                             <SelectContent class="border border-none">
@@ -100,12 +97,11 @@
                         <Button
                             type="button"
                             variant="outline"
-                            size="sm"
                             class="whitespace-nowrap"
                             @click="showServiceModal = true"
                         >
                             <PlusIcon class="w-4 h-4 mr-1" />
-                            Nouveau
+                            <span class="hidden md:inline-flex">créer un service</span>
                         </Button>
                     </div>
                     <p
@@ -122,7 +118,10 @@
                     </label>
                     <Select v-model="formData.pool_id">
                         <SelectTrigger class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300">
-                            <SelectValue :placeholder="missionPools.find(p => p.id == formData.pool_id)?.name || 'Sélectionner un pool (optionnel)'" class="text-nowrap w-full text-sm ml-3 my-auto" />
+                            <SelectValue
+                                :placeholder="missionPools.find(p => p.id == formData.pool_id)?.name || 'Sélectionner un pool (optionnel)'"
+                                class="text-nowrap w-full text-sm ml-3 my-auto"
+                            />
                         </SelectTrigger>
                         <SelectContent class="border border-none">
                             <SelectGroup>
@@ -181,6 +180,27 @@
                     </div>
                 </div>
 
+                <div class="space-y-2">
+                    <label class="text-gray-500 font-medium">
+                        Nombre de jours par mois <span class="text-gray-400 text-sm">(optionnel)</span>
+                    </label>
+                    <Input
+                        v-model="formData.days_per_month"
+                        type="number"
+                        min="1"
+                        max="31"
+                        class="w-full lg:w-1/3 bg-white border border-gray-300 rounded-md focus-within:border-primary focus-within:border-2"
+                        placeholder="Ex: 5"
+                        :class="errors.days_per_month ? 'border-red-300' : ''"
+                    />
+                    <p
+                        v-if="errors.days_per_month"
+                        class="text-sm text-red-500"
+                    >
+                        {{ errors.days_per_month }}
+                    </p>
+                </div>
+
                 <div class="flex items-center space-x-2 mt-4 pb-2">
                     <Checkbox
                         id="is_long_term"
@@ -202,62 +222,87 @@
                     <div
                         v-for="(availability, index) in formData.availabilities"
                         :key="index"
-                        class="w-full flex gap-2 items-center mb-2 flex-wrap sm:flex-nowrap"
+                        class="w-full flex-col gap-2 mb-4 bg-white p-3 border rounded-md"
                     >
-                        <Select v-model="availability.day">
-                            <SelectTrigger class="w-full sm:w-[150px] rounded-md bg-white border-2">
-                                <SelectValue placeholder="Jour" />
-                            </SelectTrigger>
-                            <SelectContent class="border-none">
-                                <SelectItem value="Lundi">
-                                    Lundi
-                                </SelectItem>
-                                <SelectItem value="Mardi">
-                                    Mardi
-                                </SelectItem>
-                                <SelectItem value="Mercredi">
-                                    Mercredi
-                                </SelectItem>
-                                <SelectItem value="Jeudi">
-                                    Jeudi
-                                </SelectItem>
-                                <SelectItem value="Vendredi">
-                                    Vendredi
-                                </SelectItem>
-                                <SelectItem value="Samedi">
-                                    Samedi
-                                </SelectItem>
-                                <SelectItem value="Dimanche">
-                                    Dimanche
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <InputTime
-                            v-model="availability.start_time"
-                            class="w-full sm:w-32 bg-white"
-                            input-class="rounded-md"
-                        />
-                        <span class="text-gray-500 hidden sm:inline">à</span>
-                        <InputTime
-                            v-model="availability.end_time"
-                            class="w-full sm:w-32 bg-white"
-                            input-class="rounded-md"
-                        />
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            class="text-red-500 border-red-200 hover:bg-red-50"
-                            @click="formData.availabilities.splice(index, 1)"
-                        >
-                            <TrashIcon class="size-4" />
-                        </Button>
+                        <div class="flex items-center justify-between mb-3 border-b pb-2">
+                            <Select v-model="availability.day">
+                                <SelectTrigger class="w-[150px] rounded-md bg-white border-2">
+                                    <SelectValue placeholder="Jour" />
+                                </SelectTrigger>
+                                <SelectContent class="border-none">
+                                    <SelectItem value="Lundi">
+                                        Lundi
+                                    </SelectItem>
+                                    <SelectItem value="Mardi">
+                                        Mardi
+                                    </SelectItem>
+                                    <SelectItem value="Mercredi">
+                                        Mercredi
+                                    </SelectItem>
+                                    <SelectItem value="Jeudi">
+                                        Jeudi
+                                    </SelectItem>
+                                    <SelectItem value="Vendredi">
+                                        Vendredi
+                                    </SelectItem>
+                                    <SelectItem value="Samedi">
+                                        Samedi
+                                    </SelectItem>
+                                    <SelectItem value="Dimanche">
+                                        Dimanche
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                class="text-red-500 border-red-200 hover:bg-red-50"
+                                @click="formData.availabilities.splice(index, 1)"
+                            >
+                                <TrashIcon class="size-4" />
+                            </Button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <span class="text-xs text-gray-500 font-medium">Matin</span>
+                                <div class="flex gap-2 items-center w-full min-w-0">
+                                    <InputTime
+                                        v-model="availability.morning_start_at"
+                                        class="flex-1 min-w-0 bg-white"
+                                        input-class="rounded-md"
+                                    />
+                                    <span class="text-gray-500 text-xs shrink-0">à</span>
+                                    <InputTime
+                                        v-model="availability.morning_end_at"
+                                        class="flex-1 min-w-0 bg-white"
+                                        input-class="rounded-md"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-xs text-gray-500 font-medium">Après-midi</span>
+                                <div class="flex gap-2 items-center w-full min-w-0">
+                                    <InputTime
+                                        v-model="availability.afternoon_start_at"
+                                        class="flex-1 min-w-0 bg-white"
+                                        input-class="rounded-md"
+                                    />
+                                    <span class="text-gray-500 text-xs shrink-0">à</span>
+                                    <InputTime
+                                        v-model="availability.afternoon_end_at"
+                                        class="flex-1 min-w-0 bg-white"
+                                        input-class="rounded-md"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        @click="formData.availabilities.push({ day: 'Lundi', start_time: '08:00', end_time: '17:00' })"
+                        @click="formData.availabilities.push({ day: 'Lundi', morning_start_at: '', morning_end_at: '', afternoon_start_at: '', afternoon_end_at: '' })"
                     >
                         <PlusIcon class="size-4 mr-1" /> Ajouter un jour
                     </Button>
@@ -342,37 +387,59 @@
                 </div>
 
                 <div
-                    v-else
-                    class="space-y-2"
+                    v-if="!formData.is_long_term"
+                    class="space-y-4"
                 >
                     <label class="text-gray-500 font-medium">
-                        Horaire <span class="text-red-500">*</span>
+                        Plages horaires <span class="text-red-500">*</span>
                     </label>
-                    <div class="flex gap-4 items-center">
-                        <div class="flex-1">
-                            <InputTime
-                                v-model="formData.time_start_at"
-                                class="w-full"
-                                input-class="rounded-md"
-                                :class="errors.time_start_at ? 'border-red-300' : ''"
-                            />
+                    <div class="space-y-4 w-full bg-gray-50 rounded-md p-4 border">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="space-y-2">
+                                <span class="text-sm text-gray-500 font-medium block">Matin</span>
+                                <div class="flex gap-2 lg:gap-4 items-center w-full min-w-0">
+                                    <InputTime
+                                        v-model="formData.morning_start_at"
+                                        class="flex-1 min-w-0"
+                                        input-class="rounded-md bg-white w-full"
+                                        :class="errors.morning_start_at ? 'border-red-300 border-2' : ''"
+                                    />
+                                    <span class="text-gray-500 shrink-0">à</span>
+                                    <InputTime
+                                        v-model="formData.morning_end_at"
+                                        class="flex-1 min-w-0"
+                                        input-class="rounded-md bg-white w-full"
+                                        :class="errors.morning_end_at ? 'border-red-300 border-2' : ''"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <span class="text-sm text-gray-500 font-medium block">Après-midi</span>
+                                <div class="flex gap-2 lg:gap-4 items-center w-full min-w-0">
+                                    <InputTime
+                                        v-model="formData.afternoon_start_at"
+                                        class="flex-1 min-w-0"
+                                        input-class="rounded-md bg-white w-full"
+                                        :class="errors.afternoon_start_at ? 'border-red-300 border-2' : ''"
+                                    />
+                                    <span class="text-gray-500 shrink-0">à</span>
+                                    <InputTime
+                                        v-model="formData.afternoon_end_at"
+                                        class="flex-1 min-w-0"
+                                        input-class="rounded-md bg-white w-full"
+                                        :class="errors.afternoon_end_at ? 'border-red-300 border-2' : ''"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-gray-500">à</span>
-                        <div class="flex-1">
-                            <InputTime
-                                v-model="formData.time_end_at"
-                                class="w-full"
-                                input-class="rounded-md"
-                                :class="errors.time_end_at ? 'border-red-300' : ''"
-                            />
-                        </div>
+                        <p
+                            v-if="errors.time_slots"
+                            class="text-sm text-red-500 mt-2"
+                        >
+                            {{ errors.time_slots }}
+                        </p>
                     </div>
-                    <p
-                        v-if="errors.time_start_at || errors.time_end_at"
-                        class="text-sm text-red-500"
-                    >
-                        {{ errors.time_start_at || errors.time_end_at }}
-                    </p>
                 </div>
 
                 <div class="space-y-2">
@@ -444,7 +511,7 @@
                     </p>
                     <div class="flex flex-col lg:flex-row lg:items-center gap-4">
                         <label
-                            v-if="!mission?.id && canSaveAsTemplate"
+                            v-if="!mission?.id"
                             class=" flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
                         >
                             <Checkbox
@@ -531,7 +598,7 @@
                         v-model="quickServiceForm.phoneNumber"
                         rounded="md"
                         label="Téléphone *"
-                        placeholder="Optionnel"
+                        placeholder="Votre numéro de téléphone"
                         :icon="PhoneIcon"
                     />
                     <div class="grid sm:grid-cols-2 gap-4">
@@ -631,6 +698,11 @@ const props = defineProps({
             end_date: '',
             time_start_at: '',
             time_end_at: '',
+            morning_start_at: '',
+            morning_end_at: '',
+            afternoon_start_at: '',
+            afternoon_end_at: '',
+            days_per_month: undefined,
             description: '',
             status: '',
             required_diploma: '',
@@ -704,7 +776,6 @@ const toggleDay = (dayValue: number) => {
     }
 };
 
-
 await getAll(1, 50);
 await getAllTemplates();
 await getAllPools();
@@ -717,6 +788,12 @@ const errors = reactive({
     end_date: '',
     time_start_at: '',
     time_end_at: '',
+    morning_start_at: '',
+    morning_end_at: '',
+    afternoon_start_at: '',
+    afternoon_end_at: '',
+    time_slots: '',
+    days_per_month: '',
     required_diploma: '',
     availabilities: '',
 });
@@ -767,7 +844,7 @@ const getLastUsedService = () => {
 
 const getLastUsedTimes = () => {
     if (typeof window === 'undefined' || !window.localStorage) {
-        return { start: '08:00', end: '17:00' };
+        return { start: '08:00', end: '17:00', morning_start_at: '', morning_end_at: '', afternoon_start_at: '', afternoon_end_at: '' };
     }
     const lastMission = localStorage.getItem('lastMission');
     if (lastMission) {
@@ -776,13 +853,17 @@ const getLastUsedTimes = () => {
             return {
                 start: parsed.time_start_at || '08:00',
                 end: parsed.time_end_at || '17:00',
+                morning_start_at: parsed.morning_start_at || '',
+                morning_end_at: parsed.morning_end_at || '',
+                afternoon_start_at: parsed.afternoon_start_at || '',
+                afternoon_end_at: parsed.afternoon_end_at || '',
             };
         }
         catch {
-            return { start: '08:00', end: '17:00' };
+            return { start: '08:00', end: '17:00', morning_start_at: '', morning_end_at: '', afternoon_start_at: '', afternoon_end_at: '' };
         }
     }
-    return { start: '08:00', end: '17:00' };
+    return { start: '08:00', end: '17:00', morning_start_at: '', morning_end_at: '', afternoon_start_at: '', afternoon_end_at: '' };
 };
 
 const lastTimes = getLastUsedTimes();
@@ -793,6 +874,11 @@ const formData = reactive({
     start_date: props.mission?.start_date || getDefaultStartDate(),
     time_start_at: props.mission?.time_start_at || lastTimes.start,
     time_end_at: props.mission?.time_end_at || lastTimes.end,
+    morning_start_at: props.mission?.morning_start_at || lastTimes.morning_start_at || '',
+    morning_end_at: props.mission?.morning_end_at || lastTimes.morning_end_at || '',
+    afternoon_start_at: props.mission?.afternoon_start_at || lastTimes.afternoon_start_at || '',
+    afternoon_end_at: props.mission?.afternoon_end_at || lastTimes.afternoon_end_at || '',
+    days_per_month: props.mission?.days_per_month || undefined,
     service_id: props.mission?.service_id || lastServiceId || (dataServices.value.length === 1 ? dataServices.value[0].id : undefined),
     required_diploma: props.mission?.required_diploma || '',
     is_long_term: props.mission?.is_long_term || false,
@@ -902,7 +988,7 @@ const validateForm = () => {
             isValid = false;
         }
         else {
-            const allValid = formData.availabilities.every((a: any) => a.day && a.start_time && a.end_time);
+            const allValid = formData.availabilities.every((a: any) => a.day && ((a.morning_start_at && a.morning_end_at) || (a.afternoon_start_at && a.afternoon_end_at) || (a.start_time && a.end_time)));
             if (!allValid) {
                 errors.availabilities = 'Veuillez remplir correctement tous les jours et horaires';
                 isValid = false;
@@ -910,13 +996,25 @@ const validateForm = () => {
         }
     }
     else {
-        if (!formData.time_start_at) {
-            errors.time_start_at = 'L\'heure de début est requise';
+        const hasMorning = !!(formData.morning_start_at && formData.morning_end_at);
+        const hasAfternoon = !!(formData.afternoon_start_at && formData.afternoon_end_at);
+
+        if (!hasMorning && !hasAfternoon) {
+            errors.time_slots = 'Veuillez renseigner au moins une plage horaire complète (matin ou après-midi)';
             isValid = false;
         }
 
-        if (!formData.time_end_at) {
-            errors.time_end_at = 'L\'heure de fin est requise';
+        if ((formData.morning_start_at && !formData.morning_end_at) || (!formData.morning_start_at && formData.morning_end_at)) {
+            errors.morning_start_at = 'Plage incomplète';
+            errors.morning_end_at = 'Plage incomplète';
+            errors.time_slots = 'Veuillez compléter la plage horaire du matin';
+            isValid = false;
+        }
+
+        if ((formData.afternoon_start_at && !formData.afternoon_end_at) || (!formData.afternoon_start_at && formData.afternoon_end_at)) {
+            errors.afternoon_start_at = 'Plage incomplète';
+            errors.afternoon_end_at = 'Plage incomplète';
+            errors.time_slots = 'Veuillez compléter la plage horaire de l\'après-midi';
             isValid = false;
         }
     }
@@ -1020,7 +1118,8 @@ const endDate = computed({
 });
 
 const canSaveAsTemplate = computed(() => {
-    return !props.mission?.id && formData.service_id && formData.time_start_at && formData.time_end_at && formData.required_diploma;
+    const hasTime = (formData.morning_start_at && formData.morning_end_at) || (formData.afternoon_start_at && formData.afternoon_end_at);
+    return !props.mission?.id && formData.service_id && hasTime && formData.required_diploma;
 });
 
 const loadTemplate = async (templateId: string | number | null) => {
@@ -1036,6 +1135,11 @@ const loadTemplate = async (templateId: string | number | null) => {
             formData.service_id = template.service_id || formData.service_id;
             formData.time_start_at = template.time_start_at || formData.time_start_at;
             formData.time_end_at = template.time_end_at || formData.time_end_at;
+            formData.morning_start_at = template.morning_start_at || formData.morning_start_at;
+            formData.morning_end_at = template.morning_end_at || formData.morning_end_at;
+            formData.afternoon_start_at = template.afternoon_start_at || formData.afternoon_start_at;
+            formData.afternoon_end_at = template.afternoon_end_at || formData.afternoon_end_at;
+            formData.days_per_month = template.days_per_month || formData.days_per_month;
             formData.description = template.description || '';
             formData.required_diploma = template.required_diploma || '';
 
@@ -1086,6 +1190,11 @@ const saveTemplate = async () => {
             service_id: formData.service_id,
             time_start_at: formData.time_start_at,
             time_end_at: formData.time_end_at,
+            morning_start_at: formData.morning_start_at,
+            morning_end_at: formData.morning_end_at,
+            afternoon_start_at: formData.afternoon_start_at,
+            afternoon_end_at: formData.afternoon_end_at,
+            days_per_month: formData.days_per_month,
             description: formData.description || null,
             required_diploma: formData.required_diploma || null,
         };
@@ -1132,6 +1241,11 @@ const resetForm = () => {
         end_date: '',
         time_start_at: '',
         time_end_at: '',
+        morning_start_at: '',
+        morning_end_at: '',
+        afternoon_start_at: '',
+        afternoon_end_at: '',
+        days_per_month: undefined,
         description: '',
         required_diploma: '',
         service_id: undefined,
@@ -1154,8 +1268,8 @@ const { submit, inProgress } = useSubmit(async () => {
     try {
         if (formData.is_long_term) {
             if (formData.availabilities && formData.availabilities.length > 0) {
-                formData.time_start_at = formData.availabilities[0].start_time;
-                formData.time_end_at = formData.availabilities[0].end_time;
+                formData.time_start_at = formData.availabilities[0].morning_start_at || formData.availabilities[0].afternoon_start_at || formData.availabilities[0].start_time || '00:00';
+                formData.time_end_at = formData.availabilities[0].afternoon_end_at || formData.availabilities[0].morning_end_at || formData.availabilities[0].end_time || '00:00';
             }
             else {
                 formData.time_start_at = '00:00';
@@ -1164,6 +1278,8 @@ const { submit, inProgress } = useSubmit(async () => {
         }
         else {
             formData.availabilities = []; // Empty availabilities if not long term
+            formData.time_start_at = formData.morning_start_at || formData.afternoon_start_at || '00:00';
+            formData.time_end_at = formData.afternoon_end_at || formData.morning_end_at || '00:00';
         }
 
         if (formData.id == undefined) {
@@ -1187,7 +1303,7 @@ const { submit, inProgress } = useSubmit(async () => {
                         for (const day of sortedDays) {
                             const occDate = new Date(baseStartDate);
                             const currentDayIdx = occDate.getDay();
-                            
+
                             const diff = day - currentDayIdx;
                             occDate.setDate(occDate.getDate() + diff + (currentWeekOffset * 7));
 
@@ -1197,14 +1313,14 @@ const { submit, inProgress } = useSubmit(async () => {
                                         ...formData,
                                         start_date: occDate.toISOString().split('T')[0],
                                     };
-                                    
+
                                     if (formData.end_date) {
                                         const baseEndDate = new Date(formData.end_date);
                                         const durationMs = baseEndDate.getTime() - baseStartDate.getTime();
                                         const occEndDate = new Date(occDate.getTime() + durationMs);
                                         payload.end_date = occEndDate.toISOString().split('T')[0];
                                     }
-                                    
+
                                     await create(payload);
                                     missionsCreated++;
                                 }
@@ -1223,6 +1339,10 @@ const { submit, inProgress } = useSubmit(async () => {
                         service_id: formData.service_id,
                         time_start_at: formData.time_start_at,
                         time_end_at: formData.time_end_at,
+                        morning_start_at: formData.morning_start_at,
+                        morning_end_at: formData.morning_end_at,
+                        afternoon_start_at: formData.afternoon_start_at,
+                        afternoon_end_at: formData.afternoon_end_at,
                     }));
                 }
             }

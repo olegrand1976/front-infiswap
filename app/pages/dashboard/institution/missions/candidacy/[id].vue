@@ -75,12 +75,12 @@
                                         :user="response.responder"
                                         class="font-medium text-gray-700"
                                     />
-                                    <div 
+                                    <div
                                         v-if="response.responder.stars > 0"
                                         class="flex items-center gap-0.5 mt-0.5"
                                     >
-                                        <StarIcon 
-                                            v-for="i in 5" 
+                                        <StarIcon
+                                            v-for="i in 5"
                                             :key="i"
                                             class="w-3 h-3"
                                             :class="i <= response.responder.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'"
@@ -174,7 +174,7 @@
                                     :user="response.responder"
                                     class="font-semibold text-gray-800"
                                 />
-                                <div 
+                                <div
                                     v-if="response.responder.stars > 0"
                                     class="flex items-center gap-0.5"
                                 >
