@@ -673,7 +673,7 @@
                         <p class="text-white/80 text-sm">Reprenez le contrôle sur vos coûts RH</p>
                         <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
                              Découvrir les avantages
-                             <ArrowRightIcon class="size-4 group-hover:translate-x-1 transition-transform" />
+                             <ArrowRightIcon class="size-4 animate-bounce-right" />
                         </div>
                     </div>
                     <div class="absolute -right-4 -bottom-4 opacity-20">
@@ -760,7 +760,7 @@
                             v-if="formData.accountType == 'institution'"
                             class="col-span-2 relative w-full items-center"
                         >
-                            <label class="text-sm font-medium text-gray-700">
+                            <label :class="cn('text-sm font-medium', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
                                 Nom de l'institution
                             </label>
                             <InputIcon
@@ -773,7 +773,7 @@
                     </div>
 
                     <div>
-                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
                             Informations personnelles
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -865,7 +865,7 @@
                     </div>
 
                     <div>
-                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
                             Informations de connexion
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -900,7 +900,7 @@
                     </div>
 
                     <div>
-                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
                             Adresses
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -1000,7 +1000,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
                             Informations professionnelles
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
@@ -1244,7 +1244,7 @@
 
                     <div class="flex justify-center items-center">
                         <Button
-                            class="w-[70%] text-base font-bold"
+                            :class="cn('w-full', formData.accountType === 'institution' ? 'bg-white text-primary hover:bg-white/80' : 'bg-primary text-white hover:bg-primary/80')"
                             type="submit"
                             :in-progress="inProgress"
                             :disabled="!charteAccepted"
@@ -1258,7 +1258,7 @@
                     <span>Vous avez déjà un compte ?</span>
                     <NuxtLink
                         to="/login"
-                        class="font-bold text-primary underline ml-1"
+                        :class="cn('font-bold underline ml-1', formData.accountType === 'institution' ? 'text-white' : 'text-primary')"
                     >
                         Connexion
                     </NuxtLink>
@@ -1542,35 +1542,17 @@ useHead({
     background: rgba(255, 255, 255, 0.2);
 }
 
-@media (max-width: 640px) {
-  .institution-mode-mobile h2,
-  .institution-mode-mobile h3,
-  .institution-mode-mobile p,
-  .institution-mode-mobile span:not(.text-primary) {
-    color: rgba(255, 255, 255, 1) !important;
-  }
-  
-  .institution-mode-mobile .text-gray-500,
-  .institution-mode-mobile .text-gray-700,
-  .institution-mode-mobile .text-gray-400 {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-
-  .institution-mode-mobile input,
-  .institution-mode-mobile select,
-  .institution-mode-mobile [role="combobox"] {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
-    backdrop-filter: blur(8px);
-  }
-
-  .institution-mode-mobile input::placeholder {
-    color: rgba(255, 255, 255, 0.5) !important;
-  }
-
-  .institution-mode-mobile .text-primary {
-    color: white !important;
-  }
+@keyframes bounce-right {
+    0%, 100% {
+        transform: translateX(0);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        transform: translateX(4px);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+.animate-bounce-right {
+    animation: bounce-right 1s infinite;
 }
 </style>
