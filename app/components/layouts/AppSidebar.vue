@@ -396,15 +396,15 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: SquaresPlusIcon,
     },
     {
-        label: 'Services',
-        route: '/dashboard/institution/services',
-        icon: BriefcaseIcon,
-    },
-    {
         label: 'Membres',
         route: '/dashboard/institution/members',
         icon: UsersIcon,
         visible: isInstitutionAdmin.value,
+    },
+    {
+        label: 'Services',
+        route: '/dashboard/institution/services',
+        icon: BriefcaseIcon,
     },
     {
         label: 'Missions',
@@ -417,6 +417,11 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: DocumentMagnifyingGlassIcon,
     },
     {
+        label: 'Binômes',
+        route: '/dashboard/institution/partners',
+        icon: UserGroupIcon,
+    },
+    {
         label: 'Mes Favoris',
         route: '/dashboard/institution/favorites',
         icon: UsersIcon,
@@ -426,12 +431,6 @@ const institutionNavigationItems: NavigationItem[] = [
         route: '/dashboard/institution/settings',
         icon: Cog8ToothIcon,
     },
-    // {
-    //     label: 'Factures',
-    //     route: '/dashboard/institution/invoices',
-    //     icon: DocumentTextIcon,
-    //     visible: true,
-    // },
 ];
 
 const role = computed(() => {
