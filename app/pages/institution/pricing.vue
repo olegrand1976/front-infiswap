@@ -2,11 +2,17 @@
     <div class="min-h-screen bg-primary">
         <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12 lg:py-16">
             <div class="mb-8 flex items-center justify-between">
-                <NuxtLink to="/register" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors group">
+                <NuxtLink
+                    to="/register"
+                    class="flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
+                >
                     <ArrowLeftIcon class="size-5 group-hover:-translate-x-1 transition-transform" />
                     <span class="font-medium">Retour à l'inscription</span>
                 </NuxtLink>
-                <LayoutsAppImage src="logo.png" class="h-10 sm:h-12 brightness-0 invert" />
+                <LayoutsAppImage
+                    src="logo.png"
+                    class="h-10 sm:h-12 brightness-0 invert"
+                />
             </div>
 
             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
@@ -31,8 +37,8 @@ definePageMeta({
 useHead({
     title: 'Tarification Institutionnelle - InfiSwap',
     meta: [
-        { name: 'description', content: 'Découvrez les avantages exclusifs du compte Institutionnel sur InfiSwap : réduction des coûts RH, visibilité maximale et centre de pilotage intelligent.' }
-    ]
+        { name: 'description', content: 'Découvrez les avantages exclusifs du compte Institutionnel sur InfiSwap : réduction des coûts RH, visibilité maximale et centre de pilotage intelligent.' },
+    ],
 });
 </script>
 

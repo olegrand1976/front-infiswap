@@ -16,14 +16,13 @@
                     <div
                         v-if="formData.accountType === 'standard'"
                         key="standard"
-                        :class="cn(
-                            'bg-tertiary/30 flex-1 flex flex-col pt-8 sm:pt-10 lg:pt-12 xl:pt-14 relative',
-                        )"
+                        class="pt-8 sm:pt-10 lg:pt-12 xl:pt-14 flex flex-col h-full bg-white"
                     >
                         <div class="flex-1 lg:hidden" />
-                        <h1 class="mb-4 sm:mb-6 lg:mb-8 text-lg max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-8 xl:mt-10 text-center px-6 lg:px-0 text-foreground/90">
-                            <span>Bienvenue sur <span class="font-bold">InfiSwap</span>, la plateforme pour vos remplacements!</span>
-                            <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
+                        <h1 class="mb-6 sm:mb-8 lg:mb-12 text-xl lg:text-2xl xl:text-3xl max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-10 xl:mt-12 text-center px-6 lg:px-0 leading-tight">
+                            <span class="block mb-2 font-medium text-gray-600">Bienvenue sur <span class="font-black text-primary drop-shadow-sm uppercase tracking-wider">InfiSwap</span>,</span>
+                            <span class="block text-gray-900 font-extrabold">la plateforme pour vos remplacements!</span>
+                            <span class="block mt-5 text-sm font-medium text-gray-400">Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
                         </h1>
                         <div class="flex-1" />
                         <div class="rounded-2xl max-w-md mx-auto">
@@ -32,10 +31,10 @@
                                 class="relative z-20 flex justify-center mx-auto"
                             />
                         </div>
-                        <div class="absolute sm:top-1/2 sm:-translate-y-1/2 lg:top-1/3 lg:translate-y-0 lg:left-20 sm:left-12">
+                        <div class="absolute sm:top-1/2 sm:-translate-y-1/2 lg:top-1/4 lg:translate-y-0 lg:left-16 sm:left-12 opacity-70">
                             <LayoutsAppImage
                                 src="/icons/plus.png"
-                                class="xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-16 md:h-16 sm:w-11 sm:h-11"
+                                class="lg:size-20 md:size-16 sm:size-11"
                             />
                         </div>
                         <div class="absolute bottom-0 left-0 w-full h-20 bg-primary" />
@@ -97,7 +96,7 @@
                                         @click="formData.accountType = account.value"
                                     >
                                         <div
-                                            class="border-2 rounded-xl p-6 h-full flex flex-col items-center justify-center transition-all duration-300"
+                                            class="border-2 rounded-xl p-6 h-full flex flex-col items-center justify-center transition-all duration-300 relative"
                                             :class="formData.accountType === account.value
                                                 ? 'border-primary bg-primary/5 shadow-lg'
                                                 : 'border-gray-300 hover:border-gray-400'"
@@ -105,10 +104,7 @@
                                             <div class="relative w-full h-16">
                                                 <component
                                                     :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
-                                                    class="size-12 mx-auto mb-3"
-                                                    :class="formData.accountType === account.value
-                                                        ? 'text-primary'
-                                                        : 'text-gray-400'"
+                                                    :class="cn('size-12 mx-auto mb-3 transition-colors', formData.accountType === account.value ? 'text-primary' : 'text-gray-400')"
                                                 />
                                                 <div
                                                     v-if="formData.accountType === account.value"
@@ -125,12 +121,12 @@
                                             >
                                                 {{ account.label }}
                                             </span>
-                                            <span
-                                                v-if="account.description"
-                                                class="text-xs mt-1 text-gray-500 text-center"
+                                            <div
+                                                v-if="account.value === 'institution'"
+                                                class="absolute top-0 right-0 translate-x-1/3 -translate-y-1/2 px-3 py-1 rounded-full text-[10px] font-black shadow-xl border bg-primary text-white border-primary/20 z-30"
                                             >
-                                                {{ account.description }}
-                                            </span>
+                                                150€ / Mois
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -650,7 +646,7 @@
         <div
             :class="cn(
                 'sm:hidden min-h-screen w-screen flex flex-col relative overflow-x-hidden transition-colors duration-500',
-                formData.accountType === 'institution' ? 'bg-primary institution-mode-mobile' : 'bg-white'
+                formData.accountType === 'institution' ? 'bg-primary institution-mode-mobile' : 'bg-white',
             )"
         >
             <LayoutsHeaderMobile />
@@ -672,12 +668,12 @@
                         <h3 class="text-white font-bold text-lg mb-1 leading-tight">Infiswap Institutional</h3>
                         <p class="text-white/80 text-sm">Reprenez le contrôle sur vos coûts RH</p>
                         <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
-                             Découvrir les avantages
-                             <ArrowRightIcon class="size-4 animate-bounce-right" />
+                            Découvrir les avantages
+                            <ArrowRightIcon class="size-4 animate-bounce-right" />
                         </div>
                     </div>
                     <div class="absolute -right-4 -bottom-4 opacity-20">
-                         <BuildingOffice2Icon class="size-24 text-white rotate-12" />
+                        <BuildingOffice2Icon class="size-24 text-white rotate-12" />
                     </div>
                 </NuxtLink>
 
@@ -691,7 +687,7 @@
                             <h2
                                 :class="cn(
                                     'mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto mb-3 sm:mb-4 transition-colors',
-                                    formData.accountType === 'institution' ? 'text-white' : 'text-gray-500'
+                                    formData.accountType === 'institution' ? 'text-white' : 'text-gray-500',
                                 )"
                             >
                                 Quel type de compte souhaitez-vous choisir ?
@@ -708,10 +704,10 @@
                                 >
                                     <div
                                         :class="cn(
-                                            'border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm',
+                                            'border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm relative',
                                             formData.accountType === account.value
                                                 ? (formData.accountType === 'institution' ? 'border-white bg-white/20 shadow-xl scale-105' : 'border-primary bg-primary/5 shadow-lg')
-                                                : (formData.accountType === 'institution' ? 'border-white/30 bg-white/5 hover:border-white/50' : 'border-gray-300 hover:border-gray-400')
+                                                : (formData.accountType === 'institution' ? 'border-white/30 bg-white/5 hover:border-white/50' : 'border-gray-300 hover:border-gray-400'),
                                         )"
                                     >
                                         <div class="relative w-full">
@@ -721,7 +717,7 @@
                                                     'w-10 h-10 mx-auto mb-2 transition-colors duration-300',
                                                     formData.accountType === account.value
                                                         ? (formData.accountType === 'institution' ? 'text-white' : 'text-primary')
-                                                        : (formData.accountType === 'institution' ? 'text-white/60' : 'text-gray-400')
+                                                        : (formData.accountType === 'institution' ? 'text-white/60' : 'text-gray-400'),
                                                 )"
                                             />
                                             <div
@@ -729,7 +725,7 @@
                                                 class="absolute -top-1 -right-1 rounded-full p-1 transition-all duration-300"
                                                 :class="formData.accountType === 'institution' ? 'bg-white shadow-lg' : 'bg-primary'"
                                             >
-                                                <CheckIcon 
+                                                <CheckIcon
                                                     class="size-3"
                                                     :class="formData.accountType === 'institution' ? 'text-primary' : 'text-white'"
                                                 />
@@ -740,7 +736,7 @@
                                             :class="[
                                                 formData.accountType === account.value
                                                     ? (formData.accountType === 'institution' ? 'text-white' : 'text-primary')
-                                                    : (formData.accountType === 'institution' ? 'text-white/80' : 'text-gray-700')
+                                                    : (formData.accountType === 'institution' ? 'text-white/80' : 'text-gray-700'),
                                             ]"
                                         >
                                             {{ account.label }}
@@ -752,6 +748,16 @@
                                         >
                                             {{ account.description }}
                                         </span>
+
+                                        <div
+                                            v-if="account.value === 'institution'"
+                                            :class="cn(
+                                                'absolute top-0 right-3 translate-x-1/4 -translate-y-1/2 px-3 py-1 rounded-full text-[10px] font-black shadow-xl border transition-all duration-300 transform z-30',
+                                                formData.accountType === 'institution' ? 'bg-white text-primary border-white animate-pulse scale-110' : 'bg-primary text-white border-primary/20',
+                                            )"
+                                        >
+                                            150€ / Mois
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1189,38 +1195,37 @@
                                 </Select>
                             </div>
                         </div>
-
                     </div>
                     <div
-                            v-if="formData.accountType != 'institution'"
-                            class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
-                        >
-                            <div class="space-y-4">
-                                <label class="flex items-start cursor-pointer">
-                                    <Checkbox
-                                        :checked="representGroup"
-                                        class="mt-1 accent-red-600"
-                                        @update:checked="representGroup = $event"
-                                    />
-                                    <span class="text-sm ml-2 font-medium">
-                                        Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
-                                    </span>
-                                </label>
+                        v-if="formData.accountType != 'institution'"
+                        class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
+                    >
+                        <div class="space-y-4">
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="representGroup"
+                                    class="mt-1 accent-red-600"
+                                    @update:checked="representGroup = $event"
+                                />
+                                <span class="text-sm ml-2 font-medium">
+                                    Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
+                                </span>
+                            </label>
 
-                                <transition name="fade">
-                                    <div
-                                        v-if="representGroup"
-                                        class="relative"
-                                    >
-                                        <InputIcon
-                                            v-model="formData.groupName"
-                                            :icon="UserGroupIcon"
-                                            placeholder="Nom du groupement"
-                                        />
-                                    </div>
-                                </transition>
-                            </div>
+                            <transition name="fade">
+                                <div
+                                    v-if="representGroup"
+                                    class="relative"
+                                >
+                                    <InputIcon
+                                        v-model="formData.groupName"
+                                        :icon="UserGroupIcon"
+                                        placeholder="Nom du groupement"
+                                    />
+                                </div>
+                            </transition>
                         </div>
+                    </div>
                     <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                         <label class="flex items-start cursor-pointer">
                             <Checkbox
@@ -1520,12 +1525,17 @@ useHead({
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.4s ease-out;
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 0.3;
+  transform: translateY(5px);
+}
+
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(-5px);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -1554,5 +1564,13 @@ useHead({
 }
 .animate-bounce-right {
     animation: bounce-right 1s infinite;
+}
+
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.animate-bounce-slow {
+    animation: bounce-slow 4s infinite ease-in-out;
 }
 </style>
