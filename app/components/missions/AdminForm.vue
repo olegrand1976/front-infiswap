@@ -62,17 +62,14 @@
                             class="flex-1"
                         >
                             <SelectTrigger
-                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2"
+                                class="flex w-full gap-4 space-x-4 text-sm justify-start items-center rounded-md border-2"
                                 :class="errors.service_id ? 'border-red-300' : 'border-gray-300'"
                                 position="right"
                             >
-                                <BriefcaseIcon class="text-gray-500 w-5 h-5" />
                                 <SelectValue
+                                    class="w-full"
                                     :placeholder="dataServices.length === 0 ? 'Aucun service disponible' : 'Sélectionner un service'"
                                 />
-                                <span class="text-nowrap text-xs ml-3 my-auto">
-                                    {{ dataServices.find(s => s.id == formData.service_id)?.name || 'Sélectionner un service' }}
-                                </span>
                             </SelectTrigger>
                             <SelectContent class="border border-none">
                                 <SelectGroup>
@@ -1267,6 +1264,11 @@ const { submit, inProgress } = useSubmit(async () => {
 
     try {
         if (formData.is_long_term) {
+            formData.morning_start_at = '';
+            formData.morning_end_at = '';
+            formData.afternoon_start_at = '';
+            formData.afternoon_end_at = '';
+
             if (formData.availabilities && formData.availabilities.length > 0) {
                 formData.time_start_at = formData.availabilities[0].morning_start_at || formData.availabilities[0].afternoon_start_at || formData.availabilities[0].start_time || '00:00';
                 formData.time_end_at = formData.availabilities[0].afternoon_end_at || formData.availabilities[0].morning_end_at || formData.availabilities[0].end_time || '00:00';
