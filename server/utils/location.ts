@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import type { CountryCode } from '../../app/lib/types';
 
 type Entry = {
@@ -10,8 +10,36 @@ type Entry = {
     longitude: number;
 };
 
+function getFilePath(country: CountryCode): string {
+    const fileName = `${country.toUpperCase()}.txt`;
+    
+    let currentDir = process.cwd();
+    try {
+        currentDir = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+    } catch (e) {
+        // ignore
+    }
+    
+    // Essayer différents chemins selon d'où le processus Node est lancé (.output vs racine)
+    const possiblePaths = [
+        path.resolve(process.cwd(), 'server/data', fileName),
+        path.resolve(process.cwd(), '../server/data', fileName), // Si PM2 est lancé depuis .output/
+        path.resolve(process.cwd(), '../../server/data', fileName), // Si PM2 est lancé depuis .output/server/
+        path.resolve(process.cwd(), '../../../server/data', fileName), // Extra fallback
+        path.resolve(currentDir, '../../data', fileName), // dev local
+        path.resolve(currentDir, '../../../../../server/data', fileName), // prod (.output/server/chunks/build)
+        path.resolve(currentDir, '../../../../server/data', fileName) // alternative prod
+    ];
+
+    for (const p of possiblePaths) {
+        if (fs.existsSync(p)) return p;
+    }
+
+    throw new Error(`Fichier postal introuvable pour le pays ${country}. Les chemins tentés n'ont pas abouti. Veuillez vous assurer que le dossier 'server/data' existe à la racine ou près de l'endroit où le serveur est exécuté.`);
+}
+
 function loadPostalData(country: CountryCode = 'be'): string {
-    const filePath = path.resolve(process.cwd(), `server/data/${country.toUpperCase()}.txt`);
+    const filePath = getFilePath(country);
     return fs.readFileSync(filePath, 'utf-8');
 }
 
@@ -34,7 +62,7 @@ function loadPostalEntries(country: CountryCode = 'be'): Entry[] {
         return postalCache[country]!;
     }
 
-    const filePath = path.resolve(process.cwd(), `server/data/${country.toUpperCase()}.txt`);
+    const filePath = getFilePath(country);
     const content = fs.readFileSync(filePath, 'utf-8');
 
     const lines = content
