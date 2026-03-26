@@ -50,6 +50,23 @@ export const usePools = () => {
         }
     };
 
+    const getSuggestions = async (filter: 'all' | 'accepted' = 'all') => {
+        loading.value = true;
+        try {
+            const response = await $apifetch(`/api/institution/pools/suggestions`, {
+                params: { filter },
+            });
+            return response.data ?? response;
+        }
+        catch (error) {
+            console.error(`Error fetching pool suggestions:`, error);
+            throw error;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     const create = async (data: Partial<Pool> & { user_ids?: number[] }) => {
         loading.value = true;
         try {
@@ -169,5 +186,6 @@ export const usePools = () => {
         addUsers,
         removeUsers,
         updateStars,
+        getSuggestions,
     };
 };

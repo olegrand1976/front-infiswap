@@ -32,16 +32,21 @@ export const usePartners = () => {
     };
 
     async function fetchDemandPartners(page = 1, perPage = 25, options = {}) {
-        return await $apifetch('api/partners', {
-            params: {
-                page: page,
-                perPage: perPage,
-                ...options,
-            },
-        }).then((response) => {
-            demandPartners.value = response.partnerships;
-            count.value = response.count;
-        });
+        loading.value = true;
+        try {
+            return await $apifetch('api/partners', {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    ...options,
+                },
+            }).then((response) => {
+                demandPartners.value = response.partnerships;
+                count.value = response.count;
+            });
+        } finally {
+            loading.value = false;
+        }
     }
 
     const detailDemandPartner = async (userPartnerId: number, notified: boolean = false) => {

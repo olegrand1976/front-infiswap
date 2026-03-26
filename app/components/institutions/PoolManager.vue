@@ -9,13 +9,23 @@
                     Gérez vos listes d'infirmiers préférés pour vos missions.
                 </p>
             </div>
-            <Button
-                class="rounded-md flex items-center gap-2"
-                @click="showCreateModal = true"
-            >
-                <PlusIcon class="w-5 h-5" />
-                Nouveau Pool
-            </Button>
+            <div class="flex items-center gap-3">
+                <Button
+                    variant="outline"
+                    class="rounded-md flex items-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-800 border-yellow-200"
+                    @click="openGlobalSuggestions"
+                >
+                    <SparklesIcon class="w-5 h-5" />
+                    Suggestions
+                </Button>
+                <Button
+                    class="rounded-md flex items-center gap-2"
+                    @click="showCreateModal = true"
+                >
+                    <PlusIcon class="w-5 h-5" />
+                    Nouveau Pool
+                </Button>
+            </div>
         </div>
 
         <div
@@ -166,7 +176,7 @@
                                     <div class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                                 </div>
                                 <div
-                                    v-if="searchResults.length > 0"
+                                    v-if="searchQuery.length >= 2 && searchResults.length > 0"
                                     class="absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto"
                                 >
                                     <div
@@ -189,6 +199,73 @@
                                             </div>
                                         </div>
                                         <PlusIcon class="w-4 h-4 text-primary" />
+                                    </div>
+                                </div>
+                                <div
+                                    v-else-if="searchQuery.length >= 2 && !isSearching"
+                                    class="absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-3 text-center text-sm text-gray-500"
+                                >
+                                    Aucun résultat trouvé
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUGGESTIONS -->
+                        <div v-if="searchQuery.length === 0" class="mt-4 border-t border-gray-200 pt-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                                    <StarIconOutline class="w-3.5 h-3.5 text-yellow-500" />
+                                    Ont répondu à vos annonces
+                                </h5>
+                                <div class="flex bg-gray-100 rounded-md p-0.5">
+                                    <button
+                                        class="px-3 py-1 text-xs font-medium rounded transition-all"
+                                        :class="suggestionFilter === 'all' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                        @click="switchSuggestionFilter('all')"
+                                    >
+                                        Toutes
+                                    </button>
+                                    <button
+                                        class="px-3 py-1 text-xs font-medium rounded transition-all"
+                                        :class="suggestionFilter === 'accepted' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                        @click="switchSuggestionFilter('accepted')"
+                                    >
+                                        ✅ Acceptées
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div v-if="loadingSuggestions" class="flex justify-center py-6">
+                                <div class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                            </div>
+
+                            <div v-else-if="availableSuggestions.length === 0" class="text-center py-4 text-sm text-gray-400 italic">
+                                Aucune suggestion disponible
+                            </div>
+
+                            <div v-else class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1">
+                                <div
+                                    v-for="u in availableSuggestions"
+                                    :key="u.id"
+                                    class="p-2 bg-white rounded-md border border-gray-100 hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer flex items-center justify-between"
+                                    @click="addNurse(u)"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold border border-primary/20">
+                                            {{ u.firstname?.[0] }}{{ u.lastname?.[0] }}
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-gray-900">
+                                                {{ u.firstname }} {{ u.lastname }}
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                {{ u.email }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-xs font-medium text-primary">
+                                        <PlusIcon class="w-4 h-4" />
+                                        Ajouter
                                     </div>
                                 </div>
                             </div>
@@ -258,6 +335,106 @@
             </DialogContent>
         </Dialog>
 
+        <Dialog v-model:open="showGlobalSuggestionsModal">
+            <DialogContent class="max-w-2xl max-h-[90vh] flex flex-col">
+                <DialogHeader>
+                    <DialogTitle>Suggestions d'infirmiers</DialogTitle>
+                    <DialogDescription>
+                        Infirmiers ayant déjà interagi avec vos missions, que vous pouvez ajouter à vos pools favoris.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div class="mt-4 flex flex-col overflow-y-auto pr-2">
+                    <div class="flex items-center justify-end mb-3">
+                        <div class="flex bg-gray-100 rounded-md p-0.5">
+                            <button
+                                class="px-3 py-1 text-xs font-medium rounded transition-all"
+                                :class="globalSuggestionFilter === 'all' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                @click="switchGlobalSuggestionFilter('all')"
+                            >
+                                Toutes
+                            </button>
+                            <button
+                                class="px-3 py-1 text-xs font-medium rounded transition-all"
+                                :class="globalSuggestionFilter === 'accepted' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                @click="switchGlobalSuggestionFilter('accepted')"
+                            >
+                                ✅ Acceptées
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="loadingGlobalSuggestions" class="flex justify-center py-12">
+                        <RollingLoader />
+                    </div>
+
+                    <div v-else-if="globalSuggestions.length === 0" class="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center">
+                        <StarIconOutline class="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <h3 class="text-sm font-medium text-gray-900">Aucune suggestion pour le moment</h3>
+                        <p class="text-xs text-gray-500 mt-1">Les infirmiers ayant répondu à vos missions apparaîtront ici.</p>
+                    </div>
+
+                    <div v-else class="grid grid-cols-1 gap-3">
+                        <div
+                            v-for="u in globalSuggestions"
+                            :key="u.id"
+                            class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold border border-primary/20">
+                                    {{ u.firstname?.[0] || '' }}{{ u.lastname?.[0] || '' }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900">
+                                        {{ u.firstname }} {{ u.lastname }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ u.email }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <div v-if="pools.data.length === 0" class="text-xs text-red-500 italic">
+                                    Aucun pool existant
+                                </div>
+                                <div v-else-if="pools.data.length === 1" class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1.5 rounded">
+                                    Pool: {{ pools.data[0].name }}
+                                </div>
+                                <select 
+                                    v-else 
+                                    v-model="selectedPoolForSuggestion[u.id]" 
+                                    class="text-xs border border-gray-300 rounded-md py-1.5 pl-3 pr-8 focus:ring-primary focus:border-primary"
+                                >
+                                    <option v-for="p in pools.data" :key="p.id" :value="p.id">
+                                        {{ p.name }}
+                                    </option>
+                                </select>
+
+                                <Button
+                                    size="sm"
+                                    :disabled="pools.data.length === 0 || addingToPool[u.id]"
+                                    :in-progress="addingToPool[u.id]"
+                                    @click="addNurseToGlobalPool(u)"
+                                >
+                                    Ajouter
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6 border-t pt-4">
+                    <Button
+                        variant="outline"
+                        @click="showGlobalSuggestionsModal = false"
+                    >
+                        Fermer
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+
         <Dialog v-model:open="showDeleteDialog">
             <DialogContent class="max-w-md">
                 <DialogHeader>
@@ -296,6 +473,7 @@ import {
     XMarkIcon,
     MagnifyingGlassIcon,
     StarIcon as StarIconOutline,
+    SparklesIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import { toast } from 'vue-sonner';
@@ -312,7 +490,7 @@ import { Textarea } from '@/components/ui/textarea';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { debounce } from '~/lib/utils';
 
-const { pools, loading, getAll, getById, create, update, remove, addUsers, removeUsers, updateStars } = usePools();
+const { pools, loading, getAll, getById, create, update, remove, addUsers, removeUsers, updateStars, getSuggestions } = usePools();
 const { $apifetch } = useNuxtApp();
 
 const showCreateModal = ref(false);
@@ -332,6 +510,32 @@ const poolForm = reactive({
 const searchQuery = ref('');
 const isSearching = ref(false);
 const searchResults = ref<any[]>([]);
+const rawSuggestions = ref<any[]>([]);
+const suggestionFilter = ref<'all' | 'accepted'>('all');
+const loadingSuggestions = ref(false);
+
+const availableSuggestions = computed(() => {
+    const currentIds = selectedPool.value?.users?.map((u: any) => u.id) || [];
+    return rawSuggestions.value.filter(u => !currentIds.includes(u.id));
+});
+
+const loadSuggestions = async (filter: 'all' | 'accepted' = 'all') => {
+    loadingSuggestions.value = true;
+    try {
+        const suggs = await getSuggestions(filter);
+        rawSuggestions.value = suggs || [];
+    } catch (e) {
+        console.error(e);
+    } finally {
+        loadingSuggestions.value = false;
+    }
+};
+
+const switchSuggestionFilter = async (filter: 'all' | 'accepted') => {
+    if (filter === suggestionFilter.value) return;
+    suggestionFilter.value = filter;
+    await loadSuggestions(filter);
+};
 
 const closeModal = () => {
     showCreateModal.value = false;
@@ -340,11 +544,76 @@ const closeModal = () => {
     poolForm.description = '';
 };
 
+const showGlobalSuggestionsModal = ref(false);
+const globalSuggestions = ref<any[]>([]);
+const loadingGlobalSuggestions = ref(false);
+const globalSuggestionFilter = ref<'all' | 'accepted'>('accepted');
+const selectedPoolForSuggestion = ref<Record<number, number>>({});
+const addingToPool = ref<Record<number, boolean>>({});
+
+const loadGlobalSuggestions = async (filter: 'all' | 'accepted' = 'accepted') => {
+    loadingGlobalSuggestions.value = true;
+    try {
+        const suggs = await getSuggestions(filter);
+        globalSuggestions.value = suggs || [];
+        if (pools.value.data.length > 0) {
+            const defaultPoolId = pools.value.data[0].id;
+            for (const s of globalSuggestions.value) {
+                if (!selectedPoolForSuggestion.value[s.id]) {
+                    selectedPoolForSuggestion.value[s.id] = defaultPoolId;
+                }
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    } finally {
+        loadingGlobalSuggestions.value = false;
+    }
+};
+
+const openGlobalSuggestions = async () => {
+    showGlobalSuggestionsModal.value = true;
+    await loadGlobalSuggestions(globalSuggestionFilter.value);
+};
+
+const switchGlobalSuggestionFilter = async (filter: 'all' | 'accepted') => {
+    if (filter === globalSuggestionFilter.value) return;
+    globalSuggestionFilter.value = filter;
+    await loadGlobalSuggestions(filter);
+};
+
+const addNurseToGlobalPool = async (user: any) => {
+    const poolId = selectedPoolForSuggestion.value[user.id] || (pools.value.data.length === 1 ? pools.value.data[0].id : null);
+    if (!poolId) {
+        toast.error('Veuillez sélectionner un pool');
+        return;
+    }
+
+    addingToPool.value[user.id] = true;
+    try {
+        await addUsers(poolId, [user.id]);
+        toast.success(`${user.firstname} ajouté au pool`);
+        globalSuggestions.value = globalSuggestions.value.filter(u => u.id !== user.id);
+        await getAll();
+    }
+    catch (err) {
+        toast.error('Erreur lors de l\'ajout');
+    }
+    finally {
+        addingToPool.value[user.id] = false;
+    }
+};
+
 const openPool = async (p: any) => {
     await getById(p.id);
     selectedPool.value = pools.value.data.find(item => item.id === p.id) || p;
     const res = await getById(p.id);
     selectedPool.value = res.data;
+    
+    if (rawSuggestions.value.length === 0) {
+        await loadSuggestions(suggestionFilter.value);
+    }
+    
     showMembersModal.value = true;
 };
 
