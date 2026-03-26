@@ -27,7 +27,6 @@
                         <span class="font-medium text-xs sm:text-sm">Mes missions</span>
                         <Badge
                             v-if="myMissionsCount > 0"
-                            class="ml-0 sm:ml-1 bg-success text-white text-xs px-1.5"
                         >
                             {{ myMissionsCount }}
                         </Badge>
@@ -47,7 +46,6 @@
                         <span class="font-medium text-xs sm:text-sm">Candidatures</span>
                         <Badge
                             v-if="candidacyCount > 0"
-                            class="ml-0 sm:ml-1 bg-orange-500 text-white text-xs px-1.5"
                         >
                             {{ candidacyCount }}
                         </Badge>
@@ -609,6 +607,7 @@ async function loadCandidacy() {
             date: candidacyOption.value.responseDate,
             institutionName: candidacyOption.value.institutionName,
             type: 'nurse',
+            exclude_status: 'accepted',
         });
     }
     catch (error) {
@@ -656,6 +655,7 @@ const filterCandidacy = async () => {
             date: currentFilter.responseDate,
             institutionName: currentFilter.institutionName,
             type: 'nurse',
+            exclude_status: 'accepted',
         });
 };
 
