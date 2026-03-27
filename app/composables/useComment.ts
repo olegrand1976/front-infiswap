@@ -1,7 +1,7 @@
 import type { Comment, User } from '~/lib/types';
 
 export const useComment = () => {
-    const loading = useState('loading', () => false);
+    const loading = useState('commentLoading', () => false);
     const userComments = useState<Comment[]>('comments', () => undefined);
     const { $apifetch } = useNuxtApp();
 

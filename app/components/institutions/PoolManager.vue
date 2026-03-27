@@ -211,7 +211,10 @@
                         </div>
 
                         <!-- SUGGESTIONS -->
-                        <div v-if="searchQuery.length === 0" class="mt-4 border-t border-gray-200 pt-4">
+                        <div
+                            v-if="searchQuery.length === 0"
+                            class="mt-4 border-t border-gray-200 pt-4"
+                        >
                             <div class="flex items-center justify-between mb-3">
                                 <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                                     <StarIconOutline class="w-3.5 h-3.5 text-yellow-500" />
@@ -235,15 +238,24 @@
                                 </div>
                             </div>
 
-                            <div v-if="loadingSuggestions" class="flex justify-center py-6">
+                            <div
+                                v-if="loadingSuggestions"
+                                class="flex justify-center py-6"
+                            >
                                 <div class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                             </div>
 
-                            <div v-else-if="availableSuggestions.length === 0" class="text-center py-4 text-sm text-gray-400 italic">
+                            <div
+                                v-else-if="availableSuggestions.length === 0"
+                                class="text-center py-4 text-sm text-gray-400 italic"
+                            >
                                 Aucune suggestion disponible
                             </div>
 
-                            <div v-else class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1">
+                            <div
+                                v-else
+                                class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1"
+                            >
                                 <div
                                     v-for="u in availableSuggestions"
                                     :key="u.id"
@@ -364,17 +376,30 @@
                         </div>
                     </div>
 
-                    <div v-if="loadingGlobalSuggestions" class="flex justify-center py-12">
+                    <div
+                        v-if="loadingGlobalSuggestions"
+                        class="flex justify-center py-12"
+                    >
                         <RollingLoader />
                     </div>
 
-                    <div v-else-if="globalSuggestions.length === 0" class="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center">
+                    <div
+                        v-else-if="globalSuggestions.length === 0"
+                        class="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center"
+                    >
                         <StarIconOutline class="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                        <h3 class="text-sm font-medium text-gray-900">Aucune suggestion pour le moment</h3>
-                        <p class="text-xs text-gray-500 mt-1">Les infirmiers ayant répondu à vos missions apparaîtront ici.</p>
+                        <h3 class="text-sm font-medium text-gray-900">
+                            Aucune suggestion pour le moment
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-1">
+                            Les infirmiers ayant répondu à vos missions apparaîtront ici.
+                        </p>
                     </div>
 
-                    <div v-else class="grid grid-cols-1 gap-3">
+                    <div
+                        v-else
+                        class="grid grid-cols-1 gap-3"
+                    >
                         <div
                             v-for="u in globalSuggestions"
                             :key="u.id"
@@ -393,20 +418,30 @@
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-center gap-3">
-                                <div v-if="pools.data.length === 0" class="text-xs text-red-500 italic">
+                                <div
+                                    v-if="pools.data.length === 0"
+                                    class="text-xs text-red-500 italic"
+                                >
                                     Aucun pool existant
                                 </div>
-                                <div v-else-if="pools.data.length === 1" class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1.5 rounded">
+                                <div
+                                    v-else-if="pools.data.length === 1"
+                                    class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1.5 rounded"
+                                >
                                     Pool: {{ pools.data[0].name }}
                                 </div>
-                                <select 
-                                    v-else 
-                                    v-model="selectedPoolForSuggestion[u.id]" 
+                                <select
+                                    v-else
+                                    v-model="selectedPoolForSuggestion[u.id]"
                                     class="text-xs border border-gray-300 rounded-md py-1.5 pl-3 pr-8 focus:ring-primary focus:border-primary"
                                 >
-                                    <option v-for="p in pools.data" :key="p.id" :value="p.id">
+                                    <option
+                                        v-for="p in pools.data"
+                                        :key="p.id"
+                                        :value="p.id"
+                                    >
                                         {{ p.name }}
                                     </option>
                                 </select>
@@ -524,9 +559,11 @@ const loadSuggestions = async (filter: 'all' | 'accepted' = 'all') => {
     try {
         const suggs = await getSuggestions(filter);
         rawSuggestions.value = suggs || [];
-    } catch (e) {
+    }
+    catch (e) {
         console.error(e);
-    } finally {
+    }
+    finally {
         loadingSuggestions.value = false;
     }
 };
@@ -564,9 +601,11 @@ const loadGlobalSuggestions = async (filter: 'all' | 'accepted' = 'accepted') =>
                 }
             }
         }
-    } catch (e) {
+    }
+    catch (e) {
         console.error(e);
-    } finally {
+    }
+    finally {
         loadingGlobalSuggestions.value = false;
     }
 };
@@ -609,11 +648,11 @@ const openPool = async (p: any) => {
     selectedPool.value = pools.value.data.find(item => item.id === p.id) || p;
     const res = await getById(p.id);
     selectedPool.value = res.data;
-    
+
     if (rawSuggestions.value.length === 0) {
         await loadSuggestions(suggestionFilter.value);
     }
-    
+
     showMembersModal.value = true;
 };
 

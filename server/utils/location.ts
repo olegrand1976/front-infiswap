@@ -16,20 +16,21 @@ function getFilePath(country: CountryCode): string {
     let currentDir = process.cwd();
     try {
         currentDir = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
-    } catch (e) {
+    }
+    catch (e) {
         // ignore
     }
 
     const startDirs = [process.cwd(), currentDir];
     const triedPaths = [];
 
-    for (let baseDir of startDirs) {
+    for (const baseDir of startDirs) {
         let dir = baseDir;
         for (let i = 0; i < 6; i++) {
             const possiblePaths = [
                 path.resolve(dir, 'server/data', fileName),
                 path.resolve(dir, 'data', fileName),
-                path.resolve(dir, '.output/server/data', fileName)
+                path.resolve(dir, '.output/server/data', fileName),
             ];
 
             for (const p of possiblePaths) {
@@ -56,7 +57,7 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     const dLon = toRad(lon2 - lon1);
     const a
         = Math.sin(dLat / 2) ** 2
-        + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+            + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
 
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }

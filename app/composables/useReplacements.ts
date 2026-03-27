@@ -20,10 +20,21 @@ export const useReplacements = () => {
         error.value = null;
         success.value = false;
 
-        return await $apifetch('/api/replacements', {
-            method: 'POST',
-            body: JSON.stringify(formData),
-        });
+        try {
+            const response = await $apifetch('/api/replacements', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+            });
+            success.value = true;
+            return response;
+        }
+        catch (err) {
+            error.value = err;
+            throw err;
+        }
+        finally {
+            loading.value = false;
+        }
     };
 
     const getReplacements = async () => {
@@ -365,23 +376,25 @@ export const useDetailReplacement = (replacementId) => {
 export const sendResponse = () => {
     const { $apifetch, $toast } = useNuxtApp();
 
-    const isDisabled = useState('isDisabled', () => false);
+    const isDisabled = useState('replacementResponseIsDisabled', () => false);
 
     const submitResponse = async (formData) => {
+        isDisabled.value = true;
         try {
             await $apifetch('/api/replacement-responses/send', {
                 method: 'POST',
                 body: formData,
             });
-            isDisabled.value = false;
             toast.success('Réponse envoyée avec succès');
             return true;
         }
         catch (e) {
-            isDisabled.value = false;
             const errorMessage = e?.data?.message || e?.message || 'Une erreur est survenue lors de l\'envoi de la réponse';
             toast.error(errorMessage);
             throw e;
+        }
+        finally {
+            isDisabled.value = false;
         }
     };
 
@@ -396,11 +409,17 @@ export const useListResponse = (id) => {
 
     const listResponse = useState('listResponse', () => []);
     const listApply = useState('listApply', () => []);
-    const loading = useState('loading', () => false);
+    const loading = useState('replacementListResponseLoading', () => false);
 
     async function fetchListResponse() {
-        const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET' });
-        listResponse.value = response.responses;
+        loading.value = true;
+        try {
+            const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET' });
+            listResponse.value = response.responses;
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function getReplacementResponses() {
@@ -419,13 +438,16 @@ export const useListResponse = (id) => {
 export const changeStatusReplacement = () => {
     const { $apifetch } = useNuxtApp();
     const changeStatus = async (responseId: number, status: string) => {
-        return await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
-            method: 'PUT',
-        }).then(() => {
+        try {
+            await $apifetch(`/api/replacement-responses/${responseId}/update-status?status=${status}`, {
+                method: 'PUT',
+            });
             toast.success('Mise à jour effectuée');
-        }).catch(() => {
+        }
+        catch (e) {
             toast.error('Une erreur est survenue lors de la mise à jour.');
-        });
+            throw e;
+        }
     };
 
     return { changeStatus };

@@ -9,8 +9,8 @@ type TimesheetList = {
 export const useTimesheets = () => {
     const { $apifetch } = useNuxtApp();
     const timesheets = useState<TimesheetList>('timesheets', () => ({ data: [], meta: {} }));
-    const error = useState('error', () => null);
-    const loading = useState('loading', () => false);
+    const error = useState('timesheetError', () => null);
+    const loading = useState('timesheetLoading', () => false);
 
     async function getAll(missionId: number, page = 1, perPage = 5, options = {}) {
         return await $apifetch(`api/institution/timesheets/${missionId}`, {

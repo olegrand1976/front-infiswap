@@ -1,16 +1,19 @@
 import type { Referrer } from '~/lib/types';
 
 export const useReferrer = () => {
-    const loading = useState('loading', () => false);
+    const loading = useState('referrerLoading', () => false);
     const { $apifetch } = useNuxtApp();
     const userReferrer = useState<Referrer[]>('comments', () => undefined);
 
     async function getUserReferrer() {
         loading.value = true;
-        const response = await $apifetch(`api/users/business-referrers`);
-        userReferrer.value = response.data;
-
-        loading.value = false;
+        try {
+            const response = await $apifetch(`api/users/business-referrers`);
+            userReferrer.value = response.data;
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function updateReferrer(id: number, newValue: {

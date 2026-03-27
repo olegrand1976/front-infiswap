@@ -4,7 +4,7 @@ import { PERPAGE } from '~/lib/constants';
 
 export const usePartners = () => {
     const { $apifetch, $toast } = useNuxtApp();
-    const loading = useState('loading', () => false);
+    const loading = useState('partnerLoading', () => false);
     const count = useState<number>('userCount', () => 0);
     const demandPartners = useState<Pagination<UserPartner>>('demandPartners', () => ({
         data: [],
@@ -23,6 +23,7 @@ export const usePartners = () => {
     }));
     const demandPartner = useState<UserPartner>('demandPartner', () => null);
     const demandResponses = useState('demandResponses', () => null);
+    const error = useState('partnerError', () => null);
 
     const create = async (formData) => {
         return await $apifetch('/api/partners/create', {
@@ -44,7 +45,8 @@ export const usePartners = () => {
                 demandPartners.value = response.partnerships;
                 count.value = response.count;
             });
-        } finally {
+        }
+        finally {
             loading.value = false;
         }
     }

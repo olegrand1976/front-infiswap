@@ -12,8 +12,8 @@ export const useInstitutionServices = () => {
     const { $apifetch } = useNuxtApp();
     const services = useState<DataList>('services', () => ({ data: [], meta: {} }));
     const count = useState<number>('servicesCount', () => 0);
-    const error = useState('error', () => null);
-    const loading = useState('loading', () => false);
+    const error = useState('institutionError', () => null);
+    const loading = useState('institutionLoading', () => false);
 
     async function getAll(page = 1, perPage = 25, options = {}) {
         return await $apifetch('api/institution/services/', {

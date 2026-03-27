@@ -11,8 +11,8 @@ export const useMissions = () => {
     const { $apifetch } = useNuxtApp();
     const missions = useState<MissionList>('missions', () => ({ data: [], meta: {} }));
     const count = useState<number>('missionsCount', () => 0);
-    const error = useState('error', () => null);
-    const loading = useState('loading', () => false);
+    const error = useState('missionError', () => null);
+    const loading = useState('missionLoading', () => false);
 
     async function create(formData) {
         const response = await $apifetch(`/api/institution/missions`, {
@@ -24,15 +24,20 @@ export const useMissions = () => {
     }
 
     async function getAll(page = 1, perPage = 25, options = {}) {
-        return await $apifetch('api/institution/missions/', {
-            params: {
-                page: page,
-                perPage: perPage,
-                ...options,
-            },
-        }).then((response) => {
+        loading.value = true;
+        try {
+            const response = await $apifetch('api/institution/missions/', {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    ...options,
+                },
+            });
             missions.value = response;
-        });
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function getById(id: number) {
@@ -75,15 +80,20 @@ export const useMissionResponses = () => {
     const loading = useState('missionResponsesLoading', () => false);
 
     async function getAll(page = 1, perPage = 25, options = {}) {
-        return await $apifetch('/api/institution/missions/responses', {
-            params: {
-                page: page,
-                perPage: perPage,
-                ...options,
-            },
-        }).then((response) => {
+        loading.value = true;
+        try {
+            const response = await $apifetch('/api/institution/missions/responses', {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    ...options,
+                },
+            });
             responses.value = response;
-        });
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function apply(formData) {
@@ -96,15 +106,20 @@ export const useMissionResponses = () => {
     }
 
     async function getByMission(id, page = 1, perPage = 25, options = {}) {
-        return await $apifetch(`/api/institution/missions/responses/${id}`, {
-            params: {
-                page: page,
-                perPage: perPage,
-                ...options,
-            },
-        }).then((response) => {
+        loading.value = true;
+        try {
+            const response = await $apifetch(`/api/institution/missions/responses/${id}`, {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    ...options,
+                },
+            });
             responses.value = response;
-        });
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function update(id, formData) {
@@ -131,19 +146,24 @@ export const useMissionResponses = () => {
 export const useMissionInvoices = () => {
     const { $apifetch } = useNuxtApp();
     const invoices = useState<MissionList>('invoices', () => ({ data: [], meta: {} }));
-    const error = useState('error', () => null);
-    const loading = useState('loading', () => false);
+    const error = useState('missionInvoiceError', () => null);
+    const loading = useState('missionInvoiceLoading', () => false);
 
     async function getAll(page = 1, perPage = 25, options = {}) {
-        return await $apifetch('api/institution/mission-invoices/', {
-            params: {
-                page: page,
-                perPage: perPage,
-                ...options,
-            },
-        }).then((response) => {
+        loading.value = true;
+        try {
+            const response = await $apifetch('api/institution/mission-invoices/', {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    ...options,
+                },
+            });
             invoices.value = response;
-        });
+        }
+        finally {
+            loading.value = false;
+        }
     }
 
     async function create(formData) {
