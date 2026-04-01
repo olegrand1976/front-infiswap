@@ -6,23 +6,6 @@
             <div class="text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-blue-600 text-white">
                 MISSION
             </div>
-            <TableCell
-                v-if="type === ''"
-                class="bg-gray-100 text-xs pt-5"
-            >
-                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 flex items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                    {{ institutionName ?? mission.institution?.name ?? '—' }}
-                </div>
-            </TableCell>
-
-            <TableCell
-                v-if="type === ''"
-                class="bg-gray-100 text-xs pt-5"
-            >
-                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 flex items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                    —
-                </div>
-            </TableCell>
 
             <TableCell class="flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]">
                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">

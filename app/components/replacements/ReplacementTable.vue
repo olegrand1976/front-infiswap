@@ -4,18 +4,6 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none', gridClass]">
-                        <TableHead
-                            v-if="type === ''"
-                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                        >
-                            Nom complet
-                        </TableHead>
-                        <TableHead
-                            v-if="type === ''"
-                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                        >
-                            Téléphone
-                        </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>
@@ -103,38 +91,6 @@
                             >
                                 FERMÉ
                             </div>
-
-                            <TableCell
-                                v-if="type === ''"
-                                class="bg-gray-100 text-xs pt-5"
-                            >
-                                <div
-                                    class="pt-3 h-10 rounded cursor-pointer bg-[#E4E7F4] text-center px-3 flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap text-ellipsis"
-                                    @click="emit('show-info-user', r.user)"
-                                >
-                                    <span>{{ r.user.full_name }}</span>
-                                    <div
-                                        v-if="r.user.is_favorited"
-                                        class="flex items-center gap-0.5 shrink-0"
-                                        title="Infirmier favori"
-                                    >
-                                        <StarIconSolid class="w-3 h-3 text-yellow-400" />
-                                        <span
-                                            v-if="r.user.stars > 0"
-                                            class="text-[10px] text-gray-400 font-medium"
-                                        >({{ r.user.stars }})</span>
-                                    </div>
-                                </div>
-                            </TableCell>
-
-                            <TableCell
-                                v-if="type === ''"
-                                class="bg-gray-100 text-xs pt-5"
-                            >
-                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 items-center overflow-hidden whitespace-nowrap text-ellipsis">
-                                    {{ r.user.phone_number }}
-                                </div>
-                            </TableCell>
 
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
@@ -370,12 +326,6 @@
             <Table>
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
-                        <TableHead
-                            v-if="type === ''"
-                            class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                        >
-                            Nom complet
-                        </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Date
                         </TableHead>
@@ -641,7 +591,7 @@ const openCloseDialog = (r: Replacement) => {
 const gridColsByType: Record<string, string> = {
     'groups': 'grid-cols-8',
     'me': 'grid-cols-6',
-    '': 'grid-cols-10',
+    '': 'grid-cols-8',
 };
 const gridClass = computed(() => gridColsByType[props.type] ?? 'grid-cols-8');
 

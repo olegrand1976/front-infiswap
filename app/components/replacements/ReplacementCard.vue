@@ -23,29 +23,6 @@
                         {{ institutionName }}
                     </span>
                 </div>
-                <div
-                    v-else-if="replacement.creator_name"
-                    class="flex flex-col"
-                >
-                    <h2
-                        class="text-base font-semibold text-gray-900 mb-0.5 group-hover:text-primary transition-colors flex items-center gap-2"
-                    >
-                        {{ replacement.creator_name }}
-                        <div
-                            v-if="replacement.is_favorited"
-                            class="flex items-center gap-0.5"
-                            title="Infirmier favori"
-                        >
-                            <StarIcon
-                                class="w-4 h-4 text-yellow-400"
-                            />
-                            <span
-                                v-if="replacement.stars > 0"
-                                class="text-[10px] text-gray-400 font-medium"
-                            >({{ replacement.stars }})</span>
-                        </div>
-                    </h2>
-                </div>
             </div>
 
             <span
