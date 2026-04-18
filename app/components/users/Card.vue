@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full max-w-full overflow-hidden transition-all duration-300 bg-white rounded-xl">
-        <div class="relative flex items-center justify-center h-36 bg-primary to-blue-700">
+    <div class="flex h-full min-h-0 w-full max-w-full flex-col overflow-hidden rounded-xl bg-card text-card-foreground transition-all duration-300">
+        <div class="relative flex h-36 items-center justify-center bg-primary">
             <LayoutsAppImage
                 :src="'logo_white.png'"
                 alt="logo-InfiSwap"
@@ -11,20 +11,22 @@
                 v-if="user.profil_url"
                 :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
                 alt="Photo de profil"
-                class="absolute border-4 border-white rounded-full w-28 h-28 -bottom-14"
+                class="absolute -bottom-14 h-28 w-28 rounded-full border-4 border-background"
             >
             <UserCircleIcon
                 v-else
-                class="absolute text-white bg-gray-300 border-4 border-white rounded-full w-28 h-28 -bottom-14"
+                class="absolute -bottom-14 h-28 w-28 rounded-full border-4 border-background bg-muted text-tertiary"
             />
         </div>
 
-        <div class="px-6 pt-20 text-center">
-            <h1 class="mb-1 text-2xl text-gray-800 dark:text-white">
+        <div class="px-5 pt-20 text-center">
+            <h1
+                class="mb-1 min-h-[3.5rem] text-2xl leading-snug text-card-foreground line-clamp-2 break-words hyphens-auto"
+            >
                 <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
                     user.lastname }}</span>
             </h1>
-            <p class="mb-4 font-semibold text-gray-500">
+            <p class="mb-0 min-h-[2.75rem] line-clamp-2 font-semibold leading-snug text-muted-foreground">
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
                 <template v-if="user.professional_category">
                     - {{ translatedCategory }}
@@ -595,75 +597,49 @@
         </div>
         <div
             v-else
-            class="px-6"
+            class="flex min-h-0 flex-1 flex-col px-5"
         >
-            <div class="my-4">
-                <Separator class="w-full h-1 bg-gray-200" />
-            </div>
-            <div class="px-6 space-y-2 text-sm text-left text-gray-500">
+            <Separator class="mt-4 h-px w-full shrink-0" />
+            <div class="grid min-h-0 flex-1 grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2.5 py-4 text-left text-sm text-muted-foreground">
                 <template v-if="minimalInfo">
-                    <p class="flex items-center gap-2">
-                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || user.profile.city || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
-                    </p>
+                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
+                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
                 </template>
                 <template v-else-if="showFullInfo">
-                    <p class="flex items-center gap-2 text-primary">
-                        <EnvelopeIcon class="w-5 h-5" />
-                        {{ user.email || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <LayoutsAppImage
-                            src="/icons/gender.png"
-                            class="h-5"
-                        />
-                        {{
-                            user.gender === 'F' ? 'Femme'
-                            : user.gender === 'M' ? 'Homme'
-                                : user.gender || 'Non renseigné'
-                        }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <PhoneIcon class="w-5 h-5 text-primary" />
-                        {{ user.phone_number || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || user.profile.city || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <IdentificationIcon class="w-5 h-5 text-primary" />
-                        {{ user.identifier_number || 'Non renseigné' }}
-                    </p>
+                    <EnvelopeIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug text-primary">{{ user.email || 'Non renseigné' }}</span>
+                    <LayoutsAppImage
+                        src="/icons/gender.png"
+                        class="size-5 shrink-0 justify-self-start"
+                    />
+                    <span class="min-w-0 break-words leading-snug">{{
+                        user.gender === 'F' ? 'Femme'
+                        : user.gender === 'M' ? 'Homme'
+                            : user.gender || 'Non renseigné'
+                    }}</span>
+                    <PhoneIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.phone_number || 'Non renseigné' }}</span>
+                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
+                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
+                    <IdentificationIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.identifier_number || 'Non renseigné' }}</span>
                 </template>
                 <template v-else>
-                    <p class="flex items-center gap-2">
-                        <BuildingOffice2Icon class="w-5 h-5 text-primary" />
-                        {{ user.city || user.profile.city || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <InboxArrowDownIcon class="w-5 h-5 text-primary" />
-                        {{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <PhoneIcon class="w-5 h-5 text-primary" />
-                        {{ user.phone_number || 'Non renseigné' }}
-                    </p>
+                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
+                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
+                    <PhoneIcon class="size-5 shrink-0 text-primary" />
+                    <span class="min-w-0 break-words leading-snug">{{ user.phone_number || 'Non renseigné' }}</span>
                 </template>
             </div>
-            <div class="pb-10">
-                <Separator class="w-full h-1 my-3 bg-gray-200" />
-            </div>
+            <Separator class="mb-0 h-px w-full shrink-0" />
         </div>
-        <div class="w-full h-4 bg-primary rounded-b-xl" />
+        <div class="h-4 w-full shrink-0 rounded-b-xl bg-primary" />
     </div>
 </template>
 
