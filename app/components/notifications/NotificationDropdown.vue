@@ -271,7 +271,8 @@ const handleNotificationClick = async (notification: Notification) => {
     }
     else if (type.includes('replacement')) {
         if (data.replacement_id) {
-            router.push(`/dashboard/replacements/detail/${data.replacement_id}`);
+            const suffix = type === 'replacement.response' ? '/list' : '';
+            router.push(`/dashboard/replacements/detail/${data.replacement_id}${suffix}`);
         }
     }
     else if (type.includes('partnership')) {

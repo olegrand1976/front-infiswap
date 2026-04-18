@@ -49,7 +49,23 @@
                         class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-gray-100/50 shadow-xl rounded-lg text-gray-900"
                     >
                         <div class="px-4 pt-4">
+                            <div
+                                v-if="list.institution"
+                                class="flex flex-col items-center gap-3 py-2"
+                            >
+                                <span class="text-xs font-semibold uppercase text-primary">Institution</span>
+                                <img
+                                    v-if="institutionLogoUrl(list.institution)"
+                                    :src="institutionLogoUrl(list.institution)!"
+                                    :alt="list.institution.name"
+                                    class="h-16 w-16 rounded-lg object-cover border border-gray-200"
+                                >
+                                <p class="text-center font-semibold text-gray-900">
+                                    {{ list.institution.name }}
+                                </p>
+                            </div>
                             <UsersCard
+                                v-else
                                 :user="list.repondedBy"
                                 :show-full-info="list.status === 'confirmed'"
                             />
@@ -105,6 +121,18 @@ import { CheckCircleIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import { useInstitutions } from '~/composables/useInstitution';
+
+const { getLogoUrl } = useInstitutions();
+
+const institutionLogoUrl = (inst: { logo?: string | null }) => {
+    if (!inst?.logo) return null;
+    const logo = inst.logo;
+    if (typeof logo === 'string' && (logo.startsWith('http://') || logo.startsWith('https://'))) {
+        return logo;
+    }
+    return getLogoUrl(logo) || null;
+};
 
 const { changeStatus } = changeStatusReplacement();
 

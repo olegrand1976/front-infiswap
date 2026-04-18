@@ -345,16 +345,19 @@ export type ReplacementDetail = {
 export type ReplacementResponse = {
     id: number;
     replacement_id: number;
-    reponded_by: number;
+    reponded_by: number | null;
+    institution_id?: number | null;
     status: 'pending' | 'confirmed' | 'canceled' | 'refused';
     reason?: string;
     comment?: string;
     created_at: string;
     updated_at: string;
     confirmed_at: string;
-    respondedBy: User;
-    responded_by: User;
-    repondedBy: User;
+    respondedBy: User | null;
+    responded_by: User | null;
+    repondedBy: User | null;
+    institution?: { id: number; name: string; logo?: string | null } | null;
+    parent?: Replacement;
 };
 
 export type HomeType = {

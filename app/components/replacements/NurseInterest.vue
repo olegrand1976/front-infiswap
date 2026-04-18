@@ -5,6 +5,9 @@
                 <thead>
                     <tr class="bg-gray-100 text-left">
                         <th class="px-4 py-2 border-b">
+                            Type
+                        </th>
+                        <th class="px-4 py-2 border-b">
                             Nom
                         </th>
                         <th class="px-4 py-2 border-b">
@@ -27,18 +30,24 @@
                         :key="index"
                         class="hover:bg-gray-50"
                     >
+                        <td class="px-4 py-2 border-b text-sm text-gray-600">
+                            {{ item.institution ? 'Institution' : 'Soignant' }}
+                        </td>
                         <td class="px-4 py-2 border-b">
-                            <!-- {{ item.repondedBy.full_name }} -->
+                            <template v-if="item.institution">
+                                <span class="font-medium text-gray-800">{{ item.institution.name }}</span>
+                            </template>
                             <UsersCrm
+                                v-else
                                 :user="item.repondedBy"
                                 class="font-medium text-gray-800"
                             />
                         </td>
                         <td class="px-4 py-2 border-b">
-                            {{ item.repondedBy.email }}
+                            {{ item.institution ? '—' : item.repondedBy?.email }}
                         </td>
                         <td class="px-4 py-2 border-b">
-                            {{ item.repondedBy.phone_number }}
+                            {{ item.institution ? '—' : item.repondedBy?.phone_number }}
                         </td>
                         <td
                             :class="cn('px-4 py-2 border-b font-semibold', {
@@ -51,11 +60,16 @@
                         </td>
                         <td class="px-4 py-2 border-b">
                             <button
+                                v-if="!item.institution && item.repondedBy"
                                 class="text-blue-600 hover:underline"
                                 @click="openModal(item.repondedBy)"
                             >
                                 Voir détail
                             </button>
+                            <span
+                                v-else
+                                class="text-gray-400 text-sm"
+                            >—</span>
                         </td>
                     </tr>
                 </tbody>
