@@ -41,45 +41,48 @@
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
                 <div
-                    class="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 2xl:grid-cols-4"
+                    class="grid grid-cols-1 items-stretch gap-2 sm:gap-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
                 >
                     <div
                         v-for="(list, index) in sortedListResponse"
                         :key="list.id ?? index"
-                        class="flex h-full min-h-0 w-full max-w-sm flex-col rounded-lg bg-muted/50 text-foreground shadow-xl"
+                        class="flex h-full min-h-0 w-full max-w-[17.5rem] flex-col rounded-md bg-muted/50 text-foreground shadow-md"
                     >
-                        <div class="flex min-h-0 flex-1 flex-col px-3 pt-3 sm:px-4 sm:pt-4">
+                        <div class="flex min-h-0 flex-1 flex-col px-2 pt-2">
                             <ReplacementsInstitutionResponseCard
                                 v-if="list.institution"
                                 class="h-full min-h-0 w-full flex-1"
+                                compact
                                 :institution="list.institution"
                                 :show-full-info="list.status === 'confirmed'"
                             />
                             <UsersCard
                                 v-else
                                 class="h-full min-h-0 w-full flex-1"
+                                compact
                                 :user="list.repondedBy"
                                 :show-full-info="list.status === 'confirmed'"
                             />
                         </div>
-                        <div class="mx-auto mt-auto flex min-h-[5.25rem] w-full max-w-[300px] shrink-0 flex-col justify-center border-t border-border/60 px-3 pb-3 pt-3 sm:px-4">
+                        <div class="mx-auto mt-auto flex min-h-[3.75rem] w-full max-w-[260px] shrink-0 flex-col justify-center border-t border-border/60 px-2 pb-2 pt-2">
                             <div
                                 v-if="list.status==='confirmed'"
-                                class="flex justify-center items-center gap-2 mx-auto w-1/2 text-success"
+                                class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm text-success"
                             >
-                                <CheckCircleIcon class="size-8" /> <span>Accepté</span>
+                                <CheckCircleIcon class="size-5 shrink-0" /> <span>Accepté</span>
                             </div>
                             <div
                                 v-else-if="list.status==='refused'"
-                                class="flex mx-auto gap-2 w-1/2 text-primary items-center font-bold"
+                                class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm font-bold text-primary"
                             >
-                                <XMarkIcon class="size-7" /> <span>Refusé</span>
+                                <XMarkIcon class="size-5 shrink-0" /> <span>Refusé</span>
                             </div>
                             <div
                                 v-if="!hasConfirmed() && list.status !== 'refused'"
-                                class="flex justify-center gap-4 w-full mt-2"
+                                class="mt-1 flex w-full justify-center gap-2"
                             >
                                 <Button
+                                    size="sm"
                                     class="w-1/2 hover:bg-primary/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'refused')"
@@ -87,6 +90,7 @@
                                     Refuser
                                 </Button>
                                 <Button
+                                    size="sm"
                                     class="w-1/2 bg-success hover:bg-success/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'confirmed')"

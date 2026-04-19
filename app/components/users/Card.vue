@@ -1,32 +1,47 @@
 <template>
-    <div class="flex h-full min-h-0 w-full max-w-full flex-col overflow-hidden rounded-xl bg-card text-card-foreground transition-all duration-300">
-        <div class="relative flex h-36 items-center justify-center bg-primary">
+    <div
+        class="flex h-full min-h-0 w-full max-w-full flex-col overflow-hidden bg-card text-card-foreground transition-all duration-300"
+        :class="compact ? 'rounded-lg' : 'rounded-xl'"
+    >
+        <div
+            class="relative flex items-center justify-center bg-primary"
+            :class="compact ? 'h-24' : 'h-36'"
+        >
             <LayoutsAppImage
                 :src="'logo_white.png'"
                 alt="logo-InfiSwap"
-                class="w-48 mb-8 hover:cursor-pointer"
+                :class="compact ? 'mb-2 w-28 hover:cursor-pointer' : 'mb-8 w-48 hover:cursor-pointer'"
                 format="png"
             />
             <img
                 v-if="user.profil_url"
                 :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
                 alt="Photo de profil"
-                class="absolute -bottom-14 h-28 w-28 rounded-full border-4 border-background"
+                class="absolute rounded-full border-background"
+                :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
             >
             <UserCircleIcon
                 v-else
-                class="absolute -bottom-14 h-28 w-28 rounded-full border-4 border-background bg-muted text-tertiary"
+                class="absolute rounded-full border-background bg-muted text-tertiary"
+                :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
             />
         </div>
 
-        <div class="px-5 pt-20 text-center">
+        <div
+            class="text-center"
+            :class="compact ? 'px-3 pt-11' : 'px-5 pt-20'"
+        >
             <h1
-                class="mb-1 min-h-[3.5rem] text-2xl leading-snug text-card-foreground line-clamp-2 break-words hyphens-auto"
+                class="mb-0.5 line-clamp-2 break-words leading-snug text-card-foreground hyphens-auto"
+                :class="compact ? 'min-h-[2.25rem] text-base' : 'min-h-[3.5rem] text-2xl'"
             >
                 <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
                     user.lastname }}</span>
             </h1>
-            <p class="mb-0 min-h-[2.75rem] line-clamp-2 font-semibold leading-snug text-muted-foreground">
+            <p
+                class="mb-0 line-clamp-2 font-semibold leading-snug text-muted-foreground"
+                :class="compact ? 'min-h-[1.25rem] text-xs' : 'min-h-[2.75rem] text-base'"
+            >
                 {{ user.gender === 'F' ? 'Infirmière' : 'Infirmier' }}
                 <template v-if="user.professional_category">
                     - {{ translatedCategory }}
@@ -597,54 +612,97 @@
         </div>
         <div
             v-else
-            class="flex min-h-0 flex-1 flex-col px-5"
+            class="flex min-h-0 flex-1 flex-col"
+            :class="compact ? 'px-3' : 'px-5'"
         >
-            <Separator class="mt-4 h-px w-full shrink-0" />
-            <div class="grid min-h-0 flex-1 grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2.5 py-4 text-left text-sm text-muted-foreground">
+            <Separator
+                class="h-px w-full shrink-0"
+                :class="compact ? 'mt-2' : 'mt-4'"
+            />
+            <div
+                class="grid min-h-0 flex-1 items-start text-left text-muted-foreground"
+                :class="compact
+                    ? 'grid-cols-[1rem_minmax(0,1fr)] gap-x-2 gap-y-1 py-2 text-xs'
+                    : 'grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2.5 py-4 text-sm'"
+            >
                 <template v-if="minimalInfo">
-                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <BuildingOffice2Icon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <InboxArrowDownIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
                 </template>
                 <template v-else-if="showFullInfo">
-                    <EnvelopeIcon class="size-5 shrink-0 text-primary" />
+                    <EnvelopeIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug text-primary">{{ user.email || 'Non renseigné' }}</span>
                     <LayoutsAppImage
                         src="/icons/gender.png"
-                        class="size-5 shrink-0 justify-self-start"
+                        class="shrink-0 justify-self-start"
+                        :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{
                         user.gender === 'F' ? 'Femme'
                         : user.gender === 'M' ? 'Homme'
                             : user.gender || 'Non renseigné'
                     }}</span>
-                    <PhoneIcon class="size-5 shrink-0 text-primary" />
+                    <PhoneIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.phone_number || 'Non renseigné' }}</span>
-                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <BuildingOffice2Icon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <InboxArrowDownIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
-                    <IdentificationIcon class="size-5 shrink-0 text-primary" />
+                    <IdentificationIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.identifier_number || 'Non renseigné' }}</span>
                 </template>
                 <template v-else>
-                    <BuildingOffice2Icon class="size-5 shrink-0 text-primary" />
+                    <BuildingOffice2Icon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon class="size-5 shrink-0 text-primary" />
+                    <InboxArrowDownIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
-                    <PhoneIcon class="size-5 shrink-0 text-primary" />
+                    <PhoneIcon
+                        class="shrink-0 text-primary"
+                        :class="iconSz"
+                    />
                     <span class="min-w-0 break-words leading-snug">{{ user.phone_number || 'Non renseigné' }}</span>
                 </template>
             </div>
             <Separator class="mb-0 h-px w-full shrink-0" />
         </div>
-        <div class="h-4 w-full shrink-0 rounded-b-xl bg-primary" />
+        <div
+            class="w-full shrink-0 bg-primary"
+            :class="compact ? 'h-2 rounded-b-lg' : 'h-4 rounded-b-xl'"
+        />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import {
     UserCircleIcon,
     InboxArrowDownIcon,
@@ -671,10 +729,15 @@ const props = withDefaults(defineProps<{
     user: User;
     showFullInfo?: boolean;
     minimalInfo?: boolean;
+    /** Carte dense (ex. grille liste remplacements) */
+    compact?: boolean;
 }>(), {
     showFullInfo: false,
     minimalInfo: false,
+    compact: false,
 });
+
+const iconSz = computed(() => (props.compact ? 'size-4' : 'size-5'));
 
 const { activityUser } = useReplacements();
 const { getAll } = useProduct();
