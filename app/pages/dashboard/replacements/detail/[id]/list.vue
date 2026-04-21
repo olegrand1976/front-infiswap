@@ -50,17 +50,17 @@
                     >
                         <div class="flex min-h-0 flex-1 flex-col px-2 pt-2">
                             <ReplacementsInstitutionResponseCard
-                                v-if="list.institution"
+                                v-if="isInstitutionRespondent(list)"
                                 class="h-full min-h-0 w-full flex-1"
                                 compact
-                                :institution="list.institution"
+                                :institution="list.respondent"
                                 :show-full-info="list.status === 'confirmed'"
                             />
                             <UsersCard
                                 v-else
                                 class="h-full min-h-0 w-full flex-1"
                                 compact
-                                :user="list.repondedBy"
+                                :user="list.respondent"
                                 :show-full-info="list.status === 'confirmed'"
                             />
                         </div>
@@ -129,13 +129,15 @@ const { loading, listResponse, fetchListResponse } = useListResponse(replacement
 const sortedListResponse = computed(() => {
     const items = [...(listResponse.value || [])];
     items.sort((a, b) => {
-        const aInst = !!a.institution;
-        const bInst = !!b.institution;
+        const aInst = isInstitutionRespondent(a);
+        const bInst = isInstitutionRespondent(b);
         if (aInst !== bInst) return aInst ? -1 : 1;
         return 0;
     });
     return items;
 });
+
+const isInstitutionRespondent = (response: any) => response?.respondent?.type === 'institution';
 
 const updateStatus = async (id: number, status: string) => {
     try {

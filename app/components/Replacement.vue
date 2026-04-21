@@ -813,10 +813,10 @@ const formatReplacementForCard = (r: any) => ({
         };
     })(),
     patient_count: r.patient_count,
-    status: r.status || (r.replaced_by ? 'filled' : 'available'),
+    status: r.status || (r.has_confirmed_substitute ? 'filled' : 'available'),
     type: r.type,
     details: r.details || [],
-    replaced_by: r.replaced_by,
+    has_confirmed_substitute: r.has_confirmed_substitute,
 });
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];

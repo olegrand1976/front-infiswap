@@ -35,8 +35,7 @@
                 class="mb-0.5 line-clamp-2 break-words leading-snug text-card-foreground hyphens-auto"
                 :class="compact ? 'min-h-[2.25rem] text-base' : 'min-h-[3.5rem] text-2xl'"
             >
-                <span class="font-semibold text-primary">{{ user.firstname }}</span> <span class="text-primary">{{
-                    user.lastname }}</span>
+                <span class="font-semibold text-primary">{{ user.full_name }}</span>
             </h1>
             <p
                 class="mb-0 line-clamp-2 font-semibold leading-snug text-muted-foreground"

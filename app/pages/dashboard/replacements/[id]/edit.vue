@@ -293,7 +293,7 @@ const loadReplacement = async () => {
 
         formData.id = r.id;
         formData.userId = r.user_id;
-        formData.replacedBy = r.replaced_by ?? null;
+        formData.replacedBy = r.confirmed_substitute?.id ?? null;
         formData.visibility = r.visibility ?? '';
         formData.status = r.status ?? '';
         formData.type = r.type ?? '';

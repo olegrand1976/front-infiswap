@@ -19,7 +19,8 @@ export interface MergedItem {
     patient_count?: number;
     time_slot?: Record<string, unknown>;
     details?: Record<string, unknown>[];
-    replaced_by?: number | null;
+    has_confirmed_substitute?: boolean;
+    confirmed_substitute?: Record<string, unknown> | null;
     user?: { id: number; full_name?: string; name?: string; phone_number?: string; institution?: Institution };
     institution?: { id: number; name: string; logo?: string | null } | null;
     // Mission

@@ -78,16 +78,16 @@
                             :class="['gap-2 grid border border-none overflow-x-hidden relative', gridClass]"
                         >
                             <div
-                                v-if="isUrgentReplacement(r) && r.replaced_by !== null"
+                                v-if="isUrgentReplacement(r) && r.status === 'open' && !hasConfirmedSubstitute(r)"
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
-                                            { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
+                                            { 'bg-primary text-white': r.type === 'immediate' && !hasConfirmedSubstitute(r) && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-gray-600 text-white',
-                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-15' : '-top-1 left-0']"
+                                         isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
@@ -288,7 +288,7 @@
                                                 <span>Modifier</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
-                                                v-if="currentUserId === r.user_id && r.replaced_by === null"
+                                                v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                                 class="flex items-center space-x-2 text-sm"
                                                 @click="emit('select-replacement', r)"
                                             >
@@ -306,7 +306,7 @@
                                         <EyeIcon class="h-6 mt-1" />
                                     </Button>
                                     <Button
-                                        v-if="currentUserId === r.user_id && r.replaced_by === null && r.status === 'closed'"
+                                        v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r) && r.status === 'closed'"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         @click="openCloseDialog(r)"
                                     >
@@ -362,16 +362,16 @@
                             class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative gap-y-2"
                         >
                             <div
-                                v-if="isUrgentReplacement(r) && r.replaced_by !== null"
+                                v-if="isUrgentReplacement(r) && r.status === 'open' && !hasConfirmedSubstitute(r)"
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
-                                            { 'bg-primary text-white': r.type === 'immediate' && r.replaced_by === null && r.status === 'open' })]"
+                                            { 'bg-primary text-white': r.type === 'immediate' && !hasConfirmedSubstitute(r) && r.status === 'open' })]"
                             >
                                 URGENT
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-yellow-400 text-red-600',
-                                         isUrgentReplacement(r) && r.replaced_by !== null ? '-top-1 left-15' : '-top-1 left-0']"
+                                         isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
                             </div>
@@ -473,7 +473,7 @@
                                                     <span>Modifier</span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem
-                                                    v-if="currentUserId === r.user_id && r.replaced_by === null"
+                                                    v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                                     class="flex items-center space-x-2 text-sm"
                                                     @click="emit('select-replacement', r)"
                                                 >
@@ -485,7 +485,7 @@
                                     </template>
                                     <template v-else>
                                         <Button
-                                            v-if="currentUserId === r.user_id && r.replaced_by === null"
+                                            v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             @click="openCloseDialog(r)"
                                         >
@@ -643,7 +643,8 @@ const hasShift = (r: Replacement, period: string) => {
 };
 
 const isUrgentReplacement = (r: Replacement) => r.type === 'immediate' && r.details?.length > 0;
-const isClosed = (r: Replacement) => r.status === 'closed' || r.replaced_by !== null;
+const hasConfirmedSubstitute = (r: Replacement) => r.has_confirmed_substitute === true;
+const isClosed = (r: Replacement) => r.status === 'closed' || hasConfirmedSubstitute(r);
 
 const getUniqueValues = (details: any[], extractor: (d: any) => any) =>
     [...new Set(details.flatMap(d => extractor(d) || []).filter(Boolean))];

@@ -29,9 +29,16 @@
                             :key="res.id"
                         >
                             <UsersName
-                                :user="res.responded_by"
+                                v-if="getRespondedUser(res)"
+                                :user="getRespondedUser(res)"
                                 class="font-medium text-gray-800"
                             />
+                            <span
+                                v-else
+                                class="font-medium text-gray-800"
+                            >
+                                {{ res.respondent?.full_name ?? 'Institution' }}
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -45,7 +52,7 @@ import { ref, onMounted } from 'vue';
 import { EyeIcon } from '@heroicons/vue/24/outline';
 import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { ReplacementRow } from '~/lib/types';
+import type { ReplacementRow, User } from '~/lib/types';
 
 const replacements = ref([]);
 const selected = ref<ReplacementRow | null>(null);
@@ -100,6 +107,14 @@ const formatDate = (dateStr: string) => {
 const handleRowClick = (row: { original: ReplacementRow } | ReplacementRow) => {
     selected.value = 'original' in row ? row.original : row;
     showModal.value = true;
+};
+
+const getRespondedUser = (response: any): User | null => {
+    if (response?.respondent?.type === 'user') {
+        return response.respondent as User;
+    }
+
+    return null;
 };
 
 const columns = [
