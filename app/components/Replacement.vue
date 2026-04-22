@@ -1004,9 +1004,9 @@ watch(
             currentItems.value = [...initialItems.value];
             isSubmitted.value = false;
         }
-        else if (isSubmitted.value) {
+        // else if (isSubmitted.value) {
             submitSearch();
-        }
+        // }
     },
     { deep: true },
 );
