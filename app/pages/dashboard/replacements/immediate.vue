@@ -332,15 +332,7 @@ const openProposalDialog = (value: string) => {
     proposalDialog.value = true;
 };
 
-// const onZipCodeAdded = async (zip: string) => {
-//     const citiesFromZip = await getCityFromZipCode(zip);
-//     if (!citiesFromZip) return;
 
-//     const citiesSet = new Set(formData.cities);
-//     citiesFromZip.forEach(city => citiesSet.add(city));
-//     formData.cities = Array.from(citiesSet);
-//     openProposalDialog(zip);
-// };
 const onZipCodeAdded = async (zip: string) => {
     const country = user.value.profile.country;
 
