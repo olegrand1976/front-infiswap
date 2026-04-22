@@ -47,6 +47,15 @@
                             type="tel"
                         />
 
+                        <InputIcon
+                            v-model="formData.validation_date"
+                            rounded="md"
+                            label="Date de validation"
+                            placeholder="Date de validation"
+                            type="tel"
+                        />
+
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Logo de l'institution
@@ -190,6 +199,7 @@ const formData = reactive({
     phone_number: '',
     logo: null,
     can_apply_replacements: false,
+    validation_date:'',
     address: {
         street_address: '',
         city: '',
@@ -243,6 +253,9 @@ const fetchInstitution = async () => {
             formData.company_number = institution.value.company_number || '';
             formData.phone_number = institution.value.phone_number || institution.value.contact?.phone_number || '';
             formData.can_apply_replacements = !!institution.value.can_apply_replacements;
+            if (institution.value.validation_date) {
+                formData.validation_date = institution.value.validation_date || '';
+            }
 
             if (institution.value.address) {
                 formData.address.street_address = institution.value.address.street_address || '';

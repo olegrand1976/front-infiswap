@@ -406,16 +406,44 @@ const openProposalDialog = (value: string) => {
     proposalDialog.value = true;
 };
 
+const validateZipCode = (zip: string): boolean => {
+    const country = user.value?.profile?.country;
+
+    if (!zip) return false;
+
+    const cleanZip = zip.trim();
+
+    if (country === 'be') {
+        return /^[0-9]{4}$/.test(cleanZip);
+    }
+
+    if (country === 'fr') {
+        return /^[0-9]{5}$/.test(cleanZip);
+    }
+
+    // fallback (si pays inconnu)
+    return /^[0-9]{4,5}$/.test(cleanZip);
+};
+
 const onZipCodeAdded = async (zip: string) => {
+    if (!validateZipCode(zip)) {
+        toast.error(
+            user.value?.profile?.country === 'be'
+                ? 'Le code postal doit contenir 4 chiffres (Belgique)'
+                : 'Le code postal doit contenir 5 chiffres (France)'
+        );
+        return;
+    }
+
     const citiesFromZip = await getCitiesFomZipCode(zip);
     if (!citiesFromZip) return;
 
     const citiesSet = new Set(formData.cities);
     citiesFromZip.forEach(city => citiesSet.add(city));
+
     formData.cities = Array.from(citiesSet);
     openProposalDialog(zip);
 };
-
 const onCityAdded = async (city: string) => {
     const zipCode = await getZipCodeFromCity(city);
     if (zipCode && !formData.zipCodes.includes(zipCode)) {
