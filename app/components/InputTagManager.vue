@@ -10,6 +10,7 @@
                 :icon="icon"
                 :placeholder="placeholder"
                 class="w-full"
+                :maxlength="maxLength"
                 @keyup="handleKeyUp"
                 @blur="handleBlur"
             />
@@ -48,6 +49,8 @@
 <script setup>
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import { InputIcon } from '~/components/ui/input-with-icon';
+
+const user = useState('user');
 
 const props = defineProps({
     label: String,
@@ -138,6 +141,22 @@ const handleBlur = () => {
         addItem();
     }
 };
+const maxLength = computed(() => {
+    return user.value?.profile?.country === 'fr' ? 5 : 4;
+});
+
+watch(inputValue, (val) => {
+    // garder uniquement les chiffres
+    let clean = val.replace(/\D/g, '');
+
+    // limiter la longueur
+    if (clean.length > maxLength.value) {
+        clean = clean.slice(0, maxLength.value);
+    }
+
+    inputValue.value = clean;
+});
+
 </script>
 
 <style scoped>

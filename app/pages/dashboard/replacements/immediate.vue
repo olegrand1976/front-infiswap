@@ -332,13 +332,50 @@ const openProposalDialog = (value: string) => {
     proposalDialog.value = true;
 };
 
+// const onZipCodeAdded = async (zip: string) => {
+//     const citiesFromZip = await getCityFromZipCode(zip);
+//     if (!citiesFromZip) return;
+
+//     const citiesSet = new Set(formData.cities);
+//     citiesFromZip.forEach(city => citiesSet.add(city));
+//     formData.cities = Array.from(citiesSet);
+//     openProposalDialog(zip);
+// };
 const onZipCodeAdded = async (zip: string) => {
+    const country = user.value.profile.country;
+
+    // Validation longueur
+    if (
+        (country === 'be' && zip.length !== 4) ||
+        (country === 'fr' && zip.length !== 5)
+    ) {
+        $toast({
+            description: `Code postal invalide pour ce pays`,
+        });
+
+        // supprimer le dernier ajouté
+        formData.zipCodes = formData.zipCodes.filter(z => z !== zip);
+        return;
+    }
+
+    // Validation uniquement chiffres
+    if (!/^\d+$/.test(zip)) {
+        $toast({
+            description: `Seulement des chiffres autorisés`,
+        });
+
+        formData.zipCodes = formData.zipCodes.filter(z => z !== zip);
+        return;
+    }
+
+    // logique existante
     const citiesFromZip = await getCityFromZipCode(zip);
     if (!citiesFromZip) return;
 
     const citiesSet = new Set(formData.cities);
     citiesFromZip.forEach(city => citiesSet.add(city));
     formData.cities = Array.from(citiesSet);
+
     openProposalDialog(zip);
 };
 
