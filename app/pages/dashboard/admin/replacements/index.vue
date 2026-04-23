@@ -26,6 +26,14 @@
                     class="w-full lg:w-[250px]"
                     @input="debouncedFilterReplacements"
                 />
+                <InputIcon
+                    v-model="option.country"
+                    rounded="md"
+                    placeholder="Pays (fr, be, us...)"
+                    class="w-full lg:w-[250px]"
+                    @input="debouncedFilterReplacements"
+                />
+
                 <Select
                     v-model="option.type"
                     @update:model-value="debouncedFilterReplacements"
@@ -310,7 +318,7 @@ import { Button } from '@/components/ui/button';
 import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { PERPAGE } from '~/lib/constants';
+import { LANGUAGES, PERPAGE } from '~/lib/constants';
 import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { regions, departments, formatPhoneNumber, getErrorMessage } from '~/lib/utils';
@@ -862,6 +870,27 @@ const columns: ColumnDef<Replacement>[] = [
                 }),
             ]);
         },
+    },
+    {
+        accessorKey: 'country',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Pays', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+        },
+
+        cell: ({ row }) => {
+            const country = row.original.country;
+
+            const countryLabel = LANGUAGES.find(l => l.value === country)?.label
+                ?? country
+                ?? '-';
+
+            return h('div', { class: 'text-center capitalize' }, countryLabel);
+        },
+
+        sortingFn: 'alphanumeric',
     },
 ];
 

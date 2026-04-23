@@ -406,20 +406,9 @@ const openProposalDialog = (value: string) => {
     proposalDialog.value = true;
 };
 
-// const onZipCodeAdded = async (zip: string) => {
-//     const citiesFromZip = await getCitiesFomZipCode(zip);
-//     if (!citiesFromZip) return;
-
-//     const citiesSet = new Set(formData.cities);
-//     citiesFromZip.forEach(city => citiesSet.add(city));
-//     formData.cities = Array.from(citiesSet);
-//     openProposalDialog(zip);
-// };
 
 const onZipCodeAdded = async (zip: string) => {
     const country = user.value?.profile?.country;
-
-    // Validation longueur + chiffres uniquement
     const isValid = (country === 'fr' && /^\d{5}$/.test(zip))
         || (country === 'be' && /^\d{4}$/.test(zip))
         || (country !== 'fr' && country !== 'be' && /^\d{4,5}$/.test(zip));
@@ -430,7 +419,6 @@ const onZipCodeAdded = async (zip: string) => {
                 ? 'Code postal invalide (4 chiffres requis pour la Belgique)'
                 : 'Code postal invalide (5 chiffres requis pour la France)'
         );
-        // Supprimer le zip invalide déjà ajouté par InputTagManager
         formData.zipCodes = formData.zipCodes.filter(z => z !== zip);
         return;
     }

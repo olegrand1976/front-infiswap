@@ -230,6 +230,16 @@ const formattedGroup = computed(() => {
     return form.group_roles.map(g => g.group_name).join(', ');
 });
 
+const getCountryName = (code: string | null) => {
+    switch (code) {
+        case 'fr': return 'France';
+        case 'be': return 'Belgique';
+        case 'us': return 'États-Unis';
+        case 'nl': return 'Pays-Bas';
+        default: return code;
+    }
+};
+
 const selectedGroupIds = ref<number[]>(form.group_roles.map(g => g.group_id));
 
 watch(selectedGroupIds, (newIds) => {
@@ -489,6 +499,14 @@ const route = useRoute();
                         label="Ville"
                     />
                 </div>
+                <div>
+                    <InputIcon
+                            :model-value="getCountryName(form.address.country)"
+                            rounded="md"
+                            label="Pays"
+                        />
+                </div>
+
                 <div>
                     <InputIcon
                         v-model="form.address.zipCode"
