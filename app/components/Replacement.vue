@@ -584,7 +584,7 @@ const { $toast } = useNuxtApp();
 interface ReplacementProps {
     selectedRegions?: string[];
     type?: string;
-    filters?: { type: string; role: string };
+    filters?: { type: string; role: string ; status: string};
     displayMode?: 'table' | 'cards';
     groupByProvince: boolean;
     filteredProvinces?: string[];
@@ -594,7 +594,7 @@ interface ReplacementProps {
 const props = withDefaults(defineProps<ReplacementProps>(), {
     selectedRegions: () => [],
     type: '',
-    filters: () => ({ type: 'all', role: 'all' }),
+    filters: () => ({ type: 'all', role: 'all', status: 'open' }),
     displayMode: 'cards' as const,
     filteredProvinces: () => [],
     selectedCountry: 'be',
@@ -663,7 +663,9 @@ const isAnyFilterActive = computed(() =>
     || formData.cityTags.length > 0
     || formData.selectedDays.length > 0
     || localFilters.type !== 'all'
-    || localFilters.role !== 'all',
+    || localFilters.role !== 'all'
+    || localFilters.status !== 'open',   // open = valeur par défaut, donc pas "actif"
+
 );
 
 const isEmpty = computed(() => {
@@ -679,6 +681,7 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const localFilters = reactive({
     type: props.filters.type,
     role: props.filters.role,
+    status: props.filters.status ?? 'open',
 });
 
 // Track whether onMounted fetch has run, to avoid double-fetch from watchers
@@ -976,6 +979,7 @@ watch(() => props.filters, (nf, old) => {
     if (!nf) return;
     localFilters.type = nf.type;
     localFilters.role = nf.role;
+    localFilters.status = nf.status ?? 'open';
     if (!mountedFetchDone.value) return;
     if (old && nf.type === old.type && nf.role === old.role) return;
     fetchData(page.value, perPage.value);

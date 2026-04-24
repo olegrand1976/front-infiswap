@@ -57,6 +57,20 @@
                                 </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                         </DropdownMenuGroup>
+                        <DropdownMenuGroup>
+                        <DropdownMenuSeparator />    
+                        <DropdownMenuLabel>Statut</DropdownMenuLabel>
+                        <DropdownMenuRadioGroup v-model="selectedFilters.status">
+                            <DropdownMenuRadioItem
+                                v-for="(label, key) in replacementStatusFilters"
+                                :key="key"
+                                :value="key"
+                            >
+                                {{ label }}
+                            </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                    </DropdownMenuGroup>
+
                     </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -167,10 +181,16 @@ const replacementRoleFilters = {
     caregiver: 'Aide soignant(e)',
     midwife: 'Sage-femme',
 };
+const replacementStatusFilters = {
+    open: 'Ouvert',
+    closed: 'Fermé',
+    all: 'Tous',
+};
 
 const selectedFilters = ref({
     type: 'all',
     role: 'all',
+    status: 'open',
 });
 
 const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
@@ -191,6 +211,7 @@ const activeFiltersCount = computed(() => {
     let count = 0;
     if (selectedFilters.value.type !== 'all') count++;
     if (selectedFilters.value.role !== 'all') count++;
+    if (selectedFilters.value.status !== 'open') count++;
     return count;
 });
 
