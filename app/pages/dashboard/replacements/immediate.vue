@@ -1,6 +1,8 @@
 <template>
     <div class="lg:ml-20 xl:ml-0 space-y-6">
-        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+        <div
+            class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg"
+        >
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
@@ -12,13 +14,17 @@
         </div>
 
         <Form @submit="submit">
-            <div class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full">
+            <div
+                class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full"
+            >
                 <h3 class="text-center text-lg text-primary py-4 mb-2 font-bold">
                     Besoin d’aide rapidement ? Rien de plus simple !
                 </h3>
                 <div class="space-y-4">
                     <div class="flex flex-wrap gap-6 mt-4">
-                        <div class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center">
+                        <div
+                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
+                        >
                             <h5 class="text-sm text-gray-700 font-medium">
                                 Heure début *
                             </h5>
@@ -28,7 +34,9 @@
                             />
                         </div>
 
-                        <div class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center">
+                        <div
+                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
+                        >
                             <h5 class="text-sm text-gray-700 font-medium">
                                 Heure fin *
                             </h5>
@@ -38,7 +46,9 @@
                             />
                         </div>
 
-                        <div class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center">
+                        <div
+                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
+                        >
                             <h5 class="text-sm text-gray-700 font-medium">
                                 Nombre de patients *
                             </h5>
@@ -56,7 +66,11 @@
                             </h5>
                             <InputTagManager
                                 v-model="formData.zipCodes"
-                                :placeholder="user.profile.country == 'fr' ? '75000, 40990, 89550' : '6565,4561,1237'"
+                                :placeholder="
+                                    user.profile.country == 'fr'
+                                        ? '75000, 40990, 89550'
+                                        : '6565,4561,1237'
+                                "
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :comma-validation="false"
@@ -79,7 +93,11 @@
                             </h5>
                             <InputTagManager
                                 v-model="formData.cities"
-                                :placeholder="user.profile.country ? 'Paris, Landes, Yonne' : 'Anvers, Bruges, Gand'"
+                                :placeholder="
+                                    user.profile.country
+                                        ? 'Paris, Landes, Yonne'
+                                        : 'Anvers, Bruges, Gand'
+                                "
                                 class="w-[102%] pt-4"
                                 :is-mobile="true"
                                 :comma-validation="true"
@@ -91,7 +109,9 @@
                     </div>
                     <div class="hidden relative lg:grid lg:grid-cols-2 lg:gap-4">
                         <div class="flex items-start gap-2 h-full">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10">
+                            <h5
+                                class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10"
+                            >
                                 Codes postaux *
                             </h5>
                             <div class="w-3/4">
@@ -109,7 +129,9 @@
                         </div>
 
                         <div class="flex items-start gap-2 h-full ml-4">
-                            <h5 class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10">
+                            <h5
+                                class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10"
+                            >
                                 Villes *
                             </h5>
                             <div class="w-3/4">
@@ -133,19 +155,19 @@
                         >
                             Boost IA
                         </Button>
-
-                        <ProposalLocationModal
-                            v-model="proposalDialog"
-                            v-model:newly-added-value="newlyAddedValue"
-                            title="Suggestions"
-                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
-                            :initial-zip-codes="formData.zipCodes"
-                            :initial-cities="formData.cities"
-                            :is-preference-mode="false"
-                            @update:initial-zip-codes="updateZipCodes"
-                            @update:initial-cities="updateCities"
-                        />
                     </div>
+
+                    <ProposalLocationModal
+                        v-model="proposalDialog"
+                        v-model:newly-added-value="newlyAddedValue"
+                        title="Suggestions"
+                        description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
+                        :initial-zip-codes="formData.zipCodes"
+                        :initial-cities="formData.cities"
+                        :is-preference-mode="false"
+                        @update:initial-zip-codes="updateZipCodes"
+                        @update:initial-cities="updateCities"
+                    />
 
                     <div class="grid grid-cols-[30%_70%] items-center pt-4 lg:pt-8">
                         <h5 class="text-sm text-gray-700 font-medium">
@@ -200,7 +222,9 @@
                     <label class="text-sm text-gray-700 font-medium">
                         Demander en tant que
                     </label>
-                    <div class="flex gap-2 flex-col sm:flex-row sm:gap-8 2xl:gap-12 sm:items-center">
+                    <div
+                        class="flex gap-2 flex-col sm:flex-row sm:gap-8 2xl:gap-12 sm:items-center"
+                    >
                         <div class="flex gap-2 items-center">
                             <input
                                 id="nurse"
@@ -209,9 +233,7 @@
                                 name="roleType"
                                 value="nurse"
                             >
-                            <label for="nurse">
-                                Infirmier(ère)
-                            </label>
+                            <label for="nurse"> Infirmier(ère) </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -221,9 +243,7 @@
                                 name="roleType"
                                 value="caregiver"
                             >
-                            <label for="caregiver">
-                                Aide soignant(e)
-                            </label>
+                            <label for="caregiver"> Aide soignant(e) </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -233,9 +253,7 @@
                                 name="roleType"
                                 value="midwife"
                             >
-                            <label for="midwife">
-                                Sage-femme
-                            </label>
+                            <label for="midwife"> Sage-femme </label>
                         </div>
                     </div>
                 </div>
@@ -253,16 +271,20 @@
 </template>
 
 <script setup lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
-import { LayoutsAppImage } from '#components';
-import type { User } from '~/lib/types';
+import type { CountryCode, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup } from '@/components/ui/select';
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectGroup,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
@@ -283,7 +305,25 @@ const hasMultipleValidRoles = computed(() => {
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
-const { getCityFromZipCode, getZipCodeFromCity } = useOpenai();
+const { getZipCodesFromCity } = useLocation();
+const countryCode = computed<CountryCode>(() => {
+    const country = (
+        user.value?.profile?.country
+        || user.value?.profile?.working_at
+        || 'be'
+    )
+        .toString()
+        .toLowerCase();
+    if (country === 'fr' || country === 'france') return 'fr';
+    if (
+        country === 'us'
+        || country === 'usa'
+        || country === 'etats-unis'
+        || country === 'états-unis'
+    )
+        return 'us';
+    return 'be';
+});
 
 onMounted(() => {
     if (hasMultipleValidRoles.value) {
@@ -333,19 +373,15 @@ const openProposalDialog = (value: string) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const citiesFromZip = await getCityFromZipCode(zip);
-    if (!citiesFromZip) return;
-
-    const citiesSet = new Set(formData.cities);
-    citiesFromZip.forEach(city => citiesSet.add(city));
-    formData.cities = Array.from(citiesSet);
     openProposalDialog(zip);
 };
 
 const onCityAdded = async (city: string) => {
-    const zipCode = await getZipCodeFromCity(city);
-    if (zipCode && !formData.zipCodes.includes(zipCode)) {
-        formData.zipCodes = [...formData.zipCodes, zipCode];
+    const zipCodes = await getZipCodesFromCity(city, countryCode.value);
+    if (zipCodes.length) {
+        const zipCodesSet = new Set(formData.zipCodes);
+        zipCodes.forEach(zipCode => zipCodesSet.add(zipCode));
+        formData.zipCodes = Array.from(zipCodesSet);
     }
     openProposalDialog(city);
 };
