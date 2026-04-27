@@ -251,6 +251,19 @@ const columns: ColumnDef<User>[] = [
         enableSorting: false,
     },
     {
+        accessorKey: 'account_type',
+        header: 'Type',
+        cell: ({ row }) => {
+            const type = row.getValue('account_type');
+
+            const label = type === 'institution'
+                ? 'Institution'
+                : 'Infirmier';
+
+            return h('div', { class: 'ml-4' }, label);
+        },
+    },
+        {
         accessorKey: 'ambassador',
         header: 'Inficoncept',
         cell: ({ row }) => {
