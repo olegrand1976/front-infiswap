@@ -1,6 +1,6 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+        <div class="mt-6 flex items-center gap-2 rounded-lg text-primary sm:bg-muted/50 sm:px-9">
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
@@ -17,20 +17,20 @@
                     Période
                 </h4>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
-                    <span class="text-xs text-white ms-3">Début</span>
-                    <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
+                    <span class="ms-3 text-xs text-primary-foreground">Début</span>
+                    <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
                         <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                        <div class="text-xs text-primary w-24 h-9 flex items-center rounded-full bg-white">
+                        <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
                             {{ startDate }}
                         </div>
                     </div>
                 </div>
                 <span class="text-primary">au</span>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
-                    <span class="text-xs text-white ms-3">Fin</span>
-                    <div class="flex justify-center items-center text-primary rounded-full bg-white shadow w-40">
+                    <span class="ms-3 text-xs text-primary-foreground">Fin</span>
+                    <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
                         <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
-                        <div class="text-xs text-primary w-24 h-9 flex items-center rounded-full bg-white">
+                        <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
                             {{ endDate }}
                         </div>
                     </div>
@@ -41,37 +41,48 @@
         <div class="mt-8 mb-12 p-2">
             <template v-if="listResponse.length != 0">
                 <div
-                    v-for="(list, index) in listResponse"
-                    :key="index"
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 lg:gap-4 justify-between items-center"
+                    class="grid grid-cols-1 items-stretch gap-2 sm:gap-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
                 >
                     <div
-                        class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-gray-100/50 shadow-xl rounded-lg text-gray-900"
+                        v-for="(list, index) in sortedListResponse"
+                        :key="list.id ?? index"
+                        class="flex h-full min-h-0 w-full max-w-[17.5rem] flex-col rounded-md bg-muted/50 text-foreground shadow-md"
                     >
-                        <div class="px-4 pt-4">
+                        <div class="flex min-h-0 flex-1 flex-col px-2 pt-2">
+                            <ReplacementsInstitutionResponseCard
+                                v-if="isInstitutionRespondent(list)"
+                                class="h-full min-h-0 w-full flex-1"
+                                compact
+                                :institution="list.respondent"
+                                :show-full-info="list.status === 'confirmed'"
+                            />
                             <UsersCard
-                                :user="list.repondedBy"
+                                v-else
+                                class="h-full min-h-0 w-full flex-1"
+                                compact
+                                :user="list.respondent"
                                 :show-full-info="list.status === 'confirmed'"
                             />
                         </div>
-                        <div class="p-4 mx-8 mt-2 w-[300px]">
+                        <div class="mx-auto mt-auto flex min-h-[3.75rem] w-full max-w-[260px] shrink-0 flex-col justify-center border-t border-border/60 px-2 pb-2 pt-2">
                             <div
                                 v-if="list.status==='confirmed'"
-                                class="flex justify-center items-center gap-2 mx-auto w-1/2 text-success"
+                                class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm text-success"
                             >
-                                <CheckCircleIcon class="size-8" /> <span>Accepté</span>
+                                <CheckCircleIcon class="size-5 shrink-0" /> <span>Accepté</span>
                             </div>
                             <div
                                 v-else-if="list.status==='refused'"
-                                class="flex mx-auto gap-2 w-1/2 text-primary items-center font-bold"
+                                class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm font-bold text-primary"
                             >
-                                <XMarkIcon class="size-7" /> <span>Refusé</span>
+                                <XMarkIcon class="size-5 shrink-0" /> <span>Refusé</span>
                             </div>
                             <div
                                 v-if="!hasConfirmed() && list.status !== 'refused'"
-                                class="flex justify-center gap-4 w-full mt-2"
+                                class="mt-1 flex w-full justify-center gap-2"
                             >
                                 <Button
+                                    size="sm"
                                     class="w-1/2 hover:bg-primary/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'refused')"
@@ -79,6 +90,7 @@
                                     Refuser
                                 </Button>
                                 <Button
+                                    size="sm"
                                     class="w-1/2 bg-success hover:bg-success/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'confirmed')"
@@ -91,7 +103,7 @@
                 </div>
             </template>
             <template v-else>
-                <span class="text-black/60 mx-auto flex justify-center items-center mt-8">
+                <span class="mx-auto mt-8 flex items-center justify-center text-muted-foreground">
                     Aucune liste à afficher pour le moment
                 </span>
             </template>
@@ -113,6 +125,19 @@ const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
 
 const { loading, listResponse, fetchListResponse } = useListResponse(replacementId);
+
+const sortedListResponse = computed(() => {
+    const items = [...(listResponse.value || [])];
+    items.sort((a, b) => {
+        const aInst = isInstitutionRespondent(a);
+        const bInst = isInstitutionRespondent(b);
+        if (aInst !== bInst) return aInst ? -1 : 1;
+        return 0;
+    });
+    return items;
+});
+
+const isInstitutionRespondent = (response: any) => response?.respondent?.type === 'institution';
 
 const updateStatus = async (id: number, status: string) => {
     try {

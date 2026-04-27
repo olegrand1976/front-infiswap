@@ -272,6 +272,14 @@ interface PaginationLink {
     active: boolean;
 }
 
+/** API MorphRespondentResource payload (user, institution, or generic). */
+export type ReplacementParty = Record<string, unknown> & {
+    id?: number;
+    type?: string;
+    full_name?: string | null;
+    name?: string | null;
+};
+
 export type Replacement = {
     id: number;
     user_id: number;
@@ -279,7 +287,9 @@ export type Replacement = {
     user_phone_number: string;
     user: User;
     role_type: AccountType;
-    replaced_by?: number;
+    institution_id?: number | null;
+    has_confirmed_substitute?: boolean;
+    confirmed_substitute?: ReplacementParty | null;
     experience_years: number | null;
     start_date: string;
     end_date: string;
@@ -345,16 +355,36 @@ export type ReplacementDetail = {
 export type ReplacementResponse = {
     id: number;
     replacement_id: number;
-    reponded_by: number;
+    respondent_type?: string | null;
+    respondent_id?: number | null;
     status: 'pending' | 'confirmed' | 'canceled' | 'refused';
     reason?: string;
     comment?: string;
     created_at: string;
     updated_at: string;
     confirmed_at: string;
-    respondedBy: User;
-    responded_by: User;
-    repondedBy: User;
+    respondent?: ((User & {
+        type: 'user';
+        profil_url?: string | null;
+        zip_code?: string | null;
+        city?: string | null;
+    }) | {
+        type: 'institution';
+        id: number;
+        full_name: string;
+        email?: string | null;
+        phone_number?: string | null;
+        profil_url?: string | null;
+        identifier_number?: string | null;
+        logo?: string | null;
+        name?: string;
+        company_number?: string | null;
+        city?: string | null;
+        zip_code?: string | null;
+        street_address?: string | null;
+        country?: string | null;
+    }) | null;
+    parent?: Replacement;
 };
 
 export type HomeType = {

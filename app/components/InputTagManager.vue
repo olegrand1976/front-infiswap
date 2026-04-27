@@ -155,6 +155,10 @@ watch(inputValue, (val) => {
     }
 
     inputValue.value = clean;
+
+    if (clean.length === maxLength.value) {
+        nextTick(() => addItem());
+    }
 });
 
 </script>

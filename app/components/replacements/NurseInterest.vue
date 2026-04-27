@@ -5,6 +5,9 @@
                 <thead>
                     <tr class="bg-gray-100 text-left">
                         <th class="px-4 py-2 border-b">
+                            Type
+                        </th>
+                        <th class="px-4 py-2 border-b">
                             Nom
                         </th>
                         <th class="px-4 py-2 border-b">
@@ -27,18 +30,24 @@
                         :key="index"
                         class="hover:bg-gray-50"
                     >
+                        <td class="px-4 py-2 border-b text-sm text-gray-600">
+                            {{ item.respondent?.type === 'institution' ? 'Institution' : 'Soignant' }}
+                        </td>
                         <td class="px-4 py-2 border-b">
-                            <!-- {{ item.repondedBy.full_name }} -->
+                            <template v-if="item.respondent?.type === 'institution'">
+                                <span class="font-medium text-gray-800">{{ item.respondent?.full_name }}</span>
+                            </template>
                             <UsersCrm
-                                :user="item.repondedBy"
+                                v-else
+                                :user="getRespondedUser(item)"
                                 class="font-medium text-gray-800"
                             />
                         </td>
                         <td class="px-4 py-2 border-b">
-                            {{ item.repondedBy.email }}
+                            {{ item.respondent?.type === 'institution' ? '—' : getRespondedUser(item)?.email }}
                         </td>
                         <td class="px-4 py-2 border-b">
-                            {{ item.repondedBy.phone_number }}
+                            {{ item.respondent?.type === 'institution' ? '—' : getRespondedUser(item)?.phone_number }}
                         </td>
                         <td
                             :class="cn('px-4 py-2 border-b font-semibold', {
@@ -51,11 +60,16 @@
                         </td>
                         <td class="px-4 py-2 border-b">
                             <button
+                                v-if="item.respondent?.type !== 'institution' && item.respondent"
                                 class="text-blue-600 hover:underline"
-                                @click="openModal(item.repondedBy)"
+                                @click="openModal(item.respondent)"
                             >
                                 Voir détail
                             </button>
+                            <span
+                                v-else
+                                class="text-gray-400 text-sm"
+                            >—</span>
                         </td>
                     </tr>
                 </tbody>
@@ -83,7 +97,7 @@
 
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-import type { ReplacementResponse } from '~/lib/types';
+import type { ReplacementResponse, User } from '~/lib/types';
 
 defineProps<{
     responses: ReplacementResponse[];
@@ -106,6 +120,15 @@ const traduireStatut = (statut: string) => {
 
 const showModal = ref(false);
 const selectedUser = ref(null);
+
+const getRespondedUser = (item: ReplacementResponse): User | null => {
+    const respondent = item.respondent as any;
+    if (respondent?.type === 'user') {
+        return respondent as User;
+    }
+
+    return null;
+};
 
 function openModal(user) {
     selectedUser.value = user;

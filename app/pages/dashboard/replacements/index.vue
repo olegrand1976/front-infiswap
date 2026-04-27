@@ -63,6 +63,18 @@
                                 </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                         </DropdownMenuGroup>
+                        <DropdownMenuSeparator />    
+                        <DropdownMenuLabel>Statut</DropdownMenuLabel>
+                        <DropdownMenuRadioGroup v-model="selectedFilters.status">
+                            <DropdownMenuRadioItem
+                                v-for="(label, key) in replacementStatusFilters"
+                                :key="key"
+                                :value="key"
+                            >
+                                {{ label }}
+                            </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+
                     </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -248,6 +260,7 @@ const isAllSelected = computed(() => selectedRegions.value.length === 0);
 const selectedFilters = ref({
     type: 'all',
     role: 'all',
+    status: 'open',
 });
 
 const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
@@ -310,7 +323,11 @@ watch(selectedFilters, (newFilters) => {
 watch(selectedCountry, () => {
     selectedRegions.value = [];
 });
-
+const replacementStatusFilters = {
+    open: 'Ouvert',
+    closed: 'Fermé',
+    all: 'Tous',
+};
 useHead({
     title: 'Chercher un remplacement',
 });

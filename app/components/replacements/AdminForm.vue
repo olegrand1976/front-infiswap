@@ -494,7 +494,7 @@ const transformCareInformations = (careInfo: string | object) => {
 const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
     id: replacement?.id ?? null,
     userId: replacement?.user_id ?? null,
-    replacedBy: replacement?.replaced_by ?? null,
+    replacedBy: replacement?.confirmed_substitute?.id ?? null,
     experienceYears: replacement?.experience_years ?? null,
     startDate: formatDate(replacement?.start_date ?? null),
     endDate: formatDate(replacement?.end_date ?? null),

@@ -216,10 +216,10 @@
                             </svg>
                         </div>
                         <p class="text-emerald-800 text-sm font-semibold">
-                            Candidature envoyée
+                            {{ isApplicationAccepted ? 'Candidature acceptée' : 'Candidature envoyée' }}
                         </p>
                         <p class="text-emerald-500 text-xs mt-1">
-                            Vous avez déjà postulé à cette mission
+                            {{ isApplicationAccepted ? 'Vous avez déjà été accepté(e) pour cette mission' : 'Vous avez déjà postulé à cette mission' }}
                         </p>
                     </div>
 
@@ -290,7 +290,7 @@ import {
     BuildingOfficeIcon,
     ChevronRightIcon,
 } from '@heroicons/vue/24/outline';
-import type { Mission } from '~/lib/types';
+import type { Mission, MissionResponse } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
 useHead({ title: 'Détail mission' });
@@ -346,6 +346,7 @@ function formatRelativeDate(d?: string): string {
 }
 
 const STATUS_LABELS: Record<string, string> = {
+    assigned: 'Assignée',
     open: 'Ouverte',
     in_progress: 'En cours',
     completed: 'Terminée',
@@ -367,11 +368,27 @@ const missionDuration = computed((): string => {
     return diff > 0 ? String(diff) : '—';
 });
 
+const currentMissionResponse = computed((): MissionResponse | null => {
+    const currentMissionId = mission.value?.id;
+    if (!currentMissionId) return null;
+    return (responses.value?.data ?? []).find(
+        (r: MissionResponse) => r.mission_id === currentMissionId,
+    ) ?? null;
+});
+
+const isApplicationAccepted = computed((): boolean =>
+    currentMissionResponse.value?.status === 'accepted',
+);
+
 const statusText = computed((): string =>
-    STATUS_LABELS[mission.value?.status ?? ''] ?? 'Ouverte',
+    isApplicationAccepted.value && mission.value?.status === 'open'
+        ? 'Assignée'
+        : (STATUS_LABELS[mission.value?.status ?? ''] ?? 'Ouverte'),
 );
 
 const statusBadgeClass = computed((): string =>
-    STATUS_BADGE_CLASSES[mission.value?.status ?? ''] ?? 'bg-emerald-50 text-emerald-700',
+    isApplicationAccepted.value && mission.value?.status === 'open'
+        ? 'bg-blue-50 text-blue-700'
+        : (STATUS_BADGE_CLASSES[mission.value?.status ?? ''] ?? 'bg-emerald-50 text-emerald-700'),
 );
 </script>

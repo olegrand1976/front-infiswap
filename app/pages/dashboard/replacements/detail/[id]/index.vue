@@ -583,7 +583,11 @@ const selectAndSubmitReplacement = async (userId) => {
     };
 
     await sendResponse().submitResponse(payload);
-    replacement.value.replaced_by = userId;
+    replacement.value.has_confirmed_substitute = true;
+    replacement.value.confirmed_substitute = {
+        id: userId,
+        type: 'user',
+    };
     isAssignModalOpen.value = false;
 };
 

@@ -348,7 +348,7 @@ interface Replacement {
     status?: string;
     type?: string;
     details?: Record<string, unknown>[];
-    replaced_by?: number | null;
+    has_confirmed_substitute?: boolean;
     stars?: number;
     is_favorited?: boolean;
 }
@@ -382,7 +382,7 @@ const isOwner = computed(() =>
 const isClosed = computed(() =>
     localClosed.value
     || props.replacement.status === 'closed'
-    || props.replacement.replaced_by !== null,
+    || props.replacement.has_confirmed_substitute === true,
 );
 
 const canClose = computed(() => isOwner.value && !isClosed.value);

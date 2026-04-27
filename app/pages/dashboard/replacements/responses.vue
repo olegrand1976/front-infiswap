@@ -135,26 +135,26 @@
                                         class="grid grid-cols-4 w-full my-2 border border-none overflow-x-hidden relative"
                                     >
                                         <TableCell class="w-full truncate flex flex-nowrap flex-col sm:flex-row items-center justify-center sm:justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
-                                            <template v-if="responseDetail?.responded_by?.profile?.profil_url == null">
+                                            <template v-if="getRespondent(responseDetail)?.profil_url == null">
                                                 <UserCircleIcon class="size-8 text-black/60" />
                                             </template>
                                             <template v-else>
                                                 <img
                                                     class="w-8 h-8 rounded-full object-cover object-center"
-                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + responseDetail?.responded_by?.profile?.profil_url"
+                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + getRespondent(responseDetail)?.profil_url"
                                                 >
                                             </template>
                                             <p class="truncate">
-                                                {{ responseDetail?.responded_by?.full_name }}
+                                                {{ getRespondent(responseDetail)?.full_name }}
                                             </p>
                                         </TableCell>
 
                                         <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ responseDetail?.responded_by?.phone_number }}
+                                            {{ getRespondent(responseDetail)?.phone_number }}
                                         </TableCell>
 
                                         <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ responseDetail?.responded_by?.profile?.zip_code }}
+                                            {{ getRespondent(responseDetail)?.zip_code ?? '—' }}
                                         </TableCell>
 
                                         <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
@@ -215,7 +215,7 @@
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle
-                        v-if="selectedUser.responded_by.gender === 'F'"
+                        v-if="getRespondent(selectedUser)?.gender === 'F'"
                     >
                         Informations de l'infirmière
                     </DialogTitle>
@@ -231,14 +231,14 @@
                     class="flex space-x-4 items-center mt-4"
                 >
                     <LayoutsAppImage
-                        :src="selectedUser.responded_by?.profile?.profil_url
-                            ? useRuntimeConfig().public.API_URL + '/storage/' + selectedUser.responded_by.profile.profil_url
+                        :src="getRespondent(selectedUser)?.profil_url
+                            ? useRuntimeConfig().public.API_URL + '/storage/' + getRespondent(selectedUser).profil_url
                             : '/icons/user-circle.png'"
                         class="w-8 h-8 sm:w-12 sm:h-12 rounded-full opacity-60"
                     />
                     <div class="flex flex-col space-y-2">
                         <h6 class="font-medium">
-                            {{ selectedUser.responded_by.full_name }}
+                            {{ getRespondent(selectedUser)?.full_name }}
                         </h6>
                     </div>
                 </div>
@@ -251,7 +251,7 @@
                         Numéro {{ identifierLabel }}
                     </h5>
                     <p class="ps-4">
-                        {{ selectedUser.responded_by.identifier_number }}
+                        {{ getRespondent(selectedUser)?.identifier_number }}
                     </p>
                 </div>
 
@@ -264,7 +264,7 @@
                         <span class="md:hidden">Email</span>
                     </h5>
                     <p class="ps-4">
-                        {{ selectedUser.responded_by.email }}
+                        {{ getRespondent(selectedUser)?.email }}
                     </p>
                 </div>
 
@@ -276,7 +276,7 @@
                         N° téléphone
                     </h5>
                     <p class="ps-4">
-                        {{ selectedUser.responded_by.phone_number }}
+                        {{ getRespondent(selectedUser)?.phone_number }}
                     </p>
                 </div>
 
@@ -288,7 +288,7 @@
                         Code postal
                     </h5>
                     <p class="ps-4">
-                        {{ selectedUser.responded_by.profile.zip_code }}
+                        {{ getRespondent(selectedUser)?.zip_code ?? '—' }}
                     </p>
                 </div>
 
@@ -300,7 +300,7 @@
                         Ville
                     </h5>
                     <p class="ps-4">
-                        {{ selectedUser.responded_by.profile.city }}
+                        {{ getRespondent(selectedUser)?.city ?? '—' }}
                     </p>
                 </div>
             </DialogContent>
@@ -335,6 +335,12 @@ const visibleResponses = (responses: ReplacementResponse[]) => {
     }
     return responses;
 };
+
+const getRespondent = (responseDetail: any) =>
+    responseDetail?.respondent
+    ?? responseDetail?.responded_by
+    ?? responseDetail?.repondedBy
+    ?? null;
 
 const handleAccept = async (responseDetail: ReplacementResponse) => {
     try {

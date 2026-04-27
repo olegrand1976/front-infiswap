@@ -4,7 +4,9 @@
             v-model:open="openDialog"
             class="pb-8 sm:pb-0"
         >
-            <DialogContent class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl">
+            <DialogContent
+                class="max-h-[60vh] overflow-y-scroll pb-8 sm:max-h-auto max-w-2xl"
+            >
                 <DialogHeader>
                     <DialogTitle>{{ props.title }}</DialogTitle>
                     <DialogDescription>
@@ -23,23 +25,20 @@
                                     :checked="allSelected"
                                     @update:checked="handleSelectProposal"
                                 />
-                                <span v-if="allSelected">
-                                    Tout décocher
-                                </span>
-                                <span v-else>
-                                    Tout cocher
-                                </span>
+                                <span v-if="allSelected"> Tout décocher </span>
+                                <span v-else> Tout cocher </span>
                             </p>
                         </div>
                         <div
-                            v-if="loading"
+                            v-if="loadingDialog"
                             class="flex flex-col items-center mt-8"
                         >
                             <p class="text-center text-black/70 text-sm">
-                                La recherche peut prendre plusieurs secondes. Veuillez patienter...
+                                La recherche peut prendre plusieurs secondes. Veuillez
+                                patienter...
                             </p>
                             <RollingLoader
-                                :loading="loading"
+                                :loading="loadingDialog"
                                 class="mt-12 -ml-52 sm:-ml-44"
                             />
                         </div>
@@ -55,7 +54,9 @@
                                 <label
                                     :for="`${zipCode}-${city}-${index}`"
                                     class="grid grid-cols-[10%_90%] items-center w-full text-sm font-medium border border-gray-300 rounded-full cursor-pointer hover:bg-primary hover:text-white group px-4 py-2 transition-colors"
-                                    :class="{ 'bg-primary text-white': isSelected(zipCode, city) }"
+                                    :class="{
+                                        'bg-primary text-white': isSelected(zipCode, city),
+                                    }"
                                 >
                                     <Checkbox
                                         :id="`${zipCode}-${city}-${index}`"
@@ -80,7 +81,9 @@
                     </div>
                 </section>
 
-                <DialogFooter class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4">
+                <DialogFooter
+                    class="my-6 flex flex-col items-center sm:flex-row gap-4 sm:space-x-4"
+                >
                     <Button
                         variant="secondary"
                         class="w-full sm:w-auto"
@@ -101,10 +104,17 @@
 </template>
 
 <script setup lang="ts">
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import type { CountryCode } from '~/lib/types';
 
-const { loading, getNearbyLocalities } = useLocation();
+const { getNearbyLocalities, getZipCodesFromCity } = useLocation();
 const { createPreferences } = useAuth();
 const user = useUser();
 
@@ -129,7 +139,7 @@ const loadingDialog = ref(true);
 const modelValue = defineModel<boolean>();
 const openDialog = computed({
     get: () => modelValue.value,
-    set: (val: boolean) => modelValue.value = val,
+    set: (val: boolean) => (modelValue.value = val),
 });
 
 const locationData = ref<[string, string][]>([]);
@@ -143,47 +153,87 @@ watch(
     ([newZipCodes, newCities]) => {
         existingZipCodes.value = [...newZipCodes].filter(zip => zip);
         existingCities.value = [...newCities].filter(city => city);
-        tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
-            zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
+        tempSelectedLocations.value = locationData.value.filter(
+            ([zip, city]) =>
+                zip
+                && city
+                && (existingZipCodes.value.includes(zip)
+                    || existingCities.value.includes(city)),
         );
     },
     { immediate: true, deep: true },
 );
 
-const hasLoadedOnce = ref(false);
-const isInitialLoad = ref(true);
+const countryCode = computed<CountryCode>(() => {
+    const country = (
+        user.value?.profile?.country
+        || user.value?.profile?.working_at
+        || 'be'
+    )
+        .toString()
+        .toLowerCase();
+    if (country === 'fr' || country === 'france') return 'fr';
+    if (
+        country === 'us'
+        || country === 'usa'
+        || country === 'etats-unis'
+        || country === 'états-unis'
+    )
+        return 'us';
+    return 'be';
+});
+
+const isPostalCode = (value: string) => /^\d{4,5}$/.test(value.trim());
+
+const fetchLocationSuggestions = async (
+    input: string,
+): Promise<[string, string][]> => {
+    const normalizedInput = input.trim();
+    if (!normalizedInput) return [];
+
+    const candidateZipCodes = isPostalCode(normalizedInput)
+        ? [normalizedInput]
+        : await getZipCodesFromCity(normalizedInput, countryCode.value);
+
+    if (!candidateZipCodes.length) return [];
+
+    const merged = new Map<string, [string, string]>();
+    for (const zipCode of candidateZipCodes) {
+        const suggestions = await getNearbyLocalities(
+            zipCode,
+            5,
+            countryCode.value,
+            props.initialZipCodes,
+            props.initialCities,
+        );
+
+        for (const [suggestedZipCode, suggestedCity] of suggestions) {
+            merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
+                suggestedZipCode,
+                suggestedCity,
+            ]);
+        }
+    }
+
+    return Array.from(merged.values());
+};
 
 watch(
     () => openDialog.value,
     async (isOpen) => {
-        // Si le modal se ferme, réinitialiser pour permettre un rechargement lors de la prochaine ouverture
         if (!isOpen) {
-            // Ne pas réinitialiser hasLoadedOnce si c'est juste une fermeture temporaire
-            // On le réinitialisera seulement si nécessaire
             return;
         }
-
-        // Si on a déjà chargé les données une fois et que ce n'est pas le chargement initial, ne pas recharger
-        // Sauf si c'est le premier chargement (ouverture automatique)
-        if (hasLoadedOnce.value && !isInitialLoad.value) {
-            return;
-        }
-
-        hasLoadedOnce.value = true;
-        isInitialLoad.value = false;
         loadingDialog.value = true;
 
         try {
-            const zipCode = props.newlyAddedValue || user.value.profile.zip_code || '';
-            if (zipCode) {
-                locationData.value = await getNearbyLocalities(zipCode, 5, 'be', props.initialZipCodes, props.initialCities);
-                if (!locationData.value.length) {
-                    locationData.value = [];
-                }
-            }
+            const seedValue
+        = props.newlyAddedValue || user.value.profile.zip_code || '';
+            locationData.value = await fetchLocationSuggestions(seedValue);
 
             tempSelectedLocations.value = [...locationData.value];
-            allSelected.value = tempSelectedLocations.value.length === locationData.value.length;
+            allSelected.value
+        = tempSelectedLocations.value.length === locationData.value.length;
         }
         catch {
             locationData.value = [];
@@ -211,13 +261,17 @@ const handleSelectProposal = () => {
 };
 
 const isSelected = (zipCode: string, city: string) => {
-    return tempSelectedLocations.value.some(([z, c]) => z === zipCode && c === city);
+    return tempSelectedLocations.value.some(
+        ([z, c]) => z === zipCode && c === city,
+    );
 };
 
 const toggleLocation = (zipCode: string, city: string) => {
     if (!zipCode || !city) return;
     if (isSelected(zipCode, city)) {
-        tempSelectedLocations.value = tempSelectedLocations.value.filter(([z, c]) => z !== zipCode || c !== city);
+        tempSelectedLocations.value = tempSelectedLocations.value.filter(
+            ([z, c]) => z !== zipCode || c !== city,
+        );
     }
     else {
         tempSelectedLocations.value.push([zipCode, city]);
@@ -228,8 +282,12 @@ const handleCreatePreference = async () => {
     const inputZipCodes = [...props.initialZipCodes].filter(zip => zip);
     const inputCities = [...props.initialCities].filter(city => city);
 
-    const selectedZipCodes = tempSelectedLocations.value.map(([zip]) => zip).filter(zip => zip);
-    const selectedCities = tempSelectedLocations.value.map(([, city]) => city).filter(city => city);
+    const selectedZipCodes = tempSelectedLocations.value
+        .map(([zip]) => zip)
+        .filter(zip => zip);
+    const selectedCities = tempSelectedLocations.value
+        .map(([, city]) => city)
+        .filter(city => city);
 
     const mergedZipCodes = [...new Set([...inputZipCodes, ...selectedZipCodes])];
     const mergedCities = [...new Set([...inputCities, ...selectedCities])];
@@ -269,10 +327,13 @@ const handleCreatePreference = async () => {
 };
 
 const cancel = () => {
-    tempSelectedLocations.value = locationData.value.filter(([zip, city]) =>
-        zip && city && (existingZipCodes.value.includes(zip) || existingCities.value.includes(city)),
+    tempSelectedLocations.value = locationData.value.filter(
+        ([zip, city]) =>
+            zip
+            && city
+            && (existingZipCodes.value.includes(zip)
+                || existingCities.value.includes(city)),
     );
-    // Ne pas réinitialiser hasLoadedOnce pour éviter de recharger si on rouvre le modal
     openDialog.value = false;
     emit('update:newlyAddedValue', '');
 };
