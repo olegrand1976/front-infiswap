@@ -254,9 +254,7 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'account_type',
         header: 'Type',
         cell: ({ row }) => {
-         
-
-            return h('div', { class: 'ml-4' }, row.getValue('account_type'));
+            return h('div', { class: '' }, row.getValue('account_type'));
         },
     },
         {
