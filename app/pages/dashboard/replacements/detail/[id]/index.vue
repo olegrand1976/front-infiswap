@@ -194,7 +194,7 @@
                                     Zone(s) géographique(s) couverte(s)
                                 </h4>
                             </div>
-                            <div class="py-16 px-3 space-y-3">
+                            <!-- <div class="py-16 px-3 space-y-3">
                                 <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <HomeIcon class="w-5 h-5" />
@@ -209,7 +209,30 @@
                                     </div>
                                     <span>{{ group.cities }}</span>
                                 </div>
-                            </div>
+                            </div> -->
+                            <div class="py-6 px-3 space-y-4">
+    <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
+        <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
+            <HomeIcon class="w-5 h-5 mr-2" />
+            <span>Codes postaux</span>
+        </div>
+
+        <div class="flex-1 text-gray-700 break-words whitespace-normal leading-5 py-1">
+            {{ group.zipCodes }}
+        </div>
+    </div>
+
+    <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
+        <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
+            <HomeIcon class="w-5 h-5 mr-2" />
+            <span>Villes</span>
+        </div>
+
+        <div class="flex-1 text-gray-700 break-words whitespace-normal leading-5 py-1">
+            {{ group.cities }}
+        </div>
+    </div>
+</div>
                         </div>
 
                         <div
