@@ -254,13 +254,9 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'account_type',
         header: 'Type',
         cell: ({ row }) => {
-            const type = row.getValue('account_type');
+         
 
-            const label = type === 'institution'
-                ? 'Institution'
-                : 'Infirmier';
-
-            return h('div', { class: 'ml-4' }, label);
+            return h('div', { class: 'ml-4' }, row.getValue('account_type'));
         },
     },
         {
