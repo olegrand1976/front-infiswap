@@ -50,7 +50,7 @@
                         </div>
                         <div class="mt-4 grid grid-cols-[40%_60%]">
                             <p class="font-medium">
-                                Période
+                                Période 
                             </p>
                             <p>
                                 <template v-if="response?.parent?.start_date && response?.parent?.end_date">
@@ -63,17 +63,18 @@
                                     </template>
                                 </template>
 
-                                <template v-else-if="response?.parent?.periods?.length">
+                                <template v-else-if="response?.parent?.periods.length > 0 ">
+                                    
                                     <ul>
                                         <li
                                             v-for="(period) in response.parent.periods"
                                             :key="period.id"
                                         >
                                             <template v-if="period.start_date === period.end_date">
-                                                {{ new Date(period.start_date).toLocaleDateString('fr-FR') }}
+                                            {{ period.start_date }}   {{ new Date(period.start_date).toLocaleDateString('fr-FR') }}
                                             </template>
                                             <template v-else>
-                                                {{ new Date(period.start_date).toLocaleDateString('fr-FR') }} -
+                                              {{ new Date(period.start_date).toLocaleDateString('fr-FR') }} -
                                                 {{ new Date(period.end_date).toLocaleDateString('fr-FR') }}
                                             </template>
                                         </li>
