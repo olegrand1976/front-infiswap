@@ -412,10 +412,11 @@ export const useListResponse = (id) => {
     const listApply = useState('listApply', () => []);
     const loading = useState('replacementListResponseLoading', () => false);
 
-    async function fetchListResponse() {
+    async function fetchListResponse(older = false) {
         loading.value = true;
         try {
-            const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET' });
+            const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET', query: { older },  });
+            console.log('response',response);
             listResponse.value = response.responses;
         }
         finally {

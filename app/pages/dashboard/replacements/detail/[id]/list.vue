@@ -64,6 +64,11 @@
                                 :show-full-info="list.status === 'confirmed'"
                             />
                         </div>
+
+                        <div class="px-2 pt-1 text-xs text-muted-foreground text-center">
+                            Réponse reçue le {{ list.responded_at }}
+                        </div>
+
                         <div class="mx-auto mt-auto flex min-h-[3.75rem] w-full max-w-[260px] shrink-0 flex-col justify-center border-t border-border/60 px-2 pb-2 pt-2">
                             <div
                                 v-if="list.status==='confirmed'"
@@ -137,6 +142,8 @@ const sortedListResponse = computed(() => {
     return items;
 });
 
+const showOlder = ref(false);
+
 const isInstitutionRespondent = (response: any) => response?.respondent?.type === 'institution';
 
 const updateStatus = async (id: number, status: string) => {
@@ -163,13 +170,40 @@ const formatDate = (isoString) => {
     return `${day}/${month}/${year}`;
 };
 
-const startDate = computed(() =>
-    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.start_date) : '',
-);
+// const startDate = computed(() =>
+//     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.start_date) : '',
+// );
 
-const endDate = computed(() =>
-    listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
-);
+// const endDate = computed(() =>
+//     listResponse.value?.length > 0 ? formatDate(listResponse.value[0].parent.end_date) : '',
+// );
+const startDate = computed(() => {
+    if (!listResponse.value?.length) return '';
+    const parent = listResponse.value[0].parent;
+
+    // ✅ Cas avec periods
+    if (!parent.start_date && parent.periods?.length) {
+        return formatDate(parent.periods[0].start_date);
+    }
+    return parent.start_date ? formatDate(parent.start_date) : '';
+});
+
+const endDate = computed(() => {
+    if (!listResponse.value?.length) return '';
+    const parent = listResponse.value[0].parent;
+
+    // ✅ Cas avec periods
+    if (!parent.end_date && parent.periods?.length) {
+        return formatDate(parent.periods[parent.periods.length - 1].end_date);
+    }
+    return parent.end_date ? formatDate(parent.end_date) : '';
+});
+
+const loadOlder = async () => {
+    showOlder.value = true;
+    await fetchListResponse(true);
+};
+
 
 const hasConfirmed = () =>
     listResponse.value?.some(item => item.status === 'confirmed');

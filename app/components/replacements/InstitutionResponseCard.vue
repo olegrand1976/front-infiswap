@@ -168,4 +168,12 @@ const displayZip = computed(() => {
     return String(z);
 });
 const displayCompanyNumber = computed(() => props.institution.company_number || 'Non renseigné');
+
+const showOlder = ref(false);
+
+const loadOlder = async () => {
+    showOlder.value = true;
+    await fetchListResponse(true);
+};
+
 </script>
