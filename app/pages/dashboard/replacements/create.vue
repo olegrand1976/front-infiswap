@@ -3,7 +3,9 @@
         class="lg:ml-20 xl:ml-0"
         @submit.prevent="submit"
     >
-        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
+        <div
+            class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg"
+        >
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
@@ -14,10 +16,14 @@
             </h1>
         </div>
 
-        <section class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24">
+        <section
+            class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24"
+        >
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow pb-8">
-                    <h2 class="text-white font-medium text-center bg-primary lg:px-2 px-0 py-4 rounded-t-lg">
+                    <h2
+                        class="text-white font-medium text-center bg-primary lg:px-2 px-0 py-4 rounded-t-lg"
+                    >
                         Sélectionner les périodes de remplacement
                     </h2>
 
@@ -29,12 +35,16 @@
 
                     <div class="mb-10 relative -mt-1 text-center text-black/50">
                         <hr class="border-b border-gray-200 mx-8">
-                        <p class="absolute -top-5 left-[45%] text-center bg-white p-3 text-black/60">
+                        <p
+                            class="absolute -top-5 left-[45%] text-center bg-white p-3 text-black/60"
+                        >
                             OU
                         </p>
                     </div>
 
-                    <div class="flex flex-col space-y-4 justify-center items-center mx-auto">
+                    <div
+                        class="flex flex-col space-y-4 justify-center items-center mx-auto"
+                    >
                         <h2 class="text-center font-semibold text-black/70">
                             Saisir manuellement les périodes
                         </h2>
@@ -78,12 +88,8 @@
                             size="sm"
                             @click="addPeriod"
                         >
-                            <PlusIcon
-                                class="w-5 h-5"
-                            />
-                            <span>
-                                Ajouter période
-                            </span>
+                            <PlusIcon class="w-5 h-5" />
+                            <span> Ajouter période </span>
                         </Button>
                     </div>
                 </div>
@@ -91,14 +97,14 @@
 
             <div class="flex flex-col space-y-4 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div>
-                    <label class="text-primary font-semibold">
-                        Créneau horaire
-                    </label>
-                    <div class="mt-2 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center">
-                        <label class="font-medium text-gray-700">
-                            Matin :
-                        </label>
-                        <div class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center">
+                    <label class="text-primary font-semibold"> Créneau horaire </label>
+                    <div
+                        class="mt-2 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center"
+                    >
+                        <label class="font-medium text-gray-700"> Matin : </label>
+                        <div
+                            class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center"
+                        >
                             <p>De</p>
                             <InputTime
                                 v-model="formData.timeSlot.morning.startAt"
@@ -113,11 +119,13 @@
                             />
                         </div>
                     </div>
-                    <div class="mt-4 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center">
-                        <label class="font-medium text-gray-700">
-                            Soir :
-                        </label>
-                        <div class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center">
+                    <div
+                        class="mt-4 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center"
+                    >
+                        <label class="font-medium text-gray-700"> Soir : </label>
+                        <div
+                            class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center"
+                        >
                             <p>De</p>
                             <InputTime
                                 v-model="formData.timeSlot.evening.startAt"
@@ -147,7 +155,11 @@
                     <InputTagManager
                         v-model="formData.zipCodes"
                         label="Codes postaux"
-                        :placeholder="user.profile.country == 'fr' ? '75000, 40990, 89550' : '6565,4561,1237'"
+                        :placeholder="
+                            user.profile.country == 'fr'
+                                ? '75000, 40990, 89550'
+                                : '6565,4561,1237'
+                        "
                         :is-mobile="isMobile"
                         :comma-validation="false"
                         :count="4"
@@ -168,7 +180,11 @@
                 <InputTagManager
                     v-model="formData.cities"
                     label="Villes"
-                    :placeholder="user.profile.country ? 'Paris, Landes, Yonne' : 'Anvers, Bruges, Gand'"
+                    :placeholder="
+                        user.profile.country
+                            ? 'Paris, Landes, Yonne'
+                            : 'Anvers, Bruges, Gand'
+                    "
                     :is-mobile="isMobile"
                     class="mt-4"
                     :comma-validation="true"
@@ -179,9 +195,7 @@
                 />
 
                 <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold">
-                        Type de soins
-                    </label>
+                    <label class="text-primary font-semibold"> Type de soins </label>
                     <Select
                         v-model="formData.careTypes"
                         multiple
@@ -195,9 +209,7 @@
                                     {{ getSelectedCareTypesText(formData.careTypes) }}
                                 </template>
                                 <template v-else>
-                                    <span class="text-black/60">
-                                        Sélectionner
-                                    </span>
+                                    <span class="text-black/60"> Sélectionner </span>
                                 </template>
                             </SelectValue>
                         </SelectTrigger>
@@ -229,7 +241,9 @@
                     <label class="text-primary font-semibold">
                         Demander en tant que
                     </label>
-                    <div class="flex flex-col gap-4 sm:flex-row sm:gap-12 lg:gap-8 2xl:gap-12 sm:items-center">
+                    <div
+                        class="flex flex-col gap-4 sm:flex-row sm:gap-12 lg:gap-8 2xl:gap-12 sm:items-center"
+                    >
                         <div class="flex gap-2 items-center">
                             <input
                                 id="nurse"
@@ -238,9 +252,7 @@
                                 name="roleType"
                                 value="nurse"
                             >
-                            <label for="nurse">
-                                Infirmier(ère)
-                            </label>
+                            <label for="nurse"> Infirmier(ère) </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -250,9 +262,7 @@
                                 name="roleType"
                                 value="caregiver"
                             >
-                            <label for="caregiver">
-                                Aide soignant(e)
-                            </label>
+                            <label for="caregiver"> Aide soignant(e) </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -262,17 +272,13 @@
                                 name="roleType"
                                 value="midwife"
                             >
-                            <label for="midwife">
-                                Sage-femme
-                            </label>
+                            <label for="midwife"> Sage-femme </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold">
-                        Description
-                    </label>
+                    <label class="text-primary font-semibold"> Description </label>
                     <Textarea
                         v-model="formData.comment"
                         placeholder="Décrivez en quelques mots votre demande de remplacement..."
@@ -318,8 +324,7 @@ import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
-const { getZipCodeFromCity } = useOpenai();
-const { getCitiesFomZipCode } = useLocation();
+const { getZipCodeFromCity, getCitiesFomZipCode } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -439,12 +444,18 @@ watch(
     { deep: true },
 );
 
-const handleCalendarUpdate = (ranges: { start: string | null; end: string | null }[]) => {
+const handleCalendarUpdate = (
+    ranges: { start: string | null; end: string | null }[],
+) => {
     if (!Array.isArray(ranges)) {
         console.error('Expected ranges to be an array:', ranges);
         return;
     }
-    if (formData.periods.length === 1 && !formData.periods[0].startDate && !formData.periods[0].endDate) {
+    if (
+        formData.periods.length === 1
+        && !formData.periods[0].startDate
+        && !formData.periods[0].endDate
+    ) {
         formData.periods[0] = {
             startDate: ranges[0]?.start || null,
             endDate: ranges[0]?.end || null,
@@ -508,10 +519,12 @@ const getSelectedCareTypesText = (selectedIds: number[]): string => {
 };
 
 const resetForm = () => {
-    formData.periods = [{
-        startDate: null,
-        endDate: null,
-    }];
+    formData.periods = [
+        {
+            startDate: null,
+            endDate: null,
+        },
+    ];
     calendarValue.value = [{ start: null, end: null }];
     formData.patientCount = null;
     formData.zipCodes = [];
@@ -526,17 +539,20 @@ const resetForm = () => {
     formData.citiesInput = '';
 };
 
-const { submit, inProgress } = useSubmit(async () => {
-    await submitReplacement(formData);
-}, {
-    onSuccess: () => {
-        toast.success('Création effectuée');
-        resetForm();
-        setTimeout(() => {
-            router.push('/dashboard/replacements/me');
-        }, 2000);
+const { submit, inProgress } = useSubmit(
+    async () => {
+        await submitReplacement(formData);
     },
-});
+    {
+        onSuccess: () => {
+            toast.success('Création effectuée');
+            resetForm();
+            setTimeout(() => {
+                router.push('/dashboard/replacements/me');
+            }, 2000);
+        },
+    },
+);
 
 useHead({
     title: 'Créer un remplacement',

@@ -1,7 +1,7 @@
 import type { CountryCode } from '~/lib/types';
 
 export function useLocation() {
-    const { getCityFromZipCode } = useOpenai();
+    const { $apifetch } = useNuxtApp();
     const loading = useState('loading', () => false);
     async function findNearbyCodes(
         zipCode: string,
@@ -9,18 +9,24 @@ export function useLocation() {
         country: CountryCode = 'be',
     ): Promise<[string, string][]> {
         try {
-            const result = await $fetch<[string, string][]>('/api/postal/nearby', {
-                params: {
-                    code: zipCode,
-                    radius: radiusKm,
-                    country,
+            const result = await $apifetch<[string, string][]>(
+                '/api/location/nearby',
+                {
+                    params: {
+                        code: zipCode,
+                        radius: radiusKm,
+                        country,
+                    },
                 },
-            });
+            );
 
             return result;
         }
         catch (error) {
-            console.error('Erreur lors de la récupération des codes postaux limitrophes :', error);
+            console.error(
+                'Erreur lors de la récupération des codes postaux limitrophes :',
+                error,
+            );
             return [];
         }
     }
@@ -45,13 +51,6 @@ export function useLocation() {
                 return nearbyCodes;
             }
 
-            const localities = await getCityFromZipCode(zipCode);
-            if (localities && localities.length > 0) {
-                const filteredLocalities = localities.filter(city => !excludeCities.includes(city));
-
-                return filteredLocalities.map(city => [zipCode, city] as [string, string]);
-            }
-
             return [];
         }
         catch {
@@ -62,19 +61,16 @@ export function useLocation() {
         }
     }
 
-    async function getCitiesFomZipCode(zipCode: string, country: CountryCode = 'be') {
+    async function getCitiesFomZipCode(
+        zipCode: string,
+        country: CountryCode = 'be',
+    ) {
         try {
-            const citiesFromApi = await $fetch<string[]>('/api/postal/cities', {
+            const citiesFromApi = await $apifetch<string[]>('/api/location/cities', {
                 params: { code: zipCode, country },
             });
 
-            if (citiesFromApi && citiesFromApi.length > 0) {
-                return citiesFromApi;
-            }
-
-            const citiesFromOpenAi = await getCityFromZipCode(zipCode);
-
-            return citiesFromOpenAi ?? [];
+            return citiesFromApi ?? [];
         }
         catch (error) {
             console.error('Erreur lors de la récupération des villes :', error);
@@ -82,9 +78,34 @@ export function useLocation() {
         }
     }
 
+    async function getZipCodeFromCity(
+        city: string,
+        country: CountryCode = 'be',
+    ): Promise<string | null> {
+        try {
+            const postalCodes = await $apifetch<string[]>(
+                '/api/location/postal-codes',
+                {
+                    params: { city, country },
+                },
+            );
+
+            if (Array.isArray(postalCodes) && postalCodes.length > 0) {
+                return postalCodes[0] ?? null;
+            }
+
+            return null;
+        }
+        catch (error) {
+            console.error('Erreur lors de la récupération du code postal :', error);
+            return null;
+        }
+    }
+
     return {
         loading,
         getNearbyLocalities,
         getCitiesFomZipCode,
+        getZipCodeFromCity,
     };
 }
