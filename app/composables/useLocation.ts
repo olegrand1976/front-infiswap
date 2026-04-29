@@ -19,7 +19,7 @@ export function useLocation() {
                     exclude_zip_codes: excludeZipCodes,
                     exclude_cities: excludeCities,
                 },
-            );
+            });
 
             return result;
         }
