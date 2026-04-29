@@ -155,19 +155,19 @@
                         >
                             Boost IA
                         </Button>
-
-                        <ProposalLocationModal
-                            v-model="proposalDialog"
-                            v-model:newly-added-value="newlyAddedValue"
-                            title="Suggestions"
-                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
-                            :initial-zip-codes="formData.zipCodes"
-                            :initial-cities="formData.cities"
-                            :is-preference-mode="false"
-                            @update:initial-zip-codes="updateZipCodes"
-                            @update:initial-cities="updateCities"
-                        />
                     </div>
+
+                    <ProposalLocationModal
+                        v-model="proposalDialog"
+                        v-model:newly-added-value="newlyAddedValue"
+                        title="Suggestions"
+                        description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
+                        :initial-zip-codes="formData.zipCodes"
+                        :initial-cities="formData.cities"
+                        :is-preference-mode="false"
+                        @update:initial-zip-codes="updateZipCodes"
+                        @update:initial-cities="updateCities"
+                    />
 
                     <div class="grid grid-cols-[30%_70%] items-center pt-4 lg:pt-8">
                         <h5 class="text-sm text-gray-700 font-medium">
@@ -271,12 +271,10 @@
 </template>
 
 <script setup lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
-import { LayoutsAppImage } from '#components';
-import type { User } from '~/lib/types';
+import type { CountryCode, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -307,7 +305,25 @@ const hasMultipleValidRoles = computed(() => {
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
-const { getCitiesFomZipCode, getZipCodeFromCity } = useLocation();
+const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
+const countryCode = computed<CountryCode>(() => {
+    const country = (
+        user.value?.profile?.country
+        || user.value?.profile?.working_at
+        || 'be'
+    )
+        .toString()
+        .toLowerCase();
+    if (country === 'fr' || country === 'france') return 'fr';
+    if (
+        country === 'us'
+        || country === 'usa'
+        || country === 'etats-unis'
+        || country === 'états-unis'
+    )
+        return 'us';
+    return 'be';
+});
 
 onMounted(() => {
     if (hasMultipleValidRoles.value) {
@@ -357,7 +373,7 @@ const openProposalDialog = (value: string) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const citiesFromZip = await getCitiesFomZipCode(zip);
+    const citiesFromZip = await getCitiesFomZipCode(zip, countryCode.value);
     if (!citiesFromZip) return;
 
     const citiesSet = new Set(formData.cities);
@@ -367,9 +383,11 @@ const onZipCodeAdded = async (zip: string) => {
 };
 
 const onCityAdded = async (city: string) => {
-    const zipCode = await getZipCodeFromCity(city);
-    if (zipCode && !formData.zipCodes.includes(zipCode)) {
-        formData.zipCodes = [...formData.zipCodes, zipCode];
+    const zipCodes = await getZipCodesFromCity(city, countryCode.value);
+    if (zipCodes.length) {
+        const zipCodesSet = new Set(formData.zipCodes);
+        zipCodes.forEach(zipCode => zipCodesSet.add(zipCode));
+        formData.zipCodes = Array.from(zipCodesSet);
     }
     openProposalDialog(city);
 };

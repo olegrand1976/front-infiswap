@@ -324,7 +324,7 @@ import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
-const { getZipCodeFromCity, getCitiesFomZipCode } = useLocation();
+const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -342,6 +342,18 @@ const hasMultipleValidRoles = computed(() => {
 });
 
 const isMobile = ref(false);
+const countryCode = computed(() => {
+    const country = (
+        user.value?.profile?.country
+        || user.value?.profile?.working_at
+        || 'be'
+    )
+        .toString()
+        .toLowerCase();
+    if (country === 'fr' || country === 'france') return 'fr';
+    if (country === 'us' || country === 'usa') return 'us';
+    return 'be';
+});
 onMounted(() => {
     if (import.meta.client) {
         isMobile.value = window.innerWidth <= 1024;
@@ -412,19 +424,22 @@ const openProposalDialog = (value: string) => {
 };
 
 const onZipCodeAdded = async (zip: string) => {
-    const citiesFromZip = await getCitiesFomZipCode(zip);
-    if (!citiesFromZip) return;
+    const citiesFromZip = await getCitiesFomZipCode(zip, countryCode.value);
+    if (citiesFromZip.length) {
+        const citiesSet = new Set(formData.cities);
+        citiesFromZip.forEach(city => citiesSet.add(city));
+        formData.cities = Array.from(citiesSet);
+    }
 
-    const citiesSet = new Set(formData.cities);
-    citiesFromZip.forEach(city => citiesSet.add(city));
-    formData.cities = Array.from(citiesSet);
     openProposalDialog(zip);
 };
 
 const onCityAdded = async (city: string) => {
-    const zipCode = await getZipCodeFromCity(city);
-    if (zipCode && !formData.zipCodes.includes(zipCode)) {
-        formData.zipCodes = [...formData.zipCodes, zipCode];
+    const zipCodes = await getZipCodesFromCity(city, countryCode.value);
+    if (zipCodes.length) {
+        const zipCodesSet = new Set(formData.zipCodes);
+        zipCodes.forEach(zipCode => zipCodesSet.add(zipCode));
+        formData.zipCodes = Array.from(zipCodesSet);
     }
     openProposalDialog(city);
 };

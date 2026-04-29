@@ -5,16 +5,15 @@
                 class="relative cursor-pointer"
                 @click="loadNotifications"
             >
-                <BellAlertIcon class="w-6 h-6 text-gray-500 hover:text-primary transition-colors" />
+                <BellAlertIcon
+                    class="w-6 h-6 text-gray-500 hover:text-primary transition-colors"
+                />
 
                 <span
                     v-if="unreadCount > 0"
-                    class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2
-                        bg-red-500 text-white text-xs font-bold
-                        rounded-full h-5 w-5 flex items-center justify-center
-                        pointer-events-none"
+                    class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center pointer-events-none"
                 >
-                    {{ unreadCount > 99 ? '99+' : unreadCount }}
+                    {{ unreadCount > 99 ? "99+" : unreadCount }}
                 </span>
             </div>
         </DropdownMenuTrigger>
@@ -68,14 +67,13 @@
                             'bg-gray-50': !notification.read_at,
                         }"
                     >
-                        <div
-                            class="w-full p-4 hover:bg-gray-100 transition-colors"
-                            @click="handleNotificationClick(notification)"
-                        >
+                        <div class="w-full p-4 hover:bg-gray-100 transition-colors">
                             <div class="flex items-start gap-3">
                                 <div
                                     class="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                                    :class="notification.read_at ? 'bg-transparent' : 'bg-primary'"
+                                    :class="
+                                        notification.read_at ? 'bg-transparent' : 'bg-primary'
+                                    "
                                 />
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-start justify-between gap-2">
@@ -84,6 +82,7 @@
                                             :class="{
                                                 'font-semibold': !notification.read_at,
                                             }"
+                                            @click="handleNotificationClick(notification)"
                                         >
                                             {{ getNotificationTitle(notification) }}
                                         </p>
@@ -93,11 +92,20 @@
                                             class="h-6 w-6 p-0 flex-shrink-0"
                                             @click.stop="handleDelete(notification.id)"
                                         >
-                                            <XMarkIcon class="w-4 h-4 text-gray-400 hover:text-red-500" />
+                                            <XMarkIcon
+                                                class="w-4 h-4 text-gray-400 hover:text-red-500"
+                                            />
                                         </Button>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1">
                                         {{ getNotificationMessage(notification) }}
+                                        <NuxtLink
+                                            v-if="getNotificationDetailLink(notification)"
+                                            class="text-primary hover:underline"
+                                            :to="getNotificationDetailLink(notification)?.path"
+                                        >
+                                            {{ getNotificationDetailLink(notification)?.label }}
+                                        </NuxtLink>
                                     </p>
                                     <p class="text-xs text-gray-400 mt-1">
                                         {{ formatRelativeDate(notification.created_at) }}
@@ -132,11 +140,26 @@
 <script lang="ts" setup>
 import { BellAlertIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { Notification, User } from '~/lib/types';
 import { formatRelativeDate } from '~/composables/useDate';
 
-const { getAll, markAsRead, markAllAsRead, remove, getUnreadCount, notifications, unreadCount, startPolling, stopPolling } = useNotifications();
+const {
+    getAll,
+    markAsRead,
+    markAllAsRead,
+    remove,
+    getUnreadCount,
+    notifications,
+    unreadCount,
+    startPolling,
+    stopPolling,
+} = useNotifications();
 const loading = ref(false);
 const router = useRouter();
 const isOpen = ref(false);
@@ -210,27 +233,27 @@ const getNotificationMessage = (notification: Notification): string => {
     switch (type) {
         case 'mission.candidate':
         case 'mission_new_candidate':
-            return `Un nouveau candidat a postulé pour votre mission${data.mission_id ? ` #${data.mission_id}` : ''}`;
+            return 'Un nouveau candidat a postulé pour votre mission';
         case 'mission.accepted':
-            return `Votre candidature pour la mission${data.mission_id ? ` #${data.mission_id}` : ''} a été acceptée`;
+            return 'Votre candidature pour la mission a été acceptée';
         case 'mission.rejected':
-            return `Votre candidature pour la mission${data.mission_id ? ` #${data.mission_id}` : ''} a été refusée`;
+            return 'Votre candidature pour la mission a été refusée';
         case 'mission.new':
             return `Une nouvelle mission est disponible${data.service_name ? ` pour ${data.service_name}` : ''}`;
         case 'timesheet.pending':
-            return `Vous avez des jours à valider pour la mission${data.mission_id ? ` #${data.mission_id}` : ''}`;
+            return 'Vous avez des jours à valider pour la mission';
         case 'replacement.response':
-            return `Vous avez reçu une réponse pour votre remplacement${data.replacement_id ? ` #${data.replacement_id}` : ''}`;
+            return 'Vous avez reçu une réponse pour votre remplacement';
         case 'replacement.accepted':
-            return `Votre candidature pour le remplacement${data.replacement_id ? ` #${data.replacement_id}` : ''} a été acceptée`;
+            return 'Votre candidature pour le remplacement a été acceptée';
         case 'replacement.refused':
-            return `Votre candidature pour le remplacement${data.replacement_id ? ` #${data.replacement_id}` : ''} a été refusée`;
+            return 'Votre candidature pour le remplacement a été refusée';
         case 'replacement.new':
             return `Un nouveau remplacement est disponible${data.city ? ` à ${data.city}` : ''}`;
         case 'replacement.canceled':
-            return `Le remplacement${data.replacement_id ? ` #${data.replacement_id}` : ''} a été annulé${data.nurse_name ? ` par ${data.nurse_name}` : ''}`;
+            return `Le remplacement a été annulé${data.nurse_name ? ` par ${data.nurse_name}` : ''}`;
         case 'replacement.closed':
-            return `Le remplacement${data.replacement_id ? ` #${data.replacement_id}` : ''} a été clôturé`;
+            return 'Le remplacement a été clôturé';
         case 'partnership.request':
             return `Nouvelle demande de partenariat${data.partner_name ? ` de ${data.partner_name}` : ''}`;
         case 'system.announcement':
@@ -240,6 +263,77 @@ const getNotificationMessage = (notification: Notification): string => {
         default:
             return data.message || 'Nouvelle notification';
     }
+};
+
+const getNotificationDetailLink = (
+    notification: Notification,
+): { label: string; path: string } | null => {
+    const type = notification.type;
+    const data = notification.data || {};
+
+    if (type.includes('timesheet') && data.mission_id) {
+        return {
+            label: `#${data.mission_id}`,
+            path: `/dashboard/institution/missions/timesheet/${data.mission_id}`,
+        };
+    }
+
+    if (type.includes('mission') && data.mission_id) {
+        const user = useState<User>('user');
+        const isMissionListType
+      = type === 'mission.candidate'
+          || type === 'mission_new_candidate'
+          || type === 'mission.response'
+          || type === 'mission.invitation';
+
+        if (isMissionListType && user.value?.type === 'institution') {
+            return {
+                label: `#${data.mission_id}`,
+                path: `/dashboard/institution/missions/candidacy/${data.mission_id}`,
+            };
+        }
+
+        const path
+      = user.value?.type === 'institution'
+          ? `/dashboard/institution/missions/${data.mission_id}`
+          : `/dashboard/missions/${data.mission_id}`;
+
+        return {
+            label: `#${data.mission_id}`,
+            path,
+        };
+    }
+
+    if (type.includes('replacement') && data.replacement_id) {
+        const isReplacementListType
+      = type === 'replacement.response'
+          || type === 'replacement.candidate'
+          || type === 'replacement.invitation';
+
+        return {
+            label: `#${data.replacement_id}`,
+            path: isReplacementListType
+                ? `/dashboard/replacements/detail/${data.replacement_id}/list`
+                : `/dashboard/replacements/detail/${data.replacement_id}`,
+        };
+    }
+
+    return null;
+};
+
+const handleNotificationLinkClick = async (notification: Notification) => {
+    if (!notification.read_at) {
+        await markAsRead(notification.id);
+        await getUnreadCount();
+    }
+
+    const detailLink = getNotificationDetailLink(notification);
+    if (!detailLink) {
+        return;
+    }
+
+    isOpen.value = false;
+    router.push(detailLink.path);
 };
 
 const handleNotificationClick = async (notification: Notification) => {
@@ -256,6 +350,19 @@ const handleNotificationClick = async (notification: Notification) => {
     if (type.includes('mission')) {
         if (data.mission_id) {
             const user = useState<User>('user');
+            const isMissionListType
+        = type === 'mission.candidate'
+            || type === 'mission_new_candidate'
+            || type === 'mission.response'
+            || type === 'mission.invitation';
+
+            if (isMissionListType && user.value?.type === 'institution') {
+                router.push(
+                    `/dashboard/institution/missions/candidacy/${data.mission_id}`,
+                );
+                return;
+            }
+
             if (user.value?.type === 'institution') {
                 router.push(`/dashboard/institution/missions/${data.mission_id}`);
             }
@@ -266,13 +373,23 @@ const handleNotificationClick = async (notification: Notification) => {
     }
     else if (type.includes('timesheet')) {
         if (data.mission_id) {
-            router.push(`/dashboard/institution/missions/timesheet/${data.mission_id}`);
+            router.push(
+                `/dashboard/institution/missions/timesheet/${data.mission_id}`,
+            );
         }
     }
     else if (type.includes('replacement')) {
         if (data.replacement_id) {
-            const suffix = type === 'replacement.response' ? '/list' : '';
-            router.push(`/dashboard/replacements/detail/${data.replacement_id}${suffix}`);
+            const isReplacementListType
+        = type === 'replacement.response'
+            || type === 'replacement.candidate'
+            || type === 'replacement.invitation';
+
+            router.push(
+                isReplacementListType
+                    ? `/dashboard/replacements/detail/${data.replacement_id}/list`
+                    : `/dashboard/replacements/detail/${data.replacement_id}`,
+            );
         }
     }
     else if (type.includes('partnership')) {
