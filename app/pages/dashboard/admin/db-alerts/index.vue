@@ -118,7 +118,8 @@ const saveRecipients = async () => {
             title: 'Succes',
             description: 'Destinataires enregistres.',
         });
-    } catch (error) {
+    }
+    catch (error) {
         $toast({
             title: 'Erreur',
             description: 'Impossible d\'enregistrer la configuration.',

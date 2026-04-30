@@ -1,64 +1,147 @@
 <template>
-    <div class="max-w-6xl mx-auto space-y-6">
-        <div class="bg-white rounded-lg border p-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-semibold">
-                    Monitoring erreurs Laravel
-                </h1>
-                <p class="text-sm text-gray-600">
-                    Liste des erreurs critiques enregistrees dans le backend (cache/redis).
-                </p>
-            </div>
-            <button
-                type="button"
-                class="px-4 py-2 rounded border text-sm hover:bg-gray-50"
-                @click="refresh"
-            >
-                Rafraichir
-            </button>
-        </div>
+    <div class="w-full">
+        <DashboardAdminPageHeader title="Monitoring erreurs Laravel">
+            <template #action>
+                <Button
+                    class="rounded cursor-pointer"
+                    @click="refresh"
+                >
+                    <Icon name="RefreshCw" />
+                </Button>
+            </template>
+        </DashboardAdminPageHeader>
 
-        <div class="bg-white rounded-lg border overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b">
-                    <tr>
-                        <th class="text-left px-4 py-3">Date</th>
-                        <th class="text-left px-4 py-3">Message</th>
-                        <th class="text-left px-4 py-3">Classe</th>
-                        <th class="text-left px-4 py-3">Route</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="item in errors"
+        <DashboardAdminPageContent class="space-y-6">
+            <div class="bg-white rounded-lg border p-4 text-sm text-gray-600">
+                <span class="font-medium text-gray-800">Laravel.log:</span>
+                {{ laravelLogsTotal }} entree(s) trouvee(s),
+                {{ laravelLogs.length }} affichee(s).
+            </div>
+
+            <div class="relative min-h-[220px]">
+                <div
+                    v-if="isLoadingLaravelLogs"
+                    class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-[1px]"
+                >
+                    <RollingLoader :loading="isLoadingLaravelLogs" />
+                </div>
+
+                <div
+                    class="space-y-4 transition-opacity"
+                    :class="{ 'opacity-60': isLoadingLaravelLogs }"
+                >
+                    <div
+                        v-for="item in laravelLogs"
                         :key="item.id"
-                        class="border-b last:border-b-0"
+                        class="bg-white rounded-lg border p-4"
                     >
-                        <td class="px-4 py-3 whitespace-nowrap">
-                            {{ formatDate(item.created_at) }}
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="font-medium">{{ item.message }}</div>
-                            <div class="text-xs text-gray-500">{{ item.file }}:{{ item.line }}</div>
-                        </td>
-                        <td class="px-4 py-3">{{ item.exception_class }}</td>
-                        <td class="px-4 py-3">{{ item.method || 'CLI' }} - {{ item.url || '-' }}</td>
-                    </tr>
-                    <tr v-if="errors.length === 0">
-                        <td
-                            colspan="4"
-                            class="px-4 py-8 text-center text-gray-500"
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="font-semibold">
+                                {{ formatToDMY(item.datetime, true) }}
+                            </div>
+                            <span
+                                class="text-xs px-2 py-1 rounded border uppercase"
+                                :class="getLevelClass(item.level)"
+                            >
+                                {{ item.level }}
+                            </span>
+                        </div>
+                        <div class="mt-2 text-sm">
+                            <div class="font-medium">
+                                {{ item.message }}
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                Env: {{ item.environment }}
+                            </div>
+                        </div>
+                        <pre
+                            v-if="item.details"
+                            class="mt-3 text-xs bg-gray-50 border rounded p-3 overflow-x-auto whitespace-pre-wrap break-words"
+                        >{{ item.details }}</pre>
+                    </div>
+
+                    <div
+                        v-if="laravelLogs.length === 0"
+                        class="bg-white rounded-lg border p-8 text-center text-gray-500"
+                    >
+                        Aucune entree detectee dans laravel.log.
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="relative bg-white rounded-lg border overflow-hidden min-h-[260px]"
+            >
+                <div
+                    v-if="isRefreshingMonitoring"
+                    class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-[1px]"
+                >
+                    <RollingLoader :loading="isRefreshingMonitoring" />
+                </div>
+
+                <table
+                    class="w-full text-sm transition-opacity"
+                    :class="{ 'opacity-60': isRefreshingMonitoring }"
+                >
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="text-left px-4 py-3">
+                                Date
+                            </th>
+                            <th class="text-left px-4 py-3">
+                                Message
+                            </th>
+                            <th class="text-left px-4 py-3">
+                                Classe
+                            </th>
+                            <th class="text-left px-4 py-3">
+                                Route
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="item in errors"
+                            :key="item.id"
+                            class="border-b last:border-b-0"
                         >
-                            Aucune erreur enregistree.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                {{ formatToDMY(item.created_at, true) }}
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="font-medium">
+                                    {{ item.message }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    {{ item.file }}:{{ item.line }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                {{ item.exception_class }}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{ item.method || "CLI" }} - {{ item.url || "-" }}
+                            </td>
+                        </tr>
+                        <tr v-if="errors.length === 0">
+                            <td
+                                colspan="4"
+                                class="px-4 py-8 text-center text-gray-500"
+                            >
+                                Aucune erreur enregistree.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
+import RollingLoader from '~/components/RollingLoader.vue';
+import { formatToDMY } from '~/composables/useDate';
+
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
@@ -67,21 +150,52 @@ definePageMeta({
 useHead({ title: 'Monitoring erreurs Laravel' });
 
 const { isSuperAdmin, isDeveloper } = useAuth();
-const { errors, getMonitoringErrors } = useMonitoring();
+const {
+    errors,
+    laravelLogs,
+    laravelLogsTotal,
+    isRefreshingMonitoring,
+    isLoadingLaravelLogs,
+    getMonitoringErrors,
+    getLaravelLogErrors,
+} = useMonitoring();
 
 if (!isSuperAdmin.value && !isDeveloper.value) {
     await navigateTo('/dashboard/admin', { replace: true });
 }
 
+const fetchData = async () => {
+    await Promise.all([getMonitoringErrors(1, 50), getLaravelLogErrors(50)]);
+};
+
 const refresh = async () => {
-    await getMonitoringErrors(1, 50);
+    await fetchData();
 };
 
-const formatDate = (value: string) => {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleString('fr-FR');
+const getLevelClass = (level: string) => {
+    const normalized = level.toLowerCase();
+    if (
+        normalized.includes('error')
+        || normalized.includes('critical')
+        || normalized.includes('alert')
+    ) {
+        return 'bg-destructive text-destructive-foreground border-destructive';
+    }
+
+    if (normalized.includes('warning') || normalized.includes('warn')) {
+        return 'bg-warning text-warning-foreground border-warning';
+    }
+
+    if (normalized.includes('info') || normalized.includes('notice')) {
+        return 'bg-info text-info-foreground border-info';
+    }
+
+    if (normalized.includes('debug')) {
+        return 'bg-gray-50 text-gray-700 border-gray-200';
+    }
+
+    return 'bg-slate-50 text-slate-700 border-slate-200';
 };
 
-await refresh();
+await fetchData();
 </script>
