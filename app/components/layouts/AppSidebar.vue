@@ -257,7 +257,6 @@ defineProps({
 const {
     isSuperAdmin,
     isAdmin,
-    isDeveloper,
     isManager,
     isCollaborator,
     isCommunityManager,
@@ -497,14 +496,14 @@ const adminNavigationItems: NavigationItem[] = [
         label: 'Alerte DB',
         route: '/dashboard/admin/db-alerts',
         icon: InboxIcon,
-        visible: isSuperAdmin.value || isDeveloper.value,
+        visible: isSuperAdmin.value || isAdmin.value,
     },
 
     {
         label: 'Logs',
         route: '/dashboard/admin/monitoring-errors',
         icon: ClipboardDocumentIcon,
-        visible: isSuperAdmin.value || isDeveloper.value,
+        visible: isSuperAdmin.value || isAdmin.value,
     },
 ];
 
@@ -556,7 +555,6 @@ const role = computed(() => {
     if (isInstitution.value) return 'institution';
     if (isSuperAdmin.value) return 'super_admin';
     if (isAdmin.value) return 'admin';
-    if (isDeveloper.value) return 'developer';
     if (isManager.value) return 'manager';
     if (isCommunityManager.value) return 'community_manager';
     if (isSaleRepresentative.value) return 'sale_representative';

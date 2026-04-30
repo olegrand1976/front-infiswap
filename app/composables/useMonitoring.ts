@@ -5,18 +5,6 @@ type AlertRecipient = {
     name: string;
 };
 
-type MonitoringErrorEntry = {
-    id: string;
-    level: string;
-    message: string;
-    exception_class: string;
-    file: string | null;
-    line: number | null;
-    url: string | null;
-    method: string | null;
-    created_at: string;
-};
-
 type LaravelLogEntry = {
     id: string;
     source: string;
@@ -33,10 +21,7 @@ export const useMonitoring = () => {
 
     const recipients = useState<AlertRecipient[]>('dbAlertRecipients', () => []);
     const loading = useState<boolean>('dbAlertRecipientsLoading', () => false);
-    const isRefreshingMonitoring = useState<boolean>('monitoringRefreshing', () => false);
     const isLoadingLaravelLogs = useState<boolean>('monitoringLaravelLogsLoading', () => false);
-    const errors = useState<MonitoringErrorEntry[]>('monitoringErrors', () => []);
-    const errorsTotal = useState<number>('monitoringErrorsTotal', () => 0);
     const laravelLogs = useState<LaravelLogEntry[]>('monitoringLaravelLogs', () => []);
     const laravelLogsTotal = useState<number>('monitoringLaravelLogsTotal', () => 0);
 
@@ -52,12 +37,12 @@ export const useMonitoring = () => {
         }
     };
 
-    const updateDatabaseAlertRecipients = async (payload: AlertRecipient[]) => {
+    const createDatabaseAlertRecipient = async (payload: AlertRecipient) => {
         loading.value = true;
         try {
             const response = await $apifetch('/api/admin/monitoring/database-alert-recipients', {
-                method: 'PUT',
-                body: { recipients: payload },
+                method: 'POST',
+                body: payload,
             });
             recipients.value = response.recipients ?? [];
             return response;
@@ -67,18 +52,17 @@ export const useMonitoring = () => {
         }
     };
 
-    const getMonitoringErrors = async (page = 1, perPage = 25) => {
-        isRefreshingMonitoring.value = true;
+    const deleteDatabaseAlertRecipient = async (email: string) => {
+        loading.value = true;
         try {
-            const response = await $apifetch('/api/admin/monitoring/errors', {
-                params: { page, per_page: perPage },
+            const response = await $apifetch(`/api/admin/monitoring/database-alert-recipients/${encodeURIComponent(email)}`, {
+                method: 'DELETE',
             });
-            errors.value = response.data ?? [];
-            errorsTotal.value = response.total ?? 0;
+            recipients.value = response.recipients ?? [];
             return response;
         }
         finally {
-            isRefreshingMonitoring.value = false;
+            loading.value = false;
         }
     };
 
@@ -99,16 +83,13 @@ export const useMonitoring = () => {
 
     return {
         recipients,
-        errors,
-        errorsTotal,
         laravelLogs,
         laravelLogsTotal,
         loading,
-        isRefreshingMonitoring,
         isLoadingLaravelLogs,
         getDatabaseAlertRecipients,
-        updateDatabaseAlertRecipients,
-        getMonitoringErrors,
+        createDatabaseAlertRecipient,
+        deleteDatabaseAlertRecipient,
         getLaravelLogErrors,
     };
 };

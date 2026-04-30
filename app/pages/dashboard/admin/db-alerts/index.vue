@@ -72,11 +72,11 @@ definePageMeta({
 
 useHead({ title: 'Alerte DB - Destinataires' });
 
-const { isSuperAdmin, isDeveloper } = useAuth();
+const { isAdmin, isDeveloper } = useAuth();
 const { $toast } = useNuxtApp();
-const { recipients, loading, getDatabaseAlertRecipients, updateDatabaseAlertRecipients } = useMonitoring();
+const { recipients, loading, getDatabaseAlertRecipients, createDatabaseAlertRecipient, deleteDatabaseAlertRecipient } = useMonitoring();
 
-if (!isSuperAdmin.value && !isDeveloper.value) {
+if (!isAdmin.value && !isDeveloper.value) {
     await navigateTo('/dashboard/admin', { replace: true });
 }
 
@@ -110,8 +110,20 @@ const saveRecipients = async () => {
         return;
     }
 
+    const currentByEmail = new Map(
+        recipients.value.map(recipient => [recipient.email.toLowerCase(), recipient]),
+    );
+    const nextByEmail = new Map(payload.map(recipient => [recipient.email.toLowerCase(), recipient]));
+    const toCreate = payload.filter(recipient => !currentByEmail.has(recipient.email.toLowerCase()));
+    const toDelete = recipients.value
+        .filter(recipient => !nextByEmail.has(recipient.email.toLowerCase()))
+        .map(recipient => recipient.email);
+
     try {
-        await updateDatabaseAlertRecipients(payload);
+        await Promise.all(toDelete.map(email => deleteDatabaseAlertRecipient(email)));
+        await Promise.all(
+            toCreate.map(recipient => createDatabaseAlertRecipient(recipient)),
+        );
         formRecipients.value = [...recipients.value];
 
         $toast({

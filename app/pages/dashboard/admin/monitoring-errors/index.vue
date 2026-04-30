@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Monitoring erreurs Laravel">
+        <DashboardAdminPageHeader title="Logs">
             <template #action>
                 <Button
                     class="rounded cursor-pointer"
@@ -68,72 +68,6 @@
                     </div>
                 </div>
             </div>
-
-            <div
-                class="relative bg-white rounded-lg border overflow-hidden min-h-[260px]"
-            >
-                <div
-                    v-if="isRefreshingMonitoring"
-                    class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-[1px]"
-                >
-                    <RollingLoader :loading="isRefreshingMonitoring" />
-                </div>
-
-                <table
-                    class="w-full text-sm transition-opacity"
-                    :class="{ 'opacity-60': isRefreshingMonitoring }"
-                >
-                    <thead class="bg-gray-50 border-b">
-                        <tr>
-                            <th class="text-left px-4 py-3">
-                                Date
-                            </th>
-                            <th class="text-left px-4 py-3">
-                                Message
-                            </th>
-                            <th class="text-left px-4 py-3">
-                                Classe
-                            </th>
-                            <th class="text-left px-4 py-3">
-                                Route
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="item in errors"
-                            :key="item.id"
-                            class="border-b last:border-b-0"
-                        >
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                {{ formatToDMY(item.created_at, true) }}
-                            </td>
-                            <td class="px-4 py-3">
-                                <div class="font-medium">
-                                    {{ item.message }}
-                                </div>
-                                <div class="text-xs text-gray-500">
-                                    {{ item.file }}:{{ item.line }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ item.exception_class }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ item.method || "CLI" }} - {{ item.url || "-" }}
-                            </td>
-                        </tr>
-                        <tr v-if="errors.length === 0">
-                            <td
-                                colspan="4"
-                                class="px-4 py-8 text-center text-gray-500"
-                            >
-                                Aucune erreur enregistree.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </DashboardAdminPageContent>
     </div>
 </template>
@@ -147,28 +81,22 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-useHead({ title: 'Monitoring erreurs Laravel' });
+useHead({ title: 'logs - Laravel' });
 
-const { isSuperAdmin, isDeveloper } = useAuth();
+const { isAdmin, isDeveloper } = useAuth();
 const {
-    errors,
     laravelLogs,
     laravelLogsTotal,
-    isRefreshingMonitoring,
     isLoadingLaravelLogs,
-    getMonitoringErrors,
     getLaravelLogErrors,
 } = useMonitoring();
 
-if (!isSuperAdmin.value && !isDeveloper.value) {
+if (!isAdmin.value && !isDeveloper.value) {
     await navigateTo('/dashboard/admin', { replace: true });
 }
 
 const fetchData = async () => {
-    await Promise.allSettled([
-        getMonitoringErrors(1, 50),
-        getLaravelLogErrors(50),
-    ]);
+    await getLaravelLogErrors(50);
 };
 
 const refresh = async () => {
@@ -182,15 +110,15 @@ const getLevelClass = (level?: string | null) => {
         || normalized.includes('critical')
         || normalized.includes('alert')
     ) {
-        return 'bg-destructive/60 text-destructive-foreground border-destructive/60';
+        return 'bg-destructive text-destructive-foreground border-destructive/60';
     }
 
     if (normalized.includes('warning') || normalized.includes('warn')) {
-        return 'bg-warning/60 text-warning-foreground border-warning/60';
+        return 'bg-warning text-warning-foreground border-warning/60';
     }
 
     if (normalized.includes('info') || normalized.includes('notice')) {
-        return 'bg-info/60 text-info-foreground border-info/60';
+        return 'bg-info text-info-foreground border-info/60';
     }
 
     if (normalized.includes('debug')) {
