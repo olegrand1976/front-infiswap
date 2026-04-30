@@ -500,13 +500,29 @@ const route = useRoute();
                     />
                 </div>
                 <div>
-                    <InputIcon
-                            :model-value="getCountryName(form.address.country)"
-                            rounded="md"
-                            label="Pays"
-                        />
-                </div>
+                  <Select
+                        v-model="form.address.country"
+                        label="Pays"
+                    >
+                        <SelectTrigger
+                            position="right"
+                            class="rounded-md"
+                        >
+                            <SelectValue>
+                                {{ getCountryName(form.address.country) || 'Sélectionner...' }}
+                            </SelectValue>
+                        </SelectTrigger>
 
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <SelectItem value="fr">France</SelectItem>
+                                <SelectItem value="be">Belgique</SelectItem>
+                                <SelectItem value="nl">Pays-Bas</SelectItem>
+                                <SelectItem value="us">États-Unis</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
                 <div>
                     <InputIcon
                         v-model="form.address.zipCode"
