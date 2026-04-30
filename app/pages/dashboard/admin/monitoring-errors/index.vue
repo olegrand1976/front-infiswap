@@ -165,29 +165,32 @@ if (!isSuperAdmin.value && !isDeveloper.value) {
 }
 
 const fetchData = async () => {
-    await Promise.all([getMonitoringErrors(1, 50), getLaravelLogErrors(50)]);
+    await Promise.allSettled([
+        getMonitoringErrors(1, 50),
+        getLaravelLogErrors(50),
+    ]);
 };
 
 const refresh = async () => {
     await fetchData();
 };
 
-const getLevelClass = (level: string) => {
-    const normalized = level.toLowerCase();
+const getLevelClass = (level?: string | null) => {
+    const normalized = (level ?? '').toString().toLowerCase();
     if (
         normalized.includes('error')
         || normalized.includes('critical')
         || normalized.includes('alert')
     ) {
-        return 'bg-destructive text-destructive-foreground border-destructive';
+        return 'bg-destructive/60 text-destructive-foreground border-destructive/60';
     }
 
     if (normalized.includes('warning') || normalized.includes('warn')) {
-        return 'bg-warning text-warning-foreground border-warning';
+        return 'bg-warning/60 text-warning-foreground border-warning/60';
     }
 
     if (normalized.includes('info') || normalized.includes('notice')) {
-        return 'bg-info text-info-foreground border-info';
+        return 'bg-info/60 text-info-foreground border-info/60';
     }
 
     if (normalized.includes('debug')) {
