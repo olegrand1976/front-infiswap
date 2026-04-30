@@ -387,6 +387,10 @@ const adminNavigationItems: NavigationItem[] = [
     { label: 'Produits', route: '/dashboard/admin/products', icon: ShoppingBagIcon, visible: true },
 
     { label: 'Suivi des liens', route: '/dashboard/admin/stats', icon: LinkIcon, visible: true },
+
+    { label: 'Alerte DB', route: '/dashboard/admin/db-alerts', icon: InboxIcon, visible: isSuperAdmin.value || isDeveloper.value },
+
+    { label: 'Monitoring erreurs', route: '/dashboard/admin/monitoring-errors', icon: InboxIcon, visible: isSuperAdmin.value || isDeveloper.value },
 ];
 
 const institutionNavigationItems: NavigationItem[] = [
