@@ -357,8 +357,7 @@
                 </div>
             </div>
 
-         
-            <!-- <div class="col-span-1 lg:col-span-2">
+            <div class="col-span-1 lg:col-span-2">
                 <button
                     type="button"
                     class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
@@ -374,7 +373,6 @@
                 </button>
 
                 <div v-if="showInstitutions" class="mt-3 space-y-4">
-                  
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
                             <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Total</span>
@@ -394,7 +392,6 @@
                         </div>
                     </div>
 
-               
                     <div>
                         <p class="ml-2 mb-1 font-semibold text-sm">
                             Nouvelles institutions par semaine (année en cours)
@@ -416,7 +413,8 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
+
         </section>
     </div>
 </template>
@@ -441,6 +439,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
 });
+const showInstitutions = ref(false);
 
 onMounted(() => {
     loading.value = false;
@@ -604,38 +603,22 @@ const adminReports = computed(() => {
         },
     ];
 });
+const institutionStats = computed(() => {
+    const stats = reports.value?.institution_statistics;
+    return stats ?? { total: 0, total_belgian: 0, total_french: 0, last_30_days: 0, weeks_year: [] };
+});
 
-    // const showInstitutions = ref(false);
+const institutionWeeklyChartData = computed(() => {
+    const data = (institutionStats.value.weeks_year ?? []).map((item: { name: number; count: number }) => ({
+        name: `S${item.name}`,
+        count: item.count,
+    }));
+    return { data, legendLabels: { count: 'Institutions' } };
+});
 
-    // const institutionStats = computed(() => {
-    // const stats = reports.value?.institution_statistics;
-
-    //     if (!stats) {
-    //         return {
-    //             total: 0,
-    //             total_belgian: 0,
-    //             total_french: 0,
-    //             last_30_days: 0,
-    //             today: 0,
-    //             weeks_year: [],
-    //         };
-    //     }
-
-    //     return structuredClone(stats);
-    // });
-
-    // const institutionWeeklyChartData = computed(() => {
-    //     const raw = institutionStats.value.weeks_year ?? [];
-    //     const data = raw.map((item: { name: number; count: number }) => ({
-    //         name: `S${item.name}`,
-    //         count: item.count,
-    //     }));
-    //     return { data, legendLabels: { count: 'Institutions' } };
-    // });
-
-    // const xInstitutionWeekFormatter = computed(() =>
-    //     createXFormatter(computed(() => institutionWeeklyChartData.value.data))
-    // );
+const xInstitutionWeekFormatter = computed(() =>
+    createXFormatter(computed(() => institutionWeeklyChartData.value.data))
+);
 
 </script>
 
