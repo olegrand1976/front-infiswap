@@ -66,6 +66,21 @@ export const useMonitoring = () => {
         }
     };
 
+    const updateDatabaseAlertRecipient = async (originalEmail: string, payload: AlertRecipient) => {
+        loading.value = true;
+        try {
+            const response = await $apifetch(`/api/admin/monitoring/database-alert-recipients/${encodeURIComponent(originalEmail)}`, {
+                method: 'PUT',
+                body: payload,
+            });
+            recipients.value = response.recipients ?? [];
+            return response;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
     const getLaravelLogErrors = async (limit = 50) => {
         isLoadingLaravelLogs.value = true;
         try {
@@ -89,6 +104,7 @@ export const useMonitoring = () => {
         isLoadingLaravelLogs,
         getDatabaseAlertRecipients,
         createDatabaseAlertRecipient,
+        updateDatabaseAlertRecipient,
         deleteDatabaseAlertRecipient,
         getLaravelLogErrors,
     };

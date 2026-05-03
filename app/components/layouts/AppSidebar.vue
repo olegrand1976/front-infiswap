@@ -241,6 +241,7 @@ import {
     BriefcaseIcon,
     DocumentTextIcon,
     ClipboardDocumentIcon,
+    ShieldExclamationIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -493,9 +494,9 @@ const adminNavigationItems: NavigationItem[] = [
     },
 
     {
-        label: 'Alerte DB',
+        label: 'Alerte',
         route: '/dashboard/admin/db-alerts',
-        icon: InboxIcon,
+        icon: ShieldExclamationIcon,
         visible: isSuperAdmin.value || isAdmin.value,
     },
 
@@ -572,9 +573,6 @@ const navigationItems = computed(() => {
         case 'institution':
             return institutionNavigationItems;
             return items;
-
-        case 'developer':
-            return items.filter(i => !i.route?.includes('/contracts/nurstech'));
 
         case 'manager':
             return items.filter(
