@@ -67,9 +67,9 @@
 
                     <div class="grid gap-4 py-2">
                         <div class="grid gap-2">
-                            <Label for="db-alert-name">Nom</Label>
+                            <Label for="alert-name">Nom</Label>
                             <Input
-                                id="db-alert-name"
+                                id="alert-name"
                                 v-model="newRecipient.name"
                                 type="text"
                                 autocomplete="name"
@@ -77,9 +77,9 @@
                             />
                         </div>
                         <div class="grid gap-2">
-                            <Label for="db-alert-email">E‑mail</Label>
+                            <Label for="alert-email">E‑mail</Label>
                             <Input
-                                id="db-alert-email"
+                                id="alert-email"
                                 v-model="newRecipient.email"
                                 type="email"
                                 autocomplete="email"

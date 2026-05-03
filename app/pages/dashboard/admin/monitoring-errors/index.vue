@@ -41,12 +41,15 @@
                             </div>
                             <span
                                 class="text-xs px-2 py-1 rounded border uppercase"
-                                :class="getLevelClass(item.level)"
+                                :class="getLevelClass(item.level, 'badge')"
                             >
                                 {{ item.level }}
                             </span>
                         </div>
-                        <div class="mt-2 text-sm">
+                        <div
+                            class="mt-2 text-sm rounded-md px-3 py-2 border"
+                            :class="getLevelClass(item.level, 'content')"
+                        >
                             <div class="font-medium">
                                 {{ item.message }}
                             </div>
@@ -103,30 +106,63 @@ const refresh = async () => {
     await fetchData();
 };
 
-const getLevelClass = (level?: string | null) => {
+type LogLevelTone = 'error' | 'warning' | 'info' | 'debug' | 'neutral';
+
+function getLogLevelTone(level?: string | null): LogLevelTone {
     const normalized = (level ?? '').toString().toLowerCase();
     if (
         normalized.includes('error')
         || normalized.includes('critical')
         || normalized.includes('alert')
     ) {
-        return 'bg-destructive text-destructive-foreground border-destructive/60';
+        return 'error';
     }
-
     if (normalized.includes('warning') || normalized.includes('warn')) {
-        return 'bg-warning text-warning-foreground border-warning/60';
+        return 'warning';
     }
-
     if (normalized.includes('info') || normalized.includes('notice')) {
-        return 'bg-info text-info-foreground border-info/60';
+        return 'info';
     }
-
     if (normalized.includes('debug')) {
-        return 'bg-gray-50 text-gray-700 border-gray-200';
+        return 'debug';
+    }
+    return 'neutral';
+}
+
+function getLevelClass(
+    level: string | null | undefined,
+    variant: 'badge' | 'content',
+): string {
+    const tone = getLogLevelTone(level);
+
+    if (variant === 'badge') {
+        switch (tone) {
+            case 'error':
+                return 'bg-destructive text-destructive-foreground border-destructive/60';
+            case 'warning':
+                return 'bg-warning text-warning-foreground border-warning/60';
+            case 'info':
+                return 'bg-info text-info-foreground border-info/60';
+            case 'debug':
+                return 'bg-gray-50 text-gray-700 border-gray-200';
+            default:
+                return 'bg-slate-50 text-slate-700 border-slate-200';
+        }
     }
 
-    return 'bg-slate-50 text-slate-700 border-slate-200';
-};
+    switch (tone) {
+        case 'error':
+            return 'bg-destructive/60 text-foreground border-destructive/40';
+        case 'warning':
+            return 'bg-warning/60 text-foreground border-warning/40';
+        case 'info':
+            return 'bg-primarytech/60 text-primarytech-foreground border-primarytech/40';
+        case 'debug':
+            return 'bg-gray-50/60 text-gray-800 border-gray-200';
+        default:
+            return 'bg-slate-50/60 text-slate-800 border-slate-200';
+    }
+}
 
 await fetchData();
 </script>

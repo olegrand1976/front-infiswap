@@ -494,8 +494,8 @@ const adminNavigationItems: NavigationItem[] = [
     },
 
     {
-        label: 'Alerte',
-        route: '/dashboard/admin/db-alerts',
+        label: 'Alertes',
+        route: '/dashboard/admin/alerts',
         icon: ShieldExclamationIcon,
         visible: isSuperAdmin.value || isAdmin.value,
     },
