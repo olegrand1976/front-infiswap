@@ -53,7 +53,7 @@
                             <div class="font-medium">
                                 {{ item.message }}
                             </div>
-                            <div class="text-xs text-gray-500 mt-1">
+                            <div class="text-xs mt-1">
                                 Env: {{ item.environment }}
                             </div>
                         </div>
@@ -142,25 +142,21 @@ function getLevelClass(
             case 'warning':
                 return 'bg-warning text-warning-foreground border-warning/60';
             case 'info':
-                return 'bg-info text-info-foreground border-info/60';
-            case 'debug':
-                return 'bg-gray-50 text-gray-700 border-gray-200';
+                return 'bg-primarytech text-white border-primarytech/60';
             default:
-                return 'bg-slate-50 text-slate-700 border-slate-200';
+                return 'bg-primarytech text-white border-primarytech/60';
         }
     }
 
     switch (tone) {
         case 'error':
-            return 'bg-destructive/60 text-foreground border-destructive/40';
+            return 'bg-destructive/80 text-destructive-foreground border-destructive/40';
         case 'warning':
-            return 'bg-warning/60 text-foreground border-warning/40';
+            return 'bg-warning/80 text-destructive-foreground border-warning/40';
         case 'info':
-            return 'bg-primarytech/60 text-primarytech-foreground border-primarytech/40';
-        case 'debug':
-            return 'bg-gray-50/60 text-gray-800 border-gray-200';
+            return 'bg-primarytech text-white border-primarytech/40 dark:text-primarytech-foreground';
         default:
-            return 'bg-slate-50/60 text-slate-800 border-slate-200';
+            return 'bg-primarytech text-white border-primarytech/40 dark:text-primarytech-foreground';
     }
 }
 
