@@ -11,6 +11,7 @@
                 :placeholder="placeholder"
                 class="w-full"
                 :maxlength="maxLength"
+                    @input="onInput"
                 @keyup="handleKeyUp"
                 @blur="handleBlur"
             />
@@ -160,10 +161,27 @@ watch(inputValue, (val) => {
 
     inputValue.value = clean;
 
-    if (clean.length === maxLength.value) {
-        nextTick(() => addItem());
-    }
+    // if (clean.length === maxLength.value) {
+    //     nextTick(() => addItem());
+    // }
 });
+
+const onInput = (event) => {
+    // Récupère la valeur brute du DOM natif
+    const raw = event.target?.value ?? inputValue.value;
+    let clean = raw.replace(/\D/g, '');
+    
+    if (clean.length > maxLength.value) {
+        clean = clean.slice(0, maxLength.value);
+    }
+    
+    inputValue.value = clean;
+    
+    // Force la valeur sur l'input natif directement
+    if (event.target) {
+        event.target.value = clean;
+    }
+};
 
 </script>
 
