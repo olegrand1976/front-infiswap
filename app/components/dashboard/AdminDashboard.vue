@@ -360,7 +360,7 @@
             <div class="col-span-1 lg:col-span-2">
                 <button
                     type="button"
-                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
+                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                     @click="showInstitutions = !showInstitutions"
                 >
                     <span class="font-semibold text-sm text-gray-800">Institutions</span>
@@ -401,7 +401,7 @@
                                 <BarChart
                                     :data="institutionWeeklyChartData.data"
                                     index="name"
-                                    :categories="['count']"
+                                    :categories="['Inscrits']"
                                     :x-formatter="xInstitutionWeekFormatter"
                                     :y-formatter="yFormatter"
                                     :show-all-x-ticks="true"
@@ -609,11 +609,16 @@ const institutionStats = computed(() => {
 });
 
 const institutionWeeklyChartData = computed(() => {
-    const data = (institutionStats.value.weeks_year ?? []).map((item: { name: number; count: number }) => ({
-        name: `S${item.name}`,
-        count: item.count,
+    const raw = institutionStats.value.weeks_year ?? [];
+    const data = raw.map((item: { name: number; count: number }) => ({
+        name: item.name,        // number, pas string
+        Inscrits: item.count,
     }));
-    return { data, legendLabels: { count: 'Institutions' } };
+    
+    return {
+        data,
+        legendLabels: { Inscrits: 'Institutions' }
+    };
 });
 
 const xInstitutionWeekFormatter = computed(() =>
