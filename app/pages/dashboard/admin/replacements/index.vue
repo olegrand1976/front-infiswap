@@ -29,7 +29,7 @@
                 <InputIcon
                     v-model="option.country"
                     rounded="md"
-                    placeholder="Pays (fr, be, us...)"
+                    placeholder="Pays"
                     class="w-full lg:w-[250px]"
                     @input="debouncedFilterReplacements"
                 />
@@ -676,6 +676,27 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
+        accessorKey: 'country',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+            }, () => ['Pays', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+        },
+
+        cell: ({ row }) => {
+            const country = row.original.country;
+
+            const countryLabel = LANGUAGES.find(l => l.value === country)?.label
+                ?? country
+                ?? '-';
+
+            return h('div', { class: 'text-center capitalize' }, countryLabel);
+        },
+
+        sortingFn: 'alphanumeric',
+    },
+    {
         accessorKey: 'user_owner',
         header: ({ column }) =>
             h(Button, {
@@ -870,28 +891,8 @@ const columns: ColumnDef<Replacement>[] = [
                 }),
             ]);
         },
-    },
-    {
-        accessorKey: 'country',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Pays', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
-        },
-
-        cell: ({ row }) => {
-            const country = row.original.country;
-
-            const countryLabel = LANGUAGES.find(l => l.value === country)?.label
-                ?? country
-                ?? '-';
-
-            return h('div', { class: 'text-center capitalize' }, countryLabel);
-        },
-
-        sortingFn: 'alphanumeric',
-    },
+    }
+   
 ];
 
 const excludedColumnsForModal = ['user_owner', 'substitute_user'];

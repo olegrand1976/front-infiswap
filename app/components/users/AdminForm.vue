@@ -234,8 +234,7 @@ const getCountryName = (code: string | null) => {
     switch (code) {
         case 'fr': return 'France';
         case 'be': return 'Belgique';
-        case 'us': return 'États-Unis';
-        case 'nl': return 'Pays-Bas';
+  
         default: return code;
     }
 };
@@ -517,8 +516,6 @@ const route = useRoute();
                             <SelectGroup>
                                 <SelectItem value="fr">France</SelectItem>
                                 <SelectItem value="be">Belgique</SelectItem>
-                                <SelectItem value="nl">Pays-Bas</SelectItem>
-                                <SelectItem value="us">États-Unis</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
