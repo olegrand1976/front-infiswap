@@ -2,7 +2,7 @@
 <template>
     <div>
         <div class="flex mt-8">
-            <Form class="grid grid-cols-1 sm:grid-cols-5 2xl:grid-cols-6 w-full gap-4">
+            <Form class="grid grid-cols-1 sm:grid-cols-4 2xl:grid-cols-6 w-full gap-4">
                 <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
                     <FormField name="days">
                         <FormItem>
