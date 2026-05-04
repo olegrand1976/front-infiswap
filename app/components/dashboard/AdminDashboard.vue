@@ -1,44 +1,48 @@
 <template>
     <div>
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
-            <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
-                <div v-if="loading">
-                    <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                </div>
-                <div
-                    v-else
-                    class="mt-3 grid sm:grid-cols-2 gap-4 sm:gap-8 items-center"
-                >
-                    <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
-                        <div>
-                            <h3 class="text-sm font-semibold">
-                                Utilisateur en Belgique
-                            </h3>
-                            <p class="font-semibold text-primary text-3xl">
-                                {{ userBelgianCount }}
-                            </p>
-                        </div>
-                        <LayoutsAppImage
-                            :src="'/icons/belgium.png'"
-                            alt="Belgium flag"
-                            class="w-8 sm:w-12"
-                        />
-                    </div>
 
-                    <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
-                        <div>
-                            <h3 class="text-sm font-semibold">
-                                Utilisateur en France
-                            </h3>
-                            <p class="font-semibold text-success text-3xl">
-                                {{ userFrenchCount }}
-                            </p>
+            <div>
+                
+                <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
+                    <div v-if="loading">
+                        <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                    </div>
+                    <div
+                        v-else
+                        class="mt-3 grid sm:grid-cols-2 gap-4 sm:gap-8 items-center"
+                    >
+                        <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
+                            <div>
+                                <h3 class="text-sm font-semibold">
+                                    Utilisateur en Belgique
+                                </h3>
+                                <p class="font-semibold text-primary text-3xl">
+                                    {{ userBelgianCount }}
+                                </p>
+                            </div>
+                            <LayoutsAppImage
+                                :src="'/icons/belgium.png'"
+                                alt="Belgium flag"
+                                class="w-8 sm:w-12"
+                            />
                         </div>
-                        <LayoutsAppImage
-                            :src="'/icons/fr.png'"
-                            alt="France flag"
-                            class="w-8 sm:w-12"
-                        />
+
+                        <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
+                            <div>
+                                <h3 class="text-sm font-semibold">
+                                    Utilisateur en France
+                                </h3>
+                                <p class="font-semibold text-success text-3xl">
+                                    {{ userFrenchCount }}
+                                </p>
+                            </div>
+                            <LayoutsAppImage
+                                :src="'/icons/fr.png'"
+                                alt="France flag"
+                                class="w-8 sm:w-12"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,6 +222,8 @@
                 v-if="deletedUserChartData.data.length > 0"
                 class="col-span-1 lg:col-span-2"
             >
+
+            
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des utilisateurs perdus
                 </p>
@@ -245,62 +251,94 @@
             </div>
 
             <div class="col-span-1 lg:col-span-2">
-                <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                    Évolution des inscriptions par province
-                </p>
+                <div>
+                    <button
+                        type="button"
+                        class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                        @click="showReplacements = !showReplacements"
+                    >
+                        <span class="font-semibold text-sm text-gray-800">Évolution des remplacements</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                            class="w-4 h-4 text-gray-400 transition-transform duration-200"
+                            :class="showReplacements ? 'rotate-180' : ''"
+                        >
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div v-if="showReplacements" class="mt-3 space-y-4">
+                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                            Évolution des inscriptions par province
+                        </p>
 
-                <div class="mt-4 flex gap-8 items-center">
-                    <div class="flex gap-3 items-center">
-                        <input
-                            v-model="selectedCountryForProvince"
-                            type="radio"
-                            value="be"
-                        >
-                        <label
-                            class="font-medium text-sm"
-                        >
-                            Belgique
-                        </label>
-                    </div>
+                        <div class="mt-4 flex gap-8 items-center">
+                            <div class="flex gap-3 items-center">
+                                <input
+                                    v-model="selectedCountryForProvince"
+                                    type="radio"
+                                    value="be"
+                                >
+                                <label
+                                    class="font-medium text-sm"
+                                >
+                                    Belgique
+                                </label>
+                            </div>
 
-                    <div class="flex gap-3 items-center">
-                        <input
-                            v-model="selectedCountryForProvince"
-                            type="radio"
-                            value="fr"
-                        >
-                        <label
-                            class="font-medium text-sm"
-                        >
-                            France
-                        </label>
-                    </div>
-                </div>
+                            <div class="flex gap-3 items-center">
+                                <input
+                                    v-model="selectedCountryForProvince"
+                                    type="radio"
+                                    value="fr"
+                                >
+                                <label
+                                    class="font-medium text-sm"
+                                >
+                                    France
+                                </label>
+                            </div>
+                        </div>
 
-                <div v-if="loading">
-                    <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
+                        <div v-if="loading">
+                            <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
+                        </div>
+                        <div
+                            v-else
+                            class="mt-6 bg-white rounded-sm shadow-md p-4"
+                        >
+                            <ClientOnly>
+                                <LineChart
+                                    index="name"
+                                    :data="userByProvince"
+                                    :categories="['inscrits']"
+                                    :x-formatter="xProvinceFormatter"
+                                    :y-formatter="yFormatter"
+                                    :rounded-corners="4"
+                                    :colors="chartLineColors"
+                                    class="pb-8 w-full"
+                                    :legend-labels="{ inscrits: 'Inscrits' }"
+                                />
+                            </ClientOnly>
+                        </div>
                 </div>
-                <div
-                    v-else
-                    class="mt-6 bg-white rounded-sm shadow-md p-4"
-                >
-                    <ClientOnly>
-                        <LineChart
-                            index="name"
-                            :data="userByProvince"
-                            :categories="['inscrits']"
-                            :x-formatter="xProvinceFormatter"
-                            :y-formatter="yFormatter"
-                            :rounded-corners="4"
-                            :colors="chartLineColors"
-                            class="pb-8 w-full"
-                            :legend-labels="{ inscrits: 'Inscrits' }"
-                        />
-                    </ClientOnly>
-                </div>
+               </div>
             </div>
 
             <div class="col-span-1 lg:col-span-2">
+                <div>
+                    <button
+                    type="button"
+                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                    @click="showGeography = !showGeography"
+                >
+                    <span class="font-semibold text-sm text-gray-800">Répartition géographique</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        class="w-4 h-4 text-gray-400 transition-transform duration-200"
+                        :class="showGeography ? 'rotate-180' : ''"
+                    >
+                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div v-if="showGeography" class="mt-3 space-y-6">
                 <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
                     Évolution des inscriptions par zone de code postal
                 </p>
@@ -355,6 +393,8 @@
                         />
                     </ClientOnly>
                 </div>
+            </div>
+               </div>
             </div>
 
             <div class="col-span-1 lg:col-span-2">
@@ -439,7 +479,12 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
 });
-const showInstitutions = ref(false);
+const showStats         = ref(true)   // ouvert par défaut
+const showRegistrations = ref(true)   // ouvert par défaut
+const showReplacements  = ref(false)
+const showGeography     = ref(false)
+const showInstitutions  = ref(false)
+
 
 onMounted(() => {
     loading.value = false;
