@@ -981,7 +981,7 @@ watch(() => props.filters, (nf, old) => {
     localFilters.role = nf.role;
     localFilters.status = nf.status ?? 'open';
     if (!mountedFetchDone.value) return;
-    if (old && nf.type === old.type && nf.role === old.role) return;
+    // if (old && nf.type === old.type && nf.role === old.role) return;
     fetchData(page.value, perPage.value);
 }, { deep: true });
 

@@ -193,8 +193,8 @@ const selectedFilters = ref({
     status: 'open',
 });
 
-const filterCookies = useCookie<{ type: string; role: string }>('selectedFilters', {
-    default: () => ({ type: 'all', role: 'all' }),
+const filterCookies = useCookie<{ type: string; role: string; status: string }>('selectedFilters', {
+    default: () => ({ type: 'all', role: 'all', status: 'open' }),
 });
 
 const displayModeCookie = useCookie<'cards' | 'table'>('displayMode', {
@@ -228,13 +228,18 @@ const selectedType = ref('me');
 
 onMounted(() => {
     if (filterCookies.value) {
-        selectedFilters.value = filterCookies.value;
+        selectedFilters.value = {
+            type: filterCookies.value.type ?? 'all',
+            role: filterCookies.value.role ?? 'all',
+            status: filterCookies.value.status ?? 'open', // fallback si ancien cookie sans status
+        };
     }
+  
 });
 
 watch(selectedFilters, (newFilters) => {
     filterCookies.value = newFilters;
-});
+}, { deep: true });
 
 try {
     await myGroups();
