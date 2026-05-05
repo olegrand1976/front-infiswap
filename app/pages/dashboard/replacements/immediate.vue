@@ -305,7 +305,7 @@ const hasMultipleValidRoles = computed(() => {
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
-const { getZipCodesFromCity } = useLocation();
+const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const countryCode = computed<CountryCode>(() => {
     const country = (
         user.value?.profile?.country
@@ -374,6 +374,12 @@ const openProposalDialog = (value: string) => {
 
 
 const onZipCodeAdded = async (zip: string) => {
+    const citiesFromZip = await getCitiesFomZipCode(zip, countryCode.value);
+    if (!citiesFromZip) return;
+
+    const citiesSet = new Set(formData.cities);
+    citiesFromZip.forEach(city => citiesSet.add(city));
+    formData.cities = Array.from(citiesSet);
     openProposalDialog(zip);
 };
 

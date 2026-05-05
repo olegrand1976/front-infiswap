@@ -1,11 +1,15 @@
 <template>
     <Sidebar>
-        <SidebarContent class="p-2 bg-white flex flex-col gap-8 justify-between sidebar-content min-w-[260px] w-[260px]">
+        <SidebarContent
+            class="p-2 bg-white flex flex-col gap-8 justify-between sidebar-content min-w-[260px] w-[260px]"
+        >
             <SidebarGroup
-                :class="cn('rounded-xl pb-6', {
-                    'bg-white': isAdmin,
-                    'bg-gray-100': !isAdmin,
-                })"
+                :class="
+                    cn('rounded-xl pb-6', {
+                        'bg-white': isAdmin,
+                        'bg-gray-100': !isAdmin,
+                    })
+                "
             >
                 <SidebarHeader class="flex flex-col mb-4 justify-center items-center">
                     <LayoutsLogo class="w-36" />
@@ -21,13 +25,17 @@
                             :key="index"
                         >
                             <SidebarMenuItem v-if="item?.children?.length > 0">
-                                <Collapsible class="group/collapsible transition-all duration-500">
+                                <Collapsible
+                                    class="group/collapsible transition-all duration-500"
+                                >
                                     <CollapsibleTrigger as-child>
                                         <SidebarMenuButton
                                             class="h-12 w-full"
                                             :class="{
-                                                'bg-primary text-white font-bold': route.path.startsWith(item.route),
-                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20': !route.path.startsWith(item.route),
+                                                'bg-primary text-white font-bold':
+                                                    route.path.startsWith(item.route),
+                                                'bg-gray-200 text-neutral-700 hover:bg-primary/20':
+                                                    !route.path.startsWith(item.route),
                                             }"
                                         >
                                             <NuxtLink
@@ -56,8 +64,11 @@
                                                 :key="subIndex"
                                                 class="h-10 rounded w-full"
                                                 :class="{
-                                                    'bg-primary/90 text-white': isActiveRoute(subItem.route),
-                                                    'text-neutral-700 hover:bg-primary/20': !isActiveRoute(subItem.route),
+                                                    'bg-primary/90 text-white': isActiveRoute(
+                                                        subItem.route,
+                                                    ),
+                                                    'text-neutral-700 hover:bg-primary/20':
+                                                        !isActiveRoute(subItem.route),
                                                 }"
                                                 :onclick="closeSidebar"
                                             >
@@ -94,10 +105,13 @@
                                         :href="item.route"
                                         class="w-full flex justify-between items-center p-3 rounded-lg transition-all duration-75"
                                         :class="{
-                                            'bg-primary text-white font-bold': isActiveRoute(item.route),
-                                            'bg-gray-200 text-neutral-700 hover:bg-primary/20': !isActiveRoute(item.route),
+                                            'bg-primary text-white font-bold': isActiveRoute(
+                                                item.route,
+                                            ),
+                                            'bg-gray-200 text-neutral-700 hover:bg-primary/20':
+                                                !isActiveRoute(item.route),
                                         }"
-                                        :target="item.external ? '_blank': ''"
+                                        :target="item.external ? '_blank' : ''"
                                     >
                                         <div class="flex space-x-2 items-center">
                                             <component
@@ -148,12 +162,15 @@
                             </DialogTitle>
                         </DialogHeader>
                         <p>
-                            Vous êtes satisfait de notre plateforme ? <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
+                            Vous êtes satisfait de notre plateforme ?
+                            <span class="font-semibold">Faites-en profiter vos collègues ! </span>Partagez votre code de parrainage avec d'autres personnes.
                         </p>
 
                         <div class="flex justify-between items-center mb-4">
                             <p class="mt-4">
-                                {{ `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}` }}
+                                {{
+                                    `${config.public.FRONT_END_URL}/register/?referral=${user.referral_code}`
+                                }}
                             </p>
 
                             <CopyButton
@@ -223,6 +240,8 @@ import {
     LinkIcon,
     BriefcaseIcon,
     DocumentTextIcon,
+    ClipboardDocumentIcon,
+    ShieldExclamationIcon,
 } from '@heroicons/vue/24/outline';
 import { StarIcon } from '@heroicons/vue/24/solid';
 import type { FunctionalComponent } from 'vue';
@@ -236,7 +255,18 @@ defineProps({
     collapsed: Boolean,
 });
 
-const { isSuperAdmin, isAdmin, isDeveloper, isManager, isCollaborator, isCommunityManager, isSaleRepresentative, isMedical, isInstitution, isInstitutionAdmin, logout } = useAuth();
+const {
+    isSuperAdmin,
+    isAdmin,
+    isManager,
+    isCollaborator,
+    isCommunityManager,
+    isSaleRepresentative,
+    isMedical,
+    isInstitution,
+    isInstitutionAdmin,
+    logout,
+} = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
 const { setOpenMobile, isMobile } = useSidebar();
@@ -350,25 +380,75 @@ const nurseNavigationItems: NavigationItem[] = [
 ];
 
 const adminNavigationItems: NavigationItem[] = [
-    { label: 'Tableau de bord', route: '/dashboard', icon: SquaresPlusIcon, visible: !isManager.value },
+    {
+        label: 'Tableau de bord',
+        route: '/dashboard',
+        icon: SquaresPlusIcon,
+        visible: !isManager.value,
+    },
 
-    { label: 'Suivi inscriptions', route: '/dashboard/admin/registrations', icon: ChartBarIcon, visible: true },
+    {
+        label: 'Suivi inscriptions',
+        route: '/dashboard/admin/registrations',
+        icon: ChartBarIcon,
+        visible: true,
+    },
 
-    { label: 'Remplacements', route: '/dashboard/admin/replacements', icon: ArrowPathIcon, visible: true },
+    {
+        label: 'Remplacements',
+        route: '/dashboard/admin/replacements',
+        icon: ArrowPathIcon,
+        visible: true,
+    },
 
-    { label: 'Intérêt pour remplacement', route: '/dashboard/admin/replacements/interest', icon: ListBulletIcon, visible: true },
+    {
+        label: 'Intérêt pour remplacement',
+        route: '/dashboard/admin/replacements/interest',
+        icon: ListBulletIcon,
+        visible: true,
+    },
 
-    { label: 'Binômes', route: '/dashboard/admin/partners', icon: UsersIcon, visible: true },
+    {
+        label: 'Binômes',
+        route: '/dashboard/admin/partners',
+        icon: UsersIcon,
+        visible: true,
+    },
 
-    { label: 'Utilisateurs', route: '/dashboard/admin/users', icon: UserGroupIcon, visible: true },
+    {
+        label: 'Utilisateurs',
+        route: '/dashboard/admin/users',
+        icon: UserGroupIcon,
+        visible: true,
+    },
 
-    { label: 'Accueil', route: '/dashboard/admin/home-management', icon: WrenchScrewdriverIcon, visible: true },
+    {
+        label: 'Accueil',
+        route: '/dashboard/admin/home-management',
+        icon: WrenchScrewdriverIcon,
+        visible: true,
+    },
 
-    { label: 'CRM', route: '/dashboard/admin/users/crm', icon: UsersIcon, visible: true },
+    {
+        label: 'CRM',
+        route: '/dashboard/admin/users/crm',
+        icon: UsersIcon,
+        visible: true,
+    },
 
-    { label: 'Institutions', route: '/dashboard/admin/institutions', icon: DocumentTextIcon, visible: true },
+    {
+        label: 'Institutions',
+        route: '/dashboard/admin/institutions',
+        icon: DocumentTextIcon,
+        visible: true,
+    },
 
-    { label: 'Type de soins', route: '/dashboard/admin/care-types', icon: ShieldCheckIcon, visible: true },
+    {
+        label: 'Type de soins',
+        route: '/dashboard/admin/care-types',
+        icon: ShieldCheckIcon,
+        visible: true,
+    },
 
     {
         label: 'Contacts',
@@ -378,15 +458,54 @@ const adminNavigationItems: NavigationItem[] = [
         children: contactChildren.value,
     },
 
-    { label: 'Contrats NURSTECH', route: '/dashboard/admin/contracts/nurstech', icon: DocumentCurrencyEuroIcon, visible: isSuperAdmin.value || isSaleRepresentative.value },
+    {
+        label: 'Contrats NURSTECH',
+        route: '/dashboard/admin/contracts/nurstech',
+        icon: DocumentCurrencyEuroIcon,
+        visible: isSuperAdmin.value || isSaleRepresentative.value,
+    },
 
-    { label: 'Tutoriels', route: '/dashboard/admin/tutorials', icon: PlayCircleIcon, visible: true },
+    {
+        label: 'Tutoriels',
+        route: '/dashboard/admin/tutorials',
+        icon: PlayCircleIcon,
+        visible: true,
+    },
 
-    { label: 'Groupement', route: '/dashboard/admin/groups', icon: UserGroupIcon, visible: true },
+    {
+        label: 'Groupement',
+        route: '/dashboard/admin/groups',
+        icon: UserGroupIcon,
+        visible: true,
+    },
 
-    { label: 'Produits', route: '/dashboard/admin/products', icon: ShoppingBagIcon, visible: true },
+    {
+        label: 'Produits',
+        route: '/dashboard/admin/products',
+        icon: ShoppingBagIcon,
+        visible: true,
+    },
 
-    { label: 'Suivi des liens', route: '/dashboard/admin/stats', icon: LinkIcon, visible: true },
+    {
+        label: 'Suivi des liens',
+        route: '/dashboard/admin/stats',
+        icon: LinkIcon,
+        visible: true,
+    },
+
+    {
+        label: 'Alertes',
+        route: '/dashboard/admin/alerts',
+        icon: ShieldExclamationIcon,
+        visible: isSuperAdmin.value || isAdmin.value,
+    },
+
+    {
+        label: 'Logs',
+        route: '/dashboard/admin/monitoring-errors',
+        icon: ClipboardDocumentIcon,
+        visible: isSuperAdmin.value || isAdmin.value,
+    },
 ];
 
 const institutionNavigationItems: NavigationItem[] = [
@@ -437,7 +556,6 @@ const role = computed(() => {
     if (isInstitution.value) return 'institution';
     if (isSuperAdmin.value) return 'super_admin';
     if (isAdmin.value) return 'admin';
-    if (isDeveloper.value) return 'developer';
     if (isManager.value) return 'manager';
     if (isCommunityManager.value) return 'community_manager';
     if (isSaleRepresentative.value) return 'sale_representative';
@@ -456,33 +574,30 @@ const navigationItems = computed(() => {
             return institutionNavigationItems;
             return items;
 
-        case 'developer':
-            return items.filter(i =>
-                !i.route?.includes('/contracts/nurstech'),
-            );
-
         case 'manager':
-            return items.filter(i =>
-                !i.route.includes('/users/crm')
-                && !i.route.includes('/care-types'),
+            return items.filter(
+                i =>
+                    !i.route.includes('/users/crm') && !i.route.includes('/care-types'),
             );
 
         case 'community_manager':
-            return items.filter(i =>
-                i.route === '/dashboard'
-                || i.route.includes('/registrations')
-                || i.route.includes('/replacements')
-                || i.route.includes('/replacements/interest')
-                || i.route.includes('/users')
-                || i.route.includes('/users/crm')
-                || i.route.includes('/home-management'),
+            return items.filter(
+                i =>
+                    i.route === '/dashboard'
+                    || i.route.includes('/registrations')
+                    || i.route.includes('/replacements')
+                    || i.route.includes('/replacements/interest')
+                    || i.route.includes('/users')
+                    || i.route.includes('/users/crm')
+                    || i.route.includes('/home-management'),
             );
 
         case 'sale_representative':
-            return items.filter(i =>
-                i.route.includes('/users/crm')
-                || i.route.includes('/products')
-                || i.route.includes('/contracts/nurstech'),
+            return items.filter(
+                i =>
+                    i.route.includes('/users/crm')
+                    || i.route.includes('/products')
+                    || i.route.includes('/contracts/nurstech'),
             );
 
         case 'collaborator':

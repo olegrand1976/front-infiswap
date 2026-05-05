@@ -24,7 +24,10 @@ export function useLocation() {
             return result;
         }
         catch (error) {
-            console.error('Erreur lors de la récupération des codes postaux limitrophes :', error);
+            console.error(
+                'Erreur lors de la récupération des codes postaux limitrophes :',
+                error,
+            );
             return [];
         }
     }
@@ -57,7 +60,10 @@ export function useLocation() {
         }
     }
 
-    async function getCitiesFomZipCode(zipCode: string, country: CountryCode = 'be') {
+    async function getCitiesFomZipCode(
+        zipCode: string,
+        country: CountryCode = 'be',
+    ) {
         try {
             const citiesFromApi = await $apifetch<string[]>('/api/location/cities', {
                 params: { code: zipCode, country },

@@ -9,19 +9,10 @@ export default defineNuxtConfig({
         '@nuxt/image',
         process.env.NODE_ENV === 'production' ? 'nuxt-meta-pixel' : null,
     ].filter(Boolean),
-    plugins: [
-    ],
-    components: [
-        '~/components/ui',
-        '~/components',
-    ],
+    plugins: [],
+    components: ['~/components/ui', '~/components'],
     imports: {
-        dirs: [
-            './utils',
-            'composables',
-            'components/ui',
-            'components',
-        ],
+        dirs: ['./utils', 'composables', 'components/ui', 'components'],
         autoImport: true,
     },
     devtools: { enabled: process.env.NODE_ENV === 'development' },
@@ -34,7 +25,7 @@ export default defineNuxtConfig({
                 {
                     name: 'description',
                     content:
-                        'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
+            'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
                 },
                 {
                     name: 'keywords',
@@ -54,14 +45,11 @@ export default defineNuxtConfig({
             ],
         },
     },
-    css: [
-        './app/assets/css/tailwind.css',
-    ],
+    css: ['./app/assets/css/tailwind.css'],
     runtimeConfig: {
         public: {
             API_URL: process.env.API_URL,
             FRONT_END_URL: process.env.FRONT_END_URL,
-            OPENAI_API_KEY: process.env.OPENAI_API_KEY,
             MAINTENANCE_MODE: process.env.MAINTENANCE_MODE === 'true' || false,
             metapixel: {
                 default: {
@@ -94,18 +82,12 @@ export default defineNuxtConfig({
             concurrency: 1,
             interval: 100,
             failOnError: false,
-            routes: [
-                '/',
-                '/about',
-                '/contact',
-            ],
+            routes: ['/', '/about', '/contact'],
         },
     },
 
     vite: {
-        plugins: [
-            tailwindcss(),
-        ],
+        plugins: [tailwindcss()],
         css: {
             devSourcemap: false,
         },
@@ -131,14 +113,14 @@ export default defineNuxtConfig({
         devtools: process.env.NODE_ENV !== 'production',
     },
     shadcn: {
-        /**
-         * Prefix for all the imported component
-         */
+    /**
+     * Prefix for all the imported component
+     */
         prefix: '',
         /**
-         * Directory that the component lives in.
-         * @default "./app/components/ui"
-         */
+     * Directory that the component lives in.
+     * @default "./app/components/ui"
+     */
         componentDir: './app/components/ui',
     },
 });

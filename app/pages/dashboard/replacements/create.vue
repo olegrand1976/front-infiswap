@@ -324,7 +324,7 @@ import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
-const { getZipCodesFromCity } = useLocation();
+const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
@@ -425,6 +425,13 @@ const openProposalDialog = (value: string) => {
 
 
 const onZipCodeAdded = async (zip: string) => {
+    const citiesFromZip = await getCitiesFomZipCode(zip, countryCode.value);
+    if (citiesFromZip.length) {
+        const citiesSet = new Set(formData.cities);
+        citiesFromZip.forEach(city => citiesSet.add(city));
+        formData.cities = Array.from(citiesSet);
+    }
+
     openProposalDialog(zip);
 };
 const onCityAdded = async (city: string) => {
