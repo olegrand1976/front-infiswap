@@ -72,8 +72,6 @@
                 </div>
             </div>
 
-          
-
             <div class="col-span-1 lg:col-span-2">
                 <button
                     type="button"
@@ -489,8 +487,6 @@
             </div>
                </div>
             </div>
-
-          
 
         </section>
     </div>
