@@ -92,6 +92,15 @@
                                 FERMÉ
                             </div>
 
+                            <div
+                                v-if="isNew(r)"
+                                class="absolute z-10 font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase bg-primarytech text-white text-[10px]"
+                                :class="[
+                                    isUrgentReplacement(r) || isClosed(r) ? 'top-8 left-20' : 'top-8 left-4'
+                                ]"
+                            >
+                                NEW
+                            </div>
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
                                     <div
@@ -680,4 +689,13 @@ const getInstitutionLogoUrl = (r: Replacement): string | null => {
     if (!logo) return null;
     return getLogoUrl(logo);
 };
+
+const isNew = (r: Replacement) => {
+    const createdAt = (r as any).created_at;
+    if (!createdAt) return false;
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    return new Date(createdAt) > oneWeekAgo;
+};
+
 </script>

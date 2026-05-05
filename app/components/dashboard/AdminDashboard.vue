@@ -17,48 +17,89 @@
                     </svg>
                 </button>
                 <div v-if="showStats" class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
-                    <div>
-                        <div class="col-span-1 lg:col-span-2 mb-2 sm:mb-0">
-                    <div v-if="loading">
-                        <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                    </div>
-                    <div
-                        v-else
-                        class="mt-3 grid sm:grid-cols-2 gap-4 sm:gap-8 items-center"
-                    >
-                        <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
-                            <div>
-                                <h3 class="text-sm font-semibold">
-                                    Utilisateur en Belgique
-                                </h3>
-                                <p class="font-semibold text-primary text-3xl">
-                                    {{ userBelgianCount }}
-                                </p>
-                            </div>
-                            <LayoutsAppImage
-                                :src="'/icons/belgium.png'"
-                                alt="Belgium flag"
-                                class="w-8 sm:w-12"
-                            />
+                    <div class="col-span-full mb-2 sm:mb-0">
+                        <div v-if="loading">
+                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                         </div>
+                        <div v-else  class="mt-3 grid grid-cols-2 gap-4 sm:gap-8 items-center">
+                            <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
+                                <div>
+                                    <h3 class="text-sm font-semibold">
+                                        Utilisateur en Belgique
+                                    </h3>
+                                    <p class="font-semibold text-primary text-3xl">
+                                        {{ userBelgianCount }}
+                                    </p>
+                                </div>
+                                <LayoutsAppImage
+                                    :src="'/icons/belgium.png'"
+                                    alt="Belgium flag"
+                                    class="w-8 sm:w-12"
+                                />
+                            </div>
+                            <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
+                                <div>
+                                    <h3 class="text-sm font-semibold">
+                                        Utilisateur en France
+                                    </h3>
+                                    <p class="font-semibold text-success text-3xl">
+                                        {{ userFrenchCount }}
+                                    </p>
+                                </div>
+                                <LayoutsAppImage
+                                    :src="'/icons/fr.png'"
+                                    alt="France flag"
+                                    class="w-8 sm:w-12"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
-                            <div>
-                                <h3 class="text-sm font-semibold">
-                                    Utilisateur en France
-                                </h3>
-                                <p class="font-semibold text-success text-3xl">
-                                    {{ userFrenchCount }}
-                                </p>
+                    <div class="col-span-1 lg:col-span-2">
+                        <div v-if="loading">
+                                <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
                             </div>
-                            <LayoutsAppImage
-                                :src="'/icons/fr.png'"
-                                alt="France flag"
-                                class="w-8 sm:w-12"
-                            />
+                        <div v-else class="mt-3 space-y-4">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Total</span>
+                                    <span class="text-2xl font-bold text-gray-800">{{ institutionStats.total }}</span>
+                                </div>
+                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Belgique</span>
+                                    <span class="text-2xl font-bold text-primary">{{ institutionStats.total_belgian }}</span>
+                                </div>
+                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">France</span>
+                                    <span class="text-2xl font-bold text-success">{{ institutionStats.total_french }}</span>
+                                </div>
+                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">30 derniers jours</span>
+                                    <span class="text-2xl font-bold text-orange-600">{{ institutionStats.last_30_days }}</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="ml-2 mb-1 font-semibold text-sm">
+                                    Nouvelles institutions par semaine (année en cours)
+                                </p>
+                                <div class="mt-3 bg-white rounded-sm shadow-md">
+                                    <ClientOnly>
+                                        <BarChart
+                                            :data="institutionWeeklyChartData.data"
+                                            index="name"
+                                            :categories="['Inscrits']"
+                                            :x-formatter="xInstitutionWeekFormatter"
+                                            :y-formatter="yFormatter"
+                                            :show-all-x-ticks="true"
+                                            :colors="['var(--chart-3, #8b5cf6)']"
+                                            :legend-labels="institutionWeeklyChartData.legendLabels"
+                                            class="w-full"
+                                        />
+                                    </ClientOnly>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
                     </div>
                     <div class="col-span-1 lg:col-span-2">
                             <DashboardStatCardAdminGroup
@@ -68,7 +109,7 @@
                                 :items="report.items"
                                 :loading="loading"
                             />
-                        </div> 
+                    </div> 
                 </div>
             </div>
 
@@ -275,64 +316,6 @@
                                     :show-all-x-ticks="true"
                                     :colors="['var(--chart-2)']"
                                     :legend-labels="deletedUserChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-span-1 lg:col-span-2">
-                <button
-                    type="button"
-                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                    @click="showInstitutions = !showInstitutions"
-                >
-                    <span class="font-semibold text-sm text-gray-800">Institutions</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                        :class="showInstitutions ? 'rotate-180' : ''"
-                    >
-                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-
-                <div v-if="showInstitutions" class="mt-3 space-y-4">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Total</span>
-                            <span class="text-2xl font-bold text-gray-800">{{ institutionStats.total }}</span>
-                        </div>
-                        <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Belgique</span>
-                            <span class="text-2xl font-bold text-primary">{{ institutionStats.total_belgian }}</span>
-                        </div>
-                        <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">France</span>
-                            <span class="text-2xl font-bold text-success">{{ institutionStats.total_french }}</span>
-                        </div>
-                        <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">30 derniers jours</span>
-                            <span class="text-2xl font-bold text-orange-600">{{ institutionStats.last_30_days }}</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <p class="ml-2 mb-1 font-semibold text-sm">
-                            Nouvelles institutions par semaine (année en cours)
-                        </p>
-                        <div class="mt-3 bg-white rounded-sm shadow-md">
-                            <ClientOnly>
-                                <BarChart
-                                    :data="institutionWeeklyChartData.data"
-                                    index="name"
-                                    :categories="['Inscrits']"
-                                    :x-formatter="xInstitutionWeekFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--chart-3, #8b5cf6)']"
-                                    :legend-labels="institutionWeeklyChartData.legendLabels"
                                     class="w-full"
                                 />
                             </ClientOnly>
