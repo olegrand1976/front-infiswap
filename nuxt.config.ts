@@ -85,14 +85,13 @@ export default defineNuxtConfig({
             routes: ['/', '/about', '/contact'],
         },
     },
-
     vite: {
         plugins: [tailwindcss()],
         css: {
             devSourcemap: false,
         },
         build: {
-            sourcemap: false, // Désactive les sourcemaps pour réduire la RAM
+            sourcemap: false,
             minify: 'esbuild',
         },
     },
@@ -111,6 +110,9 @@ export default defineNuxtConfig({
         ignoredViews: ['dashboard'],
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
+    },
+    image: {
+        format: ['webp'],
     },
     shadcn: {
     /**
