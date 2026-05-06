@@ -150,7 +150,6 @@ const maxLength = computed(() => {
 
 
 watch(inputValue, (val) => {
-    console.log('user.value?.profile',user.value?.profile);
     // garder uniquement les chiffres
     let clean = val.replace(/\D/g, '');
 
