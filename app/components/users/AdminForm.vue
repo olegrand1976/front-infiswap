@@ -234,7 +234,7 @@ const getCountryName = (code: string | null) => {
     switch (code) {
         case 'fr': return 'France';
         case 'be': return 'Belgique';
-  
+
         default: return code;
     }
 };
@@ -499,7 +499,7 @@ const route = useRoute();
                     />
                 </div>
                 <div>
-                  <Select
+                    <Select
                         v-model="form.address.country"
                         label="Pays"
                     >
@@ -514,8 +514,12 @@ const route = useRoute();
 
                         <SelectContent class="border border-none">
                             <SelectGroup>
-                                <SelectItem value="fr">France</SelectItem>
-                                <SelectItem value="be">Belgique</SelectItem>
+                                <SelectItem value="fr">
+                                    France
+                                </SelectItem>
+                                <SelectItem value="be">
+                                    Belgique
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

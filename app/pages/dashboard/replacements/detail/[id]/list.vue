@@ -204,7 +204,6 @@ const loadOlder = async () => {
     await fetchListResponse(true);
 };
 
-
 const hasConfirmed = () =>
     listResponse.value?.some(item => item.status === 'confirmed');
 

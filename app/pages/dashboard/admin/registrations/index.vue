@@ -257,7 +257,7 @@ const columns: ColumnDef<User>[] = [
             return h('div', { class: '' }, row.getValue('account_type'));
         },
     },
-        {
+    {
         accessorKey: 'ambassador',
         header: 'Inficoncept',
         cell: ({ row }) => {

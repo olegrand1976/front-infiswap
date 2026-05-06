@@ -1,11 +1,11 @@
 <template>
     <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative ">
         <div
-        v-if="isNew"
-        class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
-    >
-        New
-    </div>
+            v-if="isNew"
+            class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
+        >
+            New
+        </div>
         <div class="flex justify-between items-start">
             <div class="flex-1 flex items-center gap-2">
                 <div
@@ -564,14 +564,13 @@ const institutionName = computed(() => {
 });
 
 const isNew = computed(() => {
-    console.log('props.rawReplacement',props.rawReplacement);
+    console.log('props.rawReplacement', props.rawReplacement);
     const createdAt = props.rawReplacement?.created_at;
     if (!createdAt) return false;
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     return new Date(createdAt) > oneWeekAgo;
 });
-
 </script>
 
 <style scoped>

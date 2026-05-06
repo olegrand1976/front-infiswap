@@ -55,7 +55,6 @@
                             type="tel"
                         />
 
-
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Logo de l'institution
@@ -199,7 +198,7 @@ const formData = reactive({
     phone_number: '',
     logo: null,
     can_apply_replacements: false,
-    validation_date:'',
+    validation_date: '',
     address: {
         street_address: '',
         city: '',

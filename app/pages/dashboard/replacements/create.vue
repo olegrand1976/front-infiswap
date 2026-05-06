@@ -423,7 +423,6 @@ const openProposalDialog = (value: string) => {
     proposalDialog.value = true;
 };
 
-
 const onZipCodeAdded = async (zip: string) => {
     const citiesFromZip = await getCitiesFomZipCode(zip, countryCode.value);
     if (citiesFromZip.length) {

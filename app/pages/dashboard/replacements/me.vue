@@ -58,19 +58,18 @@
                             </DropdownMenuRadioGroup>
                         </DropdownMenuGroup>
                         <DropdownMenuGroup>
-                        <DropdownMenuSeparator />    
-                        <DropdownMenuLabel>Statut</DropdownMenuLabel>
-                        <DropdownMenuRadioGroup v-model="selectedFilters.status">
-                            <DropdownMenuRadioItem
-                                v-for="(label, key) in replacementStatusFilters"
-                                :key="key"
-                                :value="key"
-                            >
-                                {{ label }}
-                            </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuGroup>
-
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel>Statut</DropdownMenuLabel>
+                            <DropdownMenuRadioGroup v-model="selectedFilters.status">
+                                <DropdownMenuRadioItem
+                                    v-for="(label, key) in replacementStatusFilters"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -234,7 +233,6 @@ onMounted(() => {
             status: filterCookies.value.status ?? 'open', // fallback si ancien cookie sans status
         };
     }
-  
 });
 
 watch(selectedFilters, (newFilters) => {

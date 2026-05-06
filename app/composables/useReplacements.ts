@@ -415,8 +415,8 @@ export const useListResponse = (id) => {
     async function fetchListResponse(older = false) {
         loading.value = true;
         try {
-            const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET', query: { older },  });
-            console.log('response',response);
+            const response = await $apifetch(`api/replacement-responses/${id}`, { method: 'GET', query: { older } });
+            console.log('response', response);
             listResponse.value = response.responses;
         }
         finally {

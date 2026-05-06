@@ -11,7 +11,7 @@
                 :placeholder="placeholder"
                 class="w-full"
                 :maxlength="maxLength"
-                    @input="onInput"
+                @input="onInput"
                 @keyup="handleKeyUp"
                 @blur="handleBlur"
             />
@@ -146,9 +146,6 @@ const maxLength = computed(() => {
     return user.value?.profile?.country === 'fr' ? 5 : 4;
 });
 
-
-
-
 watch(inputValue, (val) => {
     // garder uniquement les chiffres
     let clean = val.replace(/\D/g, '');
@@ -169,19 +166,18 @@ const onInput = (event) => {
     // Récupère la valeur brute du DOM natif
     const raw = event.target?.value ?? inputValue.value;
     let clean = raw.replace(/\D/g, '');
-    
+
     if (clean.length > maxLength.value) {
         clean = clean.slice(0, maxLength.value);
     }
-    
+
     inputValue.value = clean;
-    
+
     // Force la valeur sur l'input natif directement
     if (event.target) {
         event.target.value = clean;
     }
 };
-
 </script>
 
 <style scoped>

@@ -63,7 +63,7 @@
                                 </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />    
+                        <DropdownMenuSeparator />
                         <DropdownMenuLabel>Statut</DropdownMenuLabel>
                         <DropdownMenuRadioGroup v-model="selectedFilters.status">
                             <DropdownMenuRadioItem
@@ -74,7 +74,6 @@
                                 {{ label }}
                             </DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
-
                     </DropdownMenuContent>
                 </DropdownMenu>
 

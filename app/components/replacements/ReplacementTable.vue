@@ -96,7 +96,7 @@
                                 v-if="isNew(r)"
                                 class="absolute z-10 font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase bg-primarytech text-white text-[10px]"
                                 :class="[
-                                    isUrgentReplacement(r) || isClosed(r) ? 'top-8 left-20' : 'top-8 left-4'
+                                    isUrgentReplacement(r) || isClosed(r) ? 'top-8 left-20' : 'top-8 left-4',
                                 ]"
                             >
                                 NEW
@@ -697,5 +697,4 @@ const isNew = (r: Replacement) => {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     return new Date(createdAt) > oneWeekAgo;
 };
-
 </script>

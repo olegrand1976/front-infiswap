@@ -175,5 +175,4 @@ const loadOlder = async () => {
     showOlder.value = true;
     await fetchListResponse(true);
 };
-
 </script>

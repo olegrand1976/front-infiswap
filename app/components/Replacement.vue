@@ -584,7 +584,7 @@ const { $toast } = useNuxtApp();
 interface ReplacementProps {
     selectedRegions?: string[];
     type?: string;
-    filters?: { type: string; role: string ; status: string};
+    filters?: { type: string; role: string ; status: string };
     displayMode?: 'table' | 'cards';
     groupByProvince: boolean;
     filteredProvinces?: string[];
@@ -664,7 +664,7 @@ const isAnyFilterActive = computed(() =>
     || formData.selectedDays.length > 0
     || localFilters.type !== 'all'
     || localFilters.role !== 'all'
-    || localFilters.status !== 'open',   // open = valeur par défaut, donc pas "actif"
+    || localFilters.status !== 'open', // open = valeur par défaut, donc pas "actif"
 
 );
 
@@ -1009,7 +1009,7 @@ watch(
             isSubmitted.value = false;
         }
         // else if (isSubmitted.value) {
-            submitSearch();
+        submitSearch();
         // }
     },
     { deep: true },

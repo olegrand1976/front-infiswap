@@ -891,8 +891,8 @@ const columns: ColumnDef<Replacement>[] = [
                 }),
             ]);
         },
-    }
-   
+    },
+
 ];
 
 const excludedColumnsForModal = ['user_owner', 'substitute_user'];
