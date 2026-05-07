@@ -607,7 +607,11 @@ const selectedUser = ref(null);
 const showInfoUser = ref(false);
 const selectedReplacement = ref<Replacement>(null);
 const perPage = ref(PERPAGE);
-const page = ref(1);
+// const page = ref(1);
+const route = useRoute();
+const router = useRouter();
+const page = ref(Number(route.query.page) || 1);
+
 const pagination = ref({ current_page: 1, per_page: PERPAGE, total: 0, last_page: 1 });
 const filterRegionDialog = ref(false);
 const isMobileView = ref(false);
@@ -765,11 +769,32 @@ const reinitializeFilter = () => {
     fetchData(1, perPage.value);
 };
 
+// const refreshItems = async (newPage: number) => {
+//     page.value = newPage;
+//     if (isSubmitted.value) await submitSearch();
+//     else await fetchData(newPage, perPage.value);
+// };
+
 const refreshItems = async (newPage: number) => {
     page.value = newPage;
-    if (isSubmitted.value) await submitSearch();
-    else await fetchData(newPage, perPage.value);
+
+    await router.replace({
+        query: {
+            ...route.query,
+            page: String(newPage),
+        },
+    });
+
+    emit('update:page', newPage);
+
+    if (isSubmitted.value) {
+        await submitSearch();
+    }
+    else {
+        await fetchData(newPage, perPage.value);
+    }
 };
+
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
