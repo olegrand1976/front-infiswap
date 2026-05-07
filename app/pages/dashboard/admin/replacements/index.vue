@@ -339,8 +339,13 @@ const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, e
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
 const { isSuperAdmin, isCommunityManager, isDeveloper } = useAuth();
 
-const perPage = ref(PERPAGE);
-const page = ref(1);
+const route = useRoute();
+const router = useRouter();
+
+// const perPage = ref(PERPAGE);
+// const page = ref(1);
+const perPage = ref(Number(route.query.perPage) || PERPAGE);
+const page = ref(Number(route.query.page) || 1);
 
 const initialFilter = {
     name: null,
@@ -436,17 +441,56 @@ const resetFilter = async () => {
 
 const debouncedFilterReplacements = debounce(filterReplacements, 100);
 
-await getReplacementsForAdmin(page.value, perPage.value);
+// await getReplacementsForAdmin(page.value, perPage.value);
+await getReplacementsForAdmin(
+    page.value,
+    perPage.value,
+    option.value,
+);
 
 const { $toast } = useNuxtApp();
 
-const refreshReplacement = async (page: number) => {
-    await getReplacementsForAdmin(page, perPage.value);
+const updatePaginationInUrl = () => {
+    router.replace({
+        query: {
+            ...route.query,
+            page: page.value.toString(),
+            perPage: perPage.value.toString(),
+        },
+    });
 };
+
+// const refreshReplacement = async (page: number) => {
+//     await getReplacementsForAdmin(page, perPage.value);
+// };
+const refreshReplacement = async (newPage: number) => {
+    page.value = newPage;
+
+    updatePaginationInUrl();
+
+    await getReplacementsForAdmin(
+        page.value,
+        perPage.value,
+        option.value,
+    );
+};
+
+// const handlePerPageChange = async (value: number) => {
+//     perPage.value = value;
+//     await getReplacementsForAdmin(page.value, value);
+// };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getReplacementsForAdmin(page.value, value);
+    page.value = 1;
+
+    updatePaginationInUrl();
+
+    await getReplacementsForAdmin(
+        page.value,
+        perPage.value,
+        option.value,
+    );
 };
 
 const isModalOpen = ref(false);
