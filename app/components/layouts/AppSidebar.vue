@@ -215,7 +215,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
@@ -429,6 +429,12 @@ const adminNavigationItems: NavigationItem[] = [
         icon: Inbox,
         visible: true,
         children: contactChildren.value,
+    },
+    {
+        label: 'Mails',
+        route: '/dashboard/admin/mails',
+        icon: Mail,
+        visible: isSuperAdmin.value || isAdmin.value,
     },
 
     {

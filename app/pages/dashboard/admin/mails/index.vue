@@ -1,6 +1,8 @@
 <template>
     <div class="w-full">
-        <MailComposer />
+        <DashboardAdminPageContent>
+            <MailComposer />
+        </DashboardAdminPageContent>
     </div>
 </template>
 

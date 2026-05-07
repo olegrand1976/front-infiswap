@@ -1,29 +1,31 @@
 <template>
     <div>
         <div class="relative">
-            <InputIcon
+            <Input
                 v-model="search"
                 placeholder="joe@gmail.com"
-                class="w-full"
+                class="w-full rounded-md"
                 @update:model-value="handleSearch"
                 @keydown.enter.prevent="handleEnter"
+                @keydown.space.prevent="handleTokenCommit"
+                @blur="handleBlur"
             >
                 <template #icon>
                     <i class="i-mdi:account-search-outline" />
                 </template>
-            </InputIcon>
+            </Input>
 
             <ul
                 v-if="filteredResults.length > 0"
-                class="absolute bg-white border w-full mt-1 z-10 rounded shadow max-h-60 overflow-y-auto"
+                class="absolute bg-white border w-full mt-1 z-10 rounded-md shadow max-h-60 overflow-y-auto"
             >
                 <li
                     v-for="user in filteredResults"
                     :key="user.id"
                     class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                    @click="selectUser(user)"
+                    @mousedown.prevent="selectUser(user)"
                 >
-                    {{ user.firstname || 'nom indéfini' }} {{ user.lastname || '' }} - {{ user.email }}
+                    {{ getDisplayName(user) }} - {{ user.email }}
                 </li>
             </ul>
         </div>
@@ -36,7 +38,7 @@
                 <li
                     v-for="user in selected"
                     :key="user.email"
-                    class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded"
+                    class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md"
                 >
                     {{ user.email }}
                     <button
@@ -88,8 +90,9 @@ const filteredResults = computed(() => {
 
 function selectUser(user) {
     if (!selected.value.find(u => u.user_id === user.id?.toString())) {
+        const displayName = getDisplayName(user);
         selected.value.push({
-            name: `${user.firstname} ${user.lastname}`,
+            name: displayName === 'Nom indéfini' ? null : displayName,
             email: user.email,
             user_id: user.id?.toString() || null,
         });
@@ -105,19 +108,52 @@ function removeUser(user) {
 }
 
 function handleEnter() {
-    const email = search.value.trim();
-    if (!email) return;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return;
-    }
+    commitEmailsFromInput();
+}
 
-    if (!selected.value.some(u => u.email === email)) {
-        selected.value.push({
-            email,
-            name: null,
-            user_id: null,
-        });
+function handleTokenCommit() {
+    commitEmailsFromInput();
+}
+
+function handleBlur() {
+    setTimeout(() => {
+        commitEmailsFromInput();
+    }, 120);
+}
+
+function getDisplayName(user) {
+    const first = user?.firstname?.trim?.() || '';
+    const last = user?.lastname?.trim?.() || '';
+    const full = `${first} ${last}`.trim();
+    if (full) return full;
+    if (user?.full_name) return String(user.full_name).trim();
+    if (user?.name) return String(user.name).trim();
+    return 'Nom indéfini';
+}
+
+function commitEmailsFromInput() {
+    const raw = search.value.trim();
+    if (!raw) return;
+
+    const emails = raw
+        .split(/[\s,;]+/)
+        .map(token => token.trim())
+        .filter(Boolean);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let hasChanges = false;
+    emails.forEach((email) => {
+        if (emailRegex.test(email) && !selected.value.some(u => u.email === email)) {
+            selected.value.push({
+                email,
+                name: null,
+                user_id: null,
+            });
+            hasChanges = true;
+        }
+    });
+
+    if (hasChanges) {
         emit('update:recipients', [...selected.value]);
     }
     search.value = '';

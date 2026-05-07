@@ -51,7 +51,7 @@
                             </template>
                             <template v-else>
                                 <CircleUser
-                                    class="w-10 h-10 text-black/40"
+                                    class="size-11 text-black/40"
                                 />
                             </template>
                         </DropdownMenuTrigger>
@@ -93,17 +93,6 @@
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <div
-                        v-if="isAdmin"
-                        class="pr-4"
-                    >
-                        <NuxtLink
-                            to="/dashboard/admin/mails"
-                            class="inline-block"
-                        >
-                            <Mail class="w-5 h-5 text-primary hover:text-primary/80 transition-colors duration-150" />
-                        </NuxtLink>
-                    </div>
                     <div class="relative inline-block pr-4">
                         <div class="flex space-x-4 flex-nowrap">
                             <NotificationsNotificationDropdown />
@@ -203,7 +192,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellOff, CircleUser, Frown, Mail, Star } from 'lucide-vue-next';
+import { BellOff, CircleUser, Frown, Star } from 'lucide-vue-next';
 
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';

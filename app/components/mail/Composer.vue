@@ -1,135 +1,120 @@
 <template>
-    <div class="min-h-screen flex flex-col lg:flex-row p-1 space-y-4 lg:space-y-0 lg:space-x-4">
-        <div class="lg:w-1/3 w-full bg-white rounded-lg shadow flex flex-col">
-            <div class="flex items-center justify-between bg-primary rounded-t-lg py-3 px-4">
-                <h2 class="font-semibold text-white text-center flex-1">
-                    Historique des e-mails envoyés
+    <div class="grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-5">
+        <section class="bg-white rounded-md border border-gray-100 shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-primary to-primary/80 px-5 py-4 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <Inbox class="w-5 h-5" />
+                        <h2 class="font-semibold tracking-wide">
+                            Historique des e-mails
+                        </h2>
+                    </div>
+                    <span class="text-xs bg-white/20 rounded-md px-2 py-1">{{ mail?.length || 0 }} messages</span>
+                </div>
+            </div>
+
+            <div class="p-3 lg:p-4 space-y-3 max-h-[calc(100vh-10rem)] overflow-y-auto">
+                <div
+                    v-if="!mail?.length"
+                    class="rounded-md border border-dashed border-gray-200 bg-gray-50 px-4 py-10 text-center text-gray-500"
+                >
+                    Aucun e-mail envoyé pour le moment.
+                </div>
+
+                <button
+                    title="Nouveau message"
+                    class="w-full hidden lg:flex items-center justify-center gap-2 rounded-md bg-primary hover:bg-primary/90 text-white font-medium py-2.5 shadow-sm transition"
+                    @click="showNewMailModal = true"
+                >
+                    <MailPlus class="w-4 h-4" />
+                    Nouveau message
+                </button>
+
+                <article
+                    v-for="mailItem in mail"
+                    :key="mailItem.id"
+                    class="rounded-md border p-4 cursor-pointer transition-all duration-150"
+                    :class="selectedMail?.id === mailItem.id ? 'border-primary bg-primary/5 shadow-sm' : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50'"
+                    @click="selectMail(mailItem)"
+                >
+                    <p
+                        class="text-xs text-gray-500 truncate"
+                        :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')"
+                    >
+                        À :
+                        <span
+                            v-for="(recipient, idx) in parseRecipients(mailItem.recipients)"
+                            :key="idx"
+                            class="font-medium text-gray-700"
+                        >
+                            {{ recipient.email }}<span v-if="Number(idx) < parseRecipients(mailItem.recipients).length - 1">, </span>
+                        </span>
+                    </p>
+                    <h3 class="mt-2 text-sm font-semibold text-gray-900 line-clamp-1">
+                        {{ mailItem.object }}
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-600 line-clamp-2">
+                        {{ mailItem.content }}
+                    </p>
+                    <div class="mt-3 text-[11px] text-gray-400">
+                        {{ formatDate(mailItem.created_at) }}
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="hidden lg:flex flex-col bg-white overflow-hidden">
+            <div class="bg-gray-50 border-b px-6 py-4">
+                <h2 class="font-semibold text-gray-900">
+                    Détail du message
                 </h2>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-8rem)]">
-                <div class="fixed top-46 left-0 right-0 z-50 px-4 lg:hidden">
-                    <div class="flex justify-center">
-                        <button
-                            title="Nouveau message"
-                            class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
-                            @click="showNewMailModal = true"
-                        >
-                            Nouveau message
-                        </button>
-                    </div>
-                </div>
-
-                <div v-if="!mail">
-                    <div class="text-center text-gray-500 italic mt-8">
-                        Vos mails seront affichés ici.
-                    </div>
-                </div>
-                <div v-else>
-                    <div
-                        v-for="mailItem in mail"
-                        :key="mailItem.id"
-                        class="relative border rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer mb-2"
-                        @click="selectMail(mailItem)"
-                    >
-                        <div
-                            class="text-sm text-gray-500 mb-1 truncate"
-                            :title="'À : ' + parseRecipients(mailItem.recipients).map(r => r.email).join(', ')"
-                        >
-                            À :
-                            <span
-                                v-for="(recipient, idx) in parseRecipients(mailItem.recipients)"
-                                :key="idx"
-                                class="font-medium text-gray-700"
-                            >
-                                {{ recipient.email }}<span v-if="idx < parseRecipients(mailItem.recipients).length - 1">, </span>
-                            </span>
-                        </div>
-
-                        <div class="text-base font-medium mb-1 mt-1">
-                            Objet : {{ mailItem.object }}
-                        </div>
-
-                        <div class="text-gray-600 text-sm mb-6 truncate">
-                            {{ mailItem.content }}
-                        </div>
-
-                        <div class="absolute bottom-2 right-4 text-xs text-gray-400">
-                            {{ formatDate(mailItem.created_at) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sticky hidden lg:block bottom-6 pt-4">
-                    <div class="flex justify-center mb-2 px-4">
-                        <button
-                            title="Nouveau message"
-                            class="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg shadow-md animate-bounce"
-                            @click="showNewMailModal = true"
-                        >
-                            Nouveau message
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="lg:w-2/3 w-full bg-white rounded-lg shadow flex-col hidden lg:flex">
-            <h2 class="font-semibold bg-primary text-white text-center py-3 rounded-t-lg">
-                Détail du message
-            </h2>
-
             <div
                 v-if="selectedMail"
-                class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[calc(100vh-8rem)]"
+                class="flex-1 overflow-y-auto p-6 space-y-6 max-h-[calc(100vh-10rem)]"
             >
-                <div class="space-y-3">
-                    <div>
-                        <span class="font-semibold text-gray-700">Destinataires :</span>
-                        <span class="ml-2 text-gray-600">
-                            {{ parseRecipients(selectedMail.recipients).map(r => r.email).join(', ') }}
-                        </span>
-                    </div>
+                <div class="grid gap-2">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">
+                        Destinataires
+                    </p>
+                    <p class="text-sm text-gray-700">
+                        {{ parseRecipients(selectedMail.recipients).map(r => r.email).join(', ') }}
+                    </p>
+                </div>
 
-                    <div class="py-2 border-b border-gray-200">
-                        <span class="font-semibold text-gray-700">Objet :</span>
-                        <span class="ml-2 font-medium text-gray-900">{{ selectedMail.object }}</span>
-                    </div>
+                <div class="grid gap-2">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">
+                        Objet
+                    </p>
+                    <p class="text-lg font-semibold text-gray-900">
+                        {{ selectedMail.object }}
+                    </p>
+                </div>
 
-                    <div class="mt-2">
-                        <span class="font-semibold text-gray-700">Contenu :</span>
-                        <div class="mt-2 p-2 text-gray-800 leading-relaxed whitespace-pre-line">
-                            {{ selectedMail.content }}
-                        </div>
+                <div class="grid gap-2">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">
+                        Contenu
+                    </p>
+                    <div class="rounded-md border border-gray-100 bg-gray-50 p-4 text-gray-800 leading-relaxed whitespace-pre-line">
+                        {{ selectedMail.content }}
                     </div>
                 </div>
 
-                <div v-if="parseAttachments(selectedMail.attachement).length">
-                    <span class="font-semibold text-gray-700">Pièces jointes :</span>
-
-                    <div class="mt-4 border rounded-lg divide-y">
+                <div
+                    v-if="parseAttachments(selectedMail.attachement).length"
+                    class="space-y-3"
+                >
+                    <p class="text-xs uppercase tracking-wide text-gray-500">
+                        Pièces jointes
+                    </p>
+                    <div class="border border-gray-100 rounded-md divide-y overflow-hidden">
                         <div
                             v-for="(file, idx) in parseAttachments(selectedMail.attachement)"
                             :key="idx"
                             class="flex items-center p-3 hover:bg-gray-50"
                         >
-                            <div class="mr-3 text-gray-500">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                    />
-                                </svg>
-                            </div>
-
+                            <FileText class="w-5 h-5 text-gray-400 mr-3" />
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-900 truncate">
                                     {{ file.split('/').pop() }}
@@ -138,51 +123,48 @@
                                     fichier
                                 </p>
                             </div>
-
                             <a
                                 :href="file"
                                 target="_blank"
-                                class="ml-2 p-2 rounded-full hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                                class="ml-2 inline-flex p-2 rounded-md hover:bg-gray-200 text-gray-600 hover:text-gray-800"
                                 title="Télécharger"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                    />
-                                </svg>
+                                <Download class="w-4 h-4" />
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-sm text-gray-400">
-                    <span class="font-semibold">Date :</span> {{ formatDate(selectedMail.created_at) }}
+                <div class="text-xs text-gray-400">
+                    Envoyé le {{ formatDate(selectedMail.created_at) }}
                 </div>
             </div>
 
             <div
                 v-else
-                class="p-6 text-gray-500 italic"
+                class="h-full grid place-items-center p-6 text-center text-gray-500"
             >
-                Cliquez sur un e-mail à gauche pour voir les détails.
+                <div>
+                    <Inbox class="w-10 h-10 mx-auto mb-3 text-gray-300" />
+                    <p>Sélectionnez un e-mail pour afficher son contenu.</p>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
+
+    <button
+        title="Nouveau message"
+        class="fixed bottom-6 right-10 z-40 h-12 w-12 rounded-md bg-primary text-white shadow-lg grid place-items-center"
+        @click="showNewMailModal = !showNewMailModal"
+    >
+        <MailPlus class="w-5 h-5" />
+    </button>
 
     <div
         v-if="showNewMailModal"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+        class="fixed z-50 bottom-6 shadow-lg right-10 z-40 lg:right-10 w-[calc(100vw-2rem)] sm:w-[30rem] max-h-[78vh] overflow-y-auto"
     >
-        <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4">
+        <div class="bg-white p-6 rounded-md border border-gray-200 w-full shadow-2xl">
             <button
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                 aria-label="Fermer"
@@ -190,33 +172,38 @@
             >
                 <X class="h-5 w-5" />
             </button>
-            <h3 class="text-lg font-semibold mb-4">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <SendHorizontal class="w-5 h-5 text-primary" />
                 Nouveau message
             </h3>
 
             <form @submit.prevent="submit">
-                <label class="block mb-2">
-                    Destinataires :
+                <div class="mb-4">
+                    <label class="block text-sm">
+                        A :
+                    </label>
                     <UserAutocomplete v-model:recipients="newMail.recipients" />
-                </label>
+                </div>
 
-                <label class="block mb-2">
-                    Objet :
-                    <InputIcon
+                <div class="mb-4">
+                    <label class="block text-sm">
+                        Objet :
+                    </label>
+                    <Input
                         v-model="newMail.object"
-                        class="mt-1"
+                        class="mt-1 rounded-md"
                     />
-                </label>
+                </div>
 
-                <label class="block mb-2">
-                    Contenu :
-                    <div class="h-40 rounded-3xl border-2 border-gray-300">
-                        <Textarea
-                            v-model="newMail.content"
-                            class="text-base w-full h-full resize-none rounded-xl p-4 text-black placeholder:text-black/80 bg-transparent outline-none"
-                        />
-                    </div>
-                </label>
+                <div class="mb-4">
+                    <label class="block text-sm">
+                        Contenu :
+                    </label>
+                    <Textarea
+                        v-model="newMail.content"
+                        class="text-base w-full h-full resize-none rounded-md p-4 text-black placeholder:text-black/80 bg-transparent outline-none"
+                    />
+                </div>
 
                 <div class="mb-4">
                     <input
@@ -228,7 +215,7 @@
                     >
                     <button
                         type="button"
-                        class="flex items-center gap-2 text-primary hover:underline"
+                        class="flex items-center gap-2 text-primary hover:text-primary/80 transition"
                         @click="fileInput?.click()"
                     >
                         <Paperclip class="w-5 h-5" />
@@ -243,7 +230,7 @@
                     <div
                         v-for="(file, index) in selectedFiles"
                         :key="file.name + index"
-                        class="flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm"
+                        class="flex items-center bg-gray-100 px-3 py-1 rounded-md text-sm"
                     >
                         📎 <span class="mx-1 truncate max-w-[200px]">{{ file.name }}</span>
                         <button
@@ -259,14 +246,14 @@
                 <div class="flex justify-end space-x-2">
                     <Button
                         type="button"
-                        class="px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100"
+                        class="px-4 py-2 rounded-md border bg-white text-gray-600 hover:bg-gray-100"
                         @click="showNewMailModal = false"
                     >
                         Annuler
                     </Button>
                     <Button
                         type="submit"
-                        class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+                        class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
                         :in-progress="inProgress"
                     >
                         Envoyer
@@ -280,7 +267,7 @@
         v-if="showMailDetailModal"
         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center lg:hidden"
     >
-        <div class="bg-white p-6 rounded-lg w-full max-w-xl relative mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white p-6 rounded-md w-full max-w-xl relative mx-4 max-h-[90vh] overflow-y-auto shadow-xl">
             <button
                 class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                 aria-label="Fermer"
@@ -318,28 +305,13 @@
                 <div v-if="parseAttachments(selectedMail.attachement).length">
                     <span class="font-semibold text-gray-700">Pièces jointes :</span>
 
-                    <div class="mt-4 border rounded-lg divide-y">
+                    <div class="mt-4 border rounded-md divide-y">
                         <div
                             v-for="(file, idx) in parseAttachments(selectedMail.attachement)"
                             :key="idx"
                             class="flex items-center p-3 hover:bg-gray-50"
                         >
-                            <div class="mr-3 text-gray-500">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                    />
-                                </svg>
-                            </div>
+                            <FileText class="mr-3 h-5 w-5 text-gray-500" />
 
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-900 truncate">
@@ -353,23 +325,10 @@
                             <a
                                 :href="file"
                                 target="_blank"
-                                class="ml-2 p-2 rounded-full hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                                class="ml-2 p-2 rounded-md hover:bg-gray-200 text-gray-600 hover:text-gray-800"
                                 title="Télécharger"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                    />
-                                </svg>
+                                <Download class="h-5 w-5" />
                             </a>
                         </div>
                     </div>
@@ -384,7 +343,7 @@
 </template>
 
 <script setup lang="ts">
-import { Paperclip, Star, X } from 'lucide-vue-next';
+import { Download, FileText, Inbox, MailPlus, Paperclip, SendHorizontal, X } from 'lucide-vue-next';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from 'vue';
@@ -496,6 +455,7 @@ const { submit, inProgress } = useSubmit(
                 recipients: '',
                 content: '',
                 file: null,
+                files: null,
             };
             selectedFiles.value = [];
 
