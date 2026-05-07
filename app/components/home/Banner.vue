@@ -52,7 +52,7 @@
                 class="text-white text-center"
             >
                 <div class="mb-2 lg:absolute right-4 top-4">
-                    <BellAlertIcon class="size-8 mx-auto animate-ring" />
+                    <BellRing class="size-8 mx-auto animate-ring" />
                 </div>
                 <p>
                     Pour une meilleure gestion de vos remplacements, commencez par encoder votre tournée sur infiswap
@@ -165,7 +165,8 @@
 </template>
 
 <script setup lang="ts">
-import { BellAlertIcon } from '@heroicons/vue/24/solid';
+import { BellRing, Star } from 'lucide-vue-next';
+
 import {
     Carousel,
     CarouselContent,

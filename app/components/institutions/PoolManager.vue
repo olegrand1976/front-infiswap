@@ -15,14 +15,14 @@
                     class="rounded-md flex items-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-800 border-yellow-200"
                     @click="openGlobalSuggestions"
                 >
-                    <SparklesIcon class="w-5 h-5" />
+                    <Sparkles class="w-5 h-5" />
                     Suggestions
                 </Button>
                 <Button
                     class="rounded-md flex items-center gap-2"
                     @click="showCreateModal = true"
                 >
-                    <PlusIcon class="w-5 h-5" />
+                    <Plus class="w-5 h-5" />
                     Nouveau Pool
                 </Button>
             </div>
@@ -40,7 +40,7 @@
             class="bg-white rounded-xl border border-dashed border-gray-300 p-12 text-center"
         >
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
-                <UsersIcon class="w-8 h-8" />
+                <Users class="w-8 h-8" />
             </div>
             <h3 class="text-lg font-medium text-gray-900">
                 Aucun pool de favoris
@@ -69,7 +69,7 @@
             >
                 <div class="flex justify-between items-start mb-4">
                     <div class="bg-primary/10 text-primary p-2 rounded-lg">
-                        <UsersIcon class="w-6 h-6" />
+                        <Users class="w-6 h-6" />
                     </div>
                     <div class="flex gap-1">
                         <Button
@@ -78,7 +78,7 @@
                             class="h-8 w-8 text-gray-400 hover:text-red-500"
                             @click.stop="confirmDelete(p)"
                         >
-                            <TrashIcon class="w-4 h-4" />
+                            <Trash2 class="w-4 h-4" />
                         </Button>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                     <span class="text-gray-600 font-medium">{{ p.users_count }} membre(s)</span>
                     <span class="text-primary hover:underline flex items-center gap-1">
                         Gérer
-                        <ChevronRightIcon class="w-4 h-4" />
+                        <ChevronRight class="w-4 h-4" />
                     </span>
                 </div>
             </div>
@@ -198,7 +198,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        <PlusIcon class="w-4 h-4 text-primary" />
+                                        <Plus class="w-4 h-4 text-primary" />
                                     </div>
                                 </div>
                                 <div
@@ -217,7 +217,7 @@
                         >
                             <div class="flex items-center justify-between mb-3">
                                 <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                                    <StarIconOutline class="w-3.5 h-3.5 text-yellow-500" />
+                                    <StarOutline class="w-3.5 h-3.5 text-yellow-500" />
                                     Ont répondu à vos annonces
                                 </h5>
                                 <div class="flex bg-gray-100 rounded-md p-0.5">
@@ -276,7 +276,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-1 text-xs font-medium text-primary">
-                                        <PlusIcon class="w-4 h-4" />
+                                        <Plus class="w-4 h-4" />
                                         Ajouter
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                             {{ member.firstname }} {{ member.lastname }}
                                         </p>
                                         <div class="flex items-center gap-0.5 mt-0.5">
-                                            <StarIcon
+                                            <Star
                                                 v-for="i in 5"
                                                 :key="i"
                                                 class="w-4 h-4 cursor-pointer transition-all hover:scale-110"
@@ -329,7 +329,7 @@
                                     class="h-8 w-8 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors"
                                     @click="removeNurse(member.id)"
                                 >
-                                    <XMarkIcon class="w-4 h-4" />
+                                    <X class="w-4 h-4" />
                                 </Button>
                             </div>
                         </div>
@@ -387,7 +387,7 @@
                         v-else-if="globalSuggestions.length === 0"
                         class="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center"
                     >
-                        <StarIconOutline class="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <StarOutline class="w-12 h-12 text-gray-300 mx-auto mb-3" />
                         <h3 class="text-sm font-medium text-gray-900">
                             Aucune suggestion pour le moment
                         </h3>
@@ -499,18 +499,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import {
-    UsersIcon,
-    PlusIcon,
-    TrashIcon,
-    ChevronRightIcon,
-    XMarkIcon,
-    MagnifyingGlassIcon,
-    StarIcon as StarIconOutline,
-    SparklesIcon,
-} from '@heroicons/vue/24/outline';
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { ChevronRight, Plus, Search, Sparkles, Star, Trash2, Users, X } from 'lucide-vue-next';
+
 import { toast } from 'vue-sonner';
 import { usePools } from '~/composables/usePools';
 import {

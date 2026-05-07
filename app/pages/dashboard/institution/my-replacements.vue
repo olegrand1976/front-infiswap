@@ -2,7 +2,7 @@
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-6 flex items-center justify-between w-full">
             <div class="flex items-center gap-2 text-primary sm:bg-gray-100 sm:w-[65%] lg:w-[75%] px-2 rounded-lg">
-                <ArrowLeftIcon
+                <ArrowLeft
                     class="size-5 cursor-pointer hover:text-primary"
                     title="Retour"
                     @click="goBack"
@@ -19,7 +19,7 @@
                             variant="outline"
                             class="flex gap-3 items-center shadow h-10 border-gray-200 text-black/90 font-normal"
                         >
-                            <FunnelIcon class="w-5" />
+                            <Filter class="w-5" />
                             <span>
                                 Filtrer
                                 <span
@@ -68,7 +68,7 @@
                                 @click="toggleGroupByProvince"
                             >
                                 <component
-                                    :is="MapIcon"
+                                    :is="Map"
                                     class="w-5 text-black/70 hover:text-primary"
                                 />
                             </button>
@@ -87,7 +87,7 @@
                                 @click="toggleDisplayMode"
                             >
                                 <component
-                                    :is="displayMode === 'cards' ? QueueListIcon : Squares2X2Icon"
+                                    :is="displayMode === 'cards' ? ListOrdered : LayoutGrid"
                                     class="w-5 text-black/70 hover:text-primary"
                                 />
                             </button>
@@ -110,7 +110,8 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, QueueListIcon, FunnelIcon, ArrowLeftIcon, MapIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map, Star } from 'lucide-vue-next';
+
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';

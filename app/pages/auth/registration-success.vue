@@ -14,7 +14,7 @@
                         class="mt-[-10px] mr-2"
                         @click="navigateTo('/')"
                     >
-                        <XCircleIcon class="h-5 w-5 sm:h-4 sm:w-4 text-primary cursor-pointer" />
+                        <XCircle class="h-5 w-5 sm:h-4 sm:w-4 text-primary cursor-pointer" />
                     </span>
                 </div>
 
@@ -94,8 +94,9 @@
 </template>
 
 <script lang="ts" setup>
+import { Star, XCircle } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { navigateTo } from '#app';
 
 definePageMeta({

@@ -44,7 +44,7 @@
                             @submit.prevent="subscribeNewsletter"
                         >
                             <div class="flex flex-row justify-start items-center">
-                                <EnvelopeIcon
+                                <Mail
                                     class="w-4 h-4 ms-3"
                                     :class="txtClass"
                                 />
@@ -153,7 +153,7 @@
                             @submit.prevent="subscribeNewsletter"
                         >
                             <div class="flex flex-row justify-start items-center">
-                                <EnvelopeIcon
+                                <Mail
                                     class="w-4 h-4 ms-3"
                                     :class="txtClass"
                                 />
@@ -236,9 +236,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    EnvelopeIcon,
-} from '@heroicons/vue/24/outline';
+import { Mail, Star } from 'lucide-vue-next';
+
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();

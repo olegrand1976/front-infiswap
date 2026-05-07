@@ -188,7 +188,7 @@
                 aria-label="Fermer"
                 @click="showNewMailModal = false"
             >
-                <XMarkIcon class="h-5 w-5" />
+                <X class="h-5 w-5" />
             </button>
             <h3 class="text-lg font-semibold mb-4">
                 Nouveau message
@@ -231,7 +231,7 @@
                         class="flex items-center gap-2 text-primary hover:underline"
                         @click="fileInput?.click()"
                     >
-                        <PaperClipIcon class="w-5 h-5" />
+                        <Paperclip class="w-5 h-5" />
                         <span>Joindre des fichiers</span>
                     </button>
                 </div>
@@ -286,7 +286,7 @@
                 aria-label="Fermer"
                 @click="showMailDetailModal = false"
             >
-                <XMarkIcon class="h-5 w-5" />
+                <X class="h-5 w-5" />
             </button>
             <h3 class="text-lg font-semibold mb-4">
                 Détail du message
@@ -384,8 +384,9 @@
 </template>
 
 <script setup lang="ts">
+import { Paperclip, Star, X } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { XMarkIcon, PaperClipIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useMail } from '@/composables/useMail';
 

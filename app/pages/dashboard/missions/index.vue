@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -23,7 +23,7 @@
                            data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
                 >
                     <div class="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
-                        <BriefcaseIcon class="w-4 h-4 sm:w-5 sm:h-5 text-success shrink-0" />
+                        <Briefcase class="w-4 h-4 sm:w-5 sm:h-5 text-success shrink-0" />
                         <span class="font-medium text-xs sm:text-sm">Mes missions</span>
                         <Badge
                             v-if="myMissionsCount > 0"
@@ -42,7 +42,7 @@
                            data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
                 >
                     <div class="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
-                        <UserCircleIcon class="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 shrink-0" />
+                        <CircleUser class="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 shrink-0" />
                         <span class="font-medium text-xs sm:text-sm">Candidatures</span>
                         <Badge
                             v-if="candidacyCount > 0"
@@ -65,7 +65,7 @@
                     class="flex items-center justify-center py-20"
                 >
                     <div class="flex flex-col items-center gap-4">
-                        <ArrowPathIcon class="w-12 h-12 animate-spin text-success" />
+                        <RefreshCw class="w-12 h-12 animate-spin text-success" />
                         <p class="text-gray-500">
                             Chargement de vos missions...
                         </p>
@@ -94,7 +94,7 @@
                                 class="flex-1 sm:flex-none rounded-md bg-success hover:bg-success/90 text-white"
                                 @click="reinitializeMyMissionsFilter"
                             >
-                                <ArrowPathIcon class="w-4 h-4 shrink-0 sm:mr-2" />
+                                <RefreshCw class="w-4 h-4 shrink-0 sm:mr-2" />
                                 <span class="ml-2 sm:hidden text-sm">Réinitialiser</span>
                                 <span class="hidden sm:inline-block text-sm">Réinitialiser</span>
                             </Button>
@@ -102,7 +102,7 @@
                                 type="submit"
                                 class="flex-1 sm:flex-none rounded-md bg-success hover:bg-success/90 text-white"
                             >
-                                <MagnifyingGlassIcon class="w-4 h-4 mr-2 shrink-0" />
+                                <Search class="w-4 h-4 mr-2 shrink-0" />
                                 <span class="text-sm">Rechercher</span>
                             </Button>
                         </div>
@@ -112,7 +112,7 @@
                         v-if="isSearchingMyMissions"
                         class="flex items-center gap-2 justify-center mt-10"
                     >
-                        <ArrowPathIcon class="w-6 h-6 animate-spin text-success" />
+                        <RefreshCw class="w-6 h-6 animate-spin text-success" />
                         <span>Recherche en cours...</span>
                     </div>
                     <div
@@ -186,7 +186,7 @@
                             </div>
 
                             <div class="mt-3 md:mt-4 flex items-center gap-2 text-sm text-gray-500">
-                                <CalendarIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                <Calendar class="h-4 w-4 text-gray-400 shrink-0" />
                                 <span>
                                     {{ formatToDMY(mission.start_date, mission.status === 'completed') }}
                                     <span class="mx-1 text-gray-300">→</span>
@@ -197,7 +197,7 @@
                                 v-if="mission.status !== 'completed'"
                                 class="mt-2 md:mt-3 flex items-center gap-2 text-sm text-gray-500"
                             >
-                                <ClockIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                <Clock class="h-4 w-4 text-gray-400 shrink-0" />
                                 <span
                                     v-if="mission.is_long_term"
                                     class="font-medium text-gray-600"
@@ -214,7 +214,7 @@
                                 v-else
                                 class="mt-2 md:mt-3 flex items-center gap-2 text-sm text-gray-500"
                             >
-                                <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                <GraduationCap class="h-4 w-4 text-gray-400 shrink-0" />
                                 <span>{{ mission.required_diploma }}</span>
                             </div>
                             <div class="mt-4 pt-3 border-t border-gray-100 flex justify-end">
@@ -224,7 +224,7 @@
                                         size="sm"
                                         class="text-xs border-gray-200 text-gray-600 hover:border-success hover:text-success"
                                     >
-                                        <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                        <Eye class="w-3.5 h-3.5 mr-1.5" />
                                         Voir les détails
                                     </Button>
                                 </NuxtLink>
@@ -233,7 +233,7 @@
                     </div>
                     <div v-else>
                         <div class="mt-10 text-center">
-                            <BriefcaseIcon class="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                            <Briefcase class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                             <p class="text-gray-500 text-lg font-medium">
                                 Aucune mission acceptée
                             </p>
@@ -251,7 +251,7 @@
                     class="flex items-center justify-center py-20"
                 >
                     <div class="flex flex-col items-center gap-4">
-                        <ArrowPathIcon class="w-12 h-12 animate-spin text-orange-500" />
+                        <RefreshCw class="w-12 h-12 animate-spin text-orange-500" />
                         <p class="text-gray-500">
                             Chargement de vos candidatures...
                         </p>
@@ -280,7 +280,7 @@
                                 class="flex-1 sm:flex-none rounded-md bg-orange-500 hover:bg-orange-600 text-white py-2"
                                 @click="reinitializeCandidacyFilter"
                             >
-                                <ArrowPathIcon class="w-4 h-4 shrink-0 sm:mr-2" />
+                                <RefreshCw class="w-4 h-4 shrink-0 sm:mr-2" />
                                 <span class="ml-2 sm:hidden text-sm">Réinitialiser</span>
                                 <span class="hidden sm:inline-block text-sm">Réinitialiser</span>
                             </Button>
@@ -288,7 +288,7 @@
                                 type="submit"
                                 class="flex-1 sm:flex-none rounded-md bg-orange-500 hover:bg-orange-600 text-white py-2"
                             >
-                                <MagnifyingGlassIcon class="w-4 h-4 mr-2 shrink-0" />
+                                <Search class="w-4 h-4 mr-2 shrink-0" />
                                 <span class="text-sm">Rechercher</span>
                             </Button>
                         </div>
@@ -298,7 +298,7 @@
                         v-if="isSearchingCandidacy"
                         class="flex items-center gap-2 justify-center mt-10"
                     >
-                        <ArrowPathIcon class="w-6 h-6 animate-spin text-orange-500" />
+                        <RefreshCw class="w-6 h-6 animate-spin text-orange-500" />
                         <span>Recherche en cours...</span>
                     </div>
                     <div
@@ -371,7 +371,7 @@
                                             </p>
                                         </div>
                                         <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                                            <CalendarIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                            <Calendar class="h-4 w-4 text-gray-400 shrink-0" />
                                             <span>
                                                 {{ formatToDMY(response.mission.start_date) }}
                                                 <span class="mx-1 text-gray-300">→</span>
@@ -379,7 +379,7 @@
                                             </span>
                                         </div>
                                         <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                                            <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                            <GraduationCap class="h-4 w-4 text-gray-400 shrink-0" />
                                             <span>{{ response.mission.required_diploma }}</span>
                                         </div>
                                         <div class="mt-4 pt-3 border-t border-gray-100 flex justify-end">
@@ -389,7 +389,7 @@
                                                     size="sm"
                                                     class="text-xs border-gray-200 text-gray-600 hover:border-orange-400 hover:text-orange-500"
                                                 >
-                                                    <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                                    <Eye class="w-3.5 h-3.5 mr-1.5" />
                                                     Voir les détails
                                                 </Button>
                                             </NuxtLink>
@@ -441,7 +441,7 @@
                                         </p>
                                     </div>
                                     <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                                        <CalendarIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                        <Calendar class="h-4 w-4 text-gray-400 shrink-0" />
                                         <span>
                                             {{ formatToDMY(response.mission.start_date) }}
                                             <span class="mx-1 text-gray-300">→</span>
@@ -449,7 +449,7 @@
                                         </span>
                                     </div>
                                     <div class="mt-2 flex items-center gap-2 text-sm text-gray-500">
-                                        <AcademicCapIcon class="h-4 w-4 text-gray-400 shrink-0" />
+                                        <GraduationCap class="h-4 w-4 text-gray-400 shrink-0" />
                                         <span>{{ response.mission.required_diploma }}</span>
                                     </div>
                                     <div class="mt-3 pt-3 border-t border-gray-100 flex justify-end">
@@ -459,7 +459,7 @@
                                                 size="sm"
                                                 class="text-xs border-gray-200 text-gray-600 hover:border-orange-400 hover:text-orange-500"
                                             >
-                                                <EyeIcon class="w-3.5 h-3.5 mr-1.5" />
+                                                <Eye class="w-3.5 h-3.5 mr-1.5" />
                                                 Voir les détails
                                             </Button>
                                         </NuxtLink>
@@ -471,7 +471,7 @@
 
                     <div v-else>
                         <div class="mt-10 text-center">
-                            <UserCircleIcon class="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                            <CircleUser class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                             <p class="text-gray-500 text-lg font-medium">
                                 Aucune candidature trouvée
                             </p>
@@ -498,8 +498,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowLeft, Briefcase, Calendar, CircleUser, Clock, Eye, GraduationCap, Megaphone, RefreshCw, Search, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, BriefcaseIcon, CalendarIcon, ClockIcon, MagnifyingGlassIcon, MegaphoneIcon, UserCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

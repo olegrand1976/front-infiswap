@@ -10,7 +10,7 @@
                     href="/dashboard/institution/members/create"
                     class="rounded-md"
                 >
-                    <PlusIcon class="w-6 h-6" />
+                    <Plus class="w-6 h-6" />
                     <span class="hidden lg:inline-block">Ajouter un membre</span>
                 </Button>
             </template>
@@ -74,7 +74,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { Plus, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import {

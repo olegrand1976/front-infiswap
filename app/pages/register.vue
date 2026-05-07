@@ -103,14 +103,14 @@
                                         >
                                             <div class="relative w-full h-16">
                                                 <component
-                                                    :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
+                                                    :is="account.value === 'standard' ? CircleUser : Building2"
                                                     :class="cn('size-12 mx-auto mb-3 transition-colors', formData.accountType === account.value ? 'text-primary' : 'text-gray-400')"
                                                 />
                                                 <div
                                                     v-if="formData.accountType === account.value"
                                                     class="absolute -top-2 -right-2 bg-primary rounded-full p-1 transition-all duration-300"
                                                 >
-                                                    <CheckIcon class="size-3 text-white" />
+                                                    <Check class="size-3 text-white" />
                                                 </div>
                                             </div>
                                             <span
@@ -139,7 +139,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.institutionName"
-                                        :icon="BuildingOffice2Icon"
+                                        :icon="Building2"
                                         size="md"
                                         placeholder="Nom de l'institution *"
                                     />
@@ -159,7 +159,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.lastname"
-                                            :icon="UserCircleIcon"
+                                            :icon="CircleUser"
                                             size="md"
                                             placeholder="Nom *"
                                         />
@@ -171,7 +171,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.firstname"
-                                            :icon="UserCircleIcon"
+                                            :icon="CircleUser"
                                             size="md"
                                             placeholder="Prénoms *"
                                         />
@@ -183,7 +183,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.email"
-                                            :icon="EnvelopeIcon"
+                                            :icon="Mail"
                                             size="md"
                                             placeholder="Email *"
                                             autocomplete="off"
@@ -196,7 +196,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.phoneNumber"
-                                            :icon="PhoneIcon"
+                                            :icon="Phone"
                                             size="md"
                                             placeholder="N° de téléphone"
                                         />
@@ -251,7 +251,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.password"
-                                            :icon="LockClosedIcon"
+                                            :icon="Lock"
                                             size="md"
                                             type="password"
                                             placeholder="Mot de passe *"
@@ -264,7 +264,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.passwordConfirmation"
-                                            :icon="LockClosedIcon"
+                                            :icon="Lock"
                                             size="md"
                                             type="password"
                                             placeholder="Confirmation mot de passe *"
@@ -286,7 +286,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.street"
-                                            :icon="MapPinIcon"
+                                            :icon="MapPin"
                                             size="md"
                                             placeholder="Rue *"
                                         />
@@ -298,7 +298,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.zipCode"
-                                            :icon="InboxArrowDownIcon"
+                                            :icon="Inbox"
                                             size="md"
                                             placeholder="Code postal *"
                                         />
@@ -310,7 +310,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.city"
-                                            :icon="BuildingOffice2Icon"
+                                            :icon="Building2"
                                             size="md"
                                             placeholder="Ville *"
                                         />
@@ -392,7 +392,7 @@
                                                 class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
                                                 position="right"
                                             >
-                                                <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
+                                                <Users class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
                                                 <SelectValue
                                                     placeholder="Compte"
                                                     class="text-nowrap w-full text-sm ml-3 my-auto"
@@ -503,7 +503,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.identifierNumber"
-                                            :icon="IdentificationIcon"
+                                            :icon="IdCard"
                                             size="md"
                                             :placeholder="identifierLabel"
                                         />
@@ -517,7 +517,7 @@
                                         </label>
                                         <InputIcon
                                             v-model="formData.companyNumber"
-                                            :icon="IdentificationIcon"
+                                            :icon="IdCard"
                                             size="md"
                                             placeholder="Numéro d'entreprise"
                                         />
@@ -539,7 +539,7 @@
                                         class="flex justify-between items-center rounded-full border-2 border-gray-300"
                                         position="right"
                                     >
-                                        <UserGroupIcon class="text-primary w-10 h-10" />
+                                        <Users class="text-primary w-10 h-10" />
                                         <SelectValue
                                             placeholder="Catégorie"
                                             class="ml-3 block w-full"
@@ -589,7 +589,7 @@
                                     >
                                         <InputIcon
                                             v-model="formData.groupName"
-                                            :icon="UserGroupIcon"
+                                            :icon="Users"
                                             placeholder="Nom du groupement"
                                         />
                                     </div>
@@ -669,11 +669,11 @@
                         <p class="text-white/80 text-sm">Reprenez le contrôle sur vos coûts RH</p>
                         <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
                             Découvrir les avantages
-                            <ArrowRightIcon class="size-4 animate-bounce-right" />
+                            <ArrowRight class="size-4 animate-bounce-right" />
                         </div>
                     </div>
                     <div class="absolute -right-4 -bottom-4 opacity-20">
-                        <BuildingOffice2Icon class="size-24 text-white rotate-12" />
+                        <Building2 class="size-24 text-white rotate-12" />
                     </div>
                 </NuxtLink>
 
@@ -712,7 +712,7 @@
                                     >
                                         <div class="relative w-full">
                                             <component
-                                                :is="account.value === 'standard' ? UserCircleIcon : BuildingOffice2Icon"
+                                                :is="account.value === 'standard' ? CircleUser : Building2"
                                                 :class="cn(
                                                     'w-10 h-10 mx-auto mb-2 transition-colors duration-300',
                                                     formData.accountType === account.value
@@ -725,7 +725,7 @@
                                                 class="absolute -top-1 -right-1 rounded-full p-1 transition-all duration-300"
                                                 :class="formData.accountType === 'institution' ? 'bg-white shadow-lg' : 'bg-primary'"
                                             >
-                                                <CheckIcon
+                                                <Check
                                                     class="size-3"
                                                     :class="formData.accountType === 'institution' ? 'text-primary' : 'text-white'"
                                                 />
@@ -771,7 +771,7 @@
                             </label>
                             <InputIcon
                                 v-model="formData.institutionName"
-                                :icon="BuildingOffice2Icon"
+                                :icon="Building2"
                                 size="md"
                                 placeholder="Nom de l'institution *"
                             />
@@ -790,7 +790,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.lastname"
-                                        :icon="UserCircleIcon"
+                                        :icon="CircleUser"
                                         size="md"
                                         placeholder="Nom *"
                                     />
@@ -802,7 +802,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.firstname"
-                                        :icon="UserCircleIcon"
+                                        :icon="CircleUser"
                                         size="md"
                                         placeholder="Prénoms *"
                                     />
@@ -814,7 +814,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.email"
-                                        :icon="EnvelopeIcon"
+                                        :icon="Mail"
                                         size="md"
                                         placeholder="Email *"
                                         autocomplete="off"
@@ -827,7 +827,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.phoneNumber"
-                                        :icon="PhoneIcon"
+                                        :icon="Phone"
                                         size="md"
                                         placeholder="N° de téléphone"
                                     />
@@ -882,7 +882,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.password"
-                                        :icon="LockClosedIcon"
+                                        :icon="Lock"
                                         size="md"
                                         type="password"
                                         placeholder="Mot de passe *"
@@ -895,7 +895,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.passwordConfirmation"
-                                        :icon="LockClosedIcon"
+                                        :icon="Lock"
                                         size="md"
                                         type="password"
                                         placeholder="Confirmation mot de passe *"
@@ -917,7 +917,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.street"
-                                        :icon="MapPinIcon"
+                                        :icon="MapPin"
                                         size="md"
                                         placeholder="Rue *"
                                     />
@@ -929,7 +929,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.zipCode"
-                                        :icon="InboxArrowDownIcon"
+                                        :icon="Inbox"
                                         size="md"
                                         placeholder="Code postal *"
                                     />
@@ -941,7 +941,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.city"
-                                        :icon="BuildingOffice2Icon"
+                                        :icon="Building2"
                                         size="md"
                                         placeholder="Ville *"
                                     />
@@ -1023,7 +1023,7 @@
                                             class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
                                             position="right"
                                         >
-                                            <UsersIcon class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
+                                            <Users class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
                                             <SelectValue
                                                 placeholder="Compte"
                                                 class="text-nowrap w-full text-sm ml-3 my-auto"
@@ -1134,7 +1134,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.identifierNumber"
-                                        :icon="IdentificationIcon"
+                                        :icon="IdCard"
                                         size="md"
                                         :placeholder="identifierLabel"
                                     />
@@ -1148,7 +1148,7 @@
                                     </label>
                                     <InputIcon
                                         v-model="formData.companyNumber"
-                                        :icon="IdentificationIcon"
+                                        :icon="IdCard"
                                         size="md"
                                         placeholder="Numéro d'entreprise"
                                     />
@@ -1169,7 +1169,7 @@
                                         class="flex justify-between items-center rounded-full border-2 border-gray-300"
                                         position="right"
                                     >
-                                        <UserGroupIcon class="text-primary w-10 h-10" />
+                                        <Users class="text-primary w-10 h-10" />
                                         <SelectValue
                                             placeholder="Catégorie"
                                             class="ml-3 block w-full"
@@ -1219,7 +1219,7 @@
                                 >
                                     <InputIcon
                                         v-model="formData.groupName"
-                                        :icon="UserGroupIcon"
+                                        :icon="Users"
                                         placeholder="Nom du groupement"
                                     />
                                 </div>
@@ -1274,24 +1274,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    UserCircleIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    LockClosedIcon,
-    EllipsisHorizontalCircleIcon,
-    LanguageIcon,
-    IdentificationIcon,
-    UsersIcon,
-    BuildingOffice2Icon,
-    MapPinIcon,
-    InboxArrowDownIcon,
-    UserGroupIcon,
-    ArrowRightIcon,
-    CheckIcon,
-} from '@heroicons/vue/24/solid';
-
-import { CircleChevronDown } from 'lucide-vue-next';
+import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, IdCard, Inbox, Lock, Mail, MapPin, Phone, Star, Users } from 'lucide-vue-next';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';

@@ -6,7 +6,7 @@
                     class="rounded-md flex gap-2 items-center"
                     @click="handleGenerateInvoice"
                 >
-                    <ClipboardDocumentListIcon class="w-4 h-4" />
+                    <ClipboardList class="w-4 h-4" />
                     <span>Générer la facture</span>
                 </Button>
             </template>
@@ -19,7 +19,7 @@
                         <span class="w-4 h-4 rounded-full bg-primary mr-2" />
                         Détail de la mission
                     </h3>
-                    <PencilIcon
+                    <Pencil
                         class="w-5 h-5 text-gray-400 hover:text-primary hover:cursor-pointer transition-all duration-300"
                         @click="() => router.push(`/dashboard/institution/missions/${mission.id}`)"
                     />
@@ -27,7 +27,7 @@
 
                 <div class="mt-6 grid 2xl:grid-cols-3 gap-2 2xl:gap-6">
                     <div class="flex items-center gap-2 text-sm text-gray-500">
-                        <CalendarIcon class="w-4 h-4 text-gray-400" />
+                        <Calendar class="w-4 h-4 text-gray-400" />
                         <span class="font-medium text-gray-700">Date :</span>
                         <span>
                             {{ formatToDMY(mission.start_date) }}
@@ -36,7 +36,7 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 text-sm text-gray-500">
-                        <ClockIcon class="w-4 h-4 text-gray-400" />
+                        <Clock class="w-4 h-4 text-gray-400" />
                         <span class="font-medium text-gray-700">Horaire :</span>
                         <span>
                             {{ formatTime(mission.time_start_at) }}
@@ -45,7 +45,7 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 text-sm text-gray-500">
-                        <AcademicCapIcon class="w-4 h-4 text-gray-400" />
+                        <GraduationCap class="w-4 h-4 text-gray-400" />
                         <span class="font-medium text-gray-700">Diplôme :</span>
                         <span>{{ mission.required_diploma }}</span>
                     </div>
@@ -161,7 +161,7 @@
                         class="rounded-md h-11"
                         @click="resetFilter"
                     >
-                        <ArrowPathIcon class="md:mr-2" />
+                        <RefreshCw class="md:mr-2" />
                         <span class="hidden md:inline-block">Restaurer</span>
                     </Button>
                 </div>
@@ -356,7 +356,8 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, ArrowPathIcon, CalendarIcon, ClipboardDocumentListIcon, ClockIcon, PencilIcon } from '@heroicons/vue/24/outline';
+import { Calendar, ClipboardList, Clock, GraduationCap, Pencil, RefreshCw, Star } from 'lucide-vue-next';
+
 import { toast } from 'vue-sonner';
 import { formatTime, formatToDMY } from '~/composables/useDate';
 import { useRuntimeConfig } from '#app';

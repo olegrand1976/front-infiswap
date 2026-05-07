@@ -37,7 +37,7 @@
                                     alt="Photo de profil"
                                     class="w-full h-full object-cover"
                                 >
-                                <UserCircleIcon
+                                <CircleUser
                                     v-else
                                     class="w-full h-full text-gray-400 p-4"
                                 />
@@ -51,7 +51,7 @@
                                     class="bg-gray-200 text-gray-800 p-1.5 rounded-full hover:bg-gray-300 transition-all shadow-sm border border-gray-300"
                                     @click="isProfileUrlDialogOpen = true"
                                 >
-                                    <PencilIcon class="w-3.5 h-3.5" />
+                                    <Pencil class="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                     v-if="patient.profile?.profil_url"
@@ -59,7 +59,7 @@
                                     class="bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 transition-all shadow-sm border border-red-200"
                                     @click="confirmDeleteAvatar"
                                 >
-                                    <TrashIcon class="w-3.5 h-3.5" />
+                                    <Trash2 class="w-3.5 h-3.5" />
                                 </button>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                 <div class="bg-gray-100 rounded-b-lg">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t-lg">
                         <span class="font-semibold">Informations personnelles</span>
-                        <PencilSquareIcon
+                        <SquarePen
                             v-if="isOwnPatient"
                             class="w-5 text-white cursor-pointer"
                             @click="openDialog"
@@ -407,7 +407,7 @@
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span>{{ patient.katz_code ? patient.katz_code : ' - - - - - -' }}</span>
-                                    <PencilSquareIcon
+                                    <SquarePen
                                         class="w-4 h-4 cursor-pointer me-4"
                                         @click="goToPatientKatz(patient)"
                                     />
@@ -420,7 +420,7 @@
                 <div class="bg-gray-100 rounded-b-lg">
                     <h3 class="bg-primary flex justify-between items-center text-white p-6 rounded-t-lg">
                         <span class="font-semibold">Notes de santé</span>
-                        <PlusCircleIcon
+                        <CirclePlus
                             v-if="isOwnPatient"
                             class="w-7 text-white cursor-pointer"
                             @click="openCareInfoDialog"
@@ -442,7 +442,7 @@
                                         title="Modifier cette note"
                                         @click="editCareInfo(careIndex)"
                                     >
-                                        <PencilSquareIcon class="w-6 text-gray-500 hover:text-blue-500" />
+                                        <SquarePen class="w-6 text-gray-500 hover:text-blue-500" />
                                     </button>
                                     <button
                                         v-if="isOwnPatient"
@@ -451,7 +451,7 @@
                                         title="Supprimer cette note"
                                         @click.stop="removeSavedCareInfo(careIndex)"
                                     >
-                                        <XCircleIcon class="w-7 text-gray-500 hover:text-red-500" />
+                                        <XCircle class="w-7 text-gray-500 hover:text-red-500" />
                                     </button>
                                 </div>
                                 <div class="grid grid-cols-[40%_60%] gap-4">
@@ -695,7 +695,7 @@
                             <hr class="border border-gray-200 my-5">
 
                             <div class="flex justify-end items-center">
-                                <XMarkIcon
+                                <X
                                     v-if="visit.theoreticalVisitTimes.length > 1"
                                     class="w-5 text-primary cursor-pointer"
                                     @click="removeTimeSlot(visitIndex, timeIndex)"
@@ -748,7 +748,7 @@
                             </div>
                         </div>
 
-                        <PlusCircleIcon
+                        <CirclePlus
                             v-if="isOwnPatient"
                             class="w-6 text-primary mt-8 ml-auto cursor-pointer"
                             title="Ajouter un autre heure"
@@ -763,7 +763,7 @@
                     type="button"
                     @click="addVisit"
                 >
-                    <PlusCircleIcon class="w-5 h-5 mr-2" />
+                    <CirclePlus class="w-5 h-5 mr-2" />
                     <span>Ajouter un autre jour</span>
                 </Button>
             </div>
@@ -779,7 +779,7 @@
                         class="w-full flex items-center justify-center mt-4"
                         @click="openFileUploadDialog"
                     >
-                        <PlusCircleIcon class="w-5" />
+                        <CirclePlus class="w-5" />
                         Ajouter un document
                     </Button>
                 </div>
@@ -822,7 +822,7 @@
                                             class="flex h-10 rounded bg-gray-200 justify-center items-center text-black hover:text-white"
                                             @click="removeDocument(index, document.id)"
                                         >
-                                            <TrashIcon class="w-5 cursor-pointer" />
+                                            <Trash2 class="w-5 cursor-pointer" />
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -876,17 +876,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    PlusCircleIcon,
-    UserCircleIcon,
-    CloudArrowDownIcon,
-    PencilSquareIcon,
-    XMarkIcon,
-    XCircleIcon,
-    CalendarDaysIcon,
-    TrashIcon,
-    PencilIcon,
-} from '@heroicons/vue/24/solid';
+import { Calendar, CirclePlus, CircleUser, Pencil, SquarePen, Star, Trash2, X, XCircle } from 'lucide-vue-next';
 
 import clsx from 'clsx';
 import { useCareTypes } from '~/composables/useCareTypes';

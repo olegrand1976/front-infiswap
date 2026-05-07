@@ -57,7 +57,7 @@
                     >
                         <InputIcon
                             v-model="formData.password"
-                            :icon="LockClosedIcon"
+                            :icon="Lock"
                             type="password"
                             placeholder="Mot de passe"
                             class="text-sm w-full"
@@ -65,7 +65,7 @@
 
                         <InputIcon
                             v-model="formData.passwordConfirm"
-                            :icon="LockClosedIcon"
+                            :icon="Lock"
                             type="password"
                             placeholder="Confirmation"
                             class="text-sm w-full"
@@ -106,7 +106,7 @@
                     <div class="space-y-4">
                         <InputIcon
                             v-model="formData.password"
-                            :icon="LockClosedIcon"
+                            :icon="Lock"
                             type="password"
                             label="Nouveau mot de passe"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
@@ -116,7 +116,7 @@
 
                         <InputIcon
                             v-model="formData.passwordConfirm"
-                            :icon="LockClosedIcon"
+                            :icon="Lock"
                             type="password"
                             label="Confirmer le nouveau mot de passe"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
@@ -140,8 +140,9 @@
 </template>
 
 <script lang="ts" setup>
+import { Lock, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LockClosedIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';

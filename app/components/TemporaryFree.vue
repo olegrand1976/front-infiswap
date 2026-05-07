@@ -1,7 +1,7 @@
 <template>
     <div class="container flex flex-col items-center px-4 py-12 mx-auto text-center">
         <div class="flex flex-col items-center justify-center max-w-2xl gap-2 mx-auto text-4xl font-semibold tracking-tight text-center text-success xl:text-5xl">
-            <StarIcon class="size-36" />
+            <Star class="size-36" />
             <h1>100% gratuit</h1>
         </div>
 
@@ -31,5 +31,5 @@
 </template>
 
 <script setup>
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { Star } from 'lucide-vue-next';
 </script>

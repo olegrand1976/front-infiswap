@@ -3,7 +3,7 @@
         <div class="mb-4 lg:mb-6">
             <div class="flex items-center gap-3 mb-3 lg:mb-4">
                 <div class="p-2.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-lg">
-                    <BuildingOfficeIcon class="size-6 sm:size-7 text-white" />
+                    <Building2 class="size-6 sm:size-7 text-white" />
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight bg-linear-to-r from-white to-white/70 bg-clip-text text-transparent">
@@ -142,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { BuildingOfficeIcon } from '@heroicons/vue/24/solid';
+import { Building2, Star } from 'lucide-vue-next';
 </script>
 
 <style scoped>

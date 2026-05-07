@@ -13,6 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid';
+import { Star } from 'lucide-vue-next';
+
 import LayoutError from '~/layouts/error.vue';
 </script>

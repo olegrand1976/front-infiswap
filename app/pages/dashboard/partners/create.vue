@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ArrowLeftIcon
+        <ArrowLeft
             class="size-6 cursor-pointer hover:text-primary"
             title="Retour"
             @click="goBack"
@@ -83,7 +83,7 @@
             </div>
 
             <div class="mt-16 flex gap-2 text-gray-700">
-                <InformationCircleIcon class="w-8" />
+                <Info class="w-8" />
                 <p class="text-sm">
                     Cette demande ne représente en aucun cas une engagement contractuel, InfiSwap permet le rapprochement entre infirmières recherchant une collaboration
                 </p>
@@ -101,7 +101,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeftIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Info, Star } from 'lucide-vue-next';
+
 import { usePartners } from '@/composables/usePartners';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';

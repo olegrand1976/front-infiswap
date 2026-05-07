@@ -10,7 +10,7 @@
                     <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
                         <div class="h-full max-w-lg mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
                             <div class="p-6 text-center">
-                                <StarIcon class="flex justify-center w-24 mx-auto text-success" />
+                                <Star class="flex justify-center w-24 mx-auto text-success" />
 
                                 <h1 class="text-5xl font-semibold text-success">
                                     <span>100% gratuit</span>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { Star } from 'lucide-vue-next';
 
 definePageMeta({
     layout: 'dashboard',

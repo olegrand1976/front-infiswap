@@ -3,7 +3,7 @@
         <div
             class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg"
         >
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -271,7 +271,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Star } from 'lucide-vue-next';
+
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import type { CountryCode, User } from '~/lib/types';

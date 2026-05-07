@@ -26,7 +26,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -50,8 +50,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, ChevronsUpDown, Eye, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowPathIcon, ArrowsUpDownIcon, ChevronUpDownIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 
 import { PERPAGE } from '~/lib/constants';
@@ -164,7 +165,7 @@ const columns: ColumnDef<UserPartner>[] = [
     //         h(Button, {
     //             variant: 'ghost',
     //             onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-    //         }, () => ['Type', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+    //         }, () => ['Type', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
     //     cell: ({ row }) => {
     //         const type = typePartnership[row.original.type];
     //         return h('div', { class: 'ml-4' }, type);
@@ -177,7 +178,7 @@ const columns: ColumnDef<UserPartner>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Code postal', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Code postal', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const zipCode = Number(row.original.user.zip_code);
             const isClosed = row.original.status === 'closed';
@@ -210,7 +211,7 @@ const columns: ColumnDef<UserPartner>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Ville', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Ville', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const city = row.original.user.city;
             return h('div', { class: 'ml-4' }, city);
@@ -223,7 +224,7 @@ const columns: ColumnDef<UserPartner>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Créateur', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Créateur', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const user = row.original.user;
             return h(UsersName, { user });
@@ -245,7 +246,7 @@ const columns: ColumnDef<UserPartner>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Partenaire', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Partenaire', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const user = row.original.partner;
 
@@ -283,7 +284,7 @@ const columns: ColumnDef<UserPartner>[] = [
                     variant: 'ghost',
                     size: 'sm',
                     onClick: () => navigateTo(`/dashboard/admin/partners/notified/${userPartnerId}`),
-                }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
+                }, () => h(Eye, { class: 'h-4 w-4 ml-1' })),
             ]);
         },
     },
@@ -294,7 +295,7 @@ const columns: ColumnDef<UserPartner>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Intéressés', h(ChevronUpDownIcon, { class: 'ml-2 h-2 w-2' })]),
+            }, () => ['Intéressés', h(ChevronsUpDown, { class: 'ml-2 h-2 w-2' })]),
         cell: ({ row }) => {
             const users = row.original.responses_count ?? 0;
             const id = row.original.id;
@@ -321,7 +322,7 @@ const columns: ColumnDef<UserPartner>[] = [
                     onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 }, () => [
                     'Création',
-                    h(ArrowsUpDownIcon, { class: '' }),
+                    h(ArrowUpDown, { class: '' }),
                 ]),
             ]);
         },

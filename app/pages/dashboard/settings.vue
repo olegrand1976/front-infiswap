@@ -1,6 +1,6 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeftIcon
+        <ArrowLeft
             class="size-6 cursor-pointer hover:text-primary mt-4"
             title="Retour"
             @click="goBack"
@@ -15,11 +15,11 @@
         <form class="mt-6 mb-12">
             <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
                 <div class="relative">
-                    <PencilSquareIcon
+                    <SquarePen
                         class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
                         @click="profileDialog = true"
                     />
-                    <TrashIcon
+                    <Trash2
                         v-if="user.profile?.profil_url"
                         class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
                         @click="deleteAvatarDialog = true"
@@ -94,11 +94,11 @@
                     <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
-                                <IdentificationIcon class="w-6 text-gray-400" />
+                                <IdCard class="w-6 text-gray-400" />
                                 <span class="text-lg">Information générale</span>
                             </h3>
 
-                            <PencilSquareIcon
+                            <SquarePen
                                 class="w-5 text-black/60 hover:text-primary cursor-pointer"
                                 @click="personalInfoDialog = true"
                             />
@@ -275,7 +275,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <BuildingOfficeIcon class="w-5" />
+                                        <Building2 class="w-5" />
                                         <span>Nom de l'institution</span>
                                     </label>
                                 </div>
@@ -292,7 +292,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <UserCircleIcon class="w-5" />
+                                        <CircleUser class="w-5" />
                                         <span>Nom</span>
                                     </label>
                                 </div>
@@ -309,7 +309,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <UserPlusIcon class="w-5" />
+                                        <UserPlus class="w-5" />
                                         <span>Prénom</span>
                                     </label>
                                 </div>
@@ -326,7 +326,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <CalendarDaysIcon class="w-5" />
+                                        <Calendar class="w-5" />
                                         <span>Date de naissance</span>
                                     </label>
                                 </div>
@@ -343,7 +343,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <EnvelopeIcon class="w-5" />
+                                        <Mail class="w-5" />
                                         <span class="truncate w-full">Email</span>
                                     </label>
                                 </div>
@@ -380,7 +380,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <PhoneIcon class="w-5" />
+                                        <Phone class="w-5" />
                                         <span>Téléphone</span>
                                     </label>
                                 </div>
@@ -420,7 +420,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <UserGroupIcon class="text-white w-5" />
+                                        <Users class="text-white w-5" />
                                         <span>Catégorie professionnel</span>
                                     </label>
                                 </div>
@@ -437,11 +437,11 @@
                     >
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
-                                <MapPinIcon class="w-6 text-gray-400" />
+                                <MapPin class="w-6 text-gray-400" />
                                 <span class="text-lg">Adresse</span>
                             </h3>
 
-                            <PencilSquareIcon
+                            <SquarePen
                                 class="w-5 text-black/50 hover:text-primary cursor-pointer"
                                 @click="addressInfoDialog = true"
                             />
@@ -579,7 +579,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <MapIcon class="w-5" />
+                                        <Map class="w-5" />
                                         <span>Rue</span>
                                     </label>
                                 </div>
@@ -596,7 +596,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <BuildingOffice2Icon class="w-5" />
+                                        <Building2 class="w-5" />
                                         <span>Ville</span>
                                     </label>
                                 </div>
@@ -630,7 +630,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <BuildingOfficeIcon class="w-5" />
+                                        <Building2 class="w-5" />
                                         <span>Pays de travail</span>
                                     </label>
                                 </div>
@@ -683,11 +683,11 @@
                     >
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
-                                <MapPinIcon class="w-6 text-gray-400" />
+                                <MapPin class="w-6 text-gray-400" />
                                 <span class="text-lg">Adresse</span>
                             </h3>
 
-                            <PencilSquareIcon
+                            <SquarePen
                                 class="w-5 text-black/50 hover:text-primary cursor-pointer"
                                 @click="addressInfoDialog = true"
                             />
@@ -825,7 +825,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <MapIcon class="w-5" />
+                                        <Map class="w-5" />
                                         <span>Rue</span>
                                     </label>
                                 </div>
@@ -842,7 +842,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <BuildingOffice2Icon class="w-5" />
+                                        <Building2 class="w-5" />
                                         <span>Ville</span>
                                     </label>
                                 </div>
@@ -876,7 +876,7 @@
                                     <label
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
-                                        <BuildingOfficeIcon class="w-5" />
+                                        <Building2 class="w-5" />
                                         <span>Pays de travail</span>
                                     </label>
                                 </div>
@@ -924,7 +924,7 @@
                     <section class="shadow rounded-lg p-6">
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
-                                <ShieldCheckIcon class="w-6 text-gray-400" />
+                                <ShieldCheck class="w-6 text-gray-400" />
                                 <span class="text-lg">Sécurité</span>
                             </h3>
                         </div>
@@ -939,7 +939,7 @@
                                     <span>Mot de passe</span>
                                 </label>
 
-                                <PencilSquareIcon
+                                <SquarePen
                                     class="w-5 text-black/50 hover:text-primary font-semibold text-sm cursor-pointer"
                                     @click="changePasswordDialog = true"
                                 />
@@ -1014,7 +1014,7 @@
                                     for="authTwoFactor"
                                     class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
                                 >
-                                    <DevicePhoneMobileIcon class="w-5 hidden sm:block" />
+                                    <Smartphone class="w-5 hidden sm:block" />
                                     <span class="w-full truncate">Authentification à deux facteurs</span>
                                 </label>
                                 <Switch
@@ -1119,7 +1119,7 @@
                     >
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
-                                <WrenchScrewdriverIcon class="w-6 text-gray-400" />
+                                <Wrench class="w-6 text-gray-400" />
                                 <span class="text-lg">Préférences</span>
                             </h3>
 
@@ -1199,7 +1199,7 @@
                         class="mt-4 xl:mt-0 shadow rounded-lg p-6"
                     >
                         <h3 class="flex items-center space-x-4">
-                            <BellAlertIcon class="w-6 text-gray-400" />
+                            <BellRing class="w-6 text-gray-400" />
                             <span class="text-lg">Notification</span>
                         </h3>
 
@@ -1341,7 +1341,7 @@
                             class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white"
                             @click="deleteAccountDialog = true"
                         >
-                            <TrashIcon class="w-5" />
+                            <Trash2 class="w-5" />
                             <span>Supprimer compte</span>
                         </Button>
 
@@ -1395,32 +1395,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    IdentificationIcon,
-    UserCircleIcon,
-    UserPlusIcon,
-    CalendarDaysIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    MapPinIcon,
-    MapIcon,
-    BuildingOffice2Icon,
-    FlagIcon,
-    EllipsisHorizontalCircleIcon,
-    ShieldCheckIcon,
-    KeyIcon,
-    DevicePhoneMobileIcon,
-    WrenchScrewdriverIcon,
-    LanguageIcon,
-    BellAlertIcon,
-    TrashIcon,
-    PencilSquareIcon,
-    BuildingOfficeIcon,
-    EnvelopeOpenIcon,
-    UserGroupIcon,
-} from '@heroicons/vue/24/solid';
-import { useRouter } from 'vue-router';
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Star, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
+
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';

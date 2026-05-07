@@ -336,7 +336,7 @@
                                     <hr class="border border-gray-200 my-5">
 
                                     <div class="flex justify-end items-center">
-                                        <XMarkIcon
+                                        <X
                                             v-if="visit.theoreticalVisitTimes.length > 1"
                                             class="w-5 text-primary cursor-pointer"
                                             @click="removeTimeSlot(visitIndex, timeIndex)"
@@ -399,7 +399,7 @@
                                     class="w-48 ml-auto flex justify-start text-primary mt-8 cursor-pointer items-center space-x-3"
                                     @click="addTimeSlot(visitIndex)"
                                 >
-                                    <PlusIcon class="w-6" />
+                                    <Plus class="w-6" />
                                     <span>
                                         Nouvelle visite
                                     </span>
@@ -412,7 +412,7 @@
                             type="button"
                             @click="addVisit"
                         >
-                            <PlusIcon class="w-5 h-5 mr-2" />
+                            <Plus class="w-5 h-5 mr-2" />
                             <span>Ajouter un autre jour</span>
                         </Button>
                     </div>
@@ -454,11 +454,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter, onBeforeRouteLeave } from 'vue-router';
+import { Plus, Star, X } from 'lucide-vue-next';
 
-import * as yup from 'yup';
-
-import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { InputTime } from '@/components/ui/input-time';
 import { useCareTypes } from '~/composables/useCareTypes';
 import { createPatient } from '~/composables/usePatients';

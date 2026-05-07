@@ -22,7 +22,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -51,7 +51,7 @@
                     aria-label="Fermer"
                     @click="showMailModal = false"
                 >
-                    <XMarkIcon class="h-5 w-5" />
+                    <X class="h-5 w-5" />
                 </button>
                 <h3 class="text-lg font-semibold mb-4">
                     Répondre au contact
@@ -97,7 +97,7 @@
                             class="flex items-center gap-2 text-primary hover:underline"
                             @click="fileInput?.click()"
                         >
-                            <PaperClipIcon class="w-5 h-5" />
+                            <Paperclip class="w-5 h-5" />
                             <span>Joindre des fichiers</span>
                         </button>
                     </div>
@@ -145,9 +145,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, Eye, Paperclip, Pencil, RefreshCw, Star, X } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, XMarkIcon, PaperClipIcon, PencilIcon, EyeIcon } from '@heroicons/vue/24/solid';
-import { ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import type { Contact } from '~/lib/types';
@@ -254,7 +254,7 @@ const columns: ColumnDef<Contact>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('name'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'min-h-8 flex items-center capitalize' }, row.getValue('name')),
     },
@@ -264,7 +264,7 @@ const columns: ColumnDef<Contact>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('email'),
-            }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: '' }, row.getValue('email')),
     },
@@ -274,7 +274,7 @@ const columns: ColumnDef<Contact>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('phone_number'),
-            }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('phone_number')),
     },
@@ -284,7 +284,7 @@ const columns: ColumnDef<Contact>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('description'),
-            }, () => ['Description', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Description', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'whitespace-pre-wrap' }, row.getValue('description')),
     },
@@ -298,7 +298,7 @@ const columns: ColumnDef<Contact>[] = [
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
                     'Création',
-                    h(ArrowsUpDownIcon, { class: '' }),
+                    h(ArrowUpDown, { class: '' }),
                 ]),
             ]);
         },
@@ -318,13 +318,13 @@ const columns: ColumnDef<Contact>[] = [
                         { class: 'flex ml-4 items-center gap-2' },
                         [
                             !contact.hasResponded
-                            && h(PencilIcon, {
+                            && h(Pencil, {
                                 class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
                                 title: 'Répondre',
                                 onClick: () => handleReply(contact),
                             }),
                             contact.hasResponded
-                            && h(EyeIcon, {
+                            && h(Eye, {
                                 class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
                                 title: 'Voir la réponse',
                                 onClick: () => router.push('/dashboard/admin/mails'),

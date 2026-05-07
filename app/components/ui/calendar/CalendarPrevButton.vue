@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ChevronLeftIcon } from '@heroicons/vue/24/outline';
+import { ChevronLeft, Star } from 'lucide-vue-next';
+
 import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         v-bind="forwardedProps"
     >
         <slot>
-            <ChevronLeftIcon class="h-4 w-4" />
+            <ChevronLeft class="h-4 w-4" />
         </slot>
     </CalendarPrev>
 </template>

@@ -138,7 +138,7 @@
         <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1">
                 <div class="flex items-center gap-1">
-                    <BuildingOfficeIcon class="w-3.5 h-3.5 text-primary" />
+                    <Building2 class="w-3.5 h-3.5 text-primary" />
                     <span>{{ mission.institution?.city ?? 'Mission' }}</span>
                 </div>
                 <div
@@ -156,7 +156,7 @@
                 :href="`/dashboard/missions/${mission.id}`"
                 class="text-xs border-gray-200 text-gray-600 hover:border-primary hover:text-primary"
             >
-                <EyeIcon class="w-3.5 h-3.5 mr-1" /> Détails
+                <Eye class="w-3.5 h-3.5 mr-1" /> Détails
             </Button>
             <Button
                 v-if="isOwner"
@@ -166,7 +166,7 @@
                 title="Reposter cette mission"
                 @click="duplicateMission"
             >
-                <ArrowPathIcon class="w-3.5 h-3.5 mr-1" /> Reposter
+                <RefreshCw class="w-3.5 h-3.5 mr-1" /> Reposter
             </Button>
             <Button
                 v-if="!mission.has_answered"
@@ -174,15 +174,16 @@
                 :href="`/dashboard/missions/${mission.id}/apply`"
             >
                 <span>Postuler</span>
-                <ChevronRightIcon class="w-3.5 h-3.5" />
+                <ChevronRight class="w-3.5 h-3.5" />
             </Button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { Building2, ChevronRight, Eye, RefreshCw, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChevronRightIcon, BuildingOfficeIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { Mission } from '~/lib/types';

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
-import { DocumentIcon } from '@heroicons/vue/24/solid';
+import { File, Star } from 'lucide-vue-next';
 
 const props = defineProps<{
     buttonClass?: string;
@@ -137,7 +136,7 @@ const triggerFileInput = () => {
                 v-else-if="fileType !==null"
                 class="text-gray-500 text-center px-2 flex gap-2 lg:gap-4 items-center"
             >
-                <DocumentIcon
+                <File
                     v-show="file"
                     class="size-10 lg:size-16"
                 />

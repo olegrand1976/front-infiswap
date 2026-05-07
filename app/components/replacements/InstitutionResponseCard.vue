@@ -63,44 +63,44 @@
                     : 'grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2.5 py-4 text-sm'"
             >
                 <template v-if="showFullInfo">
-                    <PhoneIcon
+                    <Phone
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayPhone }}</span>
-                    <MapPinIcon
+                    <MapPin
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ institution.street_address || '—' }}</span>
-                    <BuildingOffice2Icon
+                    <Building2
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayCity }}</span>
-                    <InboxArrowDownIcon
+                    <Inbox
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayZip }}</span>
-                    <IdentificationIcon
+                    <IdCard
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayCompanyNumber }}</span>
                 </template>
                 <template v-else>
-                    <BuildingOffice2Icon
+                    <Building2
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayCity }}</span>
-                    <InboxArrowDownIcon
+                    <Inbox
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ displayZip }}</span>
-                    <PhoneIcon
+                    <Phone
                         class="shrink-0 text-primary"
                         :class="compact ? 'size-4' : 'size-5'"
                     />
@@ -117,14 +117,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    BuildingOffice2Icon,
-    IdentificationIcon,
-    InboxArrowDownIcon,
-    MapPinIcon,
-    PhoneIcon,
-} from '@heroicons/vue/24/solid';
-import { Building2 } from 'lucide-vue-next';
+import { Building2, IdCard, Inbox, MapPin, Phone, Star } from 'lucide-vue-next';
 import { useInstitutions } from '~/composables/useInstitution';
 
 export type InstitutionResponsePayload = {

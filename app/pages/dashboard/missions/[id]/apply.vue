@@ -2,7 +2,7 @@
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-4 flex items-center justify-between w-full">
             <div class="flex items-center gap-2 w-full py-3 rounded-lg text-primary sm:bg-gray-100 sm:px-4">
-                <ArrowLeftIcon
+                <ArrowLeft
                     class="size-5 cursor-pointer hover:text-primary"
                     title="Retour"
                     @click="goBack"
@@ -48,7 +48,7 @@
 
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                                <CalendarIcon class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                                <Calendar class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-[11px] sm:text-xs text-gray-400 font-medium">Période</span>
@@ -69,7 +69,7 @@
 
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-                                <ClockIcon class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
+                                <Clock class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                             </div>
                             <div class="flex flex-col w-full">
                                 <span class="text-[11px] sm:text-xs text-gray-400 font-medium">{{ mission.is_long_term ? 'Disponibilités (long terme)' : 'Horaires' }}</span>
@@ -114,7 +114,7 @@
 
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
-                                <AcademicCapIcon class="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
+                                <GraduationCap class="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-[11px] sm:text-xs text-gray-400 font-medium">Diplôme requis</span>
@@ -126,7 +126,7 @@
 
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 sm:p-6 transition-all hover:shadow-md">
                     <p class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary/70 mb-4">
-                        <DocumentTextIcon class="w-4 h-4" /> Description globale
+                        <FileText class="w-4 h-4" /> Description globale
                     </p>
                     <div class="text-[13px] sm:text-sm text-gray-600 leading-relaxed whitespace-pre-wrap max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                         {{ mission.description }}
@@ -156,7 +156,7 @@
 
                     <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div class="flex items-center gap-2 text-[11px] sm:text-xs text-gray-400 font-medium bg-gray-50 px-3 py-2 rounded-lg border border-gray-100 w-full sm:w-auto justify-center">
-                            <InformationCircleIcon class="w-4 h-4 text-primary shrink-0" />
+                            <Info class="w-4 h-4 text-primary shrink-0" />
                             Candidature confidentielle et sécurisée
                         </div>
                         <Button
@@ -192,7 +192,8 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, ArrowLeftIcon, CalendarIcon, ClockIcon, InformationCircleIcon, DocumentTextIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Calendar, Clock, FileText, GraduationCap, Info, Star } from 'lucide-vue-next';
+
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import type { Mission, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';

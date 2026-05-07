@@ -9,7 +9,7 @@
                     class="rounded"
                     @click="searchUserDialog = true"
                 >
-                    <MagnifyingGlassIcon />
+                    <Search />
                     <span class="hidden md:inline-block">
                         Rechercher un utilisateur
                     </span>
@@ -26,7 +26,7 @@
                         <div class="mt-4 mb-6">
                             <InputIcon
                                 v-model="optionUser.name"
-                                :icon="UserCircleIcon"
+                                :icon="CircleUser"
                                 rounded="md"
                                 placeholder="Entrer nom ou prénom"
                                 class="max-w-full"
@@ -51,7 +51,7 @@
                                         </div>
 
                                         <div>
-                                            <PlusCircleIcon
+                                            <CirclePlus
                                                 class="w-8 text-primary cursor-pointer"
                                                 @click="handleCreateContract(user)"
                                             />
@@ -71,7 +71,7 @@
                                     class="text-primary font-semibold"
                                     @click="router.push('/dashboard/admin/users/create')"
                                 >
-                                    <PlusIcon />
+                                    <Plus />
                                     <span>
                                         Créer un nouveau utilisateur
                                     </span>
@@ -118,7 +118,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -166,8 +166,8 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, ArrowPathIcon, ArrowsUpDownIcon, UserCircleIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
-import { PlusIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { ArrowUpDown, CirclePlus, CircleUser, Eye, Plus, RefreshCw, Search, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { useContract } from '@/composables/useContract';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
@@ -259,7 +259,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('name'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, row.getValue('name')),
     },
@@ -269,7 +269,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('email'),
-            }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('email')),
     },
@@ -279,7 +279,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('phone_number'),
-            }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, row.getValue('phone_number')),
     },
@@ -289,7 +289,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('formula'),
-            }, () => ['Formule', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Formule', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('formula')),
     },
@@ -299,7 +299,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('payment_mode'),
-            }, () => ['Mode de paiement', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Mode de paiement', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize text-center' }, row.getValue('payment_mode')),
     },
@@ -309,7 +309,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('pdf_path'),
-            }, () => ['Fichier PDF', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Fichier PDF', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('pdf_path')),
     },
@@ -319,7 +319,7 @@ const columnsContracts = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('status'),
-            }, () => ['Statut', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Statut', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('status')),
     },
@@ -333,7 +333,7 @@ const columnsContracts = [
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
                     'Création',
-                    h(ArrowsUpDownIcon, { class: '' }),
+                    h(ArrowUpDown, { class: '' }),
                 ]),
             ]);
         },
@@ -346,11 +346,11 @@ const columnsContracts = [
         header: () => {
             return h(Button, {
                 variant: 'ghost',
-            }, () => ['Visualiser', h(ArrowsUpDownIcon)]);
+            }, () => ['Visualiser', h(ArrowUpDown)]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
-                h(EyeIcon, {
+                h(Eye, {
                     class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
                     onClick: () => viewPdf(row.original.id),
                 }),

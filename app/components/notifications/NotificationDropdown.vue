@@ -5,7 +5,7 @@
                 class="relative cursor-pointer"
                 @click="loadNotifications"
             >
-                <BellAlertIcon
+                <BellRing
                     class="w-6 h-6 text-gray-500 hover:text-primary transition-colors"
                 />
 
@@ -51,7 +51,7 @@
                 v-else-if="notificationsList.length === 0"
                 class="p-8 text-center text-gray-500"
             >
-                <BellAlertIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                <BellRing class="w-12 h-12 mx-auto mb-2 text-gray-300" />
                 <p>Aucune notification</p>
             </div>
 
@@ -92,7 +92,7 @@
                                             class="h-6 w-6 p-0 flex-shrink-0"
                                             @click.stop="handleDelete(notification.id)"
                                         >
-                                            <XMarkIcon
+                                            <X
                                                 class="w-4 h-4 text-gray-400 hover:text-red-500"
                                             />
                                         </Button>
@@ -138,7 +138,8 @@
 </template>
 
 <script lang="ts" setup>
-import { BellAlertIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { BellRing, Star, X } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,

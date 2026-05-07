@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { isVNode } from 'vue';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid';
+import { CircleCheck, Star, XCircle } from 'lucide-vue-next';
+
 import { useToast } from './use-toast';
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '.';
 
 const { toasts } = useToast();
 
-const getIcon = (variant?: string) => (variant === 'destructive' ? XCircleIcon : CheckCircleIcon);
+const getIcon = (variant?: string) => (variant === 'destructive' ? XCircle : CircleCheck);
 </script>
 
 <template>

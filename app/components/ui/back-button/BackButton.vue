@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid';
+import { ArrowLeft, Star } from 'lucide-vue-next';
+
 import type { HTMLAttributes } from 'vue';
 import { cn } from '~/lib/utils';
 
@@ -26,7 +27,7 @@ const handleBack = () => {
                 :class="cn('flex items-center space-x-2 text-primary hover:underline group', $props.class)"
                 @click="handleBack"
             >
-                <ArrowLeftIcon class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                <ArrowLeft class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
                 <span class="font-medium">{{ text }}</span>
             </button>
         </div>
@@ -36,7 +37,7 @@ const handleBack = () => {
                 class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm text-primary active:scale-95 transition-transform"
                 @click="handleBack"
             >
-                <ArrowLeftIcon class="w-6 h-6" />
+                <ArrowLeft class="w-6 h-6" />
             </button>
         </div>
     </div>

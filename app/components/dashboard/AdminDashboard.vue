@@ -518,7 +518,8 @@
 </template>
 
 <script lang="ts" setup>
-import { UserGroupIcon, ArrowPathIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
+import { RefreshCw, Send, Star, Users } from 'lucide-vue-next';
+
 import { markRaw } from 'vue';
 import { DashboardStatCardAdminGroup } from '#components';
 import { BarChart } from '@/components/ui/chart-bar';
@@ -632,21 +633,21 @@ const adminReports = computed(() => {
                     value: reports.value.registration_statistics.today + reports.value.registration_statistics.yesterday,
                     label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
-                    icon: UserGroupIcon,
+                    icon: Users,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.registration_statistics.last_30_days,
                     label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
-                    icon: UserGroupIcon,
+                    icon: Users,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.registration_statistics.total,
                     label: 'Total ',
                     colorClass: 'bg-pink-600',
-                    icon: UserGroupIcon,
+                    icon: Users,
                     containerClass: 'string',
                 },
             ],
@@ -658,21 +659,21 @@ const adminReports = computed(() => {
                     value: reports.value.accepted_replacement_statistics.today + reports.value.accepted_replacement_statistics.yesterday,
                     label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
-                    icon: ArrowPathIcon,
+                    icon: RefreshCw,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.accepted_replacement_statistics.last_30_days,
                     label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
-                    icon: ArrowPathIcon,
+                    icon: RefreshCw,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.accepted_replacement_statistics.total,
                     label: 'Total ',
                     colorClass: 'bg-pink-600',
-                    icon: ArrowPathIcon,
+                    icon: RefreshCw,
                     containerClass: 'string',
                 },
             ],
@@ -684,21 +685,21 @@ const adminReports = computed(() => {
                     value: reports.value.replacement_response_statistics.today + reports.value.replacement_response_statistics.yesterday,
                     label: `Ce jour `,
                     colorClass: 'bg-indigo-600',
-                    icon: PaperAirplaneIcon,
+                    icon: Send,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.replacement_response_statistics.last_30_days,
                     label: 'Mois glissant',
                     colorClass: 'bg-orange-700',
-                    icon: PaperAirplaneIcon,
+                    icon: Send,
                     containerClass: 'string',
                 },
                 {
                     value: reports.value.replacement_response_statistics.total,
                     label: 'Total ',
                     colorClass: 'bg-pink-600',
-                    icon: PaperAirplaneIcon,
+                    icon: Send,
                     containerClass: 'string',
                 },
             ],

@@ -228,9 +228,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, Eye, Pencil, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { EyeIcon, PencilIcon } from '@heroicons/vue/24/outline';
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import type { Comment, Pagination, User, Referrer } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
@@ -507,7 +507,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('firstname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -517,7 +517,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('zip_code'),
-            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('zip_code'));
@@ -529,7 +529,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('city'),
-            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('city'));
@@ -668,7 +668,7 @@ const columns: ColumnDef<User>[] = [
                                 class: 'max-w-[150px] truncate text-sm',
                                 title: comment?.body ?? '',
                             }, comment?.body || ''),
-                            h(PencilIcon, {
+                            h(Pencil, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 shrink-0',
                                 onClick: () => openCommentDialog(row.original),
                             }),
@@ -680,7 +680,7 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'contact_date',
         header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_date') }, () => [
             'Date de contact',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
             const rawDate = row.original.crm.last_contact_date;
@@ -697,7 +697,7 @@ const columns: ColumnDef<User>[] = [
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', formattedDate),
-                            h(PencilIcon, {
+                            h(Pencil, {
                                 class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
                                 onClick: () => openContactDialog(row.original),
                             }),
@@ -709,7 +709,7 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'contact_method',
         header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_method') }, () => [
             'Contacté par',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
             const method = row.original.crm.last_contact_method;
@@ -725,7 +725,7 @@ const columns: ColumnDef<User>[] = [
                     ? h('span', { class: 'text-gray-400' }, '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', displayMethod),
-                            h(PencilIcon, {
+                            h(Pencil, {
                                 class: 'w-3 h-3 cursor-pointer hover:text-gray-700',
                                 onClick: () => openContactDialog(row.original),
                             }),
@@ -749,7 +749,7 @@ const columns: ColumnDef<User>[] = [
                                 class: 'max-w-[150px] truncate text-sm',
                                 title: referrer?.full_name ?? '',
                             }, referrer?.full_name || ''),
-                            h(PencilIcon, {
+                            h(Pencil, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 shrink-0',
                                 onClick: () => openReferrerDialog(row.original),
                             }),
@@ -763,7 +763,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Date de création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Date de création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const rawDate = row.original.created_at;
@@ -796,7 +796,7 @@ const columns: ColumnDef<User>[] = [
                     },
                     () => [
                         'Dernière post',
-                        h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
                     ],
                 ),
             ],
@@ -846,7 +846,7 @@ const columns: ColumnDef<User>[] = [
                     },
                     () => [
                         'Dernière acceptation',
-                        h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
                     ],
                 ),
             ],
@@ -892,7 +892,7 @@ const columns: ColumnDef<User>[] = [
                     },
                     () => [
                         'Dernière réponse',
-                        h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
                     ],
                 ),
             ],
@@ -938,7 +938,7 @@ const columns: ColumnDef<User>[] = [
                     },
                     () => [
                         'Acceptation réponse',
-                        h(ArrowsUpDownIcon, { class: 'ml-1 inline w-4 h-4' }),
+                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
                     ],
                 ),
             ],
@@ -972,7 +972,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('last_login_at'),
-            }, () => ['Dernière connexion', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Dernière connexion', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const rawDate = row.original.last_login_at;
@@ -998,7 +998,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
@@ -1010,11 +1010,11 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('action'),
-            }, () => ['Action', h(ArrowsUpDownIcon)]);
+            }, () => ['Action', h(ArrowUpDown)]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
-                h(EyeIcon, {
+                h(Eye, {
                     class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
                     onClick: () => openModal(row.original),
                 }),

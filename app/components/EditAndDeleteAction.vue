@@ -6,7 +6,7 @@
             title="edit"
             @click="onEdit"
         >
-            <PencilSquareIcon class="w-5 h-5" />
+            <SquarePen class="w-5 h-5" />
         </Button>
         <Button
             variant="destructive"
@@ -15,13 +15,13 @@
             title="delete"
             @click="onDelete"
         >
-            <TrashIcon class="w-5 h-5" />
+            <Trash2 class="w-5 h-5" />
         </Button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { SquarePen, Star, Trash2 } from 'lucide-vue-next';
 
 defineProps<{
     onEdit: () => void;

@@ -6,7 +6,7 @@
                     to="/register"
                     class="flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
                 >
-                    <ArrowLeftIcon class="size-5 group-hover:-translate-x-1 transition-transform" />
+                    <ArrowLeft class="size-5 group-hover:-translate-x-1 transition-transform" />
                     <span class="font-medium">Retour à l'inscription</span>
                 </NuxtLink>
                 <LayoutsAppImage
@@ -27,7 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Star } from 'lucide-vue-next';
+
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 
 definePageMeta({

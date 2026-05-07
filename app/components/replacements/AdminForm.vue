@@ -50,7 +50,7 @@
                             class="ml-2 flex items-center justify-center gap-1 text-primary hover:underline font-bold"
                         >
                             {{ form.responseCount }} personne<span v-if="form.responseCount > 1">s</span>
-                            <EyeIcon
+                            <Eye
                                 v-if="form.responseCount>0"
                                 class="size-4"
                             />
@@ -64,7 +64,7 @@
                             class="w-full max-w-sm rounded"
                             @click.prevent="handleOpenReleaseConfirmation"
                         >
-                            <ArrowPathIcon class="mr-2" />
+                            <RefreshCw class="mr-2" />
                             <span>Ré-ouvrir le remplacement</span>
                         </Button>
                     </div>
@@ -444,8 +444,9 @@
 </template>
 
 <script setup lang="ts">
+import { Eye, RefreshCw, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ArrowPathIcon, EyeIcon } from '@heroicons/vue/24/solid';
 import type { Replacement, User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 

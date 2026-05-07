@@ -14,7 +14,7 @@
                         >
                             <span class="relative align-baseline text-primarytech font-semibold hover:underline pr-2">
                                 NursTech
-                                <GlobeAltIcon class="absolute -top-0.5 -right-1 w-3 h-3" />
+                                <Globe class="absolute -top-0.5 -right-1 w-3 h-3" />
                             </span>
                         </NuxtLink>
                         <span class="ml-2">et une page dédiée à votre activité professionnelle.</span>
@@ -53,7 +53,7 @@
                         >
                             <span class="relative align-baseline text-primaryassur font-semibold hover:underline">
                                 NursAssur
-                                <GlobeAltIcon class="absolute -top-0.5 -right-3 w-3 h-3" />
+                                <Globe class="absolute -top-0.5 -right-3 w-3 h-3" />
                             </span>
                         </NuxtLink>
                         <span class="pl-3">dédié aux professionnels de santé.</span>
@@ -95,9 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-    GlobeAltIcon,
-} from '@heroicons/vue/24/outline';
+import { Globe, Star } from 'lucide-vue-next';
 
 const showNursTech = ref(false);
 const showNursAssur = ref(false);

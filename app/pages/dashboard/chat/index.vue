@@ -7,7 +7,7 @@
                         <span class="text-lg text-primary font-semibold">
                             Messages
                         </span>
-                        <Cog6ToothIcon class="w-6 cursor-pointer" />
+                        <Cog class="w-6 cursor-pointer" />
                     </h2>
                 </div>
 
@@ -58,7 +58,7 @@
                     class="flex justify-end ml-auto mr-6 items-center"
                     @click="handleOpenChange"
                 >
-                    <PencilSquareIcon class="w-4" />
+                    <SquarePen class="w-4" />
                     <span>Nouveau</span>
                 </Button>
                 <CommandDialog
@@ -117,7 +117,7 @@
                             >
                         </template>
                         <template v-else>
-                            <UserCircleIcon class="w-10 h-10 text-black/50" />
+                            <CircleUser class="w-10 h-10 text-black/50" />
                         </template>
                         <div>
                             <h2 class="font-medium text-primary">
@@ -137,7 +137,7 @@
                     </div>
 
                     <div>
-                        <EllipsisVerticalIcon
+                        <EllipsisVertical
                             class="w-8 h-8 cursor-pointer"
                             title="Options"
                         />
@@ -162,7 +162,7 @@
                                 >
                             </template>
                             <template v-else>
-                                <UserCircleIcon class="w-8 text-black/50" />
+                                <CircleUser class="w-8 text-black/50" />
                             </template>
                         </template>
                         <div
@@ -186,7 +186,7 @@
                             class="relative"
                         >
                             <CollapsibleTrigger>
-                                <PlusCircleIcon class="w-6 text-black/40 cursor-pointer" />
+                                <CirclePlus class="w-6 text-black/40 cursor-pointer" />
                             </CollapsibleTrigger>
                             <CollapsibleContent class="bg-white absolute p-2 rounded-lg -top-24 shadow w-44">
                                 <p class="flex space-x-2 items-center cursor-pointer text-black/40 text-xs">
@@ -213,7 +213,7 @@
 
                         <div class="flex space-x-3">
                             <FaceSmileIcon class="w-6 text-black/40 cursor-pointer" />
-                            <PaperAirplaneIcon
+                            <Send
                                 class="w-6 text-black/40 cursor-pointer hover:text-primary"
                                 @click="sendMessage"
                             />
@@ -235,17 +235,7 @@
 </template>
 
 <script setup>
-import {
-    EllipsisVerticalIcon,
-    UserCircleIcon,
-    FaceSmileIcon,
-    PaperAirplaneIcon,
-    PencilSquareIcon,
-    Cog6ToothIcon,
-    CameraIcon,
-    DocumentPlusIcon,
-} from '@heroicons/vue/24/solid';
-import { PlusCircleIcon } from '@heroicons/vue/24/outline';
+import { CirclePlus, CircleUser, Cog, EllipsisVertical, Send, SquarePen, Star } from 'lucide-vue-next';
 
 import { CommandDialog, CommandInput, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 

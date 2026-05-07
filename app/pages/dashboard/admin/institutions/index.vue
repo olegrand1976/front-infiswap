@@ -6,7 +6,7 @@
                     class="rounded"
                     href="/dashboard/admin/institutions/create"
                 >
-                    <PlusCircleIcon />
+                    <CirclePlus />
                     <span class="hidden md:inline-block">Nouvelle</span>
                 </Button>
             </template>
@@ -25,7 +25,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -56,10 +56,10 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, CirclePlus, Pencil, RefreshCw, Star, Trash2 } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
-import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -249,7 +249,7 @@ const columns: ColumnDef<Institution>[] = [
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('name') }, () => [
                 'Nom de l\'institution',
-                h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' }),
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
             ]),
         cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('name') || '—'),
     },
@@ -341,7 +341,7 @@ const columns: ColumnDef<Institution>[] = [
                     class: 'w-8 h-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50',
                     onClick: () => handleEdit(institution),
                     title: 'Modifier',
-                }, () => h(PencilIcon, { class: 'w-4 h-4' })),
+                }, () => h(Pencil, { class: 'w-4 h-4' })),
 
                 isSuperAdmin.value
                     ? h(Button, {
@@ -350,7 +350,7 @@ const columns: ColumnDef<Institution>[] = [
                             class: 'w-8 h-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50',
                             onClick: () => handleDelete(institution),
                             title: 'Supprimer',
-                        }, () => h(TrashIcon, { class: 'w-4 h-4' }))
+                        }, () => h(Trash2, { class: 'w-4 h-4' }))
                     : null,
             ]);
         },

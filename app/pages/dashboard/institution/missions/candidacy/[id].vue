@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="flex gap-2 items-center border border-gray-300 rounded-md py-2 px-4">
-                    <MagnifyingGlassIcon class="w-4 h-4 text-gray-500" />
+                    <Search class="w-4 h-4 text-gray-500" />
                     <input
                         v-model="search"
                         type="text"
@@ -79,7 +79,7 @@
                                         v-if="response.responder.stars > 0"
                                         class="flex items-center gap-0.5 mt-0.5"
                                     >
-                                        <StarIcon
+                                        <Star
                                             v-for="i in 5"
                                             :key="i"
                                             class="w-3 h-3"
@@ -96,7 +96,7 @@
                                 <p class="max-w-52 truncate">
                                     {{ response.description }}
                                 </p>
-                                <EyeIcon class="w-4 h-4 hover:text-primary" />
+                                <Eye class="w-4 h-4 hover:text-primary" />
                             </TableCell>
 
                             <TableCell class="text-gray-600">
@@ -112,14 +112,14 @@
                                         variant="success"
                                         @click="handleChangeStatusCandidacy(response, 'accepted')"
                                     >
-                                        <CheckIcon class="w-4 h-4 mr-1" />
+                                        <Check class="w-4 h-4 mr-1" />
                                         Accepter
                                     </Button>
                                     <Button
                                         variant="destructive"
                                         @click="handleChangeStatusCandidacy(response, 'rejected')"
                                     >
-                                        <XMarkIcon class="w-4 h-4 mr-1" />
+                                        <X class="w-4 h-4 mr-1" />
                                         Rejeter
                                     </Button>
                                 </div>
@@ -133,7 +133,7 @@
                                             : 'bg-red-100 text-red-700',
                                     ]"
                                 >
-                                    <CheckIcon class="w-4 h-4" />
+                                    <Check class="w-4 h-4" />
                                     {{ response.status === 'accepted' ? 'Accepté' : 'Rejeté' }}
                                 </span>
                             </TableCell>
@@ -178,7 +178,7 @@
                                     v-if="response.responder.stars > 0"
                                     class="flex items-center gap-0.5"
                                 >
-                                    <StarIcon class="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                    <Star class="w-3 h-3 text-yellow-400 fill-yellow-400" />
                                     <span class="text-[10px] font-bold text-yellow-600">{{ response.responder.stars }}</span>
                                 </div>
                             </div>
@@ -262,8 +262,8 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckIcon, EyeIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { Check, Eye, Search, Star, X } from 'lucide-vue-next';
+
 import { toast } from 'vue-sonner';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';

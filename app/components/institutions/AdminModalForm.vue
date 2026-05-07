@@ -67,7 +67,7 @@
                                 title="Supprimer ce service"
                                 @click="removeService(i)"
                             >
-                                <TrashIcon class="w-4 h-4" />
+                                <Trash2 class="w-4 h-4" />
                             </button>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                     class="rounded-lg w-full sm:w-fit"
                     @click="addService"
                 >
-                    <PlusCircleIcon class="w-4 h-4 mr-2" />
+                    <CirclePlus class="w-4 h-4 mr-2" />
                     Ajouter un service
                 </Button>
             </div>
@@ -106,9 +106,10 @@
 </template>
 
 <script setup lang="ts">
+import { CirclePlus, Star, Trash2 } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from 'vue';
-import { TrashIcon, PlusCircleIcon } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';
 import type { Institution, InstitutionService } from '~/lib/types';

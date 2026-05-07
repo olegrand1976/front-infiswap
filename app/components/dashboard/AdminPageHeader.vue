@@ -4,7 +4,7 @@
         :class="flexClass"
     >
         <div class="flex items-center font-bold gap-2 lg:gap-4">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-6 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -29,7 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid';
+import { ArrowLeft, Star } from 'lucide-vue-next';
+
 import { goBack } from '~/lib/utils';
 
 const props = defineProps<{

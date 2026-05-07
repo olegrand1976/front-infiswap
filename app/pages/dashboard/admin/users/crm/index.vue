@@ -99,7 +99,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -170,7 +170,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowPathIcon } from '@heroicons/vue/24/solid';
+import { RefreshCw, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';

@@ -12,19 +12,19 @@
                     </h3>
                     <div class="flex flex-col mt-4 space-y-4">
                         <p class="flex flex-row items-center space-x-2 text-sm">
-                            <PhoneIcon class="w-4 h-4 text-primary" />
+                            <Phone class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">0478.02.33.77</span>
                         </p>
                         <p class="flex flex-row items-center space-x-2 text-sm">
-                            <MapPinIcon class="w-4 h-4 text-primary" />
+                            <MapPin class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</span>
                         </p>
                         <p class="flex flex-row items-center space-x-2 text-sm">
-                            <EnvelopeIcon class="w-4 h-4 text-primary" />
+                            <Mail class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">info@infiswap.be</span>
                         </p>
                         <p class="flex flex-row items-center space-x-2 text-sm">
-                            <GlobeAltIcon class="w-4 h-4 text-primary" />
+                            <Globe class="w-4 h-4 text-primary" />
                             <span class="md:text-xs lg:text-sm">www.infiswap.be</span>
                         </p>
                     </div>
@@ -48,7 +48,7 @@
                         @submit.prevent="subscribeNewsletter"
                     >
                         <div class="flex flex-row items-center justify-start">
-                            <EnvelopeIcon class="w-4 h-4 text-white ms-3" />
+                            <Mail class="w-4 h-4 text-white ms-3" />
                             <Input
                                 v-model="email"
                                 variant="transparent"
@@ -117,12 +117,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    PhoneIcon,
-    MapPinIcon,
-    EnvelopeIcon,
-    GlobeAltIcon,
-} from '@heroicons/vue/24/outline';
+import { Globe, Mail, MapPin, Phone, Star } from 'lucide-vue-next';
+
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();

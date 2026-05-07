@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { Menu, Star } from 'lucide-vue-next';
+
 import type { HTMLAttributes } from 'vue';
-import { Bars3Icon } from '@heroicons/vue/24/outline';
 import { useSidebar } from './utils';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -20,7 +21,7 @@ const { toggleSidebar } = useSidebar();
         :class="cn('h-7 w-7 xl:ml-0 lg:-ml-12', props.class)"
         @click="toggleSidebar"
     >
-        <Bars3Icon />
+        <Menu />
         <span class="sr-only">Toggle Sidebar</span>
     </Button>
 </template>

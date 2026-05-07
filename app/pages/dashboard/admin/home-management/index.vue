@@ -9,7 +9,7 @@
                     class="rounded"
                     href="/dashboard/admin/home-management/create"
                 >
-                    <PlusCircleIcon />
+                    <CirclePlus />
                     <span class="hidden md:inline-block">
                         Nouveau
                     </span>
@@ -35,7 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowsUpDownIcon, PlusCircleIcon, EyeIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpDown, CirclePlus, Eye, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
 import Button from '~/components/ui/button/Button.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -100,7 +101,7 @@ const columns: ColumnDef<HomeType>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Description', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Description', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             let fullDescription = row.getValue('description') as string;
 
@@ -122,7 +123,7 @@ const columns: ColumnDef<HomeType>[] = [
                                 showDialog.value = true;
                             },
                             class: 'text-gray-600 hover:text-black cursor-pointer',
-                        }, () => [h(EyeIcon, { class: 'w-4 h-4' })]),
+                        }, () => [h(Eye, { class: 'w-4 h-4' })]),
 
                         showDialog.value && h(DialogContent, {}, {
                             default: () => [
@@ -144,7 +145,7 @@ const columns: ColumnDef<HomeType>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'w-full text-center',
-            }, () => ['Status', h(ArrowsUpDownIcon, { class: 'text-center' })]);
+            }, () => ['Status', h(ArrowUpDown, { class: 'text-center' })]);
         },
         cell: ({ row }) => {
             const toggle = async (value: boolean) => {
@@ -172,7 +173,7 @@ const columns: ColumnDef<HomeType>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 class: 'text-center w-full',
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));

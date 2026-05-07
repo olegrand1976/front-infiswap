@@ -45,7 +45,7 @@
                             class="ml-2 flex items-center justify-center gap-1 text-primary hover:underline font-bold"
                         >
                             {{ form.responsesCount }} personne<span v-if="form.responsesCount > 1">s</span>
-                            <EyeIcon
+                            <Eye
                                 v-if="form.responsesCount > 0"
                                 class="size-4"
                             />
@@ -60,7 +60,7 @@
                             class="w-full max-w-sm rounded"
                             @click.prevent="form.status == 'closed' ? handleOpenReleaseConfirmation() : handleRelease('closed')"
                         >
-                            <ArrowPathIcon class="mr-2" />
+                            <RefreshCw class="mr-2" />
                             <span v-if="form.status == 'closed'">
                                 Ré-ouvrir la demande
                             </span>
@@ -183,7 +183,8 @@
 </template>
 
 <script setup lang="ts">
-import { EyeIcon } from '@heroicons/vue/24/outline';
+import { Eye, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { User, UserPartner } from '~/lib/types';
 
 const props = defineProps<{

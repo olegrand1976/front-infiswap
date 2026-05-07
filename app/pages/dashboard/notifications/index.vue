@@ -27,7 +27,7 @@
                 v-else-if="dataNotifications.length === 0"
                 class="p-8 text-center text-gray-500"
             >
-                <BellAlertIcon class="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <BellRing class="w-16 h-16 mx-auto mb-4 text-gray-300" />
                 <p class="text-lg">
                     Aucune notification
                 </p>
@@ -79,7 +79,7 @@
                                         size="sm"
                                         @click="handleDelete(notification.id)"
                                     >
-                                        <TrashIcon class="w-4 h-4 text-red-500" />
+                                        <Trash2 class="w-4 h-4 text-red-500" />
                                     </Button>
                                 </div>
                             </div>
@@ -102,8 +102,9 @@
 </template>
 
 <script lang="ts" setup>
+import { BellRing, Star, Trash2 } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BellAlertIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import type { Notification } from '~/lib/types';

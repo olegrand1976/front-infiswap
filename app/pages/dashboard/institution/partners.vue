@@ -61,7 +61,7 @@
                         class="flex-1 h-10 shadow-sm"
                         @click="search"
                     >
-                        <MagnifyingGlassIcon class="w-4 h-4 mr-2" />
+                        <Search class="w-4 h-4 mr-2" />
                         Rechercher
                     </Button>
                     <Button
@@ -70,7 +70,7 @@
                         title="Réinitialiser"
                         @click="reinitializeFilter"
                     >
-                        <ArrowPathIcon class="w-4 h-4" />
+                        <RefreshCw class="w-4 h-4" />
                     </Button>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                                 {{ selectedPartnership.user.firstname }} {{ selectedPartnership.user.lastname }}
                             </h3>
                             <p class="text-sm text-gray-500 font-medium">
-                                <MapPinIcon class="w-3.5 h-3.5 inline mr-1 text-primary/60" />
+                                <MapPin class="w-3.5 h-3.5 inline mr-1 text-primary/60" />
                                 {{ selectedPartnership.user.city }} ({{ selectedPartnership.user.zip_code }})
                             </p>
                         </div>
@@ -126,7 +126,7 @@
                     <!-- Description Section -->
                     <div class="space-y-3">
                         <h4 class="text-sm font-bold text-primary uppercase tracking-widest flex items-center gap-2">
-                            <InformationCircleIcon class="w-4 h-4" />
+                            <Info class="w-4 h-4" />
                             Description de la recherche
                         </h4>
                         <div class="p-4 bg-white border border-gray-100 rounded-xl shadow-inner text-gray-700 italic leading-relaxed min-h-[100px] flex items-center justify-center text-center">
@@ -144,7 +144,7 @@
                                 :href="`tel:${selectedPartnership.user.phone_number}`"
                                 class="flex items-center justify-center gap-2 w-full"
                             >
-                                <PhoneIcon class="w-5 h-5 shrink-0" />
+                                <Phone class="w-5 h-5 shrink-0" />
                                 Appeler
                             </a>
                         </Button>
@@ -157,7 +157,7 @@
                                 :href="`mailto:${selectedPartnership.user.email}`"
                                 class="flex items-center justify-center gap-2 w-full"
                             >
-                                <EnvelopeIcon class="w-5 h-5 shrink-0" />
+                                <Mail class="w-5 h-5 shrink-0" />
                                 Email
                             </a>
                         </Button>
@@ -174,15 +174,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    MagnifyingGlassIcon,
-    ArrowPathIcon,
-    EyeIcon,
-    PhoneIcon,
-    EnvelopeIcon,
-    MapPinIcon,
-    InformationCircleIcon,
-} from '@heroicons/vue/24/outline';
+import { Eye, Info, Mail, MapPin, Phone, RefreshCw, Search, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
 import { usePartners } from '@/composables/usePartners';
 import type { UserPartner } from '~/lib/types';
@@ -281,13 +274,13 @@ const columns: ColumnDef<UserPartner>[] = [
             return h('div', { class: 'space-y-1 ml-4 py-2' }, [
                 user.phone_number
                     ? h('div', { class: 'flex items-center gap-2 text-xs font-medium text-gray-700' }, [
-                            h(PhoneIcon, { class: 'w-3.5 h-3.5 text-primary/60' }),
+                            h(Phone, { class: 'w-3.5 h-3.5 text-primary/60' }),
                             h('span', user.phone_number),
                         ])
                     : null,
                 user.email
                     ? h('div', { class: 'flex items-center gap-2 text-xs text-gray-500' }, [
-                            h(EnvelopeIcon, { class: 'w-3.5 h-3.5 text-primary/40' }),
+                            h(Mail, { class: 'w-3.5 h-3.5 text-primary/40' }),
                             h('span', user.email),
                         ])
                     : null,
@@ -300,7 +293,7 @@ const columns: ColumnDef<UserPartner>[] = [
         cell: ({ row }) => {
             const user = row.original.user;
             return h('div', { class: 'ml-4 flex items-center gap-1.5' }, [
-                h(MapPinIcon, { class: 'w-3.5 h-3.5 text-primary' }),
+                h(MapPin, { class: 'w-3.5 h-3.5 text-primary' }),
                 h('div', [
                     h('span', { class: 'font-bold text-gray-800' }, user.zip_code),
                     h('span', { class: 'text-gray-400 ml-1.5' }, user.city),
@@ -319,7 +312,7 @@ const columns: ColumnDef<UserPartner>[] = [
                     class: 'text-primary font-bold hover:bg-primary/5 rounded-lg border border-transparent hover:border-primary/20 transition-all',
                     onClick: () => handleShowDetail(row.original),
                 }, () => [
-                    h(EyeIcon, { class: 'w-4 h-4 mr-1.5' }),
+                    h(Eye, { class: 'w-4 h-4 mr-1.5' }),
                     'Détails',
                 ]),
             ]);

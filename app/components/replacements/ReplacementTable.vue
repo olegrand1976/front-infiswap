@@ -136,19 +136,19 @@
 
                             <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                 <div>
-                                    <CheckCircleIcon
+                                    <CircleCheck
                                         v-if="hasShift(r, 'morning')"
                                         class="h-6 text-green-500"
                                     />
                                 </div>
                                 <div>
-                                    <CheckCircleIcon
+                                    <CircleCheck
                                         v-if="hasShift(r, 'afternoon')"
                                         class="h-6 text-green-500"
                                     />
                                 </div>
                                 <div>
-                                    <CheckCircleIcon
+                                    <CircleCheck
                                         v-if="hasShift(r, 'evening')"
                                         class="h-6 text-green-500"
                                     />
@@ -277,7 +277,7 @@
                                 <template v-if="type === 'me'">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger>
-                                            <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                            <Ellipsis class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent class="w-48">
                                             <DropdownMenuItem as-child>
@@ -285,7 +285,7 @@
                                                     :href="`/dashboard/replacements/detail/${r.id}`"
                                                     class="flex items-center space-x-2 text-sm"
                                                 >
-                                                    <EyeIcon class="h-4 w-4" />
+                                                    <Eye class="h-4 w-4" />
                                                     <span>Voir</span>
                                                 </NuxtLink>
                                             </DropdownMenuItem>
@@ -293,7 +293,7 @@
                                                 class="flex items-center space-x-2 text-sm"
                                                 @click="emit('open-edit', r)"
                                             >
-                                                <PencilSquareIcon class="h-4 w-4" />
+                                                <SquarePen class="h-4 w-4" />
                                                 <span>Modifier</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
@@ -301,7 +301,7 @@
                                                 class="flex items-center space-x-2 text-sm"
                                                 @click="emit('select-replacement', r)"
                                             >
-                                                <XMarkIcon class="h-4 w-4" />
+                                                <X class="h-4 w-4" />
                                                 <span>Fermer</span>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -312,14 +312,14 @@
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacements/detail/${r.id}`"
                                     >
-                                        <EyeIcon class="h-6 mt-1" />
+                                        <Eye class="h-6 mt-1" />
                                     </Button>
                                     <Button
                                         v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r) && r.status === 'closed'"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         @click="openCloseDialog(r)"
                                     >
-                                        <XMarkIcon class="h-6 mt-1" />
+                                        <X class="h-6 mt-1" />
                                     </Button>
                                 </template>
                             </TableCell>
@@ -462,7 +462,7 @@
                                     <template v-if="type === 'me'">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
-                                                <EllipsisHorizontalIcon class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                                <Ellipsis class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent class="w-48">
                                                 <DropdownMenuItem as-child>
@@ -470,7 +470,7 @@
                                                         :href="`/dashboard/replacements/detail/${r.id}`"
                                                         class="flex items-center space-x-2 text-sm"
                                                     >
-                                                        <EyeIcon class="h-4 w-4" />
+                                                        <Eye class="h-4 w-4" />
                                                         <span>Voir</span>
                                                     </NuxtLink>
                                                 </DropdownMenuItem>
@@ -478,7 +478,7 @@
                                                     class="flex items-center space-x-2 text-sm"
                                                     @click="emit('open-edit', r)"
                                                 >
-                                                    <PencilSquareIcon class="h-4 w-4" />
+                                                    <SquarePen class="h-4 w-4" />
                                                     <span>Modifier</span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem
@@ -486,7 +486,7 @@
                                                     class="flex items-center space-x-2 text-sm"
                                                     @click="emit('select-replacement', r)"
                                                 >
-                                                    <XMarkIcon class="h-4 w-4" />
+                                                    <X class="h-4 w-4" />
                                                     <span>Fermer</span>
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
@@ -498,13 +498,13 @@
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             @click="openCloseDialog(r)"
                                         >
-                                            <XMarkIcon class="h-6 mt-1" />
+                                            <X class="h-6 mt-1" />
                                         </Button>
                                         <Button
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             :href="`/dashboard/replacements/detail/${r.id}`"
                                         >
-                                            <EyeIcon class="h-6 mt-1" />
+                                            <Eye class="h-6 mt-1" />
                                         </Button>
                                     </template>
                                 </div>
@@ -547,9 +547,9 @@
 </template>
 
 <script lang="ts" setup>
+import { CircleCheck, Ellipsis, Eye, SquarePen, Star, X } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/unified-signatures */
-import { CheckCircleIcon, EyeIcon, XMarkIcon, EllipsisHorizontalIcon, PencilSquareIcon } from '@heroicons/vue/24/outline';
-import { StarIcon as StarIconSolid } from '@heroicons/vue/24/solid';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

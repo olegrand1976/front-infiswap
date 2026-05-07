@@ -9,7 +9,7 @@
                     class="rounded"
                     href="/dashboard/admin/tutorials/create"
                 >
-                    <PlusCircleIcon />
+                    <CirclePlus />
                     <span class="hidden md:inline-block">
                         Nouveau
                     </span>
@@ -52,7 +52,7 @@
                     class="rounded-md mr-4!"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -110,8 +110,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowUpDown, CirclePlus, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
@@ -205,7 +206,7 @@ const columns: ColumnDef<Tutorial>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('media_path'),
-            }, () => ['Ressource', h(ArrowsUpDownIcon, {})]);
+            }, () => ['Ressource', h(ArrowUpDown, {})]);
         },
         cell: ({ row }) => {
             const mediaPath: string = row.getValue('media_path');
@@ -255,7 +256,7 @@ const columns: ColumnDef<Tutorial>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('media_type'),
-            }, () => ['Type', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Type', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const key: string = row.getValue('media_type');
@@ -268,7 +269,7 @@ const columns: ColumnDef<Tutorial>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('description'),
-            }, () => ['Description', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Description', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-4' }, row.getValue('description'));
@@ -280,7 +281,7 @@ const columns: ColumnDef<Tutorial>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-start ml-4' }, formatRelativeDate(row.getValue('created_at')));

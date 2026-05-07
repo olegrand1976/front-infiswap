@@ -12,7 +12,6 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@heroicons/vue": "^2.2.0",
     "@nuxt/image": "^2.0.0",
     "@saslavik/nuxt-gtm": "^0.1.2",
     "@stripe/stripe-js": "^6.1.0",

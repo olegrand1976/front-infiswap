@@ -10,7 +10,7 @@
                         to="/dashboard/institution/services/create"
                         class="flex gap-3 items-center"
                     >
-                        <PlusIcon class="w-6 h-6" />
+                        <Plus class="w-6 h-6" />
                         <span>Nouveau</span>
                     </NuxtLink>
                 </Button>
@@ -37,9 +37,10 @@
 </template>
 
 <script lang="ts" setup>
+import { Plus, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';

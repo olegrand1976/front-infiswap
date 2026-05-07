@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0 pb-24">
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -15,7 +15,7 @@
             v-if="loading"
             class="mt-32 flex flex-col items-center gap-3 text-gray-400"
         >
-            <ArrowPathIcon class="w-6 h-6 animate-spin text-primary" />
+            <RefreshCw class="w-6 h-6 animate-spin text-primary" />
             <p class="text-sm">
                 Chargement...
             </p>
@@ -64,7 +64,7 @@
                         <div class="space-y-4">
                             <div class="flex items-start gap-3.5">
                                 <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                                    <CalendarIcon class="w-4 h-4 text-gray-500" />
+                                    <Calendar class="w-4 h-4 text-gray-500" />
                                 </div>
                                 <div>
                                     <p class="text-[11px] text-gray-400 font-medium">
@@ -86,7 +86,7 @@
 
                             <div class="flex items-start gap-3.5">
                                 <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                                    <ClockIcon class="w-4 h-4 text-gray-500" />
+                                    <Clock class="w-4 h-4 text-gray-500" />
                                 </div>
                                 <div class="w-full">
                                     <p class="text-[11px] text-gray-400 font-medium">
@@ -139,7 +139,7 @@
 
                             <div class="flex items-start gap-3.5">
                                 <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                                    <AcademicCapIcon class="w-4 h-4 text-gray-500" />
+                                    <GraduationCap class="w-4 h-4 text-gray-500" />
                                 </div>
                                 <div>
                                     <p class="text-[11px] text-gray-400 font-medium">
@@ -155,7 +155,7 @@
                                 <div class="h-px bg-gray-50" />
                                 <div class="flex items-start gap-3.5">
                                     <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                                        <BuildingOfficeIcon class="w-4 h-4 text-gray-500" />
+                                        <Building2 class="w-4 h-4 text-gray-500" />
                                     </div>
                                     <div>
                                         <p class="text-[11px] text-gray-400 font-medium">
@@ -172,7 +172,7 @@
                                 <div class="h-px bg-gray-50" />
                                 <div class="flex items-start gap-3.5">
                                     <div class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-0.5">
-                                        <ClockIcon class="w-4 h-4 text-gray-500" />
+                                        <Clock class="w-4 h-4 text-gray-500" />
                                     </div>
                                     <div>
                                         <p class="text-[11px] text-gray-400 font-medium">
@@ -191,7 +191,7 @@
                         <NuxtLink :href="`/dashboard/missions/${mission.id}/apply`">
                             <button class="w-full h-12 rounded-2xl bg-primary text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
                                 Postuler à cette mission
-                                <ChevronRightIcon class="w-4 h-4" />
+                                <ChevronRight class="w-4 h-4" />
                             </button>
                         </NuxtLink>
                     </div>
@@ -281,15 +281,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    ArrowLeftIcon,
-    ArrowPathIcon,
-    CalendarIcon,
-    ClockIcon,
-    AcademicCapIcon,
-    BuildingOfficeIcon,
-    ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
+import { ArrowLeft, Building2, Calendar, ChevronRight, Clock, GraduationCap, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { Mission, MissionResponse } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 

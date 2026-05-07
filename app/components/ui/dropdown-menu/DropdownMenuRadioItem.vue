@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { CheckIcon } from '@heroicons/vue/24/solid';
+import { Check, Star } from 'lucide-vue-next';
+
 import {
     DropdownMenuItemIndicator,
     DropdownMenuRadioItem,
@@ -33,7 +34,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     >
         <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
             <DropdownMenuItemIndicator>
-                <CheckIcon class="w-3 fill-current" />
+                <Check class="w-3 fill-current" />
             </DropdownMenuItemIndicator>
         </span>
         <slot />

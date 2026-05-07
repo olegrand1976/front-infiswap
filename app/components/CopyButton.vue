@@ -5,7 +5,7 @@
         :class="props.class"
         @click="() => handleCopy(props.content)"
     >
-        <DocumentDuplicateIcon />
+        <Copy />
         <span v-if="showLabel == true">
             {{ props.label }}
         </span>
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline';
+import { Copy, Star } from 'lucide-vue-next';
 
 const { $toast } = useNuxtApp();
 

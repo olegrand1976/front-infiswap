@@ -27,7 +27,7 @@
                     class="rounded-md"
                     @click="showModalUser = true"
                 >
-                    <EyeIcon />
+                    <Eye />
                     <span>Détail</span>
                 </Button>
 
@@ -156,8 +156,9 @@
 </template>
 
 <script lang="ts" setup>
+import { Eye, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EyeIcon } from '@heroicons/vue/24/outline';
 import { useContract } from '@/composables/useContract';
 import { useAuth } from '@/composables/useAuth';
 

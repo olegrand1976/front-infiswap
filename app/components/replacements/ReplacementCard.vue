@@ -56,7 +56,7 @@
                         @click="showAllPeriods = !showAllPeriods"
                     >
                         {{ showAllPeriods ? 'Masquer' : `+${periods.length - 1} autres` }}
-                        <ChevronDownIcon
+                        <ChevronDown
                             class="w-3 h-3 transition-transform"
                             :class="{ 'rotate-180': showAllPeriods }"
                         />
@@ -92,7 +92,7 @@
                         @click="showAllZipCodes = !showAllZipCodes"
                     >
                         {{ showAllZipCodes ? 'Masquer' : `+${zipCodes.length - 1} autres` }}
-                        <ChevronDownIcon
+                        <ChevronDown
                             class="w-3 h-3 transition-transform"
                             :class="{ 'rotate-180': showAllZipCodes }"
                         />
@@ -128,7 +128,7 @@
                         @click="showAllCities = !showAllCities"
                     >
                         {{ showAllCities ? 'Masquer' : `+${cities.length - 1} autres` }}
-                        <ChevronDownIcon
+                        <ChevronDown
                             class="w-3 h-3 transition-transform"
                             :class="{ 'rotate-180': showAllCities }"
                         />
@@ -164,7 +164,7 @@
                         @click="showAllCareTypes = !showAllCareTypes"
                     >
                         {{ showAllCareTypes ? 'Masquer' : `+${careTypes.length - 1} autres` }}
-                        <ChevronDownIcon
+                        <ChevronDown
                             class="w-3 h-3 transition-transform"
                             :class="{ 'rotate-180': showAllCareTypes }"
                         />
@@ -204,14 +204,14 @@
         <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1">
                 <div class="flex items-center gap-1">
-                    <ClockIcon class="w-3.5 h-3.5 text-primary" />
+                    <Clock class="w-3.5 h-3.5 text-primary" />
                     <span>{{ timeSlotsText }}</span>
                 </div>
                 <div
                     v-if="replacement.patient_count"
                     class="flex items-center gap-1"
                 >
-                    <UserGroupIcon class="w-3.5 h-3.5 text-primary" />
+                    <Users class="w-3.5 h-3.5 text-primary" />
                     <span>{{ replacement.patient_count }} patient(s)/jour</span>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                     class="shrink-0 gap-1.5"
                 >
                     <span>Voir détail</span>
-                    <ChevronRightIcon class="w-3.5 h-3.5" />
+                    <ChevronRight class="w-3.5 h-3.5" />
                 </Button>
             </template>
 
@@ -235,7 +235,7 @@
                             variant="outline"
                             class="shrink-0 gap-1.5 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all font-medium"
                         >
-                            <EllipsisHorizontalIcon class="w-4 h-4" />
+                            <Ellipsis class="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -251,7 +251,7 @@
                                 :href="`/dashboard/replacements/detail/${replacement.id}`"
                                 class="flex items-center gap-2 text-sm cursor-pointer"
                             >
-                                <EyeIcon class="w-4 h-4 text-gray-500" />
+                                <Eye class="w-4 h-4 text-gray-500" />
                                 <span>Voir le détail</span>
                             </NuxtLink>
                         </DropdownMenuItem>
@@ -260,7 +260,7 @@
                             class="flex items-center gap-2 text-sm cursor-pointer"
                             @click="emit('open-edit', props.rawReplacement ?? replacement)"
                         >
-                            <PencilSquareIcon class="w-4 h-4 text-gray-500" />
+                            <SquarePen class="w-4 h-4 text-gray-500" />
                             <span>Modifier</span>
                         </DropdownMenuItem>
                         <template v-if="canClose">
@@ -269,7 +269,7 @@
                                 class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
                                 @click="closeDialog = true"
                             >
-                                <LockClosedIcon class="w-4 h-4" />
+                                <Lock class="w-4 h-4" />
                                 <span>Fermer</span>
                             </DropdownMenuItem>
                         </template>
@@ -310,9 +310,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ChevronDown, ChevronRight, Clock, Ellipsis, Eye, Lock, SquarePen, Star, Users } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { ChevronDownIcon, ChevronRightIcon, ClockIcon, UserGroupIcon, EyeIcon, EllipsisHorizontalIcon, LockClosedIcon, PencilSquareIcon, StarIcon as StarIconOutline } from '@heroicons/vue/24/outline';
-import { StarIcon } from '@heroicons/vue/24/solid';
 import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';

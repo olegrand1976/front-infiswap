@@ -50,8 +50,8 @@
                                 </Avatar>
                             </template>
                             <template v-else>
-                                <UserCircleIcon
-                                    class="w-12 text-black/40"
+                                <CircleUser
+                                    class="w-10 h-10 text-black/40"
                                 />
                             </template>
                         </DropdownMenuTrigger>
@@ -101,7 +101,7 @@
                             to="/dashboard/admin/mails"
                             class="inline-block"
                         >
-                            <EnvelopeIcon class="w-6 text-primary hover:text-primary/80 transition-colors duration-150" />
+                            <Mail class="w-5 h-5 text-primary hover:text-primary/80 transition-colors duration-150" />
                         </NuxtLink>
                     </div>
                     <div class="relative inline-block pr-4">
@@ -112,15 +112,15 @@
                                 title="Signaler un problème"
                                 @click="showReportModal = true"
                             >
-                                <FaceFrownIcon class="w-6 h-6 text-gray-500" />
+                                <Frown class="w-5 h-5 text-gray-500 hover:text-gray-700 transition-colors duration-150" />
                             </div>
-                            <DropdownMenu>
+                            <DropdownMenu v-if="!isAdmin">
                                 <DropdownMenuTrigger as-child>
                                     <div
                                         class="relative cursor-pointer"
                                         @click="handleSeen()"
                                     >
-                                        <BellAlertIcon class="w-6 h-6 text-gray-500" />
+                                        <BellOff class="w-5 h-5 text-gray-500 hover:text-gray-700 transition-colors duration-150" />
 
                                         <span
                                             v-if="showSpan"
@@ -203,7 +203,8 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, EnvelopeIcon, FaceFrownIcon } from '@heroicons/vue/24/solid';
+import { BellOff, CircleUser, Frown, Mail, Star } from 'lucide-vue-next';
+
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';

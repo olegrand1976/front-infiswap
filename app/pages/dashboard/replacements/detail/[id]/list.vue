@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-6 flex items-center gap-2 rounded-lg text-primary sm:bg-muted/50 sm:px-9">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -19,7 +19,7 @@
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
                     <span class="ms-3 text-xs text-primary-foreground">Début</span>
                     <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
-                        <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                        <Calendar class="w-4 h-4 ml-1 text-primary" />
                         <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
                             {{ startDate }}
                         </div>
@@ -29,7 +29,7 @@
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
                     <span class="ms-3 text-xs text-primary-foreground">Fin</span>
                     <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
-                        <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                        <Calendar class="w-4 h-4 ml-1 text-primary" />
                         <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
                             {{ endDate }}
                         </div>
@@ -74,13 +74,13 @@
                                 v-if="list.status==='confirmed'"
                                 class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm text-success"
                             >
-                                <CheckCircleIcon class="size-5 shrink-0" /> <span>Accepté</span>
+                                <CircleCheck class="size-5 shrink-0" /> <span>Accepté</span>
                             </div>
                             <div
                                 v-else-if="list.status==='refused'"
                                 class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm font-bold text-primary"
                             >
-                                <XMarkIcon class="size-5 shrink-0" /> <span>Refusé</span>
+                                <X class="size-5 shrink-0" /> <span>Refusé</span>
                             </div>
                             <div
                                 v-if="!hasConfirmed() && list.status !== 'refused'"
@@ -117,9 +117,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-import { CheckCircleIcon, CalendarDaysIcon, XMarkIcon } from '@heroicons/vue/24/solid';
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Calendar, CircleCheck, Star, X } from 'lucide-vue-next';
+
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 

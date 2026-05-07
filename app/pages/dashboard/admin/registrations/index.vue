@@ -57,7 +57,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpDown, Star } from 'lucide-vue-next';
+
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -120,7 +121,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
@@ -132,7 +133,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('lastname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'uppercase ml-4' }, row.getValue('lastname')),
     },
@@ -142,7 +143,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('firstname'),
-            }, () => ['Prénoms', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Prénoms', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, row.getValue('firstname')),
     },
@@ -152,7 +153,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('gender'),
-            }, () => ['Sexe', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Sexe', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, row.getValue('gender')),
     },
@@ -162,7 +163,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('phone_number'),
-            }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize ml-4' }, formatPhoneNumber(row.getValue('phone_number'))),
     },
@@ -172,7 +173,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('email'),
-            }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('email')),
     },
@@ -182,7 +183,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_by'),
-            }, () => ['Créé par', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Créé par', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('created_by')),
     },
@@ -192,7 +193,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('affiliate_by'),
-            }, () => ['Affilié par', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Affilié par', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'ml-4' }, row.getValue('affiliate_by')),
     },
@@ -290,7 +291,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('last_contact_date'),
-            }, () => ['Date de dernier contact', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Date de dernier contact', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const value = row.getValue('last_contact_date');
@@ -303,7 +304,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('last_login_at'),
-            }, () => ['Dernière connexion', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Dernière connexion', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const value = row.getValue('last_login_at');
