@@ -43,16 +43,9 @@
 
 <script setup lang="ts">
 import { PhoneIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
-import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';
-import type { Replacement } from '~/lib/types';
 
 const { isLoggedIn } = useAuth();
-const { getAccordingReplacements } = useReplacements();
-const replacements = ref<Replacement[]>([]);
-
-const data = await getAccordingReplacements();
-replacements.value = (data ?? []) as Replacement[];
 
 useHead({
     title: 'Accueil',
