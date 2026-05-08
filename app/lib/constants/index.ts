@@ -2,7 +2,7 @@ import type { AccountType } from '../types';
 
 export const AUTH_TOKEN = 'INFISWAP_TOKEN';
 export const LANGUAGE = 'LANGUAGE';
-export const PERPAGE = 25;
+export const PERPAGE = 5;
 
 export const SUPER_ADMIN_ROLES: AccountType[] = [
     'administrator',

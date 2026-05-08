@@ -72,9 +72,11 @@ definePageMeta({
     middleware: ['admin'],
 });
 const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
-
+const route = useRoute();
+const router = useRouter();
 const perPage = ref(PERPAGE);
-const page = ref(1);
+// const page = ref(1);
+const page = ref(Number(route.query.page) || 1);
 const initialFilter = {
     name: null,
     zip: null,
@@ -82,7 +84,10 @@ const initialFilter = {
 const selectedUser = ref<User>(null);
 const { $toast } = useNuxtApp();
 const option = ref({ ...initialFilter });
-
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
 const debounce = (func, delay) => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     return (...args) => {
@@ -100,12 +105,31 @@ const filterUsers = async () => {
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
-await getUsers(page.value, perPage.value, option.value);
+// await getUsers(page.value, perPage.value, option.value);
+await getUsers(page.value, perPage.value, {
+    ...option.value,
+    sortOrder: sort.order,
+    sortKey: sort.by,
+});
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
-const refreshUsers = async (page: number) => {
-    await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+// const refreshUsers = async (page: number) => {
+//     await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+// };
+const refreshUsers = async (newPage: number) => {
+    page.value = newPage;
+    router.replace({
+        query: {
+            ...route.query,
+            page: String(newPage),
+        },
+    });
+    await getUsers(newPage, perPage.value, {
+        ...option.value,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
 
 const handlePerPageChange = async (value: number) => {
@@ -121,7 +145,12 @@ const resetFilter = async () => {
 
     option.value = { ...initialFilter };
     page.value = 1;
-    await getUsers(page.value, perPage.value, option.value);
+    // await getUsers(page.value, perPage.value, option.value);
+    await getUsers(page.value, perPage.value, {
+        ...option.value,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
 
 const canManageValidation = computed(() =>
@@ -355,10 +384,7 @@ const columns: ColumnDef<User>[] = [
     },
 ];
 
-const sort = reactive({
-    order: 'DESC',
-    by: null,
-});
+
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
