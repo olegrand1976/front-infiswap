@@ -11,7 +11,7 @@
             >
                 <div class="flex rounded-full border border-transparent">
                     <div class="flex items-center">
-                        <EnvelopeIcon
+                        <Mail
                             class="text-primary w-5 ms-4"
                             :class="iconClass"
                         />
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { Mail, Star } from 'lucide-vue-next';
 
 import { useNewsletter } from '@/composables/useNewsletter';
 

@@ -106,7 +106,7 @@
                                     <FormItem class="flex rounded-full border border-transparent">
                                         <FormControl>
                                             <div class="flex items-center">
-                                                <EnvelopeIcon class="text-white w-5 h-5 ms-4" />
+                                                <Mail class="text-white w-5 h-5 ms-4" />
                                                 <Input
                                                     v-model="email"
                                                     placeholder="Email"
@@ -182,7 +182,7 @@
 </template>
 
 <script setup>
-import { EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { Mail, Star } from 'lucide-vue-next';
 
 import {
     Accordion,

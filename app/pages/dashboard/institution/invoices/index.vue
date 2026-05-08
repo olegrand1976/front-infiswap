@@ -69,7 +69,7 @@
                         class="mb-4 flex items-center gap-2 text-primary cursor-pointer"
                         @click="handleViewInvoice(selectedInvoice.id)"
                     >
-                        <PaperClipIcon class="w-5 h-5" />
+                        <Paperclip class="w-5 h-5" />
                         <span
                             v-if="attachedFile"
                             class="text-sm text-gray-700 truncate max-w-[240px]"
@@ -100,8 +100,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ChevronsUpDown, FileText, Paperclip, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ChevronUpDownIcon, DocumentTextIcon, PaperClipIcon } from '@heroicons/vue/24/outline';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { UsersName } from '#components';
 import Button from '~/components/ui/button/Button.vue';
@@ -239,7 +240,7 @@ const columns: ColumnDef<MissionInvoice>[] = [
             const fileName = fullPath.split('/').pop();
 
             return h('div', { class: 'flex items-center justify-center gap-2 font-medium text-gray-700 truncate w-40' }, [
-                h(DocumentTextIcon, { class: 'w-4 h-4 text-gray-500 flex-shrink-0' }),
+                h(FileText, { class: 'w-4 h-4 text-gray-500 flex-shrink-0' }),
                 h('span', { class: 'truncate' }, fileName),
             ]);
         },
@@ -263,7 +264,7 @@ const columns: ColumnDef<MissionInvoice>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ChevronUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ChevronsUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));

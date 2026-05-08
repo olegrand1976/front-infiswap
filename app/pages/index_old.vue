@@ -16,7 +16,7 @@
                     <span>Découvrez les remplacements </span> <span class="font-bold">les plus récents</span>
                 </h3>
                 <h3 class="flex items-center gap-2 text-xl font-bold md:hidden">
-                    <SparklesIcon class="size-5" /> Des remplacements
+                    <Sparkles class="size-5" /> Des remplacements
                 </h3>
                 <NuxtLink
                     to="/dashboard/replacements/immediate"
@@ -25,7 +25,7 @@
                     <Button class="hidden text-sm md:inline-block bg-primary">
                         <span>Créer remplacement</span>
                     </Button>
-                    <PlusCircleIcon class="inline-block w-8 h-8 md:hidden text-primary" />
+                    <CirclePlus class="inline-block w-8 h-8 md:hidden text-primary" />
                 </NuxtLink>
             </div>
             <div class="w-full">
@@ -83,7 +83,7 @@
                     (+32) 478 02 33 77
                 </p>
                 <div class="absolute p-1 rounded-lg bg-success -top-2 -left-2 animate-pulse">
-                    <PhoneIcon class="w-4 text-white" />
+                    <Phone class="w-4 text-white" />
                 </div>
             </a>
         </div>
@@ -94,14 +94,15 @@
             to="/register"
             class="lg:hidden fixed bottom-20 right-0 z-40 bg-primary text-white rounded-l-full shadow-lg px-4 py-3 flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
-            <UserPlusIcon class="w-5 h-5" />
+            <UserPlus class="w-5 h-5" />
             <span class="text-sm font-semibold">Inscription</span>
         </NuxtLink>
     </div>
 </template>
 
 <script setup lang="ts">
-import { PlusCircleIcon, SparklesIcon, PhoneIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
+import { CirclePlus, Phone, Sparkles, Star, UserPlus } from 'lucide-vue-next';
+
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';

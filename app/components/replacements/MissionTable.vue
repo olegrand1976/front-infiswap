@@ -25,19 +25,19 @@
                 </template>
                 <template v-else>
                     <div>
-                        <CheckCircleIcon
+                        <CircleCheck
                             v-if="hasMorning"
                             class="h-6 text-green-500"
                         />
                     </div>
                     <div>
-                        <CheckCircleIcon
+                        <CircleCheck
                             v-if="hasAfternoon"
                             class="h-6 text-green-500"
                         />
                     </div>
                     <div>
-                        <CheckCircleIcon
+                        <CircleCheck
                             v-if="hasEvening"
                             class="h-6 text-green-500"
                         />
@@ -121,7 +121,7 @@
                     :href="`/dashboard/missions/${mission.id}`"
                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                 >
-                    <EyeIcon class="h-6 mt-1" />
+                    <Eye class="h-6 mt-1" />
                 </Button>
                 <Button
                     v-if="isOwner"
@@ -129,7 +129,7 @@
                     title="Reposter cette mission"
                     @click="duplicateMission"
                 >
-                    <ArrowPathIcon class="h-6 mt-1" />
+                    <RefreshCw class="h-6 mt-1" />
                 </Button>
             </TableCell>
 
@@ -164,14 +164,14 @@
                     :href="`/dashboard/missions/${mission.id}`"
                     class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                 >
-                    <EyeIcon class="h-6 mt-1" />
+                    <Eye class="h-6 mt-1" />
                 </Button>
                 <Button
                     v-if="isOwner"
                     class="inline-block rounded bg-[#E4E7F4] text-primary hover:bg-primary hover:text-white justify-center items-center ml-2"
                     @click="duplicateMission"
                 >
-                    <ArrowPathIcon class="h-6 mt-1" />
+                    <RefreshCw class="h-6 mt-1" />
                 </Button>
             </TableCell>
 
@@ -181,8 +181,9 @@
 </template>
 
 <script lang="ts" setup>
+import { CircleCheck, Eye, RefreshCw, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CheckCircleIcon, EyeIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { MergedItem } from '~/composables/useMergedSearch';

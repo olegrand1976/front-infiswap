@@ -10,7 +10,7 @@
                         <div>
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center gap-2 pl-4 pr-2">
-                                    <UserCircleIcon class="w-6 text-primary sm:text-white" />
+                                    <CircleUser class="w-6 text-primary sm:text-white" />
                                     <span class="font-light hidden sm:inline text-primary sm:text-white">Nom</span>
                                 </div>
                                 <Input
@@ -26,8 +26,8 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <UserCircleIcon class="w-6 text-primary sm:text-white" />
-                                        <PlusIcon class="w-3 text-primary sm:text-white absolute top-0 left-1" />
+                                        <CircleUser class="w-6 text-primary sm:text-white" />
+                                        <Plus class="w-3 text-primary sm:text-white absolute top-0 left-1" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Prénom</span>
                                     </div>
                                 </div>
@@ -44,7 +44,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <EnvelopeIcon class="w-6 text-primary sm:text-white" />
+                                        <Mail class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Email</span>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <IdentificationIcon class="w-6 text-primary sm:text-white" />
+                                        <IdCard class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">NISS *</span>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_75%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <PhoneIcon class="w-6 text-primary sm:text-white" />
+                                        <Phone class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Téléphone</span>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                             <div class="h-10 rounded-full border border-primary grid grid-cols-[30%_70%]">
                                 <div class="bg-transparent sm:bg-primary rounded-s-full flex items-center">
                                     <div class="flex space-x-4 text-white items-center ms-4 relative">
-                                        <HeartIcon class="w-6 text-primary sm:text-white" />
+                                        <Heart class="w-6 text-primary sm:text-white" />
                                         <span class="font-light hidden sm:inline text-primary sm:text-white">Préférence</span>
                                     </div>
                                 </div>
@@ -242,15 +242,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    UserCircleIcon,
-    PlusIcon,
-    PhoneIcon,
-    HeartIcon,
-    EnvelopeIcon,
-    IdentificationIcon,
-    FaceSmileIcon,
-} from '@heroicons/vue/24/solid';
+import { CircleUser, Heart, IdCard, Mail, Phone, Plus, Star } from 'lucide-vue-next';
+
 import { searchNurse } from '~/composables/usePatients';
 import { getErrorMessage } from '~/lib/utils';
 

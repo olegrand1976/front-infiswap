@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
+import { Ellipsis, Star } from 'lucide-vue-next';
+
 import { PaginationEllipsis, type PaginationEllipsisProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -19,7 +20,7 @@ const delegatedProps = computed(() => {
         :class="cn('w-9 h-9 flex items-center justify-center', props.class)"
     >
         <slot>
-            <EllipsisHorizontalIcon />
+            <Ellipsis />
         </slot>
     </PaginationEllipsis>
 </template>

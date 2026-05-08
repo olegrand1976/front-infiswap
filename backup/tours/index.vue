@@ -26,7 +26,7 @@
                             </h2>
                             <div title="Créer un nouveau patient">
                                 <a href="/dashboard/patients/create">
-                                    <PlusCircleIcon class="w-6 h-6 text-white cursor-pointer mr-2" />
+                                    <CirclePlus class="w-6 h-6 text-white cursor-pointer mr-2" />
                                 </a>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                                             alt="Photo de profil"
                                                             class="rounded-full h-9 w-9 object-cover"
                                                         >
-                                                        <UserCircleIcon
+                                                        <CircleUser
                                                             v-else
                                                             class="h-10 w-10 text-gray-400"
                                                         />
@@ -87,9 +87,9 @@
                                                     @click.stop="openDialog(item.id, item.visit_times?.[0]?.id)"
                                                 >
                                                     <div title="Exclure de la tournée du jour">
-                                                        <XCircleIcon class="h-5 w-5 text-white stroke-2 cursor-pointer" />
+                                                        <XCircle class="h-5 w-5 text-white stroke-2 cursor-pointer" />
                                                     </div>
-                                                    <CheckCircleIcon class="h-5 w-5 text-white stroke-2 cursor-pointer" />
+                                                    <CircleCheck class="h-5 w-5 text-white stroke-2 cursor-pointer" />
                                                 </div>
                                             </div>
                                             <Dialog v-model:open="isDialogOpen">
@@ -138,7 +138,7 @@
                                             alt="Photo de profil"
                                             class="rounded-full h-20 w-20"
                                         >
-                                        <UserCircleIcon
+                                        <CircleUser
                                             v-else
                                             class="size-20"
                                         />
@@ -189,7 +189,7 @@
                                     <div
                                         class="bg-primary text-white p-2.5 rounded-t-lg font-bold w-full text-base flex"
                                     >
-                                        <HomeIcon class="h-6 w-6 text-white mr-2" /> Ville
+                                        <Home class="h-6 w-6 text-white mr-2" /> Ville
                                     </div>
                                     <div
                                         class="bg-white w-64 text-center rounded-full mt-4 py-2 border-2 border-primary"
@@ -202,7 +202,7 @@
                                     <div
                                         class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-base w-full flex"
                                     >
-                                        <InboxIcon class="h-6 w-6 text-white mr-2" /> Code postal
+                                        <Inbox class="h-6 w-6 text-white mr-2" /> Code postal
                                     </div>
                                     <div
                                         class="bg-white w-64 text-center rounded-full mt-4 py-2 border-2 border-primary"
@@ -215,7 +215,7 @@
                                     <div
                                         class="bg-primary text-white p-2.5 rounded-t-lg font-bold text-base w-full flex"
                                     >
-                                        <ClockIcon class="h-6 w-6 text-white mr-2" /> Créneau horaire
+                                        <Clock class="h-6 w-6 text-white mr-2" /> Créneau horaire
                                     </div>
                                     <div
                                         v-if="selectedPatient?.visit_times && selectedPatient.visit_times.length > 0"
@@ -293,15 +293,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    XCircleIcon,
-    InboxIcon,
-    ClockIcon,
-    HomeIcon,
-    UserCircleIcon,
-    CheckCircleIcon,
-    PlusCircleIcon,
-} from '@heroicons/vue/24/solid';
+import { CircleCheck, CirclePlus, CircleUser, Clock, Home, Inbox, Star, XCircle } from 'lucide-vue-next';
 
 import { ref, watch, computed } from 'vue';
 import { CalendarDate } from '@internationalized/date';

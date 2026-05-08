@@ -1,6 +1,6 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeftIcon
+        <ArrowLeft
             class="size-6 cursor-pointer hover:text-primary"
             title="Retour"
             @click="goBack"
@@ -81,7 +81,7 @@
                                         v-else
                                         :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
                                     >
-                                        <CheckBadgeIcon class="w-8" />
+                                        <BadgeCheck class="w-8" />
                                         <p class="font-semibold">
                                             {{ response.status === 'accepted' ? 'Acceptée' : 'Refusée' }}
                                         </p>
@@ -157,7 +157,7 @@
                                         v-else
                                         :class="[cn('w-full mt-8  flex justify-center mx-auto gap-3 items-center rounded-full p-3 bg-gray-100', { 'text-success': response.status === 'accepted', 'text-primary': response.status === 'rejected' })]"
                                     >
-                                        <CheckBadgeIcon class="w-8" />
+                                        <BadgeCheck class="w-8" />
                                         <p class="font-semibold">
                                             {{ response.status === 'accepted' ? 'Acceptée' : 'Refusée' }}
                                         </p>
@@ -179,7 +179,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeftIcon, CheckBadgeIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, BadgeCheck, Star } from 'lucide-vue-next';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';

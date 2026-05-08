@@ -10,7 +10,7 @@
                         to="/dashboard/institution/missions/create"
                         class="flex gap-3 items-center"
                     >
-                        <PlusIcon class="w-6 h-6" />
+                        <Plus class="w-6 h-6" />
                         <span>Nouveau</span>
                     </NuxtLink>
                 </Button>
@@ -43,7 +43,7 @@
                     class="rounded-md h-11"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -119,8 +119,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ChevronsUpDown, Eye, Plus, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PlusIcon, ArrowPathIcon, ChevronUpDownIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';
 import UsersName from '@/components/users/Name.vue';
@@ -255,7 +256,7 @@ const columns: ColumnDef<Mission>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('start_date'),
-            }, () => ['Date de début', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Date de début', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const startDate = row.original.start_date;
             return h('div', { class: 'ml-4' }, formatToDMY(startDate));
@@ -268,7 +269,7 @@ const columns: ColumnDef<Mission>[] = [
             h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('end_date'),
-            }, () => ['Date de fin', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]),
+            }, () => ['Date de fin', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]),
         cell: ({ row }) => {
             const endDate = row.original.end_date;
             return h('div', { class: 'ml-4' }, formatToDMY(endDate));
@@ -362,7 +363,7 @@ const columns: ColumnDef<Mission>[] = [
                     variant: 'ghost',
                     size: 'sm',
                     onClick: () => navigateTo(`/dashboard/institution/missions/candidacy/${missionId}`),
-                }, () => h(EyeIcon, { class: 'h-4 w-4 ml-1' })),
+                }, () => h(Eye, { class: 'h-4 w-4 ml-1' })),
             ]);
         },
     },
@@ -372,7 +373,7 @@ const columns: ColumnDef<Mission>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ChevronUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ChevronsUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));

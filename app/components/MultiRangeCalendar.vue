@@ -6,7 +6,7 @@
                 :disabled="isPrevDisabled"
                 @click="prevMonth"
             >
-                <ChevronLeftIcon
+                <ChevronLeft
                     class="w-5 h-5"
                 />
             </div>
@@ -15,7 +15,7 @@
                 class="text-primary hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
                 @click="nextMonth"
             >
-                <ChevronRightIcon class="w-5 h-5" />
+                <ChevronRight class="w-5 h-5" />
             </div>
         </div>
         <div class="grid grid-cols-7 gap-1">
@@ -46,7 +46,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-vue-next';
+
 import { getLocalTimeZone, today } from '@internationalized/date';
 
 const props = defineProps<{

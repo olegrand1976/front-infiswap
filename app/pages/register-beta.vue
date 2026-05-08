@@ -33,7 +33,7 @@
                     <div class="relative w-full items-center">
                         <InputIcon
                             v-model="credentials.lastname"
-                            :icon="UserIcon"
+                            :icon="User"
                             size="md"
                             placeholder="Nom"
                             :errors="validationErrors.lastname"
@@ -42,7 +42,7 @@
                     <div class="relative w-full items-center">
                         <InputIcon
                             v-model="credentials.firstname"
-                            :icon="UserPlusIcon"
+                            :icon="UserPlus"
                             size="md"
                             placeholder="Prénom"
                             :errors="validationErrors.firstname"
@@ -52,7 +52,7 @@
                     <div class="relative w-full items-center">
                         <InputIcon
                             v-model="credentials.email"
-                            :icon="EnvelopeIcon"
+                            :icon="Mail"
                             type="email"
                             size="md"
                             placeholder="Email"
@@ -64,7 +64,7 @@
                     <div class="relative w-full items-center">
                         <InputIcon
                             v-model="credentials.phoneNumber"
-                            :icon="PhoneIcon"
+                            :icon="Phone"
                             placeholder="Téléphone"
                             size="md"
                             icon-class="h-5"
@@ -75,7 +75,7 @@
                     <div class="relative w-full items-center">
                         <InputIcon
                             v-model="credentials.zipCode"
-                            :icon="MapIcon"
+                            :icon="Map"
                             placeholder="Code postal"
                             size="md"
                             icon-class="h-5"
@@ -101,13 +101,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    UserIcon,
-    UserPlusIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    MapIcon,
-} from '@heroicons/vue/24/solid';
+import { Mail, Map, Phone, Star, User, UserPlus } from 'lucide-vue-next';
+
 import { reactive } from 'vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 

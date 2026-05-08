@@ -138,14 +138,14 @@
                         class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
                         @click="reinitializeFilter"
                     >
-                        <ArrowPathIcon class="w-6" />
+                        <RefreshCw class="w-6" />
                         <span class="ml-2 block lg:hidden text-xs md:text-sm">Réinitialiser</span>
                     </Button>
                     <Button
                         class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
                         @click="submitSearch"
                     >
-                        <MagnifyingGlassIcon class="w-6" />
+                        <Search class="w-6" />
                         <span class="ml-2 text-xs md:text-sm">Rechercher</span>
                     </Button>
                 </div>
@@ -158,7 +158,7 @@
                 class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"
             >
                 <div class="bg-white rounded-full p-5 shadow-sm mb-5 border border-gray-100">
-                    <MagnifyingGlassIcon class="w-10 h-10 text-gray-400" />
+                    <Search class="w-10 h-10 text-gray-400" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">
                     Aucun résultat trouvé
@@ -552,10 +552,9 @@
 </template>
 
 <script lang="ts" setup>
+import { CircleCheck, Ellipsis, Eye, Plus, RefreshCw, Search, SquarePen, Star, X } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { ArrowPathIcon, XMarkIcon, PlusIcon } from '@heroicons/vue/24/outline';
-import { toRaw } from 'vue';
-import { CheckCircleIcon, EyeIcon, EllipsisHorizontalIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
 import ReplacementTable from '@/components/replacements/ReplacementTable.vue';

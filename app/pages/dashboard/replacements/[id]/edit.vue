@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0 pb-16">
         <div class="mt-2 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-4 rounded-lg">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -57,7 +57,7 @@
                                             class="outline-gray-200 rounded-full border border-gray-300 px-3 py-2 w-full"
                                         >
                                     </div>
-                                    <XMarkIcon
+                                    <X
                                         v-if="formData.periods.length > 1"
                                         class="w-5 h-5 text-primary cursor-pointer shrink-0"
                                         @click="removePeriod(index)"
@@ -71,7 +71,7 @@
                                 type="button"
                                 @click="addPeriod"
                             >
-                                <PlusIcon class="w-5 h-5" />
+                                <Plus class="w-5 h-5" />
                                 <span>Ajouter une période</span>
                             </Button>
                         </div>
@@ -232,8 +232,8 @@
 </template>
 
 <script lang="ts" setup>
-import { XMarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Plus, Star, X } from 'lucide-vue-next';
+
 import { toast } from 'vue-sonner';
 import { useReplacements } from '@/composables/useReplacements';
 import { InputTime } from '@/components/ui/input-time';

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { Eye, EyeOff, Star } from 'lucide-vue-next';
+
 import type { Component, HTMLAttributes } from 'vue';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 import { useVModel } from '@vueuse/core';
 import { cn } from '@/lib/utils';
 
@@ -142,11 +143,11 @@ const togglePasswordVisibility = () => {
                 class="absolute right-3 inset-y-0 flex items-center cursor-pointer z-10"
                 @click="togglePasswordVisibility"
             >
-                <EyeIcon
+                <Eye
                     v-if="!isPasswordVisible"
                     class="h-5 w-5 text-gray-400"
                 />
-                <EyeSlashIcon
+                <EyeOff
                     v-if="isPasswordVisible"
                     class="h-5 w-5 text-gray-400"
                 />

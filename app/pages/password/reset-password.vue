@@ -57,7 +57,7 @@
                             v-model="email"
                             type="email"
                             placeholder="Votre email"
-                            :icon="EnvelopeIcon"
+                            :icon="Mail"
                         />
 
                         <div class="px-8 pt-8">
@@ -105,7 +105,7 @@
                                             v-model="email"
                                             type="email"
                                             placeholder="Votre email"
-                                            :icon="EnvelopeIcon"
+                                            :icon="Mail"
                                         />
                                     </FormControl>
                                 </FormItem>
@@ -137,7 +137,8 @@
 </template>
 
 <script lang="ts" setup>
-import { EnvelopeIcon } from '@heroicons/vue/24/solid';
+import { Mail, Star } from 'lucide-vue-next';
+
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';

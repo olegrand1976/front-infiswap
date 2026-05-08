@@ -31,7 +31,7 @@
                         <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
                             <span class="text-xs text-white ms-3">Début</span>
                             <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
-                                <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                                <Calendar class="w-4 h-4 ml-1 text-primary" />
                                 <Input
                                     v-model="startDate"
                                     variant="transparent"
@@ -43,7 +43,7 @@
                         <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
                             <span class="text-xs text-white ms-3">Fin</span>
                             <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
-                                <CalendarDaysIcon class="w-4 h-4 ml-1 text-primary" />
+                                <Calendar class="w-4 h-4 ml-1 text-primary" />
                                 <Input
                                     v-model="endDate"
                                     variant="transparent"
@@ -152,7 +152,7 @@
 
                         <div class="mt-8 h-10 flex px-2 bg-primary rounded items-center">
                             <h4 class="text-white text-sm flex items-center">
-                                <ClockIcon class="w-5 h-5 mr-2" />
+                                <Clock class="w-5 h-5 mr-2" />
                                 <p class="w-full truncate text-ellipsis pr-2">
                                     {{ group.date }}
                                 </p>
@@ -197,14 +197,14 @@
                             <!-- <div class="py-16 px-3 space-y-3">
                                 <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
-                                        <HomeIcon class="w-5 h-5" />
+                                        <Home class="w-5 h-5" />
                                         <span>Codes postaux</span>
                                     </div>
                                     <span>{{ group.zipCodes }}</span>
                                 </div>
                                 <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
-                                        <HomeIcon class="w-5 h-5" />
+                                        <Home class="w-5 h-5" />
                                         <span>Villes</span>
                                     </div>
                                     <span>{{ group.cities }}</span>
@@ -213,7 +213,7 @@
                             <div class="py-6 px-3 space-y-4">
                                 <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
                                     <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
-                                        <HomeIcon class="w-5 h-5 mr-2" />
+                                        <Home class="w-5 h-5 mr-2" />
                                         <span>Codes postaux</span>
                                     </div>
 
@@ -224,7 +224,7 @@
 
                                 <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
                                     <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
-                                        <HomeIcon class="w-5 h-5 mr-2" />
+                                        <Home class="w-5 h-5 mr-2" />
                                         <span>Villes</span>
                                     </div>
 
@@ -282,7 +282,7 @@
                     v-else
                     class="flex items-center gap-2 text-success font-semibold"
                 >
-                    <CheckCircleIcon class="w-6 h-6" />
+                    <CircleCheck class="w-6 h-6" />
                     <span>Réponse envoyée</span>
                 </div>
 
@@ -322,10 +322,10 @@
                             @click="selectAndSubmitReplacement(member.user_id)"
                         >
                             <div class="flex items-center gap-2">
-                                <UserIcon class="size-5 text-primary" />
+                                <User class="size-5 text-primary" />
                                 <span>{{ member?.firstname }} {{ member?.lastname }}</span>
                             </div>
-                            <ArrowRightIcon class="size-5 text-primary" />
+                            <ArrowRight class="size-5 text-primary" />
                         </li>
                     </template>
                     <template v-else>
@@ -349,13 +349,8 @@
 </template>
 
 <script setup>
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
-import {
-    CalendarDaysIcon,
-    ClockIcon,
-    HomeIcon,
-    CheckCircleIcon,
-} from '@heroicons/vue/24/solid';
+import { ArrowLeft, ArrowRight, Calendar, CircleCheck, Clock, Home, Star, User } from 'lucide-vue-next';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';

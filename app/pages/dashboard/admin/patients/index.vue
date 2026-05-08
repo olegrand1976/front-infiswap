@@ -12,7 +12,8 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronUpDownIcon } from '@heroicons/vue/24/outline';
+import { ChevronsUpDown, Star } from 'lucide-vue-next';
+
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -39,7 +40,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Nom', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Nom', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -49,7 +50,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['NISS', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['NISS', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase' }, formatNISS(row.getValue('social_security_number'))),
     },
@@ -59,7 +60,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Email', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Email', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase' }, row.getValue('email')),
     },
@@ -69,7 +70,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Téléphone', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Téléphone', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatPhoneNumber(row.getValue('phone_number')));
@@ -81,7 +82,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Infirmier(e)', h(ChevronUpDownIcon, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Infirmier(e)', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
             const patient = row.original;
@@ -94,7 +95,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Ville', h(ChevronUpDownIcon, { class: '' })]);
+            }, () => ['Ville', h(ChevronsUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, row.getValue('city'));
@@ -106,7 +107,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['C.P', h(ChevronUpDownIcon, { class: '' })]);
+            }, () => ['C.P', h(ChevronsUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, row.getValue('zip_code'));
@@ -118,7 +119,7 @@ const columns: ColumnDef<Patient>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Date', h(ChevronUpDownIcon, { class: '' })]);
+            }, () => ['Date', h(ChevronsUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));

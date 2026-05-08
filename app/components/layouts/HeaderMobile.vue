@@ -33,8 +33,9 @@
 </template>
 
 <script lang="ts" setup>
+import { Phone, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PhoneIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import { cn } from '~/lib/utils';
 

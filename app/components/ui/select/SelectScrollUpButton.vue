@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ChevronUpIcon } from '@heroicons/vue/24/outline';
+import { ChevronUp, Star } from 'lucide-vue-next';
+
 import { SelectScrollUpButton, type SelectScrollUpButtonProps, useForwardProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -21,7 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         :class="cn('flex cursor-default items-center justify-center py-1', props.class)"
     >
         <slot>
-            <ChevronUpIcon class="h-4 w-4" />
+            <ChevronUp class="h-4 w-4" />
         </slot>
     </SelectScrollUpButton>
 </template>

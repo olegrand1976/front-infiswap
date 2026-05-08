@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -93,14 +93,14 @@
                     class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                     @click="reinitializeFilter"
                 >
-                    <ArrowPathIcon class="w-6" />
+                    <RefreshCw class="w-6" />
                     <span class="block ml-2 text-sm md:hidden">Réinitialiser</span>
                 </Button>
                 <Button
                     type="submit"
                     class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                 >
-                    <MagnifyingGlassIcon class="w-6" />
+                    <Search class="w-6" />
                     <span class="ml-2 text-sm">Rechercher</span>
                 </Button>
             </div>
@@ -200,14 +200,14 @@
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
-                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                    <Ellipsis class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="w-4 h-4" />
+                                                        <Eye class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -305,14 +305,14 @@
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
-                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                    <Ellipsis class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="w-4 h-4" />
+                                                        <Eye class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -417,14 +417,14 @@
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
-                                                    <EllipsisHorizontalIcon class="w-6 cursor-pointer" />
+                                                    <Ellipsis class="w-6 cursor-pointer" />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent class="w-48">
                                                     <DropdownMenuItem
                                                         class="flex items-center space-x-2 text-sm cursor-pointer"
                                                         @click="handleShowDetail(partnership)"
                                                     >
-                                                        <EyeIcon class="w-4 h-4" />
+                                                        <Eye class="w-4 h-4" />
                                                         <span>Détail</span>
                                                     </DropdownMenuItem>
 
@@ -432,7 +432,7 @@
                                                         @click="closePartenershipDialog = true;
                                                                 selectedPartnership = partnership"
                                                     >
-                                                        <XMarkIcon class="w-4 h-4" />
+                                                        <X class="w-4 h-4" />
                                                         <span>Fermer</span>
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -545,7 +545,7 @@
                         v-else-if="selectedPartnership.has_responded"
                         class="flex items-center justify-center gap-3 p-3 mx-auto my-6 bg-gray-100 rounded-full text-success w-80"
                     >
-                        <CheckBadgeIcon class="w-8" />
+                        <BadgeCheck class="w-8" />
                         <p class="font-semibold">
                             Réponse envoyée
                         </p>
@@ -571,7 +571,7 @@
                         </div>
 
                         <div class="flex gap-3 mt-8 text-gray-700">
-                            <InformationCircleIcon class="w-8" />
+                            <Info class="w-8" />
                             <p class="text-sm">
                                 En vous proposant comme candidat pour cette demande, vous témoignez de votre volonté de collaborer et de former un binôme avec la personne qui a posté cette demande.
                             </p>
@@ -625,16 +625,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    MagnifyingGlassIcon,
-    ArrowPathIcon,
-    EllipsisHorizontalIcon,
-    EyeIcon,
-    CheckBadgeIcon,
-    InformationCircleIcon,
-    XMarkIcon,
-    ArrowLeftIcon,
-} from '@heroicons/vue/24/outline';
+import { ArrowLeft, BadgeCheck, Ellipsis, Eye, Info, RefreshCw, Search, Star, X } from 'lucide-vue-next';
+
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

@@ -167,7 +167,8 @@
 </template>
 
 <script lang="ts" setup>
-import { InformationCircleIcon as InfoIcon } from '@heroicons/vue/24/outline';
+import { Info, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

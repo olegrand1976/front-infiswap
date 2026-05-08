@@ -18,7 +18,7 @@
             <div class="mb-4">
                 <InputIcon
                     v-model="searchQuery"
-                    :icon="UserCircleIcon"
+                    :icon="CircleUser"
                     type="text"
                     placeholder="Rechercher par nom ou prénom..."
                     rounded="md"
@@ -72,7 +72,8 @@
 </template>
 
 <script setup lang="ts">
-import { UserCircleIcon } from '@heroicons/vue/24/solid';
+import { CircleUser, Star } from 'lucide-vue-next';
+
 import type { UserPartner, User } from '~/lib/types';
 
 const props = defineProps<{ partnership?: UserPartner | null }>();

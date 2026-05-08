@@ -23,20 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-import {
-    HomeIcon as HomeIconOutline,
-    InformationCircleIcon as InformationCircleIconOutline,
-    BriefcaseIcon as BriefcaseIconOutline,
-    SquaresPlusIcon as SquaresPlusIconOutline,
-} from '@heroicons/vue/24/outline';
-import {
-    HomeIcon as HomeIconSolid,
-    InformationCircleIcon as InformationCircleIconSolid,
-    BriefcaseIcon as BriefcaseIconSolid,
-    SquaresPlusIcon as SquaresPlusIconSolid,
-} from '@heroicons/vue/24/solid';
-import { Headphones as HeadphonesIcon, LogIn as LogInIcon } from 'lucide-vue-next';
+import { Briefcase, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();
 const route = useRoute();
@@ -46,20 +33,20 @@ const tabs = computed(() => {
         {
             label: 'Accueil',
             route: '/',
-            iconOutline: HomeIconOutline,
-            iconSolid: HomeIconSolid,
+            iconOutline: Home,
+            iconSolid: Home,
         },
         {
             label: 'À propos',
             route: '/about',
-            iconOutline: InformationCircleIconOutline,
-            iconSolid: InformationCircleIconSolid,
+            iconOutline: Info,
+            iconSolid: Info,
         },
         {
             label: 'Services',
             route: '/services',
-            iconOutline: BriefcaseIconOutline,
-            iconSolid: BriefcaseIconSolid,
+            iconOutline: Briefcase,
+            iconSolid: Briefcase,
         },
         {
             label: 'Contact',
@@ -73,8 +60,8 @@ const tabs = computed(() => {
         baseTabs.push({
             label: 'Dashboard',
             route: '/dashboard',
-            iconOutline: SquaresPlusIconOutline,
-            iconSolid: SquaresPlusIconSolid,
+            iconOutline: LayoutGrid,
+            iconSolid: LayoutGrid,
         });
     }
     else {

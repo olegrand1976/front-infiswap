@@ -57,7 +57,7 @@
                     <div class="col-span-2 relative w-full items-center">
                         <InputIcon
                             v-model="formData.lastname"
-                            :icon="UserCircleIcon"
+                            :icon="CircleUser"
                             size="md"
                             placeholder="Nom *"
                         />
@@ -66,7 +66,7 @@
                     <div class="col-span-2 relative w-full items-center">
                         <InputIcon
                             v-model="formData.firstname"
-                            :icon="UserCircleIcon"
+                            :icon="CircleUser"
                             size="md"
                             placeholder="Prénoms *"
                         />
@@ -75,7 +75,7 @@
                     <div class="col-span-2 relative w-full items-center">
                         <InputIcon
                             v-model="formData.email"
-                            :icon="EnvelopeIcon"
+                            :icon="Mail"
                             size="md"
                             placeholder="Email *"
                         />
@@ -84,7 +84,7 @@
                     <div class="col-span-2">
                         <InputIcon
                             v-model="formData.phoneNumber"
-                            :icon="PhoneIcon"
+                            :icon="Phone"
                             size="md"
                             placeholder="N° de téléphone"
                         />
@@ -115,11 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    UserCircleIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-} from '@heroicons/vue/24/solid';
+import { CircleUser, Mail, Phone, Star } from 'lucide-vue-next';
 
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 

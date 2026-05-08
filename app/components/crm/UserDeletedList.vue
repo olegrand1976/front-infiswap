@@ -32,9 +32,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowUpDown, Eye, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { EyeIcon } from '@heroicons/vue/24/outline';
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { Button } from '@/components/ui/button';
 import type { Pagination, User } from '~/lib/types';
@@ -96,7 +96,7 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('firstname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -106,7 +106,7 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('zip_code'),
-            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-4' }, row.getValue('zip_code'));
@@ -118,7 +118,7 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('city'),
-            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-4' }, row.getValue('city'));
@@ -130,11 +130,11 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowsUpDownIcon)]);
+            }, () => ['Contact', h(ArrowUpDown)]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-8' }, [
-                h(EyeIcon, {
+                h(Eye, {
                     class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
                     onClick: () => openModal(row.original),
                 }),
@@ -195,7 +195,7 @@ const columnsExUsers: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'ml-4' }, formatRelativeDate(row.getValue('created_at')));

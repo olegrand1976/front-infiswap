@@ -68,7 +68,7 @@
                                         class="inline-flex items-center justify-center size-8 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors mx-auto"
                                         title="Voir détails"
                                     >
-                                        <EyeIcon class="size-5 text-blue-600" />
+                                        <Eye class="size-5 text-blue-600" />
                                     </NuxtLink>
                                 </td>
                             </tr>
@@ -81,9 +81,8 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref, reactive, onMounted } from 'vue';
-import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, EyeIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpDown, Eye, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -149,7 +148,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.full_name') }, () => [
                 'Nom',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4 ml-2' }),
+                h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info =>
             h('div', { class: 'py-2 ml-3' }, [
@@ -161,7 +160,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.email') }, () => [
                 'Email',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4 ml-2' }),
+                h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
     },
@@ -170,7 +169,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.phone_number') }, () => [
                 'Téléphone',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4 ml-2' }),
+                h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
     },
@@ -184,7 +183,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
                     'Nb. remplacements',
-                    h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                    h(ArrowUpDown, { class: 'w-4 h-4' }),
                 ]),
             ]),
         cell: (info) => {

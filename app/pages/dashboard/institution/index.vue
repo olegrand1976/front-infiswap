@@ -353,7 +353,7 @@
                         class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
                         @click="handleReadNotification(notification, 'mission')"
                     >
-                        <UserPlusIcon class="w-6 h-6 text-primary" />
+                        <UserPlus class="w-6 h-6 text-primary" />
                         <div class="space-y-2">
                             <h6 class="text-sm text-gray-600 font-medium">
                                 Un nouveau candidat pour la mission #{{ notification.notifiable_id }}
@@ -369,7 +369,7 @@
                         class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
                         @click="handleReadNotification(notification, 'timesheet')"
                     >
-                        <ClipboardDocumentListIcon class="w-6 h-6 text-primary" />
+                        <ClipboardList class="w-6 h-6 text-primary" />
                         <div class="space-y-2">
                             <h6 class="text-sm text-gray-600 font-medium">
                                 Vous avez {{ notification.data.length > 1 ? `${notification.data.length} jours` : `${notification.data.length} jour` }} à valider pour la mission #{{ notification.mission_id }}
@@ -386,8 +386,8 @@
 </template>
 
 <script lang="ts" setup>
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ClipboardDocumentListIcon, UserPlusIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
+import { ClipboardList, Info, Star, UserPlus } from 'lucide-vue-next';
+
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 
 useHead({ title: 'Tableau de bord' });

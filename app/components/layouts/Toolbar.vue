@@ -16,7 +16,7 @@
                                         type="submit"
                                         class="bg-primary text-white w-7 h-7 rounded-full"
                                     >
-                                        <MagnifyingGlassIcon class="h-7 w-7" />
+                                        <Search class="h-7 w-7" />
                                     </Button>
                                 </div>
                             </FormControl>
@@ -32,7 +32,7 @@
                             {{ emailCount }}
                         </Badge>
                     </div>
-                    <EnvelopeIcon class="h-7 w-7 text-gray-500" />
+                    <Mail class="h-7 w-7 text-gray-500" />
                 </div>
                 <div class="relative">
                     <div class="absolute -top-3 -right-3">
@@ -48,7 +48,7 @@
                         class="w-full font-semibold"
                         @click="signOut"
                     >
-                        <PowerIcon class="w-6 h-6" />
+                        <Power class="w-6 h-6" />
                         Déconnexion
                     </Button>
                 </div>
@@ -58,7 +58,8 @@
 </template>
 
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, EnvelopeIcon, BellIcon, PowerIcon } from '@heroicons/vue/24/solid';
+import { Mail, Power, Search, Star } from 'lucide-vue-next';
+
 import { Badge } from '@/components/ui/badge';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';

@@ -22,8 +22,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -95,7 +96,7 @@ const columns: ColumnDef<Stat>[] = [
                 class: 'flex justify-center items-center w-full',
             }, () => [
                 'Nom du site',
-                h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' }),
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
             ]);
         },
         cell: ({ row }) =>
@@ -110,7 +111,7 @@ const columns: ColumnDef<Stat>[] = [
                 class: 'flex justify-center items-center w-full',
             }, () => [
                 'Nombre de visites',
-                h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' }),
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
             ]);
         },
         cell: ({ row }) =>
@@ -126,7 +127,7 @@ const columns: ColumnDef<Stat>[] = [
                     class: 'flex items-center gap-1',
                 }, () => [
                     'Création',
-                    h(ArrowsUpDownIcon, { class: '' }),
+                    h(ArrowUpDown, { class: '' }),
                 ]),
             ]);
         },

@@ -39,7 +39,7 @@
                         <InputIcon
                             id="name"
                             v-model="formData.name"
-                            :icon="BuildingOffice2Icon"
+                            :icon="Building2"
                             placeholder="Nom de l'institution"
                             required
                         />
@@ -68,8 +68,9 @@
 </template>
 
 <script setup lang="ts">
+import { Building2, Star } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BuildingOffice2Icon } from '@heroicons/vue/24/solid';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 

@@ -32,7 +32,7 @@
                 <Button
                     class="bg-primary"
                 >
-                    <MagnifyingGlassIcon class="w-6" />
+                    <Search class="w-6" />
                     Rechercher
                 </Button>
             </Form> -->
@@ -103,7 +103,7 @@
                                             :to="`/dashboard/patients/detail/${patient.id}`"
                                             @click.prevent="storePatientOwnership(patient)"
                                         >
-                                            <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
+                                            <SquarePen class="w-5 cursor-pointer hover:text-primary" />
                                         </NuxtLink>
                                         <AlertDialog>
                                             <AlertDialogTrigger as-child>
@@ -112,7 +112,7 @@
                                                     :disabled="!patient.is_own_patient"
                                                     :class="!patient.is_own_patient ? 'opacity-50 cursor-not-allowed' : ''"
                                                 >
-                                                    <TrashIcon
+                                                    <Trash2
                                                         class="w-5 hover:text-primary"
                                                         :class="!patient.is_own_patient ? 'cursor-not-allowed' : 'cursor-pointer'"
                                                     />
@@ -197,9 +197,9 @@
 
                         <div class="flex space-x-4">
                             <NuxtLink :to="`/dashboard/patients/detail/${patient.id}`">
-                                <PencilSquareIcon class="w-5 cursor-pointer hover:text-primary" />
+                                <SquarePen class="w-5 cursor-pointer hover:text-primary" />
                             </NuxtLink>
-                            <TrashIcon
+                            <Trash2
                                 class="w-5 cursor-pointer hover:text-primary"
                                 @click="openDialog"
                             />
@@ -270,7 +270,8 @@
 </template>
 
 <script setup lang="ts">
-import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { Search, SquarePen, Star, Trash2 } from 'lucide-vue-next';
+
 import { useNursePatients } from '~/composables/useNursePatients';
 import { deletePatient } from '~/composables/usePatients';
 import type { CareType } from '~/lib/types';

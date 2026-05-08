@@ -14,7 +14,7 @@
                             <div class="relative items-center w-full">
                                 <InputIcon
                                     v-model="formData.name"
-                                    :icon="UserCircleIcon"
+                                    :icon="CircleUser"
                                     size="md"
                                     placeholder="Nom, prénom"
                                     :errors="validationErrors.name"
@@ -33,7 +33,7 @@
                             <div class="relative items-center w-full">
                                 <InputIcon
                                     v-model="formData.email"
-                                    :icon="EnvelopeIcon"
+                                    :icon="Mail"
                                     size="md"
                                     placeholder="Email"
                                     :errors="validationErrors.email"
@@ -52,7 +52,7 @@
                             <div class="relative items-center w-full">
                                 <InputIcon
                                     v-model="formData.phoneNumber"
-                                    :icon="PhoneIcon"
+                                    :icon="Phone"
                                     size="md"
                                     placeholder="N° de téléphone"
                                     :errors="validationErrors.phoneNumber"
@@ -68,7 +68,7 @@
                 <FormField name="message">
                     <FormItem class="flex flex-col px-4 py-2 border border-gray-300 rounded-3xl focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
                         <div class="flex items-center space-x-3">
-                            <EnvelopeIcon class="w-6 text-primary" />
+                            <Mail class="w-6 text-primary" />
                             <span class="text-sm text-primary">
                                 Message
                             </span>
@@ -97,7 +97,7 @@
             <section class="grid grid-cols-1 lg:grid-cols-4 container sm:w-[70%] lg:w-[55%] gap-4 my-12">
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
-                        <EnvelopeIcon class="w-6 h-6" />
+                        <Mail class="w-6 h-6" />
                         <span>Téléphone</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
@@ -107,7 +107,7 @@
 
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
-                        <MapPinIcon class="w-6 h-6" />
+                        <MapPin class="w-6 h-6" />
                         <span>Emplacement</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
@@ -117,7 +117,7 @@
 
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
-                        <EnvelopeIcon class="w-6 h-6" />
+                        <Mail class="w-6 h-6" />
                         <span>Email</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
@@ -127,7 +127,7 @@
 
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
-                        <GlobeAltIcon class="w-6 h-6" />
+                        <Globe class="w-6 h-6" />
                         <span>Site</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
@@ -140,13 +140,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    UserCircleIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    MapPinIcon,
-    GlobeAltIcon,
-} from '@heroicons/vue/24/solid';
+import { CircleUser, Globe, Mail, MapPin, Phone, Star } from 'lucide-vue-next';
 
 import * as yup from 'yup';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';

@@ -5,7 +5,7 @@
     >
         <div class="container mx-auto flex justify-between text-sm items-center px-4">
             <p class="flex items-center">
-                <MapPinIcon class="w-5 h-5 mr-2" />
+                <MapPin class="w-5 h-5 mr-2" />
                 Rue de la Résistance, 92/A 7131 Waudrez Belgium
             </p>
             <div class="flex items-center gap-2">
@@ -14,7 +14,7 @@
                     href="mailto:info@infiswap.be"
                     class="ml-4 flex items-center gap-2"
                 >
-                    <EnvelopeIcon class="w-5 h-5" />
+                    <Mail class="w-5 h-5" />
                     info@infiswap.be
                 </a>
             </div>
@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MapPinIcon, EnvelopeIcon } from '@heroicons/vue/24/outline';
+import { Mail, MapPin, Star } from 'lucide-vue-next';
 
 import { useRoute } from 'vue-router';
 

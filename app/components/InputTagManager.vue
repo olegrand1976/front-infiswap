@@ -22,7 +22,7 @@
                 title="Ajouter"
                 @click="addItem"
             >
-                <PlusIcon class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
+                <Plus class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
             </Button>
         </div>
         <div
@@ -48,7 +48,8 @@
 </template>
 
 <script setup>
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { Plus, Star } from 'lucide-vue-next';
+
 import { InputIcon } from '~/components/ui/input-with-icon';
 
 const user = useState('user');

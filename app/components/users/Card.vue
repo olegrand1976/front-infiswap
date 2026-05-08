@@ -20,7 +20,7 @@
                 class="absolute rounded-full border-background"
                 :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
             >
-            <UserCircleIcon
+            <CircleUser
                 v-else
                 class="absolute rounded-full border-background bg-muted text-tertiary"
                 :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
@@ -105,7 +105,7 @@
                     class="flex items-center gap-2 cursor-pointer"
                     title="Date de dernière post d'un remplacement"
                 >
-                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <Calendar class="w-5 h-5 text-primary" />
                     <p>Dernière post : <span class="font-semibold">{{ user.historic_activity?.last_post_date ?? '—' }}</span></p>
                 </div>
 
@@ -113,7 +113,7 @@
                     class="flex items-center gap-2 cursor-pointer"
                     title="Date de dernière acceptation d'un remplacement"
                 >
-                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <Calendar class="w-5 h-5 text-primary" />
                     <p>Acceptation : <span class="font-semibold">{{ user.historic_activity?.last_accept_posted_date ?? '—' }}</span></p>
                 </div>
 
@@ -121,7 +121,7 @@
                     class="flex items-center gap-2 cursor-pointer"
                     title="Date de dernière réponse à un remplacement posté"
                 >
-                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <Calendar class="w-5 h-5 text-primary" />
                     <p>Réponse : <span class="font-semibold">{{ user.historic_activity?.last_response_date ?? '—' }}</span></p>
                 </div>
 
@@ -129,7 +129,7 @@
                     class="flex items-center gap-2 cursor-pointer"
                     title="Date de dernière acceptation sur un remplacement posté"
                 >
-                    <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                    <Calendar class="w-5 h-5 text-primary" />
                     <p>Accept. réponse : <span class="font-semibold">{{ user.historic_activity?.last_accept_response_date ?? '—' }}</span></p>
                 </div>
 
@@ -156,7 +156,7 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <CheckCircleIcon class="w-5 h-5 text-primary" />
+                    <CircleCheck class="w-5 h-5 text-primary" />
                     <p>
                         Positionnements acceptés : <span class="font-semibold">{{ activityData.placements_accepted }}</span>
                     </p>
@@ -168,7 +168,7 @@
                     v-if="user.ambassador === 1"
                     class="flex items-center gap-2"
                 >
-                    <UserGroupIcon class="w-5 h-5 text-primary" />
+                    <Users class="w-5 h-5 text-primary" />
                     <p>Infirmiers parrainés : <span class="font-semibold">--</span></p>
                 </div>
             </div>
@@ -178,23 +178,23 @@
                 class="p-4 space-y-3 border border-gray-200 rounded-lg"
             >
                 <p class="flex items-center gap-2 text-primary">
-                    <EnvelopeIcon class="w-5 h-5" />
+                    <Mail class="w-5 h-5" />
                     {{ user.email }}
                 </p>
                 <p class="flex items-center gap-2">
-                    <PhoneIcon class="w-5 h-5 text-primary" />
+                    <Phone class="w-5 h-5 text-primary" />
                     {{ user.phone_number }}
                 </p>
                 <p class="flex items-center gap-2">
-                    <BuildingOffice2Icon class="w-5 h-5 text-primary" />
+                    <Building2 class="w-5 h-5 text-primary" />
                     {{ user.city }}
                 </p>
                 <p class="flex items-center gap-2">
-                    <InboxArrowDownIcon class="w-5 h-5 text-primary" />
+                    <Inbox class="w-5 h-5 text-primary" />
                     {{ user.zip_code }}
                 </p>
                 <p class="flex items-center gap-2">
-                    <IdentificationIcon class="w-5 h-5 text-primary" />
+                    <IdCard class="w-5 h-5 text-primary" />
                     {{ new Date(user.created_at).toLocaleDateString('fr-FR') }}
                 </p>
             </div>
@@ -219,7 +219,7 @@
 
                 <div class="flex items-center gap-2">
                     <component
-                        :is="user.insurance ? CheckCircleIcon : XCircleIcon"
+                        :is="user.insurance ? CircleCheck : XCircle"
                         :class="user.insurance ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>NursAssur</label>
@@ -227,7 +227,7 @@
 
                 <div class="flex items-center gap-2">
                     <component
-                        :is="user.site ? CheckCircleIcon : XCircleIcon"
+                        :is="user.site ? CircleCheck : XCircle"
                         :class="user.site ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>NursTech</label>
@@ -235,14 +235,14 @@
 
                 <div class="flex items-center gap-2">
                     <component
-                        :is="user.ambassador ? CheckCircleIcon : XCircleIcon"
+                        :is="user.ambassador ? CircleCheck : XCircle"
                         :class="user.ambassador ? 'text-green-500 w-5 h-5' : 'text-gray-300 w-5 h-5'"
                     />
                     <label>Ambassadeur</label>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <XCircleIcon class="w-5 h-5 text-gray-300" />
+                    <XCircle class="w-5 h-5 text-gray-300" />
                     <label>Tournée</label>
                 </div>
             </div>
@@ -625,19 +625,19 @@
                     : 'grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2.5 py-4 text-sm'"
             >
                 <template v-if="minimalInfo">
-                    <BuildingOffice2Icon
+                    <Building2
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon
+                    <Inbox
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
                 </template>
                 <template v-else-if="showFullInfo">
-                    <EnvelopeIcon
+                    <Mail
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
@@ -652,39 +652,39 @@
                         : user.gender === 'M' ? 'Homme'
                             : user.gender || 'Non renseigné'
                     }}</span>
-                    <PhoneIcon
+                    <Phone
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.phone_number || 'Non renseigné' }}</span>
-                    <BuildingOffice2Icon
+                    <Building2
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon
+                    <Inbox
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
-                    <IdentificationIcon
+                    <IdCard
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.identifier_number || 'Non renseigné' }}</span>
                 </template>
                 <template v-else>
-                    <BuildingOffice2Icon
+                    <Building2
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.city || user.profile.city || 'Non renseigné' }}</span>
-                    <InboxArrowDownIcon
+                    <Inbox
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
                     <span class="min-w-0 break-words leading-snug">{{ user.zip_code || user.profile.zip_code || 'Non renseigné' }}</span>
-                    <PhoneIcon
+                    <Phone
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
@@ -701,22 +701,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import {
-    UserCircleIcon,
-    InboxArrowDownIcon,
-    BuildingOffice2Icon,
-    CheckCircleIcon,
-    XCircleIcon,
-    DocumentPlusIcon,
-    DocumentCheckIcon,
-    ArrowPathRoundedSquareIcon,
-    UserGroupIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    IdentificationIcon,
-    CalendarDaysIcon,
-} from '@heroicons/vue/24/solid';
+import { Building2, Calendar, CircleCheck, CircleUser, IdCard, Inbox, Mail, Phone, Star, Users, XCircle } from 'lucide-vue-next';
+
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 

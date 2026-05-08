@@ -82,7 +82,7 @@
                                 to="/"
                                 class="flex flex-row space-x-3"
                             >
-                                <PhoneIcon class="w-4 h-4 text-primary" />
+                                <Phone class="w-4 h-4 text-primary" />
                                 <p class="text-sm">0478.02.33.77</p>
                             </NuxtLink>
                         </li>
@@ -91,7 +91,7 @@
                                 to="/"
                                 class="flex flex-row space-x-3"
                             >
-                                <MapPinIcon class="w-4 h-4 text-primary" />
+                                <MapPin class="w-4 h-4 text-primary" />
                                 <p class="text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</p>
                             </NuxtLink>
                         </li>
@@ -100,7 +100,7 @@
                                 to="/"
                                 class="flex flex-row justify-start space-x-3"
                             >
-                                <EnvelopeIcon class="w-4 h-4 text-primary" />
+                                <Mail class="w-4 h-4 text-primary" />
                                 <p class="text-sm">info@infiswap.be</p>
                             </NuxtLink>
                         </li>
@@ -109,7 +109,7 @@
                                 to="/"
                                 class="flex flex-row justify-start space-x-3"
                             >
-                                <GlobeAltIcon class="w-4 h-4 text-primary" />
+                                <Globe class="w-4 h-4 text-primary" />
                                 <p class="text-sm">www.infiswap.be</p>
                             </NuxtLink>
                         </li>
@@ -121,18 +121,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-
-import {
-    PhoneIcon,
-    MapPinIcon,
-    EnvelopeIcon,
-    GlobeAltIcon,
-} from '@heroicons/vue/24/outline';
-
-import {
-    Bars4Icon,
-} from '@heroicons/vue/24/solid';
+import { Globe, Mail, MapPin, Phone, Star } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();
 

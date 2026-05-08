@@ -80,15 +80,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import {
-    BeakerIcon,
-    BriefcaseIcon,
-    ArrowsRightLeftIcon,
-    ArrowDownIcon,
-    ShieldCheckIcon,
-    CakeIcon,
-} from '@heroicons/vue/24/solid';
+import { Briefcase, ShieldCheck, Star } from 'lucide-vue-next';
+
 import { useRoute } from 'vue-router';
 
 const { $toast } = useNuxtApp();
@@ -107,7 +100,7 @@ const katzItems = ref([
     {
         category: 'S\'habiller',
         selected: 0,
-        icon: BriefcaseIcon,
+        icon: Briefcase,
         choices: [
             { value: 1, label: '1. S\'habille et se déshabille seul' },
             { value: 2, label: '2. Besoin d\'aide pour s\'habiller au-dessus ou en-dessous (sans les lacets)' },
@@ -140,7 +133,7 @@ const katzItems = ref([
     {
         category: 'Continence',
         selected: 0,
-        icon: ShieldCheckIcon,
+        icon: ShieldCheck,
         choices: [
             { value: 1, label: '1. Contrôle complet urines/selles' },
             { value: 2, label: '2. Pertes occasionnelles' },

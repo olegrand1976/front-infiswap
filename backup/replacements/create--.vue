@@ -27,7 +27,7 @@
                                     </FormLabel>
                                     <FormControl>
                                         <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
-                                            <CalendarIcon class="w-6 h-6 text-primary" />
+                                            <Calendar class="w-6 h-6 text-primary" />
                                             <Input
                                                 v-model="formData.startDate"
                                                 placeholder="jj/mm/aaaa"
@@ -50,7 +50,7 @@
                                     </FormLabel>
                                     <FormControl>
                                         <div class="flex px-4 w-40 space-x-1 items-center rounded-full bg-white h-10">
-                                            <CalendarIcon class="w-6 h-6 text-primary" />
+                                            <Calendar class="w-6 h-6 text-primary" />
                                             <Input
                                                 v-model="formData.endDate"
                                                 placeholder="jj/mm/aaaa"
@@ -73,7 +73,7 @@
                                 href="/dashboard/replacements/immediate"
                             >
                                 Créer un remplacement rapide
-                                <ClockIcon class="w-6 h-6" />
+                                <Clock class="w-6 h-6" />
                             </Button>
                         </div>
                         <div class="sm:mx-20 md:mx-0 ps-4">
@@ -96,7 +96,7 @@
                             <FormItem>
                                 <FormControl>
                                     <div class="bg-primary rounded-full h-9 px-3 text-white flex items-center">
-                                        <ChevronLeftIcon
+                                        <ChevronLeft
                                             class="w-5 cursor-pointer"
                                             title="Date précédente"
                                             :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) <= new Date(formData.startDate) }"
@@ -111,7 +111,7 @@
                                             class="w-28 text-xs bg-transparent placeholder:text-white"
                                             disabled
                                         />
-                                        <ChevronRightIcon
+                                        <ChevronRight
                                             class="w-5 cursor-pointer"
                                             :class="{ 'opacity-50 cursor-not-allowed': new Date(currentDate) >= new Date(formData.endDate) }"
                                             :disabled="new Date(currentDate) >= new Date(formData.endDate)"
@@ -184,7 +184,7 @@
                                                         <p class="w-full truncate">
                                                             {{ patient.firstname }} {{ patient.lastname }}
                                                         </p>
-                                                        <TrashIcon
+                                                        <Trash2
                                                             class="w-4 h-4 hover:text-primary cursor-pointer"
                                                             @click="removePatient(currentDate, patient.id, patient.time)"
                                                         />
@@ -204,7 +204,7 @@
                                                 :disabled="!formData.startDate || !formData.endDate"
                                                 @click="openDialog(key)"
                                             >
-                                                <PlusCircleIcon
+                                                <CirclePlus
                                                     class="w-6 mr-1 disabled:cursor-not-allowed cursor-pointer text-primary"
                                                 />
                                             </Button>
@@ -231,7 +231,7 @@
                                             class="flex items-center space-x-2"
                                             @click="dialogConfirm = true"
                                         >
-                                            <PlusIcon class="w-5 h-5" />
+                                            <Plus class="w-5 h-5" />
                                             <span>Nouveau patient</span>
                                         </Button>
 
@@ -451,17 +451,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    CalendarIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    Square2StackIcon,
-    PlusIcon,
-    TrashIcon,
-    PlusCircleIcon,
-    ArrowPathRoundedSquareIcon,
-    ClockIcon,
-} from '@heroicons/vue/24/solid';
+import { Calendar, ChevronLeft, ChevronRight, CirclePlus, Clock, Plus, Star, Trash2 } from 'lucide-vue-next';
 
 import type { DateRange } from 'radix-vue';
 import { CalendarDate, getLocalTimeZone, today as todayFn } from '@internationalized/date';

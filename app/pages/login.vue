@@ -49,7 +49,7 @@
                             <div class="flex w-full items-center space-x-1">
                                 <InputIcon
                                     v-model="credentials.identifier"
-                                    :icon="UserIcon"
+                                    :icon="User"
                                     type="text"
                                     placeholder="Email"
                                     class="text-sm w-full"
@@ -59,7 +59,7 @@
                             <div class="flex w-full items-center space-x-1">
                                 <InputIcon
                                     v-model="credentials.password"
-                                    :icon="LockClosedIcon"
+                                    :icon="Lock"
                                     type="password"
                                     placeholder="Mot de passe"
                                     class="text-sm w-full"
@@ -139,7 +139,7 @@
                         <div class="flex w-full items-center space-x-1">
                             <InputIcon
                                 v-model="credentials.identifier"
-                                :icon="UserIcon"
+                                :icon="User"
                                 type="text"
                                 placeholder="Email"
                                 class="text-sm w-full"
@@ -149,7 +149,7 @@
                         <div class="flex w-full items-center space-x-1">
                             <InputIcon
                                 v-model="credentials.password"
-                                :icon="LockClosedIcon"
+                                :icon="Lock"
                                 type="password"
                                 placeholder="Mot de passe"
                                 class="text-sm w-full"
@@ -211,7 +211,8 @@
 </template>
 
 <script lang="ts" setup>
-import { LockClosedIcon, UserIcon } from '@heroicons/vue/24/solid';
+import { Lock, Star, User } from 'lucide-vue-next';
+
 import { useCookie } from '#app';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';

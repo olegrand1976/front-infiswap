@@ -1,6 +1,6 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeftIcon
+        <ArrowLeft
             class="size-6 cursor-pointer hover:text-primary"
             title="Retour"
             @click="goBack"
@@ -48,14 +48,14 @@
                     class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                     @click="reinitializeFilter"
                 >
-                    <ArrowPathIcon class="w-6" />
+                    <RefreshCw class="w-6" />
                     <span class="block ml-2 text-sm md:hidden">Réinitialiser</span>
                 </Button>
                 <Button
                     type="submit"
                     class="flex items-center justify-center px-4 text-sm bg-primary h-11"
                 >
-                    <MagnifyingGlassIcon class="w-6" />
+                    <Search class="w-6" />
                     <span class="ml-2 text-sm">Rechercher</span>
                 </Button>
             </div>
@@ -86,7 +86,7 @@
                     v-if="isSearching"
                     class="flex items-center gap-2 justify-center mt-10"
                 >
-                    <ArrowPathIcon class="w-6 h-6 animate-spin text-primary" />
+                    <RefreshCw class="w-6 h-6 animate-spin text-primary" />
                     <span>Recherche en cours...</span>
                 </div>
                 <div
@@ -142,7 +142,7 @@
                         </div>
 
                         <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                            <CalendarIcon class="h-4 w-4 text-gray-400" />
+                            <Calendar class="h-4 w-4 text-gray-400" />
                             <span>
                                 {{ formatToDMY(mission.start_date) }}
                                 <span class="mx-1 text-gray-300">→</span>
@@ -150,7 +150,7 @@
                             </span>
                         </div>
                         <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                            <ClockIcon class="h-4 w-4 text-gray-400" />
+                            <Clock class="h-4 w-4 text-gray-400" />
                             <span>
                                 {{ formatTime(mission.time_start_at) }}
                                 <span class="mx-1 text-gray-300">→</span>
@@ -171,7 +171,7 @@
                     v-if="isSearching"
                     class="flex items-center gap-2 justify-center mt-10"
                 >
-                    <ArrowPathIcon class="w-6 h-6 animate-spin text-primary" />
+                    <RefreshCw class="w-6 h-6 animate-spin text-primary" />
                     <span>Recherche en cours...</span>
                 </div>
                 <div
@@ -227,7 +227,7 @@
                         </div>
 
                         <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                            <CalendarIcon class="h-4 w-4 text-gray-400" />
+                            <Calendar class="h-4 w-4 text-gray-400" />
                             <span>
                                 {{ formatToDMY(mission.start_date, true) }}
                                 <span class="mx-1 text-gray-300">→</span>
@@ -235,7 +235,7 @@
                             </span>
                         </div>
                         <div class="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                            <AcademicCapIcon class="h-4 w-4 text-gray-400" />
+                            <GraduationCap class="h-4 w-4 text-gray-400" />
                             <span>
                                 {{ mission.required_diploma }}
                             </span>
@@ -253,7 +253,8 @@
 </template>
 
 <script lang="ts" setup>
-import { AcademicCapIcon, ArrowLeftIcon, ArrowPathIcon, CalendarIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Calendar, Clock, GraduationCap, RefreshCw, Search, Star } from 'lucide-vue-next';
+
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

@@ -32,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, Pencil, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { PencilIcon } from '@heroicons/vue/24/outline';
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import type { Pagination, User } from '~/lib/types';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
@@ -92,7 +92,7 @@ const columnsCrm: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('firstname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -100,7 +100,7 @@ const columnsCrm: ColumnDef<User>[] = [
         accessorKey: 'crm.last_comment',
         header: () => h(Button, { variant: 'ghost', onClick: () => setSort('crm.last_comment') }, () => [
             'Commentaire',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
             const comment = row.original?.crm?.last_comment;
@@ -122,7 +122,7 @@ const columnsCrm: ColumnDef<User>[] = [
         accessorKey: 'contact_date',
         header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_date') }, () => [
             'Date de contact',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
             const rawDate = row.original.crm.last_contact_date;
@@ -147,7 +147,7 @@ const columnsCrm: ColumnDef<User>[] = [
         accessorKey: 'contact_method',
         header: () => h(Button, { variant: 'ghost', onClick: () => setSort('contact_method') }, () => [
             'Contacté par',
-            h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+            h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
             const method = row.original.crm.last_contact_method;
@@ -173,11 +173,11 @@ const columnsCrm: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowsUpDownIcon)]);
+            }, () => ['Contact', h(ArrowUpDown)]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
-                h(PencilIcon, {
+                h(Pencil, {
                     class: 'w-5 h-5 text-blue-500 cursor-pointer inline-block',
                     onClick: () => openModal(row.original),
                 }),
@@ -194,7 +194,7 @@ const columnsCrm: ColumnDef<User>[] = [
             },
             () => [
                 'Nombre d\'appels passés',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
         cell: ({ row }) => {
@@ -223,7 +223,7 @@ const columnsCrm: ColumnDef<User>[] = [
             },
             () => [
                 'Nombre de ventes passées',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
         cell: ({ row }) => {
@@ -252,7 +252,7 @@ const columnsCrm: ColumnDef<User>[] = [
             },
             () => [
                 'Nombre de recommandations obtenues',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
         cell: ({ row }) => {
@@ -281,7 +281,7 @@ const columnsCrm: ColumnDef<User>[] = [
             },
             () => [
                 'Nombre de rendez-vous planifiés',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
         cell: ({ row }) => {
@@ -310,7 +310,7 @@ const columnsCrm: ColumnDef<User>[] = [
             },
             () => [
                 'Nombre de réponses en attente',
-                h(ArrowsUpDownIcon, { class: 'inline w-4 h-4 ml-1' }),
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
         cell: ({ row }) => {
@@ -335,7 +335,7 @@ const columnsCrm: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));

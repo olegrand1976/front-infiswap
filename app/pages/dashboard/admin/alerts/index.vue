@@ -6,7 +6,7 @@
                     class="rounded-md"
                     @click="openRecipientModalCreate"
                 >
-                    <PlusCircleIcon class="h-5 w-5" />
+                    <CirclePlus class="h-5 w-5" />
                     <span class="hidden md:inline-block">Nouveau destinataire</span>
                 </Button>
             </template>
@@ -31,7 +31,7 @@
                     variant="outline"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2 h-5 w-5" />
+                    <RefreshCw class="md:mr-2 h-5 w-5" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -110,13 +110,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, CirclePlus, Pencil, RefreshCw, Star, Trash2 } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import {
-    ArrowPathIcon,
-    ArrowsUpDownIcon,
-    PlusCircleIcon,
-} from '@heroicons/vue/24/solid';
-import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -350,7 +346,7 @@ const columns: ColumnDef<AlertRecipient>[] = [
             h(
                 Button,
                 { variant: 'ghost', class: 'px-0', onClick: () => setSort('name') },
-                () => ['Nom', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })],
+                () => ['Nom', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
             ),
         cell: ({ row }) =>
             h('div', { class: 'font-medium' }, row.getValue('name') || '—'),
@@ -361,7 +357,7 @@ const columns: ColumnDef<AlertRecipient>[] = [
             h(
                 Button,
                 { variant: 'ghost', class: 'px-0', onClick: () => setSort('email') },
-                () => ['E‑mail', h(ArrowsUpDownIcon, { class: 'ml-2 h-4 w-4' })],
+                () => ['E‑mail', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
             ),
         cell: ({ row }) =>
             h(
@@ -386,7 +382,7 @@ const columns: ColumnDef<AlertRecipient>[] = [
                         title: 'Modifier',
                         onClick: () => openRecipientModalEdit(recipient),
                     },
-                    () => h(PencilIcon, { class: 'w-4 h-4' }),
+                    () => h(Pencil, { class: 'w-4 h-4' }),
                 ),
                 h(
                     Button,
@@ -398,7 +394,7 @@ const columns: ColumnDef<AlertRecipient>[] = [
                         title: 'Retirer',
                         onClick: () => handleDelete(recipient),
                     },
-                    () => h(TrashIcon, { class: 'w-4 h-4' }),
+                    () => h(Trash2, { class: 'w-4 h-4' }),
                 ),
             ]);
         },

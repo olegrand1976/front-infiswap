@@ -8,7 +8,7 @@
                     class="rounded"
                     href="/dashboard/admin/care-types/create"
                 >
-                    <PlusCircleIcon />
+                    <CirclePlus />
                     <span class="hidden md:inline-block">
                         Nouveau
                     </span>
@@ -34,8 +34,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowUpDown, CirclePlus, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
-import { ArrowsUpDownIcon, PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@/components/ui/button';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { PERPAGE } from '~/lib/constants';
@@ -98,7 +99,7 @@ const columns: ColumnDef<CareType>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('name'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('name')),
     },
@@ -108,7 +109,7 @@ const columns: ColumnDef<CareType>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('duration'),
-            }, () => ['Durée', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Durée', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('duration'));
@@ -120,7 +121,7 @@ const columns: ColumnDef<CareType>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('price'),
-            }, () => ['Prix', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Prix', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('price'));
@@ -136,7 +137,7 @@ const columns: ColumnDef<CareType>[] = [
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
                     'Création',
-                    h(ArrowsUpDownIcon, { class: '' }),
+                    h(ArrowUpDown, { class: '' }),
                 ]),
             ]);
         },

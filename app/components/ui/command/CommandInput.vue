@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { Search, Star } from 'lucide-vue-next';
+
 import { ListboxFilter, type ListboxFilterProps, useForwardProps } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 import { useCommand } from '.';
@@ -29,7 +30,7 @@ const { filterState } = useCommand();
         class="flex items-center border-b px-3"
         cmdk-input-wrapper
     >
-        <MagnifyingGlassIcon class="mr-2 h-4 w-4 shrink-0 opacity-80" />
+        <Search class="mr-2 h-4 w-4 shrink-0 opacity-80" />
         <ListboxFilter
             v-bind="{ ...forwardedProps, ...$attrs }"
             v-model="filterState.search"

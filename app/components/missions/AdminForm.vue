@@ -86,7 +86,7 @@
                                     class="flex items-center gap-2 p-2 px-3 text-xs text-primary hover:bg-gray-100 cursor-pointer"
                                     @click="showServiceModal = true"
                                 >
-                                    <PlusIcon class="w-4 h-4" />
+                                    <Plus class="w-4 h-4" />
                                     Nouveau service
                                 </div>
                             </SelectContent>
@@ -97,7 +97,7 @@
                             class="whitespace-nowrap"
                             @click="showServiceModal = true"
                         >
-                            <PlusIcon class="w-4 h-4 mr-1" />
+                            <Plus class="w-4 h-4 mr-1" />
                             <span class="hidden md:inline-flex">créer un service</span>
                         </Button>
                     </div>
@@ -257,7 +257,7 @@
                                 class="text-red-500 border-red-200 hover:bg-red-50"
                                 @click="formData.availabilities.splice(index, 1)"
                             >
-                                <TrashIcon class="size-4" />
+                                <Trash2 class="size-4" />
                             </Button>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -301,7 +301,7 @@
                         size="sm"
                         @click="formData.availabilities.push({ day: 'Lundi', morning_start_at: '', morning_end_at: '', afternoon_start_at: '', afternoon_end_at: '' })"
                     >
-                        <PlusIcon class="size-4 mr-1" /> Ajouter un jour
+                        <Plus class="size-4 mr-1" /> Ajouter un jour
                     </Button>
                     <p
                         v-if="errors.availabilities"
@@ -324,7 +324,7 @@
                             for="is_recurring"
                             class="text-sm font-medium leading-none text-gray-700 select-none cursor-pointer flex items-center gap-1"
                         >
-                            <ArrowPathIcon class="w-4 h-4 text-primary" />
+                            <RefreshCw class="w-4 h-4 text-primary" />
                             Répéter cette mission (récurrence)
                         </label>
                     </div>
@@ -588,7 +588,7 @@
                         rounded="md"
                         label="Nom du service *"
                         placeholder="Ex: Service de soins à domicile"
-                        :icon="BriefcaseIcon"
+                        :icon="Briefcase"
                         required
                     />
                     <InputIcon
@@ -596,7 +596,7 @@
                         rounded="md"
                         label="Téléphone *"
                         placeholder="Votre numéro de téléphone"
-                        :icon="PhoneIcon"
+                        :icon="Phone"
                     />
                     <div class="grid sm:grid-cols-2 gap-4">
                         <InputIcon
@@ -604,14 +604,14 @@
                             rounded="md"
                             label="Rue"
                             placeholder="Optionnel"
-                            :icon="MapPinIcon"
+                            :icon="MapPin"
                         />
                         <InputIcon
                             v-model="quickServiceForm.address.zipCode"
                             rounded="md"
                             label="Code postal"
                             placeholder="Optionnel"
-                            :icon="InboxArrowDownIcon"
+                            :icon="Inbox"
                         />
                     </div>
                     <div class="grid sm:grid-cols-2 gap-4">
@@ -620,14 +620,14 @@
                             rounded="md"
                             label="Ville"
                             placeholder="Optionnel"
-                            :icon="BuildingOffice2Icon"
+                            :icon="Building2"
                         />
                         <InputIcon
                             v-model="quickServiceForm.address.country"
                             rounded="md"
                             label="Pays"
                             placeholder="Optionnel"
-                            :icon="MapPinIcon"
+                            :icon="MapPin"
                         />
                     </div>
                     <div class="flex justify-end gap-3 mt-6">
@@ -652,19 +652,9 @@
 </template>
 
 <script lang="ts" setup>
+import { Briefcase, Building2, Inbox, MapPin, Phone, Plus, RefreshCw, Star, Trash2, Users } from 'lucide-vue-next';
+
 /* eslint-disable @typescript-eslint/no-explicit-any, no-prototype-builtins, @typescript-eslint/no-unused-vars */
-import {
-    BriefcaseIcon,
-    PlusIcon,
-    PhoneIcon,
-    MapPinIcon,
-    InboxArrowDownIcon,
-    BuildingOffice2Icon,
-    BookmarkIcon,
-    TrashIcon,
-    UsersIcon,
-    ArrowPathIcon,
-} from '@heroicons/vue/24/outline';
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
 import {

@@ -3,7 +3,7 @@
         <div class="mt-6 flex flex-col lg:flex-row lg:gap-4 lg:items-center w-full">
             <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-auto lg:shrink-0 sm:px-6 rounded-lg">
                 <div class="flex items-center gap-2 text-base">
-                    <ArrowLeftIcon
+                    <ArrowLeft
                         class="size-5 cursor-pointer hover:text-primary shrink-0"
                         title="Retour"
                         @click="goBack"
@@ -19,7 +19,7 @@
                             variant="outline"
                             class="flex gap-2 items-center border-gray-200 font-normal shadow text-black/90 h-9 text-xs px-3"
                         >
-                            <FunnelIcon class="w-4 h-4 shrink-0" />
+                            <Filter class="w-4 h-4 shrink-0" />
                             <span>
                                 Filtrer
                                 <span
@@ -169,7 +169,7 @@
                                     : 'bg-white border-gray-200 hover:bg-gray-50'"
                                 @click="toggleGroupByProvince"
                             >
-                                <MapIcon
+                                <Map
                                     class="w-4 h-4 transition-colors"
                                     :class="groupByProvince ? 'text-primary' : 'text-black/60'"
                                 />
@@ -188,11 +188,11 @@
                                 class="flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 bg-white shadow hover:bg-gray-50 transition-colors text-xs font-medium text-black/70"
                                 @click="toggleDisplayMode"
                             >
-                                <Squares2X2Icon
+                                <LayoutGrid
                                     v-if="displayMode === 'table'"
                                     class="w-5 h-5 shrink-0"
                                 />
-                                <TableCellsIcon
+                                <Table
                                     v-else
                                     class="w-5 h-5 shrink-0"
                                 />
@@ -219,7 +219,8 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, TableCellsIcon, FunnelIcon, ArrowLeftIcon, MapIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, Filter, LayoutGrid, Map, Star, Table } from 'lucide-vue-next';
+
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';

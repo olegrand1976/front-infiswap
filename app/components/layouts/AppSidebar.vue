@@ -45,12 +45,12 @@
                                                 <div class="flex space-x-2 items-center">
                                                     <component
                                                         :is="item.icon"
-                                                        class="w-6 opacity-80"
+                                                        class="w-5 h-5 opacity-80"
                                                     />
                                                     <span>{{ item.label }}</span>
                                                 </div>
                                                 <div>
-                                                    <ChevronRightIcon
+                                                    <ChevronRight
                                                         class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90"
                                                     />
                                                 </div>
@@ -116,7 +116,7 @@
                                         <div class="flex space-x-2 items-center">
                                             <component
                                                 :is="item.icon"
-                                                class="w-6 opacity-80"
+                                                class="w-5 h-5 opacity-80"
                                             />
                                             <span>{{ item.label }}</span>
                                         </div>
@@ -148,7 +148,7 @@
                         success-message="Lien copié avec succès"
                     />
 
-                    <QuestionMarkCircleIcon
+                    <CircleHelp
                         class="w-4 text-blue-500 cursor-pointer"
                         @click="referralDialog = true"
                     />
@@ -190,11 +190,11 @@
                     class="text-center flex flex-col gap-1"
                 >
                     <div class="flex justify-center text-yellow-400">
-                        <StarIcon class="h-5" />
-                        <StarIcon class="h-5" />
-                        <StarIcon class="h-5" />
-                        <StarIcon class="h-5" />
-                        <StarIcon class="h-5" />
+                        <Star class="h-5" />
+                        <Star class="h-5" />
+                        <Star class="h-5" />
+                        <Star class="h-5" />
+                        <Star class="h-5" />
                     </div>
                     <p class="text-sm font-bold">Évaluez-nous sur</p>
                     <LayoutsAppImage
@@ -206,7 +206,7 @@
                     class="w-full mt-4 rounded flex space-x-2 items-center justify-arround"
                     @click="logout"
                 >
-                    <PowerIcon class="w-6 opacity-80" />
+                    <Power class="w-5 h-5 opacity-80" />
                     <span>Déconnexion</span>
                 </Button>
             </SidebarGroup>
@@ -215,35 +215,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-import {
-    SquaresPlusIcon,
-    ArrowPathIcon,
-    UserGroupIcon,
-    ChevronRightIcon,
-    ListBulletIcon,
-    PowerIcon,
-    PlusIcon,
-    DocumentMagnifyingGlassIcon,
-    MagnifyingGlassIcon,
-    UsersIcon,
-    Cog8ToothIcon,
-    DocumentCurrencyEuroIcon,
-    WrenchScrewdriverIcon,
-    ChatBubbleLeftEllipsisIcon,
-    ShieldCheckIcon,
-    InboxIcon,
-    QuestionMarkCircleIcon,
-    PlayCircleIcon,
-    ShoppingBagIcon,
-    ChartBarIcon,
-    LinkIcon,
-    BriefcaseIcon,
-    DocumentTextIcon,
-    ClipboardDocumentIcon,
-    ShieldExclamationIcon,
-} from '@heroicons/vue/24/outline';
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -299,12 +272,12 @@ const contactChildren = computed(() => {
         {
             label: 'Infiswap',
             route: '/dashboard/admin/contacts/infiswap',
-            icon: InboxIcon,
+            icon: Inbox,
         },
         ...products.value.map(p => ({
             label: p.name,
             route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
-            icon: InboxIcon,
+            icon: Inbox,
         })),
     ];
 });
@@ -313,7 +286,7 @@ const nurseNavigationItems: NavigationItem[] = [
     {
         label: 'Informations',
         route: '/dashboard',
-        icon: SquaresPlusIcon,
+        icon: LayoutGrid,
     },
     {
         label: 'Remplacement rapide',
@@ -323,59 +296,59 @@ const nurseNavigationItems: NavigationItem[] = [
     {
         label: 'Demander un(e) remplaçant(e)',
         route: '/dashboard/replacements/create',
-        icon: ArrowPathIcon,
+        icon: RefreshCw,
     },
     {
         label: 'Mes remplacements',
         route: '/dashboard/replacements/me',
-        icon: ListBulletIcon,
+        icon: List,
     },
     {
         label: 'Chercher un remplacement',
         route: '/dashboard/replacements',
-        icon: DocumentMagnifyingGlassIcon,
+        icon: FileSearch,
     },
     {
         label: 'Mes réponses reçues',
         route: '/dashboard/replacements/responses',
-        icon: UsersIcon,
+        icon: Users,
     },
     {
         label: 'Missions',
         route: '/dashboard/missions',
-        icon: BriefcaseIcon,
+        icon: Briefcase,
     },
     {
         label: 'Binômes',
         route: '/dashboard/partners',
-        icon: UserGroupIcon,
+        icon: Users,
         children: [
             {
                 label: 'Rechercher',
                 route: '/dashboard/partners',
-                icon: MagnifyingGlassIcon,
+                icon: Search,
             },
             {
                 label: 'Demander',
                 route: '/dashboard/partners/create',
-                icon: PlusIcon,
+                icon: Plus,
             },
             {
                 label: 'Réponses',
                 route: '/dashboard/partners/responses',
-                icon: ChatBubbleLeftEllipsisIcon,
+                icon: MessageSquare,
             },
         ],
     },
     {
         label: 'Mon groupement',
         route: '/dashboard/group',
-        icon: UserGroupIcon,
+        icon: Users,
     },
     {
         label: 'Paramètres',
         route: '/dashboard/settings',
-        icon: Cog8ToothIcon,
+        icon: Cog,
     },
 ];
 
@@ -383,127 +356,133 @@ const adminNavigationItems: NavigationItem[] = [
     {
         label: 'Tableau de bord',
         route: '/dashboard',
-        icon: SquaresPlusIcon,
+        icon: LayoutGrid,
         visible: !isManager.value,
     },
 
     {
         label: 'Suivi inscriptions',
         route: '/dashboard/admin/registrations',
-        icon: ChartBarIcon,
+        icon: BarChart3,
         visible: true,
     },
 
     {
         label: 'Remplacements',
         route: '/dashboard/admin/replacements',
-        icon: ArrowPathIcon,
+        icon: RefreshCw,
         visible: true,
     },
 
     {
         label: 'Intérêt pour remplacement',
         route: '/dashboard/admin/replacements/interest',
-        icon: ListBulletIcon,
+        icon: List,
         visible: true,
     },
 
     {
         label: 'Binômes',
         route: '/dashboard/admin/partners',
-        icon: UsersIcon,
+        icon: UserSearch,
         visible: true,
     },
 
     {
         label: 'Utilisateurs',
         route: '/dashboard/admin/users',
-        icon: UserGroupIcon,
+        icon: Users,
         visible: true,
     },
 
     {
         label: 'Accueil',
         route: '/dashboard/admin/home-management',
-        icon: WrenchScrewdriverIcon,
+        icon: Wrench,
         visible: true,
     },
 
     {
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
-        icon: UsersIcon,
+        icon: UserCheck,
         visible: true,
     },
 
     {
         label: 'Institutions',
         route: '/dashboard/admin/institutions',
-        icon: DocumentTextIcon,
+        icon: FileText,
         visible: true,
     },
 
     {
         label: 'Type de soins',
         route: '/dashboard/admin/care-types',
-        icon: ShieldCheckIcon,
+        icon: ShieldCheck,
         visible: true,
     },
 
     {
         label: 'Contacts',
         route: '/dashboard/admin/contacts/infiswap',
-        icon: InboxIcon,
+        icon: Inbox,
         visible: true,
         children: contactChildren.value,
+    },
+    {
+        label: 'Mails',
+        route: '/dashboard/admin/mails',
+        icon: Mail,
+        visible: isSuperAdmin.value || isAdmin.value,
     },
 
     {
         label: 'Contrats NURSTECH',
         route: '/dashboard/admin/contracts/nurstech',
-        icon: DocumentCurrencyEuroIcon,
+        icon: Euro,
         visible: isSuperAdmin.value || isSaleRepresentative.value,
     },
 
     {
         label: 'Tutoriels',
         route: '/dashboard/admin/tutorials',
-        icon: PlayCircleIcon,
+        icon: CirclePlay,
         visible: true,
     },
 
     {
         label: 'Groupement',
         route: '/dashboard/admin/groups',
-        icon: UserGroupIcon,
+        icon: Users,
         visible: true,
     },
 
     {
         label: 'Produits',
         route: '/dashboard/admin/products',
-        icon: ShoppingBagIcon,
+        icon: ShoppingBag,
         visible: true,
     },
 
     {
         label: 'Suivi des liens',
         route: '/dashboard/admin/stats',
-        icon: LinkIcon,
+        icon: Link,
         visible: true,
     },
 
     {
         label: 'Alertes',
         route: '/dashboard/admin/alerts',
-        icon: ShieldExclamationIcon,
+        icon: ShieldAlert,
         visible: isSuperAdmin.value || isAdmin.value,
     },
 
     {
         label: 'Logs',
         route: '/dashboard/admin/monitoring-errors',
-        icon: ClipboardDocumentIcon,
+        icon: ClipboardList,
         visible: isSuperAdmin.value || isAdmin.value,
     },
 ];
@@ -512,43 +491,43 @@ const institutionNavigationItems: NavigationItem[] = [
     {
         label: 'Tableau de bord',
         route: '/dashboard/institution',
-        icon: SquaresPlusIcon,
+        icon: LayoutGrid,
     },
     {
         label: 'Membres',
         route: '/dashboard/institution/members',
-        icon: UsersIcon,
+        icon: Users,
         visible: isInstitutionAdmin.value,
     },
     {
         label: 'Services',
         route: '/dashboard/institution/services',
-        icon: BriefcaseIcon,
+        icon: Briefcase,
     },
     {
         label: 'Missions',
         route: '/dashboard/institution/missions',
-        icon: BriefcaseIcon,
+        icon: Briefcase,
     },
     {
         label: 'Chercher un remplacement',
         route: '/dashboard/institution/replacements',
-        icon: DocumentMagnifyingGlassIcon,
+        icon: FileSearch,
     },
     {
         label: 'Binômes',
         route: '/dashboard/institution/partners',
-        icon: UserGroupIcon,
+        icon: Users,
     },
     {
         label: 'Mes Favoris',
         route: '/dashboard/institution/favorites',
-        icon: UsersIcon,
+        icon: Users,
     },
     {
         label: 'Paramètres institution',
         route: '/dashboard/institution/settings',
-        icon: Cog8ToothIcon,
+        icon: Cog,
     },
 ];
 

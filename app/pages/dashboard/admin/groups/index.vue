@@ -8,7 +8,7 @@
                     class="rounded"
                     href="/dashboard/admin/groups/create"
                 >
-                    <PlusCircleIcon />
+                    <CirclePlus />
                     <span class="hidden md:inline-block">
                         Nouveau groupe
                     </span>
@@ -58,7 +58,7 @@
                                 class="rounded-md"
                                 @click="resetFilter"
                             >
-                                <ArrowPathIcon class="md:mr-2" />
+                                <RefreshCw class="md:mr-2" />
                                 <span class="hidden md:inline-block">Restaurer</span>
                             </Button>
                         </div>
@@ -68,7 +68,7 @@
                             class="rounded flex items-center gap-2"
                             @click="handleCreateUser"
                         >
-                            <PlusCircleIcon class="w-5 h-5" />
+                            <CirclePlus class="w-5 h-5" />
                             <span class="hidden md:inline-block">Nouvel utilisateur</span>
                         </Button>
                     </div>
@@ -118,7 +118,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusCircleIcon, ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpDown, CirclePlus, RefreshCw, Star } from 'lucide-vue-next';
+
 import type { ColumnDef } from '@tanstack/vue-table';
 import { ref, watch, reactive } from 'vue';
 import { PERPAGE } from '~/lib/constants';
@@ -243,7 +244,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-start py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'Nom',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => h('div', {
@@ -259,7 +260,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-start py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'Email',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => h('div', {
@@ -275,7 +276,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-start py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'Téléphone',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => h('div', {
@@ -292,7 +293,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-center py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'C.P',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => {
@@ -311,7 +312,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-center py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'Ville',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => {
@@ -329,7 +330,7 @@ const columns: ColumnDef<User>[] = [
                 class: 'w-full flex justify-center py-3',
             }, () => h('div', { class: 'flex items-center gap-2' }, [
                 'Date d\'affectation',
-                h(ArrowsUpDownIcon, { class: 'w-4 h-4' }),
+                h(ArrowUpDown, { class: 'w-4 h-4' }),
             ]));
         },
         cell: ({ row }) => {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { Check, Star } from 'lucide-vue-next';
+
 import type { CheckboxRootEmits, CheckboxRootProps } from 'radix-vue';
-import { CheckIcon } from '@heroicons/vue/24/solid';
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     >
         <CheckboxIndicator class="flex h-full w-full items-center justify-center text-current">
             <slot>
-                <CheckIcon class="h-4 w-4" />
+                <Check class="h-4 w-4" />
             </slot>
         </CheckboxIndicator>
     </CheckboxRoot>

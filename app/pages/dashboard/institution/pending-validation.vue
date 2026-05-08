@@ -3,7 +3,7 @@
         <div class="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 text-center">
             <div class="mb-6">
                 <div class="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
-                    <ClockIcon class="w-8 h-8 text-yellow-600" />
+                    <Clock class="w-8 h-8 text-yellow-600" />
                 </div>
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">
                     Validation en attente
@@ -15,7 +15,7 @@
 
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                 <div class="flex items-start gap-4">
-                    <InformationCircleIcon class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Info class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div class="text-left">
                         <h2 class="font-semibold text-blue-900 mb-2">
                             Prochaines étapes
@@ -24,7 +24,7 @@
                             Vous serez contacté prochainement par InfiSwap pour valider votre compte institution.
                         </p>
                         <div class="flex items-center gap-2 text-blue-900 font-medium">
-                            <PhoneIcon class="w-5 h-5" />
+                            <Phone class="w-5 h-5" />
                             <span>0478 02 33 77</span>
                         </div>
                     </div>
@@ -50,7 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import { ClockIcon, InformationCircleIcon, PhoneIcon } from '@heroicons/vue/24/outline';
+import { Clock, Info, Phone, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '~/composables/useAuth';
 

@@ -18,7 +18,7 @@
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-8">
                 <InputIcon
                     v-model="formData.name"
-                    :icon="BriefcaseIcon"
+                    :icon="Briefcase"
                     rounded="md"
                     label="Nom du service"
                     placeholder="Nom du service *"
@@ -26,7 +26,7 @@
 
                 <InputIcon
                     v-model="formData.phoneNumber"
-                    :icon="PhoneIcon"
+                    :icon="Phone"
                     rounded="md"
                     label="N° de téléphone"
                     placeholder="N° de téléphone"
@@ -35,14 +35,14 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <InputIcon
                         v-model="formData.address.street"
-                        :icon="MapPinIcon"
+                        :icon="MapPin"
                         rounded="md"
                         label="Rue"
                         placeholder="Rue *"
                     />
                     <InputIcon
                         v-model="formData.address.zipCode"
-                        :icon="InboxArrowDownIcon"
+                        :icon="Inbox"
                         rounded="md"
                         label="Code postal"
                         placeholder="Code postal *"
@@ -52,14 +52,14 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <InputIcon
                         v-model="formData.address.city"
-                        :icon="BuildingOffice2Icon"
+                        :icon="Building2"
                         rounded="md"
                         label="Ville"
                         placeholder="Ville *"
                     />
                     <InputIcon
                         v-model="formData.address.country"
-                        :icon="MapPinIcon"
+                        :icon="MapPin"
                         rounded="md"
                         label="Pays"
                         placeholder="Pays"
@@ -91,14 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    BriefcaseIcon,
-    PhoneIcon,
-    MapPinIcon,
-    InboxArrowDownIcon,
-    BuildingOffice2Icon,
-    EllipsisHorizontalCircleIcon,
-} from '@heroicons/vue/24/outline';
+import { Briefcase, Building2, Inbox, MapPin, Phone, Star } from 'lucide-vue-next';
 
 const props = defineProps({
     service: {

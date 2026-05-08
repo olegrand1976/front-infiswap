@@ -292,7 +292,7 @@
                                 class="absolute transition top-2 right-4 sm:right-2 text-primary hover:text-green-600"
                                 @click="onUpdateRadius"
                             >
-                                <CheckIcon class="w-4 h-4" />
+                                <Check class="w-4 h-4" />
                             </button>
                         </div>
                     </div>
@@ -302,7 +302,7 @@
             <div class="w-full lg:w-1/2 space-y-8">
                 <div class="flex flex-col w-full bg-white rounded-lg shadow-lg">
                     <div class="p-5 bg-gray-200 rounded">
-                        <UserIcon class="w-8 opacity-80 " />
+                        <User class="w-8 opacity-80 " />
                     </div>
                     <div class="p-4">
                         <h3 class="text-sm text-gray-900">
@@ -357,7 +357,7 @@
 
                         <InputIcon
                             v-model="formData.radiusKm"
-                            :icon="MapIcon"
+                            :icon="Map"
                             class="w-full"
                             size="md"
                             :placeholder="'5 km'"
@@ -377,7 +377,7 @@
                             <div class="flex-1">
                                 <InputTagManager
                                     v-model="formData.zipCodesArray"
-                                    :icon="InboxArrowDownIcon"
+                                    :icon="Inbox"
                                     label="Codes postaux *"
                                     :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                     :is-mobile="false"
@@ -389,7 +389,7 @@
                             <div class="flex-1">
                                 <InputTagManager
                                     v-model="formData.citiesArray"
-                                    :icon="BuildingOffice2Icon"
+                                    :icon="Building2"
                                     label="Villes associées"
                                     :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                     :is-mobile="false"
@@ -403,7 +403,7 @@
                             <div class="flex-1">
                                 <InputTagManager
                                     v-model="formData.zipCodesArray"
-                                    :icon="InboxArrowDownIcon"
+                                    :icon="Inbox"
                                     label="Codes postaux *"
                                     :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
                                     :is-mobile="true"
@@ -415,7 +415,7 @@
                             <div class="flex-1">
                                 <InputTagManager
                                     v-model="formData.citiesArray"
-                                    :icon="BuildingOffice2Icon"
+                                    :icon="Building2"
                                     label="Villes"
                                     :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
                                     :is-mobile="true"
@@ -436,7 +436,7 @@
 
                         <div class="relative w-full">
                             <div class="pointer-events-none absolute top-2 left-2 flex items-center text-primary">
-                                <QuestionMarkCircleIcon class="w-6 h-6" />
+                                <CircleHelp class="w-6 h-6" />
                             </div>
 
                             <select
@@ -507,15 +507,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-    CheckIcon,
-    UserIcon,
-    EllipsisHorizontalCircleIcon,
-    BuildingOffice2Icon,
-    InboxArrowDownIcon,
-    MapIcon,
-    QuestionMarkCircleIcon,
-} from '@heroicons/vue/24/outline';
+import { Building2, Check, CircleHelp, Inbox, Map, Star, User } from 'lucide-vue-next';
+
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import InputTagManager from '~/components/InputTagManager.vue';

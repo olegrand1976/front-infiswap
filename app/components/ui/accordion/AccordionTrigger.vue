@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ChevronDown, Star } from 'lucide-vue-next';
+
 import type { AccordionTriggerProps } from 'radix-vue';
 import type { HTMLAttributes } from 'vue';
-import { ChevronDownIcon } from '@heroicons/vue/24/outline';
 import {
     AccordionHeader,
     AccordionTrigger,
@@ -32,7 +33,7 @@ const delegatedProps = computed(() => {
         >
             <slot />
             <slot name="icon">
-                <ChevronDownIcon
+                <ChevronDown
                     class="h-4 w-4 shrink-0 transition-transform duration-200"
                 />
             </slot>

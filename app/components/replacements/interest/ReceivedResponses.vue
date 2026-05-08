@@ -48,8 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { EyeIcon } from '@heroicons/vue/24/outline';
+import { Eye, Star } from 'lucide-vue-next';
+
 import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { ReplacementRow, User } from '~/lib/types';
@@ -244,7 +244,7 @@ const columns = [
                         },
                         {
                             default: () =>
-                                h(EyeIcon, {
+                                h(Eye, {
                                     class: 'w-5 h-5',
                                 }),
                         },

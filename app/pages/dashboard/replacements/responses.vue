@@ -1,7 +1,7 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            <ArrowLeftIcon
+            <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
                 title="Retour"
                 @click="goBack"
@@ -136,7 +136,7 @@
                                     >
                                         <TableCell class="w-full truncate flex flex-nowrap flex-col sm:flex-row items-center justify-center sm:justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
                                             <template v-if="getRespondent(responseDetail)?.profil_url == null">
-                                                <UserCircleIcon class="size-8 text-black/60" />
+                                                <CircleUser class="size-8 text-black/60" />
                                             </template>
                                             <template v-else>
                                                 <img
@@ -160,7 +160,7 @@
                                         <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
                                             <template v-if="responseDetail.status === 'confirmed'">
                                                 <p class="flex items-center space-x-2 text-success font-medium">
-                                                    <CheckBadgeIcon class="w-6" />
+                                                    <BadgeCheck class="w-6" />
                                                     <span class="hidden 2xl:block">Accepté</span>
                                                 </p>
                                                 <Button
@@ -168,7 +168,7 @@
                                                     title="Annuler"
                                                     @click="handleCancel(responseDetail)"
                                                 >
-                                                    <XMarkIcon class="w-4" />
+                                                    <X class="w-4" />
                                                 </Button>
                                             </template>
                                             <template v-else-if="responseDetail.status === 'canceled'">
@@ -177,7 +177,7 @@
                                                     title="Accepter"
                                                     @click="handleAccept(responseDetail)"
                                                 >
-                                                    <CheckIcon class="w-4" />
+                                                    <Check class="w-4" />
                                                 </Button>
                                             </template>
                                             <template v-else>
@@ -186,7 +186,7 @@
                                                     title="Accepter"
                                                     @click="handleAccept(responseDetail)"
                                                 >
-                                                    <CheckIcon class="w-4" />
+                                                    <Check class="w-4" />
                                                 </Button>
                                             </template>
                                             <Button
@@ -194,7 +194,7 @@
                                                 title="Détail"
                                                 @click="openNurseDialog(responseDetail)"
                                             >
-                                                <EyeIcon class="w-4" />
+                                                <Eye class="w-4" />
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -309,7 +309,8 @@
 </template>
 
 <script lang="ts" setup>
-import { UserCircleIcon, CheckIcon, XMarkIcon, CheckBadgeIcon, EyeIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, Star, X } from 'lucide-vue-next';
+
 import { useRuntimeConfig } from '#app';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';

@@ -50,7 +50,7 @@
                     :disabled="currentIndex === 0"
                     @click="prevCard"
                 >
-                    <ChevronLeftIcon class="w-5" />
+                    <ChevronLeft class="w-5" />
                 </button>
 
                 <div class="w-full">
@@ -105,7 +105,7 @@
                     :disabled="currentIndex === cards.length - 1"
                     @click="nextCard"
                 >
-                    <ChevronRightIcon class="w-5" />
+                    <ChevronRight class="w-5" />
                 </button>
             </div>
         </div>
@@ -113,10 +113,7 @@
 </template>
 
 <script setup>
-import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-} from '@heroicons/vue/24/solid';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-vue-next';
 
 import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';

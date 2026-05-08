@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { StopIcon } from '@heroicons/vue/24/solid';
+import { Star } from 'lucide-vue-next';
+
 import { Primitive, type PrimitiveProps, useForwardProps } from 'radix-vue';
 
 const props = defineProps<PrimitiveProps>();

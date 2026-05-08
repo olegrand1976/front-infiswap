@@ -32,7 +32,7 @@
                     class="rounded-md"
                     @click="resetFilter"
                 >
-                    <ArrowPathIcon class="md:mr-2" />
+                    <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
             </div>
@@ -54,9 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import { h } from 'vue';
-import type { ColumnDef } from '@tanstack/vue-table';
-import { XCircleIcon, ArrowsUpDownIcon, ArrowPathIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpDown, RefreshCw, Star, XCircle } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';
@@ -157,7 +156,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('firstname'),
-            }, () => ['Nom', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
@@ -167,7 +166,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('email'),
-            }, () => ['Email', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const isVerified = row.original.email_verified_at !== null;
@@ -176,7 +175,7 @@ const columns: ColumnDef<User>[] = [
                 h('span', row.getValue('email')),
                 !isVerified && canManageValidation.value
                     ? [
-                            h(XCircleIcon, {
+                            h(XCircle, {
                                 class: 'w-4 h-4 text-red-500 cursor-pointer',
                                 title: 'Renvoyer le mail de vérification',
                                 onClick: () =>
@@ -209,7 +208,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('identifier_number'),
-            }, () => ['INAMI', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['INAMI', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'lowercase text-center' }, formatInamiNumber(row.getValue('identifier_number'))),
     },
@@ -219,7 +218,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('phone_number'),
-            }, () => ['Téléphone', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatPhoneNumber(row.getValue('phone_number')));
@@ -231,7 +230,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('street_address'),
-            }, () => ['Rue', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Rue', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('street_address'));
@@ -243,7 +242,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('city'),
-            }, () => ['Ville', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Ville', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('city'));
@@ -255,7 +254,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('zip_code'),
-            }, () => ['C.P', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['C.P', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, row.getValue('zip_code'));
@@ -267,7 +266,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Préférences', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Préférences', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             const settings = JSON.parse(row.getValue('settings'));
@@ -306,7 +305,7 @@ const columns: ColumnDef<User>[] = [
             return h(Button, {
                 variant: 'ghost',
                 onClick: () => setSort('created_at'),
-            }, () => ['Création', h(ArrowsUpDownIcon, { class: '' })]);
+            }, () => ['Création', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));

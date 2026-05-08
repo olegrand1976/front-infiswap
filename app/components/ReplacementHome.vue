@@ -101,19 +101,19 @@
                                 <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center">
                                     <div>
                                         <span v-if="hasShift(replacement, 'morning')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                            <CircleCheck class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
                                         <span v-if="hasShift(replacement, 'afternoon')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                            <CircleCheck class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
                                     <div>
                                         <span v-if="hasShift(replacement, 'evening')">
-                                            <CheckCircleIcon class="h-6 text-green-500" />
+                                            <CircleCheck class="h-6 text-green-500" />
                                         </span>
                                         <span v-else />
                                     </div>
@@ -323,7 +323,7 @@
                                             class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
                                             :href="`/dashboard/replacements/detail/${replacement.id}`"
                                         >
-                                            <EyeIcon class="h-6 mt-1" />
+                                            <Eye class="h-6 mt-1" />
                                         </Button>
                                     </div>
                                 </TableCell>
@@ -370,7 +370,8 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/outline';
+import { CircleCheck, Eye, Star } from 'lucide-vue-next';
+
 import { getPeriodsFromTimeSlot, cn } from '~/lib/utils';
 import type { Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

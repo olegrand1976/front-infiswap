@@ -46,7 +46,7 @@
                     </div>
                     <div class="relative">
                         <div class="absolute flex items-center gap-2 left-1/2 -translate-x-1/2 bottom-full mb-2 w-max px-3 py-2 text-white bg-primary rounded-lg animate-bounce-fade duration-&lsqb;5s&rsqb; z-20">
-                            <ClockIcon class="size-5" /> <span>Bientôt disponible</span>
+                            <Clock class="size-5" /> <span>Bientôt disponible</span>
                         </div>
                     </div>
                     <Button
@@ -82,6 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ClockIcon } from '@heroicons/vue/24/solid';
+import { Clock, Star } from 'lucide-vue-next';
+
 import { Button } from '@/components/ui/button';
 </script>
