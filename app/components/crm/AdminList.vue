@@ -615,44 +615,44 @@ const columns: ColumnDef<User>[] = [
         },
         enableSorting: false,
     },
-    {
-        accessorKey: 'ambassador',
-        header: 'Inficoncept',
-        cell: ({ row }) => {
-            const user = row.original as User;
-            const currentValue = (() => {
-                const mods = user.last_product_modifications ?? [];
-                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
-                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
-                    return Number(found.activate);
-                }
-                if (user.ambassador !== undefined && user.ambassador !== null) {
-                    return Number(user.ambassador);
-                }
-                return 0;
-            })();
-            const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== undefined && index !== -1 && props.users) {
-                    localUsers.value[index].ambassador = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
-                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-                    localUsers.value[index].last_product_modifications = [...mods];
-                }
-                await edit(Number(row.original.id), { inficoncept: value });
-            };
-            return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    'class': 'mx-auto text-center',
-                    'checked': currentValue === 1,
-                    'onUpdate:checked': toggle,
-                    'disabled': isCollaborator.value,
-                }),
-            ]);
-        },
-        enableSorting: false,
-    },
+    // {
+    //     accessorKey: 'ambassador',
+    //     header: 'Inficoncept',
+    //     cell: ({ row }) => {
+    //         const user = row.original as User;
+    //         const currentValue = (() => {
+    //             const mods = user.last_product_modifications ?? [];
+    //             const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
+    //             if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+    //                 return Number(found.activate);
+    //             }
+    //             if (user.ambassador !== undefined && user.ambassador !== null) {
+    //                 return Number(user.ambassador);
+    //             }
+    //             return 0;
+    //         })();
+    //         const toggle = async (value: boolean) => {
+    //             const index = localUsers.value.findIndex(item => item.id === row.original.id);
+    //             if (index !== undefined && index !== -1 && props.users) {
+    //                 localUsers.value[index].ambassador = value ? 1 : 0;
+    //                 const mods = localUsers.value[index].last_product_modifications ?? [];
+    //                 const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
+    //                 if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+    //                 localUsers.value[index].last_product_modifications = [...mods];
+    //             }
+    //             await edit(Number(row.original.id), { inficoncept: value });
+    //         };
+    //         return h('div', { class: 'flex justify-center' }, [
+    //             h(Switch, {
+    //                 'class': 'mx-auto text-center',
+    //                 'checked': currentValue === 1,
+    //                 'onUpdate:checked': toggle,
+    //                 'disabled': isCollaborator.value,
+    //             }),
+    //         ]);
+    //     },
+    //     enableSorting: false,
+    // },
     {
         accessorKey: 'last_comment',
         header: 'Commentaire',
