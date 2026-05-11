@@ -185,14 +185,31 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
+const pageCookie = useCookie<number>('crm_page', {
+    default: () => 1,
+    maxAge: 60 * 60 * 24 * 7
+});
+
+const perPageCookie = useCookie<number>('crm_per_page', {
+    default: () => PERPAGE,
+    maxAge: 60 * 60 * 24 * 7
+});
+
+const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
+    default: () => 'users',
+    maxAge: 60 * 60 * 24 * 7
+});
 
 const selectedCrm = ref('users');
 const isCountryLoading = ref(false);
 const { getCrmPlus, users, trashCount } = useCrm();
 const { getAll } = useProduct();
 const route = useRoute();
-const perPage = ref(PERPAGE);
-const page = ref(1);
+// const perPage = ref(PERPAGE);
+// const page = ref(1);
+const perPage = ref(perPageCookie.value);
+const page = ref(pageCookie.value);
+selectedCrm.value = selectedCrmCookie.value;
 
 const countryTabs = [
     { label: 'Toutes', value: '' },
@@ -206,6 +223,7 @@ const setCountryFilter = async (country) => {
     isCountryLoading.value = true;
     option.value.country = country;
     page.value = 1;
+    pageCookie.value = 1; 
 
     await filterUsers();
 
@@ -271,6 +289,7 @@ onMounted(async () => {
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
+    pageCookie.value = newPage;
     const currentFilter = { ...option.value };
     if (selectedCrm.value === 'exUsers') currentFilter.deleted = true;
     else currentFilter.deleted = false;
@@ -293,6 +312,9 @@ const handleUserUpdate = (updatedCrmObject) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
+    perPageCookie.value = value; 
+    page.value = 1;
+    pageCookie.value = 1; 
     await getCrmPlus(page.value, value, option.value);
 };
 
@@ -303,6 +325,7 @@ const resetFilter = async () => {
     }
     option.value = { ...emptyFilter };
     page.value = 1;
+    pageCookie.value = 1; 
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
     await getCrmPlus(page.value, perPage.value, option.value);
@@ -335,8 +358,10 @@ const setSort = async (columnKey: string) => {
     });
 };
 
-watch(selectedCrm, async () => {
+watch(selectedCrm, async (newValue) => {
     page.value = 1;
+    pageCookie.value = 1;
+    selectedCrmCookie.value = newValue;
     await filterUsers();
 });
 </script>
