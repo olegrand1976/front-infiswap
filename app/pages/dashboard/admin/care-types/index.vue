@@ -52,23 +52,63 @@ definePageMeta({
 
 const { careTypes, getCareTypes, count, forceDelete } = useCareTypes();
 const { isSuperAdmin } = useAuth();
-const perPage = ref(PERPAGE);
-const page = ref(1);
+
+// ============ AJOUT DES COOKIES ============
+const pageCookie = useCookie<number>('care_types_page', {
+    default: () => 1,
+    maxAge: 60 * 60 * 24 * 7 // 7 jours
+});
+
+const perPageCookie = useCookie<number>('care_types_per_page', {
+    default: () => PERPAGE,
+    maxAge: 60 * 60 * 24 * 7
+});
+
+const sortByCookie = useCookie<string | null>('care_types_sort_by', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 7
+});
+
+const sortOrderCookie = useCookie<string>('care_types_sort_order', {
+    default: () => 'DESC',
+    maxAge: 60 * 60 * 24 * 7
+});
+
+const perPage = ref(perPageCookie.value);
+const page = ref(pageCookie.value);
+
 const initialFilter = {
     name: null,
 };
 const option = ref({ ...initialFilter });
 
+// Initialisation du tri avec les cookies
+const sort = reactive({
+    order: sortOrderCookie.value,
+    by: sortByCookie.value,
+});
+// =
+
 await getCareTypes(page.value, perPage.value, option.value);
 const dataCareTypes = computed(() => careTypes.value ?? []);
 
-const refreshCareTypes = async (page: number) => {
-    await getCareTypes(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+const refreshCareTypes = async (newPage: number) => {
+    page.value = newPage;
+    pageCookie.value = newPage; // Sauvegarder la page
+    
+    await getCareTypes(newPage, perPage.value, { 
+        sortOrder: sort.order, 
+        sortKey: sort.by 
+    });
 };
+
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getCareTypes(page.value, value, option.value);
+    perPageCookie.value = value;
+    page.value = 1;
+    pageCookie.value = 1; 
+    await getCareTypes(page.value, value, {...option.value,sortOrder: sort.order,sortKey: sort.by,});
 };
 
 const columns: ColumnDef<CareType>[] = [
@@ -178,10 +218,7 @@ const columns: ColumnDef<CareType>[] = [
     },
 ];
 
-const sort = reactive({
-    order: 'DESC',
-    by: null,
-});
+
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
