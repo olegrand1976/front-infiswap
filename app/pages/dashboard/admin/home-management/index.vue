@@ -29,6 +29,7 @@
                     @update:page="refresh"
                     @update:per-page="handlePerPageChange"
                 />
+              
             </div>
         </DashboardAdminPageContent>
     </div>
@@ -49,7 +50,6 @@ import type { HomeType } from '~/lib/types';
 const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
 const { isSuperAdmin, isCollaborator } = useAuth();
 
-await getSpecifiedHome();
 
 definePageMeta({
     layout: 'dashboard',
@@ -59,16 +59,40 @@ definePageMeta({
 useHead({
     title: 'Paramètre d\'accueil',
 });
+const pageCookie = useCookie<number>('home_management_page');
+const perPageCookie = useCookie<number>('home_management_per_page');
 
 const perPage = ref(PERPAGE);
-const page = ref(1);
+const page = ref(pageCookie.value || 1);
 
-const refresh = async (page: number) => {
-    return await getSpecifiedHome({ page: page, perPage: perPage.value });
+
+const loadHomes = async () => {
+    await getSpecifiedHome({
+        page: page.value,
+        perPage: perPage.value,
+    });
 };
 
-const handlePerPageChange = async (perPage: number) => {
-    return await getSpecifiedHome({ perPage: perPage });
+await loadHomes();
+
+watch(page, (value) => {
+    pageCookie.value = value;
+    console.log('page',page.value);
+});
+
+watch(perPage, (value) => {
+    perPageCookie.value = value;
+});
+
+const refresh = async (newPage: number) => {
+    page.value = newPage;
+    await loadHomes();
+};
+
+const handlePerPageChange = async (newPerPage: number) => {
+    perPage.value = newPerPage;
+    page.value = 1;
+    await loadHomes();
 };
 
 const selectedDescription = ref('');
