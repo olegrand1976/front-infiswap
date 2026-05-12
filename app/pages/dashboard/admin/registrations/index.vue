@@ -49,10 +49,9 @@
             <CustomPagination
                 :default-page="page"
                 :per-page="perPage"
-                :total="paginationTotal"
-                @update:page="refreshUsers"
-                @update:perPage="handlePerPageChange"
-              />
+                :total="selectedPeriod == 'lastWeek' ? dataWeekUsers?.length : dataMonthUsers?.length"
+                @update:per-page="handlePerPageChange"
+            />
         </div>
     </div>
 </template>
@@ -76,95 +75,24 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-
+const option = ref();
 const selectedPeriod = ref('lastWeek');
 
-const pageCookie = useCookie<number>('admin_registration_page');
-const perPageCookie = useCookie<number>('admin_registration_per_page');
-const periodCookie = useCookie<string>('admin_registration_period');
-
 const perPage = ref(PERPAGE);
-const page = ref(pageCookie.value || 1);
-
-if (periodCookie.value) {
-    selectedPeriod.value = periodCookie.value;
-}
-const sort = reactive({
-    order: 'DESC',
-    by: null,
-});
-
-const option = ref();
-const loadUsers = async () => {
-    await getRecentUsers(page.value, perPage.value, {
-        period: selectedPeriod.value,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
-};
+const page = ref(1);
 
 const { users, getRecentUsers } = useAuth();
 
-await loadUsers();
+await getRecentUsers(page.value, perPage.value);
+
 const dataWeekUsers = computed(() => users.value?.weekly ?? []);
 const dataMonthUsers = computed(() => users.value?.monthly ?? []);
 
-watch(page, (value) => {
-    pageCookie.value = value;
-});
-
-watch(perPage, (value) => {
-    perPageCookie.value = value;
-});
-
-watch(selectedPeriod, async (value) => {
-    periodCookie.value = value;
-    page.value = 1;
-    await loadUsers();
-});
-const refreshUsers = async (newPage: number) => {
-    page.value = newPage;
-    await loadUsers();
-}
-
 const handlePerPageChange = async (value: number) => {
-    // perPage.value = value;
-    // await getRecentUsers(page.value, value, option.value);
     perPage.value = value;
-    page.value = 1;
-    await loadUsers();
+    await getRecentUsers(page.value, value, option.value);
 };
 
-
-
-const toggleSort = () => {
-    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
-};
-
-const setSort = (columnKey: string) => {
-    if (sort.by === columnKey) {
-        toggleSort();
-    }
-    else {
-        sort.by = columnKey;
-        sort.order = 'DESC';
-    }
-};
-const paginationTotal = computed(() => {
-    return selectedPeriod.value === 'lastWeek'
-        ? dataWeekUsers.value.length
-        : dataMonthUsers.value.length;
-});
-
-watch(
-    () => sort,
-    async (newVal) => {
-        await getRecentUsers(page.value, perPage.value, {
-            sortOrder: newVal.order,
-            sortKey: newVal.by });
-    },
-    { deep: true },
-);
 const columns: ColumnDef<User>[] = [
     {
         id: 'select',
@@ -385,4 +313,32 @@ const columns: ColumnDef<User>[] = [
     },
 ];
 
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const toggleSort = () => {
+    sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
+const setSort = (columnKey: string) => {
+    if (sort.by === columnKey) {
+        toggleSort();
+    }
+    else {
+        sort.by = columnKey;
+        sort.order = 'DESC';
+    }
+};
+
+watch(
+    () => sort,
+    async (newVal) => {
+        await getRecentUsers(page.value, perPage.value, {
+            sortOrder: newVal.order,
+            sortKey: newVal.by });
+    },
+    { deep: true },
+);
 </script>
