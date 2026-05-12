@@ -83,7 +83,7 @@ const pageCookie = useCookie<number>('admin_registration_page');
 const perPageCookie = useCookie<number>('admin_registration_per_page');
 const periodCookie = useCookie<string>('admin_registration_period');
 
-const perPage = ref(perPageCookie.value || PERPAGE);
+const perPage = ref(PERPAGE);
 const page = ref(pageCookie.value || 1);
 
 if (periodCookie.value) {
