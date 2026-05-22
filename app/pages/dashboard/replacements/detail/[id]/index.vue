@@ -138,14 +138,25 @@
                                 </h4>
                             </div>
                             <div class="mt-4 space-y-4">
-                                <div class="bg-gray-200 text-sm py-2 rounded px-3">
+                                <div
+                                    v-if="replacement.can_view_creator_contact"
+                                    class="bg-gray-200 text-sm py-2 rounded px-3"
+                                >
                                     <span>Nom : {{ replacement.user.full_name }}</span>
                                 </div>
                                 <div
-                                    v-show="replacement?.candidate"
+                                    v-if="replacement.can_view_creator_contact"
                                     class="bg-gray-200 text-sm py-2 rounded px-3"
                                 >
                                     <span>Téléphone : {{ replacement.user.phone_number }}</span>
+                                </div>
+                                <div
+                                    v-if="!replacement.can_view_creator_contact && (replacement.user?.zip_code || replacement.user?.city)"
+                                    class="bg-gray-200 text-sm py-2 rounded px-3"
+                                >
+                                    <span v-if="replacement.user?.zip_code">Code postal : {{ replacement.user.zip_code }}</span>
+                                    <span v-if="replacement.user?.zip_code && replacement.user?.city"> — </span>
+                                    <span v-if="replacement.user?.city">Ville : {{ replacement.user.city }}</span>
                                 </div>
                             </div>
                         </div>

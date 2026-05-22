@@ -343,6 +343,10 @@ const getRespondent = (responseDetail: any) =>
     ?? responseDetail?.repondedBy
     ?? null;
 
+const canViewRespondentContact = (responseDetail: ReplacementResponse) =>
+    responseDetail?.can_view_respondent_contact === true
+    || responseDetail?.status === 'confirmed';
+
 const handleAccept = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'confirmed');

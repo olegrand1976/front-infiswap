@@ -54,14 +54,14 @@
                                 class="h-full min-h-0 w-full flex-1"
                                 compact
                                 :institution="list.respondent"
-                                :show-full-info="list.status === 'confirmed'"
+                                :show-full-info="true"
                             />
                             <UsersCard
                                 v-else
                                 class="h-full min-h-0 w-full flex-1"
                                 compact
                                 :user="list.respondent"
-                                :show-full-info="list.status === 'confirmed'"
+                                :show-full-info="true"
                             />
                         </div>
 
