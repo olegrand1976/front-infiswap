@@ -1,10 +1,11 @@
 <template>
-    <SidebarProvider class="bg-green-300">
-        <Sidebar class="bg-white">
-            <LayoutsAppSidebar :key="user.account_type" />
-        </Sidebar>
+    <SidebarProvider
+        storage-key="infiswap-sidebar"
+        class="min-h-svh"
+    >
+        <LayoutsAppSidebar :key="user.account_type" />
         <SidebarInset
-            :class="cn('w-full w-96', {
+            :class="cn('w-full flex-1', {
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
             })"
@@ -142,6 +143,35 @@
                             </DropdownMenu>
                         </div>
 
+                        <Dialog
+                            v-if="showNotifUI"
+                            v-model:open="showDialog"
+                        >
+                            <DialogContent class="sm:max-w-md">
+                                <DialogHeader class="text-left">
+                                    <DialogTitle class="text-left">
+                                        Désactiver les notifications
+                                    </DialogTitle>
+                                    <DialogDescription class="text-left mt-2">
+                                        Vous êtes sur le point de désactiver vos notifications par mail.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div class="mt-4 flex justify-end gap-2">
+                                    <DialogClose as-child>
+                                        <Button class="rounded border bg-white px-4 py-2 text-sm text-gray-700 hover:bg-white">
+                                            Annuler
+                                        </Button>
+                                    </DialogClose>
+                                    <Button
+                                        class="rounded px-4 py-2 text-sm text-white hover:bg-primary/90"
+                                        @click="handleDisable"
+                                    >
+                                        Valider
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+
                         <Dialog v-model:open="showReportModal">
                             <DialogContent class="sm:max-w-md">
                                 <DialogHeader class="text-left">
@@ -156,7 +186,7 @@
                                     <div class="mt-4">
                                         <Textarea
                                             v-model="reportDescription"
-                                            class="w-full border rounded p-2 text-sm focus:outline-primary"
+                                            class="w-full rounded border p-2 text-sm focus:outline-primary"
                                             rows="3"
                                             placeholder="Expliquez brièvement le problème rencontré"
                                         />
@@ -164,13 +194,13 @@
 
                                     <div class="mt-4 flex justify-end gap-2">
                                         <DialogClose as-child>
-                                            <Button class="px-4 py-2 text-sm text-gray-700 rounded bg-white border hover:bg-white">
+                                            <Button class="rounded border bg-white px-4 py-2 text-sm text-gray-700 hover:bg-white">
                                                 Annuler
                                             </Button>
                                         </DialogClose>
 
                                         <Button
-                                            class="px-4 py-2 text-white text-sm rounded hover:bg-primary/90"
+                                            class="rounded px-4 py-2 text-sm text-white hover:bg-primary/90"
                                             @click="submitReport"
                                         >
                                             Valider
@@ -192,7 +222,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellOff, CircleUser, Frown, Star } from 'lucide-vue-next';
+import { BellOff, CircleUser, Frown } from 'lucide-vue-next';
 
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
@@ -206,10 +236,22 @@ const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
 
 const { $toast } = useNuxtApp();
-const { logout, getRoles, switchRole, switchView } = useAuth();
+const { logout, getRoles, switchRole, switchView, createNotifPreferences } = useAuth();
 const { reportProblem } = useMail();
 
+const showDialog = ref(false);
+const showSpan = ref(false);
+const showNotifUI = ref(false);
 const showReportModal = ref(false);
+
+const parsedSettings = computed(() => {
+    try {
+        return user.value?.settings ? JSON.parse(user.value.settings as string) : {};
+    }
+    catch {
+        return {};
+    }
+});
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
 const reportDescription = ref('');
@@ -250,17 +292,48 @@ const submitReport = async () => {
 
 const { getUnreadCount, startPolling, stopPolling } = useNotifications();
 
+const handleSeen = async () => {
+    try {
+        await createNotifPreferences({
+            key: 'notification',
+            value: { seen: true },
+        });
+        showSpan.value = false;
+    }
+    catch (error) {
+        console.error('Erreur lors de la mise à jour de seen :', error);
+    }
+};
+
+const handleDisable = async () => {
+    try {
+        await createNotifPreferences({
+            key: 'notification',
+            value: { new_replacement: false },
+        });
+        $toast({
+            title: 'Succès',
+            description: 'Notification désactivée avec succès.',
+        });
+        showDialog.value = false;
+        showNotifUI.value = false;
+    }
+    catch (error) {
+        console.error('Erreur lors de la désactivation des notifications :', error);
+    }
+};
+
 onMounted(async () => {
     roles.value = await getRoles();
     await getUnreadCount();
     startPolling(10000);
+
+    const notif = parsedSettings.value?.notification || {};
+    showNotifUI.value = notif.new_replacement === true;
+    showSpan.value = notif.seen !== true;
 });
 
 onUnmounted(() => {
     stopPolling();
-});
-
-definePageMeta({
-    ssr: false,
 });
 </script>

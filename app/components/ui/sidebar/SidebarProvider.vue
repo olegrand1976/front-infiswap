@@ -9,10 +9,24 @@ const props = withDefaults(defineProps<{
     defaultOpen?: boolean;
     open?: boolean;
     class?: HTMLAttributes['class'];
+    storageKey?: string;
 }>(), {
     defaultOpen: true,
     open: undefined,
+    storageKey: SIDEBAR_COOKIE_NAME,
 });
+
+function readStoredOpen(): boolean {
+    if (import.meta.server) {
+        return props.defaultOpen ?? true;
+    }
+    const match = document.cookie.match(
+        new RegExp(`(?:^|; )${props.storageKey}=([^;]*)`),
+    );
+    if (match?.[1] === 'true') return true;
+    if (match?.[1] === 'false') return false;
+    return props.defaultOpen ?? true;
+}
 
 const emits = defineEmits<{
     'update:open': [open: boolean];
@@ -22,15 +36,16 @@ const isMobile = useMediaQuery('(max-width: 1024px)');
 const openMobile = ref(false);
 
 const open = useVModel(props, 'open', emits, {
-    defaultValue: props.defaultOpen ?? false,
+    defaultValue: readStoredOpen(),
     passive: (props.open === undefined) as false,
 }) as Ref<boolean>;
 
 function setOpen(value: boolean) {
-    open.value = value; // emits('update:open', value)
+    open.value = value;
 
-    // This sets the cookie to keep the sidebar state.
-    document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    if (import.meta.client) {
+        document.cookie = `${props.storageKey}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    }
 }
 
 function setOpenMobile(value: boolean) {

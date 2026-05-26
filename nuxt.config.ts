@@ -66,6 +66,7 @@ export default defineNuxtConfig({
 
     routeRules: {
         '/': { prerender: false },
+        '/dashboard/**': { ssr: false },
     },
 
     devServer: {
