@@ -72,11 +72,11 @@ definePageMeta({
     middleware: ['admin'],
 });
 const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
-const route = useRoute();
-const router = useRouter();
-const perPage = ref(PERPAGE);
-// const page = ref(1);
-const page = ref(Number(route.query.page) || 1);
+const pageCookie = useCookie<number>('admin_users_page');
+const perPageCookie = useCookie<number>('admin_users_per_page');
+const page = ref(pageCookie.value || 1);
+const perPage = ref(perPageCookie.value || PERPAGE);
+
 const initialFilter = {
     name: null,
     zip: null,
@@ -102,7 +102,13 @@ const filterUsers = async () => {
     const currentFilter = { ...option.value };
     await getUsers(page.value, perPage.value, currentFilter);
 };
+watch(page, (value) => {
+    pageCookie.value = value;
+});
 
+watch(perPage, (value) => {
+    perPageCookie.value = value;
+});
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
 // await getUsers(page.value, perPage.value, option.value);
@@ -114,17 +120,9 @@ await getUsers(page.value, perPage.value, {
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
-// const refreshUsers = async (page: number) => {
-//     await getUsers(page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
-// };
+
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
-    router.replace({
-        query: {
-            ...route.query,
-            page: String(newPage),
-        },
-    });
     await getUsers(newPage, perPage.value, {
         ...option.value,
         sortOrder: sort.order,
@@ -134,7 +132,11 @@ const refreshUsers = async (newPage: number) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getUsers(page.value, value, option.value);
+    await getUsers(page.value, value, {
+        ...option.value,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
 
 const resetFilter = async () => {
@@ -145,7 +147,7 @@ const resetFilter = async () => {
 
     option.value = { ...initialFilter };
     page.value = 1;
-    // await getUsers(page.value, perPage.value, option.value);
+    pageCookie.value = 1;
     await getUsers(page.value, perPage.value, {
         ...option.value,
         sortOrder: sort.order,

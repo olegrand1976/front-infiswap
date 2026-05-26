@@ -25,8 +25,11 @@ export function useContact() {
                 ...options,
             },
         }).then((response) => {
+            console.log('response contacts',response);
             contacts.value = response.contacts;
-            count.value = response.count;
+            // count.value = response.count;
+            count.value = response.meta?.total ?? response.count;
+
         });
     }
 

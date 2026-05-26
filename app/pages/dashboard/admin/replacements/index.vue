@@ -340,13 +340,23 @@ const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, e
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
 const { isSuperAdmin, isCommunityManager, isDeveloper } = useAuth();
 
-const route = useRoute();
-const router = useRouter();
+const pageCookie = useCookie<number>('admin_replacements_page');
+const perPageCookie = useCookie<number>('admin_replacements_per_page');
+    const filtersCookie = useCookie('admin_replacements_filters', {
+    default: () => ({
+        name: null,
+        zip: null,
+        city: null,
+        type: null,
+        role: null,
+        status: null,
+        country: '',
+        province: '',
+    }),
+});
 
-// const perPage = ref(PERPAGE);
-// const page = ref(1);
-const perPage = ref(Number(route.query.perPage) || PERPAGE);
-const page = ref(Number(route.query.page) || 1);
+const perPage = ref(perPageCookie.value || PERPAGE);
+const page = ref(pageCookie.value || 1);
 
 const initialFilter = {
     name: null,
@@ -359,7 +369,7 @@ const initialFilter = {
     province: '',
 };
 
-const option = ref({ ...initialFilter });
+const option = ref({ ...filtersCookie.value });
 
 const debounce = (func, delay) => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -437,6 +447,10 @@ const resetFilter = async () => {
 
     option.value = { ...initialFilter };
     page.value = 1;
+    pageCookie.value = 1;
+    
+    filtersCookie.value = { ...initialFilter };
+
     await getReplacementsForAdmin(page.value, perPage.value, option.value);
 };
 
@@ -451,24 +465,23 @@ await getReplacementsForAdmin(
 
 const { $toast } = useNuxtApp();
 
-const updatePaginationInUrl = () => {
-    router.replace({
-        query: {
-            ...route.query,
-            page: page.value.toString(),
-            perPage: perPage.value.toString(),
-        },
-    });
-};
 
-// const refreshReplacement = async (page: number) => {
-//     await getReplacementsForAdmin(page, perPage.value);
-// };
+
+watch(page, (value) => {
+    pageCookie.value = value;
+});
+
+watch(perPage, (value) => {
+    perPageCookie.value = value;
+});
+
+watch(option, (value) => {
+    filtersCookie.value = value;
+}, { deep: true });
+
+
 const refreshReplacement = async (newPage: number) => {
     page.value = newPage;
-
-    updatePaginationInUrl();
-
     await getReplacementsForAdmin(
         page.value,
         perPage.value,
@@ -476,16 +489,11 @@ const refreshReplacement = async (newPage: number) => {
     );
 };
 
-// const handlePerPageChange = async (value: number) => {
-//     perPage.value = value;
-//     await getReplacementsForAdmin(page.value, value);
-// };
+
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     page.value = 1;
-
-    updatePaginationInUrl();
 
     await getReplacementsForAdmin(
         page.value,

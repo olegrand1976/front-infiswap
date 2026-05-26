@@ -73,8 +73,14 @@ definePageMeta({
 const { fetchDemandPartners, demandPartners, forceDelete, updatePartnership, count } = usePartners();
 
 const { $toast } = useNuxtApp();
-const perPage = ref(PERPAGE);
-const page = ref(1);
+const pageCookie = useCookie<number>('partners_page');
+const perPageCookie = useCookie<number>('partners_per_page');
+
+const page = ref(pageCookie.value || 1);
+const perPage = ref(perPageCookie.value || PERPAGE);
+
+
+
 const { isSuperAdmin } = useAuth();
 
 const initialFilter = {
@@ -82,6 +88,16 @@ const initialFilter = {
     city: null,
     type: 'admin',
 };
+
+watch(page, (value) => {
+    pageCookie.value = value;
+});
+
+watch(perPage, (value) => {
+    perPageCookie.value = value;
+});
+
+
 
 const option = ref({ ...initialFilter });
 
@@ -115,6 +131,7 @@ const refreshDemand = async (pge: number) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
+    page.value = 1;
     await filterPartnerships();
 };
 
@@ -126,6 +143,7 @@ const resetFilter = async () => {
 
     option.value = { ...initialFilter };
     page.value = 1;
+    pageCookie.value = 1;
     await fetchDemandPartners(
         page.value,
         perPage.value,

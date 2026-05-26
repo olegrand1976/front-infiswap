@@ -169,8 +169,12 @@ const router = useRouter();
 const type = computed<string>(() => (route.params.type as string) || 'nurstech');
 const typeLabel = computed(() => type.value.charAt(0).toUpperCase() + type.value.slice(1));
 
-const perPage = ref(PERPAGE);
-const page = ref(1);
+const perPageCookie = useCookie<number>('contact_per_page');
+const pageCookie = useCookie<number>('contact_page');
+
+const perPage = ref(perPageCookie.value ?? PERPAGE);
+const page = ref(pageCookie.value ?? 1);
+
 const initialFilter = {
     name: null,
     email: null,
@@ -206,13 +210,23 @@ const dataContacts = computed(() => contacts.value ?? []);
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
+    perPageCookie.value = value; // 🔥 IMPORTANT
+
+    page.value = 1;
+    pageCookie.value = 1;
+
     await getContacts(type, page.value, value, option.value);
 };
+const refresh = async (newPage: number) => {
+    page.value = newPage;
+    pageCookie.value = newPage; // 🔥 IMPORTANT
 
-const refresh = async (page: number) => {
-    await getContacts(type, page, perPage.value, { sortOrder: sort.order, sortKey: sort.by });
+    await getContacts(type, page.value, perPage.value, {
+        ...option.value,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
 };
-
 const sort = reactive({
     order: 'DESC',
     by: null,
@@ -233,8 +247,15 @@ const setSort = (columnKey: string) => {
 };
 
 watch(type, async () => {
-    page.value = 1;
+    page.value = pageCookie.value ?? 1;
     await getContacts(type, page.value, perPage.value, option.value);
+});
+watch(page, (val) => {
+    pageCookie.value = val;
+});
+
+watch(perPage, (val) => {
+    perPageCookie.value = val;
 });
 
 watch(

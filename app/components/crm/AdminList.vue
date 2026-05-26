@@ -249,6 +249,8 @@ const props = defineProps<{
     perPage: number;
 }>();
 
+const authUser = useState('user');
+
 const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateReferrer, userReferrer, getUserReferrer } = useReferrer();
@@ -479,6 +481,13 @@ const setSort = (columnKey: string) => {
     emit('set-sort', columnKey);
 };
 
+
+const isFranceUser = computed(() => {
+    const country = authUser.value?.profile?.country?.toLowerCase();
+
+    return country === 'fr' || country === 'france';
+});
+
 const columns: ColumnDef<User>[] = [
     {
         id: 'select',
@@ -535,6 +544,7 @@ const columns: ColumnDef<User>[] = [
             return h('div', { class: 'text-center' }, row.getValue('city'));
         },
     },
+    
     {
         accessorKey: 'insurance',
         header: 'NursAssur',
@@ -571,7 +581,8 @@ const columns: ColumnDef<User>[] = [
                     'class': 'mx-auto text-center',
                     'checked': currentValue === 1,
                     'onUpdate:checked': toggle,
-                    'disabled': isCollaborator.value,
+                    'disabled': isCollaborator.value || isFranceUser.value,
+
                 }),
             ]);
         },
