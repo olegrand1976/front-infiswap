@@ -342,7 +342,7 @@ const { isSuperAdmin, isCommunityManager, isDeveloper } = useAuth();
 
 const pageCookie = useCookie<number>('admin_replacements_page');
 const perPageCookie = useCookie<number>('admin_replacements_per_page');
-    const filtersCookie = useCookie('admin_replacements_filters', {
+const filtersCookie = useCookie('admin_replacements_filters', {
     default: () => ({
         name: null,
         zip: null,
@@ -448,7 +448,7 @@ const resetFilter = async () => {
     option.value = { ...initialFilter };
     page.value = 1;
     pageCookie.value = 1;
-    
+
     filtersCookie.value = { ...initialFilter };
 
     await getReplacementsForAdmin(page.value, perPage.value, option.value);
@@ -465,8 +465,6 @@ await getReplacementsForAdmin(
 
 const { $toast } = useNuxtApp();
 
-
-
 watch(page, (value) => {
     pageCookie.value = value;
 });
@@ -479,7 +477,6 @@ watch(option, (value) => {
     filtersCookie.value = value;
 }, { deep: true });
 
-
 const refreshReplacement = async (newPage: number) => {
     page.value = newPage;
     await getReplacementsForAdmin(
@@ -488,8 +485,6 @@ const refreshReplacement = async (newPage: number) => {
         option.value,
     );
 };
-
-
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;

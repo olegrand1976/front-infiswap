@@ -481,7 +481,6 @@ const setSort = (columnKey: string) => {
     emit('set-sort', columnKey);
 };
 
-
 const isFranceUser = computed(() => {
     const country = authUser.value?.profile?.country?.toLowerCase();
 
@@ -544,7 +543,7 @@ const columns: ColumnDef<User>[] = [
             return h('div', { class: 'text-center' }, row.getValue('city'));
         },
     },
-    
+
     {
         accessorKey: 'insurance',
         header: 'NursAssur',

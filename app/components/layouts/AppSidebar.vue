@@ -183,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
@@ -434,6 +434,12 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         route: '/dashboard/admin/alerts',
         icon: ShieldAlert,
         visible: isSuperAdmin.value || isAdmin.value,
+    },
+    {
+        label: 'AI - Configuration',
+        route: '/dashboard/admin/ai-settings',
+        icon: Sparkles,
+        visible: isSuperAdmin.value,
     },
     {
         label: 'Logs',

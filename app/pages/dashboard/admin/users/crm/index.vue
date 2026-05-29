@@ -187,17 +187,17 @@ definePageMeta({
 });
 const pageCookie = useCookie<number>('crm_page', {
     default: () => 1,
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const perPageCookie = useCookie<number>('crm_per_page', {
     default: () => PERPAGE,
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
     default: () => 'users',
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const selectedCrm = ref('users');
@@ -223,7 +223,7 @@ const setCountryFilter = async (country) => {
     isCountryLoading.value = true;
     option.value.country = country;
     page.value = 1;
-    pageCookie.value = 1; 
+    pageCookie.value = 1;
 
     await filterUsers();
 
@@ -312,9 +312,9 @@ const handleUserUpdate = (updatedCrmObject) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    perPageCookie.value = value; 
+    perPageCookie.value = value;
     page.value = 1;
-    pageCookie.value = 1; 
+    pageCookie.value = 1;
     await getCrmPlus(page.value, value, option.value);
 };
 
@@ -325,7 +325,7 @@ const resetFilter = async () => {
     }
     option.value = { ...emptyFilter };
     page.value = 1;
-    pageCookie.value = 1; 
+    pageCookie.value = 1;
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
     await getCrmPlus(page.value, perPage.value, option.value);

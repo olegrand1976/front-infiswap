@@ -79,27 +79,27 @@ const { isSuperAdmin } = useAuth();
 // ============ AJOUT DES COOKIES ============
 const pageCookie = useCookie<number>('institutions_page', {
     default: () => 1,
-    maxAge: 60 * 60 * 24 * 7 // 7 jours
+    maxAge: 60 * 60 * 24 * 7, // 7 jours
 });
 
 const perPageCookie = useCookie<number>('institutions_per_page', {
     default: () => PERPAGE,
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const filterCookie = useCookie<string>('institutions_filter', {
     default: () => '',
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const sortByCookie = useCookie<string>('institutions_sort_by', {
     default: () => 'name',
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const sortOrderCookie = useCookie<'ASC' | 'DESC'>('institutions_sort_order', {
     default: () => 'ASC',
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
@@ -134,7 +134,7 @@ const refreshInstitutions = async (newPage: number) => {
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    perPageCookie.value = value; 
+    perPageCookie.value = value;
     page.value = 1;
     pageCookie.value = 1;
     await getInstitutions(page.value, value, {
@@ -147,21 +147,20 @@ const handlePerPageChange = async (value: number) => {
 const resetFilter = async () => {
     option.value = { name: '' };
     filterCookie.value = ''; // Sauvegarder le filtre vide
-    
+
     sort.by = 'name';
     sort.order = 'ASC';
     sortByCookie.value = 'name';
     sortOrderCookie.value = 'ASC';
-    
+
     page.value = 1;
     pageCookie.value = 1;
-    
+
     await getInstitutions(1, perPage.value, {
         sortKey: sort.by,
         sortOrder: sort.order,
     });
 };
-
 
 let debounceTimer: ReturnType<typeof setTimeout>;
 const debouncedFilter = () => {
@@ -200,7 +199,7 @@ watch(
     async (newVal) => {
         sortByCookie.value = newVal.by as string;
         sortOrderCookie.value = newVal.order;
-        
+
         await getInstitutions(page.value, perPage.value, {
             ...option.value,
             sortKey: newVal.by,

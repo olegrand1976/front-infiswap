@@ -27,7 +27,7 @@ export const useHome = () => {
     }
 
     async function getSpecifiedHome(options = {}) {
-        const response = await $apifetch(prefix, {    query: options, });
+        const response = await $apifetch(prefix, { query: options });
         homes.value = response;
         return response;
     }

@@ -79,8 +79,6 @@ const perPageCookie = useCookie<number>('partners_per_page');
 const page = ref(pageCookie.value || 1);
 const perPage = ref(perPageCookie.value || PERPAGE);
 
-
-
 const { isSuperAdmin } = useAuth();
 
 const initialFilter = {
@@ -96,8 +94,6 @@ watch(page, (value) => {
 watch(perPage, (value) => {
     perPageCookie.value = value;
 });
-
-
 
 const option = ref({ ...initialFilter });
 

@@ -120,7 +120,6 @@ await getUsers(page.value, perPage.value, {
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
-
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
     await getUsers(newPage, perPage.value, {
@@ -385,8 +384,6 @@ const columns: ColumnDef<User>[] = [
         },
     },
 ];
-
-
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';

@@ -604,27 +604,27 @@ const user = useState<User>('user');
 
 const pageCookie = useCookie<number>('replacements_page', {
     default: () => 1,
-    maxAge: 60 * 60 * 24 * 7 // 7 jours
+    maxAge: 60 * 60 * 24 * 7, // 7 jours
 });
 
 const perPageCookie = useCookie<number>('replacements_per_page', {
     default: () => PERPAGE,
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const postalCodeCookie = useCookie<string[]>('replacements_postal_codes', {
     default: () => [],
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const cityCookie = useCookie<string[]>('replacements_cities', {
     default: () => [],
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const selectedDaysCookie = useCookie<string[]>('replacements_selected_days', {
     default: () => [],
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
 });
 
 const selectedUser = ref(null);
@@ -769,7 +769,6 @@ const fetchData = async (p = 1, pp = PERPAGE, country = props.selectedCountry) =
 
         pageCookie.value = p;
         perPageCookie.value = pp;
-
     }
     catch (err) {
         console.error(err);
@@ -784,7 +783,7 @@ const submitSearch = async () => {
 
     postalCodeCookie.value = [...formData.postalCodeTags];
     cityCookie.value = [...formData.cityTags];
-    selectedDaysCookie.value = [...formData.selectedDays]
+    selectedDaysCookie.value = [...formData.selectedDays];
 
     try {
         loadingSearch.value = true;
@@ -800,20 +799,18 @@ const reinitializeFilter = () => {
     page.value = 1;
     pageCookie.value = 1; // Sauvegarder la page reset
     isSubmitted.value = false;
-    
+
     // Sauvegarder les filtres vides
     postalCodeCookie.value = [];
     cityCookie.value = [];
     selectedDaysCookie.value = [];
-    
+
     fetchData(1, perPage.value);
 };
 
-
-
 const refreshItems = async (newPage: number) => {
     page.value = newPage;
-    pageCookie.value = newPage; 
+    pageCookie.value = newPage;
     await router.replace({
         query: {
             ...route.query,
@@ -831,10 +828,9 @@ const refreshItems = async (newPage: number) => {
     }
 };
 
-
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    perPageCookie.value = value; 
+    perPageCookie.value = value;
     page.value = 1;
     pageCookie.value = 1;
     if (isSubmitted.value) await submitSearch();
@@ -988,7 +984,7 @@ const cancelSelection = () => {
 
 const updateZipCodesFromModal = (zips: string[]) => {
     formData.postalCodeTags = [...zips];
-    postalCodeCookie.value = [...zips]; 
+    postalCodeCookie.value = [...zips];
     submitSearch();
 };
 
@@ -1034,7 +1030,7 @@ onMounted(async () => {
     if (selectedDaysCookie.value.length > 0) {
         formData.selectedDays = [...selectedDaysCookie.value];
     }
-    
+
     await fetchCareTypes();
     mountedFetchDone.value = true;
 
@@ -1086,7 +1082,6 @@ watch(
             postalCodeCookie.value = [];
             cityCookie.value = [];
             selectedDaysCookie.value = [];
-
         }
         // else if (isSubmitted.value) {
         submitSearch();

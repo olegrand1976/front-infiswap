@@ -29,7 +29,6 @@
                     @update:page="refresh"
                     @update:per-page="handlePerPageChange"
                 />
-              
             </div>
         </DashboardAdminPageContent>
     </div>
@@ -50,7 +49,6 @@ import type { HomeType } from '~/lib/types';
 const { homes, getSpecifiedHome, edit, forceDelete } = useHome();
 const { isSuperAdmin, isCollaborator } = useAuth();
 
-
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
@@ -65,7 +63,6 @@ const perPageCookie = useCookie<number>('home_management_per_page');
 const perPage = ref(PERPAGE);
 const page = ref(pageCookie.value || 1);
 
-
 const loadHomes = async () => {
     await getSpecifiedHome({
         page: page.value,
@@ -77,7 +74,7 @@ await loadHomes();
 
 watch(page, (value) => {
     pageCookie.value = value;
-    console.log('page',page.value);
+    console.log('page', page.value);
 });
 
 watch(perPage, (value) => {
