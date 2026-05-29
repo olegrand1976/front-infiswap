@@ -2,6 +2,8 @@
     <div class="relative mt-6 sm:mt-0">
         <div class="flex flex-col">
             <HomeNewBanner />
+            <HomePlatformStats />
+            <HomeCommunityStory />
             <div class="container mt-12">
                 <HomePlatform />
             </div>
