@@ -29,15 +29,15 @@
                 v-else
                 class="space-y-6"
             >
-                <section class="rounded-xl border bg-white">
+                <section class="rounded-xl border bg-card text-card-foreground">
                     <div class="grid grid-cols-1 lg:grid-cols-2">
                         <div class="flex flex-col gap-5 p-6 border-b lg:border-b-0 lg:border-r">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="space-y-1">
-                                    <h3 class="font-semibold text-gray-900">
+                                    <h3 class="font-semibold text-foreground">
                                         Connexion au fournisseur
                                     </h3>
-                                    <p class="text-sm text-gray-500">
+                                    <p class="text-sm text-foreground/60">
                                         Service et modèle utilisés pour les requêtes IA.
                                     </p>
                                 </div>
@@ -79,29 +79,29 @@
 
                             <dl class="rounded-lg border divide-y text-sm">
                                 <div class="flex items-center justify-between gap-4 px-4 py-3">
-                                    <dt class="text-muted-foreground">
+                                    <dt class="text-foreground/60">
                                         Fournisseur
                                     </dt>
-                                    <dd class="font-medium text-gray-900">
+                                    <dd class="font-medium text-foreground">
                                         {{ providerLabel }}
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between gap-4 px-4 py-3">
-                                    <dt class="text-muted-foreground">
+                                    <dt class="text-foreground/60">
                                         Modèle
                                     </dt>
-                                    <dd class="font-medium font-mono text-gray-900 truncate max-w-[55%] text-right">
+                                    <dd class="font-medium font-mono text-foreground truncate max-w-[55%] text-right">
                                         {{ settings?.model }}
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between gap-4 px-4 py-3">
-                                    <dt class="text-muted-foreground">
+                                    <dt class="text-foreground/60">
                                         Clé API
                                     </dt>
                                     <dd class="flex items-center gap-1 min-w-0 justify-end">
                                         <span
                                             class="font-medium truncate"
-                                            :class="settings?.has_api_key ? 'font-mono text-gray-900' : 'text-amber-600'"
+                                            :class="settings?.has_api_key ? 'font-mono text-foreground' : 'text-warning'"
                                         >
                                             {{ settings?.has_api_key ? settings.masked_api_key : 'Manquante' }}
                                         </span>
@@ -120,7 +120,7 @@
 
                             <p
                                 v-if="settings?.modified_at"
-                                class="text-xs text-gray-400"
+                                class="text-xs text-foreground/40"
                             >
                                 Modifié le {{ formatToDMY(settings.modified_at, true) }}
                                 <span v-if="settings.modified_by"> · {{ settings.modified_by.name }}</span>
@@ -129,10 +129,10 @@
 
                         <div class="flex flex-col gap-5 p-6">
                             <div class="space-y-1">
-                                <h3 class="font-semibold text-gray-900">
+                                <h3 class="font-semibold text-foreground">
                                     Clé API
                                 </h3>
-                                <p class="text-sm text-gray-500">
+                                <p class="text-sm text-foreground/60">
                                     Identifiant secret chiffré en base de données.
                                 </p>
                             </div>
@@ -152,7 +152,7 @@
                                     />
                                     <button
                                         type="button"
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground"
                                         tabindex="-1"
                                         @click="isPasswordVisible = !isPasswordVisible"
                                     >
