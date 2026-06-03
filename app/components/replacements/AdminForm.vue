@@ -299,8 +299,6 @@
                     </Select>
                 </div>
 
-                <ReplacementsCountrySelect v-model="form.country" />
-
                 <div>
                     <Select
                         v-model="form.type"
@@ -363,6 +361,8 @@
                         @keydown.enter.prevent
                     />
                 </div>
+
+                <ReplacementsCountrySelect v-model="form.country" />
 
                 <div class="flex flex-col gap-2">
                     <h5>Type de soin</h5>

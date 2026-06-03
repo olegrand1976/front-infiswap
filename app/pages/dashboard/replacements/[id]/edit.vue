@@ -135,13 +135,6 @@
                         </div>
                     </div>
 
-                    <ReplacementsCountrySelect
-                        v-model="formData.country"
-                        label-class="text-primary font-semibold"
-                        trigger-class="w-full bg-white rounded-full border border-gray-300"
-                        content-class="border-none bg-white shadow-lg"
-                    />
-
                     <div class="flex flex-col space-y-2">
                         <label class="text-primary font-semibold">
                             Type de soins
@@ -200,6 +193,13 @@
                         :comma-validation="true"
                         :no-space-validation="true"
                         @keydown.enter.prevent
+                    />
+
+                    <ReplacementsCountrySelect
+                        v-model="formData.country"
+                        label-class="text-primary font-semibold"
+                        trigger-class="w-full bg-white rounded-full border border-gray-300"
+                        content-class="border-none bg-white shadow-lg"
                     />
 
                     <div class="flex flex-col space-y-2">
