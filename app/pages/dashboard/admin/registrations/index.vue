@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full min-w-0">
         <DashboardAdminPageHeader
             title="Suivi inscriptions"
         />
@@ -44,15 +44,13 @@
                 :data="selectedPeriod == 'lastWeek' ? dataWeekUsers : dataMonthUsers"
                 :columns="columns"
             />
-        </DashboardAdminPageContent>
-        <div>
             <CustomPagination
                 :default-page="page"
                 :per-page="perPage"
                 :total="selectedPeriod == 'lastWeek' ? dataWeekUsers?.length : dataMonthUsers?.length"
                 @update:per-page="handlePerPageChange"
             />
-        </div>
+        </DashboardAdminPageContent>
     </div>
 </template>
 

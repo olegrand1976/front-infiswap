@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="rounded-md border">
+    <div class="min-w-0 w-full">
+        <div class="overflow-x-auto rounded-md border">
             <Table>
                 <TableHeader class="h-14 bg-gray-100">
                     <TableRow

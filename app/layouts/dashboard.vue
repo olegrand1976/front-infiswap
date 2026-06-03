@@ -5,12 +5,12 @@
     >
         <LayoutsAppSidebar :key="user.account_type" />
         <SidebarInset
-            :class="cn('w-full flex-1', {
+            :class="cn({
                 'bg-gray-100': isAdmin,
                 'bg-white': !isAdmin,
             })"
         >
-            <header class="flex h-20 shrink-0 items-center px-6 gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-20 bg-white shadow-md">
+            <header class="flex h-20 shrink-0 items-center gap-2 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-20 bg-white shadow-md">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
                     <Separator
@@ -19,7 +19,7 @@
                     />
                 </div>
 
-                <div class="ml-auto flex flex-row-reverse items-center space-x-reverse space-x-2">
+                <div class="ml-auto flex min-w-0 shrink-0 flex-row-reverse items-center space-x-reverse space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">
                             <div>
@@ -212,9 +212,7 @@
                     </div>
                 </div>
             </header>
-            <div
-                class="flex flex-1 flex-col gap-4 m-6"
-            >
+            <div class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-auto p-6">
                 <NuxtPage />
             </div>
         </SidebarInset>
