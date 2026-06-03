@@ -135,6 +135,13 @@
                         </div>
                     </div>
 
+                    <ReplacementsCountrySelect
+                        v-model="formData.country"
+                        label-class="text-primary font-semibold"
+                        trigger-class="w-full bg-white rounded-full border border-gray-300"
+                        content-class="border-none bg-white shadow-lg"
+                    />
+
                     <div class="flex flex-col space-y-2">
                         <label class="text-primary font-semibold">
                             Type de soins
@@ -244,6 +251,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { ReplacementCountryCode } from '~/lib/replacementCountry';
+import { toReplacementCountryCode } from '~/lib/replacementCountry';
 import { goBack } from '~/lib/utils';
 
 const route = useRoute();
@@ -270,6 +279,7 @@ const formData = reactive({
     zipCodes: [] as string[],
     cities: [] as string[],
     careTypes: [] as number[],
+    country: 'be' as ReplacementCountryCode,
     timeSlot: {
         morning: {
             startAt: '',
@@ -305,6 +315,7 @@ const loadReplacement = async () => {
             ? r.cities
             : JSON.parse(r.cities || '[]');
         formData.careTypes = (r.care_types ?? []).map((ct: any) => ct.id ?? ct);
+        formData.country = toReplacementCountryCode(r.country);
         formData.comment = r.comment || '';
 
         const ts = typeof r.timeSlot === 'string' ? JSON.parse(r.timeSlot || '{}') : r.timeSlot || {};

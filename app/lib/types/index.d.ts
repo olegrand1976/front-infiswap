@@ -299,6 +299,7 @@ export type Replacement = {
     patient_count?: number;
     zip_codes?: string[] | string;
     cities?: string[] | string;
+    country?: string | null;
     care_types?: string[] | string;
     timeSlot?: {
         start_at: string;

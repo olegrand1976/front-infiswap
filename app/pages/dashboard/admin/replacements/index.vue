@@ -319,7 +319,8 @@ import { Button } from '@/components/ui/button';
 import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { LANGUAGES, PERPAGE } from '~/lib/constants';
+import { PERPAGE } from '~/lib/constants';
+import { replacementCountryLabel } from '~/lib/replacementCountry';
 import type { Replacement } from '~/lib/types';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { regions, departments, formatPhoneNumber, getErrorMessage } from '~/lib/utils';
@@ -735,9 +736,7 @@ const columns: ColumnDef<Replacement>[] = [
         cell: ({ row }) => {
             const country = row.original.country;
 
-            const countryLabel = LANGUAGES.find(l => l.value === country)?.label
-                ?? country
-                ?? '-';
+            const countryLabel = replacementCountryLabel(country);
 
             return h('div', { class: 'text-center capitalize' }, countryLabel);
         },

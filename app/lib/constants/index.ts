@@ -35,6 +35,11 @@ export const BASIC_ROLES: AccountType[] = [
     'midwife',
 ];
 
+export const REPLACEMENT_COUNTRIES = [
+    { value: 'be', label: 'Belgique' },
+    { value: 'fr', label: 'France' },
+] as const;
+
 export const LANGUAGES = [
     {
         value: 'fr',

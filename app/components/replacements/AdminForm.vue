@@ -299,6 +299,8 @@
                     </Select>
                 </div>
 
+                <ReplacementsCountrySelect v-model="form.country" />
+
                 <div>
                     <Select
                         v-model="form.type"
@@ -448,6 +450,7 @@ import { Eye, RefreshCw, Star } from 'lucide-vue-next';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Replacement, User } from '~/lib/types';
+import { toReplacementCountryCode } from '~/lib/replacementCountry';
 import { useRuntimeConfig } from '#app';
 
 const props = defineProps<{
@@ -501,6 +504,7 @@ const getInitialValue = (replacement: Replacement | null | undefined = props.rep
     endDate: formatDate(replacement?.end_date ?? null),
     visibility: replacement?.visibility ?? 'public',
     status: replacement?.status ?? 'open',
+    country: toReplacementCountryCode(replacement?.country),
     type: replacement?.type ?? 'classic',
     patientCount: replacement?.patient_count ?? null,
     zipCodes: typeof replacement?.zip_codes === 'string'
