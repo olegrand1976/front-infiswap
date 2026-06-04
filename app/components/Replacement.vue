@@ -1,19 +1,19 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div>
-        <div class="flex mt-8">
-            <Form class="grid grid-cols-1 sm:grid-cols-4 2xl:grid-cols-6 w-full gap-4">
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:w-52 2xl:w-72">
+    <div class="min-w-0 w-full max-w-full overflow-x-hidden">
+        <div class="mt-8 min-w-0 w-full">
+            <Form class="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+                <div class="min-w-0">
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
-                                <div class="flex bg-primary space-x-3 rounded-full items-center justify-between ps-3 pe-1">
+                                <div class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1">
                                     <h5 class="text-white text-xs">
                                         Jours
                                     </h5>
                                     <Select>
                                         <SelectTrigger
-                                            class="bg-white my-0.5 w-56 lg:w-36 2xl:w-52 rounded-full border-none text-xs"
+                                            class="my-0.5 min-w-0 flex-1 rounded-full border-none bg-white text-xs"
                                             position="right"
                                         >
                                             <SelectValue
@@ -44,12 +44,12 @@
                     </FormField>
                 </div>
 
-                <div class="col-span-4 md:col-span-2 lg:w-64 lg:ml-6 xl:ml-0 xl:w-88 2xl:ml-16 2xl:w-104">
+                <div class="min-w-0 lg:col-span-2">
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
                                 <div
-                                    class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
+                                    class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1"
                                     title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
                                 >
                                     <h5 class="text-white text-xs">
@@ -58,26 +58,20 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.postalCodeTags"
-                                        class="w-56 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border-none"
+                                        class="my-0.5 flex h-auto min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1 rounded-full border-none py-1 text-xs"
                                     >
-                                        <div
-                                            :class="[formData.postalCodeTags.length ? 'w-1/2' : 'hidden']"
-                                            class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                        <TagsInputItem
+                                            v-for="item in formData.postalCodeTags"
+                                            :key="item"
+                                            :value="item"
+                                            class="shrink-0"
                                         >
-                                            <TagsInputItem
-                                                v-for="item in formData.postalCodeTags"
-                                                :key="item"
-                                                :value="item"
-                                                class="shrink-0 max-w-30"
-                                            >
-                                                <TagsInputItemText class="text-xs" />
-                                                <TagsInputItemDelete @click="removeTag(formData.postalCodeTags, item)" />
-                                            </TagsInputItem>
-                                        </div>
+                                            <TagsInputItemText class="text-xs" />
+                                            <TagsInputItemDelete @click="removeTag(formData.postalCodeTags, item)" />
+                                        </TagsInputItem>
                                         <TagsInputInput
                                             v-model="postalCodeInput"
-                                            :class="[formData.postalCodeTags.length ? 'w-1/2' : 'w-full']"
-                                            class="text-xs flex items-center"
+                                            class="min-w-[4rem] flex-1 text-xs"
                                             :placeholder="props.selectedCountry === 'fr' ? '75000' : '1000'"
                                             @blur="handleBlur"
                                             @keydown.enter="addTagFromInput(postalCodeInput, formData.postalCodeTags, v => { postalCodeInput = ''; return v; })"
@@ -89,12 +83,12 @@
                     </FormField>
                 </div>
 
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 lg:-ml-26 xl:-ms-16 lg:w-72 2xl:w-104 2xl:ml-4">
+                <div class="min-w-0 lg:col-span-2">
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
                                 <div
-                                    class="flex space-x-3 bg-primary rounded-full items-center justify-between ps-3 pe-1"
+                                    class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1"
                                     title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
                                 >
                                     <h5 class="text-white text-xs">
@@ -102,26 +96,20 @@
                                     </h5>
                                     <TagsInput
                                         v-model="formData.cityTags"
-                                        class="w-56 2xl:w-72 flex items-center h-9 text-xs my-0.5 rounded-full border-none"
+                                        class="my-0.5 flex h-auto min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1 rounded-full border-none py-1 text-xs"
                                     >
-                                        <div
-                                            :class="[formData.cityTags.length ? 'w-1/2' : 'hidden']"
-                                            class="flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar"
+                                        <TagsInputItem
+                                            v-for="item in formData.cityTags"
+                                            :key="item"
+                                            :value="item"
+                                            class="shrink-0"
                                         >
-                                            <TagsInputItem
-                                                v-for="item in formData.cityTags"
-                                                :key="item"
-                                                :value="item"
-                                                class="shrink-0 max-w-24"
-                                            >
-                                                <TagsInputItemText class="text-xs" />
-                                                <TagsInputItemDelete @click="removeTag(formData.cityTags, item)" />
-                                            </TagsInputItem>
-                                        </div>
+                                            <TagsInputItemText class="text-xs" />
+                                            <TagsInputItemDelete @click="removeTag(formData.cityTags, item)" />
+                                        </TagsInputItem>
                                         <TagsInputInput
                                             v-model="cityInput"
-                                            :class="[formData.cityTags.length ? 'w-1/2' : 'w-full']"
-                                            class="text-xs flex items-center"
+                                            class="min-w-[4rem] flex-1 text-xs"
                                             :placeholder="props.selectedCountry === 'fr' ? 'Paris' : 'Bruxelles'"
                                             @blur="handleBlur"
                                             @keydown.enter="addTagFromInput(cityInput, formData.cityTags, v => { cityInput = ''; return v; })"
@@ -133,7 +121,7 @@
                     </FormField>
                 </div>
 
-                <div class="col-span-4 md:col-span-2 lg:col-span-1 2xl:ml-52 flex gap-3">
+                <div class="flex min-w-0 gap-3 sm:col-span-2 lg:col-span-2">
                     <Button
                         class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
                         @click="reinitializeFilter"
@@ -152,7 +140,7 @@
             </Form>
         </div>
 
-        <div class="grid my-8">
+        <div class="my-8 min-w-0 w-full max-w-full">
             <div
                 v-if="isEmpty"
                 class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50"

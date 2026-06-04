@@ -17,7 +17,7 @@
         </div>
 
         <section
-            class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-24"
+            class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 2xl:px-2"
         >
             <div class="sm:mx-12 lg:mx-6">
                 <div class="shadow pb-8">
