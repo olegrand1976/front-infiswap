@@ -196,6 +196,76 @@
 
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold"> Type de soins </label>
+                    
+                   
+                    <div v-if="careTypes.length > 10" class="relative mb-2">
+                        <input
+                            v-model="careTypeSearch"
+                            type="text"
+                            placeholder="Rechercher..."
+                            class="w-full rounded-full border border-gray-300 px-4 py-2 pr-8 text-sm focus:outline-none focus:border-primary"
+                        >
+                        <Search 
+                            v-if="!careTypeSearch"
+                            class="absolute right-3 top-2.5 h-4 w-4 text-gray-400"
+                        />
+                        <X 
+                            v-else
+                            class="absolute right-3 top-2.5 h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-600"
+                            @click="careTypeSearch = ''"
+                        />
+                    </div>
+                    
+                    <Select
+                        v-model="formData.careTypes"
+                        multiple
+                    >
+                        <SelectTrigger
+                            class="w-full bg-white rounded-full text-nowrap border border-gray-300"
+                            position="right"
+                        >
+                            <SelectValue class="truncate w-800">
+                                <template v-if="getSelectedCareTypesText(formData.careTypes)">
+                                    {{ getSelectedCareTypesText(formData.careTypes) }}
+                                </template>
+                                <template v-else>
+                                    <span class="text-black/60"> Sélectionner </span>
+                                </template>
+                            </SelectValue>
+                        </SelectTrigger>
+                        
+                        <SelectContent 
+                            class="border border-none max-h-72 overflow-y-auto"
+                            :style="{ maxHeight: '300px', overflowY: 'auto' }"
+                        >
+                            <SelectGroup>
+                                <div
+                                    v-for="careType in filteredCareTypes"
+                                    :key="careType.id"
+                                    class="flex items-center space-x-2 mb-2 px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                                    @click="handleCareTypeClick(formData, careType.id)"
+                                >
+                                    <Checkbox
+                                        :checked="formData.careTypes.includes(careType.id)"
+                                        class="mr-2"
+                                    />
+                                    <label class="text-sm cursor-pointer select-none">
+                                        {{ careType.name }}
+                                    </label>
+                                </div>
+                                
+                                <div
+                                    v-if="filteredCareTypes.length === 0"
+                                    class="text-center text-gray-500 py-4 text-sm"
+                                >
+                                    Aucun type de soin trouvé
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <!-- <div class="flex flex-col space-y-2">
+                    <label class="text-primary font-semibold"> Type de soins </label>
                     <Select
                         v-model="formData.careTypes"
                         multiple
@@ -232,7 +302,7 @@
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </div>
+                </div> -->
 
                 <div
                     v-if="hasMultipleValidRoles"
@@ -288,7 +358,6 @@
                 </div>
             </div>
         </section>
-
         <ProposalLocationModal
             v-model="proposalDialog"
             v-model:newly-added-value="newlyAddedValue"
@@ -297,6 +366,7 @@
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
             :is-preference-mode="false"
+            :country-code="countryCode"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
         />
@@ -312,7 +382,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Plus, Star, X } from 'lucide-vue-next';
+import { ArrowLeft, Plus, Star, X,Search } from 'lucide-vue-next';
 
 import { toast } from 'vue-sonner';
 import { InputTime } from '@/components/ui/input-time';
@@ -331,6 +401,8 @@ const router = useRouter();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);
+
+const careTypeSearch = ref('');
 
 const roleType = computed(() => {
     return user.value.roles.find(role => validRoles.includes(role));
@@ -531,6 +603,16 @@ const getSelectedCareTypesText = (selectedIds: number[]): string => {
         .map(ct => ct.name)
         .join(', ');
 };
+
+const filteredCareTypes = computed(() => {
+    if (!careTypeSearch.value) {
+        return careTypes.value;
+    }
+    const searchTerm = careTypeSearch.value.toLowerCase();
+    return careTypes.value.filter(careType => 
+        careType.name.toLowerCase().includes(searchTerm)
+    );
+});
 
 const resetForm = () => {
     formData.periods = [

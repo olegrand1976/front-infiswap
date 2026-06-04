@@ -125,6 +125,7 @@ const props = defineProps<{
     initialCities: string[];
     newlyAddedValue: string;
     isPreferenceMode: boolean;
+    countryCode?: string;
 }>();
 const allSelected = ref(true);
 
@@ -207,11 +208,36 @@ const fetchLocationSuggestions = async (
             props.initialCities,
         );
 
+        // for (const [suggestedZipCode, suggestedCity] of suggestions) {
+        //     merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
+        //         suggestedZipCode,
+        //         suggestedCity,
+        //     ]);
+        // }
         for (const [suggestedZipCode, suggestedCity] of suggestions) {
-            merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
-                suggestedZipCode,
-                suggestedCity,
-            ]);
+            // Filtrer selon le pays
+            if (props.countryCode === 'fr') {
+                // Format français: 5 chiffres
+                if (/^\d{5}$/.test(suggestedZipCode)) {
+                    merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
+                        suggestedZipCode,
+                        suggestedCity,
+                    ]);
+                }
+            } else if (props.countryCode === 'be') {
+                // Format belge: 4 chiffres
+                if (/^\d{4}$/.test(suggestedZipCode)) {
+                    merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
+                        suggestedZipCode,
+                        suggestedCity,
+                    ]);
+                }
+            } else {
+                merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
+                    suggestedZipCode,
+                    suggestedCity,
+                ]);
+            }
         }
     }
 
