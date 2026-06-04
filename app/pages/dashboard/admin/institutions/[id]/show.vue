@@ -210,7 +210,7 @@
                         <Button
                             v-if="isSuperAdmin"
                             variant="destructive"
-                            @click="handleDelete"
+                            @click="deleteDialogOpen = true"
                         >
                             Supprimer
                         </Button>
@@ -218,6 +218,30 @@
                 </div>
             </div>
         </DashboardAdminPageContent>
+
+        <AlertDialog v-model:open="deleteDialogOpen">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Êtes-vous sûr de vouloir supprimer l'institution « {{ institution?.name }} » ? Cette action est irréversible.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>
+                        Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        class="rounded"
+                        variant="destructive"
+                        :disabled="deleting"
+                        @click="confirmDelete"
+                    >
+                        Supprimer
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
 </template>
 
@@ -291,18 +315,24 @@ const handleReject = async () => {
     }
 };
 
-const handleDelete = async () => {
+const deleteDialogOpen = ref(false);
+const deleting = ref(false);
+
+const confirmDelete = async () => {
     if (!institution.value) return;
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette institution ? Cette action est irréversible.')) {
-        try {
-            await forceDelete(institution.value.id);
-            $toast({ description: 'Institution supprimée', status: 'success' });
-            navigateTo('/dashboard/admin/institutions');
-        }
-        catch (error) {
-            console.error('Erreur lors de la suppression:', error);
-            $toast({ description: 'Erreur lors de la suppression', status: 'error', variant: 'destructive' });
-        }
+
+    deleting.value = true;
+    try {
+        await forceDelete(institution.value.id);
+        deleteDialogOpen.value = false;
+        await navigateTo('/dashboard/admin/institutions');
+    }
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        $toast({ description: 'Erreur lors de la suppression', status: 'error', variant: 'destructive' });
+    }
+    finally {
+        deleting.value = false;
     }
 };
 

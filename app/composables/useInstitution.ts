@@ -250,15 +250,20 @@ export const useInstitutions = () => {
     }
 
     async function forceDelete(id: number) {
-        await $apifetch(`api/admin/institutions/${id}`, {
-            method: 'DELETE',
-        })
-            .then(() => {
-                toast.success('Suppression réussie.');
-            })
-            .catch(() => {
-                toast.error('Une erreur est survenue lors de la suppression.');
+        try {
+            await $apifetch(`api/admin/institutions/${id}`, {
+                method: 'DELETE',
             });
+            institutions.value = institutions.value.filter((institution) => institution.id !== id);
+            if (count.value > 0) {
+                count.value -= 1;
+            }
+            toast.success('Suppression réussie.');
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Une erreur est survenue lors de la suppression.');
+            throw error;
+        }
     }
 
     async function validateInstitution(id: number) {

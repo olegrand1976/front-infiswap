@@ -52,6 +52,30 @@
                 />
             </div>
         </DashboardAdminPageContent>
+
+        <AlertDialog v-model:open="deleteDialogOpen">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Êtes-vous sûr de vouloir supprimer l'institution « {{ institutionToDelete?.name }} » ? Cette action est irréversible.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>
+                        Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        class="rounded"
+                        variant="destructive"
+                        :disabled="deleting"
+                        @click="confirmDelete"
+                    >
+                        Supprimer
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
 </template>
 
@@ -213,14 +237,38 @@ const handleEdit = (institution: Institution) => {
     navigateTo(`/dashboard/admin/institutions/${institution.id}/show`);
 };
 
-const handleDelete = async (institution: Institution) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette institution ?')) {
-        await forceDelete(institution.id);
+const deleteDialogOpen = ref(false);
+const institutionToDelete = ref<Institution | null>(null);
+const deleting = ref(false);
+
+const openDeleteDialog = (institution: Institution) => {
+    institutionToDelete.value = institution;
+    deleteDialogOpen.value = true;
+};
+
+const closeDeleteDialog = () => {
+    deleteDialogOpen.value = false;
+    institutionToDelete.value = null;
+};
+
+const confirmDelete = async () => {
+    if (!institutionToDelete.value) return;
+
+    deleting.value = true;
+    try {
+        await forceDelete(institutionToDelete.value.id);
         await getInstitutions(page.value, perPage.value, {
             ...option.value,
             sortKey: sort.by,
             sortOrder: sort.order,
         });
+        closeDeleteDialog();
+    }
+    catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+    }
+    finally {
+        deleting.value = false;
     }
 };
 
@@ -392,7 +440,7 @@ const columns: ColumnDef<Institution>[] = [
                             variant: 'ghost',
                             size: 'sm',
                             class: 'w-8 h-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50',
-                            onClick: () => handleDelete(institution),
+                            onClick: () => openDeleteDialog(institution),
                             title: 'Supprimer',
                         }, () => h(Trash2, { class: 'w-4 h-4' }))
                     : null,
