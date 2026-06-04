@@ -9,11 +9,13 @@
 
             <div class="flex flex-col items-center gap-3 px-8 pb-8">
                 <Button
+                    href="/offre-institution"
                     class="bg-white text-primary font-bold px-6 py-6 rounded-full w-full text-sm leading-tight hover:bg-white hover:scale-105 transition-transform duration-300 shadow-md"
                 >
                     Trouver rapidement du personnel<br>infirmier qualifié
                 </Button>
                 <Button
+                    href="/offre-institution"
                     class="bg-transparent border-2 border-white text-white font-bold rounded-full px-6 py-6 w-full text-sm leading-tight hover:scale-105 transition-transform duration-300"
                 >
                     Une solution rapide pour<br>assurer la continuité des soins
@@ -53,11 +55,13 @@
 
                 <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-4 pb-16 z-10">
                     <Button
+                        href="/offre-institution"
                         class="bg-white text-primary font-bold px-10 py-8 rounded-full min-w-100 hover:bg-white hover:scale-105 transition-transform duration-300"
                     >
                         Trouver rapidement du personnel<br>infirmier qualifié
                     </Button>
                     <Button
+                        href="/offre-institution"
                         class="bg-primary border-2 border-white text-white font-bold rounded-full px-10 py-8 min-w-100 hover:scale-105 transition-transform duration-300"
                     >
                         Une solution rapide pour<br>assurer la continuité des soins

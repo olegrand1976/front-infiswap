@@ -254,7 +254,7 @@ export const useInstitutions = () => {
             await $apifetch(`api/admin/institutions/${id}`, {
                 method: 'DELETE',
             });
-            institutions.value = institutions.value.filter((institution) => institution.id !== id);
+            institutions.value = institutions.value.filter(institution => institution.id !== id);
             if (count.value > 0) {
                 count.value -= 1;
             }
