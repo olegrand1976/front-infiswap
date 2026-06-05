@@ -3,22 +3,21 @@
         <div class="flex justify-between items-start">
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1">
-                    <div
-                        v-if="institutionLogoUrl"
-                        class="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-gray-100 flex items-center justify-center"
-                    >
-                        <img
-                            :src="institutionLogoUrl"
-                            :alt="(mission.institution as any)?.institution_name || (mission.institution as any)?.name || 'Institution'"
-                            class="w-full h-full object-contain"
-                            @error="handleImageError"
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-100">
+                        <LayoutsApiImage
+                            v-if="institutionLogo"
+                            :path="institutionLogo"
+                            :alt="institutionName"
+                            class="h-full w-full object-contain"
                         >
-                    </div>
-                    <div
-                        v-else
-                        class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0"
-                    >
-                        <span class="text-primary font-semibold text-xs">
+                            <template #fallback>
+                                <span class="text-xs font-semibold text-primary">{{ institutionInitial }}</span>
+                            </template>
+                        </LayoutsApiImage>
+                        <span
+                            v-else
+                            class="flex h-full w-full items-center justify-center bg-primary/20 text-xs font-semibold text-primary"
+                        >
                             {{ institutionInitial }}
                         </span>
                     </div>
@@ -185,7 +184,6 @@ import { Building2, ChevronRight, Eye, RefreshCw, Star } from 'lucide-vue-next';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
-import { useInstitutions } from '~/composables/useInstitution';
 import type { Mission } from '~/lib/types';
 
 interface MissionCardProps {
@@ -194,7 +192,6 @@ interface MissionCardProps {
 
 const props = defineProps<MissionCardProps>();
 
-const { getLogoUrl } = useInstitutions();
 const showFullDescription = ref(false);
 
 const user = useState<any>('user');
@@ -263,31 +260,18 @@ const statusBadgeClass = computed(() => {
     }
 });
 
-const institutionLogoUrl = computed(() => {
+const institutionLogo = computed(() => {
     const institution = props.mission.institution;
-    if (!institution) {
-        return null;
-    }
+    if (!institution) return null;
 
     const institutionAny = institution as any;
-    const logo = institutionAny.logo || institution.profil_url;
-    if (!logo) {
-        return null;
-    }
-
-    if (typeof logo === 'string' && (logo.startsWith('http://') || logo.startsWith('https://'))) {
-        return logo;
-    }
-
-    return getLogoUrl(logo);
+    return institutionAny.logo || institution.profil_url || null;
 });
 
-const handleImageError = (event: Event) => {
-    const img = event.target as HTMLImageElement;
-    if (img) {
-        img.style.display = 'none';
-    }
-};
+const institutionName = computed(() => {
+    const institutionAny = props.mission.institution as any;
+    return institutionAny?.institution_name || institutionAny?.name || 'Institution';
+});
 
 const institutionInitial = computed(() => {
     const institution = props.mission.institution;

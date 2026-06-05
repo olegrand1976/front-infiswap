@@ -8,7 +8,7 @@
         </SidebarHeader>
 
         <SidebarContent
-            class="sidebar-content flex min-w-[260px] flex-col gap-4 bg-white p-2"
+            class="sidebar-content flex flex-col gap-4 bg-white p-2"
         >
             <SidebarGroup
                 :class="

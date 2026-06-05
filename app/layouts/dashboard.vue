@@ -212,7 +212,7 @@
                     </div>
                 </div>
             </header>
-            <div class="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-auto p-6">
+            <div class="min-h-0 flex-1 overflow-y-auto overflow-x-auto p-6">
                 <NuxtPage />
             </div>
         </SidebarInset>

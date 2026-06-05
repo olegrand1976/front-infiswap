@@ -70,7 +70,6 @@ export const useInstitutionServices = () => {
 
 export const useInstitutions = () => {
     const { $apifetch } = useNuxtApp();
-    const config = useRuntimeConfig();
 
     const institutions = useState<Institution[]>('institutions', () => []);
     const currentInstitution = useState<any>('currentInstitution', () => null);
@@ -132,17 +131,10 @@ export const useInstitutions = () => {
         }
     }
 
-    /**
-     * Get the full URL for an institution logo
-     */
+    const { getStorageUrl } = useStorageUrl();
+
     function getLogoUrl(logoPath: string | null | undefined): string | null {
-        if (!logoPath) return null;
-
-        if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
-            return logoPath;
-        }
-
-        return `${config.public.API_URL}/storage/${logoPath}`;
+        return getStorageUrl(logoPath);
     }
 
     /**

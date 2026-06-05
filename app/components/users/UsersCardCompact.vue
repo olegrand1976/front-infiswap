@@ -136,7 +136,7 @@ const props = withDefaults(
     },
 );
 
-const config = useRuntimeConfig();
+const { getStorageUrl } = useStorageUrl();
 
 const nursePhotoError = ref(false);
 
@@ -150,13 +150,7 @@ watch(
 const nursePhotoUrl = computed(() => {
     const u = props.user;
     if (!u) return null;
-    const path = u.profil_url || u.profile?.profil_url;
-    if (!path) return null;
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-        return path;
-    }
-    const base = config.public.API_URL as string;
-    return `${base}/storage/${path}`;
+    return getStorageUrl(u.profil_url || u.profile?.profil_url);
 });
 
 const roleLabel = computed(() => {
@@ -174,7 +168,6 @@ const mainTitle = computed(() => {
     return [u.firstname, u.lastname].filter(Boolean).join(' ');
 });
 
-/** Même logique que Card.vue (profession) */
 const secondaryLine = computed(() => {
     if (props.institution) return null;
     const u = props.user;
