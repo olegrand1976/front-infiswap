@@ -29,7 +29,7 @@ const forwardedProps = useForwardProps(delegatedProps);
     >
         <template v-if="props.position === 'left'">
             <SelectIcon as-child>
-                <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 sm:ms-0 ms-4" />
+                <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 sm:ms-0 ms-4 cursor-pointer" />
             </SelectIcon>
             <slot />
         </template>
@@ -39,7 +39,8 @@ const forwardedProps = useForwardProps(delegatedProps);
                 <slot />
                 <SelectIcon as-child>
                     <div class="w-full flex justify-end">
-                        <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6" />
+                        <ChevronDown     class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6"
+                        />
                     </div>
                 </SelectIcon>
             </div>

@@ -7,7 +7,7 @@ import {
     SelectViewport,
     useForwardPropsEmits,
 } from 'radix-vue';
-import { computed, type HTMLAttributes } from 'vue';
+import { computed, ref, type HTMLAttributes } from 'vue';
 import { SelectScrollDownButton, SelectScrollUpButton } from '.';
 import { cn } from '@/lib/utils';
 
@@ -25,11 +25,33 @@ const emits = defineEmits<SelectContentEmits>();
 
 const delegatedProps = computed(() => {
     const { class: _, ...delegated } = props;
-
     return delegated;
 });
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
+
+const scrollViewport = ref<HTMLElement | null>(null);
+
+// Fonction pour obtenir l'élément DOM du viewport
+const setScrollViewport = (el: any) => {
+    if (el && el.$el) {
+        scrollViewport.value = el.$el;
+    } else if (el) {
+        scrollViewport.value = el;
+    }
+};
+
+const scrollUp = () => {
+    if (scrollViewport.value) {
+        scrollViewport.value.scrollBy({ top: -50, behavior: 'smooth' });
+    }
+};
+
+const scrollDown = () => {
+    if (scrollViewport.value) {
+        scrollViewport.value.scrollBy({ top: 50, behavior: 'smooth' });
+    }
+};
 </script>
 
 <template>
@@ -41,14 +63,25 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                 position === 'popper'
                     && 'data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1 data-[side=left]:translate-x-1 data-[side=right]:-translate-x-1',
                 props.class,
-            )
-            "
+            )"
         >
-            <SelectScrollUpButton />
-            <SelectViewport :class="cn('p-1', position === 'popper' && 'h-(--radix-select-trigger-height) min-w-(--radix-select-trigger-width)')">
+            <SelectScrollUpButton
+                class="cursor-pointer"
+                @click.stop="scrollUp"
+            />
+            <SelectViewport
+                :ref="setScrollViewport"
+                :class="cn(
+                    'p-1 overflow-y-auto',
+                    position === 'popper' && 'h-(--radix-select-trigger-height) min-w-(--radix-select-trigger-width)'
+                )"
+            >
                 <slot />
             </SelectViewport>
-            <SelectScrollDownButton />
+            <SelectScrollDownButton
+                class="cursor-pointer"
+                @click.stop="scrollDown"
+            />
         </SelectContent>
     </SelectPortal>
 </template>
