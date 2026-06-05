@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Briefcase, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon } from 'lucide-vue-next';
+import { Briefcase, Building2, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();
 const route = useRoute();
@@ -47,6 +47,12 @@ const tabs = computed(() => {
             route: '/services',
             iconOutline: Briefcase,
             iconSolid: Briefcase,
+        },
+        {
+            label: 'Institution',
+            route: '/offre-institution',
+            iconOutline: Building2,
+            iconSolid: Building2,
         },
         {
             label: 'Contact',

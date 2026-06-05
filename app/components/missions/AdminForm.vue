@@ -1277,6 +1277,10 @@ const { submit, inProgress } = useSubmit(async () => {
         if (formData.id == undefined) {
             formData.institution_id = user.value.institution.id;
 
+            if (!formData.pool_id || formData.pool_id === 'none') {
+                formData.pool_id = undefined;
+            }
+
             if (isRecurring.value && !formData.is_long_term) {
                 const baseStartDate = new Date(formData.start_date);
                 const targetDays = selectedDays.value.length > 0 ? selectedDays.value : [baseStartDate.getDay()];

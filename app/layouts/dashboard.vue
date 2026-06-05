@@ -19,7 +19,7 @@
                     />
                 </div>
 
-                <div class="ml-auto flex min-w-0 shrink-0 flex-row-reverse items-center space-x-reverse space-x-2">
+                <div class="ml-auto flex shrink-0 flex-row-reverse items-center space-x-reverse space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger class="flex items-center space-x-2">
                             <div>
@@ -212,7 +212,7 @@
                     </div>
                 </div>
             </header>
-            <div class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-auto p-6">
+            <div class="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-auto p-6">
                 <NuxtPage />
             </div>
         </SidebarInset>

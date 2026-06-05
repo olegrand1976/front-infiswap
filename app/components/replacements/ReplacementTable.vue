@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <div class="hidden lg:block">
+    <div class="min-w-0 w-full max-w-full overflow-x-hidden">
+        <div class="hidden min-w-0 w-full lg:block">
             <Table>
                 <TableHeader class="w-full">
-                    <TableRow :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none', gridClass]">
+                    <TableRow :class="['min-w-0 gap-2 grid rounded-t-lg border-none', gridClass]">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
                             Jour
                         </TableHead>

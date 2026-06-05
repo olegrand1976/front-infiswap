@@ -69,6 +69,10 @@ export const useAuth = () => {
         catch {
             user.value = null;
         }
+
+        if (!user.value && useCookie(AUTH_TOKEN).value) {
+            useCookie(AUTH_TOKEN).value = null;
+        }
     }
 
     async function login(credentials: { identifier: string; password: string }) {

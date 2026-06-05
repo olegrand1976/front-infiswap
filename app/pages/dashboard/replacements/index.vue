@@ -1,6 +1,6 @@
 <template>
-    <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex flex-col lg:flex-row lg:gap-4 lg:items-center w-full">
+    <div class="min-w-0 w-full max-w-full overflow-x-hidden lg:ml-20 xl:ml-0">
+        <div class="mt-6 flex min-w-0 w-full flex-col flex-wrap gap-4 lg:flex-row lg:items-center">
             <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-auto lg:shrink-0 sm:px-6 rounded-lg">
                 <div class="flex items-center gap-2 text-base">
                     <ArrowLeft
@@ -12,7 +12,7 @@
                 </div>
             </h1>
 
-            <div class="mt-4 lg:mt-0 flex flex-wrap lg:flex-nowrap justify-start items-center gap-2">
+            <div class="mt-4 flex min-w-0 flex-wrap items-center justify-start gap-2 lg:mt-0">
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button
