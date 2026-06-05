@@ -258,6 +258,35 @@ export const useInstitutions = () => {
         }
     }
 
+    async function onboardInstitution(data: {
+        institutionName: string;
+        companyNumber?: string;
+        address: {
+            street: string;
+            city: string;
+            zipCode: string;
+            country: string;
+        };
+    }) {
+        try {
+            saving.value = true;
+            const response = await $apifetch('/api/users/institution/onboard', {
+                method: 'POST',
+                body: data,
+            });
+            toast.success('Établissement créé — en attente de validation');
+            return response;
+        }
+        catch (error: any) {
+            const message = error?.data?.message || 'Erreur lors de la création';
+            toast.error(message);
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
     async function validateInstitution(id: number) {
         try {
             const response = await $apifetch(`api/admin/institutions/${id}/validate`, {
@@ -312,6 +341,7 @@ export const useInstitutions = () => {
         get,
         getInstitutions,
         getSettings,
+        onboardInstitution,
         createOrUpdate,
         deleteLogo,
         getLogoUrl,
@@ -359,12 +389,31 @@ export const useInstitutionMembers = () => {
         }
     }
 
+    async function lookupByEmail(email: string) {
+        return await $apifetch('/api/institution/members/lookup', {
+            params: { email },
+        });
+    }
+
+    async function searchByEmail(query: string) {
+        if (query.length < 2) return [];
+        const response = await $apifetch('/api/institution/members/search', {
+            params: { query },
+        });
+        return response.data ?? [];
+    }
+
     async function addMember(email: string, role: string, firstname?: string, lastname?: string, gender?: string) {
         try {
             saving.value = true;
+            const body: Record<string, string> = { email, role };
+            if (firstname) body.firstname = firstname;
+            if (lastname) body.lastname = lastname;
+            if (gender) body.gender = gender;
+
             const response = await $apifetch('/api/institution/members', {
                 method: 'POST',
-                body: { email, role, firstname, lastname, gender },
+                body,
             });
             toast.success('Membre ajouté avec succès');
             await getMembers();
@@ -465,6 +514,8 @@ export const useInstitutionMembers = () => {
         saving,
         getMembers,
         getAvailableRoles,
+        lookupByEmail,
+        searchByEmail,
         addMember,
         updateMemberRole,
         removeMember,

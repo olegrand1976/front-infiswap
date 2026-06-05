@@ -36,6 +36,10 @@ export const useAuth = () => {
         if (!isInstitution.value || !user.value) return false;
         return (user.value.institution_roles || []).some(p => p.role_name === 'manager');
     });
+    const canCreateInstitution = computed(() => {
+        if (!isLoggedIn.value || !user.value || user.value.institution_id) return false;
+        return isMedical.value;
+    });
 
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
@@ -520,6 +524,7 @@ export const useAuth = () => {
         isInstitution,
         isInstitutionAdmin,
         isInstitutionManager,
+        canCreateInstitution,
         isCommunityManager,
         isSaleRepresentative,
         isCollaborator,
