@@ -58,21 +58,42 @@
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
-                            <template v-if="roles && roles.length > 1">
+                            <template v-if="hasMultipleContexts">
                                 <DropdownMenuSeparator />
+                                <DropdownMenuLabel class="text-xs text-muted-foreground">
+                                    Changer d'espace
+                                </DropdownMenuLabel>
                                 <DropdownMenuItem
-                                    v-for="(role, index) in roles.filter((role) => role!==user?.account_type)"
-                                    :key="index"
-                                    @click="switchRole(role)"
+                                    v-if="canAccessNurse"
+                                    :disabled="activeContext === 'nurse'"
+                                    @click="switchContext('nurse')"
                                 >
-                                    Passer en {{ getRole(role) }}
+                                    {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    v-if="canAccessAdmin"
+                                    :disabled="activeContext === 'admin'"
+                                    @click="switchContext('admin')"
+                                >
+                                    {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    v-if="canAccessInstitution"
+                                    :disabled="activeContext === 'institution'"
+                                    @click="switchContext('institution')"
+                                >
+                                    {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
                                 </DropdownMenuItem>
                             </template>
 
-                            <template v-if="canSwitchView">
+                            <template v-if="secondaryRoles.length > 0">
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem @click="handleSwitchView">
-                                    {{ user?.type === 'institution' ? 'Passer en Infirmier(e)' : 'Passer en Institution' }}
+                                <DropdownMenuItem
+                                    v-for="role in secondaryRoles"
+                                    :key="role"
+                                    @click="switchRole(role)"
+                                >
+                                    Passer en {{ getRole(role) }}
                                 </DropdownMenuItem>
                             </template>
 
@@ -234,7 +255,17 @@ const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
 
 const { $toast } = useNuxtApp();
-const { logout, getRoles, switchRole, switchView, createNotifPreferences } = useAuth();
+const {
+    logout,
+    getRoles,
+    switchRole,
+    switchContext,
+    createNotifPreferences,
+    canAccessInstitution,
+    canAccessNurse,
+    canAccessAdmin,
+    activeContext,
+} = useAuth();
 const { reportProblem } = useMail();
 
 const showDialog = ref(false);
@@ -255,15 +286,24 @@ const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
 const reportDescription = ref('');
 
 const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
-const canSwitchView = computed(() =>
-    !!user.value?.institution_id
-    && user.value?.roles?.some((r: string) => MEDICAL_ROLES.includes(r)),
-);
+const STAFF_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];
 
-const handleSwitchView = async () => {
-    const newType = user.value?.type === 'institution' ? 'standard' : 'institution';
-    await switchView(newType);
-};
+const hasMultipleContexts = computed(() => {
+    let count = 0;
+    if (canAccessNurse.value) count++;
+    if (canAccessAdmin.value) count++;
+    if (canAccessInstitution.value) count++;
+    return count > 1;
+});
+
+const secondaryRoles = computed(() => {
+    if (activeContext.value !== 'nurse' || !roles.value?.length) return [];
+
+    const medicalRoles = roles.value.filter((r: string) => MEDICAL_ROLES.includes(r));
+    if (medicalRoles.length <= 1) return [];
+
+    return medicalRoles.filter((role: string) => role !== user.value?.account_type);
+});
 
 const submitReport = async () => {
     try {

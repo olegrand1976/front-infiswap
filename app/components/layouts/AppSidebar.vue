@@ -543,7 +543,6 @@ const navigationItems = computed(() => {
         case 'collaborator':
         case 'medical':
         default:
-            // Futur : { label: 'Devenir un établissement', route: '/dashboard/institution/onboard' }
             return nurseNavigationItems;
     }
 });

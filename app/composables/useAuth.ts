@@ -41,6 +41,30 @@ export const useAuth = () => {
         return isMedical.value;
     });
 
+    const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
+    const STAFF_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];
+
+    const canAccessInstitution = computed(() => {
+        if (!user.value?.institution_id) return false;
+        return (user.value.institution_roles || []).some(
+            r => r.role_name === 'administrator' || r.role_name === 'manager',
+        );
+    });
+
+    const canAccessNurse = computed(() =>
+        user.value?.roles?.some(r => MEDICAL_ROLES.includes(r)) ?? false,
+    );
+
+    const canAccessAdmin = computed(() =>
+        user.value?.roles?.some(r => STAFF_ROLES.includes(r)) ?? false,
+    );
+
+    const activeContext = computed((): 'nurse' | 'admin' | 'institution' => {
+        if (user.value?.type === 'institution') return 'institution';
+        if (STAFF_ROLES.includes(user.value?.account_type ?? '')) return 'admin';
+        return 'nurse';
+    });
+
     const isCollaborator = computed((): boolean => {
         return ['collaborator'].includes(user.value?.account_type ?? '');
     });
@@ -409,6 +433,13 @@ export const useAuth = () => {
     };
 
     async function switchRole(role: string) {
+        if (user.value?.type === 'institution') {
+            await $apifetch('/api/users/switch-view', {
+                method: 'PUT',
+                body: { type: 'standard' },
+            });
+        }
+
         return await $apifetch('/api/user/switch-role', {
             method: 'PUT',
             body: { role: role },
@@ -416,6 +447,36 @@ export const useAuth = () => {
             await refresh();
             router.push('/dashboard');
         });
+    }
+
+    async function switchContext(context: 'nurse' | 'admin' | 'institution') {
+        if (context === 'institution') {
+            await switchView('institution');
+            return;
+        }
+
+        if (user.value?.type === 'institution') {
+            await $apifetch('/api/users/switch-view', {
+                method: 'PUT',
+                body: { type: 'standard' },
+            });
+        }
+
+        const targetRole = context === 'admin'
+            ? user.value?.roles?.find(r => r === 'administrator')
+            ?? user.value?.roles?.find(r => STAFF_ROLES.includes(r))
+            : user.value?.roles?.find(r => r === 'nurse')
+                ?? user.value?.roles?.find(r => MEDICAL_ROLES.includes(r));
+
+        if (targetRole) {
+            await $apifetch('/api/user/switch-role', {
+                method: 'PUT',
+                body: { role: targetRole },
+            });
+        }
+
+        await refresh();
+        router.push(context === 'admin' ? '/dashboard' : '/dashboard');
     }
 
     async function edit(id: number, options = {}) {
@@ -525,6 +586,11 @@ export const useAuth = () => {
         isInstitutionAdmin,
         isInstitutionManager,
         canCreateInstitution,
+        canAccessInstitution,
+        canAccessNurse,
+        canAccessAdmin,
+        activeContext,
+        switchContext,
         isCommunityManager,
         isSaleRepresentative,
         isCollaborator,

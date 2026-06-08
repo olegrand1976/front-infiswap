@@ -13,9 +13,8 @@ export default defineNuxtRouteMiddleware((to) => {
     const { isInstitution } = useAuth();
 
     if (isInstitution.value) {
-        const isUserValidated = !!user.value.validate_at;
-        const isInstitutionActive = user.value.institution?.status === 'active';
-        const isFullyValidated = isUserValidated && isInstitutionActive;
+        const institutionStatus = user.value.institution?.status;
+        const isFullyValidated = institutionStatus === 'active' || !!user.value.validate_at;
 
         if (to.path === '/dashboard' || (to.path.startsWith('/dashboard') && !to.path.startsWith('/dashboard/institution') && !to.path.startsWith('/dashboard/replacements/detail/'))) {
             if (isFullyValidated) {
