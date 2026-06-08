@@ -13,10 +13,12 @@
                 {{ title }}
             </h1>
 
-            <Button v-show="props.count>0" class="rounded-md font-semibold">
+            <Button
+                v-show="props.count>0"
+                class="rounded-md font-semibold"
+            >
                 {{ props.count }}
             </Button>
-            
         </div>
         <component
             :is="as"

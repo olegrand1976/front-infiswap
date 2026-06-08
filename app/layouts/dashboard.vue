@@ -10,8 +10,8 @@
                 'bg-white': !isAdmin,
             })"
         >
-            <header class="flex h-20 shrink-0 items-center gap-2 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-20 bg-white shadow-md">
-                <div class="flex items-center gap-2">
+            <header class="flex h-20 shrink-0 items-center gap-2 px-3 sm:px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-20 bg-white shadow-md">
+                <div class="flex shrink-0 items-center gap-2">
                     <SidebarTrigger class="-ml-1 lg:ml-4 xl:-ml-1" />
                     <Separator
                         orientation="vertical"
@@ -19,104 +19,9 @@
                     />
                 </div>
 
-                <div class="ml-auto flex shrink-0 flex-row-reverse items-center space-x-reverse space-x-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger class="flex items-center space-x-2">
-                            <div>
-                                <p
-                                    v-if="user?.type == 'institution'"
-                                    class="font-medium"
-                                >
-                                    {{ user?.institution?.name || 'Institution XXX' }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="font-medium"
-                                >
-                                    {{ user?.full_name || 'xxx XXX' }}
-                                </p>
-                                <p
-                                    :class="cn('text-xs -mt-1 text-end font-bold', {
-                                        'text-success': isAdmin,
-                                        'text-primary': !isAdmin,
-                                    })"
-                                >
-                                    {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
-                                </p>
-                            </div>
-                            <template v-if="user?.profil_url != null">
-                                <Avatar>
-                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                </Avatar>
-                            </template>
-                            <template v-else>
-                                <CircleUser
-                                    class="size-11 text-black/40"
-                                />
-                            </template>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
-                            <template v-if="hasMultipleContexts">
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel class="text-xs text-muted-foreground">
-                                    Changer d'espace
-                                </DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    v-if="canAccessNurse"
-                                    :disabled="activeContext === 'nurse'"
-                                    @click="switchContext('nurse')"
-                                >
-                                    {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessAdmin"
-                                    :disabled="activeContext === 'admin'"
-                                    @click="switchContext('admin')"
-                                >
-                                    {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessInstitution"
-                                    :disabled="activeContext === 'institution'"
-                                    @click="switchContext('institution')"
-                                >
-                                    {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
-                                </DropdownMenuItem>
-                            </template>
-
-                            <template v-if="secondaryRoles.length > 0">
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    v-for="role in secondaryRoles"
-                                    :key="role"
-                                    @click="switchRole(role)"
-                                >
-                                    Passer en {{ getRole(role) }}
-                                </DropdownMenuItem>
-                            </template>
-
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                v-if="user?.account_type != 'nurse' && user?.account_type != 'caregiver' && user?.account_type != 'midwife'"
-                            >
-                                <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                class="hover:bg-primary"
-                                @click="logout"
-                            >
-                                Déconnexion
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <div class="relative inline-block pr-4">
-                        <div class="flex space-x-4 flex-nowrap">
+                <div class="ml-auto flex min-w-0 items-center gap-1 sm:gap-2">
+                    <div class="relative shrink-0 sm:pr-2">
+                        <div class="flex flex-nowrap gap-2 sm:gap-4">
                             <NotificationsNotificationDropdown />
                             <div
                                 class="cursor-pointer"
@@ -231,6 +136,112 @@
                             </DialogContent>
                         </Dialog>
                     </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger class="flex min-w-0 items-center gap-2">
+                            <div
+                                class="min-w-0 text-right"
+                                :title="displayFullName"
+                            >
+                                <p
+                                    v-if="user?.type == 'institution'"
+                                    class="font-medium truncate max-w-[6rem] sm:max-w-[10rem] md:max-w-none"
+                                >
+                                    {{ user?.institution?.name || 'Institution XXX' }}
+                                </p>
+                                <p
+                                    v-else
+                                    class="font-medium sm:hidden"
+                                >
+                                    {{ displayShortName }}
+                                </p>
+                                <p
+                                    v-if="user?.type != 'institution'"
+                                    class="font-medium hidden truncate max-w-[8rem] md:max-w-[12rem] lg:max-w-none sm:block"
+                                >
+                                    {{ displayFullName }}
+                                </p>
+                                <p
+                                    :class="cn('text-xs -mt-1 text-end font-bold truncate', {
+                                        'text-success': isAdmin,
+                                        'text-primary': !isAdmin,
+                                    })"
+                                >
+                                    {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
+                                </p>
+                            </div>
+                            <div class="shrink-0">
+                                <template v-if="user?.profil_url != null">
+                                    <Avatar>
+                                        <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                        <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                    </Avatar>
+                                </template>
+                                <template v-else>
+                                    <CircleUser
+                                        class="size-11 text-black/40"
+                                    />
+                                </template>
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                            <template v-if="hasMultipleContexts">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel class="text-xs text-muted-foreground">
+                                    Changer d'espace
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem
+                                    v-if="canAccessNurse"
+                                    :disabled="activeContext === 'nurse'"
+                                    @click="switchContext('nurse')"
+                                >
+                                    {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    v-if="canAccessAdmin"
+                                    :disabled="activeContext === 'admin'"
+                                    @click="switchContext('admin')"
+                                >
+                                    {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    v-if="canAccessInstitution"
+                                    :disabled="activeContext === 'institution'"
+                                    @click="switchContext('institution')"
+                                >
+                                    {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
+                                </DropdownMenuItem>
+                            </template>
+
+                            <template v-if="secondaryRoles.length > 0">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    v-for="role in secondaryRoles"
+                                    :key="role"
+                                    @click="switchRole(role)"
+                                >
+                                    Passer en {{ getRole(role) }}
+                                </DropdownMenuItem>
+                            </template>
+
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                v-if="user?.account_type != 'nurse' && user?.account_type != 'caregiver' && user?.account_type != 'midwife'"
+                            >
+                                <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                class="hover:bg-primary"
+                                @click="logout"
+                            >
+                                Déconnexion
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </header>
             <div class="min-h-0 flex-1 overflow-y-auto overflow-x-auto p-6">
@@ -247,7 +258,7 @@ import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
-import { getRole } from '~/lib/utils';
+import { getRole, getShortDisplayName } from '~/lib/utils';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
 
@@ -284,6 +295,9 @@ const parsedSettings = computed(() => {
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
 const reportDescription = ref('');
+
+const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
+const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
 
 const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
 const STAFF_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];

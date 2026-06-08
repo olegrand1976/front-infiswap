@@ -62,6 +62,25 @@ export function getFullName(user: User) {
     return [user.firstname, user.lastname?.toUpperCase()].join(' ');
 }
 
+export function getShortDisplayName(user: Pick<User, 'firstname' | 'lastname' | 'full_name'> | null | undefined): string {
+    if (!user) return '';
+
+    const first = user.firstname?.trim();
+    const last = user.lastname?.trim();
+    if (first && last) {
+        return `${first} ${last.charAt(0).toUpperCase()}.`;
+    }
+
+    const full = user.full_name?.trim();
+    if (!full) return '';
+
+    const parts = full.split(/\s+/).filter(Boolean);
+    if (parts.length <= 1) return full;
+
+    const lastPart = parts[parts.length - 1];
+    return `${parts[0]} ${lastPart.charAt(0).toUpperCase()}.`;
+}
+
 export function formatInamiNumber(inami: string | null) {
     if (inami == null) return;
 
