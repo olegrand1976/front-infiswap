@@ -12,12 +12,11 @@
             <h1 class="text-xl">
                 {{ title }}
             </h1>
-            <span
-                v-if="props.count>0"
-                class="text-lg min-w-10 p-2 text-center bg-primary text-white rounded-lg"
-            >
+
+            <Button v-show="props.count>0" class="rounded-md font-semibold">
                 {{ props.count }}
-            </span>
+            </Button>
+            
         </div>
         <component
             :is="as"
@@ -29,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Star } from 'lucide-vue-next';
+import { ArrowLeft } from 'lucide-vue-next';
 
 import { goBack } from '~/lib/utils';
 

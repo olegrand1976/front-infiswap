@@ -3,6 +3,7 @@
         <DashboardAdminPageHeader
             title="Des utilisateurs"
             :count="count"
+            flex-class="flex gap-2"
         >
             <template
                 v-if="!isDeveloper || isManager"
@@ -12,29 +13,57 @@
             </template>
         </DashboardAdminPageHeader>
         <DashboardAdminPageContent>
-            <div class="p-4 flex gap-3 items-center">
+            <div class="p-4 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
                 <InputIcon
                     v-model="option.name"
+                    label="Nom ou prénom"
                     rounded="md"
-                    placeholder="Filtrer par Nom ou Prénom"
+                    placeholder="Filtrer par nom ou prénom"
                     class="max-w-sm"
                     @input="debouncedFilterUsers"
                 />
                 <InputIcon
                     v-model="option.zip"
+                    label="Code postal"
                     rounded="md"
                     placeholder="Filtrer par C.P"
                     class="max-w-sm"
                     type="numeric"
                     @input="debouncedFilterUsers"
                 />
-                <Button
-                    class="rounded-md"
-                    @click="resetFilter"
-                >
-                    <RefreshCw class="md:mr-2" />
-                    <span class="hidden md:inline-block">Restaurer</span>
-                </Button>
+                <div class="flex flex-col gap-2 max-w-sm">
+                    <Label class="text-sm text-gray-500">Type de compte</Label>
+                    <Select
+                        v-model="option.type"
+                        @update:model-value="debouncedFilterUsers"
+                    >
+                        <SelectTrigger class="w-full rounded-md">
+                            <SelectValue placeholder="Tous" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="all">
+                                    Tous
+                                </SelectItem>
+                                <SelectItem value="nurse">
+                                    Infirmière
+                                </SelectItem>
+                                <SelectItem value="institution">
+                                    Institution
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <Button
+                        class="rounded-md"
+                        @click="resetFilter"
+                    >
+                        <RefreshCw class="md:mr-2" />
+                        <span class="hidden md:inline-block">Restaurer</span>
+                    </Button>
+                </div>
             </div>
             <DataTable
                 :data="dataUsers"
@@ -64,6 +93,15 @@ import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
 import { Switch } from '~/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 useHead({ title: 'Utilisateurs' });
 
@@ -80,6 +118,15 @@ const perPage = ref(perPageCookie.value || PERPAGE);
 const initialFilter = {
     name: null,
     zip: null,
+    type: 'all',
+};
+
+const buildFilterParams = (extra = {}) => {
+    const params = { ...option.value, sortOrder: sort.order, sortKey: sort.by, ...extra };
+    if (!params.type || params.type === 'all') {
+        delete params.type;
+    }
+    return params;
 };
 const selectedUser = ref<User>(null);
 const { $toast } = useNuxtApp();
@@ -99,8 +146,7 @@ const debounce = (func, delay) => {
 };
 
 const filterUsers = async () => {
-    const currentFilter = { ...option.value };
-    await getUsers(page.value, perPage.value, currentFilter);
+    await getUsers(page.value, perPage.value, buildFilterParams());
 };
 watch(page, (value) => {
     pageCookie.value = value;
@@ -111,31 +157,18 @@ watch(perPage, (value) => {
 });
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
-// await getUsers(page.value, perPage.value, option.value);
-await getUsers(page.value, perPage.value, {
-    ...option.value,
-    sortOrder: sort.order,
-    sortKey: sort.by,
-});
+await getUsers(page.value, perPage.value, buildFilterParams());
 
 const dataUsers = computed(() => users.value?.data ?? []);
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
-    await getUsers(newPage, perPage.value, {
-        ...option.value,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
+    await getUsers(newPage, perPage.value, buildFilterParams());
 };
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
-    await getUsers(page.value, value, {
-        ...option.value,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
+    await getUsers(page.value, value, buildFilterParams());
 };
 
 const resetFilter = async () => {
@@ -147,11 +180,7 @@ const resetFilter = async () => {
     option.value = { ...initialFilter };
     page.value = 1;
     pageCookie.value = 1;
-    await getUsers(page.value, perPage.value, {
-        ...option.value,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
+    await getUsers(page.value, perPage.value, buildFilterParams());
 };
 
 const canManageValidation = computed(() =>
@@ -231,6 +260,28 @@ const columns: ColumnDef<User>[] = [
                     : null,
             ]);
         },
+    },
+    {
+        accessorKey: 'type',
+        header: 'Compte',
+        cell: ({ row }) => {
+            const type = row.getValue('type') as string;
+            const label = type === 'institution' ? 'Institution' : 'Infirmière';
+
+            return h('div', { class: 'text-center capitalize' }, label);
+        },
+        enableSorting: false,
+    },
+    {
+        id: 'institution',
+        header: 'Institution',
+        cell: ({ row }) => {
+            const user = row.original as User;
+            const name = user.institution?.name ?? null;
+
+            return h('div', { class: 'text-center' }, name ?? '—');
+        },
+        enableSorting: false,
     },
     {
         accessorKey: 'identifier_number',
@@ -401,10 +452,8 @@ const setSort = (columnKey: string) => {
 
 watch(
     () => sort,
-    async (newVal) => {
-        await getUsers(page.value, perPage.value, {
-            sortOrder: newVal.order,
-            sortKey: newVal.by });
+    async () => {
+        await getUsers(page.value, perPage.value, buildFilterParams());
     },
     { deep: true },
 );
