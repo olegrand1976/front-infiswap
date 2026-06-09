@@ -50,8 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { Clock, Info, Phone, Star } from 'lucide-vue-next';
-
+import { Clock, Info, Phone } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '~/composables/useAuth';
 

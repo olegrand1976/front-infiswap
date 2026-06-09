@@ -53,8 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { Star } from 'lucide-vue-next';
-
 definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified', 'subscribed'],

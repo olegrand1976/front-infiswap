@@ -101,8 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Info, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Info } from 'lucide-vue-next';
 import { usePartners } from '@/composables/usePartners';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';

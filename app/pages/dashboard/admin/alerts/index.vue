@@ -110,8 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, CirclePlus, Pencil, RefreshCw, Star, Trash2 } from 'lucide-vue-next';
-
+import { ArrowUpDown, CirclePlus, Pencil, RefreshCw, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import {

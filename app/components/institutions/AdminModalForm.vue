@@ -106,8 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePlus, Star, Trash2 } from 'lucide-vue-next';
-
+import { CirclePlus, Trash2 } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from 'vue';
 import { toast } from 'vue-sonner';

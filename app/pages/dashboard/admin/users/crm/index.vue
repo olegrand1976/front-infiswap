@@ -170,8 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { RefreshCw, Star } from 'lucide-vue-next';
-
+import { RefreshCw } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';

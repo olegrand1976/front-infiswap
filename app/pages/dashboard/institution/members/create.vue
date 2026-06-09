@@ -254,7 +254,6 @@
 
 <script lang="ts" setup>
 import { ChevronRight, Info as InfoIcon } from 'lucide-vue-next';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -407,6 +406,8 @@ const handleInvite = async () => {
         }
         navigateTo('/dashboard/institution/members');
     }
-    catch {}
+    catch {
+        // addMember already displays an error toast
+    }
 };
 </script>

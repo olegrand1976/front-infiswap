@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Check, Star } from 'lucide-vue-next';
-
+import { Check } from 'lucide-vue-next';
 import {
     SelectItem,
     SelectItemIndicator,

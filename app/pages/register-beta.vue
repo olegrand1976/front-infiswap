@@ -101,8 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Mail, Map, Phone, Star, User, UserPlus } from 'lucide-vue-next';
-
+import { Mail, Map, Phone, User, UserPlus } from 'lucide-vue-next';
 import { reactive } from 'vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 

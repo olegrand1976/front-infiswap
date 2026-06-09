@@ -82,7 +82,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Clock, Star } from 'lucide-vue-next';
-
+import { Clock } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 </script>

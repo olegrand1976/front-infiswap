@@ -72,8 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { CircleUser, Star } from 'lucide-vue-next';
-
+import { CircleUser } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Replacement, User } from '~/lib/types';
 

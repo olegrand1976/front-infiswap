@@ -55,8 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowUpDown, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';

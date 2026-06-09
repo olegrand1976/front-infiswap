@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Copy, Star } from 'lucide-vue-next';
+import { Copy } from 'lucide-vue-next';
 
 const { $toast } = useNuxtApp();
 

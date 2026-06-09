@@ -183,8 +183,7 @@
 </template>
 
 <script setup lang="ts">
-import { Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { Eye, RefreshCw } from 'lucide-vue-next';
 import type { User, UserPartner } from '~/lib/types';
 
 const props = defineProps<{

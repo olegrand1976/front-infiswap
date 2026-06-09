@@ -110,8 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';

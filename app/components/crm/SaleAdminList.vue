@@ -32,8 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Pencil, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Pagination, User } from '~/lib/types';

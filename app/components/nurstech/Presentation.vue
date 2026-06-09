@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { Globe, Star } from 'lucide-vue-next';
+import { Globe } from 'lucide-vue-next';
 
 const showNursTech = ref(false);
 const showNursAssur = ref(false);

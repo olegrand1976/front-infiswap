@@ -370,8 +370,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleCheck, Eye, Star } from 'lucide-vue-next';
-
+import { CircleCheck, Eye } from 'lucide-vue-next';
 import { getPeriodsFromTimeSlot, cn } from '~/lib/utils';
 import type { Replacement } from '~/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

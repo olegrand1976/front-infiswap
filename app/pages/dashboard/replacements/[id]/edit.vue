@@ -239,8 +239,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Plus, Star, X } from 'lucide-vue-next';
-
+import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { useReplacements } from '@/composables/useReplacements';
 import { InputTime } from '@/components/ui/input-time';
@@ -251,6 +250,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { CareType, ReplacementPeriod } from '~/lib/types';
 import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 import { toReplacementCountryCode } from '~/lib/replacementCountry';
 import { goBack } from '~/lib/utils';
@@ -314,7 +314,9 @@ const loadReplacement = async () => {
         formData.cities = Array.isArray(r.cities)
             ? r.cities
             : JSON.parse(r.cities || '[]');
-        formData.careTypes = (r.care_types ?? []).map((ct: any) => ct.id ?? ct);
+        formData.careTypes = (r.care_types ?? []).map((ct: CareType | number) =>
+            typeof ct === 'object' && ct !== null ? ct.id : ct,
+        );
         formData.country = toReplacementCountryCode(r.country);
         formData.comment = r.comment || '';
 
@@ -331,7 +333,7 @@ const loadReplacement = async () => {
         };
 
         if (r.periods && r.periods.length > 0) {
-            formData.periods = r.periods.map((p: any) => ({
+            formData.periods = r.periods.map((p: ReplacementPeriod) => ({
                 start_date: fmtDate(p.start_date),
                 end_date: fmtDate(p.end_date),
             }));
@@ -366,7 +368,7 @@ const handleCareTypeClick = (id: number) => {
 };
 
 const getSelectedCareTypesText = (ids: number[]) =>
-    careTypes.value.filter((ct: any) => ids.includes(ct.id)).map((ct: any) => ct.name).join(', ');
+    careTypes.value.filter((ct: CareType) => ids.includes(ct.id)).map(ct => ct.name).join(', ');
 
 const submit = async () => {
     if (inProgress.value) return;
@@ -376,8 +378,10 @@ const submit = async () => {
         toast.success('Remplacement mis à jour avec succès.');
         router.push('/dashboard/replacements/me');
     }
-    catch (e: any) {
-        const msg = e?.data?.message || 'Une erreur est survenue.';
+    catch (error: unknown) {
+        const msg = error && typeof error === 'object' && 'data' in error
+            ? String((error as { data?: { message?: string } }).data?.message ?? 'Une erreur est survenue.')
+            : 'Une erreur est survenue.';
         toast.error(msg);
     }
     finally {

@@ -137,8 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Mail, Star } from 'lucide-vue-next';
-
+import { Mail } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';

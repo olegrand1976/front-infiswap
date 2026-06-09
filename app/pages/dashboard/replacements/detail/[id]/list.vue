@@ -117,10 +117,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Calendar, CircleCheck, Star, X } from 'lucide-vue-next';
-
+import { ArrowLeft, Calendar, CircleCheck, X } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
+import type { ReplacementResponse } from '~/lib/types';
 
 const { changeStatus } = changeStatusReplacement();
 
@@ -141,9 +141,7 @@ const sortedListResponse = computed(() => {
     return items;
 });
 
-const showOlder = ref(false);
-
-const isInstitutionRespondent = (response: any) => response?.respondent?.type === 'institution';
+const isInstitutionRespondent = (response: ReplacementResponse) => response.respondent?.type === 'institution';
 
 const updateStatus = async (id: number, status: string) => {
     try {
@@ -197,11 +195,6 @@ const endDate = computed(() => {
     }
     return parent.end_date ? formatDate(parent.end_date) : '';
 });
-
-const loadOlder = async () => {
-    showOlder.value = true;
-    await fetchListResponse(true);
-};
 
 const hasConfirmed = () =>
     listResponse.value?.some(item => item.status === 'confirmed');

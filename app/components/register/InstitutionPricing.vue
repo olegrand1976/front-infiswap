@@ -142,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { Building2, Star } from 'lucide-vue-next';
+import { Building2 } from 'lucide-vue-next';
 </script>
 
 <style scoped>

@@ -74,8 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus, Star } from 'lucide-vue-next';
-
+import { Plus } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import {
@@ -94,6 +93,15 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
+
+interface InstitutionMember {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    institution_role: string;
+    gender: string;
+}
 
 const {
     members,
@@ -114,7 +122,7 @@ definePageMeta({
 });
 
 const isDeleteModalOpen = ref(false);
-const memberToDelete = ref<any>(null);
+const memberToDelete = ref<InstitutionMember | null>(null);
 
 onMounted(async () => {
     await Promise.all([
@@ -123,7 +131,7 @@ onMounted(async () => {
     ]);
 });
 
-const handleDeleteClick = (member: any) => {
+const handleDeleteClick = (member: InstitutionMember) => {
     memberToDelete.value = member;
     isDeleteModalOpen.value = true;
 };
@@ -135,18 +143,22 @@ const confirmDelete = async () => {
             isDeleteModalOpen.value = false;
             memberToDelete.value = null;
         }
-        catch (e) {}
+        catch {
+            // removeMember already displays an error toast
+        }
     }
 };
 
-const handleRoleChange = async (member: any, newRole: string) => {
+const handleRoleChange = async (member: InstitutionMember, newRole: string) => {
     try {
         await updateMemberRole(member.id, newRole);
     }
-    catch (e) {}
+    catch {
+        // updateMemberRole already displays an error toast
+    }
 };
 
-const columns: ColumnDef<any>[] = [
+const columns: ColumnDef<InstitutionMember>[] = [
     {
         id: 'name',
         accessorFn: row => `${row.firstname} ${row.lastname}`,

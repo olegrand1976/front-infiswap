@@ -140,8 +140,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleUser, Globe, Mail, MapPin, Phone, Star } from 'lucide-vue-next';
-
+import { CircleUser, Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import * as yup from 'yup';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import { submitContact } from '~/composables/useContact';

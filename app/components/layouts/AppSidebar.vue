@@ -183,8 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
-
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';

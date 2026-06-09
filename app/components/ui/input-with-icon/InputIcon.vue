@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Eye, EyeOff, Star } from 'lucide-vue-next';
-
+import { Eye, EyeOff } from 'lucide-vue-next';
 import type { Component, HTMLAttributes } from 'vue';
 import { useVModel } from '@vueuse/core';
 import { cn } from '@/lib/utils';

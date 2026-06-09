@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import { ArrowLeft } from 'lucide-vue-next';
-
 import { goBack } from '~/lib/utils';
 
 const props = defineProps<{

@@ -113,8 +113,7 @@
 </template>
 
 <script setup>
-import { ChevronLeft, ChevronRight, Star } from 'lucide-vue-next';
-
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 

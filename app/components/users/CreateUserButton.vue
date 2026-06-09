@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePlus, Star } from 'lucide-vue-next';
+import { CirclePlus } from 'lucide-vue-next';
 </script>

@@ -174,8 +174,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Eye, Info, Mail, MapPin, Phone, RefreshCw, Search, Star } from 'lucide-vue-next';
-
+import { Eye, Info, Mail, MapPin, Phone, RefreshCw, Search } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { usePartners } from '@/composables/usePartners';
 import type { UserPartner } from '~/lib/types';

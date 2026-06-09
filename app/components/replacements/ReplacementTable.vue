@@ -547,8 +547,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleCheck, Ellipsis, Eye, SquarePen, Star, X } from 'lucide-vue-next';
-
+import { CircleCheck, Ellipsis, Eye, SquarePen, X } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/unified-signatures */
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';

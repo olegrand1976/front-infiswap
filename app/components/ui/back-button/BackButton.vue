@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Star } from 'lucide-vue-next';
-
+import { ArrowLeft } from 'lucide-vue-next';
 import type { HTMLAttributes } from 'vue';
 import { cn } from '~/lib/utils';
 

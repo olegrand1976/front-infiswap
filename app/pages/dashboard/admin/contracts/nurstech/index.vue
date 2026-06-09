@@ -166,8 +166,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowUpDown, CirclePlus, CircleUser, Eye, Plus, RefreshCw, Search, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, CirclePlus, CircleUser, Eye, Plus, RefreshCw, Search } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { useContract } from '@/composables/useContract';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';

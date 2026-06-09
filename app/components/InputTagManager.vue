@@ -48,8 +48,7 @@
 </template>
 
 <script setup>
-import { Plus, Star } from 'lucide-vue-next';
-
+import { Plus } from 'lucide-vue-next';
 import { InputIcon } from '~/components/ui/input-with-icon';
 
 const user = useState('user');

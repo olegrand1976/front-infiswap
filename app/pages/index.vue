@@ -42,8 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Phone, Star, UserPlus } from 'lucide-vue-next';
-
+import { Phone, UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 
 const { isLoggedIn } = useAuth();

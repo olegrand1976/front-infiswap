@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Ellipsis, Star } from 'lucide-vue-next';
-
+import { Ellipsis } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';

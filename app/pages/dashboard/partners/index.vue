@@ -625,8 +625,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BadgeCheck, Ellipsis, Eye, Info, RefreshCw, Search, Star, X } from 'lucide-vue-next';
-
+import { ArrowLeft, BadgeCheck, Ellipsis, Eye, Info, RefreshCw, Search, X } from 'lucide-vue-next';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

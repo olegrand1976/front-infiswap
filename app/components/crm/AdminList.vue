@@ -228,8 +228,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Pencil, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Comment, Pagination, User, Referrer } from '~/lib/types';

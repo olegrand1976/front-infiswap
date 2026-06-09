@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
 import { Loader2Icon } from 'lucide-vue-next';
+import type { Mission } from '~/lib/types';
 
 useHead({ title: 'Créer une mission' });
 
@@ -27,7 +28,7 @@ definePageMeta({
 
 const route = useRoute();
 const { getById } = useMissions();
-const duplicateMission = ref<any>(undefined);
+const duplicateMission = ref<Partial<Mission> | undefined>(undefined);
 const loadingDuplicate = ref(false);
 
 onMounted(async () => {

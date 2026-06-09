@@ -117,8 +117,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Globe, Mail, MapPin, Phone, Star } from 'lucide-vue-next';
-
+import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();

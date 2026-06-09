@@ -61,8 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Star, XCircle } from 'lucide-vue-next';
-
+import { XCircle } from 'lucide-vue-next';
 import { navigateTo } from '#app';
 
 definePageMeta({

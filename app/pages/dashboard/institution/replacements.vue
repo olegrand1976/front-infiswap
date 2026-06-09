@@ -207,8 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Filter, LayoutGrid, Map, Star, Table } from 'lucide-vue-next';
-
+import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';

@@ -386,8 +386,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ClipboardList, Info, Star, UserPlus } from 'lucide-vue-next';
-
+import { ClipboardList, UserPlus } from 'lucide-vue-next';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 
 useHead({ title: 'Tableau de bord' });

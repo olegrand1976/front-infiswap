@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ChevronRight, Star } from 'lucide-vue-next';
-
+import { ChevronRight } from 'lucide-vue-next';
 import {
     DropdownMenuSubTrigger,
     type DropdownMenuSubTriggerProps,

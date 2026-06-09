@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { CircleCheck, Star, XCircle } from 'lucide-vue-next';
-
+import { CircleCheck, XCircle } from 'lucide-vue-next';
 import { useToast } from './use-toast';
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '.';
 

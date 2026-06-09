@@ -356,8 +356,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Calendar, ClipboardList, Clock, GraduationCap, Pencil, RefreshCw, Star } from 'lucide-vue-next';
-
+import { Calendar, ClipboardList, Clock, GraduationCap, Pencil, RefreshCw } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { formatTime, formatToDMY } from '~/composables/useDate';
 import { useRuntimeConfig } from '#app';

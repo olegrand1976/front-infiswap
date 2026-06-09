@@ -179,8 +179,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BadgeCheck, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, BadgeCheck } from 'lucide-vue-next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePartners } from '@/composables/usePartners';
 import { cn } from '@/lib/utils';

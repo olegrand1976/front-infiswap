@@ -145,8 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Paperclip, Pencil, RefreshCw, Star, X } from 'lucide-vue-next';
-
+import { ArrowUpDown, Eye, Paperclip, Pencil, RefreshCw, X } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';

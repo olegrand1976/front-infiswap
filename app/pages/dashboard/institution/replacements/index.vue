@@ -208,8 +208,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Filter, LayoutGrid, Map, Star, Table } from 'lucide-vue-next';
-
+import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
@@ -290,6 +289,16 @@ const selectedProvincesPlaceholder = computed(() => {
     if (isAllSelected.value || selectedRegions.value.length === 0) return 'Tous';
     return selectedRegions.value.join(', ');
 });
+
+onMounted(() => {
+    if (filterCookies.value) {
+        selectedFilters.value = filterCookies.value;
+    }
+});
+
+watch(selectedFilters, (newFilters) => {
+    filterCookies.value = newFilters;
+}, { deep: true });
 
 watch(selectedCountry, () => {
     selectedRegions.value = [];

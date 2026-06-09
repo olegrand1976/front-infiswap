@@ -34,8 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, CirclePlus, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, CirclePlus } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';

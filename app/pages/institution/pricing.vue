@@ -27,8 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Star } from 'lucide-vue-next';
-
+import { ArrowLeft } from 'lucide-vue-next';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 
 definePageMeta({

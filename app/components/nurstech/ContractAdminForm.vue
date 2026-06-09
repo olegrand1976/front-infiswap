@@ -156,8 +156,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Eye, Star } from 'lucide-vue-next';
-
+import { Eye } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContract } from '@/composables/useContract';
 import { useAuth } from '@/composables/useAuth';

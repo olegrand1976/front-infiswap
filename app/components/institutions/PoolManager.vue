@@ -499,10 +499,9 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronRight, Plus, Search, Sparkles, Star, Trash2, Users, X } from 'lucide-vue-next';
-
+import { ChevronRight, Plus, Sparkles, Trash2, Users, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
-import { usePools } from '~/composables/usePools';
+import { usePools, type Pool, type PoolUser } from '~/composables/usePools';
 import {
     Dialog,
     DialogContent,
@@ -521,9 +520,9 @@ const { $apifetch } = useNuxtApp();
 const showCreateModal = ref(false);
 const showMembersModal = ref(false);
 const showDeleteDialog = ref(false);
-const editingPool = ref<any>(null);
-const selectedPool = ref<any>(null);
-const poolToDelete = ref<any>(null);
+const editingPool = ref<Pool | null>(null);
+const selectedPool = ref<Pool | null>(null);
+const poolToDelete = ref<Pool | null>(null);
 const saving = ref(false);
 const deleting = ref(false);
 
@@ -534,13 +533,13 @@ const poolForm = reactive({
 
 const searchQuery = ref('');
 const isSearching = ref(false);
-const searchResults = ref<any[]>([]);
-const rawSuggestions = ref<any[]>([]);
+const searchResults = ref<PoolUser[]>([]);
+const rawSuggestions = ref<PoolUser[]>([]);
 const suggestionFilter = ref<'all' | 'accepted'>('all');
 const loadingSuggestions = ref(false);
 
 const availableSuggestions = computed(() => {
-    const currentIds = selectedPool.value?.users?.map((u: any) => u.id) || [];
+    const currentIds = selectedPool.value?.users?.map(u => u.id) || [];
     return rawSuggestions.value.filter(u => !currentIds.includes(u.id));
 });
 
@@ -572,7 +571,7 @@ const closeModal = () => {
 };
 
 const showGlobalSuggestionsModal = ref(false);
-const globalSuggestions = ref<any[]>([]);
+const globalSuggestions = ref<PoolUser[]>([]);
 const loadingGlobalSuggestions = ref(false);
 const globalSuggestionFilter = ref<'all' | 'accepted'>('accepted');
 const selectedPoolForSuggestion = ref<Record<number, number>>({});
@@ -611,7 +610,7 @@ const switchGlobalSuggestionFilter = async (filter: 'all' | 'accepted') => {
     await loadGlobalSuggestions(filter);
 };
 
-const addNurseToGlobalPool = async (user: any) => {
+const addNurseToGlobalPool = async (user: PoolUser) => {
     const poolId = selectedPoolForSuggestion.value[user.id] || (pools.value.data.length === 1 ? pools.value.data[0].id : null);
     if (!poolId) {
         toast.error('Veuillez sélectionner un pool');
@@ -625,7 +624,7 @@ const addNurseToGlobalPool = async (user: any) => {
         globalSuggestions.value = globalSuggestions.value.filter(u => u.id !== user.id);
         await getAll();
     }
-    catch (err) {
+    catch {
         toast.error('Erreur lors de l\'ajout');
     }
     finally {
@@ -633,7 +632,7 @@ const addNurseToGlobalPool = async (user: any) => {
     }
 };
 
-const openPool = async (p: any) => {
+const openPool = async (p: Pool) => {
     await getById(p.id);
     selectedPool.value = pools.value.data.find(item => item.id === p.id) || p;
     const res = await getById(p.id);
@@ -662,7 +661,7 @@ const savePool = async () => {
         closeModal();
         await getAll();
     }
-    catch (err) {
+    catch {
         toast.error('Une erreur est survenue');
     }
     finally {
@@ -670,7 +669,7 @@ const savePool = async () => {
     }
 };
 
-const confirmDelete = (p: any) => {
+const confirmDelete = (p: Pool) => {
     poolToDelete.value = p;
     showDeleteDialog.value = true;
 };
@@ -686,7 +685,7 @@ const handleDelete = async () => {
         showDeleteDialog.value = false;
         poolToDelete.value = null;
     }
-    catch (err) {
+    catch {
         toast.error('Erreur lors de la suppression');
     }
     finally {
@@ -708,8 +707,8 @@ const searchUsers = debounce(async () => {
                 roles: 'nurse,midwife,caregiver',
             },
         });
-        const currentIds = selectedPool.value?.users?.map((u: any) => u.id) || [];
-        searchResults.value = data.filter((u: any) => !currentIds.includes(u.id));
+        const currentIds = selectedPool.value?.users?.map(u => u.id) || [];
+        searchResults.value = (data as PoolUser[]).filter(u => !currentIds.includes(u.id));
     }
     catch (err) {
         console.error(err);
@@ -719,7 +718,7 @@ const searchUsers = debounce(async () => {
     }
 }, 300);
 
-const addNurse = async (user: any) => {
+const addNurse = async (user: PoolUser) => {
     try {
         await addUsers(selectedPool.value.id, [user.id]);
         toast.success(`${user.firstname} ajouté au pool`);
@@ -729,7 +728,7 @@ const addNurse = async (user: any) => {
         searchResults.value = [];
         await getAll();
     }
-    catch (err) {
+    catch {
         toast.error('Erreur lors de l\'ajout');
     }
 };
@@ -742,7 +741,7 @@ const removeNurse = async (userId: number) => {
         selectedPool.value = res.data;
         await getAll();
     }
-    catch (err) {
+    catch {
         toast.error('Erreur lors du retrait');
     }
 };
@@ -757,7 +756,7 @@ const sortedMembers = computed(() => {
     });
 });
 
-const setStars = async (member: any, count: number) => {
+const setStars = async (member: PoolUser, count: number) => {
     const newStars = member.pivot?.stars === count ? 0 : count;
 
     try {
@@ -770,7 +769,7 @@ const setStars = async (member: any, count: number) => {
         }
         toast.success('Note mise à jour');
     }
-    catch (err) {
+    catch {
         toast.error('Erreur lors de la notation');
     }
 };

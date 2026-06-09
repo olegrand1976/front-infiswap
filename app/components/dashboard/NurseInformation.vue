@@ -507,8 +507,7 @@
 </template>
 
 <script setup lang="ts">
-import { Building2, Check, CircleHelp, Inbox, Map, Star, User } from 'lucide-vue-next';
-
+import { Building2, Check, CircleHelp, Inbox, Map, User } from 'lucide-vue-next';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import InputTagManager from '~/components/InputTagManager.vue';

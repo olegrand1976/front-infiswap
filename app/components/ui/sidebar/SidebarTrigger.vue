@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Menu, Star } from 'lucide-vue-next';
-
+import { Menu } from 'lucide-vue-next';
 import type { HTMLAttributes } from 'vue';
 import { useSidebar } from './utils';
 import { Button } from '@/components/ui/button';

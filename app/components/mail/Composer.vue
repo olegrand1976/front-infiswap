@@ -344,7 +344,6 @@
 
 <script setup lang="ts">
 import { Download, FileText, Inbox, MailPlus, Paperclip, SendHorizontal, X } from 'lucide-vue-next';
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from 'vue';
 import { useMail } from '@/composables/useMail';

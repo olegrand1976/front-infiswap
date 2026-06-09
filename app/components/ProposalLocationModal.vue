@@ -165,7 +165,11 @@ watch(
     { immediate: true, deep: true },
 );
 
-const countryCode = computed<CountryCode>(() => {
+const resolvedCountryCode = computed<CountryCode>(() => {
+    if (props.countryCode === 'fr') return 'fr';
+    if (props.countryCode === 'us') return 'us';
+    if (props.countryCode === 'be') return 'be';
+
     const country = (
         user.value?.profile?.country
         || user.value?.profile?.working_at
@@ -194,7 +198,7 @@ const fetchLocationSuggestions = async (
 
     const candidateZipCodes = isPostalCode(normalizedInput)
         ? [normalizedInput]
-        : await getZipCodesFromCity(normalizedInput, countryCode.value);
+        : await getZipCodesFromCity(normalizedInput, resolvedCountryCode.value);
 
     if (!candidateZipCodes.length) return [];
 
@@ -203,7 +207,7 @@ const fetchLocationSuggestions = async (
         const suggestions = await getNearbyLocalities(
             zipCode,
             5,
-            countryCode.value,
+            resolvedCountryCode.value,
             props.initialZipCodes,
             props.initialCities,
         );
@@ -224,7 +228,8 @@ const fetchLocationSuggestions = async (
                         suggestedCity,
                     ]);
                 }
-            } else if (props.countryCode === 'be') {
+            }
+            else if (props.countryCode === 'be') {
                 // Format belge: 4 chiffres
                 if (/^\d{4}$/.test(suggestedZipCode)) {
                     merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
@@ -232,7 +237,8 @@ const fetchLocationSuggestions = async (
                         suggestedCity,
                     ]);
                 }
-            } else {
+            }
+            else {
                 merged.set(`${suggestedZipCode}-${suggestedCity.toLowerCase()}`, [
                     suggestedZipCode,
                     suggestedCity,

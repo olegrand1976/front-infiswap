@@ -115,8 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleUser, Mail, Phone, Star } from 'lucide-vue-next';
-
+import { CircleUser, Mail, Phone } from 'lucide-vue-next';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 
 const formData = reactive({

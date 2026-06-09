@@ -498,8 +498,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Briefcase, Calendar, CircleUser, Clock, Eye, GraduationCap, Megaphone, RefreshCw, Search, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Briefcase, Calendar, CircleUser, Clock, Eye, GraduationCap, RefreshCw, Search } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';

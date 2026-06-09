@@ -540,8 +540,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleCheck, Ellipsis, Eye, Plus, RefreshCw, Search, SquarePen, Star, X } from 'lucide-vue-next';
-
+import { RefreshCw, Search } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
@@ -705,7 +704,7 @@ const mountedFetchDone = ref(false);
 
 let newRegions = [...props.selectedRegions];
 let internalUpdate = false;
-const emit = defineEmits(['update:selectedRegions']);
+const emit = defineEmits(['update:selectedRegions', 'update:page']);
 
 const formData = reactive({
     postalCodeTags: [] as string[],

@@ -1,4 +1,7 @@
 import { ref } from 'vue';
+import type { User } from '~/lib/types';
+
+export type PoolUser = User & { pivot?: { stars: number } };
 
 export interface Pool {
     id: number;
@@ -6,7 +9,7 @@ export interface Pool {
     name: string;
     description: string | null;
     users_count?: number;
-    users?: any[];
+    users?: PoolUser[];
     created_at: string;
     updated_at: string;
 }

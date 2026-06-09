@@ -271,8 +271,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Star } from 'lucide-vue-next';
-
+import { ArrowLeft } from 'lucide-vue-next';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import type { CountryCode, User } from '~/lib/types';

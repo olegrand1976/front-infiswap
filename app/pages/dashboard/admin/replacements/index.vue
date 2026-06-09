@@ -311,8 +311,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronsUpDown, Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { ChevronsUpDown, Eye, RefreshCw } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';

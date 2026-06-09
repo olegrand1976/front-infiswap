@@ -37,8 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus, Star } from 'lucide-vue-next';
-
+import { Plus } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';

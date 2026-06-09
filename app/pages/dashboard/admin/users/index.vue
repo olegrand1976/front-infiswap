@@ -83,8 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, RefreshCw, Star, XCircle } from 'lucide-vue-next';
-
+import { ArrowUpDown, RefreshCw, XCircle } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { formatInamiNumber, formatPhoneNumber } from '~/lib/utils';
 import type { User } from '~/lib/types';

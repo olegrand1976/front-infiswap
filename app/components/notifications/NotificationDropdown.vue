@@ -138,8 +138,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellRing, Star, X } from 'lucide-vue-next';
-
+import { BellRing, X } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -320,21 +319,6 @@ const getNotificationDetailLink = (
     }
 
     return null;
-};
-
-const handleNotificationLinkClick = async (notification: Notification) => {
-    if (!notification.read_at) {
-        await markAsRead(notification.id);
-        await getUnreadCount();
-    }
-
-    const detailLink = getNotificationDetailLink(notification);
-    if (!detailLink) {
-        return;
-    }
-
-    isOpen.value = false;
-    router.push(detailLink.path);
 };
 
 const handleNotificationClick = async (notification: Notification) => {

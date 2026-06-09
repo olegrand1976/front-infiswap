@@ -211,8 +211,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Lock, Star, User } from 'lucide-vue-next';
-
+import { Lock, User } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';

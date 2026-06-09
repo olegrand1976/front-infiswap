@@ -262,8 +262,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Check, Eye, Search, Star, X } from 'lucide-vue-next';
-
+import { Check, Eye, Search, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { PERPAGE } from '~/lib/constants';
 import { useRuntimeConfig } from '#app';

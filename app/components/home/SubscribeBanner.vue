@@ -37,8 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Mail, Star } from 'lucide-vue-next';
-
+import { Mail } from 'lucide-vue-next';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();

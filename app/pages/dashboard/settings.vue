@@ -1395,8 +1395,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Star, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
-
+import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { AUTH_TOKEN } from '~/lib/constants';
 import { useCookie, useRuntimeConfig } from '#app';

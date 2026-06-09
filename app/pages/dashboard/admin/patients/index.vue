@@ -12,8 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronsUpDown, Star } from 'lucide-vue-next';
-
+import { ChevronsUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';

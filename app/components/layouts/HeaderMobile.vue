@@ -33,11 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Phone, Star } from 'lucide-vue-next';
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRoute } from 'vue-router';
-import { cn } from '~/lib/utils';
 
 const route = useRoute();
 const isHomePage = computed(() => route.path === '/');

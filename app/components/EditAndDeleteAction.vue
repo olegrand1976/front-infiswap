@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { SquarePen, Star, Trash2 } from 'lucide-vue-next';
+import { SquarePen, Trash2 } from 'lucide-vue-next';
 
 defineProps<{
     onEdit: () => void;

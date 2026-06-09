@@ -652,8 +652,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Briefcase, Building2, Inbox, MapPin, Phone, Plus, RefreshCw, Star, Trash2, Users } from 'lucide-vue-next';
-
+import { Briefcase, Building2, Inbox, MapPin, Phone, Plus, RefreshCw, Trash2 } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, no-prototype-builtins, @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';

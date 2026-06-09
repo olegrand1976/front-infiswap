@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Star, X } from 'lucide-vue-next';
-
+import { X } from 'lucide-vue-next';
 import {
     DialogClose,
     DialogContent,

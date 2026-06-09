@@ -140,8 +140,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Lock, Star } from 'lucide-vue-next';
-
+import { Lock } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';

@@ -46,8 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronLeft, ChevronRight, Star } from 'lucide-vue-next';
-
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { getLocalTimeZone, today } from '@internationalized/date';
 
 const props = defineProps<{

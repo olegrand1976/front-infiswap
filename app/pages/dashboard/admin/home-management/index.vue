@@ -35,8 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, CirclePlus, Eye, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, CirclePlus, Eye } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import Button from '~/components/ui/button/Button.vue';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';

@@ -122,9 +122,8 @@ const showModal = ref(false);
 const selectedUser = ref(null);
 
 const getRespondedUser = (item: ReplacementResponse): User | null => {
-    const respondent = item.respondent as any;
-    if (respondent?.type === 'user') {
-        return respondent as User;
+    if (item.respondent?.type === 'user') {
+        return item.respondent;
     }
 
     return null;

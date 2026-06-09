@@ -50,8 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, ChevronsUpDown, Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, ChevronsUpDown, Eye, RefreshCw } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 

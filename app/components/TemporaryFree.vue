@@ -31,5 +31,5 @@
 </template>
 
 <script setup>
-import { Star } from 'lucide-vue-next';
+
 </script>

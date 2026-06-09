@@ -1274,7 +1274,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, IdCard, Inbox, Lock, Mail, MapPin, Phone, Star, Users } from 'lucide-vue-next';
+import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, IdCard, Inbox, Lock, Mail, MapPin, Phone, Users } from 'lucide-vue-next';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';

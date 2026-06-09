@@ -1164,8 +1164,6 @@ const totalDiyCost = computed(() => calcHours.value * calcIndieRate.value + calc
 
 const savingsDiy = computed(() => Math.max(0, totalInterimCost.value - totalDiyCost.value));
 
-const savingsJaumana = computed(() => Math.max(0, totalInterimCost.value - totalJaumanaCost.value));
-
 const eurFormatter = new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR' });
 
 function formatEur(value: number) {

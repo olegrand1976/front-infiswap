@@ -48,11 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import { Eye, Star } from 'lucide-vue-next';
-
+import { Eye } from 'lucide-vue-next';
 import { NuxtLink } from '#components';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { ReplacementRow, User } from '~/lib/types';
+import type { ReplacementResponse, ReplacementRow, User } from '~/lib/types';
 
 const replacements = ref([]);
 const selected = ref<ReplacementRow | null>(null);
@@ -109,9 +108,9 @@ const handleRowClick = (row: { original: ReplacementRow } | ReplacementRow) => {
     showModal.value = true;
 };
 
-const getRespondedUser = (response: any): User | null => {
-    if (response?.respondent?.type === 'user') {
-        return response.respondent as User;
+const getRespondedUser = (response: ReplacementResponse): User | null => {
+    if (response.respondent?.type === 'user') {
+        return response.respondent;
     }
 
     return null;

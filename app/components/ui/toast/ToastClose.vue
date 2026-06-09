@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Star, X } from 'lucide-vue-next';
-
+import { X } from 'lucide-vue-next';
 import type { ToastCloseProps } from 'radix-vue';
 import type { HTMLAttributes } from 'vue';
 import { ToastClose } from 'radix-vue';

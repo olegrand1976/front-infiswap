@@ -181,8 +181,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleCheck, Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { CircleCheck, Eye, RefreshCw } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { useInstitutions } from '~/composables/useInstitution';

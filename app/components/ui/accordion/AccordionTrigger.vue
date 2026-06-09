@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ChevronDown, Star } from 'lucide-vue-next';
-
+import { ChevronDown } from 'lucide-vue-next';
 import type { AccordionTriggerProps } from 'radix-vue';
 import type { HTMLAttributes } from 'vue';
 import {

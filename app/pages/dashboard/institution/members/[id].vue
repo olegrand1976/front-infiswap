@@ -167,8 +167,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Info, Star } from 'lucide-vue-next';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -226,7 +224,7 @@ onMounted(async () => {
         member.gender = data.gender;
         member.role = data.institution_role;
     }
-    catch (e) {
+    catch {
         navigateTo('/dashboard/institution/members');
     }
     finally {
@@ -245,6 +243,8 @@ const handleUpdate = async () => {
         });
         navigateTo('/dashboard/institution/members');
     }
-    catch (e: any) {}
+    catch {
+        // updateMember already displays an error toast
+    }
 };
 </script>

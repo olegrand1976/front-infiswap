@@ -7,7 +7,7 @@ import {
     SelectViewport,
     useForwardPropsEmits,
 } from 'radix-vue';
-import { computed, ref, type HTMLAttributes } from 'vue';
+import { computed, ref, type ComponentPublicInstance, type HTMLAttributes } from 'vue';
 import { SelectScrollDownButton, SelectScrollUpButton } from '.';
 import { cn } from '@/lib/utils';
 
@@ -32,11 +32,11 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 
 const scrollViewport = ref<HTMLElement | null>(null);
 
-// Fonction pour obtenir l'élément DOM du viewport
-const setScrollViewport = (el: any) => {
-    if (el && el.$el) {
+const setScrollViewport = (el: ComponentPublicInstance | HTMLElement | null) => {
+    if (el && '$el' in el && el.$el instanceof HTMLElement) {
         scrollViewport.value = el.$el;
-    } else if (el) {
+    }
+    else if (el instanceof HTMLElement) {
         scrollViewport.value = el;
     }
 };
@@ -73,7 +73,7 @@ const scrollDown = () => {
                 :ref="setScrollViewport"
                 :class="cn(
                     'p-1 overflow-y-auto',
-                    position === 'popper' && 'h-(--radix-select-trigger-height) min-w-(--radix-select-trigger-width)'
+                    position === 'popper' && 'h-(--radix-select-trigger-height) min-w-(--radix-select-trigger-width)',
                 )"
             >
                 <slot />

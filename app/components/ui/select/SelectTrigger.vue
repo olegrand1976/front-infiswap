@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ChevronDown, Star } from 'lucide-vue-next';
-
+import { ChevronDown } from 'lucide-vue-next';
 import { SelectIcon, SelectTrigger, type SelectTriggerProps, useForwardProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
@@ -39,8 +38,7 @@ const forwardedProps = useForwardProps(delegatedProps);
                 <slot />
                 <SelectIcon as-child>
                     <div class="w-full flex justify-end">
-                        <ChevronDown     class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6"
-                        />
+                        <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6" />
                     </div>
                 </SelectIcon>
             </div>

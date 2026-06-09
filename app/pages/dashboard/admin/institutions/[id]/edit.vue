@@ -68,8 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { Building2, Star } from 'lucide-vue-next';
-
+import { Building2 } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import RollingLoader from '~/components/RollingLoader.vue';

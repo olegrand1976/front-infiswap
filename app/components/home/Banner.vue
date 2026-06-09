@@ -165,8 +165,7 @@
 </template>
 
 <script setup lang="ts">
-import { BellRing, Star } from 'lucide-vue-next';
-
+import { BellRing } from 'lucide-vue-next';
 import {
     Carousel,
     CarouselContent,

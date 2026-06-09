@@ -13,7 +13,5 @@
 </template>
 
 <script lang="ts" setup>
-import { Star } from 'lucide-vue-next';
-
 import LayoutError from '~/layouts/error.vue';
 </script>

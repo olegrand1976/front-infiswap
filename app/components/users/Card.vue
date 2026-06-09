@@ -701,8 +701,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Building2, Calendar, CircleCheck, CircleUser, IdCard, Inbox, Mail, Phone, Star, Users, XCircle } from 'lucide-vue-next';
-
+import { Building2, Calendar, CircleCheck, CircleUser, IdCard, Inbox, Mail, Phone, Users, XCircle } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 

@@ -119,8 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronsUpDown, Eye, Plus, RefreshCw, Star } from 'lucide-vue-next';
-
+import { ChevronsUpDown, Eye, Plus, RefreshCw } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';

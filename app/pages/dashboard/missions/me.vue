@@ -253,8 +253,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Calendar, Clock, GraduationCap, RefreshCw, Search, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Calendar, Clock, GraduationCap, RefreshCw, Search } from 'lucide-vue-next';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import { PERPAGE } from '~/lib/constants';
 import { debounce, goBack } from '~/lib/utils';

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ArrowRight, Star } from 'lucide-vue-next';
-
+import { ArrowRight } from 'lucide-vue-next';
 import type { WithClassAsProps } from './interface';
 import { useCarousel } from './useCarousel';
 import { cn } from '@/lib/utils';

@@ -310,8 +310,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, ChevronRight, Clock, Ellipsis, Eye, Lock, SquarePen, Star, Users } from 'lucide-vue-next';
-
+import { ChevronDown, ChevronRight, Clock, Ellipsis, Eye, Lock, SquarePen, Users } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';

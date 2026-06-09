@@ -72,8 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { CircleUser, Star } from 'lucide-vue-next';
-
+import { CircleUser } from 'lucide-vue-next';
 import type { UserPartner, User } from '~/lib/types';
 
 const props = defineProps<{ partnership?: UserPartner | null }>();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { File, Star } from 'lucide-vue-next';
+import { File } from 'lucide-vue-next';
 
 const props = defineProps<{
     buttonClass?: string;

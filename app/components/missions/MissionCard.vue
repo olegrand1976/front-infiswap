@@ -180,8 +180,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Building2, ChevronRight, Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { Building2, ChevronRight, Eye, RefreshCw } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import type { Mission } from '~/lib/types';

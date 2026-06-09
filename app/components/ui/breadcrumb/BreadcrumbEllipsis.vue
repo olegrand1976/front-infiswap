@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { Ellipsis, Star } from 'lucide-vue-next';
-
+import { Ellipsis } from 'lucide-vue-next';
 import type { HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 

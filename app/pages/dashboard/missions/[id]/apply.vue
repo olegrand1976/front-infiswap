@@ -192,8 +192,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Calendar, Clock, FileText, GraduationCap, Info, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Calendar, Clock, FileText, GraduationCap, Info } from 'lucide-vue-next';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 import type { Mission, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
@@ -224,7 +223,7 @@ await getById(Number(id.value)).then((response) => {
 });
 
 const institutionLogoUrl = computed(() => {
-    const institution = mission.value?.institution as any;
+    const institution = mission.value?.institution;
     if (!institution) return null;
 
     const logo = institution.logo || institution.profil_url;

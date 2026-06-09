@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Star } from 'lucide-vue-next';
-
 import { Primitive, type PrimitiveProps, useForwardProps } from 'radix-vue';
 
 const props = defineProps<PrimitiveProps>();

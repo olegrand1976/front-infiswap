@@ -281,8 +281,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Building2, Calendar, ChevronRight, Clock, GraduationCap, RefreshCw, Star } from 'lucide-vue-next';
-
+import { ArrowLeft, Building2, Calendar, ChevronRight, Clock, GraduationCap, RefreshCw } from 'lucide-vue-next';
 import type { Mission, MissionResponse } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Search, Star } from 'lucide-vue-next';
-
+import { Search } from 'lucide-vue-next';
 import { ListboxFilter, type ListboxFilterProps, useForwardProps } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 import { useCommand } from '.';

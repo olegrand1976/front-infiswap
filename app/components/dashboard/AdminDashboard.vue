@@ -518,9 +518,7 @@
 </template>
 
 <script lang="ts" setup>
-import { RefreshCw, Send, Star, Users } from 'lucide-vue-next';
-
-import { markRaw } from 'vue';
+import { RefreshCw, Send, Users } from 'lucide-vue-next';
 import { DashboardStatCardAdminGroup } from '#components';
 import { BarChart } from '@/components/ui/chart-bar';
 import { AreaChart } from '@/components/ui/chart-area';
@@ -538,11 +536,10 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['auth', 'verified'],
 });
-const showStats = ref(true); // ouvert par défaut
-const showRegistrations = ref(true); // ouvert par défaut
+const showStats = ref(true);
+const showRegistrations = ref(true);
 const showReplacements = ref(false);
 const showGeography = ref(false);
-const showInstitutions = ref(false);
 
 onMounted(() => {
     loading.value = false;

@@ -82,8 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown, Eye } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

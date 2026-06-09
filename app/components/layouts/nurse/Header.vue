@@ -107,8 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Mail, MapPin, Star } from 'lucide-vue-next';
-
+import { Mail, MapPin } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{

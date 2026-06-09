@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ChevronsLeft, Star } from 'lucide-vue-next';
-
+import { ChevronsLeft } from 'lucide-vue-next';
 import { PaginationFirst, type PaginationFirstProps } from 'radix-vue';
 import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';

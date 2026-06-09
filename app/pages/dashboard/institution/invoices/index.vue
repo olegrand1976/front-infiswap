@@ -100,8 +100,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronsUpDown, FileText, Paperclip, Star } from 'lucide-vue-next';
-
+import { ChevronsUpDown, FileText, Paperclip } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
 import { UsersName } from '#components';

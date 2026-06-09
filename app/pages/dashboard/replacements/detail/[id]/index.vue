@@ -360,8 +360,7 @@
 </template>
 
 <script setup>
-import { ArrowLeft, ArrowRight, Calendar, CircleCheck, Clock, Home, Star, User } from 'lucide-vue-next';
-
+import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';

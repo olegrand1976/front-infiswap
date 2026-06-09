@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Briefcase, Building2, Inbox, MapPin, Phone, Star } from 'lucide-vue-next';
+import { Briefcase, Building2, Inbox, MapPin, Phone } from 'lucide-vue-next';
 
 const props = defineProps({
     service: {

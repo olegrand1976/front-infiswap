@@ -22,8 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Star } from 'lucide-vue-next';
-
+import { ArrowUpDown } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { PERPAGE } from '~/lib/constants';
 import { Button } from '@/components/ui/button';

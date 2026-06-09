@@ -101,8 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePlus, Phone, Sparkles, Star, UserPlus } from 'lucide-vue-next';
-
+import { CirclePlus, Phone, Sparkles, UserPlus } from 'lucide-vue-next';
 import ReplacementHome from '~/components/ReplacementHome.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useAuth } from '~/composables/useAuth';

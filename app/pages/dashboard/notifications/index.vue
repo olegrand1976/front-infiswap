@@ -102,8 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellRing, Star, Trash2 } from 'lucide-vue-next';
-
+import { BellRing, Trash2 } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';

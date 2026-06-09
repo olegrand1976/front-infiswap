@@ -242,8 +242,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleUser, Heart, IdCard, Mail, Phone, Plus, Star } from 'lucide-vue-next';
-
+import { CircleUser, Heart, IdCard, Mail, Phone, Plus } from 'lucide-vue-next';
 import { searchNurse } from '~/composables/usePatients';
 import { getErrorMessage } from '~/lib/utils';
 

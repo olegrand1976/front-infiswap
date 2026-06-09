@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Building2, IdCard, Inbox, MapPin, Phone, Star } from 'lucide-vue-next';
+import { Building2, IdCard, Inbox, MapPin, Phone } from 'lucide-vue-next';
 import { useInstitutions } from '~/composables/useInstitution';
 
 export type InstitutionResponsePayload = {
@@ -161,11 +161,4 @@ const displayZip = computed(() => {
     return String(z);
 });
 const displayCompanyNumber = computed(() => props.institution.company_number || 'Non renseigné');
-
-const showOlder = ref(false);
-
-const loadOlder = async () => {
-    showOlder.value = true;
-    await fetchListResponse(true);
-};
 </script>

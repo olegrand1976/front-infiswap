@@ -23,7 +23,6 @@ export const usePartners = () => {
     }));
     const demandPartner = useState<UserPartner>('demandPartner', () => null);
     const demandResponses = useState('demandResponses', () => null);
-    const error = useState('partnerError', () => null);
 
     const create = async (formData) => {
         return await $apifetch('/api/partners/create', {

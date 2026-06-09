@@ -309,8 +309,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, Star, X } from 'lucide-vue-next';
-
+import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, X } from 'lucide-vue-next';
 import { useRuntimeConfig } from '#app';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
@@ -337,15 +336,9 @@ const visibleResponses = (responses: ReplacementResponse[]) => {
     return responses;
 };
 
-const getRespondent = (responseDetail: any) =>
-    responseDetail?.respondent
-    ?? responseDetail?.responded_by
-    ?? responseDetail?.repondedBy
+const getRespondent = (responseDetail: ReplacementResponse) =>
+    responseDetail.respondent
     ?? null;
-
-const canViewRespondentContact = (responseDetail: ReplacementResponse) =>
-    responseDetail?.can_view_respondent_contact === true
-    || responseDetail?.status === 'confirmed';
 
 const handleAccept = async (responseDetail: ReplacementResponse) => {
     try {

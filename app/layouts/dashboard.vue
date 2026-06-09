@@ -253,7 +253,6 @@
 
 <script lang="ts" setup>
 import { BellOff, CircleUser, Frown } from 'lucide-vue-next';
-
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
@@ -300,7 +299,6 @@ const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
 const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
 
 const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
-const STAFF_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];
 
 const hasMultipleContexts = computed(() => {
     let count = 0;

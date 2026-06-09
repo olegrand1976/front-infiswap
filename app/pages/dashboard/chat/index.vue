@@ -235,8 +235,7 @@
 </template>
 
 <script setup>
-import { CirclePlus, CircleUser, Cog, EllipsisVertical, Send, SquarePen, Star } from 'lucide-vue-next';
-
+import { CirclePlus, CircleUser, Cog, EllipsisVertical, Send, SquarePen } from 'lucide-vue-next';
 import { CommandDialog, CommandInput, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 
 const users = ref([

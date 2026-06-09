@@ -446,8 +446,7 @@
 </template>
 
 <script setup lang="ts">
-import { Eye, RefreshCw, Star } from 'lucide-vue-next';
-
+import { Eye, RefreshCw } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Replacement, User } from '~/lib/types';
 import { toReplacementCountryCode } from '~/lib/replacementCountry';

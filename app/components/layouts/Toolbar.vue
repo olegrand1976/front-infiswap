@@ -58,8 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Mail, Power, Search, Star } from 'lucide-vue-next';
-
+import { Mail, Power, Search } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
