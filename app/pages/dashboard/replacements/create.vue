@@ -194,6 +194,7 @@
                     @open-proposal="openProposalDialog"
                 />
 
+               
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold"> Type de soins </label>
                     <Select
@@ -288,7 +289,6 @@
                 </div>
             </div>
         </section>
-
         <ProposalLocationModal
             v-model="proposalDialog"
             v-model:newly-added-value="newlyAddedValue"
@@ -297,6 +297,7 @@
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
             :is-preference-mode="false"
+            :country-code="countryCode"
             @update:initial-zip-codes="updateZipCodes"
             @update:initial-cities="updateCities"
         />
@@ -312,7 +313,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, Plus, Star, X } from 'lucide-vue-next';
+import { ArrowLeft, Plus, Star, X,Search } from 'lucide-vue-next';
 
 import { toast } from 'vue-sonner';
 import { InputTime } from '@/components/ui/input-time';
@@ -331,6 +332,8 @@ const router = useRouter();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);
+
+const careTypeSearch = ref('');
 
 const roleType = computed(() => {
     return user.value.roles.find(role => validRoles.includes(role));
@@ -531,6 +534,16 @@ const getSelectedCareTypesText = (selectedIds: number[]): string => {
         .map(ct => ct.name)
         .join(', ');
 };
+
+const filteredCareTypes = computed(() => {
+    if (!careTypeSearch.value) {
+        return careTypes.value;
+    }
+    const searchTerm = careTypeSearch.value.toLowerCase();
+    return careTypes.value.filter(careType => 
+        careType.name.toLowerCase().includes(searchTerm)
+    );
+});
 
 const resetForm = () => {
     formData.periods = [
