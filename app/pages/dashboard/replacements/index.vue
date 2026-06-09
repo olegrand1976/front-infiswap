@@ -228,17 +228,19 @@ import { useMissions } from '~/composables/useMission';
 import { PERPAGE } from '~/lib/constants';
 
 const user = useState<User>('user');
-const selectedCountry = ref(user.value.profile.country);
+const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
+const selectedCountry = ref(
+    allowedCountryCodes.value.includes(user.value.profile.country as 'be' | 'fr')
+        ? user.value.profile.country
+        : defaultCountryCode.value,
+);
 
 const { getAll: getMissions, missions } = useMissions();
 const availableMissions = computed(() => missions.value.data ?? []);
 
 await getMissions(1, PERPAGE, { type: 'nurse' });
 
-const countries = {
-    be: 'Belgique',
-    fr: 'France',
-};
+const countries = availableCountries;
 
 const replacementTypeFilters = {
     all: 'Tous',

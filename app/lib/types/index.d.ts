@@ -44,6 +44,7 @@ export type User = {
         id: number;
         name: string;
         status?: 'pending' | 'active' | 'rejected';
+        country?: string | null;
     };
     institution_id?: number | null;
     password?: string;

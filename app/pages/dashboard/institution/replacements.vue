@@ -214,12 +214,14 @@ import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
 
 const user = useState<User>('user');
-const selectedCountry = ref(user.value.profile.country);
+const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
+const selectedCountry = ref(
+    allowedCountryCodes.value.includes(user.value.profile.country as 'be' | 'fr')
+        ? user.value.profile.country
+        : defaultCountryCode.value,
+);
 
-const countries = {
-    be: 'Belgique',
-    fr: 'France',
-};
+const countries = availableCountries;
 
 const replacementTypeFilters = {
     all: 'Tous',
