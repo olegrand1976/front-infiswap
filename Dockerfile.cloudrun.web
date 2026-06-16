@@ -1,0 +1,20 @@
+# Image runtime Nuxt — le build .output est produit par l'étape Cloud Build prepare-web.
+FROM node:22-slim
+
+WORKDIR /app
+
+COPY .output ./.output
+COPY package.json ./package.json
+
+RUN if ! getent group www-data >/dev/null 2>&1; then groupadd -r www-data; fi \
+    && if ! id -u www-data >/dev/null 2>&1; then useradd -r -g www-data www-data; fi \
+    && chown -R www-data:www-data /app
+
+USER www-data
+
+ENV NODE_ENV=production
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD ["node", ".output/server/index.mjs"]

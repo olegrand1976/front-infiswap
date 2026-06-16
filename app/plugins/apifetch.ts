@@ -9,36 +9,51 @@ import {
     useRequestEvent,
     useRequestHeaders,
     defineNuxtPlugin,
-    navigateTo,
     type NuxtApp,
 } from '#app';
 
 const CSRF_COOKIE = 'XSRF-TOKEN';
 const CSRF_HEADER = 'X-XSRF-TOKEN';
 
+const MUTATION_METHODS = new Set(['post', 'delete', 'put', 'patch']);
+
+function normalizeCsrfToken(token: string | null | undefined): string {
+    if (!token) {
+        return '';
+    }
+
+    try {
+        return decodeURIComponent(token);
+    }
+    catch {
+        return token;
+    }
+}
+
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
-    const { $csrf } = useNuxtApp();
-    const { API_URL } = useRuntimeConfig().public;
+    const config = useRuntimeConfig();
+    const apiBaseUrl = import.meta.server && config.apiUrlInternal
+        ? config.apiUrlInternal
+        : config.public.API_URL;
     const language = useCookie(LANGUAGE)?.value ?? 'fr';
-    let token: string = '';
     const apifetch = $fetch.create({
         credentials: 'include',
-        baseURL: API_URL,
+        baseURL: apiBaseUrl,
+        timeout: import.meta.server ? 15_000 : 60_000,
         async onRequest({ options }) {
+            const { $csrf } = useNuxtApp();
             const event = typeof useEvent === 'function' ? useRequestEvent() : null;
-            token = event
-                ? parseCookies(event)[CSRF_COOKIE]
-                : useCookie(CSRF_COOKIE).value;
+            const method = options?.method?.toLowerCase() ?? 'get';
+            let token = normalizeCsrfToken(
+                event
+                    ? parseCookies(event)[CSRF_COOKIE]
+                    : useCookie(CSRF_COOKIE).value,
+            );
 
-            if (
-                import.meta.client
-                    && ['post', 'delete', 'put', 'patch'].includes(
-                        options?.method?.toLowerCase() ?? '',
-                    )
-            ) {
-                if ($csrf) {
-                    token = $csrf as string;
-                }
+            if (import.meta.client && MUTATION_METHODS.has(method) && typeof $csrf === 'function') {
+                token = normalizeCsrfToken(
+                    (await ($csrf as () => Promise<string | null | undefined>)()) ?? token,
+                );
             }
 
             let headers = {
