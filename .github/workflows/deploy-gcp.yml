@@ -2,7 +2,7 @@ name: Deploy GCP staging (web only)
 
 on:
   push:
-    branches: [main]
+    branches: [staging]
   workflow_dispatch:
 
 concurrency:
