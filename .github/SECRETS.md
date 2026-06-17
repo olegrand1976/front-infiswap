@@ -25,13 +25,11 @@ Recopier les valeurs depuis GitLab → Settings → CI/CD → Variables (`old` r
 gh secret list -R olegrand1976/front-infiswap
 ```
 
-## GCP staging (`deploy-gcp.yml`)
+## Déploiement GCP (staging)
 
-| Secret | Description |
-|--------|-------------|
-| `GCP_WORKLOAD_IDENTITY_PROVIDER` | WIF provider (voir back `infra/gcp/setup-github-deploy.sh`) |
-| `GCP_SERVICE_ACCOUNT` | `github-infiswap-deploy@premedica-prod-2025.iam.gserviceaccount.com` |
-| `GH_PAT` | PAT GitHub (checkout cross-repo `back-infiswap` depuis le workflow front) |
+Le déploiement GCP est **piloté par le dépôt `back-infiswap`** (`infra/gcp/cloudbuild-web-only.yaml`),
+qui clone le front public et package `Dockerfile.cloudrun.web`. Aucun secret GCP ni `GH_PAT` n'est
+requis côté front.
 
 ## Import depuis un fichier local (une fois les valeurs exportées)
 

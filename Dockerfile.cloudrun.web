@@ -1,5 +1,7 @@
-# Image runtime Nuxt — le build .output est produit par l'étape Cloud Build prepare-web.
-FROM node:22-slim
+# Image runtime-only du front (SSR Nuxt) pour Cloud Run.
+# Le build (`npm run build`) est réalisé en amont par le Cloud Build du back
+# (infra/gcp/cloudbuild-web-only.yaml) ; ici on ne package que le .output autonome.
+FROM node:20.18.0-slim
 
 WORKDIR /app
 
