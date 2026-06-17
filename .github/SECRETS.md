@@ -25,6 +25,14 @@ Recopier les valeurs depuis GitLab → Settings → CI/CD → Variables (`old` r
 gh secret list -R olegrand1976/front-infiswap
 ```
 
+## GCP staging (`deploy-gcp.yml`)
+
+| Secret | Description |
+|--------|-------------|
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | WIF provider (voir back `infra/gcp/setup-github-deploy.sh`) |
+| `GCP_SERVICE_ACCOUNT` | `github-infiswap-deploy@premedica-prod-2025.iam.gserviceaccount.com` |
+| `GH_PAT` | PAT GitHub (checkout cross-repo `back-infiswap` depuis le workflow front) |
+
 ## Import depuis un fichier local (une fois les valeurs exportées)
 
 ```bash
