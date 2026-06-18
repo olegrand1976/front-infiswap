@@ -12,6 +12,8 @@ Le front est déployé sur **GCP Cloud Run** via Artifact Registry (`europe-west
 
 Déploiement **API + Web prod complet** : dépôt `back-infiswap` → `.github/workflows/deploy-prod-gcp.yaml`.
 
+Les configs Cloud Build (`infra/gcp/cloudbuild-*.yaml`) sont versionnées dans ce dépôt pour éviter un checkout cross-repo vers `back-infiswap` (privé).
+
 ## Prérequis GCP (une fois)
 
 Binding Workload Identity pour ce dépôt :

@@ -30,7 +30,6 @@ env:
   GCP_RUN_REGION: europe-west9
   GCP_WORKLOAD_IDENTITY_PROVIDER: projects/237481297060/locations/global/workloadIdentityPools/github-pool/providers/github-provider
   GCP_SERVICE_ACCOUNT: github-infiswap-deploy@premedica-prod-2025.iam.gserviceaccount.com
-  BACK_REPO: olegrand1976/back-infiswap
 
 jobs:
   deploy:
@@ -51,13 +50,11 @@ jobs:
           fi
           case "$target" in
             prod)
-              echo "back_ref=main" >> "$GITHUB_OUTPUT"
               echo "cloudbuild_config=infra/gcp/cloudbuild-prod-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-prod" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.be" >> "$GITHUB_OUTPUT"
               ;;
             staging)
-              echo "back_ref=staging" >> "$GITHUB_OUTPUT"
               echo "cloudbuild_config=infra/gcp/cloudbuild-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-staging" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.ll-it-sc.be" >> "$GITHUB_OUTPUT"
@@ -71,23 +68,10 @@ jobs:
       - name: Checkout front
         uses: actions/checkout@v4
 
-      - name: Checkout back (infra Cloud Build)
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.BACK_REPO }}
-          ref: ${{ steps.env.outputs.back_ref }}
-          path: back-infiswap
-
-      - name: Sync front into Cloud Build context
+      - name: Validate Cloud Build context
         run: |
-          rsync -a --delete \
-            --exclude node_modules \
-            --exclude .output \
-            --exclude .nuxt \
-            --exclude .git \
-            ./ back-infiswap/front-infiswap/
-          test -f back-infiswap/front-infiswap/Dockerfile.cloudrun.web
-          test -f "back-infiswap/${{ steps.env.outputs.cloudbuild_config }}"
+          test -f Dockerfile.cloudrun.web
+          test -f "${{ steps.env.outputs.cloudbuild_config }}"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -101,7 +85,6 @@ jobs:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Deploy via Cloud Build
-        working-directory: back-infiswap
         run: |
           gcloud builds submit \
             --project="${GCP_PROJECT_ID}" \
