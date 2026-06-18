@@ -89,7 +89,7 @@ const { copy } = usePlatformStats();
                                 {{ copy.badge }}
                             </p>
                             <p class="mt-1 text-sm text-white/80">
-                                Remplacements matchés & utilisateurs actifs
+                                Membres inscrits en Belgique & France
                             </p>
                         </div>
                     </div>

@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import { TrendingUp, Users, HeartHandshake, Activity } from 'lucide-vue-next';
-import type { HomeKpiKey } from '~/lib/constants/homeStats';
+import { Users } from 'lucide-vue-next';
 
 const { stats, loading, copy, kpiDefinitions, fetchStats, getKpiValue } = usePlatformStats();
 
 await fetchStats();
-
-const iconByKey: Record<HomeKpiKey, typeof Users> = {
-    members_total: Users,
-    matched_replacements_total: HeartHandshake,
-    active_users: Activity,
-    growth_percent: TrendingUp,
-};
 
 const formattedAsOf = computed(() => {
     if (!stats.value.as_of) {
@@ -64,7 +56,7 @@ const formattedAsOf = computed(() => {
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            <div class="mx-auto max-w-md">
                 <Card
                     v-for="kpi in kpiDefinitions"
                     :key="kpi.key"
@@ -73,8 +65,7 @@ const formattedAsOf = computed(() => {
                     <div class="flex flex-col gap-4 p-6">
                         <div class="flex items-center justify-between">
                             <div class="rounded-2xl bg-primary/10 p-3 text-primary">
-                                <component
-                                    :is="iconByKey[kpi.key]"
+                                <Users
                                     class="h-6 w-6"
                                     aria-hidden="true"
                                 />
@@ -107,18 +98,8 @@ const formattedAsOf = computed(() => {
             </div>
 
             <p
-                v-if="!loading && stats.growth.new_members_30d > 0"
-                class="mt-8 text-center text-sm text-muted-foreground"
-            >
-                {{ copy.growthLabel }} :
-                <span class="font-semibold text-success">
-                    +{{ stats.growth.new_members_30d.toLocaleString('fr-BE') }} nouveaux membres
-                </span>
-            </p>
-
-            <p
-                v-if="!loading && stats.as_of"
-                class="mt-3 text-center text-xs text-muted-foreground/80"
+                v-if="!loading && formattedAsOf"
+                class="mt-8 text-center text-xs text-muted-foreground/80"
             >
                 {{ copy.updatedLabel }}
                 {{ formattedAsOf }}
