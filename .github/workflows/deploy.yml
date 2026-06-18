@@ -1,8 +1,9 @@
-name: Deploy prod
+name: Deploy OVH (legacy - manuel)
 
+# Prod migree vers GCP : le front prod est construit par le back (cloudbuild-prod.yaml).
+# Conserve uniquement pour redeploiement OVH manuel ponctuel.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: front-app
@@ -14,6 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          missing=()
+          [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] && missing+=("DOCKERHUB_USERNAME")
+          [ -z "${{ secrets.DOCKERHUB_PASSWORD }}" ] && missing+=("DOCKERHUB_PASSWORD")
+          [ -z "${{ secrets.API_URL }}" ] && missing+=("API_URL")
+          [ -z "${{ secrets.FRONT_END_URL }}" ] && missing+=("FRONT_END_URL")
+          [ -z "${{ secrets.PORT }}" ] && missing+=("PORT")
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Secrets GitHub Actions manquants : ${missing[*]}"
+            echo "Configurer dans Settings → Secrets and variables → Actions (voir .github/SECRETS.md)."
+            exit 1
+          fi
 
       - name: Generate runtime .env
         run: |
@@ -27,7 +42,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install and build
@@ -70,6 +85,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate deploy secrets
+        run: |
+          missing=()
+          [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] && missing+=("DOCKERHUB_USERNAME")
+          [ -z "${{ secrets.DOCKERHUB_PASSWORD }}" ] && missing+=("DOCKERHUB_PASSWORD")
+          [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ] && missing+=("SSH_PRIVATE_KEY")
+          [ -z "${{ secrets.SSH_HOST }}" ] && missing+=("SSH_HOST")
+          [ -z "${{ secrets.SSH_USER }}" ] && missing+=("SSH_USER")
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Secrets GitHub Actions manquants : ${missing[*]}"
+            echo "Configurer dans Settings → Secrets and variables → Actions (voir .github/SECRETS.md)."
+            exit 1
+          fi
 
       - name: Prepare SSH key and known hosts
         run: |
