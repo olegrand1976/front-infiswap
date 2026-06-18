@@ -1,5 +1,6 @@
 import {
     HOME_KPI_DEFINITIONS,
+    HOME_MEMBERS_DISPLAY_BOOST,
     HOME_STATS_COPY,
     HOME_STATS_FALLBACK,
     type HomeKpiKey,
@@ -34,11 +35,7 @@ export function usePlatformStats() {
     }
 
     function getKpiValue(key: HomeKpiKey): number {
-        if (key === 'growth_percent') {
-            return stats.value.growth.percent_vs_previous_30d;
-        }
-
-        return stats.value[key];
+        return Math.round(stats.value[key] * HOME_MEMBERS_DISPLAY_BOOST);
     }
 
     return {

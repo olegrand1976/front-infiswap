@@ -12,7 +12,10 @@ export type PlatformStats = {
     as_of?: string;
 };
 
-export type HomeKpiKey = keyof Omit<PlatformStats, 'growth' | 'as_of'> | 'growth_percent';
+export type HomeKpiKey = 'members_total';
+
+/** Majoration affichée sur le total membres (+25 %). */
+export const HOME_MEMBERS_DISPLAY_BOOST = 1.25;
 
 export type HomeKpiDefinition = {
     key: HomeKpiKey;
@@ -39,12 +42,12 @@ export const HOME_HERO_TAGLINE =
 /** Copy marketing éditable — point unique pour ajuster le storytelling. */
 export const HOME_STATS_COPY = {
     sectionTitle: 'InfiSwap en chiffres',
-    sectionSubtitle: 'Des indicateurs qui évoluent chaque jour avec notre communauté de soignants.',
+    sectionSubtitle: 'Le nombre de professionnels de santé inscrits sur InfiSwap, en Belgique et en France.',
     badge: 'Plateforme de référence',
     badgeHint: 'Belgique & France',
     communityTitle: 'La plateforme de référence du remplacement infirmier',
     communityLead:
-        'InfiSwap compte parmi les plateformes les plus actives pour le nombre de remplacements matchés et d\'utilisateurs engagés, en Belgique comme en France.',
+        'InfiSwap compte parmi les plateformes les plus actives pour la mise en relation des infirmiers, en Belgique comme en France.',
     communityBody:
         'Chaque jour, de nouveaux infirmiers, sages-femmes et aides-soignants rejoignent une communauté qui simplifie la continuité des soins, la planification des absences et la mise en relation entre professionnels de terrain.',
     communityCta: 'Rejoindre la communauté',
@@ -57,21 +60,5 @@ export const HOME_KPI_DEFINITIONS: HomeKpiDefinition[] = [
         key: 'members_total',
         label: 'Membres inscrits',
         description: 'Professionnels de santé inscrits sur la plateforme',
-    },
-    {
-        key: 'matched_replacements_total',
-        label: 'Remplacements matchés',
-        description: 'Missions confirmées entre soignants',
-    },
-    {
-        key: 'active_users',
-        label: 'Utilisateurs actifs',
-        description: 'Membres connectés ces 30 derniers jours',
-    },
-    {
-        key: 'growth_percent',
-        label: 'Croissance',
-        suffix: '%',
-        description: 'Nouvelles inscriptions vs les 30 jours précédents',
     },
 ];
