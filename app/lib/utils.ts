@@ -346,6 +346,16 @@ export function getErrorMessage(error: any): string {
 
     if (typeof error === 'string') return error;
 
+    const validationErrors = error.data?.errors ?? error.response?._data?.errors;
+
+    if (validationErrors && typeof validationErrors === 'object') {
+        const firstFieldErrors = Object.values(validationErrors)[0];
+
+        if (Array.isArray(firstFieldErrors) && firstFieldErrors.length > 0) {
+            return String(firstFieldErrors[0]);
+        }
+    }
+
     return (
         error.data?.message
         || error.response?._data?.message
