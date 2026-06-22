@@ -417,6 +417,12 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         visible: true,
     },
     {
+        label: 'Abonnements',
+        route: '/dashboard/admin/subscription-plans',
+        icon: Euro,
+        visible: isSuperAdmin.value || isAdmin.value || isManager.value,
+    },
+    {
         label: 'Produits',
         route: '/dashboard/admin/products',
         icon: ShoppingBag,

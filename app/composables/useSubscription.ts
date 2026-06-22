@@ -1,15 +1,15 @@
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
 
-    const plans = useState<Plans>('plans', () => null);
-    const loading = useState<boolean>('loading', () => false);
-    const plan = useState<Plan>('plan', () => null);
-    const current = useState<ActiveSubscription>('current', () => null);
+    const plans = useState<SubscriptionPlans | null>('plans', () => null);
+    const loading = useState<boolean>('subscriptionLoading', () => false);
+    const current = useState<ActiveSubscription | null>('currentSubscription', () => null);
     const user = useUser();
+
     const getPlans = async (): Promise<void> => {
         loading.value = true;
         try {
-            const response = await $apifetch<{ plans: Plans }>('api/subscription/plans');
+            const response = await $apifetch<{ plans: SubscriptionPlans }>('api/subscription/plans');
             plans.value = response.plans;
         }
         catch (error) {
@@ -20,44 +20,57 @@ export const useSubscription = () => {
         }
     };
 
-    const selectPlan = (selected: Plan): void => {
-        plan.value = selected;
-    };
-
     const create = async (priceId: string): Promise<SubscriptionResponse | null> => {
         if (!user.value) {
             navigateTo('/login');
-
-            return;
+            return null;
         }
 
         loading.value = true;
         try {
-            const response = await $apifetch<SubscriptionResponse>('api/subscription/create', { method: 'POST', body: {
-                priceId: priceId,
-            } });
-
-            return response;
+            return await $apifetch<SubscriptionResponse>('api/subscription/create', {
+                method: 'POST',
+                body: { priceId },
+            });
         }
-        catch (error) {
-            if (error.data.message) {
-                $toast({
-                    variant: 'destructive',
-                    description: error.data.message,
-                    duration: 3000,
-                });
-            }
-            else {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Erreur lors de la création de votre abonnement',
-                    duration: 3000,
-                });
-            }
+        catch (error: any) {
+            $toast({
+                variant: 'destructive',
+                description: error?.data?.message || 'Erreur lors de la création de votre abonnement',
+                duration: 3000,
+            });
+            return null;
         }
         finally {
             loading.value = false;
         }
+    };
+
+    const boostReplacement = async (replacementId: number): Promise<SubscriptionResponse | null> => {
+        loading.value = true;
+        try {
+            return await $apifetch<SubscriptionResponse>(`api/subscription/replacements/${replacementId}/boost`, {
+                method: 'POST',
+            });
+        }
+        catch (error: any) {
+            $toast({
+                variant: 'destructive',
+                description: error?.data?.message || 'Impossible d\'activer la mise en avant.',
+            });
+            return null;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
+
+    const cancelBoost = async (replacementId: number): Promise<void> => {
+        await $apifetch(`api/subscription/replacements/${replacementId}/boost/cancel`, {
+            method: 'POST',
+        }).then(() => {
+            $toast({ description: 'Mise en avant annulée.' });
+        });
     };
 
     const getCurrentSubscription = async () => {
@@ -75,9 +88,9 @@ export const useSubscription = () => {
         }
     };
 
-    const check = async (user: number) => {
+    const check = async (userId: number) => {
         try {
-            return await $apifetch<CheckResponse>(`/api/subscription/${user}/check`, { method: 'GET' });
+            return await $apifetch<CheckResponse>(`/api/subscription/${userId}/check`, { method: 'GET' });
         }
         catch (error) {
             console.error('Error checking subscription:', error);
@@ -87,14 +100,11 @@ export const useSubscription = () => {
     const startTrial = async () => {
         if (!user.value) {
             navigateTo('/login');
-
             return;
         }
 
         await $apifetch('/api/subscription/start-trial', { method: 'POST' }).then(() => {
-            $toast({
-                description: 'Essai gratuit activé',
-            });
+            $toast({ description: 'Essai gratuit activé' });
         });
     };
 
@@ -102,9 +112,9 @@ export const useSubscription = () => {
         loading,
         getPlans,
         plans,
-        plan,
         create,
-        selectPlan,
+        boostReplacement,
+        cancelBoost,
         check,
         getCurrentSubscription,
         current,
@@ -115,25 +125,23 @@ export const useSubscription = () => {
 export interface Plan {
     id: number;
     name: string;
-    interval: 'month' | 'year';
-    amount: number;
-    currency: 'eur';
+    type: 'platform_access' | 'replacement_boost';
+    interval: 'week' | 'month' | 'year';
+    amount: number | string;
+    currency: 'eur' | string;
     description: string;
-    expire_at: string | null;
-    created_at: string | null;
-    updated_at: string | null;
+    valid_from: string | null;
+    valid_until: string | null;
     stripe_price_id: string;
+    is_active?: boolean;
+    is_boosted?: boolean;
+    boosted_until?: string | null;
 }
 
-export interface Plans {
-    monthly: Plan;
-    yearly: Plan;
-    weekly: Plan;
-}
-
-export interface PaymentDetails {
-    paymentMethodId: string;
-    priceId: string;
+export interface SubscriptionPlans {
+    platform: Plan | null;
+    boost: Plan | null;
+    current_plan?: string | null;
 }
 
 interface SubscriptionResponse {
@@ -145,9 +153,9 @@ interface CheckResponse {
 }
 
 interface ActiveSubscription {
-    status: 'active' | 'expired';
-    plan: Plan;
-    subscription: Subscription;
+    status: 'active' | 'expired' | 'no_active_subscription';
+    plan: Plan | null;
+    subscription: Subscription | null;
 }
 
 interface Subscription {

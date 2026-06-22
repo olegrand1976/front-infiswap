@@ -101,6 +101,12 @@
                             >
                                 NEW
                             </div>
+                            <div
+                                v-if="r.is_boosted"
+                                class="absolute z-10 font-bold px-2 py-0.5 rounded-md shadow-sm uppercase bg-amber-500 text-white text-[10px] top-1 right-2"
+                            >
+                                En avant
+                            </div>
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
                                     <div
@@ -297,6 +303,20 @@
                                                 <span>Modifier</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
+                                                v-if="canBoost(r) && !r.is_boosted"
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="handleBoost(r)"
+                                            >
+                                                <span>Mettre en avant (5 €/sem.)</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                v-if="canBoost(r) && r.is_boosted"
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="handleCancelBoost(r)"
+                                            >
+                                                <span>Annuler la mise en avant</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
                                                 v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                                 class="flex items-center space-x-2 text-sm"
                                                 @click="emit('select-replacement', r)"
@@ -482,6 +502,20 @@
                                                     <span>Modifier</span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem
+                                                    v-if="canBoost(r) && !r.is_boosted"
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="handleBoost(r)"
+                                                >
+                                                    <span>Mettre en avant</span>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    v-if="canBoost(r) && r.is_boosted"
+                                                    class="flex items-center space-x-2 text-sm"
+                                                    @click="handleCancelBoost(r)"
+                                                >
+                                                    <span>Annuler mise en avant</span>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
                                                     v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                                     class="flex items-center space-x-2 text-sm"
                                                     @click="emit('select-replacement', r)"
@@ -556,7 +590,11 @@ import ReplacementTableSkeleton from '@/components/replacements/ReplacementTable
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 import { useInstitutions } from '~/composables/useInstitution';
+import { useSubscription } from '~/composables/useSubscription';
 import type { Replacement } from '~/lib/types';
+
+const { boostReplacement, cancelBoost } = useSubscription();
+const { isInstitution } = useAuth();
 
 interface Props {
     replacements: Replacement[];
@@ -594,6 +632,26 @@ const pendingCloseReplacement = ref<Replacement | null>(null);
 const openCloseDialog = (r: Replacement) => {
     pendingCloseReplacement.value = r;
     closeReplacementDialog.value = true;
+};
+
+const canBoost = (r: Replacement) =>
+    props.type === 'me'
+    && !isInstitution.value
+    && !r.institution_id
+    && r.status === 'open'
+    && !hasConfirmedSubstitute(r);
+
+const handleBoost = async (r: Replacement) => {
+    const response = await boostReplacement(r.id);
+    if (response?.url) {
+        window.location.href = response.url;
+    }
+};
+
+const handleCancelBoost = async (r: Replacement) => {
+    await cancelBoost(r.id);
+    r.is_boosted = false;
+    r.boosted_until = null;
 };
 
 const gridColsByType: Record<string, string> = {
