@@ -91,4 +91,5 @@ export interface StripePlanPayload {
     priority?: number;
     target_roles?: string[];
     deactivate_previous?: boolean;
+    is_active?: boolean;
 }

@@ -3,6 +3,44 @@
         class="space-y-6"
         @submit.prevent="submit"
     >
+        <div
+            v-if="isEditMode && plan"
+            class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white p-4 rounded-md border border-gray-100"
+        >
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Type
+                </p>
+                <p class="font-medium mt-1">
+                    {{ typeLabel(plan.type) }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Intervalle
+                </p>
+                <p class="font-medium mt-1">
+                    {{ intervalLabel(plan.interval) }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Montant
+                </p>
+                <p class="font-medium mt-1">
+                    {{ plan.amount }} € / {{ intervalLabel(plan.interval).toLowerCase() }}
+                </p>
+            </div>
+            <div class="md:col-span-3">
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Stripe Price ID
+                </p>
+                <p class="font-mono text-sm mt-1 break-all">
+                    {{ plan.stripe_price_id }}
+                </p>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-white p-4 rounded-md">
             <InputIcon
                 v-model="form.name"
@@ -11,48 +49,54 @@
                 placeholder="Accès InfiSwap"
             />
 
-            <div>
-                <label class="text-sm font-medium text-gray-700">Type</label>
-                <select
-                    v-model="form.type"
-                    class="mt-1 w-full rounded-md border border-gray-200 px-3 py-2"
-                    :disabled="isEditMode"
-                >
-                    <option value="platform_access">
-                        Accès plateforme
-                    </option>
-                    <option value="replacement_boost">
-                        Mise en avant
-                    </option>
-                </select>
-            </div>
+            <template v-if="!isEditMode">
+                <div class="flex flex-col gap-2">
+                    <Label class="text-sm text-gray-500">Type</Label>
+                    <Select v-model="form.type">
+                        <SelectTrigger class="w-full rounded-md">
+                            <SelectValue placeholder="Choisir un type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="option in typeOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
 
-            <div>
-                <label class="text-sm font-medium text-gray-700">Intervalle</label>
-                <select
-                    v-model="form.interval"
-                    class="mt-1 w-full rounded-md border border-gray-200 px-3 py-2"
-                    :disabled="isEditMode"
-                >
-                    <option value="week">
-                        Semaine
-                    </option>
-                    <option value="month">
-                        Mois
-                    </option>
-                    <option value="year">
-                        Année
-                    </option>
-                </select>
-            </div>
+                <div class="flex flex-col gap-2">
+                    <Label class="text-sm text-gray-500">Intervalle</Label>
+                    <Select v-model="form.interval">
+                        <SelectTrigger class="w-full rounded-md">
+                            <SelectValue placeholder="Choisir un intervalle" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="option in intervalOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
 
-            <InputIcon
-                v-model="form.amount"
-                rounded="md"
-                label="Montant (€)"
-                placeholder="15"
-                :disabled="isEditMode"
-            />
+                <InputIcon
+                    v-model="form.amount"
+                    rounded="md"
+                    label="Montant (€)"
+                    placeholder="15"
+                />
+            </template>
 
             <InputIcon
                 v-model="form.description"
@@ -119,6 +163,15 @@
 
 <script setup lang="ts">
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import type { StripePlan } from '~/composables/useSubscriptionPlansAdmin';
 
 const props = defineProps({
@@ -131,21 +184,43 @@ const props = defineProps({
 const { createPlan, updatePlan } = useSubscriptionPlansAdmin();
 const isEditMode = computed(() => !!props.plan?.id);
 
+const typeOptions = [
+    { value: 'platform_access', label: 'Accès plateforme' },
+    { value: 'replacement_boost', label: 'Mise en avant' },
+] as const;
+
+const intervalOptions = [
+    { value: 'week', label: 'Semaine' },
+    { value: 'month', label: 'Mois' },
+    { value: 'year', label: 'Année' },
+] as const;
+
+const typeLabel = (value: string) =>
+    typeOptions.find(o => o.value === value)?.label ?? value;
+
+const intervalLabel = (value: string) =>
+    intervalOptions.find(o => o.value === value)?.label ?? value;
+
+const toDatetimeLocal = (value: string | null | undefined): string => {
+    if (!value) return '';
+    const normalized = value.replace(' ', 'T');
+    return normalized.slice(0, 16);
+};
+
 const form = reactive({
-    name: props.plan?.name ?? '',
-    type: props.plan?.type ?? 'platform_access',
-    interval: props.plan?.interval ?? 'month',
-    amount: props.plan?.amount ?? 15,
-    description: props.plan?.description ?? '',
-    priority: props.plan?.priority ?? 10,
-    valid_from: props.plan?.valid_from ? props.plan.valid_from.slice(0, 16) : '',
-    valid_until: props.plan?.valid_until ? props.plan.valid_until.slice(0, 16) : '',
-    is_active: props.plan?.is_active ?? true,
+    name: '',
+    type: 'platform_access' as StripePlan['type'],
+    interval: 'month' as StripePlan['interval'],
+    amount: 15,
+    description: '',
+    priority: 10,
+    valid_from: '',
+    valid_until: '',
+    is_active: true,
     deactivate_previous: true,
 });
 
-watch(() => props.plan, (plan) => {
-    if (!plan) return;
+const applyPlan = (plan: StripePlan) => {
     Object.assign(form, {
         name: plan.name,
         type: plan.type,
@@ -153,10 +228,16 @@ watch(() => props.plan, (plan) => {
         amount: plan.amount,
         description: plan.description ?? '',
         priority: plan.priority,
-        valid_from: plan.valid_from ? plan.valid_from.slice(0, 16) : '',
-        valid_until: plan.valid_until ? plan.valid_until.slice(0, 16) : '',
+        valid_from: toDatetimeLocal(plan.valid_from),
+        valid_until: toDatetimeLocal(plan.valid_until),
         is_active: plan.is_active,
     });
+};
+
+watch(() => props.plan, (plan) => {
+    if (plan) {
+        applyPlan(plan);
+    }
 }, { immediate: true });
 
 const { submit, inProgress } = useSubmit(async () => {
