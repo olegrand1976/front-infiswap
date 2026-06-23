@@ -1,19 +1,47 @@
 import { useCookie, useRuntimeConfig, defineNuxtPlugin } from '#app';
 
-export default defineNuxtPlugin(async (nuxtApp) => {
-    const CSRF_COOKIE = 'XSRF-TOKEN';
-    async function initCsrf() {
-        const { API_BASE_URL } = useRuntimeConfig().public;
-        const existingToken = useCookie(CSRF_COOKIE).value;
+const CSRF_COOKIE = 'XSRF-TOKEN';
 
-        if (existingToken) return existingToken;
+function readCsrfToken(): string | null {
+    const fromUseCookie = useCookie(CSRF_COOKIE).value;
+    if (fromUseCookie) {
+        try {
+            return decodeURIComponent(fromUseCookie);
+        }
+        catch {
+            return fromUseCookie;
+        }
+    }
+
+    if (import.meta.client && typeof document !== 'undefined') {
+        const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+        if (match?.[1]) {
+            try {
+                return decodeURIComponent(match[1]);
+            }
+            catch {
+                return match[1];
+            }
+        }
+    }
+
+    return null;
+}
+
+export default defineNuxtPlugin((nuxtApp) => {
+    async function initCsrf() {
+        const config = useRuntimeConfig();
+        const apiBaseUrl = import.meta.server && config.apiUrlInternal
+            ? config.apiUrlInternal
+            : config.public.API_URL;
 
         await $fetch('/sanctum/csrf-cookie', {
-            baseURL: API_BASE_URL as string,
+            baseURL: apiBaseUrl as string,
             credentials: 'include',
+            timeout: import.meta.server ? 15_000 : 60_000,
         });
 
-        return useCookie(CSRF_COOKIE).value;
+        return readCsrfToken();
     }
 
     nuxtApp.provide('csrf', initCsrf);

@@ -1,0 +1,78 @@
+substitutions:
+  _AR_REGION: europe-west1
+  _RUN_REGION: europe-west9
+  _AR_REPO: infiswap
+  _SERVICE_ACCOUNT: infiswap-run
+  _WEB_SERVICE: infiswap-web-prod
+  _API_SERVICE: infiswap-api-prod
+  _API_PUBLIC_URL: https://back.infiswap.be
+  _WEB_PUBLIC_URL: https://infiswap.be
+  _MAX_INSTANCES_WEB: "8"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - id: prepare-web
+    name: node:22
+    waitFor: ["-"]
+    entrypoint: bash
+    env:
+      - NODE_ENV=production
+      - NODE_OPTIONS=--max_old_space_size=4096
+      - API_URL=${_API_PUBLIC_URL}
+      - FRONT_END_URL=${_WEB_PUBLIC_URL}
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        npm install --include=dev --no-audit --no-fund
+        npm run build
+        test -f .output/server/index.mjs
+
+  - id: build-web
+    name: gcr.io/kaniko-project/executor:latest
+    waitFor: ["prepare-web"]
+    args:
+      - --destination=${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/infiswap-web:$BUILD_ID
+      - --destination=${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/infiswap-web:latest
+      - --cache=false
+      - --context=dir://.
+      - --dockerfile=Dockerfile.cloudrun.web
+
+  - id: deploy-web
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        IMAGE="${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/infiswap-web:$BUILD_ID"
+        SA="${_SERVICE_ACCOUNT}@$PROJECT_ID.iam.gserviceaccount.com"
+        API_RUN_URL="$(gcloud run services describe ${_API_SERVICE} \
+          --project="$PROJECT_ID" --region="${_RUN_REGION}" \
+          --format='value(status.url)')"
+        gcloud run deploy ${_WEB_SERVICE} \
+          --project="$PROJECT_ID" \
+          --image="$$IMAGE" \
+          --region="${_RUN_REGION}" \
+          --platform=managed \
+          --service-account="$$SA" \
+          --allow-unauthenticated \
+          --port=8080 \
+          --memory=512Mi \
+          --cpu=1 \
+          --min-instances=1 \
+          --cpu-boost \
+          --max-instances=${_MAX_INSTANCES_WEB} \
+          --timeout=120 \
+          --set-env-vars="NODE_ENV=production,NUXT_PUBLIC_API_URL=${_API_PUBLIC_URL},NUXT_PUBLIC_FRONT_END_URL=${_WEB_PUBLIC_URL},NUXT_API_URL_INTERNAL=$$API_RUN_URL" \
+          --quiet
+        gcloud run services add-iam-policy-binding ${_WEB_SERVICE} \
+          --project="$PROJECT_ID" \
+          --region="${_RUN_REGION}" \
+          --member=allUsers \
+          --role=roles/run.invoker \
+          --quiet 2>/dev/null || true
+        gcloud run services describe ${_WEB_SERVICE} --region="${_RUN_REGION}" --format='value(status.url)'
+    waitFor: ["build-web"]

@@ -25,7 +25,7 @@
                     class="text-white font-light leading-relaxed"
                     style="font-size: 15px;"
                 >
-                    InfiSwap est la première plateforme belge 100% automatisée dédiée à la mise en relation des infirmiers.
+                    {{ heroTagline }}
                 </p>
             </div>
 
@@ -55,7 +55,7 @@
                     />
                 </div>
                 <p class="text-white text-xl lg:text-4xl font-light leading-snug">
-                    InfiSwap est la première plateforme belge 100% automatisée dédiée à la mise en relation des infirmiers.
+                    {{ heroTagline }}
                 </p>
             </div>
 
@@ -93,6 +93,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { HOME_HERO_TAGLINE } from '~/lib/constants/homeStats';
 
 const nurseLoaded = ref(false);
+const heroTagline = HOME_HERO_TAGLINE;
 </script>
