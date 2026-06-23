@@ -1,26 +1,26 @@
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
 
-    const plans = useState<SubscriptionPlans | null>('plans', () => null);
+    const accessPlan = useState<AccessPlan | null>('accessPlan', () => null);
     const loading = useState<boolean>('subscriptionLoading', () => false);
-    const current = useState<ActiveSubscription | null>('currentSubscription', () => null);
+    const current = useState<ActiveAccess | null>('currentAccess', () => null);
     const user = useUser();
 
-    const getPlans = async (): Promise<void> => {
+    const getAccessPlan = async (): Promise<void> => {
         loading.value = true;
         try {
-            const response = await $apifetch<{ plans: SubscriptionPlans }>('api/subscription/plans');
-            plans.value = response.plans;
+            const response = await $apifetch<{ access: AccessPlan | null }>('api/subscription/plans');
+            accessPlan.value = response.access;
         }
         catch (error) {
-            console.error('Error fetching plans:', error);
+            console.error('Error fetching access plan:', error);
         }
         finally {
             loading.value = false;
         }
     };
 
-    const create = async (priceId: string): Promise<SubscriptionResponse | null> => {
+    const purchaseAccess = async (priceId: string): Promise<CheckoutResponse | null> => {
         if (!user.value) {
             navigateTo('/login');
             return null;
@@ -28,7 +28,7 @@ export const useSubscription = () => {
 
         loading.value = true;
         try {
-            return await $apifetch<SubscriptionResponse>('api/subscription/create', {
+            return await $apifetch<CheckoutResponse>('api/subscription/create', {
                 method: 'POST',
                 body: { priceId },
             });
@@ -36,7 +36,7 @@ export const useSubscription = () => {
         catch (error: any) {
             $toast({
                 variant: 'destructive',
-                description: error?.data?.message || 'Erreur lors de la création de votre abonnement',
+                description: error?.data?.message || 'Erreur lors de l\'achat de l\'accès',
                 duration: 3000,
             });
             return null;
@@ -46,10 +46,23 @@ export const useSubscription = () => {
         }
     };
 
-    const boostReplacement = async (replacementId: number): Promise<SubscriptionResponse | null> => {
+    const confirmAccess = async (sessionId: string): Promise<boolean> => {
+        try {
+            const response = await $apifetch<{ status: string }>('api/subscription/confirm', {
+                method: 'POST',
+                body: { session_id: sessionId },
+            });
+            return response.status === 'active';
+        }
+        catch {
+            return false;
+        }
+    };
+
+    const boostReplacement = async (replacementId: number): Promise<CheckoutResponse | null> => {
         loading.value = true;
         try {
-            return await $apifetch<SubscriptionResponse>(`api/subscription/replacements/${replacementId}/boost`, {
+            return await $apifetch<CheckoutResponse>(`api/subscription/replacements/${replacementId}/boost`, {
                 method: 'POST',
             });
         }
@@ -73,15 +86,15 @@ export const useSubscription = () => {
         });
     };
 
-    const getCurrentSubscription = async () => {
+    const getCurrentAccess = async () => {
         loading.value = true;
         try {
-            const response = await $apifetch<ActiveSubscription>('/api/subscription/current');
+            const response = await $apifetch<ActiveAccess>('/api/subscription/current');
             current.value = response;
             return response;
         }
         catch (error) {
-            console.error('Error checking active subscription:', error);
+            console.error('Error checking access:', error);
         }
         finally {
             loading.value = false;
@@ -93,7 +106,7 @@ export const useSubscription = () => {
             return await $apifetch<CheckResponse>(`/api/subscription/${userId}/check`, { method: 'GET' });
         }
         catch (error) {
-            console.error('Error checking subscription:', error);
+            console.error('Error checking access:', error);
         }
     };
 
@@ -110,41 +123,32 @@ export const useSubscription = () => {
 
     return {
         loading,
-        getPlans,
-        plans,
-        create,
+        accessPlan,
+        getAccessPlan,
+        purchaseAccess,
+        confirmAccess,
         boostReplacement,
         cancelBoost,
         check,
-        getCurrentSubscription,
+        getCurrentAccess,
         current,
         startTrial,
     };
 };
 
-export interface Plan {
+export interface AccessPlan {
     id: number;
     name: string;
-    type: 'platform_access' | 'replacement_boost';
-    interval: 'week' | 'month' | 'year';
     amount: number | string;
-    currency: 'eur' | string;
+    currency: string;
     description: string;
     valid_from: string | null;
     valid_until: string | null;
     stripe_price_id: string;
     is_active?: boolean;
-    is_boosted?: boolean;
-    boosted_until?: string | null;
 }
 
-export interface SubscriptionPlans {
-    platform: Plan | null;
-    boost: Plan | null;
-    current_plan?: string | null;
-}
-
-interface SubscriptionResponse {
+interface CheckoutResponse {
     url: string;
 }
 
@@ -152,17 +156,8 @@ interface CheckResponse {
     status: 'active' | 'expired';
 }
 
-interface ActiveSubscription {
-    status: 'active' | 'expired' | 'no_active_subscription';
-    plan: Plan | null;
-    subscription: Subscription | null;
-}
-
-interface Subscription {
-    name: string;
-    stripe_status: string;
-    ends_at: string | null;
-    price_id: string;
-    stripe_subscription_id: string;
-    created_at: string;
+export interface ActiveAccess {
+    status: 'active' | 'no_access';
+    plan: AccessPlan | null;
+    paid_at: string | null;
 }

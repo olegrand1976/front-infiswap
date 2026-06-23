@@ -417,7 +417,7 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         visible: true,
     },
     {
-        label: 'Abonnements',
+        label: 'Plans d\'accès',
         route: '/dashboard/admin/subscription-plans',
         icon: Euro,
         visible: isSuperAdmin.value || isAdmin.value || isManager.value,

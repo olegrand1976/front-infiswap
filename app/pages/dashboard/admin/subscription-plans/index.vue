@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DashboardAdminPageHeader title="Plans d'abonnement">
+        <DashboardAdminPageHeader title="Plan d'accès">
             <template #action>
                 <Button
                     v-if="isSuperAdmin"
@@ -8,121 +8,116 @@
                     href="/dashboard/admin/subscription-plans/create"
                 >
                     <CirclePlus />
-                    <span class="hidden md:inline-block">Nouveau plan</span>
+                    <span class="hidden md:inline-block">Nouvelle accès</span>
                 </Button>
             </template>
         </DashboardAdminPageHeader>
 
         <DashboardAdminPageContent>
-            <DataTable
-                :data="dataPlans"
-                :columns="columns"
-            />
-            <CustomPagination
-                :default-page="page"
-                :per-page="perPage"
-                :total="count"
-                @update:page="refreshPlans"
-                @update:per-page="handlePerPageChange"
-            />
+            <div
+                v-if="loading"
+                class="flex justify-center py-16"
+            >
+                <Skeleton class="h-48 w-full max-w-lg rounded-xl" />
+            </div>
+
+            <div
+                v-else-if="plan"
+                class="max-w-lg mx-auto bg-white border border-gray-100 rounded-lg p-6 space-y-4"
+            >
+                <div class="text-center">
+                    <h2 class="text-xl font-semibold text-success">
+                        {{ plan.name }}
+                    </h2>
+                    <p
+                        v-if="plan.description"
+                        class="mt-2 text-gray-500 text-sm"
+                    >
+                        {{ plan.description }}
+                    </p>
+                    <p class="mt-4 text-3xl font-bold text-gray-800">
+                        {{ plan.amount }} {{ currencySymbol(plan.currency) }}
+                    </p>
+                    <p class="text-sm text-gray-400 mt-1">
+                        Paiement unique — accès permanent
+                    </p>
+                </div>
+
+                <div class="border-t border-gray-100 pt-4 space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Statut</span>
+                        <span class="font-medium text-success">Actif</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Priorité</span>
+                        <span>{{ plan.priority }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Stripe Price ID</span>
+                        <p class="font-mono text-xs mt-1 break-all text-gray-700">
+                            {{ plan.stripe_price_id }}
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    v-if="isSuperAdmin"
+                    class="flex gap-3 justify-center pt-2"
+                >
+                    <Button
+                        class="rounded"
+                        :href="`/dashboard/admin/subscription-plans/${plan.id}`"
+                    >
+                        Modifier
+                    </Button>
+                    <Button
+                        class="rounded"
+                        variant="outline"
+                        href="/dashboard/admin/subscription-plans/create"
+                    >
+                        Nouvelle accès
+                    </Button>
+                </div>
+            </div>
+
+            <div
+                v-else
+                class="text-center py-16 space-y-4"
+            >
+                <p class="text-gray-500">
+                    Aucun plan d'accès actif pour le moment.
+                </p>
+                <Button
+                    v-if="isSuperAdmin"
+                    class="rounded"
+                    href="/dashboard/admin/subscription-plans/create"
+                >
+                    Créer le plan d'accès
+                </Button>
+            </div>
+
+            <p class="text-center text-xs text-gray-400 mt-8 max-w-md mx-auto">
+                Ce plan est celui proposé aux infirmières. Pour changer le tarif, créez un nouveau prix — l'ancien sera désactivé automatiquement.
+            </p>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, CirclePlus } from 'lucide-vue-next';
-import type { ColumnDef } from '@tanstack/vue-table';
+import { CirclePlus } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import DropdownMenuAction from '~/components/dashboard/AdminDropdownMenuAction.vue';
-import { PERPAGE } from '~/lib/constants';
-import type { StripePlan } from '~/composables/useSubscriptionPlansAdmin';
 
-useHead({ title: 'Plans d\'abonnement' });
+useHead({ title: 'Plan d\'accès' });
 
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
 
-const { plans, getPlans, count, deactivatePlan, loading } = useSubscriptionPlansAdmin();
+const { plan, loading, getCurrentPlan } = useSubscriptionPlansAdmin();
 const { isSuperAdmin } = useAuth();
 
-const perPage = ref(PERPAGE);
-const page = ref(1);
+const currencySymbol = (currency: string) => (currency === 'gbp' ? '£' : '€');
 
-await getPlans(page.value, perPage.value);
-const dataPlans = computed(() => plans.value ?? []);
-
-const typeLabels: Record<string, string> = {
-    platform_access: 'Accès plateforme',
-    replacement_boost: 'Mise en avant',
-};
-
-const refreshPlans = async (newPage: number) => {
-    page.value = newPage;
-    await getPlans(newPage, perPage.value);
-};
-
-const handlePerPageChange = async (value: number) => {
-    perPage.value = value;
-    await getPlans(page.value, value);
-};
-
-const columns: ColumnDef<StripePlan>[] = [
-    {
-        accessorKey: 'name',
-        header: 'Nom',
-        cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('name')),
-    },
-    {
-        accessorKey: 'type',
-        header: 'Type',
-        cell: ({ row }) => h('div', typeLabels[row.getValue('type') as string] ?? row.getValue('type')),
-    },
-    {
-        accessorKey: 'amount',
-        header: 'Prix',
-        cell: ({ row }) => h('div', `${row.getValue('amount')} € / ${row.original.interval}`),
-    },
-    {
-        accessorKey: 'is_active',
-        header: 'Actif',
-        cell: ({ row }) => h('div', row.getValue('is_active') ? 'Oui' : 'Non'),
-    },
-    {
-        accessorKey: 'valid_from',
-        header: 'Début',
-        cell: ({ row }) => h('div', row.getValue('valid_from') ? formatRelativeDate(row.getValue('valid_from')) : '—'),
-    },
-    {
-        accessorKey: 'stripe_price_id',
-        header: 'Stripe Price',
-        cell: ({ row }) => h('div', { class: 'text-xs truncate max-w-[180px]' }, row.getValue('stripe_price_id')),
-    },
-    ...(isSuperAdmin.value
-        ? [{
-                id: 'actions',
-                header: 'Actions',
-                cell: ({ row }) => {
-                    const plan = row.original;
-                    return h(DropdownMenuAction, {
-                        actions: [
-                            {
-                                label: 'Modifier',
-                                onClick: () => navigateTo(`/dashboard/admin/subscription-plans/${plan.id}`),
-                            },
-                            {
-                                label: 'Désactiver',
-                                confirm: true,
-                                onClick: async () => {
-                                    await deactivatePlan(plan.id);
-                                    await getPlans(page.value, perPage.value);
-                                },
-                            },
-                        ],
-                    });
-                },
-            }]
-        : []),
-];
+await getCurrentPlan();
 </script>
