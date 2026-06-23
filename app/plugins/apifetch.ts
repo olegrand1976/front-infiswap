@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { $fetch } from 'ofetch';
 import { parseCookies } from 'h3';
 import { AUTH_TOKEN, LANGUAGE } from '~/lib/constants';
