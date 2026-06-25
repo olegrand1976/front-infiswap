@@ -300,7 +300,7 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
         params.sortOrder = sort.order;
     }
 
-    ['insurance', 'site', 'days_without_contact', 'name', 'zip', 'city'].forEach((key) => {
+    ['insurance', 'site', 'days_without_contact', 'name', 'zip', 'city', 'country'].forEach((key) => {
         if (params[key] === null || params[key] === '') {
             delete params[key];
         }
