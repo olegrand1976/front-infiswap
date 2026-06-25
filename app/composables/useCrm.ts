@@ -36,11 +36,17 @@ export const useCrm = () => {
         });
     };
 
+    async function getCrmHistories(crmUserId: number) {
+        const response = await $apifetch(`api/crm/${crmUserId}/histories`);
+        return response.histories ?? [];
+    }
+
     return {
         trashCount,
         users,
         getCrmPlus,
         crmUser,
         updateCrmUser,
+        getCrmHistories,
     };
 };

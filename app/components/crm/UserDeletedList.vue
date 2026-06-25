@@ -21,11 +21,10 @@
         <div>
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
-                @user-updated="emit('user-updated', $event)"
             />
         </div>
     </div>
@@ -47,7 +46,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const { edit, restore, forceDelete, isDeveloper } = useAuth();
+const { edit, restore, forceDelete, isSuperAdmin } = useAuth();
 
 const showModal = ref(false);
 const loggedUser = useUser();
@@ -213,15 +212,19 @@ const columnsExUsers: ColumnDef<User>[] = [
                     label: 'Restaurer',
                     confirm: true,
                     onClick: () => handleRestore(user),
-                    hidden: isDeveloper.value,
+                    hidden: !isSuperAdmin.value,
                 },
                 {
                     label: 'Supprimer définitivement',
                     confirm: true,
                     onClick: () => handleForceDelete(user),
-                    hidden: isDeveloper.value,
+                    hidden: !isSuperAdmin.value,
                 },
             ].filter(action => !action.hidden);
+
+            if (!actions.length) {
+                return h('div', { class: 'ml-4 text-gray-400 text-sm' }, '—');
+            }
 
             return h('div', { class: 'flex ml-4' }, [
                 h(DropdownMenuAction, {

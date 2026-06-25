@@ -95,6 +95,41 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
+                <Select
+                    v-model="option.days_without_contact"
+                    @update:model-value="debouncedFilterUsers"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Sans contact</span>
+                        <strong class="ml-4">
+                            {{ daysWithoutContactLabel }}
+                        </strong>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="null">
+                                <span class="ml-2">Tous</span>
+                            </SelectItem>
+                            <SelectItem :value="7">
+                                <span class="ml-2">7+ jours</span>
+                            </SelectItem>
+                            <SelectItem :value="30">
+                                <span class="ml-2">30+ jours</span>
+                            </SelectItem>
+                            <SelectItem :value="90">
+                                <span class="ml-2">90+ jours</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Button
+                    class="rounded-md"
+                    variant="outline"
+                    @click="exportCurrentListCsv"
+                >
+                    <Download class="md:mr-2 size-4" />
+                    <span class="hidden md:inline-block">Exporter CSV</span>
+                </Button>
                 <Button
                     class="rounded-md"
                     @click="resetFilter"
@@ -170,13 +205,13 @@
 </template>
 
 <script setup lang="ts">
-import { RefreshCw } from 'lucide-vue-next';
+import { Download, RefreshCw } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm } from '@/composables/useCrm';
-import { useProduct } from '~/composables/useProduct';
+import type { User } from '~/lib/types';
 
 useHead({ title: 'Suivi utilisateurs' });
 
@@ -184,6 +219,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
+
 const pageCookie = useCookie<number>('crm_page', {
     default: () => 1,
     maxAge: 60 * 60 * 24 * 7,
@@ -202,10 +238,9 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 const selectedCrm = ref('users');
 const isCountryLoading = ref(false);
 const { getCrmPlus, users, trashCount } = useCrm();
-const { getAll } = useProduct();
 const route = useRoute();
-// const perPage = ref(PERPAGE);
-// const page = ref(1);
+const { $toast } = useNuxtApp();
+
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
 selectedCrm.value = selectedCrmCookie.value;
@@ -216,7 +251,63 @@ const countryTabs = [
     { label: 'France', value: 'fr' },
 ];
 
-const setCountryFilter = async (country) => {
+const emptyFilter = {
+    name: null as string | null,
+    zip: null as string | null,
+    city: null as string | null,
+    country: '' as string,
+    insurance: null as number | null,
+    site: null as number | null,
+    days_without_contact: null as number | null,
+    deleted: false as boolean,
+};
+
+const initialFilter = {
+    ...emptyFilter,
+    name: (route.query.name as string) ?? null,
+};
+
+const option = ref({ ...initialFilter });
+
+const sort = reactive({
+    order: 'DESC' as 'ASC' | 'DESC',
+    by: null as string | null,
+});
+
+const daysWithoutContactLabel = computed(() => {
+    const days = option.value.days_without_contact;
+    if (days === 7) return '7+ jours';
+    if (days === 30) return '30+ jours';
+    if (days === 90) return '90+ jours';
+    return 'tous';
+});
+
+function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
+    const params: Record<string, unknown> = {
+        ...option.value,
+        deleted: selectedCrm.value === 'exUsers',
+        ...overrides,
+    };
+
+    if (sort.by) {
+        params.sortKey = sort.by;
+        params.sortOrder = sort.order;
+    }
+
+    ['insurance', 'site', 'days_without_contact', 'name', 'zip', 'city'].forEach((key) => {
+        if (params[key] === null || params[key] === '') {
+            delete params[key];
+        }
+    });
+
+    return params;
+}
+
+async function fetchCrmUsers(pageNum = page.value, pageSize = perPage.value, overrides: Record<string, unknown> = {}) {
+    await getCrmPlus(pageNum, pageSize, buildCrmQueryParams(overrides));
+}
+
+const setCountryFilter = async (country: string) => {
     if (option.value.country === country) return;
 
     isCountryLoading.value = true;
@@ -224,37 +315,14 @@ const setCountryFilter = async (country) => {
     page.value = 1;
     pageCookie.value = 1;
 
-    await filterUsers();
+    await fetchCrmUsers();
 
     isCountryLoading.value = false;
 };
 
-const emptyFilter = {
-    name: null as string | null,
-    zip: null as string | null,
-    city: null as string | null,
-    country: null as string | null,
-    insurance: null as number | null,
-    site: null as number | null,
-    deleted: null as boolean | null,
-};
-
-const initialFilter = {
-    ...emptyFilter,
-    name: (route.query.name as string) ?? null,
-    zip: null,
-    city: null,
-    country: '',
-    insurance: null,
-    site: null,
-    deleted: false,
-};
-
-const option = ref({ ...initialFilter });
-
-const debounce = (func, delay) => {
+const debounce = (func: (...args: unknown[]) => void, delay: number) => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    return (...args) => {
+    return (...args: unknown[]) => {
         if (timeoutId) clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             func(...args);
@@ -263,46 +331,28 @@ const debounce = (func, delay) => {
 };
 
 const filterUsers = async () => {
-    const currentFilter = { ...option.value };
-
-    if (selectedCrm.value === 'exUsers') {
-        currentFilter.deleted = true;
-    }
-    else {
-        currentFilter.deleted = false;
-    }
-
-    await getCrmPlus(page.value, perPage.value, currentFilter);
+    await fetchCrmUsers();
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
 
-await getCrmPlus(page.value, perPage.value, option.value);
+await fetchCrmUsers();
 
-onMounted(async () => {
+onMounted(() => {
     if (option.value.name) {
         debouncedFilterUsers();
     }
-    await getAll();
 });
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
     pageCookie.value = newPage;
-    const currentFilter = { ...option.value };
-    if (selectedCrm.value === 'exUsers') currentFilter.deleted = true;
-    else currentFilter.deleted = false;
-
-    await getCrmPlus(newPage, perPage.value, {
-        ...currentFilter,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
+    await fetchCrmUsers(newPage);
 };
 
-const handleUserUpdate = (updatedCrmObject) => {
-    const index = users.value.data.findIndex(u => u.id === updatedCrmObject.user_id);
-    if (index !== -1) {
+const handleUserUpdate = (updatedCrmObject: { user_id: number }) => {
+    const index = users.value?.data.findIndex(u => u.id === updatedCrmObject.user_id);
+    if (index !== undefined && index !== -1 && users.value) {
         const existingUser = { ...users.value.data[index] };
         existingUser.crm = updatedCrmObject;
         users.value.data[index] = existingUser;
@@ -314,7 +364,7 @@ const handlePerPageChange = async (value: number) => {
     perPageCookie.value = value;
     page.value = 1;
     pageCookie.value = 1;
-    await getCrmPlus(page.value, value, option.value);
+    await fetchCrmUsers(1, value);
 };
 
 const resetFilter = async () => {
@@ -327,13 +377,8 @@ const resetFilter = async () => {
     pageCookie.value = 1;
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
-    await getCrmPlus(page.value, perPage.value, option.value);
+    await fetchCrmUsers();
 };
-
-const sort = reactive({
-    order: 'DESC',
-    by: null,
-});
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
@@ -346,21 +391,74 @@ const setSort = async (columnKey: string) => {
         sort.order = 'DESC';
     }
 
-    const currentFilter = { ...option.value };
-    if (selectedCrm.value === 'exUsers') currentFilter.deleted = true;
-    else currentFilter.deleted = false;
-
-    await getCrmPlus(page.value, perPage.value, {
-        ...currentFilter,
-        sortOrder: sort.order,
-        sortKey: sort.by,
-    });
+    await fetchCrmUsers();
 };
+
+function exportUsersToCsv(rows: User[], filename: string) {
+    if (!rows.length) {
+        $toast({ description: 'Aucune donnée à exporter', variant: 'destructive' });
+        return;
+    }
+
+    const headers = [
+        'Nom',
+        'Email',
+        'Téléphone',
+        'Code postal',
+        'Ville',
+        'NursAssur',
+        'NursTech',
+        'Dernier contact',
+        'Mode contact',
+        'Appels (sem.)',
+        'Ventes (sem.)',
+        'RDV (sem.)',
+    ];
+
+    const escape = (value: unknown) => {
+        const str = value == null ? '' : String(value);
+        return `"${str.replace(/"/g, '""')}"`;
+    };
+
+    const lines = [
+        headers.join(';'),
+        ...rows.map((user) => {
+            const crm = user.crm ?? {};
+            return [
+                user.full_name,
+                user.email,
+                user.phone_number,
+                user.zip_code,
+                user.city,
+                user.insurance ? 'oui' : 'non',
+                user.site ? 'oui' : 'non',
+                crm.last_contact_date ?? '',
+                crm.last_contact_method ?? '',
+                crm.nb_call ?? 0,
+                crm.nb_sale ?? 0,
+                crm.nb_meeting ?? 0,
+            ].map(escape).join(';');
+        }),
+    ];
+
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+function exportCurrentListCsv() {
+    const rows = users.value?.data ?? [];
+    exportUsersToCsv(rows, `crm-export-${new Date().toISOString().slice(0, 10)}.csv`);
+}
 
 watch(selectedCrm, async (newValue) => {
     page.value = 1;
     pageCookie.value = 1;
     selectedCrmCookie.value = newValue;
-    await filterUsers();
+    await fetchCrmUsers();
 });
 </script>

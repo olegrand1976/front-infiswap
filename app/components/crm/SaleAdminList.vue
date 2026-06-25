@@ -21,11 +21,10 @@
         <div>
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
-                @user-updated="emit('user-updated', $event)"
             />
         </div>
     </div>

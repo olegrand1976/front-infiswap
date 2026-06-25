@@ -1,6 +1,21 @@
 <template>
     <div>
+        <div
+            v-if="selectedCount > 0"
+            class="mb-3 flex items-center gap-3 px-2"
+        >
+            <span class="text-sm text-gray-600">{{ selectedCount }} sélectionné(s)</span>
+            <Button
+                size="sm"
+                variant="outline"
+                class="rounded-md"
+                @click="exportSelectedCsv"
+            >
+                Exporter la sélection
+            </Button>
+        </div>
         <DataTable
+            ref="dataTableRef"
             :data="localUsers"
             :columns="columns"
         />
@@ -218,7 +233,7 @@
         <div>
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users?.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
@@ -272,6 +287,36 @@ const user = ref<User | null>(null);
 const selectedReferrer = ref<{ id: number } | null>(null);
 
 const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
+const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: User }[] } } } | null>(null);
+
+const selectedCount = computed(() => dataTableRef.value?.table.getFilteredSelectedRowModel().rows.length ?? 0);
+
+function exportSelectedCsv() {
+    const rows = dataTableRef.value?.table.getFilteredSelectedRowModel().rows.map(r => r.original) ?? [];
+    if (!rows.length) return;
+
+    const headers = ['Nom', 'Email', 'Téléphone', 'Code postal', 'Ville', 'NursAssur', 'NursTech'];
+    const escape = (value: unknown) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+    const lines = [
+        headers.join(';'),
+        ...rows.map(user => [
+            user.full_name,
+            user.email,
+            user.phone_number,
+            user.zip_code,
+            user.city,
+            user.insurance ? 'oui' : 'non',
+            user.site ? 'oui' : 'non',
+        ].map(escape).join(';')),
+    ];
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `crm-selection-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
 
 function openModal(selectedUser: User) {
     user.value = selectedUser;
@@ -624,44 +669,44 @@ const columns: ColumnDef<User>[] = [
         },
         enableSorting: false,
     },
-    // {
-    //     accessorKey: 'ambassador',
-    //     header: 'Inficoncept',
-    //     cell: ({ row }) => {
-    //         const user = row.original as User;
-    //         const currentValue = (() => {
-    //             const mods = user.last_product_modifications ?? [];
-    //             const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
-    //             if (found !== undefined && found.activate !== undefined && found.activate !== null) {
-    //                 return Number(found.activate);
-    //             }
-    //             if (user.ambassador !== undefined && user.ambassador !== null) {
-    //                 return Number(user.ambassador);
-    //             }
-    //             return 0;
-    //         })();
-    //         const toggle = async (value: boolean) => {
-    //             const index = localUsers.value.findIndex(item => item.id === row.original.id);
-    //             if (index !== undefined && index !== -1 && props.users) {
-    //                 localUsers.value[index].ambassador = value ? 1 : 0;
-    //                 const mods = localUsers.value[index].last_product_modifications ?? [];
-    //                 const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
-    //                 if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-    //                 localUsers.value[index].last_product_modifications = [...mods];
-    //             }
-    //             await edit(Number(row.original.id), { inficoncept: value });
-    //         };
-    //         return h('div', { class: 'flex justify-center' }, [
-    //             h(Switch, {
-    //                 'class': 'mx-auto text-center',
-    //                 'checked': currentValue === 1,
-    //                 'onUpdate:checked': toggle,
-    //                 'disabled': isCollaborator.value,
-    //             }),
-    //         ]);
-    //     },
-    //     enableSorting: false,
-    // },
+    {
+        accessorKey: 'ambassador',
+        header: 'Inficoncept',
+        cell: ({ row }) => {
+            const user = row.original as User;
+            const currentValue = (() => {
+                const mods = user.last_product_modifications ?? [];
+                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
+                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+                    return Number(found.activate);
+                }
+                if (user.ambassador !== undefined && user.ambassador !== null) {
+                    return Number(user.ambassador);
+                }
+                return 0;
+            })();
+            const toggle = async (value: boolean) => {
+                const index = localUsers.value.findIndex(item => item.id === row.original.id);
+                if (index !== undefined && index !== -1 && props.users) {
+                    localUsers.value[index].ambassador = value ? 1 : 0;
+                    const mods = localUsers.value[index].last_product_modifications ?? [];
+                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
+                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
+                    localUsers.value[index].last_product_modifications = [...mods];
+                }
+                await edit(Number(row.original.id), { inficoncept: value });
+            };
+            return h('div', { class: 'flex justify-center' }, [
+                h(Switch, {
+                    'class': 'mx-auto text-center',
+                    'checked': currentValue === 1,
+                    'onUpdate:checked': toggle,
+                    'disabled': isCollaborator.value,
+                }),
+            ]);
+        },
+        enableSorting: false,
+    },
     {
         accessorKey: 'last_comment',
         header: 'Commentaire',
@@ -790,26 +835,11 @@ const columns: ColumnDef<User>[] = [
     {
         id: 'last_post_date',
         accessorKey: 'historic_activity.last_post_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière post d\'un remplacement',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière post',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière post d\'un remplacement',
+        }, 'Dernière post'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_post_date;
 
@@ -831,35 +861,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_post_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_post_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_accept_posted_date',
         accessorKey: 'historic_activity.last_accept_posted_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière acceptation d\'un remplacement',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière acceptation',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière acceptation d\'un remplacement',
+        }, 'Dernière acceptation'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_accept_posted_date;
             if (!rawDate) {
@@ -877,35 +887,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_response_date',
         accessorKey: 'historic_activity.last_response_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière réponse à un remplacement posté',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière réponse',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière réponse à un remplacement posté',
+        }, 'Dernière réponse'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_response_date;
             if (!rawDate) {
@@ -923,35 +913,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_response_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_response_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_accept_response_date',
         accessorKey: 'historic_activity.last_accept_response_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière acceptation sur un remplacement posté',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Acceptation réponse',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière acceptation sur un remplacement posté',
+        }, 'Acceptation réponse'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_accept_response_date;
             if (!rawDate) {
@@ -968,11 +938,6 @@ const columns: ColumnDef<User>[] = [
             const minutes = String(dateObj.getMinutes()).padStart(2, '0');
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
-        },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_accept_response_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_accept_response_date ?? 0).getTime();
-            return a - b;
         },
     },
     {
