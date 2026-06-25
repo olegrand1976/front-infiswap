@@ -3,7 +3,7 @@ import type { Referrer } from '~/lib/types';
 export const useReferrer = () => {
     const loading = useState('referrerLoading', () => false);
     const { $apifetch } = useNuxtApp();
-    const userReferrer = useState<Referrer[]>('comments', () => undefined);
+    const userReferrer = useState<Referrer[]>('userReferrers', () => undefined);
 
     async function getUserReferrer() {
         loading.value = true;

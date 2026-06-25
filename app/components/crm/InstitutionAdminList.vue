@@ -16,7 +16,7 @@
         </div>
         <DataTable
             ref="dataTableRef"
-            :data="localUsers"
+            :data="localInstitutions"
             :columns="columns"
             manual-sorting
         />
@@ -26,7 +26,29 @@
             class="fixed inset-0 flex justify-center items-center bg-black/50"
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
-                <UsersCard :user="user" />
+                <div
+                    v-if="selectedInstitution"
+                    class="space-y-3"
+                >
+                    <h3 class="text-lg font-semibold text-primary">
+                        {{ selectedInstitution.full_name }}
+                    </h3>
+                    <p class="text-sm">
+                        {{ selectedInstitution.email }}
+                    </p>
+                    <p
+                        v-if="selectedInstitution.company_number"
+                        class="text-sm text-muted-foreground"
+                    >
+                        N° entreprise : {{ selectedInstitution.company_number }}
+                    </p>
+                    <NuxtLink
+                        :to="`/dashboard/admin/institutions/${selectedInstitution.id}/show`"
+                        class="inline-flex text-sm text-primary underline"
+                    >
+                        Voir la fiche institution
+                    </NuxtLink>
+                </div>
             </DialogContent>
         </Dialog>
 
@@ -231,12 +253,19 @@
             </DialogContent>
         </Dialog>
 
+        <InstitutionSubscriptionModal
+            v-model:open="subscriptionModalOpen"
+            :institution-id="subscriptionInstitutionId"
+            :institution-name="subscriptionInstitutionName"
+            @subscribed="onSubscriptionCreated"
+        />
+
         <div>
             <CustomPagination
                 :default-page="page"
                 :internal-per-page="perPage"
-                :total="props.users?.total"
-                @update:page="emit('refresh-users', $event)"
+                :total="props.institutions?.total"
+                @update:page="emit('refresh-institutions', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
             />
         </div>
@@ -247,7 +276,7 @@
 import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-import type { Comment, Pagination, User, Referrer } from '~/lib/types';
+import type { Comment, CrmInstitution, Pagination, Referrer, User } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -259,14 +288,14 @@ import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
 
 const props = defineProps<{
-    users: Pagination<User>;
+    institutions: Pagination<CrmInstitution>;
     page: number;
     perPage: number;
 }>();
 
 const authUser = useState('user');
 
-const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
+const emit = defineEmits(['refresh-institutions', 'handle-per-page-change', 'set-sort', 'update-institutions']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateReferrer, userReferrer, getUserReferrer } = useReferrer();
 
@@ -283,12 +312,16 @@ const tempClientType = ref('user');
 const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
 const { edit, isCollaborator } = useAuth();
+const subscriptionModalOpen = ref(false);
+const subscriptionInstitutionId = ref<number | null>(null);
+const subscriptionInstitutionName = ref('');
+const selectedInstitution = ref<CrmInstitution | null>(null);
+const representativeUserId = ref<number | null>(null);
 const { updateCrmUser } = useCrm();
-const user = ref<User | null>(null);
 const selectedReferrer = ref<{ id: number } | null>(null);
 
-const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
-const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: User }[] } } } | null>(null);
+const localInstitutions = ref<CrmInstitution[]>(props.institutions?.data ? [...props.institutions.data] : []);
+const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: CrmInstitution }[] } } } | null>(null);
 
 const selectedCount = computed(() => dataTableRef.value?.table.getFilteredSelectedRowModel().rows.length ?? 0);
 
@@ -319,32 +352,47 @@ function exportSelectedCsv() {
     URL.revokeObjectURL(url);
 }
 
-function openModal(selectedUser: User) {
-    user.value = selectedUser;
+function openModal(institution: CrmInstitution) {
+    selectedInstitution.value = institution;
     showModal.value = true;
 }
 
-function openContactDialog(user: User) {
-    editingUserId.value = user.id;
-    tempCrmId.value = Number(user.crm.id);
-    tempClientType.value = user.crm.client_type ?? '';
-    tempContactDate.value = user.crm.last_contact_date ?? '';
-    tempContactMethod.value = user.crm.last_contact_method ?? 'mail';
+function openContactDialog(institution: CrmInstitution) {
+    representativeUserId.value = institution.representative_user_id;
+    editingUserId.value = institution.representative_user_id;
+    tempCrmId.value = Number(institution.crm?.id);
+    tempClientType.value = institution.crm?.client_type ?? 'institution';
+    tempContactDate.value = institution.crm?.last_contact_date ?? '';
+    tempContactMethod.value = institution.crm?.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
     contactDialogOpen.value = true;
 }
 
-async function openCommentDialog(user: User) {
+async function openCommentDialog(institution: CrmInstitution) {
     commentDialogOpen.value = true;
-    tempCrmId.value = user.id;
-    await getUserComments(user);
+    representativeUserId.value = institution.representative_user_id;
+    tempCrmId.value = institution.representative_user_id ?? null;
+    if (institution.representative_user_id) {
+        await getUserComments({ id: institution.representative_user_id } as User);
+    }
 }
 
-async function openReferrerDialog(user: User) {
+async function openReferrerDialog(institution: CrmInstitution) {
     referrerDialogOpen.value = true;
-    tempCrmId.value = user.id;
+    representativeUserId.value = institution.representative_user_id;
+    tempCrmId.value = institution.representative_user_id ?? null;
     await getUserReferrer();
+}
+
+function openSubscriptionModal(institution: CrmInstitution) {
+    subscriptionInstitutionId.value = institution.id;
+    subscriptionInstitutionName.value = institution.full_name;
+    subscriptionModalOpen.value = true;
+}
+
+function onSubscriptionCreated() {
+    emit('refresh-institutions', props.page);
 }
 
 async function confirmReferrer() {
@@ -355,15 +403,15 @@ async function confirmReferrer() {
             referred_by: selectedReferrer.value.id,
         });
 
-        localUsers.value = localUsers.value.map(u =>
-            u.id === tempCrmId.value
+        localInstitutions.value = localInstitutions.value.map(u =>
+            u.representative_user_id === tempCrmId.value
                 ? { ...u, referred_by: { ...response } }
                 : u,
         );
 
-        emit('update-users', {
-            ...props.users,
-            data: localUsers.value,
+        emit('update-institutions', {
+            ...props.institutions,
+            data: localInstitutions.value,
         });
 
         $toast({
@@ -400,13 +448,13 @@ const { submit: createOrUpdateComment, inProgress: progressingComment } = useSub
                 c.id === updatingComment.value!.id ? { ...c, ...response } : c,
             );
 
-            localUsers.value = localUsers.value.map(u =>
-                u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            localInstitutions.value = localInstitutions.value.map(u =>
+                u.representative_user_id === tempCrmId.value ? { ...u, last_comment: response } : u,
             );
-            emit('update-users', {
-                ...props.users,
-                data: props.users.data.map((u: User) =>
-                    u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            emit('update-institutions', {
+                ...props.institutions,
+                data: props.institutions.data.map((u: CrmInstitution) =>
+                    u.representative_user_id === tempCrmId.value ? { ...u, last_comment: response } : u,
                 ),
             });
         }
@@ -415,14 +463,14 @@ const { submit: createOrUpdateComment, inProgress: progressingComment } = useSub
 
             userComments.value.unshift(response);
 
-            localUsers.value = localUsers.value.map(u =>
-                u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            localInstitutions.value = localInstitutions.value.map(u =>
+                u.representative_user_id === tempCrmId.value ? { ...u, last_comment: response } : u,
             );
 
-            emit('update-users', {
-                ...props.users,
-                data: props.users.data.map((u: User) =>
-                    u.id === tempCrmId.value ? { ...u, last_comment: response } : u,
+            emit('update-institutions', {
+                ...props.institutions,
+                data: props.institutions.data.map((u: CrmInstitution) =>
+                    u.representative_user_id === tempCrmId.value ? { ...u, last_comment: response } : u,
                 ),
             });
         }
@@ -444,14 +492,14 @@ const deleteComment = (comment: Comment) => {
     destroy(comment).then(() => {
         userComments.value = userComments.value.filter((item: Comment) => item.id !== comment.id);
 
-        localUsers.value = localUsers.value.map(u =>
-            u.id === tempCrmId.value ? { ...u, last_comment: userComments.value[0] } : u,
+        localInstitutions.value = localInstitutions.value.map(u =>
+            u.representative_user_id === tempCrmId.value ? { ...u, last_comment: userComments.value[0] } : u,
         );
 
-        emit('update-users', {
-            ...props.users,
-            data: props.users.data.map((u: User) =>
-                u.id === tempCrmId.value
+        emit('update-institutions', {
+            ...props.institutions,
+            data: props.institutions.data.map((u: CrmInstitution) =>
+                u.representative_user_id === tempCrmId.value
                     ? { ...u, last_comment: userComments.value[0] || null }
                     : u,
             ),
@@ -485,9 +533,9 @@ const updateCrmUserField = async (
         $toast({
             description: response.message,
         });
-        const idx = localUsers.value.findIndex(u => u.id === editingUserId.value);
+        const idx = localInstitutions.value.findIndex(u => u.id === editingUserId.value || u.representative_user_id === editingUserId.value);
         if (idx !== -1) {
-            const current = localUsers.value[idx];
+            const current = localInstitutions.value[idx];
             const updatedUser = {
                 ...current,
                 crm: {
@@ -500,8 +548,8 @@ const updateCrmUserField = async (
                         : { last_comment: updateFormData.lastComment }),
                 },
             };
-            localUsers.value[idx] = updatedUser;
-            localUsers.value = [...localUsers.value];
+            localInstitutions.value[idx] = updatedUser;
+            localInstitutions.value = [...localInstitutions.value];
         }
     }
     catch {
@@ -532,7 +580,7 @@ const isFranceUser = computed(() => {
     return country === 'fr' || country === 'france';
 });
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<CrmInstitution>[] = [
     {
         id: 'select',
         header: ({ table }) => h(Checkbox, {
@@ -559,7 +607,7 @@ const columns: ColumnDef<User>[] = [
         header: () => {
             return h(Button, {
                 variant: 'ghost',
-                onClick: () => setSort('firstname'),
+                onClick: () => setSort('name'),
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
@@ -593,32 +641,34 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'insurance',
         header: 'NursAssur',
         cell: ({ row }) => {
-            const user = row.original as User;
+            const institution = row.original as CrmInstitution;
 
             const currentValue = (() => {
-                const mods = user.last_product_modifications ?? [];
+                const mods = institution.last_product_modifications ?? [];
                 const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nursassur'));
                 if (found !== undefined && found.activate !== undefined && found.activate !== null) {
                     return Number(found.activate);
                 }
-                if (user.insurance !== undefined && user.insurance !== null) {
-                    return Number(user.insurance);
+                if (institution.insurance !== undefined && institution.insurance !== null) {
+                    return Number(institution.insurance);
                 }
                 return 0;
             })();
 
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
+                const index = localInstitutions.value.findIndex(item => item.id === row.original.id);
                 if (index !== -1) {
-                    localUsers.value[index].insurance = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
+                    localInstitutions.value[index].insurance = value ? 1 : 0;
+                    const mods = localInstitutions.value[index].last_product_modifications ?? [];
                     const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
                     if (modIndex !== -1) {
                         mods[modIndex].activate = value ? 1 : 0;
                     }
-                    localUsers.value[index].last_product_modifications = [...mods];
+                    localInstitutions.value[index].last_product_modifications = [...mods];
                 }
-                await edit(Number(row.original.id), { nursassur: value });
+                if (institution.representative_user_id) {
+                    await edit(Number(institution.representative_user_id), { nursassur: value });
+                }
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -636,28 +686,30 @@ const columns: ColumnDef<User>[] = [
         accessorKey: 'site',
         header: 'NursTech',
         cell: ({ row }) => {
-            const user = row.original as User;
+            const institution = row.original as CrmInstitution;
             const currentValue = (() => {
-                const mods = user.last_product_modifications ?? [];
+                const mods = institution.last_product_modifications ?? [];
                 const found = mods.find(p => (p.product_name || '').toLowerCase().includes('nurstech'));
                 if (found !== undefined && found.activate !== undefined && found.activate !== null) {
                     return Number(found.activate);
                 }
-                if (user.site !== undefined && user.site !== null) {
-                    return Number(user.site);
+                if (institution.site !== undefined && institution.site !== null) {
+                    return Number(institution.site);
                 }
                 return 0;
             })();
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== undefined && index !== -1 && props.users) {
-                    localUsers.value[index].site = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
+                const index = localInstitutions.value.findIndex(item => item.id === row.original.id);
+                if (index !== undefined && index !== -1 && props.institutions) {
+                    localInstitutions.value[index].site = value ? 1 : 0;
+                    const mods = localInstitutions.value[index].last_product_modifications ?? [];
                     const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
                     if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-                    localUsers.value[index].last_product_modifications = [...mods];
+                    localInstitutions.value[index].last_product_modifications = [...mods];
                 }
-                await edit(Number(row.original.id), { nurstech: value });
+                if (institution.representative_user_id) {
+                    await edit(Number(institution.representative_user_id), { nurstech: value });
+                }
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -700,7 +752,7 @@ const columns: ColumnDef<User>[] = [
             h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const rawDate = row.original.crm.last_contact_date;
+            const rawDate = row.original.crm?.last_contact_date;
             let formattedDate = '';
             if (rawDate) {
                 const date = new Date(rawDate);
@@ -729,7 +781,7 @@ const columns: ColumnDef<User>[] = [
             h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
         ]),
         cell: ({ row }) => {
-            const method = row.original.crm.last_contact_method;
+            const method = row.original.crm?.last_contact_method;
             const displayMethod = method === 'mail'
                 ? 'Mail'
                 : method === 'phone'
@@ -942,6 +994,51 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        id: 'subscription',
+        header: 'Abonnement',
+        cell: ({ row }) => {
+            const institution = row.original as CrmInstitution;
+            const subscription = institution.subscription;
+            const isActive = subscription?.active === true;
+            const status = subscription?.status;
+            const formula = subscription?.formula;
+
+            const label = (() => {
+                if (!isActive && !status) return 'Inactif';
+                if (status === 'paid' || status === 'accomplished') {
+                    return formula === 'institution_yearly_1500' ? 'Actif (annuel)' : 'Actif (mensuel)';
+                }
+                return 'En signature';
+            })();
+
+            const badgeClass = (() => {
+                if (!isActive && !status) return 'bg-gray-100 text-gray-700';
+                if (status === 'paid' || status === 'accomplished') return 'bg-green-100 text-green-800';
+                return 'bg-amber-100 text-amber-800';
+            })();
+
+            const canSubscribe = !isActive && !status;
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(
+                    'button',
+                    {
+                        type: 'button',
+                        class: `px-2 py-1 rounded text-xs font-medium ${badgeClass} ${canSubscribe && !isCollaborator.value ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
+                        disabled: !canSubscribe || isCollaborator.value,
+                        onClick: () => {
+                            if (canSubscribe && !isCollaborator.value) {
+                                openSubscriptionModal(institution);
+                            }
+                        },
+                    },
+                    label,
+                ),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
         id: 'action',
         header: () => 'Action',
         cell: ({ row }) => {
@@ -955,7 +1052,7 @@ const columns: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users, (newUsers) => {
-    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
+watch(() => props.institutions, (newInstitutions) => {
+    localInstitutions.value = newInstitutions?.data ? [...newInstitutions.data] : [];
 }, { immediate: true });
 </script>
