@@ -36,7 +36,8 @@
                     rounded="md"
                     placeholder="Filtrer par Nom ou Prénom"
                     class="w-[250px]"
-                    @input="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @input="onFilterInput"
                 />
                 <InputIcon
                     v-model="option.zip"
@@ -44,18 +45,21 @@
                     placeholder="Code postal"
                     class="w-[250px]"
                     type="numeric"
-                    @input="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @input="onFilterInput"
                 />
                 <InputIcon
                     v-model="option.city"
                     rounded="md"
                     placeholder="Ville"
                     class="w-[250px]"
-                    @input="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @input="onFilterInput"
                 />
                 <Select
                     v-model="option.insurance"
-                    @update:model-value="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @update:model-value="onFilterSelect"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Nursassur</span>
@@ -79,7 +83,8 @@
                 </Select>
                 <Select
                     v-model="option.site"
-                    @update:model-value="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @update:model-value="onFilterSelect"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>NursTech</span>
@@ -103,7 +108,8 @@
                 </Select>
                 <Select
                     v-model="option.days_without_contact"
-                    @update:model-value="debouncedFilterUsers"
+                    :disabled="isListLoading"
+                    @update:model-value="onFilterSelect"
                 >
                     <SelectTrigger class="max-w-sm rounded-md gap-2">
                         <span>Sans contact</span>
@@ -131,6 +137,7 @@
                 <Button
                     class="rounded-md"
                     variant="outline"
+                    :disabled="isListLoading"
                     @click="exportCurrentListCsv"
                 >
                     <Download class="md:mr-2 size-4" />
@@ -138,11 +145,21 @@
                 </Button>
                 <Button
                     class="rounded-md"
+                    :disabled="isListLoading"
                     @click="resetFilter"
                 >
                     <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
+                <div
+                    v-if="isBusy"
+                    class="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <Loader2 class="size-4 animate-spin text-primary" />
+                    <span>{{ isListLoading ? 'Chargement des utilisateurs…' : 'Filtre en cours…' }}</span>
+                </div>
             </div>
 
             <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -154,6 +171,7 @@
                         (tab.value === '' && option.country === '') || (tab.value !== '' && option.country === tab.value)
                             ? 'bg-primary text-white shadow-md'
                             : 'bg-gray-100 hover:bg-gray-200 text-gray-700']"
+                    :disabled="isListLoading"
                     @click="setCountryFilter(tab.value)"
                 >
                     {{ tab.label }}
@@ -161,8 +179,10 @@
             </div>
 
             <div
-                v-if="isCountryLoading"
+                v-if="isInitialLoad"
                 class="px-4 space-y-3 mb-6"
+                aria-busy="true"
+                aria-label="Chargement de la liste CRM"
             >
                 <div
                     v-for="i in 6"
@@ -172,17 +192,44 @@
                     <Skeleton class="h-12 rounded-md bg-gray-50" />
                 </div>
             </div>
-            <div v-else>
-                <template v-if="selectedCrm === 'users'">
-                    <CrmAdminList
-                        :users="users"
-                        :page="page"
-                        :per-page="perPage"
-                        @refresh-users="refreshUsers"
-                        @handle-per-page-change="handlePerPageChange"
-                        @set-sort="setSort"
-                    />
-                </template>
+            <div
+                v-else
+                class="relative"
+            >
+                <div
+                    v-if="isListLoading"
+                    class="absolute inset-0 z-10 flex items-start justify-center bg-background/70 pt-16"
+                    aria-busy="true"
+                    aria-label="Mise à jour de la liste CRM"
+                >
+                    <div class="flex items-center gap-2 rounded-md border bg-background px-4 py-2 text-sm shadow-sm">
+                        <Loader2 class="size-4 animate-spin text-primary" />
+                        <span>Chargement des utilisateurs…</span>
+                    </div>
+                </div>
+
+                <div
+                    v-if="showEmptyState"
+                    class="mx-4 mb-6 rounded-md border border-dashed px-6 py-12 text-center"
+                >
+                    <p class="text-base font-medium text-foreground">
+                        Aucun utilisateur trouvé
+                    </p>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Ajustez les filtres ou cliquez sur Restaurer pour réinitialiser la recherche.
+                    </p>
+                </div>
+                <template v-else-if="users">
+                    <template v-if="selectedCrm === 'users'">
+                        <CrmAdminList
+                            :users="users"
+                            :page="page"
+                            :per-page="perPage"
+                            @refresh-users="refreshUsers"
+                            @handle-per-page-change="handlePerPageChange"
+                            @set-sort="setSort"
+                        />
+                    </template>
                 <template v-else-if="selectedCrm === 'commercial'">
                     <CrmSaleAdminList
                         :users="users"
@@ -205,13 +252,14 @@
                         @user-updated="handleUserUpdate"
                     />
                 </template>
+                </template>
             </div>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Download, RefreshCw } from 'lucide-vue-next';
+import { Download, Loader2, RefreshCw } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -242,7 +290,8 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 });
 
 const selectedCrm = ref('users');
-const isCountryLoading = ref(false);
+const isListLoading = ref(false);
+const isAwaitingFilter = ref(false);
 const { getCrmPlus, users, trashCount } = useCrm();
 const route = useRoute();
 const { $toast } = useNuxtApp();
@@ -288,10 +337,25 @@ const daysWithoutContactLabel = computed(() => {
     return 'tous';
 });
 
+const isBusy = computed(() => isListLoading.value || isAwaitingFilter.value);
+
+const isInitialLoad = computed(() => users.value === null && isListLoading.value);
+
+const showEmptyState = computed(() => {
+    if (isListLoading.value || isAwaitingFilter.value || users.value === null) {
+        return false;
+    }
+
+    return (users.value?.total ?? 0) === 0;
+});
+
+let fetchSequence = 0;
+
 function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
     const params: Record<string, unknown> = {
         ...option.value,
         deleted: selectedCrm.value === 'exUsers',
+        enrich: selectedCrm.value === 'users' ? 1 : 0,
         ...overrides,
     };
 
@@ -310,20 +374,36 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
 }
 
 async function fetchCrmUsers(pageNum = page.value, pageSize = perPage.value, overrides: Record<string, unknown> = {}) {
-    await getCrmPlus(pageNum, pageSize, buildCrmQueryParams(overrides));
+    const requestId = ++fetchSequence;
+    isListLoading.value = true;
+
+    try {
+        await getCrmPlus(pageNum, pageSize, buildCrmQueryParams(overrides));
+    }
+    catch {
+        if (requestId === fetchSequence) {
+            $toast({
+                description: 'Impossible de charger la liste CRM. Réessayez.',
+                variant: 'destructive',
+            });
+        }
+    }
+    finally {
+        if (requestId === fetchSequence) {
+            isListLoading.value = false;
+            isAwaitingFilter.value = false;
+        }
+    }
 }
 
 const setCountryFilter = async (country: string) => {
-    if (option.value.country === country) return;
+    if (option.value.country === country || isListLoading.value) return;
 
-    isCountryLoading.value = true;
     option.value.country = country;
     page.value = 1;
     pageCookie.value = 1;
 
     await fetchCrmUsers();
-
-    isCountryLoading.value = false;
 };
 
 const debounce = (func: (...args: unknown[]) => void, delay: number) => {
@@ -343,6 +423,18 @@ const filterUsers = async () => {
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 300);
+
+function onFilterInput() {
+    isAwaitingFilter.value = true;
+    debouncedFilterUsers();
+}
+
+function onFilterSelect() {
+    if (isListLoading.value) return;
+
+    isAwaitingFilter.value = true;
+    void filterUsers();
+}
 
 await fetchCrmUsers();
 
