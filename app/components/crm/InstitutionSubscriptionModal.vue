@@ -106,8 +106,14 @@ async function confirmSubscription() {
     try {
         const response = await createInstitutionSubscription(props.institutionId, selectedFormula.value);
 
+        if (response.signing_url) {
+            window.open(response.signing_url, '_blank', 'noopener,noreferrer');
+        }
+
         $toast({
-            description: response.message ?? 'Bon de commande envoyé pour signature.',
+            description: response.signing_url
+                ? (response.message ?? 'Bon de commande envoyé pour signature.')
+                : 'Bon de commande créé. Utilisez le suivi pour ouvrir la signature Documenso.',
             variant: 'success',
         });
 
