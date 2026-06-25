@@ -7,13 +7,15 @@ export const useCrm = () => {
     const trashCount = useState<number>('userTrashCount', () => 0);
     const { $apifetch } = useNuxtApp();
 
-    async function getCrmPlus(page = 1, perPage = 15, options = {}) {
+    async function getCrmPlus(page = 1, perPage = 15, options: Record<string, unknown> = {}) {
+        const { deleted = false, ...filters } = options;
+
         return await $apifetch('api/crm', {
             params: {
-                page: page,
-                perPage: perPage,
-                deleted: options.deleted ?? false,
-                ...options,
+                page,
+                perPage,
+                deleted,
+                ...filters,
             },
         }).then((response) => {
             users.value = response.users;

@@ -342,15 +342,9 @@ const filterUsers = async () => {
     await fetchCrmUsers(1);
 };
 
-const debouncedFilterUsers = debounce(filterUsers, 100);
+const debouncedFilterUsers = debounce(filterUsers, 300);
 
 await fetchCrmUsers();
-
-onMounted(() => {
-    if (option.value.name) {
-        debouncedFilterUsers();
-    }
-});
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
