@@ -167,12 +167,7 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'contact',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowUpDown)]);
-        },
+        header: () => 'Contact',
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
                 h(Pencil, {

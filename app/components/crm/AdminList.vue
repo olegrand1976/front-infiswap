@@ -980,12 +980,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         id: 'action',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('action'),
-            }, () => ['Action', h(ArrowUpDown)]);
-        },
+        header: () => 'Action',
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
                 h(Eye, {

@@ -65,6 +65,9 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="null">
+                                <span class="ml-2">Tous</span>
+                            </SelectItem>
                             <SelectItem :value="1">
                                 <span class="ml-2">Oui</span>
                             </SelectItem>
@@ -86,6 +89,9 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="null">
+                                <span class="ml-2">Tous</span>
+                            </SelectItem>
                             <SelectItem :value="1">
                                 <span class="ml-2">Oui</span>
                             </SelectItem>
@@ -331,7 +337,9 @@ const debounce = (func: (...args: unknown[]) => void, delay: number) => {
 };
 
 const filterUsers = async () => {
-    await fetchCrmUsers();
+    page.value = 1;
+    pageCookie.value = 1;
+    await fetchCrmUsers(1);
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 100);
@@ -350,8 +358,10 @@ const refreshUsers = async (newPage: number) => {
     await fetchCrmUsers(newPage);
 };
 
-const handleUserUpdate = (updatedCrmObject: { user_id: number }) => {
-    const index = users.value?.data.findIndex(u => u.id === updatedCrmObject.user_id);
+const handleUserUpdate = (updatedCrmObject: { user_id?: number; id?: number }) => {
+    const index = users.value?.data.findIndex(u =>
+        u.id === updatedCrmObject.user_id || u.crm?.id === updatedCrmObject.id,
+    );
     if (index !== undefined && index !== -1 && users.value) {
         const existingUser = { ...users.value.data[index] };
         existingUser.crm = updatedCrmObject;
