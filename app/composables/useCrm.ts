@@ -1,5 +1,20 @@
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, User } from '~/lib/types';
+import {
+    buildCrmCacheKey,
+    clearCrmCache,
+    clearCrmCacheKey,
+    getCrmCacheEntry,
+    setCrmCacheEntry,
+} from '@/composables/useCrmCache';
+
+type GetCrmPlusOptions = Record<string, unknown> & {
+    force?: boolean;
+};
+
+type GetCrmPlusResult = {
+    fromCache: boolean;
+};
 
 export const useCrm = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
@@ -7,21 +22,51 @@ export const useCrm = () => {
     const trashCount = useState<number>('userTrashCount', () => 0);
     const { $apifetch } = useNuxtApp();
 
-    async function getCrmPlus(page = 1, perPage = 15, options: Record<string, unknown> = {}) {
-        const { deleted = false, ...filters } = options;
+    async function getCrmPlus(
+        page = 1,
+        perPage = 15,
+        options: GetCrmPlusOptions = {},
+    ): Promise<GetCrmPlusResult> {
+        const { force = false, deleted = false, ...filters } = options;
+        const requestParams = { deleted, ...filters };
+        const cacheKey = buildCrmCacheKey(page, perPage, requestParams);
 
-        return await $apifetch('api/crm', {
+        if (!force) {
+            const cached = getCrmCacheEntry(cacheKey);
+            if (cached) {
+                users.value = cached.users;
+                count.value = cached.count;
+                trashCount.value = cached.trashCount;
+
+                return { fromCache: true };
+            }
+        }
+
+        const response = await $apifetch('api/crm', {
             params: {
                 page,
                 perPage,
                 deleted,
                 ...filters,
             },
-        }).then((response) => {
-            users.value = response.users;
-            count.value = response.count;
-            trashCount.value = response.trashed_count;
         });
+
+        users.value = response.users;
+        count.value = response.count;
+        trashCount.value = response.trashed_count;
+
+        setCrmCacheEntry(cacheKey, {
+            users: response.users,
+            count: response.count,
+            trashCount: response.trashed_count,
+            cachedAt: Date.now(),
+        });
+
+        return { fromCache: false };
+    }
+
+    function invalidateCrmCacheKey(page: number, perPage: number, params: Record<string, unknown>) {
+        clearCrmCacheKey(buildCrmCacheKey(page, perPage, params));
     }
 
     const crmUser = async (formData) => {
@@ -47,8 +92,11 @@ export const useCrm = () => {
         trashCount,
         users,
         getCrmPlus,
+        invalidateCrmCacheKey,
+        clearCrmCache,
         crmUser,
         updateCrmUser,
         getCrmHistories,
+        buildCrmCacheKey,
     };
 };

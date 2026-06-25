@@ -145,21 +145,21 @@
                 </Button>
                 <Button
                     class="rounded-md"
+                    variant="outline"
+                    :disabled="isListLoading"
+                    @click="refreshData"
+                >
+                    <RefreshCw class="md:mr-2 size-4" />
+                    <span class="hidden md:inline-block">Rafraîchir les données</span>
+                </Button>
+                <Button
+                    class="rounded-md"
                     :disabled="isListLoading"
                     @click="resetFilter"
                 >
                     <RefreshCw class="md:mr-2" />
                     <span class="hidden md:inline-block">Restaurer</span>
                 </Button>
-                <div
-                    v-if="isBusy"
-                    class="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <Loader2 class="size-4 animate-spin text-primary" />
-                    <span>{{ isListLoading ? 'Chargement des utilisateurs…' : 'Filtre en cours…' }}</span>
-                </div>
             </div>
 
             <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -265,6 +265,7 @@ import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm } from '@/composables/useCrm';
+import { buildCrmCacheKey, getCrmUiState, hasCrmCacheEntry, saveCrmUiState } from '@/composables/useCrmCache';
 import type { User } from '~/lib/types';
 
 useHead({ title: 'Suivi utilisateurs' });
@@ -291,8 +292,7 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 
 const selectedCrm = ref('users');
 const isListLoading = ref(false);
-const isAwaitingFilter = ref(false);
-const { getCrmPlus, users, trashCount } = useCrm();
+const { getCrmPlus, users, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
 const route = useRoute();
 const { $toast } = useNuxtApp();
 
@@ -329,6 +329,31 @@ const sort = reactive({
     by: null as string | null,
 });
 
+if (import.meta.client && !route.query.name) {
+    const savedUiState = getCrmUiState();
+    if (savedUiState) {
+        option.value = { ...savedUiState.option };
+        sort.by = savedUiState.sort.by;
+        sort.order = savedUiState.sort.order;
+        if (savedUiState.selectedCrm) {
+            selectedCrm.value = savedUiState.selectedCrm;
+            selectedCrmCookie.value = savedUiState.selectedCrm;
+        }
+    }
+}
+
+watch(
+    [option, () => ({ by: sort.by, order: sort.order }), selectedCrm],
+    () => {
+        saveCrmUiState({
+            option: { ...option.value },
+            sort: { by: sort.by, order: sort.order },
+            selectedCrm: selectedCrm.value,
+        });
+    },
+    { deep: true },
+);
+
 const daysWithoutContactLabel = computed(() => {
     const days = option.value.days_without_contact;
     if (days === 7) return '7+ jours';
@@ -337,12 +362,10 @@ const daysWithoutContactLabel = computed(() => {
     return 'tous';
 });
 
-const isBusy = computed(() => isListLoading.value || isAwaitingFilter.value);
-
 const isInitialLoad = computed(() => users.value === null && isListLoading.value);
 
 const showEmptyState = computed(() => {
-    if (isListLoading.value || isAwaitingFilter.value || users.value === null) {
+    if (isListLoading.value || users.value === null) {
         return false;
     }
 
@@ -373,12 +396,28 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
     return params;
 }
 
-async function fetchCrmUsers(pageNum = page.value, pageSize = perPage.value, overrides: Record<string, unknown> = {}) {
+type FetchCrmOptions = {
+    force?: boolean;
+};
+
+async function fetchCrmUsers(
+    pageNum = page.value,
+    pageSize = perPage.value,
+    overrides: Record<string, unknown> = {},
+    fetchOptions: FetchCrmOptions = {},
+) {
+    const { force = false } = fetchOptions;
     const requestId = ++fetchSequence;
-    isListLoading.value = true;
+    const params = buildCrmQueryParams(overrides);
+    const cacheKey = buildCrmCacheKey(pageNum, pageSize, params);
+    const willUseCache = !force && hasCrmCacheEntry(cacheKey);
+
+    if (!willUseCache) {
+        isListLoading.value = true;
+    }
 
     try {
-        await getCrmPlus(pageNum, pageSize, buildCrmQueryParams(overrides));
+        await getCrmPlus(pageNum, pageSize, { ...params, force });
     }
     catch {
         if (requestId === fetchSequence) {
@@ -391,9 +430,13 @@ async function fetchCrmUsers(pageNum = page.value, pageSize = perPage.value, ove
     finally {
         if (requestId === fetchSequence) {
             isListLoading.value = false;
-            isAwaitingFilter.value = false;
         }
     }
+}
+
+async function refreshData() {
+    clearCrmCache();
+    await fetchCrmUsers(page.value, perPage.value, {}, { force: true });
 }
 
 const setCountryFilter = async (country: string) => {
@@ -425,14 +468,12 @@ const filterUsers = async () => {
 const debouncedFilterUsers = debounce(filterUsers, 300);
 
 function onFilterInput() {
-    isAwaitingFilter.value = true;
     debouncedFilterUsers();
 }
 
 function onFilterSelect() {
     if (isListLoading.value) return;
 
-    isAwaitingFilter.value = true;
     void filterUsers();
 }
 
@@ -453,6 +494,8 @@ const handleUserUpdate = (updatedCrmObject: { user_id?: number; id?: number }) =
         existingUser.crm = updatedCrmObject;
         users.value.data[index] = existingUser;
     }
+
+    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams());
 };
 
 const handlePerPageChange = async (value: number) => {
