@@ -3,6 +3,7 @@
         <DataTable
             :data="localUsers"
             :columns="columnsExUsers"
+            manual-sorting
         />
 
         <Dialog
@@ -230,11 +231,9 @@ const columnsExUsers: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users.data, (newUsersData) => {
-    if (newUsersData) {
-        localUsers.value = [...newUsersData];
-    }
-}, { deep: true, immediate: true });
+watch(() => props.users, (newUsers) => {
+    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
+}, { immediate: true });
 
 const handleRestore = async (user: User) => {
     const response = await restore(user.id);

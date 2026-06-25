@@ -1,5 +1,9 @@
 import { useState, useNuxtApp } from '#app';
 import type { Pagination, User } from '~/lib/types';
+
+function clonePagination<T>(pagination: Pagination<T>): Pagination<T> {
+    return structuredClone(pagination);
+}
 import {
     buildCrmCacheKey,
     clearCrmCache,
@@ -34,7 +38,7 @@ export const useCrm = () => {
         if (!force) {
             const cached = getCrmCacheEntry(cacheKey);
             if (cached) {
-                users.value = cached.users;
+                users.value = clonePagination(cached.users);
                 count.value = cached.count;
                 trashCount.value = cached.trashCount;
 
@@ -51,12 +55,12 @@ export const useCrm = () => {
             },
         });
 
-        users.value = response.users;
+        users.value = clonePagination(response.users);
         count.value = response.count;
         trashCount.value = response.trashed_count;
 
         setCrmCacheEntry(cacheKey, {
-            users: response.users,
+            users: clonePagination(response.users),
             count: response.count,
             trashCount: response.trashed_count,
             cachedAt: Date.now(),

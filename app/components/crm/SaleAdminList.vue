@@ -3,6 +3,7 @@
         <DataTable
             :data="localUsers"
             :columns="columnsCrm"
+            manual-sorting
         />
 
         <Dialog
@@ -336,9 +337,7 @@ const columnsCrm: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users.data, (newUsersData) => {
-    if (newUsersData) {
-        localUsers.value = [...newUsersData];
-    }
-}, { deep: true, immediate: true });
+watch(() => props.users, (newUsers) => {
+    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
+}, { immediate: true });
 </script>

@@ -79,12 +79,15 @@ import {
 import { ref, toRefs } from 'vue';
 import { valueUpdater } from '~/lib/utils';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     data: any[];
     columns: ColumnDef<any>[];
-}>();
+    manualSorting?: boolean;
+}>(), {
+    manualSorting: false,
+});
 
-const { columns } = toRefs(props);
+const { columns, manualSorting } = toRefs(props);
 
 const rows = computed(() => props.data);
 
@@ -102,6 +105,7 @@ const table = useVueTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    manualSorting: manualSorting.value ?? false,
     onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
     onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
     onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),

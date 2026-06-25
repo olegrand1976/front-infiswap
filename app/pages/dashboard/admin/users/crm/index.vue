@@ -228,6 +228,7 @@
                             @refresh-users="refreshUsers"
                             @handle-per-page-change="handlePerPageChange"
                             @set-sort="setSort"
+                            @update-users="handleUsersListUpdate"
                         />
                     </template>
                 <template v-else-if="selectedCrm === 'commercial'">
@@ -530,8 +531,15 @@ const setSort = async (columnKey: string) => {
         sort.order = 'DESC';
     }
 
-    await fetchCrmUsers();
+    page.value = 1;
+    pageCookie.value = 1;
+    await fetchCrmUsers(1, perPage.value, {}, { force: true });
 };
+
+function handleUsersListUpdate(updatedUsers: NonNullable<typeof users.value>) {
+    users.value = updatedUsers;
+    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams());
+}
 
 function exportUsersToCsv(rows: User[], filename: string) {
     if (!rows.length) {
