@@ -1,5 +1,5 @@
 import { useState, useNuxtApp } from '#app';
-import type { Pagination, User } from '~/lib/types';
+import type { CrmInstitution, Pagination, User } from '~/lib/types';
 
 function clonePagination<T>(pagination: Pagination<T>): Pagination<T> {
     return structuredClone(pagination);
@@ -22,7 +22,9 @@ type GetCrmPlusResult = {
 
 export const useCrm = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
+    const institutions = useState<Pagination<CrmInstitution> | null>('crmInstitutions', () => null);
     const count = useState<number>('userCount', () => 0);
+    const institutionsCount = useState<number>('crmInstitutionsCount', () => 0);
     const trashCount = useState<number>('userTrashCount', () => 0);
     const { $apifetch } = useNuxtApp();
 
@@ -33,14 +35,14 @@ export const useCrm = () => {
     ): Promise<GetCrmPlusResult> {
         const { force = false, deleted = false, ...filters } = options;
         const requestParams = { deleted, ...filters };
-        const cacheKey = buildCrmCacheKey(page, perPage, requestParams);
+        const cacheKey = buildCrmCacheKey(page, perPage, requestParams, 'users');
 
         if (!force) {
             const cached = getCrmCacheEntry(cacheKey);
-            if (cached) {
+            if (cached?.users) {
                 users.value = clonePagination(cached.users);
                 count.value = cached.count;
-                trashCount.value = cached.trashCount;
+                trashCount.value = cached.trashCount ?? 0;
 
                 return { fromCache: true };
             }
@@ -69,8 +71,62 @@ export const useCrm = () => {
         return { fromCache: false };
     }
 
-    function invalidateCrmCacheKey(page: number, perPage: number, params: Record<string, unknown>) {
-        clearCrmCacheKey(buildCrmCacheKey(page, perPage, params));
+    async function getCrmInstitutions(
+        page = 1,
+        perPage = 15,
+        options: GetCrmPlusOptions = {},
+    ): Promise<GetCrmPlusResult> {
+        const { force = false, ...filters } = options;
+        const requestParams = { ...filters };
+        const cacheKey = buildCrmCacheKey(page, perPage, requestParams, 'institutions');
+
+        if (!force) {
+            const cached = getCrmCacheEntry(cacheKey);
+            if (cached?.institutions) {
+                institutions.value = clonePagination(cached.institutions);
+                institutionsCount.value = cached.count;
+
+                return { fromCache: true };
+            }
+        }
+
+        const response = await $apifetch('api/crm/institutions', {
+            params: {
+                page,
+                perPage,
+                ...filters,
+            },
+        });
+
+        institutions.value = clonePagination(response.institutions);
+        institutionsCount.value = response.count;
+
+        setCrmCacheEntry(cacheKey, {
+            institutions: clonePagination(response.institutions),
+            count: response.count,
+            cachedAt: Date.now(),
+        });
+
+        return { fromCache: false };
+    }
+
+    async function createInstitutionSubscription(
+        institutionId: number,
+        formula: 'institution_monthly_150' | 'institution_yearly_1500',
+    ) {
+        return await $apifetch(`api/crm/institutions/${institutionId}/subscription`, {
+            method: 'POST',
+            body: { formula },
+        });
+    }
+
+    function invalidateCrmCacheKey(
+        page: number,
+        perPage: number,
+        params: Record<string, unknown>,
+        entity: 'users' | 'institutions' = 'users',
+    ) {
+        clearCrmCacheKey(buildCrmCacheKey(page, perPage, params, entity));
     }
 
     const crmUser = async (formData) => {
@@ -95,7 +151,12 @@ export const useCrm = () => {
     return {
         trashCount,
         users,
+        institutions,
+        count,
+        institutionsCount,
         getCrmPlus,
+        getCrmInstitutions,
+        createInstitutionSubscription,
         invalidateCrmCacheKey,
         clearCrmCache,
         crmUser,

@@ -112,6 +112,39 @@ export type User = {
     referral_source?: string;
 };
 
+export type CrmInstitutionSubscription = {
+    active: boolean;
+    status: string | null;
+    formula: string | null;
+    contract_id: number | null;
+};
+
+export type CrmInstitution = {
+    id: number;
+    institution_id: number;
+    representative_user_id: number | null;
+    full_name: string;
+    email: string;
+    phone_number?: string | null;
+    zip_code?: string | null;
+    city?: string | null;
+    company_number?: string | null;
+    status?: string | null;
+    account_type: string;
+    insurance?: boolean | number;
+    site?: boolean | number;
+    ambassador?: boolean | number;
+    last_comment?: Comment | null;
+    referred_by?: Referrer;
+    crm?: CrmUser;
+    product_activity_summary?: ProductActivitySummary[];
+    last_product_modifications?: LastProductModifications[];
+    historic_activity?: UserActivity;
+    subscription?: CrmInstitutionSubscription;
+    created_at?: string | null;
+    last_login_at?: string | null;
+};
+
 type LastProductModifications = {
     product_id: number;
     product_name: string;

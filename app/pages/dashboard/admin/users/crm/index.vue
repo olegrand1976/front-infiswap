@@ -14,6 +14,12 @@
                         Suivi des utilisateurs
                     </TabsTrigger>
                     <TabsTrigger
+                        value="institutions"
+                        class="w-full md:w-48 h-12"
+                    >
+                        Suivi des institutions
+                    </TabsTrigger>
+                    <TabsTrigger
                         value="commercial"
                         class="w-full md:w-48 h-12"
                     >
@@ -34,7 +40,7 @@
                 <InputIcon
                     v-model="option.name"
                     rounded="md"
-                    placeholder="Filtrer par Nom ou Prénom"
+                    placeholder="Filtrer par nom"
                     class="w-[250px]"
                     :disabled="isListLoading"
                     @input="onFilterInput"
@@ -204,7 +210,7 @@
                 >
                     <div class="flex items-center gap-2 rounded-md border bg-background px-4 py-2 text-sm shadow-sm">
                         <Loader2 class="size-4 animate-spin text-primary" />
-                        <span>Chargement des utilisateurs…</span>
+                        <span>{{ isInstitutionsTab ? 'Chargement des institutions…' : 'Chargement des utilisateurs…' }}</span>
                     </div>
                 </div>
 
@@ -213,12 +219,23 @@
                     class="mx-4 mb-6 rounded-md border border-dashed px-6 py-12 text-center"
                 >
                     <p class="text-base font-medium text-foreground">
-                        Aucun utilisateur trouvé
+                        {{ isInstitutionsTab ? 'Aucune institution trouvée' : 'Aucun utilisateur trouvé' }}
                     </p>
                     <p class="mt-2 text-sm text-muted-foreground">
                         Ajustez les filtres ou cliquez sur Restaurer pour réinitialiser la recherche.
                     </p>
                 </div>
+                <template v-else-if="isInstitutionsTab && institutions">
+                    <CrmInstitutionAdminList
+                        :institutions="institutions"
+                        :page="page"
+                        :per-page="perPage"
+                        @refresh-institutions="refreshInstitutions"
+                        @handle-per-page-change="handlePerPageChange"
+                        @set-sort="setSort"
+                        @update-institutions="handleInstitutionsListUpdate"
+                    />
+                </template>
                 <template v-else-if="users">
                     <template v-if="selectedCrm === 'users'">
                         <CrmAdminList
@@ -267,7 +284,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm } from '@/composables/useCrm';
 import { buildCrmCacheKey, getCrmUiState, hasCrmCacheEntry, saveCrmUiState } from '@/composables/useCrmCache';
-import type { User } from '~/lib/types';
+import type { CrmInstitution, User } from '~/lib/types';
 
 useHead({ title: 'Suivi utilisateurs' });
 
@@ -293,7 +310,7 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 
 const selectedCrm = ref('users');
 const isListLoading = ref(false);
-const { getCrmPlus, users, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
+const { getCrmPlus, getCrmInstitutions, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
 const route = useRoute();
 const { $toast } = useNuxtApp();
 
@@ -363,14 +380,26 @@ const daysWithoutContactLabel = computed(() => {
     return 'tous';
 });
 
-const isInitialLoad = computed(() => users.value === null && isListLoading.value);
+const isInstitutionsTab = computed(() => selectedCrm.value === 'institutions');
+
+const isInitialLoad = computed(() => {
+    if (isInstitutionsTab.value) {
+        return institutions.value === null && isListLoading.value;
+    }
+
+    return users.value === null && isListLoading.value;
+});
 
 const showEmptyState = computed(() => {
-    if (isListLoading.value || users.value === null) {
+    if (isListLoading.value) {
         return false;
     }
 
-    return (users.value?.total ?? 0) === 0;
+    if (isInstitutionsTab.value) {
+        return institutions.value !== null && (institutions.value?.total ?? 0) === 0;
+    }
+
+    return users.value !== null && (users.value?.total ?? 0) === 0;
 });
 
 let fetchSequence = 0;
@@ -378,10 +407,16 @@ let fetchSequence = 0;
 function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
     const params: Record<string, unknown> = {
         ...option.value,
-        deleted: selectedCrm.value === 'exUsers',
-        enrich: selectedCrm.value === 'users' ? 1 : 0,
         ...overrides,
     };
+
+    if (isInstitutionsTab.value) {
+        params.enrich = 1;
+    }
+    else {
+        params.deleted = selectedCrm.value === 'exUsers';
+        params.enrich = selectedCrm.value === 'users' ? 1 : 0;
+    }
 
     if (sort.by) {
         params.sortKey = sort.by;
@@ -401,7 +436,7 @@ type FetchCrmOptions = {
     force?: boolean;
 };
 
-async function fetchCrmUsers(
+async function fetchCrmList(
     pageNum = page.value,
     pageSize = perPage.value,
     overrides: Record<string, unknown> = {},
@@ -410,7 +445,8 @@ async function fetchCrmUsers(
     const { force = false } = fetchOptions;
     const requestId = ++fetchSequence;
     const params = buildCrmQueryParams(overrides);
-    const cacheKey = buildCrmCacheKey(pageNum, pageSize, params);
+    const entity = isInstitutionsTab.value ? 'institutions' : 'users';
+    const cacheKey = buildCrmCacheKey(pageNum, pageSize, params, entity);
     const willUseCache = !force && hasCrmCacheEntry(cacheKey);
 
     if (!willUseCache) {
@@ -418,12 +454,19 @@ async function fetchCrmUsers(
     }
 
     try {
-        await getCrmPlus(pageNum, pageSize, { ...params, force });
+        if (isInstitutionsTab.value) {
+            await getCrmInstitutions(pageNum, pageSize, { ...params, force });
+        }
+        else {
+            await getCrmPlus(pageNum, pageSize, { ...params, force });
+        }
     }
     catch {
         if (requestId === fetchSequence) {
             $toast({
-                description: 'Impossible de charger la liste CRM. Réessayez.',
+                description: isInstitutionsTab.value
+                    ? 'Impossible de charger la liste des institutions. Réessayez.'
+                    : 'Impossible de charger la liste CRM. Réessayez.',
                 variant: 'destructive',
             });
         }
@@ -437,7 +480,7 @@ async function fetchCrmUsers(
 
 async function refreshData() {
     clearCrmCache();
-    await fetchCrmUsers(page.value, perPage.value, {}, { force: true });
+    await fetchCrmList(page.value, perPage.value, {}, { force: true });
 }
 
 const setCountryFilter = async (country: string) => {
@@ -447,7 +490,7 @@ const setCountryFilter = async (country: string) => {
     page.value = 1;
     pageCookie.value = 1;
 
-    await fetchCrmUsers();
+    await fetchCrmList();
 };
 
 const debounce = (func: (...args: unknown[]) => void, delay: number) => {
@@ -463,7 +506,7 @@ const debounce = (func: (...args: unknown[]) => void, delay: number) => {
 const filterUsers = async () => {
     page.value = 1;
     pageCookie.value = 1;
-    await fetchCrmUsers(1);
+    await fetchCrmList(1);
 };
 
 const debouncedFilterUsers = debounce(filterUsers, 300);
@@ -478,12 +521,18 @@ function onFilterSelect() {
     void filterUsers();
 }
 
-await fetchCrmUsers();
+await fetchCrmList();
+
+const refreshInstitutions = async (newPage: number) => {
+    page.value = newPage;
+    pageCookie.value = newPage;
+    await fetchCrmList(newPage);
+};
 
 const refreshUsers = async (newPage: number) => {
     page.value = newPage;
     pageCookie.value = newPage;
-    await fetchCrmUsers(newPage);
+    await fetchCrmList(newPage);
 };
 
 const handleUserUpdate = (updatedCrmObject: { user_id?: number; id?: number }) => {
@@ -496,15 +545,20 @@ const handleUserUpdate = (updatedCrmObject: { user_id?: number; id?: number }) =
         users.value.data[index] = existingUser;
     }
 
-    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams());
+    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams(), 'users');
 };
+
+function handleInstitutionsListUpdate(updatedInstitutions: NonNullable<typeof institutions.value>) {
+    institutions.value = updatedInstitutions;
+    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams(), 'institutions');
+}
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
     perPageCookie.value = value;
     page.value = 1;
     pageCookie.value = 1;
-    await fetchCrmUsers(1, value);
+    await fetchCrmList(1, value);
 };
 
 const resetFilter = async () => {
@@ -517,7 +571,7 @@ const resetFilter = async () => {
     pageCookie.value = 1;
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', cleanUrl);
-    await fetchCrmUsers();
+    await fetchCrmList();
 };
 
 const toggleSort = () => {
@@ -533,12 +587,12 @@ const setSort = async (columnKey: string) => {
 
     page.value = 1;
     pageCookie.value = 1;
-    await fetchCrmUsers(1, perPage.value, {}, { force: true });
+    await fetchCrmList(1, perPage.value, {}, { force: true });
 };
 
 function handleUsersListUpdate(updatedUsers: NonNullable<typeof users.value>) {
     users.value = updatedUsers;
-    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams());
+    invalidateCrmCacheKey(page.value, perPage.value, buildCrmQueryParams(), 'users');
 }
 
 function exportUsersToCsv(rows: User[], filename: string) {
@@ -598,14 +652,77 @@ function exportUsersToCsv(rows: User[], filename: string) {
 }
 
 function exportCurrentListCsv() {
+    if (isInstitutionsTab.value) {
+        const rows = institutions.value?.data ?? [];
+        exportInstitutionsToCsv(rows, `crm-institutions-export-${new Date().toISOString().slice(0, 10)}.csv`);
+        return;
+    }
+
     const rows = users.value?.data ?? [];
     exportUsersToCsv(rows, `crm-export-${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+function exportInstitutionsToCsv(rows: CrmInstitution[], filename: string) {
+    if (!rows.length) {
+        $toast({ description: 'Aucune donnée à exporter', variant: 'destructive' });
+        return;
+    }
+
+    const headers = [
+        'Institution',
+        'Email',
+        'Téléphone',
+        'Code postal',
+        'Ville',
+        'NursAssur',
+        'NursTech',
+        'Abonnement',
+        'Dernier contact',
+    ];
+
+    const escape = (value: unknown) => {
+        const str = value == null ? '' : String(value);
+        return `"${str.replace(/"/g, '""')}"`;
+    };
+
+    const subscriptionLabel = (row: CrmInstitution) => {
+        const subscription = row.subscription;
+        if (!subscription?.active && !subscription?.status) return 'Inactif';
+        if (subscription.status === 'paid' || subscription.status === 'accomplished') return 'Actif';
+        return 'En signature';
+    };
+
+    const lines = [
+        headers.join(';'),
+        ...rows.map((row) => {
+            const crm = row.crm ?? {};
+            return [
+                row.full_name,
+                row.email,
+                row.phone_number,
+                row.zip_code,
+                row.city,
+                row.insurance ? 'oui' : 'non',
+                row.site ? 'oui' : 'non',
+                subscriptionLabel(row),
+                crm.last_contact_date ?? '',
+            ].map(escape).join(';');
+        }),
+    ];
+
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
 }
 
 watch(selectedCrm, async (newValue) => {
     page.value = 1;
     pageCookie.value = 1;
     selectedCrmCookie.value = newValue;
-    await fetchCrmUsers();
+    await fetchCrmList();
 });
 </script>

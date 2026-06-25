@@ -1,4 +1,4 @@
-import type { Pagination, User } from '~/lib/types';
+import type { Pagination, User, CrmInstitution } from '~/lib/types';
 
 const CACHE_STORAGE_KEY = 'crm_list_cache_v1';
 const UI_STORAGE_KEY = 'crm_ui_state_v1';
@@ -27,9 +27,10 @@ export type CrmUiState = {
 };
 
 export type CrmCacheEntry = {
-    users: Pagination<User>;
+    users?: Pagination<User>;
+    institutions?: Pagination<CrmInstitution>;
     count: number;
-    trashCount: number;
+    trashCount?: number;
     cachedAt: number;
 };
 
@@ -93,8 +94,10 @@ export function buildCrmCacheKey(
     page: number,
     perPage: number,
     params: Record<string, unknown>,
+    entity: 'users' | 'institutions' = 'users',
 ): string {
     return JSON.stringify({
+        entity,
         page,
         perPage,
         params: normalizeParams(params),
