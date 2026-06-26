@@ -115,8 +115,12 @@ export type User = {
 export type CrmInstitutionSubscription = {
     active: boolean;
     status: string | null;
+    status_label: string | null;
     formula: string | null;
     contract_id: number | null;
+    created_at: string | null;
+    can_create: boolean;
+    can_sign: boolean;
 };
 
 export type CrmInstitution = {

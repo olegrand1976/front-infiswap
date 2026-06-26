@@ -260,6 +260,13 @@
             @subscribed="onSubscriptionCreated"
         />
 
+        <InstitutionSubscriptionStatusModal
+            v-model:open="subscriptionStatusModalOpen"
+            :institution-name="subscriptionInstitutionName"
+            :subscription="subscriptionStatusData"
+            @signed="onSubscriptionStatusChanged"
+        />
+
         <div>
             <CustomPagination
                 :default-page="page"
@@ -313,8 +320,10 @@ const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
 const { edit, isCollaborator } = useAuth();
 const subscriptionModalOpen = ref(false);
+const subscriptionStatusModalOpen = ref(false);
 const subscriptionInstitutionId = ref<number | null>(null);
 const subscriptionInstitutionName = ref('');
+const subscriptionStatusData = ref<CrmInstitution['subscription'] | null>(null);
 const selectedInstitution = ref<CrmInstitution | null>(null);
 const representativeUserId = ref<number | null>(null);
 const { updateCrmUser } = useCrm();
@@ -391,7 +400,30 @@ function openSubscriptionModal(institution: CrmInstitution) {
     subscriptionModalOpen.value = true;
 }
 
+function openSubscriptionStatusModal(institution: CrmInstitution) {
+    subscriptionInstitutionName.value = institution.full_name;
+    subscriptionStatusData.value = institution.subscription ?? null;
+    subscriptionStatusModalOpen.value = true;
+}
+
+function handleSubscriptionClick(institution: CrmInstitution) {
+    if (isCollaborator.value) {
+        return;
+    }
+
+    if (institution.subscription?.can_create !== false && !institution.subscription?.contract_id) {
+        openSubscriptionModal(institution);
+        return;
+    }
+
+    openSubscriptionStatusModal(institution);
+}
+
 function onSubscriptionCreated() {
+    emit('refresh-institutions', props.page);
+}
+
+function onSubscriptionStatusChanged() {
     emit('refresh-institutions', props.page);
 }
 
@@ -995,40 +1027,57 @@ const columns: ColumnDef<CrmInstitution>[] = [
     },
     {
         id: 'subscription',
-        header: 'Abonnement',
+        header: 'Bon de commande',
         cell: ({ row }) => {
             const institution = row.original as CrmInstitution;
             const subscription = institution.subscription;
-            const isActive = subscription?.active === true;
             const status = subscription?.status;
             const formula = subscription?.formula;
+            const canCreate = subscription?.can_create !== false && !subscription?.contract_id;
 
             const label = (() => {
-                if (!isActive && !status) return 'Inactif';
+                if (canCreate) {
+                    return 'Créer';
+                }
+                if (subscription?.status_label) {
+                    return subscription.status_label;
+                }
                 if (status === 'paid' || status === 'accomplished') {
                     return formula === 'institution_yearly_1500' ? 'Actif (annuel)' : 'Actif (mensuel)';
                 }
+
                 return 'En signature';
             })();
 
             const badgeClass = (() => {
-                if (!isActive && !status) return 'bg-gray-100 text-gray-700';
-                if (status === 'paid' || status === 'accomplished') return 'bg-green-100 text-green-800';
-                return 'bg-amber-100 text-amber-800';
+                if (canCreate) {
+                    return 'bg-primary/10 text-primary border border-primary/30';
+                }
+                if (status === 'paid' || status === 'accomplished') {
+                    return 'bg-green-100 text-green-800';
+                }
+                if (['sent_for_signature', 'sign', 'pending_signature', 'signed'].includes(status ?? '')) {
+                    return 'bg-amber-100 text-amber-800';
+                }
+                if (status === 'cancelled') {
+                    return 'bg-red-100 text-red-800';
+                }
+
+                return 'bg-gray-100 text-gray-700';
             })();
 
-            const canSubscribe = !isActive && !status;
+            const isClickable = !isCollaborator.value;
 
             return h('div', { class: 'flex justify-center' }, [
                 h(
                     'button',
                     {
                         type: 'button',
-                        class: `px-2 py-1 rounded text-xs font-medium ${badgeClass} ${canSubscribe && !isCollaborator.value ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
-                        disabled: !canSubscribe || isCollaborator.value,
+                        class: `px-2 py-1 rounded text-xs font-medium ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
+                        disabled: !isClickable,
                         onClick: () => {
-                            if (canSubscribe && !isCollaborator.value) {
-                                openSubscriptionModal(institution);
+                            if (isClickable) {
+                                handleSubscriptionClick(institution);
                             }
                         },
                     },

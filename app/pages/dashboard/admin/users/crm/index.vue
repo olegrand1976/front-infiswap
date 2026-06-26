@@ -225,8 +225,9 @@
                         Ajustez les filtres ou cliquez sur Restaurer pour réinitialiser la recherche.
                     </p>
                 </div>
-                <template v-else-if="isInstitutionsTab && institutions">
+                <template v-else-if="isInstitutionsTab">
                     <CrmInstitutionAdminList
+                        v-if="institutions"
                         :institutions="institutions"
                         :page="page"
                         :per-page="perPage"
