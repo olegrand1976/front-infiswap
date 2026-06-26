@@ -169,9 +169,7 @@ definePageMeta({
 });
 
 const { institutions, getInstitutions, count, forceDelete, updateStatus, importInstitutions, loading } = useInstitutions();
-const { isSuperAdmin, isAdmin } = useAuth();
-
-const canImportInstitutions = computed(() => isSuperAdmin.value || isAdmin.value);
+const { isSuperAdmin, isAdmin, canImportInstitutions } = useAuth();
 
 const isImportProspect = (institution: Institution): boolean =>
     institution.registration_source === 'file' && !institution.contact;

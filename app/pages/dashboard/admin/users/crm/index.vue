@@ -431,11 +431,7 @@ const isListLoading = ref(false);
 const listLoadError = ref(false);
 const { getCrmPlus, getCrmInstitutions, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
 const { importInstitutions } = useInstitutions();
-const { isSuperAdmin, isAdmin } = useAuth();
-const route = useRoute();
-const { $toast } = useNuxtApp();
-
-const canImportInstitutions = computed(() => isSuperAdmin.value || isAdmin.value);
+const { canImportInstitutions } = useAuth();
 const importDialogOpen = ref(false);
 const importFile = ref<File | null>(null);
 const importing = ref(false);
