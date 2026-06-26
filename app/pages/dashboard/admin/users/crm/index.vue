@@ -215,7 +215,25 @@
                 </div>
 
                 <div
-                    v-if="showEmptyState"
+                    v-if="listLoadError"
+                    class="mx-4 mb-6 rounded-md border border-destructive/30 bg-destructive/5 px-6 py-12 text-center"
+                >
+                    <p class="text-base font-medium text-foreground">
+                        {{ isInstitutionsTab ? 'Impossible de charger les institutions' : 'Impossible de charger la liste CRM' }}
+                    </p>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Vérifiez votre connexion puis réessayez.
+                    </p>
+                    <Button
+                        class="mt-4 rounded-md"
+                        :disabled="isListLoading"
+                        @click="retryListLoad"
+                    >
+                        Réessayer
+                    </Button>
+                </div>
+                <div
+                    v-else-if="showEmptyState"
                     class="mx-4 mb-6 rounded-md border border-dashed px-6 py-12 text-center"
                 >
                     <p class="text-base font-medium text-foreground">
@@ -292,6 +310,7 @@ useHead({ title: 'Suivi utilisateurs' });
 definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
+    ssr: false,
 });
 
 const pageCookie = useCookie<number>('crm_page', {
@@ -311,6 +330,7 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 
 const selectedCrm = ref('users');
 const isListLoading = ref(false);
+const listLoadError = ref(false);
 const { getCrmPlus, getCrmInstitutions, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
 const route = useRoute();
 const { $toast } = useNuxtApp();
@@ -461,9 +481,14 @@ async function fetchCrmList(
         else {
             await getCrmPlus(pageNum, pageSize, { ...params, force });
         }
+
+        if (requestId === fetchSequence) {
+            listLoadError.value = false;
+        }
     }
     catch {
         if (requestId === fetchSequence) {
+            listLoadError.value = true;
             $toast({
                 description: isInstitutionsTab.value
                     ? 'Impossible de charger la liste des institutions. Réessayez.'
@@ -522,7 +547,13 @@ function onFilterSelect() {
     void filterUsers();
 }
 
-await fetchCrmList();
+async function retryListLoad() {
+    await fetchCrmList(page.value, perPage.value, {}, { force: true });
+}
+
+onMounted(() => {
+    void fetchCrmList();
+});
 
 const refreshInstitutions = async (newPage: number) => {
     page.value = newPage;
@@ -724,6 +755,7 @@ watch(selectedCrm, async (newValue) => {
     page.value = 1;
     pageCookie.value = 1;
     selectedCrmCookie.value = newValue;
+    listLoadError.value = false;
     await fetchCrmList();
 });
 </script>
