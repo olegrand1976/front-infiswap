@@ -293,6 +293,8 @@ import { useAuth } from '@/composables/useAuth';
 import { formatRelativeDate } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
+import InstitutionSubscriptionModal from './InstitutionSubscriptionModal.vue';
+import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
