@@ -28,12 +28,11 @@
                             <TableRow
                                 :data-state="row.getIsSelected() ? 'selected' : undefined"
                                 class="cursor-pointer"
-                                @click="() => row.toggleSelected()"
+                                @click="(event) => onRowClick(event, row)"
                             >
                                 <TableCell
                                     v-for="cell in row.getVisibleCells()"
                                     :key="cell.id"
-                                    @click.stop
                                 >
                                     <FlexRender
                                         :render="cell.column.columnDef.cell"
@@ -77,6 +76,7 @@ import {
     useVueTable,
 } from '@tanstack/vue-table';
 import { ref, toRefs } from 'vue';
+import type { Row } from '@tanstack/vue-table';
 import { valueUpdater } from '~/lib/utils';
 
 const props = withDefaults(defineProps<{
@@ -123,4 +123,13 @@ const table = useVueTable({
 defineExpose({
     table,
 });
+
+function onRowClick(event: MouseEvent, row: Row<unknown>) {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('button, a, input, textarea, select, label, [role="switch"], [data-no-row-select]')) {
+        return;
+    }
+
+    row.toggleSelected();
+}
 </script>

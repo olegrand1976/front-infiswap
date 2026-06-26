@@ -120,6 +120,7 @@ export type CrmInstitutionSubscription = {
     contract_id: number | null;
     created_at: string | null;
     can_create: boolean;
+    can_send_for_signature: boolean;
     can_sign: boolean;
 };
 

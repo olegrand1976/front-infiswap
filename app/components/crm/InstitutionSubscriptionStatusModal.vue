@@ -1,7 +1,7 @@
 <template>
     <Dialog
         v-model:open="open"
-        class="fixed inset-0 flex justify-center items-center bg-black/50"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
     >
         <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-2">
             <DialogHeader>
@@ -46,9 +46,10 @@
 
                 <div class="flex flex-wrap gap-2 pt-2">
                     <Button
-                        v-if="subscription.contract_id"
+                        v-if="subscription.contract_id && institutionId"
                         type="button"
                         variant="outline"
+                        class="touch-manipulation"
                         :disabled="pdfLoading"
                         :in-progress="pdfLoading"
                         @click="viewContractPdf"
@@ -56,21 +57,28 @@
                         Voir le PDF
                     </Button>
                     <Button
-                        v-if="subscription.can_sign"
+                        v-if="subscription.can_send_for_signature && institutionId"
                         type="button"
+                        class="touch-manipulation"
                         :disabled="signingLoading"
                         :in-progress="signingLoading"
-                        @click="openSigningLink"
+                        @click="sendForSignature"
                     >
-                        Ouvrir la signature
+                        Envoyer pour signature
                     </Button>
                 </div>
 
                 <p
-                    v-if="subscription.can_sign"
+                    v-if="subscription.can_send_for_signature"
                     class="text-xs text-muted-foreground"
                 >
-                    Le lien Documenso permet à l'institution de signer le bon de commande.
+                    Contrôlez le PDF avant l'envoi Documenso à l'institution.
+                </p>
+                <p
+                    v-else-if="subscription.can_sign"
+                    class="text-xs text-muted-foreground"
+                >
+                    Le lien de signature a été envoyé par email via Documenso.
                 </p>
             </div>
         </DialogContent>
@@ -81,11 +89,12 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { CrmInstitutionSubscription } from '~/lib/types';
-import { useContract } from '@/composables/useContract';
+import { useCrm } from '@/composables/useCrm';
 
 const open = defineModel<boolean>('open', { default: false });
 
 const props = defineProps<{
+    institutionId: number | null;
     institutionName: string;
     subscription: CrmInstitutionSubscription | null;
 }>();
@@ -94,7 +103,7 @@ const emit = defineEmits<{
     signed: [];
 }>();
 
-const { viewPdf, signContract } = useContract();
+const { viewInstitutionSubscriptionPdf, sendInstitutionSubscriptionForSignature } = useCrm();
 const { $toast } = useNuxtApp();
 
 const pdfLoading = ref(false);
@@ -146,6 +155,9 @@ const statusBadgeClass = computed(() => {
     if (!status) {
         return 'bg-gray-100 text-gray-700';
     }
+    if (status === 'draft') {
+        return 'bg-blue-100 text-blue-800';
+    }
     if (status === 'paid' || status === 'accomplished') {
         return 'bg-green-100 text-green-800';
     }
@@ -161,34 +173,53 @@ const statusBadgeClass = computed(() => {
 
 async function viewContractPdf() {
     const contractId = props.subscription?.contract_id;
-    if (!contractId) {
+    if (!contractId || !props.institutionId) {
         return;
     }
 
     pdfLoading.value = true;
     try {
-        await viewPdf(contractId);
+        await viewInstitutionSubscriptionPdf(props.institutionId, contractId);
+    }
+    catch {
+        $toast({
+            description: 'Impossible d\'ouvrir le PDF.',
+            variant: 'destructive',
+        });
     }
     finally {
         pdfLoading.value = false;
     }
 }
 
-async function openSigningLink() {
+async function sendForSignature() {
     const contractId = props.subscription?.contract_id;
-    if (!contractId) {
+    if (!contractId || !props.institutionId) {
         return;
     }
 
     signingLoading.value = true;
 
     try {
-        await signContract(contractId);
+        const response = await sendInstitutionSubscriptionForSignature(
+            props.institutionId,
+            contractId,
+        );
+
+        if (response.signing_url) {
+            window.open(response.signing_url, '_blank', 'noopener,noreferrer');
+        }
+
+        $toast({
+            description: response.message ?? 'Bon de commande envoyé pour signature.',
+            variant: 'success',
+        });
+
         emit('signed');
     }
     catch {
         $toast({
-            description: 'Impossible d\'ouvrir le lien de signature.',
+            description: 'Envoi Documenso impossible. Vérifiez la configuration ou réessayez.',
             variant: 'destructive',
         });
     }

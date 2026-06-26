@@ -14,8 +14,49 @@
                 Exporter la sélection
             </Button>
         </div>
+        <div class="md:hidden space-y-3 mb-4">
+            <article
+                v-for="institution in localInstitutions"
+                :key="`mobile-institution-${institution.id}`"
+                class="rounded-lg border bg-white p-4 shadow-sm"
+            >
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-foreground">
+                            {{ institution.full_name }}
+                        </p>
+                        <p
+                            v-if="institution.zip_code || institution.city"
+                            class="text-sm text-muted-foreground mt-1"
+                        >
+                            {{ [institution.zip_code, institution.city].filter(Boolean).join(' ') }}
+                        </p>
+                    </div>
+                    <Button
+                        v-if="!isCollaborator"
+                        type="button"
+                        size="sm"
+                        :variant="canCreateInstitutionSubscription(institution) ? 'default' : 'outline'"
+                        class="shrink-0 touch-manipulation min-h-10"
+                        @click="handleSubscriptionClick(institution)"
+                    >
+                        {{ institutionSubscriptionLabel(institution) }}
+                    </Button>
+                </div>
+                <div class="mt-3 flex items-center gap-3">
+                    <button
+                        type="button"
+                        class="text-sm text-primary underline touch-manipulation"
+                        @click="openModal(institution)"
+                    >
+                        Voir le détail
+                    </button>
+                </div>
+            </article>
+        </div>
         <DataTable
             ref="dataTableRef"
+            class="hidden md:block"
             :data="localInstitutions"
             :columns="columns"
             manual-sorting
@@ -23,7 +64,7 @@
 
         <Dialog
             v-model:open="showModal"
-            class="fixed inset-0 flex justify-center items-center bg-black/50"
+            class="fixed inset-0 z-50 flex justify-center items-center bg-black/50"
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
                 <div
@@ -48,6 +89,15 @@
                     >
                         Voir la fiche institution
                     </NuxtLink>
+                    <Button
+                        v-if="!isCollaborator && selectedInstitution"
+                        type="button"
+                        class="w-full sm:w-auto touch-manipulation"
+                        :variant="canCreateInstitutionSubscription(selectedInstitution) ? 'default' : 'outline'"
+                        @click="handleSubscriptionClick(selectedInstitution)"
+                    >
+                        {{ institutionSubscriptionLabel(selectedInstitution) }}
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -253,15 +303,106 @@
             </DialogContent>
         </Dialog>
 
-        <InstitutionSubscriptionModal
+        <Dialog
             v-model:open="subscriptionModalOpen"
-            :institution-id="subscriptionInstitutionId"
-            :institution-name="subscriptionInstitutionName"
-            @subscribed="onSubscriptionCreated"
-        />
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        >
+            <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-2">
+                <DialogHeader>
+                    <DialogTitle class="text-lg font-semibold text-primary">
+                        Abonnement institution
+                    </DialogTitle>
+                </DialogHeader>
+
+                <p class="text-sm text-muted-foreground mb-4">
+                    {{ subscriptionInstitutionName }}
+                </p>
+
+                <template v-if="subscriptionModalStep === 'formula'">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <button
+                            type="button"
+                            class="rounded-lg border p-4 text-left transition-colors hover:border-primary hover:bg-primary/5 touch-manipulation"
+                            :class="selectedSubscriptionFormula === 'institution_monthly_150' ? 'border-primary bg-primary/5 ring-2 ring-primary' : ''"
+                            :disabled="subscriptionLoading"
+                            @click="selectedSubscriptionFormula = 'institution_monthly_150'"
+                        >
+                            <p class="font-semibold text-lg">
+                                150 €
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                par mois
+                            </p>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="rounded-lg border p-4 text-left transition-colors hover:border-primary hover:bg-primary/5 touch-manipulation"
+                            :class="selectedSubscriptionFormula === 'institution_yearly_1500' ? 'border-primary bg-primary/5 ring-2 ring-primary' : ''"
+                            :disabled="subscriptionLoading"
+                            @click="selectedSubscriptionFormula = 'institution_yearly_1500'"
+                        >
+                            <p class="font-semibold text-lg">
+                                1 500 €
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                par an
+                            </p>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-end gap-2 mt-6">
+                        <Button
+                            variant="secondary"
+                            type="button"
+                            :disabled="subscriptionLoading"
+                            @click="subscriptionModalOpen = false"
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            type="button"
+                            :disabled="!selectedSubscriptionFormula || subscriptionLoading"
+                            :in-progress="subscriptionLoading"
+                            @click="generateInstitutionSubscription"
+                        >
+                            Générer le bon de commande
+                        </Button>
+                    </div>
+                </template>
+
+                <template v-else>
+                    <p class="text-sm text-muted-foreground mb-4">
+                        Vérifiez le contenu du PDF avant l'envoi pour signature électronique.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-2 mt-6">
+                        <Button
+                            variant="outline"
+                            type="button"
+                            class="touch-manipulation"
+                            :disabled="subscriptionLoading"
+                            @click="previewPendingSubscriptionPdf"
+                        >
+                            Voir le PDF
+                        </Button>
+                        <Button
+                            type="button"
+                            class="touch-manipulation"
+                            :disabled="subscriptionLoading"
+                            :in-progress="subscriptionLoading"
+                            @click="sendPendingSubscriptionForSignature"
+                        >
+                            Envoyer pour signature
+                        </Button>
+                    </div>
+                </template>
+            </DialogContent>
+        </Dialog>
 
         <InstitutionSubscriptionStatusModal
             v-model:open="subscriptionStatusModalOpen"
+            :institution-id="subscriptionInstitutionId"
             :institution-name="subscriptionInstitutionName"
             :subscription="subscriptionStatusData"
             @signed="onSubscriptionStatusChanged"
@@ -293,7 +434,6 @@ import { useAuth } from '@/composables/useAuth';
 import { formatRelativeDate } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
-import InstitutionSubscriptionModal from './InstitutionSubscriptionModal.vue';
 import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 
 const props = defineProps<{
@@ -326,6 +466,11 @@ const subscriptionStatusModalOpen = ref(false);
 const subscriptionInstitutionId = ref<number | null>(null);
 const subscriptionInstitutionName = ref('');
 const subscriptionStatusData = ref<CrmInstitution['subscription'] | null>(null);
+const selectedSubscriptionFormula = ref<'institution_monthly_150' | 'institution_yearly_1500' | null>(null);
+const subscriptionModalStep = ref<'formula' | 'review'>('formula');
+const pendingSubscriptionContractId = ref<number | null>(null);
+const subscriptionLoading = ref(false);
+const { createInstitutionSubscription, viewInstitutionSubscriptionPdf, sendInstitutionSubscriptionForSignature } = useCrm();
 const selectedInstitution = ref<CrmInstitution | null>(null);
 const representativeUserId = ref<number | null>(null);
 const { updateCrmUser } = useCrm();
@@ -399,10 +544,109 @@ async function openReferrerDialog(institution: CrmInstitution) {
 function openSubscriptionModal(institution: CrmInstitution) {
     subscriptionInstitutionId.value = institution.id;
     subscriptionInstitutionName.value = institution.full_name;
+    selectedSubscriptionFormula.value = null;
+    subscriptionModalStep.value = 'formula';
+    pendingSubscriptionContractId.value = null;
     subscriptionModalOpen.value = true;
 }
 
+async function generateInstitutionSubscription() {
+    if (!subscriptionInstitutionId.value || !selectedSubscriptionFormula.value) {
+        $toast({
+            description: 'Sélectionnez une formule d\'abonnement.',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    subscriptionLoading.value = true;
+
+    try {
+        const response = await createInstitutionSubscription(
+            subscriptionInstitutionId.value,
+            selectedSubscriptionFormula.value,
+        );
+
+        pendingSubscriptionContractId.value = response.contract?.id ?? null;
+        subscriptionModalStep.value = 'review';
+
+        $toast({
+            description: response.message ?? 'Bon de commande généré.',
+            variant: 'success',
+        });
+
+        if (pendingSubscriptionContractId.value) {
+            await previewPendingSubscriptionPdf();
+        }
+    }
+    catch {
+        $toast({
+            description: 'Impossible de générer le bon de commande. Réessayez.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        subscriptionLoading.value = false;
+    }
+}
+
+async function previewPendingSubscriptionPdf() {
+    if (!subscriptionInstitutionId.value || !pendingSubscriptionContractId.value) {
+        return;
+    }
+
+    try {
+        await viewInstitutionSubscriptionPdf(
+            subscriptionInstitutionId.value,
+            pendingSubscriptionContractId.value,
+        );
+    }
+    catch {
+        $toast({
+            description: 'Impossible d\'ouvrir le PDF.',
+            variant: 'destructive',
+        });
+    }
+}
+
+async function sendPendingSubscriptionForSignature() {
+    if (!subscriptionInstitutionId.value || !pendingSubscriptionContractId.value) {
+        return;
+    }
+
+    subscriptionLoading.value = true;
+
+    try {
+        const response = await sendInstitutionSubscriptionForSignature(
+            subscriptionInstitutionId.value,
+            pendingSubscriptionContractId.value,
+        );
+
+        if (response.signing_url) {
+            window.open(response.signing_url, '_blank', 'noopener,noreferrer');
+        }
+
+        $toast({
+            description: response.message ?? 'Bon de commande envoyé pour signature.',
+            variant: 'success',
+        });
+
+        subscriptionModalOpen.value = false;
+        onSubscriptionCreated();
+    }
+    catch {
+        $toast({
+            description: 'Envoi Documenso impossible. Vérifiez la configuration ou réessayez.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        subscriptionLoading.value = false;
+    }
+}
+
 function openSubscriptionStatusModal(institution: CrmInstitution) {
+    subscriptionInstitutionId.value = institution.id;
     subscriptionInstitutionName.value = institution.full_name;
     subscriptionStatusData.value = institution.subscription ?? null;
     subscriptionStatusModalOpen.value = true;
@@ -413,12 +657,62 @@ function handleSubscriptionClick(institution: CrmInstitution) {
         return;
     }
 
-    if (institution.subscription?.can_create !== false && !institution.subscription?.contract_id) {
+    showModal.value = false;
+
+    if (institution.subscription?.can_create === true) {
         openSubscriptionModal(institution);
         return;
     }
 
     openSubscriptionStatusModal(institution);
+}
+
+function canCreateInstitutionSubscription(institution: CrmInstitution): boolean {
+    return institution.subscription?.can_create === true;
+}
+
+function institutionSubscriptionLabel(institution: CrmInstitution): string {
+    const subscription = institution.subscription;
+    const status = subscription?.status;
+    const formula = subscription?.formula;
+
+    if (canCreateInstitutionSubscription(institution)) {
+        return 'Créer bon de commande';
+    }
+    if (subscription?.can_send_for_signature) {
+        return 'À valider';
+    }
+    if (subscription?.status_label) {
+        return subscription.status_label;
+    }
+    if (status === 'paid' || status === 'accomplished') {
+        return formula === 'institution_yearly_1500' ? 'Actif (annuel)' : 'Actif (mensuel)';
+    }
+
+    return 'Suivi signature';
+}
+
+function institutionSubscriptionBadgeClass(institution: CrmInstitution): string {
+    const subscription = institution.subscription;
+    const status = subscription?.status;
+
+    if (canCreateInstitutionSubscription(institution)) {
+        return 'bg-primary/10 text-primary border border-primary/30';
+    }
+    if (subscription?.can_send_for_signature) {
+        return 'bg-blue-100 text-blue-800';
+    }
+    if (status === 'paid' || status === 'accomplished') {
+        return 'bg-green-100 text-green-800';
+    }
+    if (['sent_for_signature', 'sign', 'pending_signature', 'signed'].includes(status ?? '')) {
+        return 'bg-amber-100 text-amber-800';
+    }
+    if (status === 'cancelled') {
+        return 'bg-red-100 text-red-800';
+    }
+
+    return 'bg-gray-100 text-gray-700';
 }
 
 function onSubscriptionCreated() {
@@ -1032,42 +1326,8 @@ const columns: ColumnDef<CrmInstitution>[] = [
         header: 'Bon de commande',
         cell: ({ row }) => {
             const institution = row.original as CrmInstitution;
-            const subscription = institution.subscription;
-            const status = subscription?.status;
-            const formula = subscription?.formula;
-            const canCreate = subscription?.can_create !== false && !subscription?.contract_id;
-
-            const label = (() => {
-                if (canCreate) {
-                    return 'Créer';
-                }
-                if (subscription?.status_label) {
-                    return subscription.status_label;
-                }
-                if (status === 'paid' || status === 'accomplished') {
-                    return formula === 'institution_yearly_1500' ? 'Actif (annuel)' : 'Actif (mensuel)';
-                }
-
-                return 'En signature';
-            })();
-
-            const badgeClass = (() => {
-                if (canCreate) {
-                    return 'bg-primary/10 text-primary border border-primary/30';
-                }
-                if (status === 'paid' || status === 'accomplished') {
-                    return 'bg-green-100 text-green-800';
-                }
-                if (['sent_for_signature', 'sign', 'pending_signature', 'signed'].includes(status ?? '')) {
-                    return 'bg-amber-100 text-amber-800';
-                }
-                if (status === 'cancelled') {
-                    return 'bg-red-100 text-red-800';
-                }
-
-                return 'bg-gray-100 text-gray-700';
-            })();
-
+            const label = institutionSubscriptionLabel(institution);
+            const badgeClass = institutionSubscriptionBadgeClass(institution);
             const isClickable = !isCollaborator.value;
 
             return h('div', { class: 'flex justify-center' }, [
@@ -1075,9 +1335,11 @@ const columns: ColumnDef<CrmInstitution>[] = [
                     'button',
                     {
                         type: 'button',
-                        class: `px-2 py-1 rounded text-xs font-medium ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
+                        'data-no-row-select': 'true',
+                        class: `px-2 py-1 rounded text-xs font-medium touch-manipulation ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
                         disabled: !isClickable,
-                        onClick: () => {
+                        onClick: (event: MouseEvent) => {
+                            event.stopPropagation();
                             if (isClickable) {
                                 handleSubscriptionClick(institution);
                             }

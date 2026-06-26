@@ -114,10 +114,51 @@ export const useCrm = () => {
         institutionId: number,
         formula: 'institution_monthly_150' | 'institution_yearly_1500',
     ) {
-        return await $apifetch(`api/crm/institutions/${institutionId}/subscription`, {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/subscription`, {
             method: 'POST',
             body: { formula },
         });
+    }
+
+    async function viewInstitutionSubscriptionPdf(institutionId: number, contractId: number) {
+        const newWindow = window.open();
+        if (!newWindow) {
+            throw new Error('Impossible d\'ouvrir le PDF. Vérifiez le bloqueur de popups.');
+        }
+
+        newWindow.document.write(`
+            <html>
+                <head><title>Chargement PDF...</title></head>
+                <body style="display:flex;align-items:center;justify-content:center;height:100vh;">
+                    <h3>Chargement du bon de commande...</h3>
+                </body>
+            </html>
+        `);
+
+        try {
+            const response = await $apifetch(
+                `/api/crm/institutions/${institutionId}/subscription/${contractId}/pdf`,
+                { responseType: 'blob' },
+            );
+
+            const blob = new Blob([response], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+
+            newWindow.document.body.innerHTML = `
+                <iframe src="${url}" frameborder="0" style="width:100%;height:100vh"></iframe>
+            `;
+        }
+        catch {
+            newWindow.document.body.innerHTML = '<h3>Erreur lors du chargement du PDF</h3>';
+            throw new Error('Erreur lors du chargement du PDF');
+        }
+    }
+
+    async function sendInstitutionSubscriptionForSignature(institutionId: number, contractId: number) {
+        return await $apifetch(
+            `/api/crm/institutions/${institutionId}/subscription/${contractId}/send-for-signature`,
+            { method: 'POST' },
+        );
     }
 
     function invalidateCrmCacheKey(
@@ -157,6 +198,8 @@ export const useCrm = () => {
         getCrmPlus,
         getCrmInstitutions,
         createInstitutionSubscription,
+        viewInstitutionSubscriptionPdf,
+        sendInstitutionSubscriptionForSignature,
         invalidateCrmCacheKey,
         clearCrmCache,
         crmUser,
