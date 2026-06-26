@@ -1,7 +1,7 @@
 import type { Pagination, User, CrmInstitution } from '~/lib/types';
 
-const CACHE_STORAGE_KEY = 'crm_list_cache_v1';
-const UI_STORAGE_KEY = 'crm_ui_state_v1';
+const CACHE_STORAGE_KEY = 'crm_list_cache_v2';
+const UI_STORAGE_KEY = 'crm_ui_state_v2';
 const MAX_CACHE_ENTRIES = 15;
 
 export type CrmFilterOption = {
@@ -12,6 +12,7 @@ export type CrmFilterOption = {
     insurance: number | null;
     site: number | null;
     days_without_contact: number | null;
+    registration_source: string;
     deleted: boolean;
 };
 

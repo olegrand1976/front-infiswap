@@ -301,6 +301,25 @@ export const useInstitutions = () => {
         }
     }
 
+    async function validateInstitutionChanges(id: number) {
+        try {
+            const response = await $apifetch(`api/admin/institutions/${id}/validate-changes`, {
+                method: 'POST',
+            });
+            toast.success('Modifications validées avec succès');
+            return response;
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Erreur lors de la validation des modifications');
+            throw error;
+        }
+    }
+
+    async function getInstitutionHistories(id: number) {
+        const response = await $apifetch(`api/admin/institutions/${id}/histories`);
+        return response.histories ?? [];
+    }
+
     async function rejectInstitution(id: number) {
         try {
             const response = await $apifetch(`api/admin/institutions/${id}/reject`, {
@@ -331,6 +350,33 @@ export const useInstitutions = () => {
         }
     }
 
+    async function importInstitutions(file: File) {
+        try {
+            loading.value = true;
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await $apifetch('api/admin/institutions/import', {
+                method: 'POST',
+                body: formData,
+                timeout: 300_000,
+            });
+
+            toast.success(
+                `Import terminé : ${response.created} créée(s), ${response.updated} mise(s) à jour, ${response.skipped} ignorée(s).`,
+            );
+
+            return response;
+        }
+        catch (error: any) {
+            toast.error(error?.data?.message || 'Erreur lors de l\'import');
+            throw error;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
     return {
         institutions,
         currentInstitution,
@@ -349,8 +395,11 @@ export const useInstitutions = () => {
         syncUsers,
         forceDelete,
         validateInstitution,
+        validateInstitutionChanges,
+        getInstitutionHistories,
         rejectInstitution,
         updateStatus,
+        importInstitutions,
     };
 };
 

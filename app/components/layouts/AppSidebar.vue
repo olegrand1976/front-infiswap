@@ -26,14 +26,14 @@
                         >
                             <Collapsible
                                 v-if="item.children?.length"
-                                :default-open="route.path.startsWith(item.route)"
+                                :default-open="isGroupActive(item)"
                                 class="group/collapsible"
                             >
                                 <CollapsibleTrigger as-child>
                                     <SidebarMenuButton
                                         class="h-12"
-                                        :is-active="route.path.startsWith(item.route)"
-                                        :class="menuButtonClass(route.path.startsWith(item.route))"
+                                        :is-active="isGroupActive(item)"
+                                        :class="menuButtonClass(isGroupActive(item))"
                                     >
                                         <component
                                             :is="item.icon"
@@ -183,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -253,6 +253,27 @@ const contactChildren = computed<NavigationItem[]>(() => [
         icon: Inbox,
     })),
 ]);
+
+const crmChildren = computed<NavigationItem[]>(() => [
+    {
+        label: 'Suivi',
+        route: '/dashboard/admin/users/crm',
+        icon: UserCheck,
+        visible: true,
+    },
+    {
+        label: 'BC Institutions',
+        route: '/dashboard/admin/contracts/institutions',
+        icon: FileText,
+        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
+    },
+    {
+        label: 'Commissions BC',
+        route: '/dashboard/admin/institution-commission-settings',
+        icon: Euro,
+        visible: isSuperAdmin.value || isAdmin.value,
+    },
+].filter(item => item.visible !== false));
 
 const nurseNavigationItems: NavigationItem[] = [
     {
@@ -371,7 +392,8 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         label: 'CRM',
         route: '/dashboard/admin/users/crm',
         icon: UserCheck,
-        visible: true,
+        visible: crmChildren.value.length > 0,
+        children: crmChildren.value,
     },
     {
         label: 'Institutions',
@@ -542,7 +564,8 @@ const navigationItems = computed(() => {
                 i =>
                     i.route.includes('/users/crm')
                     || i.route.includes('/products')
-                    || i.route.includes('/contracts/nurstech'),
+                    || i.route.includes('/contracts/nurstech')
+                    || i.route.includes('/contracts/institutions'),
             );
         case 'collaborator':
         case 'medical':
@@ -553,4 +576,12 @@ const navigationItems = computed(() => {
 
 const route = useRoute();
 const isActiveRoute = (routePath: string) => route.path === routePath;
+
+const isGroupActive = (item: NavigationItem) => {
+    if (route.path.startsWith(item.route)) {
+        return true;
+    }
+
+    return item.children?.some(child => isActiveRoute(child.route)) ?? false;
+};
 </script>

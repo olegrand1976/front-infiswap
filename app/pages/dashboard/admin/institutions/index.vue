@@ -1,14 +1,28 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Gestion des institutions">
+        <DashboardAdminPageHeader
+            as="div"
+            title="Gestion des institutions"
+        >
             <template #action>
-                <Button
-                    class="rounded"
-                    href="/dashboard/admin/institutions/create"
-                >
-                    <CirclePlus />
-                    <span class="hidden md:inline-block">Nouvelle</span>
-                </Button>
+                <div class="flex gap-2">
+                    <Button
+                        v-if="canImportInstitutions"
+                        class="rounded"
+                        variant="outline"
+                        @click="importDialogOpen = true"
+                    >
+                        <Upload />
+                        <span class="hidden md:inline-block">Importer</span>
+                    </Button>
+                    <Button
+                        class="rounded"
+                        href="/dashboard/admin/institutions/create"
+                    >
+                        <CirclePlus />
+                        <span class="hidden md:inline-block">Nouvelle</span>
+                    </Button>
+                </div>
             </template>
         </DashboardAdminPageHeader>
 
@@ -21,6 +35,28 @@
                     class="max-w-sm"
                     @input="debouncedFilter"
                 />
+                <Select
+                    v-model="option.registration_source"
+                    @update:model-value="onRegistrationSourceChange"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Source</span>
+                        <strong class="ml-4">{{ registrationSourceLabel }}</strong>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="all">
+                                Tous
+                            </SelectItem>
+                            <SelectItem value="site">
+                                Site
+                            </SelectItem>
+                            <SelectItem value="file">
+                                Fichier
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
                 <Button
                     class="rounded-md"
                     @click="resetFilter"
@@ -58,7 +94,7 @@
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Êtes-vous sûr de vouloir supprimer l'institution « {{ institutionToDelete?.name }} » ? Cette action est irréversible.
+                        Êtes-vous sûr de vouloir supprimer l'institution « {{ institutionToDelete?.name }} » ? Elle sera masquée de la liste (suppression logique).
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -76,11 +112,43 @@
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+
+        <Dialog v-model:open="importDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Importer des institutions</DialogTitle>
+                    <DialogDescription>
+                        Fichier Excel (.xlsx) avec les colonnes Nom, Ville, Email, Téléphone, Adresse, Code postal.
+                    </DialogDescription>
+                </DialogHeader>
+                <FileUpload
+                    accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                    :max-size="10 * 1024 * 1024"
+                    @update:model-value="importFile = $event"
+                />
+                <DialogFooter>
+                    <Button
+                        variant="outline"
+                        class="rounded-md"
+                        @click="importDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        class="rounded-md"
+                        :disabled="!importFile || importing"
+                        @click="handleImport"
+                    >
+                        {{ importing ? 'Import en cours…' : 'Importer' }}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, CirclePlus, Pencil, RefreshCw, Trash2 } from 'lucide-vue-next';
+import { ArrowUpDown, CirclePlus, RefreshCw, Trash2, Upload, Pencil } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -88,6 +156,10 @@ import { PERPAGE } from '~/lib/constants';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import type { Institution } from '~/lib/types';
 import RollingLoader from '~/components/RollingLoader.vue';
+import FileUpload from '~/components/ui/file-upload/FileUpload.vue';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { formatToDMY } from '@/composables/useDate';
 
 useHead({ title: 'Gestion des institutions' });
 
@@ -96,8 +168,21 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { institutions, getInstitutions, count, forceDelete, updateStatus, loading } = useInstitutions();
-const { isSuperAdmin } = useAuth();
+const { institutions, getInstitutions, count, forceDelete, updateStatus, importInstitutions, loading } = useInstitutions();
+const { isSuperAdmin, isAdmin } = useAuth();
+
+const canImportInstitutions = computed(() => isSuperAdmin.value || isAdmin.value);
+
+const isImportProspect = (institution: Institution): boolean =>
+    institution.registration_source === 'file' && !institution.contact;
+
+const canDeleteInstitution = (institution: Institution): boolean => {
+    if (isSuperAdmin.value) {
+        return true;
+    }
+
+    return isAdmin.value && isImportProspect(institution);
+};
 
 // ============ AJOUT DES COOKIES ============
 const pageCookie = useCookie<number>('institutions_page', {
@@ -124,11 +209,48 @@ const sortOrderCookie = useCookie<'ASC' | 'DESC'>('institutions_sort_order', {
     default: () => 'ASC',
     maxAge: 60 * 60 * 24 * 7,
 });
+
+const registrationSourceCookie = useCookie<string>('institutions_registration_source', {
+    default: () => 'all',
+    maxAge: 60 * 60 * 24 * 7,
+});
+
+const importDialogOpen = ref(false);
+const importFile = ref<File | null>(null);
+const importing = ref(false);
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
 
-const initialFilter = { name: filterCookie.value };
+const initialFilter = {
+    name: filterCookie.value,
+    registration_source: registrationSourceCookie.value as 'all' | 'site' | 'file',
+};
 const option = ref({ ...initialFilter });
+
+const registrationSourceLabel = computed(() => {
+    switch (option.value.registration_source) {
+        case 'site':
+            return 'Site';
+        case 'file':
+            return 'Fichier';
+        default:
+            return 'Tous';
+    }
+});
+
+function buildListOptions() {
+    const params: Record<string, unknown> = {
+        ...option.value,
+        sortKey: sort.by,
+        sortOrder: sort.order,
+    };
+
+    if (params.registration_source === 'all') {
+        delete params.registration_source;
+    }
+
+    return params;
+}
 
 const sort = reactive<{ order: 'ASC' | 'DESC'; by: string | null }>({
     order: sortOrderCookie.value,
@@ -136,11 +258,7 @@ const sort = reactive<{ order: 'ASC' | 'DESC'; by: string | null }>({
 });
 
 onMounted(async () => {
-    await getInstitutions(page.value, perPage.value, {
-        ...option.value,
-        sortKey: sort.by,
-        sortOrder: sort.order,
-    });
+    await getInstitutions(page.value, perPage.value, buildListOptions());
 });
 
 const dataInstitutions = computed(() => institutions.value ?? []);
@@ -148,11 +266,7 @@ const dataInstitutions = computed(() => institutions.value ?? []);
 const refreshInstitutions = async (newPage: number) => {
     page.value = newPage;
     pageCookie.value = newPage;
-    await getInstitutions(newPage, perPage.value, {
-        ...option.value,
-        sortKey: sort.by,
-        sortOrder: sort.order,
-    });
+    await getInstitutions(newPage, perPage.value, buildListOptions());
 };
 
 const handlePerPageChange = async (value: number) => {
@@ -160,16 +274,13 @@ const handlePerPageChange = async (value: number) => {
     perPageCookie.value = value;
     page.value = 1;
     pageCookie.value = 1;
-    await getInstitutions(page.value, value, {
-        ...option.value,
-        sortKey: sort.by,
-        sortOrder: sort.order,
-    });
+    await getInstitutions(page.value, value, buildListOptions());
 };
 
 const resetFilter = async () => {
-    option.value = { name: '' };
-    filterCookie.value = ''; // Sauvegarder le filtre vide
+    option.value = { name: '', registration_source: 'all' };
+    filterCookie.value = '';
+    registrationSourceCookie.value = 'all';
 
     sort.by = 'name';
     sort.order = 'ASC';
@@ -179,10 +290,7 @@ const resetFilter = async () => {
     page.value = 1;
     pageCookie.value = 1;
 
-    await getInstitutions(1, perPage.value, {
-        sortKey: sort.by,
-        sortOrder: sort.order,
-    });
+    await getInstitutions(1, perPage.value, buildListOptions());
 };
 
 let debounceTimer: ReturnType<typeof setTimeout>;
@@ -192,12 +300,33 @@ const debouncedFilter = () => {
         page.value = 1;
         pageCookie.value = 1;
         filterCookie.value = option.value.name;
-        await getInstitutions(1, perPage.value, {
-            ...option.value,
-            sortKey: sort.by,
-            sortOrder: sort.order,
-        });
+        await getInstitutions(1, perPage.value, buildListOptions());
     }, 350);
+};
+
+const onRegistrationSourceChange = async () => {
+    registrationSourceCookie.value = option.value.registration_source;
+    page.value = 1;
+    pageCookie.value = 1;
+    await getInstitutions(1, perPage.value, buildListOptions());
+};
+
+const handleImport = async () => {
+    if (!importFile.value) return;
+
+    importing.value = true;
+    try {
+        await importInstitutions(importFile.value);
+        importDialogOpen.value = false;
+        importFile.value = null;
+        await getInstitutions(page.value, perPage.value, buildListOptions());
+    }
+    catch (error) {
+        console.error('Erreur lors de l\'import:', error);
+    }
+    finally {
+        importing.value = false;
+    }
 };
 
 const toggleSort = () => {
@@ -223,11 +352,7 @@ watch(
         sortByCookie.value = newVal.by as string;
         sortOrderCookie.value = newVal.order;
 
-        await getInstitutions(page.value, perPage.value, {
-            ...option.value,
-            sortKey: newVal.by,
-            sortOrder: newVal.order,
-        });
+        await getInstitutions(page.value, perPage.value, buildListOptions());
     },
     { deep: true },
 );
@@ -256,11 +381,7 @@ const confirmDelete = async () => {
     deleting.value = true;
     try {
         await forceDelete(institutionToDelete.value.id);
-        await getInstitutions(page.value, perPage.value, {
-            ...option.value,
-            sortKey: sort.by,
-            sortOrder: sort.order,
-        });
+        await getInstitutions(page.value, perPage.value, buildListOptions());
         closeDeleteDialog();
     }
     catch (error) {
@@ -274,19 +395,39 @@ const confirmDelete = async () => {
 const handleStatusChange = async (institution: Institution, newStatus: 'pending' | 'active' | 'rejected') => {
     try {
         await updateStatus(institution.id, newStatus);
-        await getInstitutions(page.value, perPage.value, {
-            ...option.value,
-            sortKey: sort.by,
-            sortOrder: sort.order,
-        });
+        await getInstitutions(page.value, perPage.value, buildListOptions());
     }
     catch (error) {
         console.error('Erreur lors de la mise à jour du statut:', error);
     }
 };
 
+const getRegistrationSourceLabel = (source: string | null | undefined) => {
+    switch (source) {
+        case 'file':
+            return 'Fichier';
+        case 'site':
+            return 'Site';
+        default:
+            return '—';
+    }
+};
+
+const getRegistrationSourceColor = (source: string | null | undefined) => {
+    switch (source) {
+        case 'file':
+            return 'bg-blue-100 text-blue-800';
+        case 'site':
+            return 'bg-purple-100 text-purple-800';
+        default:
+            return 'bg-gray-100 text-gray-800';
+    }
+};
+
 const getStatusLabel = (status: string | null | undefined) => {
     switch (status) {
+        case 'not_applicable':
+            return 'Non applicable';
         case 'active':
             return 'Active';
         case 'pending':
@@ -300,6 +441,8 @@ const getStatusLabel = (status: string | null | undefined) => {
 
 const getStatusColor = (status: string | null | undefined) => {
     switch (status) {
+        case 'not_applicable':
+            return 'bg-gray-100 text-gray-600';
         case 'active':
             return 'bg-green-100 text-green-800';
         case 'pending':
@@ -376,6 +519,38 @@ const columns: ColumnDef<Institution>[] = [
         },
     },
     {
+        id: 'registration_source',
+        header: () =>
+            h(Button, { variant: 'ghost', onClick: () => setSort('registration_source') }, () => [
+                'Source',
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
+            ]),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const source = institution.registration_source;
+
+            return h('div', { class: 'flex justify-center' }, [
+                h('span', {
+                    class: `px-2 py-1 rounded-md text-xs font-medium ${getRegistrationSourceColor(source)}`,
+                }, getRegistrationSourceLabel(source)),
+            ]);
+        },
+    },
+    {
+        id: 'registered_at',
+        header: () =>
+            h(Button, { variant: 'ghost', onClick: () => setSort('registered_at') }, () => [
+                'Date inscription / import',
+                h(ArrowUpDown, { class: 'ml-2 h-4 w-4' }),
+            ]),
+        cell: ({ row }) => {
+            const institution = row.original;
+            const dateValue = institution.registered_at || institution.created_at;
+
+            return h('div', { class: 'text-center text-sm' }, dateValue ? formatToDMY(dateValue) : '—');
+        },
+    },
+    {
         id: 'contact',
         header: () => h('div', { class: 'text-center' }, 'Contact'),
         cell: ({ row }) => {
@@ -434,7 +609,7 @@ const columns: ColumnDef<Institution>[] = [
                     title: 'Modifier',
                 }, () => h(Pencil, { class: 'w-4 h-4' })),
 
-                isSuperAdmin.value
+                canDeleteInstitution(institution)
                     ? h(Button, {
                             variant: 'ghost',
                             size: 'sm',

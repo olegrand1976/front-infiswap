@@ -179,36 +179,78 @@
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
                 <p class="font-semibold mb-4">
-                    Sélectionner un référent
+                    Apporté par
                 </p>
 
-                <RollingLoader
-                    v-if="loading"
-                    :loading="loading"
-                />
+                <div class="flex flex-wrap gap-4 mb-4">
+                    <label class="inline-flex items-center">
+                        <input
+                            v-model="referrerMode"
+                            type="radio"
+                            value="account"
+                            class="form-radio"
+                        >
+                        <span class="ml-2">Porteur d'affaire</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input
+                            v-model="referrerMode"
+                            type="radio"
+                            value="text"
+                            class="form-radio"
+                        >
+                        <span class="ml-2">Texte libre</span>
+                    </label>
+                </div>
+
+                <div
+                    v-if="referrerMode === 'text'"
+                    class="mb-4"
+                >
+                    <label
+                        for="referrerFreeText"
+                        class="block mb-1 text-sm font-medium text-gray-700"
+                    >
+                        Nom ou source
+                    </label>
+                    <InputIcon
+                        id="referrerFreeText"
+                        v-model="tempReferrerText"
+                        type="text"
+                        class="w-full"
+                        placeholder="Ex. Dr Dupont, salon Infirmiers 2025…"
+                    />
+                </div>
 
                 <template v-else>
-                    <p
-                        v-if="!userReferrer || userReferrer.length === 0"
-                        class="text-gray-500 italic text-center py-4"
-                    >
-                        Pas encore de porteur d'affaire enregistré
-                    </p>
+                    <RollingLoader
+                        v-if="loading"
+                        :loading="loading"
+                    />
 
-                    <ul
-                        v-else
-                        class="space-y-2 max-h-64 overflow-y-auto"
-                    >
-                        <li
-                            v-for="ref in userReferrer"
-                            :key="ref.id"
-                            class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                            :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                            @click="selectedReferrer = ref"
+                    <template v-else>
+                        <p
+                            v-if="!userReferrer || userReferrer.length === 0"
+                            class="text-gray-500 italic text-center py-4"
                         >
-                            {{ ref.full_name }} ({{ ref.email }})
-                        </li>
-                    </ul>
+                            Pas encore de porteur d'affaire enregistré
+                        </p>
+
+                        <ul
+                            v-else
+                            class="space-y-2 max-h-64 overflow-y-auto"
+                        >
+                            <li
+                                v-for="ref in userReferrer"
+                                :key="ref.id"
+                                class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
+                                :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
+                                @click="selectedReferrer = ref"
+                            >
+                                {{ ref.full_name }} ({{ ref.email }})
+                            </li>
+                        </ul>
+                    </template>
                 </template>
 
                 <div class="flex justify-end space-x-2 mt-4">
@@ -268,7 +310,7 @@ const authUser = useState('user');
 
 const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
-const { updateReferrer, userReferrer, getUserReferrer } = useReferrer();
+const { updateReferrer, userReferrer, getUserReferrer, referrerDisplayLabel } = useReferrer();
 
 const showModal = ref(false);
 const contactDialogOpen = ref(false);
@@ -285,7 +327,9 @@ const { $toast } = useNuxtApp();
 const { edit, isCollaborator } = useAuth();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
-const selectedReferrer = ref<{ id: number } | null>(null);
+const selectedReferrer = ref<Referrer | null>(null);
+const referrerMode = ref<'account' | 'text'>('text');
+const tempReferrerText = ref('');
 
 const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
 const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: User }[] } } } | null>(null);
@@ -344,16 +388,40 @@ async function openCommentDialog(user: User) {
 async function openReferrerDialog(user: User) {
     referrerDialogOpen.value = true;
     tempCrmId.value = user.id;
+    const referrer = user.referred_by;
+
+    if (referrer?.text) {
+        referrerMode.value = 'text';
+        tempReferrerText.value = referrer.text;
+        selectedReferrer.value = null;
+    }
+    else if (referrer?.id) {
+        referrerMode.value = 'account';
+        tempReferrerText.value = '';
+        selectedReferrer.value = referrer;
+    }
+    else {
+        referrerMode.value = 'text';
+        tempReferrerText.value = '';
+        selectedReferrer.value = null;
+    }
+
     await getUserReferrer();
 }
 
 async function confirmReferrer() {
-    if (!selectedReferrer.value) return;
+    const payload = referrerMode.value === 'text'
+        ? {
+                referred_by: null,
+                referred_by_text: tempReferrerText.value.trim() || null,
+            }
+        : {
+                referred_by: selectedReferrer.value?.id ?? null,
+                referred_by_text: null,
+            };
 
     try {
-        const response = await updateReferrer(tempCrmId.value, {
-            referred_by: selectedReferrer.value.id,
-        });
+        const response = await updateReferrer(tempCrmId.value, payload);
 
         localUsers.value = localUsers.value.map(u =>
             u.id === tempCrmId.value
@@ -367,7 +435,7 @@ async function confirmReferrer() {
         });
 
         $toast({
-            description: 'Porteur d\'affaire mis à jour avec succès',
+            description: 'Apporté par mis à jour avec succès',
             variant: 'success',
         });
 
@@ -755,17 +823,18 @@ const columns: ColumnDef<User>[] = [
         header: 'Apporté par',
         cell: ({ row }) => {
             const referrer = row.original?.referred_by as Referrer | undefined;
+            const label = referrerDisplayLabel(referrer);
 
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
                 isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
+                    ? h('span', { class: 'text-gray-400' }, label || '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'max-w-[150px] truncate text-sm',
-                                title: referrer?.full_name ?? '',
-                            }, referrer?.full_name || ''),
+                                title: label,
+                            }, label),
                             h(Pencil, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 shrink-0',
                                 onClick: () => openReferrerDialog(row.original),

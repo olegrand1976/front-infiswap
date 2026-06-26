@@ -44,6 +44,14 @@
                     <span class="text-sm">{{ formattedCreatedAt }}</span>
                 </div>
 
+                <div
+                    v-if="subscription.reference"
+                    class="flex items-center justify-between gap-3"
+                >
+                    <span class="text-sm text-muted-foreground">Référence BC</span>
+                    <span class="text-sm font-medium">{{ subscription.reference }}</span>
+                </div>
+
                 <div class="flex flex-wrap gap-2 pt-2">
                     <Button
                         v-if="subscription.contract_id && institutionId"
@@ -66,10 +74,38 @@
                     >
                         Envoyer pour signature
                     </Button>
+                    <Button
+                        v-if="canCancel && institutionId"
+                        type="button"
+                        variant="destructive"
+                        class="touch-manipulation"
+                        :disabled="deleteLoading"
+                        :in-progress="deleteLoading"
+                        @click="deleteDraft"
+                    >
+                        Annuler le bon de commande
+                    </Button>
+                    <Button
+                        v-if="subscription.contract_id"
+                        type="button"
+                        variant="outline"
+                        class="touch-manipulation"
+                        as-child
+                    >
+                        <NuxtLink :to="`/dashboard/admin/contracts/institutions?contract=${subscription.contract_id}`">
+                            Suivi BC / facturation
+                        </NuxtLink>
+                    </Button>
                 </div>
 
                 <p
-                    v-if="subscription.can_send_for_signature"
+                    v-if="canCancel"
+                    class="text-xs text-muted-foreground"
+                >
+                    Ce bon de commande n'est pas encore signé. Vous pouvez l'annuler pour en créer un nouveau.
+                </p>
+                <p
+                    v-else-if="subscription.can_send_for_signature"
                     class="text-xs text-muted-foreground"
                 >
                     Contrôlez le PDF avant l'envoi Documenso à l'institution.
@@ -79,6 +115,12 @@
                     class="text-xs text-muted-foreground"
                 >
                     Le lien de signature a été envoyé par email via Documenso.
+                </p>
+                <p
+                    v-else-if="!subscription.can_create && subscription.status"
+                    class="text-xs text-muted-foreground"
+                >
+                    Un bon de commande est déjà en cours pour cette institution.
                 </p>
             </div>
         </DialogContent>
@@ -101,13 +143,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     signed: [];
+    deleted: [];
 }>();
 
-const { viewInstitutionSubscriptionPdf, sendInstitutionSubscriptionForSignature } = useCrm();
+const { viewInstitutionSubscriptionPdf, sendInstitutionSubscriptionForSignature, deleteInstitutionSubscriptionDraft } = useCrm();
 const { $toast } = useNuxtApp();
 
 const pdfLoading = ref(false);
 const signingLoading = ref(false);
+const deleteLoading = ref(false);
+
+const canCancel = computed(() =>
+    props.subscription?.can_cancel ?? props.subscription?.can_delete_draft ?? false,
+);
 
 const statusLabel = computed(() => {
     const subscription = props.subscription;
@@ -225,6 +273,40 @@ async function sendForSignature() {
     }
     finally {
         signingLoading.value = false;
+    }
+}
+
+async function deleteDraft() {
+    const contractId = props.subscription?.contract_id;
+    if (!contractId || !props.institutionId || !canCancel.value) {
+        return;
+    }
+
+    if (!window.confirm('Supprimer ce brouillon de bon de commande ?')) {
+        return;
+    }
+
+    deleteLoading.value = true;
+
+    try {
+        const response = await deleteInstitutionSubscriptionDraft(props.institutionId, contractId);
+
+        $toast({
+            description: response.message ?? 'Brouillon supprimé.',
+            variant: 'success',
+        });
+
+        open.value = false;
+        emit('deleted');
+    }
+    catch {
+        $toast({
+            description: 'Impossible de supprimer le brouillon.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        deleteLoading.value = false;
     }
 }
 </script>

@@ -1,6 +1,23 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="CRM - Suivi utilisateurs - Suivi commercial" />
+        <DashboardAdminPageHeader
+            as="div"
+            title="CRM - Suivi utilisateurs - Suivi commercial"
+        >
+            <template
+                v-if="isInstitutionsTab && canImportInstitutions"
+                #action
+            >
+                <Button
+                    class="rounded-md"
+                    variant="outline"
+                    @click="importDialogOpen = true"
+                >
+                    <Upload class="md:mr-2 size-4" />
+                    <span class="hidden md:inline-block">Importer</span>
+                </Button>
+            </template>
+        </DashboardAdminPageHeader>
         <DashboardAdminPageContent>
             <Tabs
                 v-model="selectedCrm"
@@ -45,15 +62,35 @@
                     :disabled="isListLoading"
                     @input="onFilterInput"
                 />
-                <InputIcon
-                    v-model="option.zip"
-                    rounded="md"
-                    placeholder="Code postal"
-                    class="w-[250px]"
-                    type="numeric"
-                    :disabled="isListLoading"
-                    @input="onFilterInput"
-                />
+                <div class="flex items-center gap-1 shrink-0">
+                    <InputIcon
+                        v-model="option.zip"
+                        rounded="md"
+                        placeholder="Code postal"
+                        class="w-[220px]"
+                        type="text"
+                        inputmode="text"
+                        :disabled="isListLoading"
+                        @input="onFilterInput"
+                    />
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger as-child>
+                                <button
+                                    type="button"
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-input text-sm font-semibold text-muted-foreground hover:bg-muted"
+                                    aria-label="Aide filtre code postal"
+                                >
+                                    ?
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent class="max-w-xs">
+                                <p>Ajoutez * à la fin pour filtrer par début de code postal.</p>
+                                <p>Exemple : 5* affiche tous les codes commençant par 5.</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
                 <InputIcon
                     v-model="option.city"
                     rounded="md"
@@ -75,7 +112,7 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectItem :value="null">
+                            <SelectItem value="all">
                                 <span class="ml-2">Tous</span>
                             </SelectItem>
                             <SelectItem :value="1">
@@ -100,7 +137,7 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectItem :value="null">
+                            <SelectItem value="all">
                                 <span class="ml-2">Tous</span>
                             </SelectItem>
                             <SelectItem :value="1">
@@ -125,7 +162,7 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectItem :value="null">
+                            <SelectItem value="all">
                                 <span class="ml-2">Tous</span>
                             </SelectItem>
                             <SelectItem :value="7">
@@ -136,6 +173,30 @@
                             </SelectItem>
                             <SelectItem :value="90">
                                 <span class="ml-2">90+ jours</span>
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Select
+                    v-if="isInstitutionsTab"
+                    v-model="option.registration_source"
+                    :disabled="isListLoading"
+                    @update:model-value="onFilterSelect"
+                >
+                    <SelectTrigger class="max-w-sm rounded-md gap-2">
+                        <span>Source</span>
+                        <strong class="ml-4">{{ registrationSourceLabel }}</strong>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="all">
+                                <span class="ml-2">Tous</span>
+                            </SelectItem>
+                            <SelectItem value="site">
+                                <span class="ml-2">Site</span>
+                            </SelectItem>
+                            <SelectItem value="file">
+                                <span class="ml-2">Fichier</span>
                             </SelectItem>
                         </SelectGroup>
                     </SelectContent>
@@ -292,18 +353,55 @@
                 </template>
             </div>
         </DashboardAdminPageContent>
+
+        <Dialog v-model:open="importDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Importer des institutions</DialogTitle>
+                    <DialogDescription>
+                        Fichier Excel (.xlsx) avec les colonnes Nom, Ville, Email, Téléphone, Adresse, Code postal.
+                    </DialogDescription>
+                </DialogHeader>
+                <FileUpload
+                    accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                    :max-size="10 * 1024 * 1024"
+                    @update:model-value="importFile = $event"
+                />
+                <DialogFooter>
+                    <Button
+                        variant="outline"
+                        class="rounded-md"
+                        @click="importDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        class="rounded-md"
+                        :disabled="!importFile || importing"
+                        @click="handleImport"
+                    >
+                        {{ importing ? 'Import en cours…' : 'Importer' }}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Download, Loader2, RefreshCw } from 'lucide-vue-next';
+import { Download, Loader2, RefreshCw, Upload } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm } from '@/composables/useCrm';
 import { buildCrmCacheKey, getCrmUiState, hasCrmCacheEntry, saveCrmUiState } from '@/composables/useCrmCache';
 import type { CrmInstitution, User } from '~/lib/types';
+import FileUpload from '~/components/ui/file-upload/FileUpload.vue';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useInstitutions } from '@/composables/useInstitution';
+import { useAuth } from '@/composables/useAuth';
 
 useHead({ title: 'Suivi utilisateurs' });
 
@@ -332,8 +430,15 @@ const selectedCrm = ref('users');
 const isListLoading = ref(false);
 const listLoadError = ref(false);
 const { getCrmPlus, getCrmInstitutions, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
+const { importInstitutions } = useInstitutions();
+const { isSuperAdmin, isAdmin } = useAuth();
 const route = useRoute();
 const { $toast } = useNuxtApp();
+
+const canImportInstitutions = computed(() => isSuperAdmin.value || isAdmin.value);
+const importDialogOpen = ref(false);
+const importFile = ref<File | null>(null);
+const importing = ref(false);
 
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
@@ -345,14 +450,17 @@ const countryTabs = [
     { label: 'France', value: 'fr' },
 ];
 
+const CRM_FILTER_ALL = 'all' as const;
+
 const emptyFilter = {
     name: null as string | null,
     zip: null as string | null,
     city: null as string | null,
     country: '' as string,
-    insurance: null as number | null,
-    site: null as number | null,
-    days_without_contact: null as number | null,
+    insurance: CRM_FILTER_ALL as typeof CRM_FILTER_ALL | 0 | 1,
+    site: CRM_FILTER_ALL as typeof CRM_FILTER_ALL | 0 | 1,
+    days_without_contact: CRM_FILTER_ALL as typeof CRM_FILTER_ALL | 7 | 30 | 90,
+    registration_source: CRM_FILTER_ALL as typeof CRM_FILTER_ALL | 'site' | 'file',
     deleted: false as boolean,
 };
 
@@ -371,7 +479,13 @@ const sort = reactive({
 if (import.meta.client && !route.query.name) {
     const savedUiState = getCrmUiState();
     if (savedUiState) {
-        option.value = { ...savedUiState.option };
+        option.value = {
+            ...savedUiState.option,
+            insurance: savedUiState.option.insurance ?? CRM_FILTER_ALL,
+            site: savedUiState.option.site ?? CRM_FILTER_ALL,
+            days_without_contact: savedUiState.option.days_without_contact ?? CRM_FILTER_ALL,
+            registration_source: savedUiState.option.registration_source ?? CRM_FILTER_ALL,
+        };
         sort.by = savedUiState.sort.by;
         sort.order = savedUiState.sort.order;
         if (savedUiState.selectedCrm) {
@@ -399,6 +513,17 @@ const daysWithoutContactLabel = computed(() => {
     if (days === 30) return '30+ jours';
     if (days === 90) return '90+ jours';
     return 'tous';
+});
+
+const registrationSourceLabel = computed(() => {
+    switch (option.value.registration_source) {
+        case 'site':
+            return 'Site';
+        case 'file':
+            return 'Fichier';
+        default:
+            return 'tous';
+    }
 });
 
 const isInstitutionsTab = computed(() => selectedCrm.value === 'institutions');
@@ -433,6 +558,7 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
 
     if (isInstitutionsTab.value) {
         params.enrich = 1;
+        delete params.deleted;
     }
     else {
         params.deleted = selectedCrm.value === 'exUsers';
@@ -444,8 +570,8 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
         params.sortOrder = sort.order;
     }
 
-    ['insurance', 'site', 'days_without_contact', 'name', 'zip', 'city', 'country'].forEach((key) => {
-        if (params[key] === null || params[key] === '') {
+    ['insurance', 'site', 'days_without_contact', 'registration_source', 'name', 'zip', 'city', 'country'].forEach((key) => {
+        if (params[key] === null || params[key] === '' || params[key] === CRM_FILTER_ALL) {
             delete params[key];
         }
     });
@@ -508,6 +634,25 @@ async function refreshData() {
     clearCrmCache();
     await fetchCrmList(page.value, perPage.value, {}, { force: true });
 }
+
+const handleImport = async () => {
+    if (!importFile.value) return;
+
+    importing.value = true;
+    try {
+        await importInstitutions(importFile.value);
+        importDialogOpen.value = false;
+        importFile.value = null;
+        clearCrmCache();
+        await fetchCrmList(page.value, perPage.value, {}, { force: true });
+    }
+    catch (error) {
+        console.error('Erreur lors de l\'import:', error);
+    }
+    finally {
+        importing.value = false;
+    }
+};
 
 const setCountryFilter = async (country: string) => {
     if (option.value.country === country || isListLoading.value) return;
@@ -756,6 +901,6 @@ watch(selectedCrm, async (newValue) => {
     pageCookie.value = 1;
     selectedCrmCookie.value = newValue;
     listLoadError.value = false;
-    await fetchCrmList();
+    await fetchCrmList(1, perPage.value, {}, { force: true });
 });
 </script>

@@ -161,6 +161,23 @@ export const useCrm = () => {
         );
     }
 
+    async function deleteInstitutionSubscriptionDraft(institutionId: number, contractId: number) {
+        return await $apifetch(
+            `/api/crm/institutions/${institutionId}/subscription/${contractId}`,
+            { method: 'DELETE' },
+        );
+    }
+
+    async function updateCrmInstitutionContact(
+        institutionId: number,
+        payload: { email?: string; phone_number?: string },
+    ) {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/contact`, {
+            method: 'PUT',
+            body: payload,
+        });
+    }
+
     function invalidateCrmCacheKey(
         page: number,
         perPage: number,
@@ -200,6 +217,8 @@ export const useCrm = () => {
         createInstitutionSubscription,
         viewInstitutionSubscriptionPdf,
         sendInstitutionSubscriptionForSignature,
+        deleteInstitutionSubscriptionDraft,
+        updateCrmInstitutionContact,
         invalidateCrmCacheKey,
         clearCrmCache,
         crmUser,
