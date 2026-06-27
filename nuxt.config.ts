@@ -48,7 +48,10 @@ export default defineNuxtConfig({
     css: ['./app/assets/css/tailwind.css'],
     runtimeConfig: {
         /** URL API joignable depuis Cloud Run (Run *.run.app) — SSR uniquement */
-        apiUrlInternal: process.env.NUXT_API_URL_INTERNAL || process.env.API_URL_INTERNAL || '',
+        apiUrlInternal: process.env.NUXT_API_URL_INTERNAL
+            || process.env.API_URL_INTERNAL
+            || process.env.API_URL_SSR
+            || '',
         public: {
             API_URL: process.env.NUXT_PUBLIC_API_URL || process.env.API_URL,
             FRONT_END_URL: process.env.NUXT_PUBLIC_FRONT_END_URL || process.env.FRONT_END_URL,
