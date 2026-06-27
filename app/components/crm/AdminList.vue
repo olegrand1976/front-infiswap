@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="flex h-full min-h-0 w-full flex-col">
         <div
             v-if="selectedCount > 0"
-            class="mb-3 flex items-center gap-3 px-2"
+            class="mb-3 flex shrink-0 items-center gap-3 px-2"
         >
             <span class="text-sm text-gray-600">{{ selectedCount }} sélectionné(s)</span>
             <Button
@@ -16,9 +16,11 @@
         </div>
         <DataTable
             ref="dataTableRef"
+            class="min-h-0 flex-1"
             :data="localUsers"
             :columns="columns"
             manual-sorting
+            constrained-height
         />
 
         <Dialog
@@ -273,7 +275,7 @@
             </DialogContent>
         </Dialog>
 
-        <div>
+        <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
                 :internal-per-page="perPage"

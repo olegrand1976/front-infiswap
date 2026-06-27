@@ -1,7 +1,8 @@
 <template>
-    <div class="w-full">
+    <div class="flex h-full min-h-0 w-full flex-col overflow-hidden">
         <DashboardAdminPageHeader
             as="div"
+            class="shrink-0"
             title="CRM - Suivi utilisateurs - Suivi commercial"
         >
             <template
@@ -18,10 +19,10 @@
                 </Button>
             </template>
         </DashboardAdminPageHeader>
-        <DashboardAdminPageContent>
+        <DashboardAdminPageContent class="flex min-h-0 flex-1 flex-col overflow-hidden">
             <Tabs
                 v-model="selectedCrm"
-                class="mb-4"
+                class="mb-4 shrink-0"
             >
                 <TabsList class="w-full">
                     <TabsTrigger
@@ -53,7 +54,7 @@
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
-            <div class="p-4 flex gap-3 items-center overflow-x-auto pb-3 px-4 scrollbar-hide">
+            <div class="flex shrink-0 gap-3 items-center overflow-x-auto p-4 px-4 pb-3 scrollbar-hide">
                 <InputIcon
                     v-model="option.name"
                     rounded="md"
@@ -229,7 +230,7 @@
                 </Button>
             </div>
 
-            <div class="ml-4 my-2 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <div class="ml-4 my-2 flex shrink-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 <button
                     v-for="tab in countryTabs"
                     :key="tab.value"
@@ -247,7 +248,7 @@
 
             <div
                 v-if="isInitialLoad"
-                class="px-4 space-y-3 mb-6"
+                class="mb-6 shrink-0 space-y-3 px-4"
                 aria-busy="true"
                 aria-label="Chargement de la liste CRM"
             >
@@ -261,7 +262,7 @@
             </div>
             <div
                 v-else
-                class="relative"
+                class="relative flex min-h-0 flex-1 flex-col overflow-hidden"
             >
                 <div
                     v-if="isListLoading"
@@ -307,6 +308,7 @@
                 <template v-else-if="isInstitutionsTab">
                     <CrmInstitutionAdminList
                         v-if="institutions"
+                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
                         :institutions="institutions"
                         :page="page"
                         :per-page="perPage"
@@ -319,6 +321,7 @@
                 <template v-else-if="users">
                     <template v-if="selectedCrm === 'users'">
                         <CrmAdminList
+                            class="flex min-h-0 flex-1 flex-col overflow-hidden"
                             :users="users"
                             :page="page"
                             :per-page="perPage"
@@ -330,6 +333,7 @@
                     </template>
                 <template v-else-if="selectedCrm === 'commercial'">
                     <CrmSaleAdminList
+                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
                         :users="users"
                         :page="page"
                         :per-page="perPage"
@@ -341,6 +345,7 @@
                 </template>
                 <template v-else-if="selectedCrm === 'exUsers'">
                     <CrmUserDeletedList
+                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
                         :users="users"
                         :page="page"
                         :per-page="perPage"

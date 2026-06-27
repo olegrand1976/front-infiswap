@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="flex h-full min-h-0 w-full flex-col">
         <div
             v-if="selectedCount > 0"
-            class="mb-3 flex items-center gap-3 px-2"
+            class="mb-3 flex shrink-0 items-center gap-3 px-2"
         >
             <span class="text-sm text-gray-600">{{ selectedCount }} sélectionné(s)</span>
             <Button
@@ -14,7 +14,7 @@
                 Exporter la sélection
             </Button>
         </div>
-        <div class="md:hidden space-y-3 mb-4">
+        <div class="mb-4 min-h-0 flex-1 space-y-3 overflow-y-auto md:hidden">
             <article
                 v-for="institution in localInstitutions"
                 :key="`mobile-institution-${institution.id}`"
@@ -97,10 +97,11 @@
         </div>
         <DataTable
             ref="dataTableRef"
-            class="hidden md:block"
+            class="hidden min-h-0 flex-1 md:flex md:flex-col"
             :data="localInstitutions"
             :columns="columns"
             manual-sorting
+            constrained-height
         />
 
         <Dialog
@@ -552,7 +553,7 @@
             @deleted="onSubscriptionStatusChanged"
         />
 
-        <div>
+        <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
                 :internal-per-page="perPage"

@@ -1,8 +1,23 @@
 <template>
-    <div class="min-w-0 w-full">
-        <div class="data-table-scroll max-w-full overflow-x-auto rounded-md border">
+    <div
+        :class="cn(
+            'min-w-0 w-full',
+            constrainedHeight && 'flex min-h-0 flex-1 flex-col',
+        )"
+    >
+        <div
+            :class="cn(
+                'data-table-scroll max-w-full rounded-md border',
+                constrainedHeight ? 'min-h-0 flex-1 overflow-auto' : 'overflow-x-auto',
+            )"
+        >
             <Table class="w-max min-w-full">
-                <TableHeader class="h-14 bg-gray-100">
+                <TableHeader
+                    :class="cn(
+                        'h-14 bg-gray-100',
+                        constrainedHeight && 'sticky top-0 z-10',
+                    )"
+                >
                     <TableRow
                         v-for="headerGroup in table.getHeaderGroups()"
                         :key="headerGroup.id"
@@ -77,14 +92,16 @@ import {
 } from '@tanstack/vue-table';
 import { ref, toRefs } from 'vue';
 import type { Row } from '@tanstack/vue-table';
-import { valueUpdater } from '~/lib/utils';
+import { cn, valueUpdater } from '~/lib/utils';
 
 const props = withDefaults(defineProps<{
     data: any[];
     columns: ColumnDef<any>[];
     manualSorting?: boolean;
+    constrainedHeight?: boolean;
 }>(), {
     manualSorting: false,
+    constrainedHeight: false,
 });
 
 const { columns, manualSorting } = toRefs(props);
@@ -141,6 +158,7 @@ function onRowClick(event: MouseEvent, row: Row<unknown>) {
 }
 
 .data-table-scroll::-webkit-scrollbar {
+    width: 8px;
     height: 8px;
 }
 

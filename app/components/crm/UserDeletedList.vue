@@ -1,9 +1,11 @@
 <template>
-    <div class="w-full">
+    <div class="flex h-full min-h-0 w-full flex-col">
         <DataTable
+            class="min-h-0 flex-1"
             :data="localUsers"
             :columns="columnsExUsers"
             manual-sorting
+            constrained-height
         />
 
         <Dialog
@@ -19,7 +21,7 @@
             </DialogContent>
         </Dialog>
 
-        <div>
+        <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
                 :internal-per-page="perPage"

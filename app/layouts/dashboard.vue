@@ -244,8 +244,8 @@
                     </DropdownMenu>
                 </div>
             </header>
-            <div class="min-h-0 flex-1 overflow-y-auto overflow-x-auto p-6">
-                <NuxtPage />
+            <div class="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
+                <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
             </div>
         </SidebarInset>
     </SidebarProvider>
