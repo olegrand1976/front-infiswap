@@ -8,6 +8,21 @@ export const submitContact = async (formData) => {
     );
 };
 
+export const submitInstitutionOfferStudy = async (body: {
+    institutionName: string;
+    repId: string;
+}) => {
+    const { $apifetch } = useNuxtApp();
+
+    await $apifetch('/api/contact/institution-offer', {
+        method: 'post',
+        body: {
+            institution_name: body.institutionName,
+            rep_id: body.repId,
+        },
+    });
+};
+
 export function useContact() {
     const contacts = ref([]);
     const loading = ref(false);

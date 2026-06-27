@@ -1,17 +1,32 @@
 <template>
-    <OffreInstitutionPage :contact="DEFAULT_OFFRE_INSTITUTION_CONTACT" />
+    <OffreInstitutionPage :contact="contact" />
 </template>
 
 <script setup lang="ts">
 import OffreInstitutionPage from '~/components/offre-institution/OffreInstitutionPage.vue';
-import { DEFAULT_OFFRE_INSTITUTION_CONTACT } from '~/lib/offreInstitutionContacts';
+import { getOffreInstitutionContact } from '~/lib/offreInstitutionContacts';
 
 definePageMeta({
     layout: false,
 });
 
+const route = useRoute();
+const id = route.params.id as string;
+const contact = getOffreInstitutionContact(id);
+
+if (!contact) {
+    throw createError({
+        statusCode: 404,
+        statusMessage: 'Page not found',
+    });
+}
+
+const pageTitle = contact.contactName
+    ? `Offre Institutions — ${contact.contactName}`
+    : 'Offre Institutions & Maisons de Repos';
+
 useHead({
-    title: 'Offre Institutions & Maisons de Repos',
+    title: pageTitle,
     link: [
         {
             rel: 'stylesheet',
