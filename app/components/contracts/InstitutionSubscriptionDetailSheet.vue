@@ -24,6 +24,7 @@ const {
     downloadBillingFile,
     sendProforma,
     sendInvoice,
+    viewPdf,
 } = useInstitutionSubscription();
 const { $toast } = useNuxtApp();
 
@@ -47,6 +48,7 @@ const paymentForm = reactive({
     notes: '',
 });
 const savingPayment = ref(false);
+const pdfLoading = ref(false);
 
 const hasProformaFile = computed(() => Boolean(props.subscription?.billing?.proforma_file_path));
 const hasInvoiceFile = computed(() => Boolean(props.subscription?.billing?.invoice_file_path));
@@ -168,6 +170,21 @@ async function payCommission(payment: InstitutionSubscriptionPayment) {
         $toast({ description: 'Erreur.', variant: 'destructive' });
     }
 }
+
+async function viewSignedBcPdf() {
+    if (!props.subscription?.institution?.id) return;
+
+    pdfLoading.value = true;
+    try {
+        await viewPdf(props.subscription.institution.id, props.subscription.id);
+    }
+    catch {
+        $toast({ description: 'Impossible d\'ouvrir le PDF.', variant: 'destructive' });
+    }
+    finally {
+        pdfLoading.value = false;
+    }
+}
 </script>
 
 <template>
@@ -198,6 +215,35 @@ async function payCommission(payment: InstitutionSubscriptionPayment) {
                     >
                         Voir la fiche institution
                     </NuxtLink>
+                </section>
+
+                <section class="space-y-3 border-t pt-4">
+                    <h3 class="font-semibold">
+                        Signature
+                    </h3>
+                    <p class="text-sm">
+                        <strong>Signataire client :</strong>
+                        {{ subscription.signatory?.full_name ?? '—' }}
+                    </p>
+                    <p class="text-sm">
+                        <strong>Commercial :</strong>
+                        {{ subscription.requester?.full_name ?? '—' }}
+                    </p>
+                    <p class="text-sm">
+                        <strong>Signé le :</strong>
+                        {{ subscription.signed_at ? formatToDMY(subscription.signed_at) : '—' }}
+                    </p>
+                    <Button
+                        v-if="subscription.institution?.id"
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        :disabled="pdfLoading"
+                        :in-progress="pdfLoading"
+                        @click="viewSignedBcPdf"
+                    >
+                        {{ subscription.has_signed_pdf ? 'Voir BC signé' : 'Voir le PDF' }}
+                    </Button>
                 </section>
 
                 <section class="space-y-4 border-t pt-4">

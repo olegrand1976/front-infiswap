@@ -52,6 +52,30 @@
                     <span class="text-sm font-medium">{{ subscription.reference }}</span>
                 </div>
 
+                <div
+                    v-if="subscription.requester"
+                    class="flex items-center justify-between gap-3"
+                >
+                    <span class="text-sm text-muted-foreground">Commercial</span>
+                    <span class="text-sm">{{ subscription.requester.full_name }}</span>
+                </div>
+
+                <div
+                    v-if="subscription.signatory"
+                    class="flex items-center justify-between gap-3"
+                >
+                    <span class="text-sm text-muted-foreground">Signataire client</span>
+                    <span class="text-sm">{{ subscription.signatory.full_name }}</span>
+                </div>
+
+                <div
+                    v-if="subscription.signed_at"
+                    class="flex items-center justify-between gap-3"
+                >
+                    <span class="text-sm text-muted-foreground">Signé le</span>
+                    <span class="text-sm">{{ formattedSignedAt }}</span>
+                </div>
+
                 <div class="flex flex-wrap gap-2 pt-2">
                     <Button
                         v-if="subscription.contract_id && institutionId"
@@ -62,7 +86,7 @@
                         :in-progress="pdfLoading"
                         @click="viewContractPdf"
                     >
-                        Voir le PDF
+                        {{ subscription.has_signed_pdf ? 'Voir BC signé' : 'Voir le PDF' }}
                     </Button>
                     <Button
                         v-if="subscription.can_send_for_signature && institutionId"
@@ -114,7 +138,7 @@
                     v-else-if="subscription.can_sign"
                     class="text-xs text-muted-foreground"
                 >
-                    Le lien de signature a été envoyé par email via Documenso.
+                    Les liens de signature ont été envoyés par e-mail via Documenso au client et au commercial.
                 </p>
                 <p
                     v-else-if="!subscription.can_create && subscription.status"
@@ -184,6 +208,19 @@ const formattedCreatedAt = computed(() => {
         return '';
     }
 
+    return formatSubscriptionDate(raw);
+});
+
+const formattedSignedAt = computed(() => {
+    const raw = props.subscription?.signed_at;
+    if (!raw) {
+        return '';
+    }
+
+    return formatSubscriptionDate(raw);
+});
+
+function formatSubscriptionDate(raw: string): string {
     const date = new Date(raw);
     if (Number.isNaN(date.getTime())) {
         return raw;
@@ -196,7 +233,7 @@ const formattedCreatedAt = computed(() => {
         hour: '2-digit',
         minute: '2-digit',
     });
-});
+}
 
 const statusBadgeClass = computed(() => {
     const status = props.subscription?.status;
@@ -254,12 +291,15 @@ async function sendForSignature() {
             contractId,
         );
 
-        if (response.signing_url) {
+        if (response.signing_urls?.commercial) {
+            window.open(response.signing_urls.commercial, '_blank', 'noopener,noreferrer');
+        }
+        else if (response.signing_url) {
             window.open(response.signing_url, '_blank', 'noopener,noreferrer');
         }
 
         $toast({
-            description: response.message ?? 'Bon de commande envoyé pour signature.',
+            description: response.message ?? 'Bon de commande envoyé. Le client et le commercial recevront un e-mail Documenso.',
             variant: 'success',
         });
 
