@@ -1,95 +1,68 @@
 <template>
-    <div class="w-full max-w-2xl mx-auto">
+    <div class="w-full">
         <DashboardAdminPageHeader title="Commissions BC institution" />
 
         <DashboardAdminPageContent>
-            <form
-                v-if="form"
-                class="space-y-6 p-4"
-                @submit.prevent="save"
+            <Tabs
+                v-model="activeTab"
+                :default-value="defaultTab"
+                class="w-full"
             >
-                <div>
-                    <Label for="first_year_rate">
-                        Commission immédiate — 1ère année (%)
-                    </Label>
-                    <Input
-                        id="first_year_rate"
-                        v-model.number="form.first_year_rate"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        max="100"
-                        class="max-w-xs mt-1"
-                    />
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <Label>Commissions années suivantes</Label>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            class="rounded-md"
-                            @click="addRenewalRow"
-                        >
-                            Ajouter une ligne
-                        </Button>
-                    </div>
-                    <div
-                        v-for="(row, index) in form.renewal_rates"
-                        :key="index"
-                        class="flex gap-3 items-end"
+                <TabsList class="mx-4 mt-2">
+                    <TabsTrigger
+                        v-if="canManageSettings"
+                        value="settings"
                     >
-                        <div>
-                            <Label>À partir de l'année</Label>
-                            <Input
-                                v-model.number="row.from_year"
-                                type="number"
-                                min="2"
-                                class="w-32 mt-1"
-                            />
-                        </div>
-                        <div>
-                            <Label>Taux (%)</Label>
-                            <Input
-                                v-model.number="row.rate"
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                max="100"
-                                class="w-32 mt-1"
-                            />
-                        </div>
-                        <Button
-                            v-if="form.renewal_rates.length > 1"
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            @click="form.renewal_rates.splice(index, 1)"
-                        >
-                            Supprimer
-                        </Button>
-                    </div>
-                </div>
+                        Paramètres
+                    </TabsTrigger>
+                    <TabsTrigger
+                        v-if="canManageSettings"
+                        value="tracking"
+                    >
+                        Suivi vendeurs
+                    </TabsTrigger>
+                    <TabsTrigger
+                        v-if="isSaleRepresentative && !canManageSettings"
+                        value="my-tracking"
+                    >
+                        Mon suivi
+                    </TabsTrigger>
+                </TabsList>
 
-                <Button
-                    type="submit"
-                    class="rounded-md"
-                    :disabled="saving"
+                <TabsContent
+                    v-if="canManageSettings"
+                    value="settings"
                 >
-                    Enregistrer
-                </Button>
-            </form>
+                    <CommissionRatePeriodsForm
+                        v-model="settingsForm"
+                        :saving="savingSettings"
+                        @save="saveSettings"
+                    />
+                </TabsContent>
+
+                <TabsContent
+                    v-if="canManageSettings"
+                    value="tracking"
+                >
+                    <CommissionVendorTracking is-admin-view />
+                </TabsContent>
+
+                <TabsContent
+                    v-if="isSaleRepresentative && !canManageSettings"
+                    value="my-tracking"
+                >
+                    <CommissionVendorTracking />
+                </TabsContent>
+            </Tabs>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import type { InstitutionCommissionSettings } from '@/composables/useInstitutionSubscription';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CommissionRatePeriodsForm from '@/components/commissions/CommissionRatePeriodsForm.vue';
+import CommissionVendorTracking from '@/components/commissions/CommissionVendorTracking.vue';
+import type { InstitutionCommissionSettingsPayload } from '@/composables/useInstitutionCommissionTracking';
 
 useHead({ title: 'Commissions BC institution' });
 
@@ -98,33 +71,62 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { getCommissionSettings, updateCommissionSettings } = useInstitutionSubscription();
+const route = useRoute();
+const { isAdmin, isSuperAdmin, isSaleRepresentative } = useAuth();
+const { getCommissionSettings, updateCommissionSettings } = useInstitutionCommissionTracking();
 const { $toast } = useNuxtApp();
 
-const form = ref<InstitutionCommissionSettings | null>(null);
-const saving = ref(false);
+const canManageSettings = computed(() => isSuperAdmin.value || isAdmin.value);
+const settingsForm = ref<InstitutionCommissionSettingsPayload | null>(null);
+const savingSettings = ref(false);
 
-onMounted(async () => {
-    form.value = await getCommissionSettings();
+const defaultTab = computed(() => {
+    if (canManageSettings.value) {
+        return 'settings';
+    }
+    return 'my-tracking';
 });
 
-function addRenewalRow() {
-    if (!form.value) return;
-    form.value.renewal_rates.push({ from_year: 2, rate: 7.5 });
-}
+const activeTab = ref(defaultTab.value);
 
-async function save() {
-    if (!form.value) return;
-    saving.value = true;
+watch(defaultTab, (value) => {
+    if (!canManageSettings.value) {
+        activeTab.value = value;
+    }
+});
+
+watch(
+    () => route.query.tab,
+    (tab) => {
+        if (typeof tab === 'string' && ['settings', 'tracking', 'my-tracking'].includes(tab)) {
+            activeTab.value = tab;
+        }
+    },
+    { immediate: true },
+);
+
+onMounted(async () => {
+    if (canManageSettings.value) {
+        settingsForm.value = await getCommissionSettings();
+    }
+    else if (isSaleRepresentative.value) {
+        activeTab.value = 'my-tracking';
+    }
+});
+
+async function saveSettings() {
+    if (!settingsForm.value) return;
+    savingSettings.value = true;
     try {
-        await updateCommissionSettings(form.value);
+        await updateCommissionSettings(settingsForm.value);
+        settingsForm.value = await getCommissionSettings();
         $toast({ description: 'Paramètres enregistrés.' });
     }
     catch {
         $toast({ description: 'Erreur lors de l\'enregistrement.', variant: 'destructive' });
     }
     finally {
-        saving.value = false;
+        savingSettings.value = false;
     }
 }
 </script>

@@ -50,12 +50,6 @@ export type InstitutionSubscriptionItem = {
     };
 };
 
-export type InstitutionCommissionSettings = {
-    first_year_rate: number;
-    renewal_rates: Array<{ from_year: number; rate: number }>;
-    updated_at?: string | null;
-    updated_by?: { id: number; full_name: string; email: string } | null;
-};
 
 export const useInstitutionSubscription = () => {
     const { $apifetch } = useNuxtApp();
@@ -63,7 +57,6 @@ export const useInstitutionSubscription = () => {
     const currentSubscription = useState<InstitutionSubscriptionItem | null>('currentInstitutionSubscription', () => null);
     const count = useState<number>('institutionSubscriptionsCount', () => 0);
     const loading = useState<boolean>('institutionSubscriptionsLoading', () => false);
-    const commissionSettings = useState<InstitutionCommissionSettings | null>('institutionCommissionSettings', () => null);
 
     async function getSubscriptions(page = 1, perPage = 25, options: Record<string, unknown> = {}) {
         loading.value = true;
@@ -129,27 +122,11 @@ export const useInstitutionSubscription = () => {
         window.open(url, '_blank');
     }
 
-    async function getCommissionSettings() {
-        const response = await $apifetch('api/admin/institution-commission-settings');
-        commissionSettings.value = response.data;
-        return response.data;
-    }
-
-    async function updateCommissionSettings(payload: InstitutionCommissionSettings) {
-        const response = await $apifetch('api/admin/institution-commission-settings', {
-            method: 'PUT',
-            body: payload,
-        });
-        commissionSettings.value = response.data;
-        return response;
-    }
-
     return {
         subscriptions,
         currentSubscription,
         count,
         loading,
-        commissionSettings,
         getSubscriptions,
         getSubscription,
         updateBilling,
@@ -157,7 +134,5 @@ export const useInstitutionSubscription = () => {
         markCommissionPaid,
         cancelSubscription,
         viewPdf,
-        getCommissionSettings,
-        updateCommissionSettings,
     };
 };
