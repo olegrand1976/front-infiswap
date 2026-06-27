@@ -28,12 +28,11 @@
                             <TableRow
                                 :data-state="row.getIsSelected() ? 'selected' : undefined"
                                 class="cursor-pointer"
-                                @click="() => row.toggleSelected()"
+                                @click="(event) => onRowClick(event, row)"
                             >
                                 <TableCell
                                     v-for="cell in row.getVisibleCells()"
                                     :key="cell.id"
-                                    @click.stop
                                 >
                                     <FlexRender
                                         :render="cell.column.columnDef.cell"
@@ -77,14 +76,18 @@ import {
     useVueTable,
 } from '@tanstack/vue-table';
 import { ref, toRefs } from 'vue';
+import type { Row } from '@tanstack/vue-table';
 import { valueUpdater } from '~/lib/utils';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     data: any[];
     columns: ColumnDef<any>[];
-}>();
+    manualSorting?: boolean;
+}>(), {
+    manualSorting: false,
+});
 
-const { columns } = toRefs(props);
+const { columns, manualSorting } = toRefs(props);
 
 const rows = computed(() => props.data);
 
@@ -102,6 +105,7 @@ const table = useVueTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    manualSorting: manualSorting.value ?? false,
     onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
     onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
     onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
@@ -119,4 +123,13 @@ const table = useVueTable({
 defineExpose({
     table,
 });
+
+function onRowClick(event: MouseEvent, row: Row<unknown>) {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('button, a, input, textarea, select, label, [role="switch"], [data-no-row-select]')) {
+        return;
+    }
+
+    row.toggleSelected();
+}
 </script>

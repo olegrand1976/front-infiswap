@@ -10,33 +10,37 @@
                         Infiswap Institutional
                     </h1>
                     <p class="text-xs sm:text-sm font-medium text-white/50 uppercase tracking-widest">
-                        Reprenez le contrôle sur vos coûts RH
+                        Le réseau n°1 du remplacement infirmier en Belgique
                     </p>
                 </div>
             </div>
             <p class="text-sm sm:text-base text-white/70 leading-relaxed max-w-xl">
-                Infiswap transforme la gestion de vos prestataires et talents. Là où les agences d'intérim traditionnelles prélèvent des commissions opaques sur chaque heure travaillée,
-                <span class="font-bold text-white/90 underline decoration-primary decoration-2 underline-offset-4">Infiswap propose une infrastructure Flat Fee (tarif fixe)</span> qui redonne de la marge à votre entreprise.
+                <span class="font-semibold text-white/90">Pour les maisons de repos, hôpitaux, bureaux de tarification, grands groupes infirmiers et centres d'intérim</span> —
+                InfiSwap connecte votre établissement à un réseau actif d'infirmiers indépendants pour couvrir vos absences et vos besoins en renforts.
+                Publiez vos missions, trouvez des profils et proposez des remplacements sans dépendre d'une agence classique à commission sur chaque heure.
             </p>
         </div>
 
         <div class="grid gap-4 sm:gap-6 lg:gap-8 mb-8 lg:mb-12">
             <div class="group p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
                 <div class="flex items-start gap-3 sm:gap-4">
-                    <span class="text-2xl shrink-0">⚡</span>
+                    <span class="text-2xl shrink-0">👥</span>
                     <div>
                         <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-yellow-400">
-                            Visibilité Maximale : Le "Fast-Track" de vos recrutements
+                            Trouvez les bons profils, plus vite
                         </h3>
                         <p class="text-white/80 text-sm mb-3">
-                            Ne laissez plus vos offres se noyer dans la masse. Le compte Institutionnel agit comme un accélérateur de visibilité.
+                            Accédez au plus grand réseau d'entraide infirmière en Belgique et mobilisez les soignants qui correspondent à vos besoins.
                         </p>
                         <div class="space-y-2 sm:space-y-3 text-white/70 text-xs sm:text-sm border-l-2 border-yellow-400/30 pl-4">
                             <p>
-                                <span class="text-white font-medium">Algorithme de remontée :</span> Vos besoins en compétences sont propulsés en haut des listes de recherche.
+                                <span class="text-white font-medium">Missions :</span> publiez vos postes à pourvoir et recevez les candidatures directement sur la plateforme.
                             </p>
                             <p>
-                                <span class="text-white font-medium">Priorité d'affichage :</span> Un positionnement stratégique qui garantit que les meilleurs profils voient vos missions en premier, réduisant ainsi drastiquement votre délai de recrutement (Time-to-Hire).
+                                <span class="text-white font-medium">Remplacements :</span> parcourez les demandes du réseau et proposez vos infirmiers, ou répondez aux besoins urgents de vos sites.
+                            </p>
+                            <p>
+                                <span class="text-white font-medium">Binômes & favoris :</span> identifiez des infirmiers près de vos établissements et constituez des listes de confiance pour les contacter en priorité.
                             </p>
                         </div>
                     </div>
@@ -45,20 +49,23 @@
 
             <div class="group p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
                 <div class="flex items-start gap-3 sm:gap-4">
-                    <span class="text-2xl shrink-0">🖥️</span>
+                    <span class="text-2xl shrink-0">📋</span>
                     <div>
                         <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-blue-400">
-                            Dashboard Institutionnel : Le centre de pilotage
+                            Pilotez tout depuis un seul espace
                         </h3>
                         <p class="text-white/80 text-sm mb-3">
-                            Oubliez les échanges de mails interminables et les factures papier. Nous mettons à votre disposition une interface conçue comme un IDE pour gestionnaire.
+                            Fini les mails éparpillés et les relances manuelles : votre tableau de bord institution regroupe l'essentiel du suivi opérationnel.
                         </p>
                         <div class="space-y-2 sm:space-y-3 text-white/70 text-xs sm:text-sm border-l-2 border-blue-400/30 pl-4">
                             <p>
-                                <span class="text-white font-medium">Menu Spécifique :</span> Un accès direct au suivi des contrats, à la conformité (KYC/Compliance) et à l'historique des prestations.
+                                <span class="text-white font-medium">Vue d'ensemble :</span> missions en cours, postes à pourvoir et feuilles de temps à valider en un coup d'œil.
                             </p>
                             <p>
-                                <span class="text-white font-medium">Reporting Automatisé :</span> Générez vos états comptables en un clic. C’est propre, c’est structuré, et c’est prêt pour vos outils d'IA (exportation JSON/CSV facilitée pour vos scripts Cursor ou Copilot).
+                                <span class="text-white font-medium">Organisation :</span> gérez vos services, suivez les candidatures, validez les prestations et centralisez vos factures.
+                            </p>
+                            <p>
+                                <span class="text-white font-medium">Équipe :</span> invitez vos collègues (RH, planning, direction) et partagez les accès selon leurs responsabilités.
                             </p>
                         </div>
                     </div>
@@ -69,10 +76,10 @@
         <div class="mt-8 overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
             <h3 class="text-lg sm:text-xl font-bold mb-2 flex items-center gap-2">
                 <span class="text-xl">💰</span>
-                Analyse Comparative : Le "No-Brainer" Financier
+                Un tarif fixe, sans commission sur les heures
             </h3>
             <p class="text-white/60 text-sm mb-4">
-                Voici pourquoi passer à Infiswap est une décision logique pour votre trésorerie :
+                Avec InfiSwap Institutional, vous payez un abonnement prévisible — pas une marge cachée sur chaque heure travaillée :
             </p>
             <div class="min-w-[500px] sm:min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-xl">
                 <table class="w-full text-left text-xs sm:text-sm border-collapse">
@@ -95,10 +102,10 @@
                                 Modèle de prix
                             </td>
                             <td class="p-3 sm:p-4 italic">
-                                Commission variable (souvent 15 à 25%)
+                                Commission variable sur chaque heure
                             </td>
-                            <td class="p-3 sm:p-4 font-bold text-white uppercase sm:tracking-wider">
-                                Abonnement Fixe
+                            <td class="p-3 sm:p-4 font-bold text-white">
+                                Abonnement fixe
                             </td>
                         </tr>
                         <tr class="hover:bg-white/5 transition-colors">
@@ -106,10 +113,11 @@
                                 Coût mensuel
                             </td>
                             <td class="p-3 sm:p-4">
-                                Plusieurs milliers d'euros par tête
+                                Coût élevé et variable selon les profils
                             </td>
                             <td class="p-3 sm:p-4 font-extrabold text-white text-base sm:text-lg">
                                 150 € / mois
+                                <span class="block text-xs font-normal text-white/60 mt-0.5">ou 1 500 € / an</span>
                             </td>
                         </tr>
                         <tr class="hover:bg-white/5 transition-colors">
@@ -117,10 +125,10 @@
                                 Marge de manœuvre
                             </td>
                             <td class="p-3 sm:p-4">
-                                Subie (dépend du salaire du profil)
+                                Dépend du profil et des heures
                             </td>
                             <td class="p-3 sm:p-4 font-semibold text-white">
-                                Totale (votre coût est prédictible)
+                                Prévisible, sans surprise
                             </td>
                         </tr>
                         <tr class="hover:bg-white/5 transition-colors">
@@ -128,10 +136,10 @@
                                 Transparence
                             </td>
                             <td class="p-3 sm:p-4 italic text-white/60">
-                                Opacité des marges arrières
+                                Marges peu lisibles
                             </td>
                             <td class="p-3 sm:p-4 font-medium text-white">
-                                Transparence logicielle totale
+                                Tarif clair, suivi centralisé
                             </td>
                         </tr>
                     </tbody>

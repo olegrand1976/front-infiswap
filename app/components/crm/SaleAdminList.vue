@@ -3,6 +3,7 @@
         <DataTable
             :data="localUsers"
             :columns="columnsCrm"
+            manual-sorting
         />
 
         <Dialog
@@ -21,11 +22,10 @@
         <div>
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
-                @user-updated="emit('user-updated', $event)"
             />
         </div>
     </div>
@@ -168,12 +168,7 @@ const columnsCrm: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'contact',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowUpDown)]);
-        },
+        header: () => 'Contact',
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
                 h(Pencil, {
@@ -342,9 +337,7 @@ const columnsCrm: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users.data, (newUsersData) => {
-    if (newUsersData) {
-        localUsers.value = [...newUsersData];
-    }
-}, { deep: true, immediate: true });
+watch(() => props.users, (newUsers) => {
+    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
+}, { immediate: true });
 </script>

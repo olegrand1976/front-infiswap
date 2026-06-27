@@ -59,6 +59,14 @@ export const useAuth = () => {
         user.value?.roles?.some(r => STAFF_ROLES.includes(r)) ?? false,
     );
 
+    const INSTITUTION_IMPORT_ROLES = ['administrator', 'developer', 'manager'] as const;
+
+    const canImportInstitutions = computed(() =>
+        user.value?.roles?.some(role =>
+            (INSTITUTION_IMPORT_ROLES as readonly string[]).includes(role),
+        ) ?? false,
+    );
+
     const activeContext = computed((): 'nurse' | 'admin' | 'institution' => {
         if (user.value?.type === 'institution') return 'institution';
         if (STAFF_ROLES.includes(user.value?.account_type ?? '')) return 'admin';
@@ -589,6 +597,7 @@ export const useAuth = () => {
         canAccessInstitution,
         canAccessNurse,
         canAccessAdmin,
+        canImportInstitutions,
         activeContext,
         switchContext,
         isCommunityManager,

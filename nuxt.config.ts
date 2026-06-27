@@ -117,7 +117,7 @@ export default defineNuxtConfig({
     },
     image: {
         format: ['webp'],
-        densities: [1, 2, 3],
+        densities: [1, 2],
     },
     shadcn: {
     /**

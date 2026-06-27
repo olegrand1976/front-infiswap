@@ -11,11 +11,14 @@ interface Props extends PrimitiveProps {
     class?: HTMLAttributes['class'];
     href?: string;
     inProgress?: boolean;
+    disabled?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     as: 'button',
 });
+
+const isDisabled = computed(() => props.inProgress || props.disabled === true);
 </script>
 
 <template>
@@ -24,7 +27,8 @@ const props = withDefaults(defineProps<Props>(), {
         :to="href"
         :class="cn(buttonVariants({ variant, size }), props.class)"
         v-bind="href ? {} : { type: 'button' }"
-        :disabled="inProgress"
+        :disabled="isDisabled"
+        :aria-disabled="isDisabled"
     >
         <slot />
         <svg
