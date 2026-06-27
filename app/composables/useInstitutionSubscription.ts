@@ -18,9 +18,12 @@ export type InstitutionSubscriptionBilling = {
     proforma_sent_at?: string | null;
     proforma_reference?: string | null;
     proforma_file_path?: string | null;
+    proforma_file_uploaded_at?: string | null;
     invoice_number?: string | null;
     invoice_issued_at?: string | null;
     invoice_file_path?: string | null;
+    invoice_file_uploaded_at?: string | null;
+    invoice_emailed_at?: string | null;
 };
 
 export type InstitutionSubscriptionItem = {
@@ -29,6 +32,7 @@ export type InstitutionSubscriptionItem = {
     status?: string | null;
     status_label?: string | null;
     formula?: string | null;
+    formula_label?: string | null;
     payment_mode?: string | null;
     created_at?: string | null;
     signed_at?: string | null;
@@ -113,13 +117,38 @@ export const useInstitutionSubscription = () => {
     }
 
     async function viewPdf(institutionId: number, contractId: number) {
+        const { viewInstitutionSubscriptionPdf } = useCrm();
+        return await viewInstitutionSubscriptionPdf(institutionId, contractId);
+    }
+
+    async function downloadBillingFile(contractId: number, type: 'proforma' | 'invoice') {
         const { $apifetch: fetch } = useNuxtApp();
         const blob = await fetch(
-            `/api/crm/institutions/${institutionId}/subscription/${contractId}/pdf`,
+            `/api/crm/institution-subscriptions/${contractId}/billing/${type}-file`,
             { responseType: 'blob' },
         );
         const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${type}-${contractId}.pdf`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    async function sendProforma(contractId: number) {
+        const response = await $apifetch(`api/crm/institution-subscriptions/${contractId}/billing/send-proforma`, {
+            method: 'POST',
+        });
+        currentSubscription.value = response.data;
+        return response;
+    }
+
+    async function sendInvoice(contractId: number) {
+        const response = await $apifetch(`api/crm/institution-subscriptions/${contractId}/billing/send-invoice`, {
+            method: 'POST',
+        });
+        currentSubscription.value = response.data;
+        return response;
     }
 
     return {
@@ -134,5 +163,8 @@ export const useInstitutionSubscription = () => {
         markCommissionPaid,
         cancelSubscription,
         viewPdf,
+        downloadBillingFile,
+        sendProforma,
+        sendInvoice,
     };
 };

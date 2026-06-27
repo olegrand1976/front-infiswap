@@ -35,14 +35,23 @@
                         <SelectItem value="draft">
                             Brouillon
                         </SelectItem>
+                        <SelectItem value="sent_for_signature">
+                            Envoyé pour signature
+                        </SelectItem>
+                        <SelectItem value="sign">
+                            Lien de signature actif
+                        </SelectItem>
                         <SelectItem value="pending_signature">
-                            En attente signature
+                            En attente de signature
                         </SelectItem>
                         <SelectItem value="signed">
                             Signé
                         </SelectItem>
                         <SelectItem value="paid">
                             Payé
+                        </SelectItem>
+                        <SelectItem value="accomplished">
+                            Abonnement actif
                         </SelectItem>
                         <SelectItem value="cancelled">
                             Annulé
@@ -90,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, FileText, RefreshCw, Trash2 } from 'lucide-vue-next';
+import { Eye, FileText, RefreshCw, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
@@ -160,14 +169,33 @@ async function onPerPageChange(value: number) {
 }
 
 async function openDetail(item: InstitutionSubscriptionItem) {
-    selectedSubscription.value = await getSubscription(item.id);
-    detailOpen.value = true;
+    try {
+        selectedSubscription.value = await getSubscription(item.id);
+        detailOpen.value = true;
+    }
+    catch {
+        $toast({ description: 'Impossible de charger le détail.', variant: 'destructive' });
+    }
+}
+
+async function handleViewPdf(institutionId: number, contractId: number) {
+    try {
+        await viewPdf(institutionId, contractId);
+    }
+    catch {
+        $toast({ description: 'Impossible d\'ouvrir le PDF.', variant: 'destructive' });
+    }
 }
 
 async function reloadDetail() {
     if (!selectedSubscription.value) return;
-    selectedSubscription.value = await getSubscription(selectedSubscription.value.id);
-    await getSubscriptions(page.value, perPage.value, buildParams());
+    try {
+        selectedSubscription.value = await getSubscription(selectedSubscription.value.id);
+        await getSubscriptions(page.value, perPage.value, buildParams());
+    }
+    catch {
+        $toast({ description: 'Impossible de rafraîchir le détail.', variant: 'destructive' });
+    }
 }
 
 async function handleCancel(item: InstitutionSubscriptionItem) {
@@ -189,8 +217,13 @@ onMounted(async () => {
     const route = useRoute();
     const contractId = Number(route.query.contract);
     if (contractId) {
-        selectedSubscription.value = await getSubscription(contractId);
-        detailOpen.value = true;
+        try {
+            selectedSubscription.value = await getSubscription(contractId);
+            detailOpen.value = true;
+        }
+        catch {
+            $toast({ description: 'Bon de commande introuvable.', variant: 'destructive' });
+        }
     }
 });
 
@@ -211,6 +244,11 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
         cell: ({ row }) => h('div', row.original.status_label ?? row.original.status ?? '—'),
     },
     {
+        id: 'base',
+        header: () => h('div', 'Base BC'),
+        cell: ({ row }) => h('div', { class: 'text-sm' }, row.original.formula_label ?? '—'),
+    },
+    {
         id: 'requester',
         header: () => h('div', 'Demandeur'),
         cell: ({ row }) => h('div', row.original.requester?.full_name ?? '—'),
@@ -219,14 +257,29 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
         id: 'proforma',
         header: () => h('div', 'Proforma'),
         cell: ({ row }) => {
+            const uploaded = row.original.billing?.proforma_file_uploaded_at;
             const sent = row.original.billing?.proforma_sent_at;
-            return h('div', { class: 'text-sm' }, sent ? formatToDMY(sent) : '—');
+            if (!uploaded && !sent) return h('div', { class: 'text-sm' }, '—');
+            return h('div', { class: 'text-sm space-y-0.5' }, [
+                uploaded ? h('div', `Inséré : ${formatToDMY(uploaded)}`) : null,
+                sent ? h('div', { class: 'text-muted-foreground' }, `Envoyé : ${formatToDMY(sent)}`) : null,
+            ]);
         },
     },
     {
         id: 'invoice',
         header: () => h('div', 'Facture'),
-        cell: ({ row }) => h('div', { class: 'text-sm' }, row.original.billing?.invoice_number ?? '—'),
+        cell: ({ row }) => {
+            const number = row.original.billing?.invoice_number;
+            const uploaded = row.original.billing?.invoice_file_uploaded_at;
+            const sent = row.original.billing?.invoice_emailed_at;
+            if (!number && !uploaded && !sent) return h('div', { class: 'text-sm' }, '—');
+            return h('div', { class: 'text-sm space-y-0.5' }, [
+                number ? h('div', number) : null,
+                uploaded ? h('div', { class: 'text-muted-foreground' }, `Inséré : ${formatToDMY(uploaded)}`) : null,
+                sent ? h('div', { class: 'text-muted-foreground' }, `Envoyé : ${formatToDMY(sent)}`) : null,
+            ]);
+        },
     },
     {
         id: 'totals',
@@ -256,7 +309,7 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
                     ? h(Button, {
                             variant: 'ghost',
                             size: 'sm',
-                            onClick: () => viewPdf(institutionId, item.id),
+                            onClick: () => handleViewPdf(institutionId, item.id),
                         }, () => h(FileText, { class: 'w-4 h-4' }))
                     : null,
                 canCancel && institutionId
