@@ -411,6 +411,8 @@ definePageMeta({
     ssr: false,
 });
 
+const route = useRoute();
+
 const pageCookie = useCookie<number>('crm_page', {
     default: () => 1,
     maxAge: 60 * 60 * 24 * 7,
