@@ -36,7 +36,8 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                await navigateTo('/acces-plan');
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
                 return null;
             }
 
@@ -168,7 +169,8 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                await navigateTo('/acces-plan');
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
                 return false;
             }
 
@@ -418,7 +420,8 @@ export const sendResponse = () => {
         }
         catch (e) {
             if (isPlatformAccessError(e)) {
-                await navigateTo('/acces-plan');
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
                 return false;
             }
 

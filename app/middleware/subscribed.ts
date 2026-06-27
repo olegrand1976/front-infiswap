@@ -1,8 +1,8 @@
 import { useSubscription } from '~/composables/useSubscription';
 import { useAuth } from '~/composables/useAuth';
 
-export default defineNuxtRouteMiddleware(async () => {
-    const { check } = useSubscription();
+export default defineNuxtRouteMiddleware(async (to) => {
+    const { check, redirectToAccesPlan } = useSubscription();
     const { isCollaborator, isAdmin, isDeveloper, isManager, isCommunityManager, isSaleRepresentative, isTester } = useAuth();
     const user = useUser();
 
@@ -17,6 +17,6 @@ export default defineNuxtRouteMiddleware(async () => {
     const response = await check(user.value.id);
 
     if (response?.status === 'expired') {
-        return navigateTo('/acces-plan');
+        return redirectToAccesPlan(to.fullPath);
     }
 });

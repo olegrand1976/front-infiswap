@@ -315,6 +315,8 @@ const includedItems = [
     'Accès permanent, sans renouvellement',
 ];
 
+const redirectTo = computed(() => safeReturnPath(route.query.redirectTo));
+
 await getAccessPlan();
 planLoaded.value = true;
 
@@ -334,7 +336,7 @@ onMounted(async () => {
             if (confirmed) {
                 hasAccess.value = true;
                 $toast({ description: 'Accès activé avec succès !' });
-                await navigateTo('/acces-plan', { replace: true });
+                await navigateTo(redirectTo.value, { replace: true });
             }
             else {
                 $toast({
@@ -357,7 +359,7 @@ onMounted(async () => {
 
 const handleCta = async () => {
     if (hasAccess.value) {
-        return navigateTo('/dashboard');
+        return navigateTo(redirectTo.value);
     }
 
     await handlePurchase();

@@ -5,6 +5,7 @@ export const useSubscription = () => {
     const loading = useState<boolean>('subscriptionLoading', () => false);
     const current = useState<ActiveAccess | null>('currentAccess', () => null);
     const user = useUser();
+    const route = useRoute();
 
     const bypassesPlatformAccess = (): boolean => {
         const {
@@ -45,12 +46,19 @@ export const useSubscription = () => {
         return response?.status === 'active';
     };
 
+    const redirectToAccesPlan = async (redirectTo?: string) => {
+        await navigateTo({
+            path: '/acces-plan',
+            query: { redirectTo: safeReturnPath(redirectTo ?? route.fullPath) },
+        });
+    };
+
     const requirePlatformAccess = async (): Promise<boolean> => {
         if (await hasPlatformAccess()) {
             return true;
         }
 
-        await navigateTo('/acces-plan');
+        await redirectToAccesPlan();
 
         return false;
     };
@@ -85,7 +93,10 @@ export const useSubscription = () => {
         try {
             return await $apifetch<CheckoutResponse>('api/subscription/create', {
                 method: 'POST',
-                body: { priceId },
+                body: {
+                    priceId,
+                    redirectTo: safeReturnPath(route.query.redirectTo),
+                },
             });
         }
         catch (error: any) {
@@ -190,6 +201,7 @@ export const useSubscription = () => {
         startTrial,
         hasPlatformAccess,
         requirePlatformAccess,
+        redirectToAccesPlan,
         isPlatformAccessError,
     };
 };
