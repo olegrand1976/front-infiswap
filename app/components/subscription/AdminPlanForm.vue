@@ -5,20 +5,33 @@
     >
         <div
             v-if="isEditMode && plan"
-            class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-white p-4 rounded-md border border-gray-100"
+            class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white p-4 rounded-md border border-gray-100"
         >
             <div>
                 <p class="text-xs text-gray-500 uppercase tracking-wide">
-                    Montant actuel
+                    Type
                 </p>
                 <p class="font-medium mt-1">
-                    {{ plan.amount }} {{ currencySymbol(plan.currency) }} — paiement unique
-                </p>
-                <p class="text-xs text-gray-400 mt-1">
-                    Pour changer le prix, créez un nouveau plan.
+                    {{ typeLabel(plan.type) }}
                 </p>
             </div>
             <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Intervalle
+                </p>
+                <p class="font-medium mt-1">
+                    {{ intervalLabel(plan.interval) }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">
+                    Montant
+                </p>
+                <p class="font-medium mt-1">
+                    {{ plan.amount }} € / {{ intervalLabel(plan.interval).toLowerCase() }}
+                </p>
+            </div>
+            <div class="md:col-span-3">
                 <p class="text-xs text-gray-500 uppercase tracking-wide">
                     Stripe Price ID
                 </p>
@@ -26,14 +39,6 @@
                     {{ plan.stripe_price_id }}
                 </p>
             </div>
-        </div>
-
-        <div
-            v-if="!isEditMode"
-            class="bg-blue-50 border border-blue-100 rounded-md p-4 text-sm text-blue-800"
-        >
-            Créer un nouveau plan désactive automatiquement l'ancien prix actif.
-            Les utilisateurs ayant déjà payé conservent leur accès.
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-white p-4 rounded-md">
@@ -45,31 +50,52 @@
             />
 
             <template v-if="!isEditMode">
-                <InputIcon
-                    v-model="form.amount"
-                    rounded="md"
-                    :label="`Montant (${currencySymbol(form.currency)})`"
-                    placeholder="15"
-                />
-
                 <div class="flex flex-col gap-2">
-                    <Label class="text-sm text-gray-500">Devise</Label>
-                    <Select
-                        v-model="form.currency"
-                        class="w-full"
-                    >
-                        <SelectTrigger class="w-full rounded-md w-full">
-                            <SelectValue placeholder="Choisir une devise" />
+                    <Label class="text-sm text-gray-500">Type</Label>
+                    <Select v-model="form.type">
+                        <SelectTrigger class="w-full rounded-md">
+                            <SelectValue placeholder="Choisir un type" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="eur">
-                                    EUR (€)
+                                <SelectItem
+                                    v-for="option in typeOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
+
+                <div class="flex flex-col gap-2">
+                    <Label class="text-sm text-gray-500">Intervalle</Label>
+                    <Select v-model="form.interval">
+                        <SelectTrigger class="w-full rounded-md">
+                            <SelectValue placeholder="Choisir un intervalle" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="option in intervalOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <InputIcon
+                    v-model="form.amount"
+                    rounded="md"
+                    label="Montant (€)"
+                    placeholder="15"
+                />
             </template>
 
             <InputIcon
@@ -84,6 +110,20 @@
                 rounded="md"
                 label="Priorité"
                 placeholder="10"
+            />
+
+            <InputIcon
+                v-model="form.valid_from"
+                rounded="md"
+                label="Valide à partir du"
+                type="datetime-local"
+            />
+
+            <InputIcon
+                v-model="form.valid_until"
+                rounded="md"
+                label="Valide jusqu'au"
+                type="datetime-local"
             />
 
             <div
@@ -105,7 +145,7 @@
                     :checked="form.deactivate_previous"
                     @update:checked="form.deactivate_previous = $event"
                 />
-                <span class="text-sm">Remplacer le prix actif</span>
+                <span class="text-sm">Désactiver les autres plans du même type</span>
             </div>
         </div>
 
@@ -115,7 +155,7 @@
                 class="rounded-md w-52"
                 :in-progress="inProgress"
             >
-                {{ isEditMode ? 'Enregistrer' : 'Créer le nouveau prix' }}
+                {{ isEditMode ? 'Enregistrer' : 'Créer et synchroniser Stripe' }}
             </Button>
         </div>
     </form>
@@ -132,11 +172,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import type { AccessPlanAdmin } from '~/composables/useSubscriptionPlansAdmin';
+import type { StripePlan } from '~/composables/useSubscriptionPlansAdmin';
 
 const props = defineProps({
     plan: {
-        type: Object as PropType<AccessPlanAdmin | null>,
+        type: Object as PropType<StripePlan | null>,
         default: null,
     },
 });
@@ -144,24 +184,52 @@ const props = defineProps({
 const { createPlan, updatePlan } = useSubscriptionPlansAdmin();
 const isEditMode = computed(() => !!props.plan?.id);
 
-const currencySymbol = (currency: string) => (currency === 'gbp' ? '£' : '€');
+const typeOptions = [
+    { value: 'platform_access', label: 'Accès plateforme' },
+    { value: 'replacement_boost', label: 'Mise en avant' },
+] as const;
+
+const intervalOptions = [
+    { value: 'week', label: 'Semaine' },
+    { value: 'month', label: 'Mois' },
+    { value: 'year', label: 'Année' },
+] as const;
+
+const typeLabel = (value: string) =>
+    typeOptions.find(o => o.value === value)?.label ?? value;
+
+const intervalLabel = (value: string) =>
+    intervalOptions.find(o => o.value === value)?.label ?? value;
+
+const toDatetimeLocal = (value: string | null | undefined): string => {
+    if (!value) return '';
+    const normalized = value.replace(' ', 'T');
+    return normalized.slice(0, 16);
+};
 
 const form = reactive({
     name: '',
+    type: 'platform_access' as StripePlan['type'],
+    interval: 'month' as StripePlan['interval'],
     amount: 15,
-    currency: 'gbp',
     description: '',
     priority: 10,
+    valid_from: '',
+    valid_until: '',
     is_active: true,
     deactivate_previous: true,
 });
 
-const applyPlan = (plan: AccessPlanAdmin) => {
+const applyPlan = (plan: StripePlan) => {
     Object.assign(form, {
         name: plan.name,
+        type: plan.type,
+        interval: plan.interval,
         amount: plan.amount,
         description: plan.description ?? '',
         priority: plan.priority,
+        valid_from: toDatetimeLocal(plan.valid_from),
+        valid_until: toDatetimeLocal(plan.valid_until),
         is_active: plan.is_active,
     });
 };
@@ -177,6 +245,8 @@ const { submit, inProgress } = useSubmit(async () => {
         ...form,
         amount: Number(form.amount),
         priority: Number(form.priority),
+        valid_from: form.valid_from || null,
+        valid_until: form.valid_until || null,
     };
 
     if (isEditMode.value && props.plan) {
@@ -184,13 +254,14 @@ const { submit, inProgress } = useSubmit(async () => {
             name: payload.name,
             description: payload.description,
             is_active: payload.is_active,
+            valid_from: payload.valid_from,
+            valid_until: payload.valid_until,
             priority: payload.priority,
         });
-        await navigateTo('/dashboard/admin/subscription-plans', { replace: true });
         return;
     }
 
     await createPlan(payload);
-    await navigateTo('/dashboard/admin/subscription-plans', { replace: true });
+    await navigateTo('/dashboard/admin/subscription-plans');
 });
 </script>

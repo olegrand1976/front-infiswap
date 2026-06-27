@@ -226,7 +226,7 @@
 
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <NuxtLink to="/dashboard/subscriptions">Abonnement</NuxtLink>
+                                <NuxtLink to="/acces-plan">Accès plateforme</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem

@@ -55,16 +55,16 @@
 <script setup lang="ts">
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'verified', 'subscribed'],
+    middleware: ['auth', 'verified'],
 });
 
 useHead({
     title: 'Abonnements',
 });
 
-const { current, getCurrentSubscription } = useSubscription();
+const { current, getCurrentAccess } = useSubscription();
 
 onMounted(async () => {
-    await getCurrentSubscription();
+    await getCurrentAccess();
 });
 </script>

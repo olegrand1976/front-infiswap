@@ -6,6 +6,61 @@ export const useSubscription = () => {
     const current = useState<ActiveAccess | null>('currentAccess', () => null);
     const user = useUser();
 
+    const bypassesPlatformAccess = (): boolean => {
+        const {
+            isCollaborator,
+            isAdmin,
+            isDeveloper,
+            isManager,
+            isCommunityManager,
+            isSaleRepresentative,
+            isTester,
+            isInstitution,
+        } = useAuth();
+
+        if (!user.value?.id) {
+            return true;
+        }
+
+        if (isInstitution.value) {
+            return true;
+        }
+
+        return isCollaborator.value
+            || isAdmin.value
+            || isDeveloper.value
+            || isManager.value
+            || isCommunityManager.value
+            || isSaleRepresentative.value
+            || isTester.value;
+    };
+
+    const hasPlatformAccess = async (): Promise<boolean> => {
+        if (bypassesPlatformAccess()) {
+            return true;
+        }
+
+        const response = await check(user.value!.id);
+
+        return response?.status === 'active';
+    };
+
+    const requirePlatformAccess = async (): Promise<boolean> => {
+        if (await hasPlatformAccess()) {
+            return true;
+        }
+
+        await navigateTo('/acces-plan');
+
+        return false;
+    };
+
+    const isPlatformAccessError = (error: unknown): boolean => {
+        const err = error as { status?: number; data?: { code?: string } };
+
+        return err?.status === 403 && err?.data?.code === 'platform_access_required';
+    };
+
     const getAccessPlan = async (): Promise<void> => {
         loading.value = true;
         try {
@@ -133,6 +188,9 @@ export const useSubscription = () => {
         getCurrentAccess,
         current,
         startTrial,
+        hasPlatformAccess,
+        requirePlatformAccess,
+        isPlatformAccessError,
     };
 };
 
