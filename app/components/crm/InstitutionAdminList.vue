@@ -1541,9 +1541,15 @@ const columns: ColumnDef<CrmInstitution>[] = [
 
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
                 isCollaborator.value
-                    ? h('span', { class: 'text-sm break-all max-w-[220px]' }, email || '—')
+                    ? h('span', {
+                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                        title: email ?? '',
+                    }, email || '—')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', { class: 'text-sm break-all max-w-[220px]' }, email || '—'),
+                            h('span', {
+                                class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                                title: email ?? '',
+                            }, email || '—'),
                             h(Pencil, {
                                 class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
                                 onClick: () => openContactInfoDialog(row.original),

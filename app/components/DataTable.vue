@@ -1,7 +1,7 @@
 <template>
     <div class="min-w-0 w-full">
-        <div class="overflow-x-auto rounded-md border">
-            <Table>
+        <div class="data-table-scroll max-w-full overflow-x-auto rounded-md border">
+            <Table class="w-max min-w-full">
                 <TableHeader class="h-14 bg-gray-100">
                     <TableRow
                         v-for="headerGroup in table.getHeaderGroups()"
@@ -133,3 +133,23 @@ function onRowClick(event: MouseEvent, row: Row<unknown>) {
     row.toggleSelected();
 }
 </script>
+
+<style scoped>
+.data-table-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+
+.data-table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.data-table-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+}
+
+.data-table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+</style>
