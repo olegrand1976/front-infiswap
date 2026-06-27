@@ -1,10 +1,19 @@
 # Infiswap — orchestration front (Nuxt 3) + back (Laravel 12 / Sail)
 # Prérequis : git, Docker avec plugin Compose v2 (`docker compose`).
-# Exécuter depuis front-infiswap/ (monorepo : ../back-infiswap/back-infiswap).
+# Lancer depuis la racine Infiswap/ ou depuis front-infiswap/.
 
-ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-MONOREPO_ROOT := $(abspath $(ROOT)/..)
-FRONT_DIR := $(ROOT)
+_MAKEFILE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+ifneq ($(wildcard $(_MAKEFILE_DIR)back-infiswap/back-infiswap/artisan),)
+  MONOREPO_ROOT := $(abspath $(_MAKEFILE_DIR))
+  FRONT_DIR := $(MONOREPO_ROOT)/front-infiswap/
+else ifneq ($(wildcard $(_MAKEFILE_DIR)../back-infiswap/back-infiswap/artisan),)
+  MONOREPO_ROOT := $(abspath $(_MAKEFILE_DIR)/..)
+  FRONT_DIR := $(_MAKEFILE_DIR)
+else
+  $(error Monorepo Infiswap introuvable — lancer make depuis la racine ou front-infiswap/)
+endif
+
 BACK_DIR := $(MONOREPO_ROOT)/back-infiswap/back-infiswap
 SCRIPTS_DIR := $(MONOREPO_ROOT)/scripts/
 PORTS_FILE := $(MONOREPO_ROOT)/.infiswap-ports.env
