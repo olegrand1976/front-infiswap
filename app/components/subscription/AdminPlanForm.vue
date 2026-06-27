@@ -20,7 +20,7 @@
                     Intervalle
                 </p>
                 <p class="font-medium mt-1">
-                    {{ intervalLabel(plan.interval) }}
+                    {{ intervalLabel(plan.interval, plan.duration_days) }}
                 </p>
             </div>
             <div>
@@ -28,7 +28,7 @@
                     Montant
                 </p>
                 <p class="font-medium mt-1">
-                    {{ plan.amount }} € / {{ intervalLabel(plan.interval).toLowerCase() }}
+                    {{ plan.amount }} €
                 </p>
             </div>
             <div class="md:col-span-3">
@@ -46,31 +46,14 @@
                 v-model="form.name"
                 rounded="md"
                 label="Nom"
-                placeholder="Accès InfiSwap"
+                :placeholder="isBoostMode ? 'Mise en avant remplacement' : 'Accès InfiSwap'"
             />
 
             <template v-if="!isEditMode">
-                <div class="flex flex-col gap-2">
-                    <Label class="text-sm text-gray-500">Type</Label>
-                    <Select v-model="form.type">
-                        <SelectTrigger class="w-full rounded-md">
-                            <SelectValue placeholder="Choisir un type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem
-                                    v-for="option in typeOptions"
-                                    :key="option.value"
-                                    :value="option.value"
-                                >
-                                    {{ option.label }}
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div class="flex flex-col gap-2">
+                <div
+                    v-if="isBoostMode"
+                    class="flex flex-col gap-2"
+                >
                     <Label class="text-sm text-gray-500">Intervalle</Label>
                     <Select v-model="form.interval">
                         <SelectTrigger class="w-full rounded-md">
@@ -79,7 +62,7 @@
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem
-                                    v-for="option in intervalOptions"
+                                    v-for="option in boostIntervalOptions"
                                     :key="option.value"
                                     :value="option.value"
                                 >
@@ -94,7 +77,15 @@
                     v-model="form.amount"
                     rounded="md"
                     label="Montant (€)"
-                    placeholder="15"
+                    :placeholder="isBoostMode ? '5' : '15'"
+                />
+
+                <InputIcon
+                    v-if="isBoostMode && form.interval === 'one_time'"
+                    v-model="form.duration_days"
+                    rounded="md"
+                    label="Durée (jours)"
+                    placeholder="7"
                 />
             </template>
 
@@ -110,20 +101,6 @@
                 rounded="md"
                 label="Priorité"
                 placeholder="10"
-            />
-
-            <InputIcon
-                v-model="form.valid_from"
-                rounded="md"
-                label="Valide à partir du"
-                type="datetime-local"
-            />
-
-            <InputIcon
-                v-model="form.valid_until"
-                rounded="md"
-                label="Valide jusqu'au"
-                type="datetime-local"
             />
 
             <div
@@ -172,64 +149,77 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import type { StripePlan } from '~/composables/useSubscriptionPlansAdmin';
+import type { StripePlanAdmin } from '~/composables/useSubscriptionPlansAdmin';
 
 const props = defineProps({
     plan: {
-        type: Object as PropType<StripePlan | null>,
+        type: Object as PropType<StripePlanAdmin | null>,
         default: null,
+    },
+    mode: {
+        type: String as PropType<'access' | 'boost'>,
+        default: 'access',
+    },
+    feature: {
+        type: String,
+        default: 'replacement',
     },
 });
 
+const route = useRoute();
 const { createPlan, updatePlan } = useSubscriptionPlansAdmin();
 const isEditMode = computed(() => !!props.plan?.id);
+const isBoostMode = computed(() => props.mode === 'boost');
 
-const typeOptions = [
-    { value: 'platform_access', label: 'Accès plateforme' },
-    { value: 'replacement_boost', label: 'Mise en avant' },
-] as const;
-
-const intervalOptions = [
+const boostIntervalOptions = [
     { value: 'week', label: 'Semaine' },
     { value: 'month', label: 'Mois' },
-    { value: 'year', label: 'Année' },
+    { value: 'quarter', label: 'Trimestre' },
+    { value: 'one_time', label: 'Paiement unique' },
 ] as const;
 
 const typeLabel = (value: string) =>
-    typeOptions.find(o => o.value === value)?.label ?? value;
+    value === 'boost' ? 'Mise en avant' : 'Accès plateforme';
 
-const intervalLabel = (value: string) =>
-    intervalOptions.find(o => o.value === value)?.label ?? value;
+const intervalLabel = (value: string, durationDays?: number | null) => {
+    if (value === 'one_time') {
+        return durationDays ? `Paiement unique · ${durationDays} jours` : 'Paiement unique';
+    }
 
-const toDatetimeLocal = (value: string | null | undefined): string => {
-    if (!value) return '';
-    const normalized = value.replace(' ', 'T');
-    return normalized.slice(0, 16);
+    return boostIntervalOptions.find(o => o.value === value)?.label ?? value;
 };
 
 const form = reactive({
     name: '',
-    type: 'platform_access' as StripePlan['type'],
-    interval: 'month' as StripePlan['interval'],
+    type: 'platform_access' as StripePlanAdmin['type'],
+    feature: 'replacement' as string | undefined,
+    interval: 'week' as string,
+    duration_days: 7,
     amount: 15,
+    currency: 'eur',
     description: '',
     priority: 10,
-    valid_from: '',
-    valid_until: '',
     is_active: true,
     deactivate_previous: true,
 });
 
-const applyPlan = (plan: StripePlan) => {
+watch(isBoostMode, (boost) => {
+    form.type = boost ? 'boost' : 'platform_access';
+    form.feature = boost ? props.feature : undefined;
+    form.interval = boost ? 'week' : 'one_time';
+    form.amount = boost ? 5 : 15;
+}, { immediate: true });
+
+const applyPlan = (plan: StripePlanAdmin) => {
     Object.assign(form, {
         name: plan.name,
         type: plan.type,
+        feature: plan.feature ?? undefined,
         interval: plan.interval,
+        duration_days: plan.duration_days ?? 7,
         amount: plan.amount,
         description: plan.description ?? '',
         priority: plan.priority,
-        valid_from: toDatetimeLocal(plan.valid_from),
-        valid_until: toDatetimeLocal(plan.valid_until),
         is_active: plan.is_active,
     });
 };
@@ -240,13 +230,14 @@ watch(() => props.plan, (plan) => {
     }
 }, { immediate: true });
 
+const returnTab = computed(() => (route.query.tab as string) || (isBoostMode.value ? 'boost_replacement' : 'access'));
+
 const { submit, inProgress } = useSubmit(async () => {
     const payload = {
         ...form,
         amount: Number(form.amount),
         priority: Number(form.priority),
-        valid_from: form.valid_from || null,
-        valid_until: form.valid_until || null,
+        duration_days: form.interval === 'one_time' ? Number(form.duration_days) : undefined,
     };
 
     if (isEditMode.value && props.plan) {
@@ -254,14 +245,12 @@ const { submit, inProgress } = useSubmit(async () => {
             name: payload.name,
             description: payload.description,
             is_active: payload.is_active,
-            valid_from: payload.valid_from,
-            valid_until: payload.valid_until,
             priority: payload.priority,
         });
         return;
     }
 
     await createPlan(payload);
-    await navigateTo('/dashboard/admin/subscription-plans');
+    await navigateTo(`/dashboard/admin/subscription-plans?tab=${returnTab.value}`);
 });
 </script>

@@ -866,6 +866,8 @@ const formatReplacementForCard = (r: any) => ({
     type: r.type,
     details: r.details || [],
     has_confirmed_substitute: r.has_confirmed_substitute,
+    is_boosted: r.is_boosted,
+    boosted_until: r.boosted_until,
 });
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];

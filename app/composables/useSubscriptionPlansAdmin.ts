@@ -1,70 +1,145 @@
+export const SUBSCRIPTION_TABS: SubscriptionTab[] = [
+    { key: 'access', label: 'Accès plateforme', group: 'access' },
+    { key: 'boost_replacement', label: 'Boost remplacement', group: 'boost', feature: 'replacement' },
+];
+
+export const resolveSubscriptionTab = (tabKey: string): SubscriptionTab =>
+    SUBSCRIPTION_TABS.find(t => t.key === tabKey) ?? SUBSCRIPTION_TABS[0];
+
 export const useSubscriptionPlansAdmin = () => {
     const { $apifetch, $toast } = useNuxtApp();
-    const plan = useState<AccessPlanAdmin | null>('adminAccessPlan', () => null);
-    const loading = useState<boolean>('adminAccessPlansLoading', () => false);
+    const tabs = useState<SubscriptionTab[]>('adminSubscriptionTabs', () => SUBSCRIPTION_TABS);
+    const activePlan = useState<StripePlanAdmin | null>('adminActivePlan', () => null);
+    const inactivePlans = useState<StripePlanAdmin[]>('adminInactivePlans', () => []);
+    const loadedTabKey = useState<string>('adminLoadedTabKey', () => '');
+    const loading = useState<boolean>('adminPlansLoading', () => false);
 
-    const getCurrentPlan = async () => {
+    const getPlansByGroup = async (group: 'access' | 'boost', feature?: string, tabKey?: string) => {
         loading.value = true;
         try {
-            const response = await $apifetch<{ plan: AccessPlanAdmin | null }>('api/admin/stripe-plans');
-            plan.value = response.plan;
+            const params = new URLSearchParams({ group });
+            if (feature) {
+                params.set('feature', feature);
+            }
+
+            const response = await $apifetch<PlansGroupResponse>(`api/admin/stripe-plans?${params.toString()}`);
+            tabs.value = response.tabs ?? SUBSCRIPTION_TABS;
+            activePlan.value = response.active;
+            inactivePlans.value = response.inactive ?? [];
+            loadedTabKey.value = tabKey ?? (group === 'access' ? 'access' : `boost_${feature ?? 'replacement'}`);
         }
         finally {
             loading.value = false;
         }
     };
 
+    const loadTab = async (tabKey: string) => {
+        const tab = resolveSubscriptionTab(tabKey);
+        await getPlansByGroup(tab.group, tab.feature, tab.key);
+    };
+
+    /** @deprecated use getPlansByGroup */
+    const getCurrentPlan = async () => {
+        await getPlansByGroup('access');
+    };
+
     const getPlan = async (id: number) => {
-        const response = await $apifetch<{ plan: AccessPlanAdmin }>(`api/admin/stripe-plans/${id}`);
+        const response = await $apifetch<{ plan: StripePlanAdmin }>(`api/admin/stripe-plans/${id}`);
         return response.plan;
     };
 
-    const createPlan = async (payload: AccessPlanPayload) => {
-        const response = await $apifetch<{ plan: AccessPlanAdmin; message: string }>('api/admin/stripe-plans', {
+    const createPlan = async (payload: StripePlanPayload) => {
+        const response = await $apifetch<{ plan: StripePlanAdmin; message: string }>('api/admin/stripe-plans', {
             method: 'POST',
             body: payload,
         });
-        $toast({ description: response.message || 'Plan d\'accès créé.' });
-        plan.value = response.plan;
+        $toast({ description: response.message || 'Plan créé.' });
+        activePlan.value = response.plan;
         return response.plan;
     };
 
-    const updatePlan = async (id: number, payload: Partial<AccessPlanPayload>) => {
-        const response = await $apifetch<{ plan: AccessPlanAdmin; message: string }>(`api/admin/stripe-plans/${id}`, {
+    const updatePlan = async (id: number, payload: Partial<StripePlanPayload>) => {
+        const response = await $apifetch<{ plan: StripePlanAdmin; message: string }>(`api/admin/stripe-plans/${id}`, {
             method: 'PUT',
             body: payload,
         });
-        $toast({ description: response.message || 'Plan d\'accès mis à jour.' });
-        plan.value = response.plan;
+        $toast({ description: response.message || 'Plan mis à jour.' });
+        return response.plan;
+    };
+
+    const activatePlan = async (id: number) => {
+        const response = await $apifetch<{ plan: StripePlanAdmin; message: string }>(`api/admin/stripe-plans/${id}/activate`, {
+            method: 'POST',
+        });
+        $toast({ description: response.message || 'Plan réactivé.' });
+        return response.plan;
+    };
+
+    const deactivatePlan = async (id: number) => {
+        const response = await $apifetch<{ plan: StripePlanAdmin; message: string }>(`api/admin/stripe-plans/${id}`, {
+            method: 'DELETE',
+        });
+        $toast({ description: response.message || 'Plan désactivé.' });
         return response.plan;
     };
 
     return {
-        plan,
+        tabs,
+        activePlan,
+        inactivePlans,
+        loadedTabKey,
         loading,
+        getPlansByGroup,
+        loadTab,
         getCurrentPlan,
         getPlan,
         createPlan,
         updatePlan,
+        activatePlan,
+        deactivatePlan,
     };
 };
 
-export interface AccessPlanAdmin {
+export interface SubscriptionTab {
+    key: string;
+    label: string;
+    group: 'access' | 'boost';
+    feature?: string;
+}
+
+export interface StripePlanAdmin {
     id: number;
     name: string;
     stripe_product_id: string | null;
     stripe_price_id: string;
+    type: 'platform_access' | 'boost';
+    feature: string | null;
+    interval: string;
+    interval_count: number | null;
+    duration_days: number | null;
     amount: number | string;
     currency: string;
     description: string | null;
     is_active: boolean;
     priority: number;
+    label?: string;
     created_at: string;
     updated_at: string;
 }
 
-export interface AccessPlanPayload {
+export interface PlansGroupResponse {
+    tabs: SubscriptionTab[];
+    active: StripePlanAdmin | null;
+    inactive: StripePlanAdmin[];
+    plan?: StripePlanAdmin | null;
+}
+
+export interface StripePlanPayload {
     name: string;
+    type?: 'platform_access' | 'boost';
+    feature?: string;
+    interval?: string;
+    duration_days?: number;
     amount: number;
     currency?: string;
     description?: string;
@@ -72,3 +147,9 @@ export interface AccessPlanPayload {
     deactivate_previous?: boolean;
     is_active?: boolean;
 }
+
+/** @deprecated use StripePlanAdmin */
+export type AccessPlanAdmin = StripePlanAdmin;
+
+/** @deprecated use StripePlanPayload */
+export type AccessPlanPayload = StripePlanPayload;

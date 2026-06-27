@@ -1,5 +1,12 @@
 <template>
-    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative ">
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative"
+        :class="{ 'ring-2 ring-amber-400/60 border-amber-300/50 shadow-amber-100/50': isBoosted }"
+    >
+        <ReplacementBoostBadge
+            v-if="isBoosted"
+            class="absolute -top-2 right-2 z-10"
+            size="md"
+        />
         <div
             v-if="isNew"
             class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
@@ -201,15 +208,18 @@
                 {{ replacementTypeLabel }}
             </span>
         </div>
-        <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
-            <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1">
+        <div
+            class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100"
+            :class="{ 'ring-2 ring-amber-400/40 rounded-lg px-2 py-2 -mx-2 bg-gradient-to-r from-amber-50/80 to-orange-50/50': isBoosted }"
+        >
+            <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1 min-w-0">
                 <div class="flex items-center gap-1">
-                    <Clock class="w-3.5 h-3.5 text-primary" />
-                    <span>{{ timeSlotsText }}</span>
+                    <Clock class="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span class="truncate">{{ timeSlotsText }}</span>
                 </div>
                 <div
                     v-if="replacement.patient_count"
-                    class="flex items-center gap-1"
+                    class="flex items-center gap-1 shrink-0"
                 >
                     <Users class="w-3.5 h-3.5 text-primary" />
                     <span>{{ replacement.patient_count }} patient(s)/jour</span>
@@ -228,16 +238,26 @@
             </template>
 
             <template v-else>
-                <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            class="shrink-0 gap-1.5 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all font-medium"
-                        >
-                            <Ellipsis class="w-4 h-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
+                <div class="flex items-center gap-2 shrink-0">
+                    <ReplacementBoostButton
+                        v-if="showBoostAction"
+                        :can-boost="!isBoosted"
+                        :is-boosted="isBoosted"
+                        :price-label="boostShortLabel"
+                        variant="card"
+                        @boost="handleBoost"
+                        @cancel="handleCancelBoost"
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger as-child>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                class="shrink-0 w-9 h-9 p-0 border-gray-300 text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
+                            >
+                                <Ellipsis class="w-4 h-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
                     <DropdownMenuContent
                         align="end"
                         class="w-48"
@@ -275,6 +295,7 @@
                         </template>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                </div>
             </template>
         </div>
 
@@ -316,6 +337,8 @@ import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
+import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
+import ReplacementBoostBadge from '@/components/replacements/ReplacementBoostBadge.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { User } from '~/lib/types';
@@ -354,6 +377,8 @@ interface Replacement {
     type?: string;
     details?: Record<string, unknown>[];
     has_confirmed_substitute?: boolean;
+    is_boosted?: boolean;
+    boosted_until?: string | null;
     stars?: number;
     is_favorited?: boolean;
 }
@@ -369,6 +394,8 @@ const emit = defineEmits<{
 }>();
 const { updateReplacement } = useReplacements();
 const { getLogoUrl } = useInstitutions();
+const { boostReplacement, cancelBoost } = useSubscription();
+const { boostShortLabel, fetchBoostPlan, canBoostReplacement } = useReplacementBoost();
 const user = useState<User>('user');
 const config = useRuntimeConfig();
 
@@ -391,6 +418,42 @@ const isClosed = computed(() =>
 );
 
 const canClose = computed(() => isOwner.value && !isClosed.value);
+
+const localBoosted = ref<boolean | null>(null);
+
+const isBoosted = computed(() => {
+    if (localBoosted.value !== null) return localBoosted.value;
+    return props.replacement.is_boosted === true || props.rawReplacement?.is_boosted === true;
+});
+
+const showBoostAction = computed(() =>
+    canBoostReplacement(
+        {
+            institution_id: props.replacement.institution_id,
+            status: props.replacement.status,
+            has_confirmed_substitute: props.replacement.has_confirmed_substitute,
+        },
+        'me',
+    ),
+);
+
+onMounted(() => {
+    if (isOwner.value) {
+        fetchBoostPlan();
+    }
+});
+
+const handleBoost = async () => {
+    const response = await boostReplacement(props.replacement.id);
+    if (response?.url) {
+        window.location.href = response.url;
+    }
+};
+
+const handleCancelBoost = async () => {
+    await cancelBoost(props.replacement.id);
+    localBoosted.value = false;
+};
 
 const handleCloseReplacement = async (): Promise<void> => {
     isClosing.value = true;
@@ -576,6 +639,7 @@ const isNew = computed(() => {
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
