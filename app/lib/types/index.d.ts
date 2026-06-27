@@ -127,6 +127,10 @@ export type CrmInstitutionSubscription = {
     can_delete_draft: boolean;
     created_by?: number | null;
     requester?: { id: number; full_name: string; email: string } | null;
+    signatory?: { id: number; full_name: string; email: string } | null;
+    signed_at?: string | null;
+    has_signed_pdf?: boolean;
+    signing_urls?: { client?: string | null; commercial?: string | null } | null;
 };
 
 export type CrmInstitution = {

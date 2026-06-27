@@ -21,6 +21,7 @@
             :columns="columns"
             manual-sorting
             constrained-height
+            :sticky-leading-columns="2"
         />
 
         <Dialog

@@ -23,8 +23,9 @@
                         :key="headerGroup.id"
                     >
                         <TableHead
-                            v-for="header in headerGroup.headers"
+                            v-for="(header, colIndex) in headerGroup.headers"
                             :key="header.id"
+                            :class="getStickyColumnClass(colIndex, { isHeader: true })"
                         >
                             <FlexRender
                                 v-if="!header.isPlaceholder"
@@ -42,12 +43,16 @@
                         >
                             <TableRow
                                 :data-state="row.getIsSelected() ? 'selected' : undefined"
-                                class="cursor-pointer"
+                                class="group cursor-pointer"
                                 @click="(event) => onRowClick(event, row)"
                             >
                                 <TableCell
-                                    v-for="cell in row.getVisibleCells()"
+                                    v-for="(cell, colIndex) in row.getVisibleCells()"
                                     :key="cell.id"
+                                    :class="getStickyColumnClass(colIndex, {
+                                        isHeader: false,
+                                        isSelected: row.getIsSelected(),
+                                    })"
                                 >
                                     <FlexRender
                                         :render="cell.column.columnDef.cell"
@@ -99,12 +104,47 @@ const props = withDefaults(defineProps<{
     columns: ColumnDef<any>[];
     manualSorting?: boolean;
     constrainedHeight?: boolean;
+    stickyLeadingColumns?: number;
 }>(), {
     manualSorting: false,
     constrainedHeight: false,
+    stickyLeadingColumns: 0,
 });
 
-const { columns, manualSorting } = toRefs(props);
+const { columns, manualSorting, constrainedHeight, stickyLeadingColumns } = toRefs(props);
+
+const STICKY_LEFT_OFFSETS = ['left-0', 'left-12', 'left-44'] as const;
+
+function getStickyColumnClass(
+    colIndex: number,
+    options: { isHeader: boolean; isSelected?: boolean },
+) {
+    if (stickyLeadingColumns.value <= 0 || colIndex >= stickyLeadingColumns.value) {
+        return undefined;
+    }
+
+    const isLastSticky = colIndex === stickyLeadingColumns.value - 1;
+    const leftClass = STICKY_LEFT_OFFSETS[colIndex] ?? 'left-0';
+    const zClass = options.isHeader
+        ? (constrainedHeight.value ? 'z-30' : 'z-20')
+        : 'z-10';
+    const bgClass = options.isHeader
+        ? 'bg-gray-100'
+        : cn(
+            'bg-white group-hover:bg-gray-100',
+            options.isSelected && 'bg-gray-100',
+        );
+
+    return cn(
+        'sticky',
+        leftClass,
+        zClass,
+        bgClass,
+        colIndex === 0 && 'w-12 min-w-12 max-w-12',
+        colIndex === 1 && 'min-w-[140px]',
+        isLastSticky && 'border-r border-gray-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]',
+    );
+}
 
 const rows = computed(() => props.data);
 

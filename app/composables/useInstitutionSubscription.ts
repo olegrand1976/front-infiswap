@@ -36,6 +36,7 @@ export type InstitutionSubscriptionItem = {
     payment_mode?: string | null;
     created_at?: string | null;
     signed_at?: string | null;
+    has_signed_pdf?: boolean;
     institution?: { id: number; name: string } | null;
     requester?: { id: number; full_name: string; email: string } | null;
     signatory?: { id: number; full_name: string; email: string } | null;

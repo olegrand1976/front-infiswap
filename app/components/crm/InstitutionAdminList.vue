@@ -102,6 +102,7 @@
             :columns="columns"
             manual-sorting
             constrained-height
+            :sticky-leading-columns="2"
         />
 
         <Dialog
@@ -1060,12 +1061,15 @@ async function sendPendingSubscriptionForSignature() {
             pendingSubscriptionContractId.value,
         );
 
-        if (response.signing_url) {
+        if (response.signing_urls?.commercial) {
+            window.open(response.signing_urls.commercial, '_blank', 'noopener,noreferrer');
+        }
+        else if (response.signing_url) {
             window.open(response.signing_url, '_blank', 'noopener,noreferrer');
         }
 
         $toast({
-            description: response.message ?? 'Bon de commande envoyé pour signature.',
+            description: response.message ?? 'Bon de commande envoyé. Le client et le commercial recevront un e-mail Documenso.',
             variant: 'success',
         });
 
