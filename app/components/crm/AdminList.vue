@@ -846,6 +846,151 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
+        accessorKey: 'nb_call',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_call'),
+                title: 'Nombre d\'appels passés dans la semaine',
+            },
+            () => [
+                'Nombre d\'appels passés',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_call = Number(row.original.crm?.nb_call) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_call.toString(),
+                            }, nb_call || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_sale',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_sale'),
+                title: 'Nombre de ventes passées dans la semaine',
+            },
+            () => [
+                'Nombre de ventes passées',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_sale = Number(row.original.crm?.nb_sale) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_sale.toString(),
+                            }, nb_sale || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_recommandation',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_recommandation'),
+                title: 'Nombre de recommandations obtenues dans la semaine',
+            },
+            () => [
+                'Nombre de recommandations obtenues',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_recommandation = Number(row.original.crm?.nb_recommandation) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_recommandation.toString(),
+                            }, nb_recommandation || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_meeting',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_meeting'),
+                title: 'Nombre de rendez-vous planifiés dans la semaine',
+            },
+            () => [
+                'Nombre de rendez-vous planifiés',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_meeting = Number(row.original.crm?.nb_meeting) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_meeting.toString(),
+                            }, nb_meeting || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_pending',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_pending'),
+                title: 'Nombre de réponses en attente dans la semaine',
+            },
+            () => [
+                'Nombre de réponses en attente',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_pending = Number(row.original.crm?.nb_pending) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_pending.toString(),
+                            }, nb_pending || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
         accessorKey: 'created_at',
         header: () => {
             return h(Button, {

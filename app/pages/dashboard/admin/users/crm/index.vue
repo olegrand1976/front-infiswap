@@ -3,7 +3,7 @@
         <DashboardAdminPageHeader
             as="div"
             class="shrink-0"
-            title="CRM - Suivi utilisateurs - Suivi commercial"
+            title="CRM - Suivi infirmières"
         >
             <template
                 v-if="isInstitutionsTab && canImportInstitutions"
@@ -29,19 +29,13 @@
                         value="users"
                         class="w-full md:w-48 h-12"
                     >
-                        Suivi des utilisateurs
+                        Suivi des infirmières
                     </TabsTrigger>
                     <TabsTrigger
                         value="institutions"
                         class="w-full md:w-48 h-12"
                     >
                         Suivi des institutions
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="commercial"
-                        class="w-full md:w-48 h-12"
-                    >
-                        Suivi commercial
                     </TabsTrigger>
                     <TabsTrigger
                         value="exUsers"
@@ -299,7 +293,7 @@
                     class="mx-4 mb-6 rounded-md border border-dashed px-6 py-12 text-center"
                 >
                     <p class="text-base font-medium text-foreground">
-                        {{ isInstitutionsTab ? 'Aucune institution trouvée' : 'Aucun utilisateur trouvé' }}
+                        {{ isInstitutionsTab ? 'Aucune institution trouvée' : 'Aucune infirmière trouvée' }}
                     </p>
                     <p class="mt-2 text-sm text-muted-foreground">
                         Ajustez les filtres ou cliquez sur Restaurer pour réinitialiser la recherche.
@@ -331,18 +325,6 @@
                             @update-users="handleUsersListUpdate"
                         />
                     </template>
-                <template v-else-if="selectedCrm === 'commercial'">
-                    <CrmSaleAdminList
-                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
-                        :users="users"
-                        :page="page"
-                        :per-page="perPage"
-                        @refresh-users="refreshUsers"
-                        @handle-per-page-change="handlePerPageChange"
-                        @set-sort="setSort"
-                        @user-updated="handleUserUpdate"
-                    />
-                </template>
                 <template v-else-if="selectedCrm === 'exUsers'">
                     <CrmUserDeletedList
                         class="flex min-h-0 flex-1 flex-col overflow-hidden"
@@ -408,7 +390,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useInstitutions } from '@/composables/useInstitution';
 import { useAuth } from '@/composables/useAuth';
 
-useHead({ title: 'Suivi utilisateurs' });
+useHead({ title: 'Suivi infirmières' });
 
 definePageMeta({
     layout: 'dashboard',
@@ -445,7 +427,10 @@ const importing = ref(false);
 
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
-selectedCrm.value = selectedCrmCookie.value;
+selectedCrm.value = selectedCrmCookie.value === 'commercial' ? 'users' : selectedCrmCookie.value;
+if (selectedCrmCookie.value === 'commercial') {
+    selectedCrmCookie.value = 'users';
+}
 
 const countryTabs = [
     { label: 'Toutes', value: '' },
@@ -492,8 +477,9 @@ if (import.meta.client && !route.query.name) {
         sort.by = savedUiState.sort.by;
         sort.order = savedUiState.sort.order;
         if (savedUiState.selectedCrm) {
-            selectedCrm.value = savedUiState.selectedCrm;
-            selectedCrmCookie.value = savedUiState.selectedCrm;
+            const restoredTab = savedUiState.selectedCrm === 'commercial' ? 'users' : savedUiState.selectedCrm;
+            selectedCrm.value = restoredTab;
+            selectedCrmCookie.value = restoredTab;
         }
     }
 }
@@ -565,7 +551,7 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
     }
     else {
         params.deleted = selectedCrm.value === 'exUsers';
-        params.enrich = selectedCrm.value === 'users' ? 1 : 0;
+        params.enrich = selectedCrm.value === 'exUsers' ? 0 : 1;
     }
 
     if (sort.by) {
