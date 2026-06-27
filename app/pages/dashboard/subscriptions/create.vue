@@ -6,7 +6,7 @@
             <div class="flex flex-col justify-center items-center">
                 <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
                     <h1 class="text-2xl font-medium text-success capitalize lg:text-3xl dark:text-white">
-                        Abonnement
+                        Accès InfiSwap
                     </h1>
                     <div class="mt-4">
                         <span class="inline-block w-28 h-1 bg-success rounded-full" />
@@ -28,6 +28,6 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Abonnements',
+    title: 'Accès InfiSwap',
 });
 </script>
