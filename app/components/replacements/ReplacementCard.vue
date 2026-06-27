@@ -1,12 +1,5 @@
 <template>
-    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative"
-        :class="{ 'ring-2 ring-amber-400/60 border-amber-300/50 shadow-amber-100/50': isBoosted }"
-    >
-        <ReplacementBoostBadge
-            v-if="isBoosted"
-            class="absolute -top-2 right-2 z-10"
-            size="md"
-        />
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative">
         <div
             v-if="isNew"
             class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
@@ -208,10 +201,7 @@
                 {{ replacementTypeLabel }}
             </span>
         </div>
-        <div
-            class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100"
-            :class="{ 'ring-2 ring-amber-400/40 rounded-lg px-2 py-2 -mx-2 bg-gradient-to-r from-amber-50/80 to-orange-50/50': isBoosted }"
-        >
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100">
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1 min-w-0">
                 <div class="flex items-center gap-1">
                     <Clock class="w-3.5 h-3.5 text-primary shrink-0" />
@@ -227,26 +217,34 @@
             </div>
 
             <template v-if="!isOwner">
-                <Button
-                    size="sm"
-                    :href="`/dashboard/replacements/detail/${replacement.id}`"
-                    class="shrink-0 gap-1.5"
-                >
-                    <span>Voir détail</span>
-                    <ChevronRight class="w-3.5 h-3.5" />
-                </Button>
+                <div class="flex items-center gap-2 shrink-0">
+                    <ReplacementBoostTrustBadge
+                        v-if="isBoosted"
+                        variant="visitor"
+                        compact
+                    />
+                    <Button
+                        size="sm"
+                        :href="`/dashboard/replacements/detail/${replacement.id}`"
+                        class="shrink-0 gap-1.5"
+                    >
+                        <span>Voir détail</span>
+                        <ChevronRight class="w-3.5 h-3.5" />
+                    </Button>
+                </div>
             </template>
 
             <template v-else>
                 <div class="flex items-center gap-2 shrink-0">
                     <ReplacementBoostButton
-                        v-if="showBoostAction"
-                        :can-boost="!isBoosted"
-                        :is-boosted="isBoosted"
-                        :price-label="boostShortLabel"
+                        v-if="showBoostAction && !isBoosted"
                         variant="card"
-                        @boost="handleBoost"
-                        @cancel="handleCancelBoost"
+                        @boost="openBoostPreview()"
+                    />
+                    <ReplacementBoostStars
+                        v-else-if="isBoosted"
+                        clickable
+                        @click="openBoostActive()"
                     />
                     <DropdownMenu>
                         <DropdownMenuTrigger as-child>
@@ -299,6 +297,12 @@
             </template>
         </div>
 
+        <ReplacementBoostModal
+            v-model:open="boostModalOpen"
+            :replacement="boostModalReplacement"
+            @cancelled="onBoostCancelled"
+        />
+
         <Dialog v-model:open="closeDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
@@ -338,7 +342,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
-import ReplacementBoostBadge from '@/components/replacements/ReplacementBoostBadge.vue';
+import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
+import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoostTrustBadge.vue';
+import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { User } from '~/lib/types';
@@ -394,8 +400,31 @@ const emit = defineEmits<{
 }>();
 const { updateReplacement } = useReplacements();
 const { getLogoUrl } = useInstitutions();
-const { boostReplacement, cancelBoost } = useSubscription();
-const { boostShortLabel, fetchBoostPlan, canBoostReplacement } = useReplacementBoost();
+const { canBoostReplacement } = useReplacementBoost();
+
+const boostModalOpen = ref(false);
+const boostModalReplacement = ref<Replacement | null>(null);
+const localBoosted = ref<boolean | null>(null);
+
+const openBoostPreview = () => {
+    const source = (props.rawReplacement ?? props.replacement) as Replacement;
+    boostModalReplacement.value = source;
+    boostModalOpen.value = true;
+};
+
+const openBoostActive = () => {
+    const source = (props.rawReplacement ?? props.replacement) as Replacement;
+    boostModalReplacement.value = source;
+    boostModalOpen.value = true;
+};
+
+const onBoostCancelled = () => {
+    localBoosted.value = false;
+    if (props.rawReplacement) {
+        props.rawReplacement.is_boosted = false;
+        props.rawReplacement.boosted_until = null;
+    }
+};
 const user = useState<User>('user');
 const config = useRuntimeConfig();
 
@@ -419,41 +448,14 @@ const isClosed = computed(() =>
 
 const canClose = computed(() => isOwner.value && !isClosed.value);
 
-const localBoosted = ref<boolean | null>(null);
-
 const isBoosted = computed(() => {
     if (localBoosted.value !== null) return localBoosted.value;
     return props.replacement.is_boosted === true || props.rawReplacement?.is_boosted === true;
 });
 
 const showBoostAction = computed(() =>
-    canBoostReplacement(
-        {
-            institution_id: props.replacement.institution_id,
-            status: props.replacement.status,
-            has_confirmed_substitute: props.replacement.has_confirmed_substitute,
-        },
-        'me',
-    ),
+    canBoostReplacement(props.rawReplacement ?? props.replacement, 'me'),
 );
-
-onMounted(() => {
-    if (isOwner.value) {
-        fetchBoostPlan();
-    }
-});
-
-const handleBoost = async () => {
-    const response = await boostReplacement(props.replacement.id);
-    if (response?.url) {
-        window.location.href = response.url;
-    }
-};
-
-const handleCancelBoost = async () => {
-    await cancelBoost(props.replacement.id);
-    localBoosted.value = false;
-};
 
 const handleCloseReplacement = async (): Promise<void> => {
     isClosing.value = true;

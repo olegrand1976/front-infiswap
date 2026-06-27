@@ -2,14 +2,16 @@ export const useReplacementBoost = () => {
     const { $apifetch } = useNuxtApp();
     const { isInstitution } = useAuth();
 
-    const boostPlan = useState<{ label?: string; amount?: string | number; interval?: string } | null>(
-        'replacementBoostPlan',
-        () => null,
-    );
+    const boostPlan = useState<{
+        label?: string;
+        amount?: string | number;
+        interval?: string;
+        description?: string | null;
+    } | null>('replacementBoostPlan', () => null);
     const planLoaded = useState('replacementBoostPlanLoaded', () => false);
 
-    const fetchBoostPlan = async () => {
-        if (planLoaded.value) return boostPlan.value;
+    const fetchBoostPlan = async (force = false) => {
+        if (planLoaded.value && !force) return boostPlan.value;
 
         try {
             const response = await $apifetch<{ plan: typeof boostPlan.value }>('api/subscription/boosts/replacement');
@@ -25,12 +27,6 @@ export const useReplacementBoost = () => {
         return boostPlan.value;
     };
 
-    const boostShortLabel = computed(() => {
-        if (!boostPlan.value?.label) return null;
-        const parts = boostPlan.value.label.split(' · ');
-        return parts[0] ?? boostPlan.value.label;
-    });
-
     const canBoostReplacement = (r: {
         institution_id?: number | null;
         status?: string;
@@ -44,7 +40,6 @@ export const useReplacementBoost = () => {
 
     return {
         boostPlan,
-        boostShortLabel,
         fetchBoostPlan,
         canBoostReplacement,
     };

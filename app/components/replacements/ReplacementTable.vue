@@ -101,10 +101,6 @@
                             >
                                 NEW
                             </div>
-                            <ReplacementBoostBadge
-                                v-if="r.is_boosted"
-                                class="absolute z-10 top-2 right-2"
-                            />
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
                                     <div
@@ -277,19 +273,19 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="text-xs flex items-center justify-end bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
+                            <TableCell class="text-xs flex items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
                                 <template v-if="type === 'me'">
-                                    <div class="flex items-center justify-end gap-2 w-full">
-                                        <ReplacementBoostButton
-                                            v-if="canBoostReplacement(r, type)"
-                                            :can-boost="!r.is_boosted"
-                                            :is-boosted="!!r.is_boosted"
-                                            :price-label="boostShortLabel"
-                                            variant="table"
-                                            @boost="handleBoost(r)"
-                                            @cancel="handleCancelBoost(r)"
-                                        />
-                                        <DropdownMenu>
+                                    <ReplacementBoostButton
+                                        v-if="canBoostReplacement(r, type) && !r.is_boosted"
+                                        variant="table"
+                                        @boost="openBoostPreview(r)"
+                                    />
+                                    <ReplacementBoostStars
+                                        v-else-if="r.is_boosted"
+                                        clickable
+                                        @click="openBoostActive(r)"
+                                    />
+                                    <DropdownMenu>
                                             <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
                                                 <Ellipsis class="h-5 w-5 text-gray-700" />
                                             </DropdownMenuTrigger>
@@ -320,9 +316,14 @@
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-                                    </div>
                                 </template>
                                 <template v-else>
+                                    <ReplacementBoostTrustBadge
+                                        v-if="r.is_boosted"
+                                        variant="visitor"
+                                        compact
+                                        stars-only
+                                    />
                                     <Button
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacements/detail/${r.id}`"
@@ -400,12 +401,6 @@
                                 FERMÉ
                             </div>
 
-                            <ReplacementBoostBadge
-                                v-if="r.is_boosted"
-                                class="absolute z-10 top-2 right-1"
-                                size="md"
-                            />
-
                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                                 <template v-if="r.periods.length > 0 && r.start_date == null && r.end_date == null">
                                     <div
@@ -481,13 +476,14 @@
                             <TableCell class="text-xs flex flex-row items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
                                 <template v-if="type === 'me'">
                                     <ReplacementBoostButton
-                                        v-if="canBoostReplacement(r, type)"
-                                        :can-boost="!r.is_boosted"
-                                        :is-boosted="!!r.is_boosted"
-                                        :price-label="boostShortLabel"
+                                        v-if="canBoostReplacement(r, type) && !r.is_boosted"
                                         variant="table"
-                                        @boost="handleBoost(r)"
-                                        @cancel="handleCancelBoost(r)"
+                                        @boost="openBoostPreview(r)"
+                                    />
+                                    <ReplacementBoostStars
+                                        v-else-if="r.is_boosted"
+                                        clickable
+                                        @click="openBoostActive(r)"
                                     />
                                     <DropdownMenu>
                                         <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
@@ -522,6 +518,12 @@
                                     </DropdownMenu>
                                 </template>
                                 <template v-else>
+                                    <ReplacementBoostTrustBadge
+                                        v-if="r.is_boosted"
+                                        variant="visitor"
+                                        compact
+                                        stars-only
+                                    />
                                     <Button
                                         v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
@@ -544,6 +546,12 @@
                 </TableBody>
             </Table>
         </div>
+
+        <ReplacementBoostModal
+            v-model:open="boostModalOpen"
+            :replacement="boostModalReplacement"
+            @cancelled="onBoostCancelled"
+        />
 
         <Dialog v-model:open="closeReplacementDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
@@ -582,21 +590,35 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ReplacementTableSkeleton from '@/components/replacements/ReplacementTableSkeleton.vue';
 import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
-import ReplacementBoostBadge from '@/components/replacements/ReplacementBoostBadge.vue';
+import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
+import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoostTrustBadge.vue';
+import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 import { useInstitutions } from '~/composables/useInstitution';
-import { useSubscription } from '~/composables/useSubscription';
 import type { Replacement } from '~/lib/types';
 
-const { boostReplacement, cancelBoost } = useSubscription();
-const { boostShortLabel, fetchBoostPlan, canBoostReplacement } = useReplacementBoost();
+const { canBoostReplacement } = useReplacementBoost();
 
-onMounted(() => {
-    if (props.type === 'me') {
-        fetchBoostPlan();
+const boostModalOpen = ref(false);
+const boostModalReplacement = ref<Replacement | null>(null);
+
+const openBoostPreview = (r: Replacement) => {
+    boostModalReplacement.value = r;
+    boostModalOpen.value = true;
+};
+
+const openBoostActive = (r: Replacement) => {
+    boostModalReplacement.value = r;
+    boostModalOpen.value = true;
+};
+
+const onBoostCancelled = () => {
+    if (boostModalReplacement.value) {
+        boostModalReplacement.value.is_boosted = false;
+        boostModalReplacement.value.boosted_until = null;
     }
-});
+};
 
 interface Props {
     replacements: Replacement[];
@@ -634,19 +656,6 @@ const pendingCloseReplacement = ref<Replacement | null>(null);
 const openCloseDialog = (r: Replacement) => {
     pendingCloseReplacement.value = r;
     closeReplacementDialog.value = true;
-};
-
-const handleBoost = async (r: Replacement) => {
-    const response = await boostReplacement(r.id);
-    if (response?.url) {
-        window.location.href = response.url;
-    }
-};
-
-const handleCancelBoost = async (r: Replacement) => {
-    await cancelBoost(r.id);
-    r.is_boosted = false;
-    r.boosted_until = null;
 };
 
 const gridColsByType: Record<string, string> = {

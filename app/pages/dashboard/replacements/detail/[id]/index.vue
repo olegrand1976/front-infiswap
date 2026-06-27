@@ -1,5 +1,42 @@
 <template>
     <div class="pt-2">
+        <div
+            v-if="showBoostSuccess"
+            class="mx-3 mb-4 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-4 sm:p-5 shadow-sm"
+        >
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <ReplacementBoostStars size="lg" />
+                <div class="flex-1">
+                    <p class="font-bold text-amber-900 text-lg">
+                        Remplacement boosté avec succès !
+                    </p>
+                    <p class="text-sm text-amber-800/80 mt-1">
+                        Votre annonce est en tête de liste et bénéficie d'une visibilité maximale.
+                    </p>
+                </div>
+                <Button
+                    variant="outline"
+                    class="shrink-0 border-amber-300 text-amber-800 hover:bg-amber-100"
+                    @click="showBoostSuccess = false"
+                >
+                    Compris
+                </Button>
+            </div>
+        </div>
+
+        <div
+            v-if="replacement.is_boosted"
+            class="mx-3 mb-2 sm:mb-4 flex justify-center sm:justify-start"
+        >
+            <ReplacementBoostTrustBadge
+                :variant="isReplacementOwner ? 'owner' : 'visitor'"
+                size="md"
+                :boosted-until="replacement.boosted_until"
+                :clickable="isReplacementOwner"
+                @click="openBoostActive"
+            />
+        </div>
+
         <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
                 :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
@@ -356,20 +393,50 @@
                 </div>
             </DialogContent>
         </Dialog>
+
+        <ReplacementBoostModal
+            v-if="isReplacementOwner"
+            v-model:open="boostModalOpen"
+            :replacement="replacement"
+            @cancelled="onBoostCancelled"
+        />
     </div>
 </template>
 
 <script setup>
 import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
+import ReplacementBoostTrustBadge from '~/components/replacements/ReplacementBoostTrustBadge.vue';
+import ReplacementBoostModal from '~/components/replacements/ReplacementBoostModal.vue';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
 
 const user = useState('user');
 const route = useRoute();
+const router = useRouter();
+const { $toast } = useNuxtApp();
 const replacementId = route.params.id;
+const showBoostSuccess = ref(false);
+const boostModalOpen = ref(false);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
+
+const isReplacementOwner = computed(() =>
+    user.value?.id != null && Number(replacement.value?.user_id) === Number(user.value.id),
+);
+
+const openBoostActive = () => {
+    if (isReplacementOwner.value) {
+        boostModalOpen.value = true;
+    }
+};
+
+const onBoostCancelled = async () => {
+    replacement.value.is_boosted = false;
+    replacement.value.boosted_until = null;
+    await fetchReplacement();
+};
 
 const { isDisabled } = sendResponse();
 const { isAdminGroup, isInstitution } = useAuth();
@@ -574,6 +641,19 @@ const endDate = computed(() => {
 });
 
 await fetchReplacement();
+
+onMounted(async () => {
+    if (route.query.boost === 'success') {
+        showBoostSuccess.value = true;
+        $toast({ description: 'Votre remplacement est maintenant boosté !' });
+        await fetchReplacement();
+        router.replace({ path: route.path, query: {} });
+    }
+    else if (route.query.boost === 'cancel') {
+        $toast({ variant: 'destructive', description: 'Paiement annulé.' });
+        router.replace({ path: route.path, query: {} });
+    }
+});
 
 const isAdminOfReplacementGroup = computed(() => {
     if (!replacement.value?.group_ids) return false;
