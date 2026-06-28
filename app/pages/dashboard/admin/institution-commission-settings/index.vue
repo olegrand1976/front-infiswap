@@ -1,70 +1,23 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Commissions BC institution" />
+        <DashboardAdminPageHeader title="Paramètres commissions BC institution" />
 
         <DashboardAdminPageContent>
-            <Tabs
-                v-model="activeTab"
-                :default-value="defaultTab"
-                class="w-full"
-            >
-                <TabsList class="mx-4 mt-2">
-                    <TabsTrigger
-                        v-if="canManageSettings"
-                        value="settings"
-                    >
-                        Paramètres
-                    </TabsTrigger>
-                    <TabsTrigger
-                        v-if="canManageSettings"
-                        value="tracking"
-                    >
-                        Suivi vendeurs
-                    </TabsTrigger>
-                    <TabsTrigger
-                        v-if="isSaleRepresentative && !canManageSettings"
-                        value="my-tracking"
-                    >
-                        Mon suivi
-                    </TabsTrigger>
-                </TabsList>
-
-                <TabsContent
-                    v-if="canManageSettings"
-                    value="settings"
-                >
-                    <CommissionRatePeriodsForm
-                        v-model="settingsForm"
-                        :saving="savingSettings"
-                        @save="saveSettings"
-                    />
-                </TabsContent>
-
-                <TabsContent
-                    v-if="canManageSettings"
-                    value="tracking"
-                >
-                    <CommissionVendorTracking is-admin-view />
-                </TabsContent>
-
-                <TabsContent
-                    v-if="isSaleRepresentative && !canManageSettings"
-                    value="my-tracking"
-                >
-                    <CommissionVendorTracking />
-                </TabsContent>
-            </Tabs>
+            <CommissionRatePeriodsForm
+                v-if="canManageSettings && settingsForm"
+                v-model="settingsForm"
+                :saving="savingSettings"
+                @save="saveSettings"
+            />
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CommissionRatePeriodsForm from '@/components/commissions/CommissionRatePeriodsForm.vue';
-import CommissionVendorTracking from '@/components/commissions/CommissionVendorTracking.vue';
 import type { InstitutionCommissionSettingsPayload } from '@/composables/useInstitutionCommissionTracking';
 
-useHead({ title: 'Commissions BC institution' });
+useHead({ title: 'Paramètres commissions BC institution' });
 
 definePageMeta({
     layout: 'dashboard',
@@ -72,46 +25,37 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { isAdmin, isSuperAdmin, isSaleRepresentative } = useAuth();
+const { isAdmin, isSuperAdmin } = useAuth();
 const { getCommissionSettings, updateCommissionSettings } = useInstitutionCommissionTracking();
 const { $toast } = useNuxtApp();
+
+const trackingPath = '/dashboard/admin/institution-commission-tracking';
 
 const canManageSettings = computed(() => isSuperAdmin.value || isAdmin.value);
 const settingsForm = ref<InstitutionCommissionSettingsPayload | null>(null);
 const savingSettings = ref(false);
 
-const defaultTab = computed(() => {
-    if (canManageSettings.value) {
-        return 'settings';
-    }
-    return 'my-tracking';
-});
-
-const activeTab = ref(defaultTab.value);
-
-watch(defaultTab, (value) => {
-    if (!canManageSettings.value) {
-        activeTab.value = value;
-    }
-});
+function redirectToTracking() {
+    return navigateTo(trackingPath, { replace: true });
+}
 
 watch(
     () => route.query.tab,
     (tab) => {
-        if (typeof tab === 'string' && ['settings', 'tracking', 'my-tracking'].includes(tab)) {
-            activeTab.value = tab;
+        if (typeof tab === 'string' && ['tracking', 'my-tracking'].includes(tab)) {
+            redirectToTracking();
         }
     },
     { immediate: true },
 );
 
 onMounted(async () => {
-    if (canManageSettings.value) {
-        settingsForm.value = await getCommissionSettings();
+    if (!canManageSettings.value) {
+        await redirectToTracking();
+        return;
     }
-    else if (isSaleRepresentative.value) {
-        activeTab.value = 'my-tracking';
-    }
+
+    settingsForm.value = await getCommissionSettings();
 });
 
 async function saveSettings() {

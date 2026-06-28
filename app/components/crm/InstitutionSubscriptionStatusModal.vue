@@ -98,17 +98,26 @@
                     >
                         Envoyer pour signature
                     </Button>
-                    <Button
+                    <ConfirmDialog
                         v-if="canCancel && institutionId"
-                        type="button"
-                        variant="destructive"
-                        class="touch-manipulation"
-                        :disabled="deleteLoading"
-                        :in-progress="deleteLoading"
-                        @click="deleteDraft"
+                        title="Archiver le bon de commande"
+                        :description="archiveDescription"
+                        confirm-text="Archiver"
+                        cancel-text="Annuler"
+                        :on-confirm="deleteDraft"
                     >
-                        Annuler le bon de commande
-                    </Button>
+                        <template #trigger>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                class="touch-manipulation"
+                                :disabled="deleteLoading"
+                                :in-progress="deleteLoading"
+                            >
+                                Archiver le bon de commande
+                            </Button>
+                        </template>
+                    </ConfirmDialog>
                     <Button
                         v-if="subscription.contract_id"
                         type="button"
@@ -126,7 +135,7 @@
                     v-if="canCancel"
                     class="text-xs text-muted-foreground"
                 >
-                    Ce bon de commande n'est pas encore signé. Vous pouvez l'annuler pour en créer un nouveau.
+                    Ce bon de commande n'est pas encore signé. Vous pouvez l'archiver pour en créer un nouveau.
                 </p>
                 <p
                     v-else-if="subscription.can_send_for_signature"
@@ -153,6 +162,7 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { CrmInstitutionSubscription } from '~/lib/types';
 import { useCrm } from '@/composables/useCrm';
@@ -176,6 +186,13 @@ const { $toast } = useNuxtApp();
 const pdfLoading = ref(false);
 const signingLoading = ref(false);
 const deleteLoading = ref(false);
+
+const archiveDescription = computed(() => {
+    const reference = props.subscription?.reference ?? props.subscription?.contract_id;
+    return reference
+        ? `Le BC ${reference} sera retiré de la liste active. L'historique des actions sera conservé.`
+        : 'Ce bon de commande sera archivé. L\'historique des actions sera conservé.';
+});
 
 const canCancel = computed(() =>
     props.subscription?.can_cancel ?? props.subscription?.can_delete_draft ?? false,
@@ -322,17 +339,13 @@ async function deleteDraft() {
         return;
     }
 
-    if (!window.confirm('Supprimer ce brouillon de bon de commande ?')) {
-        return;
-    }
-
     deleteLoading.value = true;
 
     try {
         const response = await deleteInstitutionSubscriptionDraft(props.institutionId, contractId);
 
         $toast({
-            description: response.message ?? 'Brouillon supprimé.',
+            description: response.message ?? 'Bon de commande archivé.',
             variant: 'success',
         });
 

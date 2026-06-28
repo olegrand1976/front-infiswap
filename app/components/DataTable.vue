@@ -6,10 +6,24 @@
         )"
     >
         <div
+            v-if="hasHorizontalScroll"
+            ref="topScrollRef"
+            class="data-table-scroll data-table-scroll-top shrink-0 overflow-x-auto overflow-y-hidden rounded-t-md border border-b-0 bg-gray-50"
+            @scroll="onTopScroll"
+        >
+            <div
+                class="h-px"
+                :style="{ width: `${scrollContentWidth}px` }"
+            />
+        </div>
+        <div
+            ref="bottomScrollRef"
             :class="cn(
-                'data-table-scroll max-w-full rounded-md border',
+                'data-table-scroll max-w-full border bg-white',
+                hasHorizontalScroll ? 'rounded-b-md border-t-0' : 'rounded-md',
                 constrainedHeight ? 'min-h-0 flex-1 overflow-auto' : 'overflow-x-auto',
             )"
+            @scroll="onBottomScroll"
         >
             <Table class="w-max min-w-full">
                 <TableHeader
@@ -95,7 +109,7 @@ import {
     getSortedRowModel,
     useVueTable,
 } from '@tanstack/vue-table';
-import { ref, toRefs } from 'vue';
+import { ref, toRefs, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import type { Row } from '@tanstack/vue-table';
 import { cn, valueUpdater } from '~/lib/utils';
 
@@ -181,6 +195,69 @@ defineExpose({
     table,
 });
 
+const topScrollRef = ref<HTMLElement | null>(null);
+const bottomScrollRef = ref<HTMLElement | null>(null);
+const scrollContentWidth = ref(0);
+const containerWidth = ref(0);
+
+const hasHorizontalScroll = computed(() => scrollContentWidth.value > containerWidth.value + 1);
+
+let isSyncingScroll = false;
+let resizeObserver: ResizeObserver | null = null;
+
+function updateScrollMetrics() {
+    const el = bottomScrollRef.value;
+    if (!el) return;
+
+    scrollContentWidth.value = el.scrollWidth;
+    containerWidth.value = el.clientWidth;
+
+    if (topScrollRef.value && hasHorizontalScroll.value) {
+        topScrollRef.value.scrollLeft = el.scrollLeft;
+    }
+}
+
+function onTopScroll() {
+    if (isSyncingScroll || !topScrollRef.value || !bottomScrollRef.value) return;
+
+    isSyncingScroll = true;
+    bottomScrollRef.value.scrollLeft = topScrollRef.value.scrollLeft;
+    isSyncingScroll = false;
+}
+
+function onBottomScroll() {
+    if (isSyncingScroll || !topScrollRef.value || !bottomScrollRef.value) return;
+
+    isSyncingScroll = true;
+    topScrollRef.value.scrollLeft = bottomScrollRef.value.scrollLeft;
+    isSyncingScroll = false;
+}
+
+watch(rows, () => {
+    nextTick(updateScrollMetrics);
+});
+
+watch(hasHorizontalScroll, (visible) => {
+    if (visible) {
+        nextTick(updateScrollMetrics);
+    }
+});
+
+onMounted(() => {
+    nextTick(updateScrollMetrics);
+
+    if (typeof ResizeObserver === 'undefined' || !bottomScrollRef.value) return;
+
+    resizeObserver = new ResizeObserver(() => {
+        updateScrollMetrics();
+    });
+    resizeObserver.observe(bottomScrollRef.value);
+});
+
+onUnmounted(() => {
+    resizeObserver?.disconnect();
+});
+
 function onRowClick(event: MouseEvent, row: Row<unknown>) {
     const target = event.target as HTMLElement | null;
     if (target?.closest('button, a, input, textarea, select, label, [role="switch"], [data-no-row-select]')) {
@@ -192,6 +269,14 @@ function onRowClick(event: MouseEvent, row: Row<unknown>) {
 </script>
 
 <style scoped>
+.data-table-scroll-top {
+    height: 14px;
+}
+
+.data-table-scroll-top::-webkit-scrollbar {
+    height: 8px;
+}
+
 .data-table-scroll {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.25) transparent;

@@ -7,13 +7,17 @@ export function referrerDisplayLabel(referrer?: Referrer | null): string {
 export const useReferrer = () => {
     const loading = useState('referrerLoading', () => false);
     const { $apifetch } = useNuxtApp();
-    const userReferrer = useState<Referrer[]>('userReferrers', () => undefined);
+    const userReferrer = useState<Referrer[]>('userReferrers', () => []);
 
     async function getUserReferrer() {
         loading.value = true;
         try {
-            const response = await $apifetch(`api/users/business-referrers`);
-            userReferrer.value = response.data;
+            const response = await $apifetch<{ data: Referrer[] }>('/api/users/business-referrers');
+            userReferrer.value = response.data ?? [];
+        }
+        catch (error) {
+            console.error(error);
+            userReferrer.value = [];
         }
         finally {
             loading.value = false;

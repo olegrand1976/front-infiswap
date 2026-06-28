@@ -256,7 +256,7 @@ const contactChildren = computed<NavigationItem[]>(() => [
 
 const crmChildren = computed<NavigationItem[]>(() => [
     {
-        label: 'Suivi',
+        label: 'Suivi commercial',
         route: '/dashboard/admin/users/crm',
         icon: UserCheck,
         visible: true,
@@ -268,16 +268,16 @@ const crmChildren = computed<NavigationItem[]>(() => [
         visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
     },
     {
-        label: 'Commissions BC',
+        label: 'Suivi commissions',
+        route: '/dashboard/admin/institution-commission-tracking',
+        icon: Euro,
+        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
+    },
+    {
+        label: 'Paramètres commissions',
         route: '/dashboard/admin/institution-commission-settings',
         icon: Euro,
         visible: isSuperAdmin.value || isAdmin.value,
-    },
-    {
-        label: 'Mes commissions',
-        route: '/dashboard/admin/institution-commission-settings?tab=my-tracking',
-        icon: Euro,
-        visible: isSaleRepresentative.value && !isSuperAdmin.value && !isAdmin.value,
     },
 ].filter(item => item.visible !== false));
 

@@ -21,15 +21,35 @@
                 class="max-w-xs"
                 @input="debouncedRefresh"
             />
-            <Input
+            <InputIcon
                 v-if="isAdminView"
-                v-model.number="filters.vendor_id"
-                type="number"
-                min="1"
-                placeholder="ID vendeur"
-                class="max-w-[140px] rounded-md"
-                @change="refresh"
+                v-model="commercialSearch"
+                rounded="md"
+                placeholder="Rechercher un commercial"
+                class="max-w-xs"
+                @input="debouncedSearchCommercials"
             />
+            <Select
+                v-if="isAdminView"
+                :model-value="selectedCommercial"
+                @update:model-value="onCommercialChange"
+            >
+                <SelectTrigger class="max-w-xs rounded-md">
+                    <span>{{ selectedCommercialLabel }}</span>
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">
+                        Tous les commerciaux
+                    </SelectItem>
+                    <SelectItem
+                        v-for="commercial in commercialOptions"
+                        :key="commercial.id"
+                        :value="String(commercial.id)"
+                    >
+                        {{ commercial.full_name }}
+                    </SelectItem>
+                </SelectContent>
+            </Select>
             <Input
                 v-model="filters.contract_created_from"
                 type="date"
@@ -117,7 +137,7 @@
             <SheetContent class="w-full sm:max-w-3xl overflow-y-auto">
                 <SheetHeader>
                     <SheetTitle>
-                        {{ detail?.vendor.full_name ?? 'Détail vendeur' }}
+                        {{ detail?.vendor.full_name ?? 'Détail commercial' }}
                     </SheetTitle>
                 </SheetHeader>
 
@@ -233,6 +253,13 @@ const props = defineProps<{
     isAdminView?: boolean;
 }>();
 
+const { $apifetch } = useNuxtApp();
+
+type CommercialOption = {
+    id: number;
+    full_name: string;
+};
+
 const {
     kpis,
     vendors,
@@ -263,6 +290,85 @@ const initialFilters: CommissionTrackingFilters = {
 };
 
 const filters = reactive<CommissionTrackingFilters>({ ...initialFilters });
+
+const selectedCommercial = ref('all');
+const commercialSearch = ref('');
+const commercialOptions = ref<CommercialOption[]>([]);
+
+const selectedCommercialLabel = computed(() => {
+    if (selectedCommercial.value === 'all') {
+        return 'Tous les commerciaux';
+    }
+    const match = commercialOptions.value.find(c => String(c.id) === selectedCommercial.value);
+    return match?.full_name ?? 'Commercial';
+});
+
+function getCommercialDisplayName(user: { id: number; firstname?: string | null; lastname?: string | null; full_name?: string | null }) {
+    const full = `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim();
+    if (full) return full;
+    if (user.full_name) return user.full_name;
+    return `Commercial #${user.id}`;
+}
+
+function mergeCommercialOptions(users: Array<{ id: number; firstname?: string | null; lastname?: string | null; full_name?: string | null }>) {
+    const existingIds = new Set(commercialOptions.value.map(c => c.id));
+    for (const user of users) {
+        if (existingIds.has(user.id)) continue;
+        commercialOptions.value.push({
+            id: user.id,
+            full_name: getCommercialDisplayName(user),
+        });
+        existingIds.add(user.id);
+    }
+    commercialOptions.value.sort((a, b) => a.full_name.localeCompare(b.full_name, 'fr'));
+}
+
+async function loadCommercialOptions() {
+    if (!props.isAdminView) return;
+
+    try {
+        const data = await $apifetch<Array<{ id: number; firstname?: string | null; lastname?: string | null; full_name?: string | null }>>('api/admin/users/search', {
+            params: {
+                query: 'a',
+                roles: 'sale_representative',
+            },
+        });
+        mergeCommercialOptions(data);
+    }
+    catch {
+        commercialOptions.value = [];
+    }
+}
+
+async function searchCommercials() {
+    if (!props.isAdminView || commercialSearch.value.length < 2) return;
+
+    try {
+        const data = await $apifetch<Array<{ id: number; firstname?: string | null; lastname?: string | null; full_name?: string | null }>>('api/admin/users/search', {
+            params: {
+                query: commercialSearch.value,
+                roles: 'sale_representative',
+            },
+        });
+        mergeCommercialOptions(data);
+    }
+    catch {
+        // ignore search errors
+    }
+}
+
+let commercialSearchTimer: ReturnType<typeof setTimeout>;
+function debouncedSearchCommercials() {
+    clearTimeout(commercialSearchTimer);
+    commercialSearchTimer = setTimeout(searchCommercials, 350);
+}
+
+function onCommercialChange(value: unknown) {
+    selectedCommercial.value = typeof value === 'string' ? value : 'all';
+    filters.vendor_id = selectedCommercial.value === 'all' ? null : Number(selectedCommercial.value);
+    page.value = 1;
+    refresh();
+}
 
 const commissionStatusLabel = computed(() => {
     switch (filters.commission_status) {
@@ -305,6 +411,13 @@ async function refresh() {
             ? getAdminVendors(page.value, perPage.value, filters)
             : getMyTracking(page.value, perPage.value, filters),
     ]);
+
+    if (props.isAdminView) {
+        mergeCommercialOptions(vendors.value.map(v => ({
+            id: v.vendor.id,
+            full_name: v.vendor.full_name,
+        })));
+    }
 }
 
 let debounceTimer: ReturnType<typeof setTimeout>;
@@ -315,6 +428,8 @@ function debouncedRefresh() {
 
 function resetFilters() {
     Object.assign(filters, initialFilters);
+    selectedCommercial.value = 'all';
+    commercialSearch.value = '';
     page.value = 1;
     refresh();
 }
@@ -355,7 +470,7 @@ async function openMyDetail() {
 const vendorColumns: ColumnDef<VendorCommissionSummary>[] = [
     {
         accessorKey: 'vendor.full_name',
-        header: 'Vendeur',
+        header: 'Commercial',
         cell: ({ row }) => row.original.vendor.full_name,
     },
     {
@@ -391,5 +506,10 @@ const vendorColumns: ColumnDef<VendorCommissionSummary>[] = [
     },
 ];
 
-onMounted(refresh);
+onMounted(async () => {
+    if (props.isAdminView) {
+        await loadCommercialOptions();
+    }
+    await refresh();
+});
 </script>

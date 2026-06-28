@@ -44,7 +44,7 @@ const items = computed(() => {
         },
         {
             value: data?.active_vendors ?? 0,
-            label: 'Vendeurs actifs',
+            label: 'Commerciaux actifs',
             colorClass: 'bg-violet-600',
             icon: Users,
         },

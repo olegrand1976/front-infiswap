@@ -185,76 +185,15 @@
                     Apporté par
                 </p>
 
-                <div class="flex flex-wrap gap-4 mb-4">
-                    <label class="inline-flex items-center">
-                        <input
-                            v-model="referrerMode"
-                            type="radio"
-                            value="account"
-                            class="form-radio"
-                        >
-                        <span class="ml-2">Porteur d'affaire</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input
-                            v-model="referrerMode"
-                            type="radio"
-                            value="text"
-                            class="form-radio"
-                        >
-                        <span class="ml-2">Texte libre</span>
-                    </label>
-                </div>
-
-                <div
-                    v-if="referrerMode === 'text'"
-                    class="mb-4"
-                >
-                    <label
-                        for="referrerFreeText"
-                        class="block mb-1 text-sm font-medium text-gray-700"
-                    >
-                        Nom ou source
-                    </label>
-                    <InputIcon
-                        id="referrerFreeText"
-                        v-model="tempReferrerText"
-                        type="text"
-                        class="w-full"
-                        placeholder="Ex. Dr Dupont, salon Infirmiers 2025…"
-                    />
-                </div>
-
-                <template v-else>
-                    <RollingLoader
-                        v-if="loading"
-                        :loading="loading"
-                    />
-
-                    <template v-else>
-                        <p
-                            v-if="!userReferrer || userReferrer.length === 0"
-                            class="text-gray-500 italic text-center py-4"
-                        >
-                            Pas encore de porteur d'affaire enregistré
-                        </p>
-
-                        <ul
-                            v-else
-                            class="space-y-2 max-h-64 overflow-y-auto"
-                        >
-                            <li
-                                v-for="ref in userReferrer"
-                                :key="ref.id"
-                                class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                                :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                                @click="selectedReferrer = ref"
-                            >
-                                {{ ref.full_name }} ({{ ref.email }})
-                            </li>
-                        </ul>
-                    </template>
-                </template>
+                <CrmReferrerPicker
+                    v-model:mode="referrerMode"
+                    v-model:selected-referrer="selectedReferrer"
+                    v-model:referrer-text="tempReferrerText"
+                    :referrers="userReferrer"
+                    :loading="loading"
+                    text-input-id="referrerFreeText"
+                    autocomplete-input-id="crmReferrerAutocomplete"
+                />
 
                 <div class="flex justify-end space-x-2 mt-4">
                     <Button
@@ -341,7 +280,7 @@ const { deactivateProduct } = useProductCrmHistory();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
-const referrerMode = ref<'account' | 'text'>('text');
+const referrerMode = ref<'account' | 'text'>('account');
 const tempReferrerText = ref('');
 
 const productActivationOpen = ref(false);
@@ -421,7 +360,7 @@ async function openReferrerDialog(user: User) {
         selectedReferrer.value = referrer;
     }
     else {
-        referrerMode.value = 'text';
+        referrerMode.value = 'account';
         tempReferrerText.value = '';
         selectedReferrer.value = null;
     }

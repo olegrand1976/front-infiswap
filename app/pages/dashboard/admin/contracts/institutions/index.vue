@@ -6,6 +6,10 @@
         />
 
         <DashboardAdminPageContent>
+            <InstitutionSubscriptionKpiCards
+                :kpis="subscriptionKpis"
+                :loading="kpiLoading"
+            />
             <div class="p-4 flex flex-wrap gap-3 items-center">
                 <InputIcon
                     v-model="filters.institution_name"
@@ -60,6 +64,13 @@
                 </Select>
                 <Button
                     class="rounded-md"
+                    :variant="filters.archived ? 'default' : 'outline'"
+                    @click="toggleArchived"
+                >
+                    Archivés
+                </Button>
+                <Button
+                    class="rounded-md"
                     variant="outline"
                     @click="resetFilters"
                 >
@@ -93,8 +104,10 @@
         <InstitutionSubscriptionDetailSheet
             v-model:open="detailOpen"
             :subscription="selectedSubscription"
+            :histories="selectedHistories"
             @refresh="reloadDetail"
         />
+
     </div>
 </template>
 
@@ -102,12 +115,14 @@
 import { Eye, FileText, RefreshCw, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
+import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { PERPAGE } from '~/lib/constants';
 import { formatToDMY } from '@/composables/useDate';
-import type { InstitutionSubscriptionItem } from '@/composables/useInstitutionSubscription';
+import type { InstitutionSubscriptionHistory, InstitutionSubscriptionItem, InstitutionSubscriptionKpis } from '@/composables/useInstitutionSubscription';
 import InstitutionSubscriptionDetailSheet from '@/components/contracts/InstitutionSubscriptionDetailSheet.vue';
+import InstitutionSubscriptionKpiCards from '@/components/contracts/InstitutionSubscriptionKpiCards.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 
 useHead({ title: 'BC Institutions' });
@@ -117,18 +132,23 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { subscriptions, count, loading, getSubscriptions, getSubscription, cancelSubscription, viewPdf } = useInstitutionSubscription();
+const { subscriptions, count, loading, getSubscriptions, getSubscriptionKpis, getSubscription, deleteSubscription, viewPdf } = useInstitutionSubscription();
 const { $toast } = useNuxtApp();
 
 const page = ref(1);
 const perPage = ref(PERPAGE);
+const kpiLoading = ref(false);
+const subscriptionKpis = ref<InstitutionSubscriptionKpis | null>(null);
 const detailOpen = ref(false);
 const selectedSubscription = ref<InstitutionSubscriptionItem | null>(null);
+const selectedHistories = ref<InstitutionSubscriptionHistory[]>([]);
+const deletingId = ref<number | null>(null);
 
 const filters = reactive({
     institution_name: '',
     reference: '',
     status: 'all',
+    archived: false,
 });
 
 function buildParams() {
@@ -136,12 +156,34 @@ function buildParams() {
     if (filters.institution_name) params.institution_name = filters.institution_name;
     if (filters.reference) params.reference = filters.reference;
     if (filters.status !== 'all') params.status = filters.status;
+    if (filters.archived) params.archived = 1;
     return params;
+}
+
+function toggleArchived() {
+    filters.archived = !filters.archived;
+    refreshList();
+}
+
+async function refreshKpis() {
+    kpiLoading.value = true;
+    try {
+        subscriptionKpis.value = await getSubscriptionKpis(buildParams());
+    }
+    catch {
+        subscriptionKpis.value = null;
+    }
+    finally {
+        kpiLoading.value = false;
+    }
 }
 
 async function refreshList() {
     page.value = 1;
-    await getSubscriptions(page.value, perPage.value, buildParams());
+    await Promise.all([
+        getSubscriptions(page.value, perPage.value, buildParams()),
+        refreshKpis(),
+    ]);
 }
 
 let debounceTimer: ReturnType<typeof setTimeout>;
@@ -154,6 +196,7 @@ function resetFilters() {
     filters.institution_name = '';
     filters.reference = '';
     filters.status = 'all';
+    filters.archived = false;
     refreshList();
 }
 
@@ -170,7 +213,9 @@ async function onPerPageChange(value: number) {
 
 async function openDetail(item: InstitutionSubscriptionItem) {
     try {
-        selectedSubscription.value = await getSubscription(item.id);
+        const { data, histories } = await getSubscription(item.id);
+        selectedSubscription.value = data;
+        selectedHistories.value = histories;
         detailOpen.value = true;
     }
     catch {
@@ -190,7 +235,9 @@ async function handleViewPdf(institutionId: number, contractId: number) {
 async function reloadDetail() {
     if (!selectedSubscription.value) return;
     try {
-        selectedSubscription.value = await getSubscription(selectedSubscription.value.id);
+        const { data, histories } = await getSubscription(selectedSubscription.value.id);
+        selectedSubscription.value = data;
+        selectedHistories.value = histories;
         await getSubscriptions(page.value, perPage.value, buildParams());
     }
     catch {
@@ -198,17 +245,35 @@ async function reloadDetail() {
     }
 }
 
-async function handleCancel(item: InstitutionSubscriptionItem) {
-    const institutionId = item.institution?.id;
-    if (!institutionId || !item.subscription?.can_cancel) return;
-    if (!confirm('Annuler ce bon de commande ?')) return;
+function documensoStatusBadgeClass(status?: string | null): string {
+    if (!status) return 'bg-gray-100 text-gray-600';
+    if (status === 'DRAFT') return 'bg-blue-100 text-blue-800';
+    if (status === 'COMPLETED') return 'bg-green-100 text-green-800';
+    if (status === 'PENDING') return 'bg-amber-100 text-amber-800';
+    if (status === 'CANCELLED' || status === 'REJECTED') return 'bg-red-100 text-red-800';
+    return 'bg-gray-100 text-gray-700';
+}
+
+function archiveDescription(item: InstitutionSubscriptionItem): string {
+    const ref = item.reference ?? String(item.id);
+    return `Le BC ${ref} sera retiré de la liste active. L'historique des actions sera conservé et consultable dans les archivés.`;
+}
+
+async function confirmArchive(item: InstitutionSubscriptionItem) {
+    deletingId.value = item.id;
     try {
-        await cancelSubscription(institutionId, item.id);
-        $toast({ description: 'Bon de commande annulé.' });
+        await deleteSubscription(item.id);
+        $toast({ description: 'Bon de commande archivé.' });
+        if (detailOpen.value && selectedSubscription.value?.id === item.id) {
+            detailOpen.value = false;
+        }
         await refreshList();
     }
     catch {
-        $toast({ description: 'Impossible d\'annuler.', variant: 'destructive' });
+        $toast({ description: 'Impossible d\'archiver ce bon de commande.', variant: 'destructive' });
+    }
+    finally {
+        deletingId.value = null;
     }
 }
 
@@ -218,7 +283,9 @@ onMounted(async () => {
     const contractId = Number(route.query.contract);
     if (contractId) {
         try {
-            selectedSubscription.value = await getSubscription(contractId);
+            const { data, histories } = await getSubscription(contractId);
+            selectedSubscription.value = data;
+            selectedHistories.value = histories;
             detailOpen.value = true;
         }
         catch {
@@ -240,8 +307,21 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
     },
     {
         accessorKey: 'status_label',
-        header: () => h('div', 'Statut'),
+        header: () => h('div', 'Statut BC'),
         cell: ({ row }) => h('div', row.original.status_label ?? row.original.status ?? '—'),
+    },
+    {
+        id: 'documenso_status',
+        header: () => h('div', 'Signature Documenso'),
+        cell: ({ row }) => {
+            const label = row.original.documenso_status_label ?? '—';
+            const status = row.original.documenso_status;
+            const badgeClass = documensoStatusBadgeClass(status);
+
+            return h('span', {
+                class: `inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${badgeClass}`,
+            }, label);
+        },
     },
     {
         id: 'base',
@@ -297,28 +377,42 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
         cell: ({ row }) => {
             const item = row.original;
             const institutionId = item.institution?.id;
-            const canCancel = item.subscription?.can_cancel ?? item.subscription?.can_delete_draft;
+            const canDelete = item.can_delete
+                ?? item.subscription?.can_cancel
+                ?? item.subscription?.can_delete_draft;
 
             return h('div', { class: 'flex gap-1' }, [
                 h(Button, {
                     variant: 'ghost',
                     size: 'sm',
+                    title: 'Voir le détail',
                     onClick: () => openDetail(item),
                 }, () => h(Eye, { class: 'w-4 h-4' })),
-                institutionId
+                institutionId && !item.is_archived
                     ? h(Button, {
                             variant: 'ghost',
                             size: 'sm',
+                            title: 'Voir le PDF',
                             onClick: () => handleViewPdf(institutionId, item.id),
                         }, () => h(FileText, { class: 'w-4 h-4' }))
                     : null,
-                canCancel && institutionId
-                    ? h(Button, {
-                            variant: 'ghost',
-                            size: 'sm',
-                            class: 'text-red-600',
-                            onClick: () => handleCancel(item),
-                        }, () => h(Trash2, { class: 'w-4 h-4' }))
+                canDelete && !item.is_archived
+                    ? h(ConfirmDialog, {
+                            title: 'Archiver le bon de commande',
+                            description: archiveDescription(item),
+                            confirmText: 'Archiver',
+                            cancelText: 'Annuler',
+                            onConfirm: () => confirmArchive(item),
+                        }, {
+                            trigger: () => h(Button, {
+                                variant: 'ghost',
+                                size: 'sm',
+                                class: 'text-red-600',
+                                title: 'Archiver',
+                                disabled: deletingId.value === item.id,
+                                inProgress: deletingId.value === item.id,
+                            }, () => h(Trash2, { class: 'w-4 h-4' })),
+                        })
                     : null,
             ]);
         },

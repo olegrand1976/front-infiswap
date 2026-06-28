@@ -236,53 +236,14 @@
 
                         <div class="md:col-span-2 space-y-3">
                             <span class="block text-sm font-medium text-gray-700">Apporté par</span>
-                            <div class="flex flex-wrap gap-4">
-                                <label class="inline-flex items-center">
-                                    <input
-                                        v-model="editForm.referrer_mode"
-                                        type="radio"
-                                        value="account"
-                                        class="form-radio"
-                                    >
-                                    <span class="ml-2">Porteur d'affaire</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input
-                                        v-model="editForm.referrer_mode"
-                                        type="radio"
-                                        value="text"
-                                        class="form-radio"
-                                    >
-                                    <span class="ml-2">Texte libre</span>
-                                </label>
-                            </div>
-                            <InputIcon
-                                v-if="editForm.referrer_mode === 'text'"
-                                v-model="editForm.referred_by_text"
-                                type="text"
-                                class="w-full"
-                                placeholder="Nom ou source"
+                            <CrmReferrerPicker
+                                v-model:mode="editForm.referrer_mode"
+                                v-model:selected-referrer="selectedReferrer"
+                                v-model:referrer-text="editForm.referred_by_text"
+                                :referrers="userReferrer"
+                                text-input-id="institutionShowReferrerText"
+                                autocomplete-input-id="institutionShowReferrerAutocomplete"
                             />
-                            <ul
-                                v-else-if="userReferrer?.length"
-                                class="space-y-2 max-h-40 overflow-y-auto border rounded p-2"
-                            >
-                                <li
-                                    v-for="ref in userReferrer"
-                                    :key="ref.id ?? `ref-${ref.full_name}`"
-                                    class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                                    :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                                    @click="selectedReferrer = ref"
-                                >
-                                    {{ ref.full_name }} ({{ ref.email }})
-                                </li>
-                            </ul>
-                            <p
-                                v-else-if="editForm.referrer_mode === 'account'"
-                                class="text-sm text-muted-foreground italic"
-                            >
-                                Aucun porteur d'affaire enregistré
-                            </p>
                         </div>
                     </form>
                 </div>
@@ -548,7 +509,7 @@ const editForm = reactive({
     last_contact_date: '',
     last_contact_method: 'mail',
     new_comment: '',
-    referrer_mode: 'text' as 'account' | 'text',
+    referrer_mode: 'account' as 'account' | 'text',
     referred_by_text: '',
 });
 const selectedReferrer = ref<Referrer | null>(null);
@@ -577,7 +538,7 @@ function populateEditForm() {
         selectedReferrer.value = referrer;
     }
     else {
-        editForm.referrer_mode = 'text';
+        editForm.referrer_mode = 'account';
         editForm.referred_by_text = '';
         selectedReferrer.value = null;
     }

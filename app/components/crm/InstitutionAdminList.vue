@@ -37,6 +37,10 @@
                         >
                             {{ [institution.zip_code, institution.city].filter(Boolean).join(' ') }}
                         </p>
+                        <p class="text-sm text-muted-foreground mt-1">
+                            NursAssur : {{ institutionProductActive(institution, 'nursassur') ? 'Oui' : 'Non' }}
+                            · NursTech : {{ institutionProductActive(institution, 'nurstech') ? 'Oui' : 'Non' }}
+                        </p>
                         <p
                             v-if="institution.phone_number || institution.email"
                             class="text-sm text-muted-foreground mt-1"
@@ -318,76 +322,15 @@
                     Apporté par
                 </p>
 
-                <div class="flex flex-wrap gap-4 mb-4">
-                    <label class="inline-flex items-center">
-                        <input
-                            v-model="referrerMode"
-                            type="radio"
-                            value="account"
-                            class="form-radio"
-                        >
-                        <span class="ml-2">Porteur d'affaire</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input
-                            v-model="referrerMode"
-                            type="radio"
-                            value="text"
-                            class="form-radio"
-                        >
-                        <span class="ml-2">Texte libre</span>
-                    </label>
-                </div>
-
-                <div
-                    v-if="referrerMode === 'text'"
-                    class="mb-4"
-                >
-                    <label
-                        for="institutionReferrerFreeText"
-                        class="block mb-1 text-sm font-medium text-gray-700"
-                    >
-                        Nom ou source
-                    </label>
-                    <InputIcon
-                        id="institutionReferrerFreeText"
-                        v-model="tempReferrerText"
-                        type="text"
-                        class="w-full"
-                        placeholder="Ex. Dr Dupont, salon Infirmiers 2025…"
-                    />
-                </div>
-
-                <template v-else>
-                    <RollingLoader
-                        v-if="loading"
-                        :loading="loading"
-                    />
-
-                    <template v-else>
-                        <p
-                            v-if="!userReferrer || userReferrer.length === 0"
-                            class="text-gray-500 italic text-center py-4"
-                        >
-                            Pas encore de porteur d'affaire enregistré
-                        </p>
-
-                        <ul
-                            v-else
-                            class="space-y-2 max-h-64 overflow-y-auto"
-                        >
-                            <li
-                                v-for="ref in userReferrer"
-                                :key="ref.id"
-                                class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                                :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                                @click="selectedReferrer = ref"
-                            >
-                                {{ ref.full_name }} ({{ ref.email }})
-                            </li>
-                        </ul>
-                    </template>
-                </template>
+                <CrmReferrerPicker
+                    v-model:mode="referrerMode"
+                    v-model:selected-referrer="selectedReferrer"
+                    v-model:referrer-text="tempReferrerText"
+                    :referrers="userReferrer"
+                    :loading="loading"
+                    text-input-id="institutionReferrerFreeText"
+                    autocomplete-input-id="institutionReferrerAutocomplete"
+                />
 
                 <div class="flex justify-end space-x-2 mt-4">
                     <Button
@@ -411,7 +354,7 @@
 
         <CrmProductActivationModal
             v-model:open="productActivationOpen"
-            :target-user-id="productActivationTargetUserId"
+            :institution-id="productActivationInstitutionId"
             :product="productActivationProduct"
             :entity-label="productActivationEntityLabel"
             :referrer="productActivationReferrer"
@@ -596,6 +539,30 @@
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+
+        <AlertDialog v-model:open="archiveBcDialogOpen">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Archiver le bon de commande</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        {{ archiveBcDialogMessage }}
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>
+                        Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        class="rounded"
+                        variant="destructive"
+                        :disabled="subscriptionDeleting"
+                        @click="confirmArchiveBc"
+                    >
+                        Archiver
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
 </template>
 
@@ -645,7 +612,7 @@ const tempClientType = ref('user');
 const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
 const { isCollaborator, isSuperAdmin, isAdmin } = useAuth();
-const { deactivateProduct } = useProductCrmHistory();
+const { deactivateInstitutionProduct } = useProductCrmHistory();
 const { forceDelete } = useInstitutions();
 const subscriptionModalOpen = ref(false);
 const subscriptionStatusModalOpen = ref(false);
@@ -671,12 +638,11 @@ const {
 } = useCrm();
 const representativeUserId = ref<number | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
-const referrerMode = ref<'account' | 'text'>('text');
+const referrerMode = ref<'account' | 'text'>('account');
 const tempReferrerText = ref('');
 const editingInstitutionForReferrer = ref<CrmInstitution | null>(null);
 
 const productActivationOpen = ref(false);
-const productActivationTargetUserId = ref(0);
 const productActivationProduct = ref<CrmProductKey>('nursassur');
 const productActivationEntityLabel = ref('');
 const productActivationReferrer = ref<Referrer | null>(null);
@@ -687,6 +653,13 @@ const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: {
 
 const deleteDialogOpen = ref(false);
 const institutionToDelete = ref<CrmInstitution | null>(null);
+const archiveBcDialogOpen = ref(false);
+const bcArchiveTarget = ref<{
+    institutionId: number;
+    contractId: number;
+    reference?: string | null;
+    onSuccess?: () => void;
+} | null>(null);
 const deletingInstitution = ref(false);
 
 const isImportProspect = (institution: CrmInstitution): boolean =>
@@ -694,6 +667,20 @@ const isImportProspect = (institution: CrmInstitution): boolean =>
 
 const isSiteRegistration = (institution: CrmInstitution): boolean =>
     institution.registration_source === 'site';
+
+function institutionProductActive(institution: CrmInstitution, product: CrmProductKey): boolean {
+    const mods = institution.last_product_modifications ?? [];
+    const needle = product === 'nursassur' ? 'nursassur' : 'nurstech';
+    const found = mods.find(p => (p.product_name || '').toLowerCase().includes(needle));
+    if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+        return Number(found.activate) === 1;
+    }
+    const field = product === 'nursassur' ? institution.insurance : institution.site;
+    if (field !== undefined && field !== null) {
+        return Number(field) === 1;
+    }
+    return false;
+}
 
 const canDeleteInstitution = (institution: CrmInstitution): boolean => {
     if (isCollaborator.value) {
@@ -725,6 +712,42 @@ const deleteInstitutionDialogTitle = computed(() =>
         ? 'Supprimer l\'institution'
         : 'Confirmer la suppression',
 );
+
+const archiveBcDialogMessage = computed(() => {
+    const target = bcArchiveTarget.value;
+    if (!target) {
+        return '';
+    }
+
+    const reference = target.reference ?? target.contractId;
+
+    return `Le BC ${reference} sera archivé. L'historique sera conservé et vous pourrez générer un nouveau bon de commande.`;
+});
+
+function openArchiveBcDialog(target: {
+    institutionId: number;
+    contractId: number;
+    reference?: string | null;
+    onSuccess?: () => void;
+}) {
+    bcArchiveTarget.value = target;
+    archiveBcDialogOpen.value = true;
+}
+
+async function confirmArchiveBc() {
+    const target = bcArchiveTarget.value;
+    if (!target) {
+        return;
+    }
+
+    await deleteSubscriptionDraft(target.institutionId, target.contractId, {
+        onSuccess: () => {
+            archiveBcDialogOpen.value = false;
+            bcArchiveTarget.value = null;
+            target.onSuccess?.();
+        },
+    });
+}
 
 const openDeleteInstitutionDialog = (institution: CrmInstitution) => {
     institutionToDelete.value = institution;
@@ -948,7 +971,7 @@ async function openReferrerDialog(institution: CrmInstitution) {
         selectedReferrer.value = referrer;
     }
     else {
-        referrerMode.value = 'text';
+        referrerMode.value = 'account';
         tempReferrerText.value = '';
         selectedReferrer.value = null;
     }
@@ -957,16 +980,7 @@ async function openReferrerDialog(institution: CrmInstitution) {
 }
 
 function openProductActivationModal(institution: CrmInstitution, product: CrmProductKey): void {
-    if (!institution.representative_user_id) {
-        $toast({
-            description: 'Aucun représentant associé à cette institution',
-            variant: 'destructive',
-        });
-        return;
-    }
-
     productActivationInstitutionId.value = institution.id;
-    productActivationTargetUserId.value = institution.representative_user_id;
     productActivationProduct.value = product;
     productActivationEntityLabel.value = institution.full_name ?? '';
     productActivationReferrer.value = institution.referred_by ?? null;
@@ -996,7 +1010,11 @@ function emitInstitutionsUpdate(): void {
     });
 }
 
-function onProductActivationConfirmed(payload: { referred_by: Referrer; product: CrmProductKey }): void {
+function onProductActivationConfirmed(payload: {
+    referred_by: Referrer;
+    product: CrmProductKey;
+    contact_user_id?: number;
+}): void {
     const institutionId = productActivationInstitutionId.value;
     if (!institutionId) {
         return;
@@ -1007,6 +1025,9 @@ function onProductActivationConfirmed(payload: { referred_by: Referrer; product:
     const index = localInstitutions.value.findIndex(item => item.id === institutionId);
     if (index !== -1) {
         localInstitutions.value[index].referred_by = payload.referred_by;
+        if (payload.contact_user_id) {
+            localInstitutions.value[index].representative_user_id = payload.contact_user_id;
+        }
     }
 
     emitInstitutionsUpdate();
@@ -1016,18 +1037,10 @@ async function handleInstitutionProductDeactivation(
     institution: CrmInstitution,
     product: CrmProductKey,
 ): Promise<void> {
-    if (!institution.representative_user_id) {
-        $toast({
-            description: 'Aucun représentant associé à cette institution',
-            variant: 'destructive',
-        });
-        return;
-    }
-
     applyInstitutionProductFieldUpdate(institution.id, product, false);
 
     try {
-        await deactivateProduct(institution.representative_user_id, product);
+        await deactivateInstitutionProduct(institution.id, product);
         emitInstitutionsUpdate();
     }
     catch (error) {
@@ -1301,7 +1314,10 @@ async function deleteDraftSubscription(institution: CrmInstitution) {
         return;
     }
 
-    await deleteSubscriptionDraft(institution.id, contractId, {
+    openArchiveBcDialog({
+        institutionId: institution.id,
+        contractId,
+        reference: institution.subscription?.reference,
         onSuccess: () => {
             subscriptionStatusModalOpen.value = false;
             subscriptionModalOpen.value = false;
@@ -1321,7 +1337,10 @@ async function deletePendingSubscriptionDraft() {
         return;
     }
 
-    await deleteSubscriptionDraft(institutionId, contractId, {
+    openArchiveBcDialog({
+        institutionId,
+        contractId,
+        reference: pendingSubscriptionInstitution.value?.subscription?.reference,
         onSuccess: () => {
             pendingSubscriptionContractId.value = null;
             selectedSubscriptionFormula.value = null;
@@ -1335,10 +1354,6 @@ async function deleteSubscriptionDraft(
     contractId: number,
     options?: { onSuccess?: () => void },
 ) {
-    if (!window.confirm('Supprimer ce brouillon de bon de commande ?')) {
-        return;
-    }
-
     subscriptionDeleting.value = true;
 
     try {
@@ -1347,7 +1362,7 @@ async function deleteSubscriptionDraft(
         patchInstitutionSubscription(institutionId, emptyInstitutionSubscription());
 
         $toast({
-            description: response.message ?? 'Brouillon supprimé. Vous pouvez générer un nouveau bon de commande.',
+            description: response.message ?? 'Bon de commande archivé. Vous pouvez générer un nouveau bon de commande.',
             variant: 'success',
         });
 
@@ -1620,105 +1635,6 @@ const columns: ColumnDef<CrmInstitution>[] = [
         },
     },
     {
-        accessorKey: 'phone_number',
-        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
-        cell: ({ row }) => {
-            const phone = row.getValue('phone_number') as string | null | undefined;
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—'),
-                            h(Pencil, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
-                                onClick: () => openContactInfoDialog(row.original),
-                            }),
-                        ]),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'email',
-        header: () => h('div', { class: 'text-center' }, 'Email'),
-        cell: ({ row }) => {
-            const email = row.getValue('email') as string | null | undefined;
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', {
-                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                        title: email ?? '',
-                    }, email || '—')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                                title: email ?? '',
-                            }, email || '—'),
-                            h(Pencil, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
-                                onClick: () => openContactInfoDialog(row.original),
-                            }),
-                        ]),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'status',
-        header: () => h('div', { class: 'text-center' }, 'Statut institution'),
-        cell: ({ row }) => {
-            const institution = row.original as CrmInstitution;
-
-            return h('div', { class: 'flex justify-center' }, [
-                h(
-                    'span',
-                    {
-                        class: `px-2 py-1 rounded text-xs font-medium ${institutionStatusBadgeClass(institution.status)}`,
-                    },
-                    institutionStatusLabel(institution),
-                ),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        id: 'registration_source',
-        header: () =>
-            h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('registration_source'),
-            }, () => ['Source', h(ArrowUpDown, { class: '' })]),
-        cell: ({ row }) => {
-            const source = row.original.registration_source;
-            const label = source === 'file' ? 'Fichier' : source === 'site' ? 'Site' : '—';
-            const colorClass = source === 'file'
-                ? 'bg-blue-100 text-blue-800'
-                : source === 'site'
-                    ? 'bg-purple-100 text-purple-800'
-                    : 'bg-gray-100 text-gray-800';
-
-            return h('div', { class: 'flex justify-center' }, [
-                h('span', { class: `px-2 py-1 rounded text-xs font-medium ${colorClass}` }, label),
-            ]);
-        },
-    },
-    {
-        id: 'registered_at',
-        header: () =>
-            h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('registered_at'),
-            }, () => ['Date inscription / import', h(ArrowUpDown, { class: '' })]),
-        cell: ({ row }) => {
-            const rawDate = row.original.registered_at || row.original.created_at;
-
-            return h('div', { class: 'text-center text-sm' }, rawDate ? formatToDMY(rawDate) : '—');
-        },
-    },
-
-    {
         accessorKey: 'insurance',
         header: 'NursAssur',
         cell: ({ row }) => {
@@ -1892,6 +1808,249 @@ const columns: ColumnDef<CrmInstitution>[] = [
                             }),
                         ]),
             ]);
+        },
+    },
+    {
+        accessorKey: 'nb_call',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_call'),
+                title: 'Nombre d\'appels passés dans la semaine',
+            },
+            () => [
+                'Nombre d\'appels passés',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_call = Number(row.original.crm?.nb_call) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_call.toString(),
+                            }, nb_call || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_sale',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_sale'),
+                title: 'Nombre de ventes passées dans la semaine',
+            },
+            () => [
+                'Nombre de ventes passées',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_sale = Number(row.original.crm?.nb_sale) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_sale.toString(),
+                            }, nb_sale || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_recommandation',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_recommandation'),
+                title: 'Nombre de recommandations obtenues dans la semaine',
+            },
+            () => [
+                'Nombre de recommandations obtenues',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_recommandation = Number(row.original.crm?.nb_recommandation) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_recommandation.toString(),
+                            }, nb_recommandation || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_meeting',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_meeting'),
+                title: 'Nombre de rendez-vous planifiés dans la semaine',
+            },
+            () => [
+                'Nombre de rendez-vous planifiés',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_meeting = Number(row.original.crm?.nb_meeting) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_meeting.toString(),
+                            }, nb_meeting || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'nb_pending',
+        header: () => h(Button,
+            {
+                variant: 'ghost',
+                onClick: () => setSort('nb_pending'),
+                title: 'Nombre de réponses en attente dans la semaine',
+            },
+            () => [
+                'Nombre de réponses en attente',
+                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
+            ],
+        ),
+        cell: ({ row }) => {
+            const nb_pending = Number(row.original.crm?.nb_pending) || 0;
+            return h('div', {
+                class: 'flex justify-center items-center gap-1',
+            }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-gray-400' }, '-')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'max-w-[150px] truncate text-sm',
+                                title: nb_pending.toString(),
+                            }, nb_pending || ''),
+                        ]),
+            ]);
+        },
+    },
+    {
+        accessorKey: 'phone_number',
+        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
+        cell: ({ row }) => {
+            const phone = row.getValue('phone_number') as string | null | undefined;
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—'),
+                            h(Pencil, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
+                                onClick: () => openContactInfoDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'email',
+        header: () => h('div', { class: 'text-center' }, 'Email'),
+        cell: ({ row }) => {
+            const email = row.getValue('email') as string | null | undefined;
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator.value
+                    ? h('span', {
+                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                        title: email ?? '',
+                    }, email || '—')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                                title: email ?? '',
+                            }, email || '—'),
+                            h(Pencil, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
+                                onClick: () => openContactInfoDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'status',
+        header: () => h('div', { class: 'text-center' }, 'Statut institution'),
+        cell: ({ row }) => {
+            const institution = row.original as CrmInstitution;
+
+            return h('div', { class: 'flex justify-center' }, [
+                h(
+                    'span',
+                    {
+                        class: `px-2 py-1 rounded text-xs font-medium ${institutionStatusBadgeClass(institution.status)}`,
+                    },
+                    institutionStatusLabel(institution),
+                ),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        id: 'registration_source',
+        header: () =>
+            h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('registration_source'),
+            }, () => ['Source', h(ArrowUpDown, { class: '' })]),
+        cell: ({ row }) => {
+            const source = row.original.registration_source;
+            const label = source === 'file' ? 'Fichier' : source === 'site' ? 'Site' : '—';
+            const colorClass = source === 'file'
+                ? 'bg-blue-100 text-blue-800'
+                : source === 'site'
+                    ? 'bg-purple-100 text-purple-800'
+                    : 'bg-gray-100 text-gray-800';
+
+            return h('div', { class: 'flex justify-center' }, [
+                h('span', { class: `px-2 py-1 rounded text-xs font-medium ${colorClass}` }, label),
+            ]);
+        },
+    },
+    {
+        id: 'registered_at',
+        header: () =>
+            h(Button, {
+                variant: 'ghost',
+                onClick: () => setSort('registered_at'),
+            }, () => ['Date inscription / import', h(ArrowUpDown, { class: '' })]),
+        cell: ({ row }) => {
+            const rawDate = row.original.registered_at || row.original.created_at;
+
+            return h('div', { class: 'text-center text-sm' }, rawDate ? formatToDMY(rawDate) : '—');
         },
     },
     {

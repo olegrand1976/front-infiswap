@@ -20,6 +20,17 @@ type GetCrmPlusResult = {
     fromCache: boolean;
 };
 
+export type CrmActivityKpis = {
+    total: number;
+    registered_this_month: number;
+    registered_previous_month: number;
+    with_insurance?: number;
+    total_sales?: number;
+    with_active_subscription?: number;
+    with_signed_bc?: number;
+    without_contact_30_days: number;
+};
+
 export const useCrm = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
     const institutions = useState<Pagination<CrmInstitution> | null>('crmInstitutions', () => null);
@@ -108,6 +119,20 @@ export const useCrm = () => {
         });
 
         return { fromCache: false };
+    }
+
+    async function getCrmKpis(
+        scope: 'users' | 'institutions',
+        options: Record<string, unknown> = {},
+    ): Promise<CrmActivityKpis> {
+        const response = await $apifetch('api/crm/kpis', {
+            params: {
+                scope,
+                ...options,
+            },
+        });
+
+        return response.data as CrmActivityKpis;
     }
 
     async function createInstitutionSubscription(
@@ -214,6 +239,7 @@ export const useCrm = () => {
         institutionsCount,
         getCrmPlus,
         getCrmInstitutions,
+        getCrmKpis,
         createInstitutionSubscription,
         viewInstitutionSubscriptionPdf,
         sendInstitutionSubscriptionForSignature,

@@ -26,11 +26,26 @@ export type InstitutionSubscriptionBilling = {
     invoice_emailed_at?: string | null;
 };
 
+export type InstitutionSubscriptionHistory = {
+    id: number;
+    event: string;
+    event_label: string;
+    description?: string | null;
+    metadata?: Record<string, unknown> | null;
+    actor?: { id: number; full_name: string; email: string } | null;
+    created_at?: string | null;
+};
+
 export type InstitutionSubscriptionItem = {
     id: number;
     reference?: string | null;
     status?: string | null;
     status_label?: string | null;
+    documenso_status?: string | null;
+    documenso_status_label?: string | null;
+    can_delete?: boolean;
+    is_archived?: boolean;
+    deleted_at?: string | null;
     formula?: string | null;
     formula_label?: string | null;
     payment_mode?: string | null;
@@ -56,6 +71,17 @@ export type InstitutionSubscriptionItem = {
 };
 
 
+export type InstitutionSubscriptionKpis = {
+    total: number;
+    created_this_month: number;
+    created_previous_month: number;
+    signed: number;
+    pending_signature: number;
+    draft: number;
+    active: number;
+    total_received: number;
+};
+
 export const useInstitutionSubscription = () => {
     const { $apifetch } = useNuxtApp();
     const subscriptions = useState<InstitutionSubscriptionItem[]>('institutionSubscriptions', () => []);
@@ -78,10 +104,21 @@ export const useInstitutionSubscription = () => {
         }
     }
 
+    async function getSubscriptionKpis(options: Record<string, unknown> = {}): Promise<InstitutionSubscriptionKpis> {
+        const response = await $apifetch('api/crm/institution-subscriptions/kpis', {
+            params: options,
+        });
+
+        return response.data as InstitutionSubscriptionKpis;
+    }
+
     async function getSubscription(contractId: number) {
         const response = await $apifetch(`api/crm/institution-subscriptions/${contractId}`);
         currentSubscription.value = response.data;
-        return response.data as InstitutionSubscriptionItem;
+        return {
+            data: response.data as InstitutionSubscriptionItem,
+            histories: (response.histories ?? []) as InstitutionSubscriptionHistory[],
+        };
     }
 
     async function updateBilling(contractId: number, formData: FormData) {
@@ -109,6 +146,12 @@ export const useInstitutionSubscription = () => {
         );
         currentSubscription.value = response.data;
         return response;
+    }
+
+    async function deleteSubscription(contractId: number) {
+        return await $apifetch(`api/crm/institution-subscriptions/${contractId}`, {
+            method: 'DELETE',
+        });
     }
 
     async function cancelSubscription(institutionId: number, contractId: number) {
@@ -158,10 +201,12 @@ export const useInstitutionSubscription = () => {
         count,
         loading,
         getSubscriptions,
+        getSubscriptionKpis,
         getSubscription,
         updateBilling,
         createPayment,
         markCommissionPaid,
+        deleteSubscription,
         cancelSubscription,
         viewPdf,
         downloadBillingFile,

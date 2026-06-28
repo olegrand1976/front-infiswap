@@ -33,76 +33,15 @@
                 Apporté par
             </p>
 
-            <div class="flex flex-wrap gap-4 mb-4">
-                <label class="inline-flex items-center">
-                    <input
-                        v-model="referrerMode"
-                        type="radio"
-                        value="account"
-                        class="form-radio"
-                    >
-                    <span class="ml-2">Porteur d'affaire</span>
-                </label>
-                <label class="inline-flex items-center">
-                    <input
-                        v-model="referrerMode"
-                        type="radio"
-                        value="text"
-                        class="form-radio"
-                    >
-                    <span class="ml-2">Texte libre</span>
-                </label>
-            </div>
-
-            <div
-                v-if="referrerMode === 'text'"
-                class="mb-4"
-            >
-                <label
-                    for="productReferrerFreeText"
-                    class="block mb-1 text-sm font-medium text-gray-700"
-                >
-                    Nom ou source
-                </label>
-                <InputIcon
-                    id="productReferrerFreeText"
-                    v-model="tempReferrerText"
-                    type="text"
-                    class="w-full"
-                    placeholder="Ex. Dr Dupont, salon Infirmiers 2025…"
-                />
-            </div>
-
-            <template v-else>
-                <RollingLoader
-                    v-if="referrerLoading"
-                    :loading="referrerLoading"
-                />
-
-                <template v-else>
-                    <p
-                        v-if="!userReferrer || userReferrer.length === 0"
-                        class="text-gray-500 italic text-center py-4"
-                    >
-                        Pas encore de porteur d'affaire enregistré
-                    </p>
-
-                    <ul
-                        v-else
-                        class="space-y-2 max-h-48 overflow-y-auto mb-4"
-                    >
-                        <li
-                            v-for="ref in userReferrer"
-                            :key="ref.id"
-                            class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                            :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                            @click="selectedReferrer = ref"
-                        >
-                            {{ ref.full_name }} ({{ ref.email }})
-                        </li>
-                    </ul>
-                </template>
-            </template>
+            <CrmReferrerPicker
+                v-model:mode="referrerMode"
+                v-model:selected-referrer="selectedReferrer"
+                v-model:referrer-text="tempReferrerText"
+                :referrers="userReferrer"
+                :loading="referrerLoading"
+                text-input-id="productReferrerFreeText"
+                autocomplete-input-id="productReferrerAutocomplete"
+            />
 
             <div class="mt-6">
                 <p class="font-semibold mb-2">
@@ -192,7 +131,8 @@ import type { CrmProductKey, ProductCrmHistoryEntry, Referrer } from '~/lib/type
 
 const props = defineProps<{
     open: boolean;
-    targetUserId: number;
+    targetUserId?: number;
+    institutionId?: number;
     product: CrmProductKey;
     entityLabel?: string;
     referrer?: Referrer | null;
@@ -203,6 +143,7 @@ const emit = defineEmits<{
     confirmed: [payload: {
         referred_by: Referrer;
         product: CrmProductKey;
+        contact_user_id?: number;
     }];
 }>();
 
@@ -211,41 +152,65 @@ const {
     loadingHistories,
     submitting,
     getProductCrmHistories,
+    getInstitutionProductCrmHistories,
     activateProduct,
+    activateInstitutionProduct,
     formatReferrerPayload,
 } = useProductCrmHistory();
 const { userReferrer, getUserReferrer, loading: referrerLoading } = useReferrer();
 
 const effectiveDate = ref('');
-const referrerMode = ref<'account' | 'text'>('text');
+const referrerMode = ref<'account' | 'text'>('account');
 const tempReferrerText = ref('');
 const selectedReferrer = ref<Referrer | null>(null);
 const histories = ref<ProductCrmHistoryEntry[]>([]);
 
 const productLabel = computed(() => (props.product === 'nursassur' ? 'NursAssur' : 'NursTech'));
 
+function extractFetchErrorMessage(error: unknown): string {
+    if (!error || typeof error !== 'object' || !('data' in error)) {
+        return 'Une erreur est survenue';
+    }
+
+    const data = (error as { data?: Record<string, unknown> }).data;
+    const errors = data?.errors;
+
+    if (errors && typeof errors === 'object') {
+        const first = Object.values(errors as Record<string, string[]>)
+            .flat()
+            .find(message => typeof message === 'string' && message.trim() !== '');
+
+        if (first) {
+            return first;
+        }
+    }
+
+    if (typeof data?.message === 'string' && data.message.trim() !== '') {
+        return data.message;
+    }
+
+    return 'Une erreur est survenue';
+}
+
 function todayIsoDate(): string {
     return new Date().toISOString().slice(0, 10);
 }
 
 function prefillReferrer(referrer?: Referrer | null): void {
-    if (referrer?.text) {
-        referrerMode.value = 'text';
-        tempReferrerText.value = referrer.text;
-        selectedReferrer.value = null;
-        return;
-    }
-
-    if (referrer?.id) {
-        referrerMode.value = 'account';
-        tempReferrerText.value = '';
-        selectedReferrer.value = referrer;
-        return;
-    }
-
-    referrerMode.value = 'text';
+    referrerMode.value = 'account';
     tempReferrerText.value = '';
-    selectedReferrer.value = null;
+    selectedReferrer.value = referrer?.id ? referrer : null;
+}
+
+async function loadHistories(): Promise<void> {
+    if (props.institutionId) {
+        histories.value = await getInstitutionProductCrmHistories(props.institutionId, props.product);
+        return;
+    }
+
+    if (props.targetUserId) {
+        histories.value = await getProductCrmHistories(props.targetUserId, props.product);
+    }
 }
 
 async function loadModalData(): Promise<void> {
@@ -253,9 +218,7 @@ async function loadModalData(): Promise<void> {
     prefillReferrer(props.referrer);
     await Promise.all([
         getUserReferrer(),
-        getProductCrmHistories(props.targetUserId, props.product).then((items) => {
-            histories.value = items;
-        }),
+        loadHistories(),
     ]);
 }
 
@@ -276,10 +239,26 @@ async function confirmActivation(): Promise<void> {
     );
 
     try {
-        await activateProduct(props.targetUserId, props.product, {
+        const activationPayload = {
             effective_date: effectiveDate.value,
             ...referrerPayload,
-        });
+        };
+
+        let contactUserId: number | undefined;
+
+        if (props.institutionId) {
+            const response = await activateInstitutionProduct(
+                props.institutionId,
+                props.product,
+                activationPayload,
+            );
+            contactUserId = response.representative_user_id
+                ?? (typeof response.user?.id === 'number' ? response.user.id : undefined);
+        }
+        else if (props.targetUserId) {
+            await activateProduct(props.targetUserId, props.product, activationPayload);
+            contactUserId = props.targetUserId;
+        }
 
         const referredBy: Referrer = referrerPayload.referred_by_text
             ? { text: referrerPayload.referred_by_text }
@@ -292,6 +271,7 @@ async function confirmActivation(): Promise<void> {
         emit('confirmed', {
             referred_by: referredBy,
             product: props.product,
+            contact_user_id: contactUserId,
         });
 
         $toast({
@@ -304,7 +284,7 @@ async function confirmActivation(): Promise<void> {
     catch (error) {
         console.error(error);
         $toast({
-            description: 'Une erreur est survenue',
+            description: extractFetchErrorMessage(error),
             variant: 'destructive',
         });
     }

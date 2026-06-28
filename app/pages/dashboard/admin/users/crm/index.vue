@@ -48,6 +48,12 @@
                     </TabsTrigger>
                 </TabsList>
             </Tabs>
+            <CrmActivityKpiCards
+                v-if="selectedCrm !== 'exUsers'"
+                :kpis="crmKpis"
+                :scope="isInstitutionsTab ? 'institutions' : 'users'"
+                :loading="kpiLoading"
+            />
             <div class="flex shrink-0 gap-3 items-center overflow-x-auto p-4 px-4 pb-3 scrollbar-hide">
                 <InputIcon
                     v-model="option.name"
@@ -382,7 +388,8 @@ import { InputIcon } from '~/components/ui/input-with-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PERPAGE } from '~/lib/constants';
-import { useCrm } from '@/composables/useCrm';
+import { useCrm, type CrmActivityKpis } from '@/composables/useCrm';
+import CrmActivityKpiCards from '@/components/crm/CrmActivityKpiCards.vue';
 import { buildCrmCacheKey, getCrmUiState, hasCrmCacheEntry, saveCrmUiState } from '@/composables/useCrmCache';
 import type { CrmInstitution, User } from '~/lib/types';
 import FileUpload from '~/components/ui/file-upload/FileUpload.vue';
@@ -417,8 +424,10 @@ const selectedCrmCookie = useCookie<string>('crm_selected_tab', {
 
 const selectedCrm = ref('users');
 const isListLoading = ref(false);
+const kpiLoading = ref(false);
+const crmKpis = ref<CrmActivityKpis | null>(null);
 const listLoadError = ref(false);
-const { getCrmPlus, getCrmInstitutions, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
+const { getCrmPlus, getCrmInstitutions, getCrmKpis, users, institutions, trashCount, clearCrmCache, invalidateCrmCacheKey } = useCrm();
 const { importInstitutions } = useInstitutions();
 const { canImportInstitutions } = useAuth();
 const importDialogOpen = ref(false);
@@ -568,6 +577,25 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
     return params;
 }
 
+async function fetchCrmKpis(params: Record<string, unknown>) {
+    if (selectedCrm.value === 'exUsers') {
+        crmKpis.value = null;
+        return;
+    }
+
+    kpiLoading.value = true;
+    try {
+        const scope = isInstitutionsTab.value ? 'institutions' : 'users';
+        crmKpis.value = await getCrmKpis(scope, params);
+    }
+    catch {
+        crmKpis.value = null;
+    }
+    finally {
+        kpiLoading.value = false;
+    }
+}
+
 type FetchCrmOptions = {
     force?: boolean;
 };
@@ -599,6 +627,7 @@ async function fetchCrmList(
 
         if (requestId === fetchSequence) {
             listLoadError.value = false;
+            await fetchCrmKpis(params);
         }
     }
     catch {
