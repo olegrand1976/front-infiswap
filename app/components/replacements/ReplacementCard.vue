@@ -6,6 +6,7 @@
         >
             New
         </div>
+
         <div class="flex justify-between items-start">
             <div class="flex-1 flex items-center gap-2">
                 <div
@@ -344,6 +345,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
 import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoostTrustBadge.vue';
+import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
@@ -450,7 +452,13 @@ const canClose = computed(() => isOwner.value && !isClosed.value);
 
 const isBoosted = computed(() => {
     if (localBoosted.value !== null) return localBoosted.value;
-    return props.replacement.is_boosted === true || props.rawReplacement?.is_boosted === true;
+
+    const source = {
+        is_boosted: props.replacement.is_boosted ?? props.rawReplacement?.is_boosted,
+        boosted_until: props.replacement.boosted_until ?? props.rawReplacement?.boosted_until,
+    };
+
+    return isReplacementActivelyBoosted(source);
 });
 
 const showBoostAction = computed(() =>

@@ -294,7 +294,7 @@
                     </template>
                     <template v-else>
                         <template
-                            v-for="item in currentItems.filter(i => i.record_type === 'replacement')"
+                            v-for="item in replacementItems"
                             :key="`card-flat-${item.record_type}-${item.id}`"
                         >
                             <ReplacementCard
@@ -326,7 +326,7 @@
                     />
                     <template v-else>
                         <ReplacementTable
-                            :replacements="items.filter(i => i.record_type === 'replacement')"
+                            :replacements="items"
                             :type="props.type"
                             :user-id="user.id"
                             :group-members="groupMembers"
@@ -349,8 +349,8 @@
                 />
                 <template v-else>
                     <ReplacementTable
-                        v-if="currentItems.some(i => i.record_type === 'replacement')"
-                        :replacements="currentItems.filter(i => i.record_type === 'replacement')"
+                        v-if="replacementItems.length > 0"
+                        :replacements="replacementItems"
                         :type="props.type"
                         :user-id="user.id"
                         :group-members="groupMembers"
@@ -565,6 +565,7 @@ import { useCareTypes } from '@/composables/useCareTypes';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
+import { sortReplacementsByBoost } from '~/lib/replacementBoost';
 
 const { $toast } = useNuxtApp();
 
@@ -649,14 +650,18 @@ const allMissions = computed<MergedItem[]>(() =>
     ),
 );
 
+const replacementItems = computed<MergedItem[]>(() =>
+    sortReplacementsByBoost(
+        currentItems.value.filter(item => item.record_type === 'replacement'),
+    ),
+);
+
 const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
     if (!props.groupByProvince) return {};
 
     const groups: Record<string, MergedItem[]> = {};
 
-    currentItems.value.forEach((item) => {
-        if (item.record_type === 'mission') return;
-
+    replacementItems.value.forEach((item) => {
         const province = item.province || 'Autres';
         if (!groups[province]) groups[province] = [];
         groups[province].push(item);
@@ -669,7 +674,7 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
             if (b === 'Autres') return -1;
             return a.localeCompare(b, 'fr');
         })
-        .forEach((key) => { sorted[key] = groups[key]; });
+        .forEach((key) => { sorted[key] = sortReplacementsByBoost(groups[key]); });
 
     return sorted;
 });

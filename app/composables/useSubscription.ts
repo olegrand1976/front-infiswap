@@ -8,16 +8,7 @@ export const useSubscription = () => {
     const route = useRoute();
 
     const bypassesPlatformAccess = (): boolean => {
-        const {
-            isCollaborator,
-            isAdmin,
-            isDeveloper,
-            isManager,
-            isCommunityManager,
-            isSaleRepresentative,
-            isTester,
-            isInstitution,
-        } = useAuth();
+        const { isInfiswapStaff, isInstitution } = useAuth();
 
         if (!user.value?.id) {
             return true;
@@ -27,13 +18,7 @@ export const useSubscription = () => {
             return true;
         }
 
-        return isCollaborator.value
-            || isAdmin.value
-            || isDeveloper.value
-            || isManager.value
-            || isCommunityManager.value
-            || isSaleRepresentative.value
-            || isTester.value;
+        return isInfiswapStaff.value;
     };
 
     const hasPlatformAccess = async (): Promise<boolean> => {

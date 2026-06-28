@@ -101,6 +101,13 @@
                             >
                                 NEW
                             </div>
+                            <div
+                                v-if="type !== 'me' && isActivelyBoosted(r)"
+                                class="absolute z-10 top-1 right-2 rounded-lg border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-1 shadow-sm"
+                                title="Remplacement boosté"
+                            >
+                                <ReplacementBoostStars size="sm" />
+                            </div>
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
                                     <div
@@ -319,7 +326,7 @@
                                 </template>
                                 <template v-else>
                                     <ReplacementBoostTrustBadge
-                                        v-if="r.is_boosted"
+                                        v-if="isActivelyBoosted(r)"
                                         variant="visitor"
                                         compact
                                         stars-only
@@ -399,6 +406,13 @@
                                          isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
+                            </div>
+                            <div
+                                v-if="type !== 'me' && isActivelyBoosted(r)"
+                                class="absolute z-10 top-0 right-0 rounded-bl-lg border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-1 shadow-sm"
+                                title="Remplacement boosté"
+                            >
+                                <ReplacementBoostStars size="sm" />
                             </div>
 
                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
@@ -519,7 +533,7 @@
                                 </template>
                                 <template v-else>
                                     <ReplacementBoostTrustBadge
-                                        v-if="r.is_boosted"
+                                        v-if="isActivelyBoosted(r)"
                                         variant="visitor"
                                         compact
                                         stars-only
@@ -595,6 +609,7 @@ import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoo
 import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { Replacement } from '~/lib/types';
 
@@ -619,6 +634,8 @@ const onBoostCancelled = () => {
         boostModalReplacement.value.boosted_until = null;
     }
 };
+
+const isActivelyBoosted = (replacement: Replacement) => isReplacementActivelyBoosted(replacement);
 
 interface Props {
     replacements: Replacement[];
