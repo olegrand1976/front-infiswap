@@ -287,6 +287,19 @@ const crmChildren = computed<NavigationItem[]>(() => [
     },
 ].filter(item => item.visible !== false));
 
+const documentationChildren = computed<NavigationItem[]>(() => [
+    {
+        label: 'Bon de commande vierge',
+        route: '/dashboard/admin/crm/documentation/blank-purchase-order',
+        icon: FileText,
+    },
+    {
+        label: 'Conditions générales de vente',
+        route: '/dashboard/admin/crm/documentation/general-terms',
+        icon: FileText,
+    },
+]);
+
 const nurseNavigationItems: NavigationItem[] = [
     {
         label: 'Informations',
@@ -406,6 +419,13 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         icon: UserCheck,
         visible: crmChildren.value.length > 0,
         children: crmChildren.value,
+    },
+    {
+        label: 'Documentation',
+        route: '/dashboard/admin/crm/documentation',
+        icon: ClipboardList,
+        visible: isSuperAdmin.value || isAdmin.value || isCommunityManager.value || isSaleRepresentative.value,
+        children: documentationChildren.value,
     },
     {
         label: 'Institutions',
@@ -569,12 +589,14 @@ const navigationItems = computed(() => {
                     || i.route.includes('/replacements/interest')
                     || i.route.includes('/users')
                     || i.route.includes('/users/crm')
+                    || i.route.includes('/crm/documentation')
                     || i.route.includes('/home-management'),
             );
         case 'sale_representative':
             return items.filter(
                 i =>
                     i.route.includes('/users/crm')
+                    || i.route.includes('/crm/documentation')
                     || i.route.includes('/products')
                     || i.route.includes('/contracts/nurstech')
                     || i.route.includes('/contracts/institutions'),

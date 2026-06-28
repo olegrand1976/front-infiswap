@@ -184,7 +184,7 @@ export const useCrm = () => {
         });
     }
 
-    async function viewInstitutionSubscriptionPdf(institutionId: number, contractId: number) {
+    async function openPdfInNewWindow(apiPath: string, loadingTitle: string) {
         const newWindow = window.open();
         if (!newWindow) {
             throw new Error('Impossible d\'ouvrir le PDF. Vérifiez le bloqueur de popups.');
@@ -192,19 +192,15 @@ export const useCrm = () => {
 
         newWindow.document.write(`
             <html>
-                <head><title>Chargement PDF...</title></head>
+                <head><title>${loadingTitle}</title></head>
                 <body style="display:flex;align-items:center;justify-content:center;height:100vh;">
-                    <h3>Chargement du bon de commande...</h3>
+                    <h3>${loadingTitle}</h3>
                 </body>
             </html>
         `);
 
         try {
-            const response = await $apifetch(
-                `/api/crm/institutions/${institutionId}/subscription/${contractId}/pdf`,
-                { responseType: 'blob' },
-            );
-
+            const response = await $apifetch(apiPath, { responseType: 'blob' });
             const blob = new Blob([response], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
 
@@ -216,6 +212,26 @@ export const useCrm = () => {
             newWindow.document.body.innerHTML = '<h3>Erreur lors du chargement du PDF</h3>';
             throw new Error('Erreur lors du chargement du PDF');
         }
+    }
+
+    async function viewInstitutionSubscriptionPdf(institutionId: number, contractId: number) {
+        await openPdfInNewWindow(
+            `/api/crm/institutions/${institutionId}/subscription/${contractId}/pdf`,
+            'Chargement du bon de commande...',
+        );
+    }
+
+    async function openCrmDocumentationPdf(type: 'blank-purchase-order' | 'general-terms') {
+        const paths = {
+            'blank-purchase-order': '/api/crm/documentation/blank-purchase-order/pdf',
+            'general-terms': '/api/crm/documentation/general-terms/pdf',
+        };
+        const titles = {
+            'blank-purchase-order': 'Chargement du bon de commande vierge...',
+            'general-terms': 'Chargement des conditions générales...',
+        };
+
+        await openPdfInNewWindow(paths[type], titles[type]);
     }
 
     async function sendInstitutionSubscriptionForSignature(institutionId: number, contractId: number) {
@@ -294,6 +310,7 @@ export const useCrm = () => {
         getCrmKpis,
         createInstitutionSubscription,
         viewInstitutionSubscriptionPdf,
+        openCrmDocumentationPdf,
         sendInstitutionSubscriptionForSignature,
         deleteInstitutionSubscriptionDraft,
         updateCrmInstitutionContact,
