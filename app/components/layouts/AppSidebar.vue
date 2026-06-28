@@ -262,6 +262,12 @@ const crmChildren = computed<NavigationItem[]>(() => [
         visible: true,
     },
     {
+        label: 'Récap activité',
+        route: '/dashboard/admin/users/crm/commercial-activity',
+        icon: BarChart3,
+        visible: isSuperAdmin.value || isAdmin.value,
+    },
+    {
         label: 'BC Institutions',
         route: '/dashboard/admin/contracts/institutions',
         icon: FileText,

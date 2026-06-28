@@ -264,7 +264,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Pencil, Plus } from 'lucide-vue-next';
+import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Comment, Pagination, User, Referrer, CrmProductKey } from '~/lib/types';
@@ -734,27 +734,12 @@ const isFranceUser = computed(() => {
     return country === 'fr' || country === 'france';
 });
 
-function renderKpiCell(
-    rowUser: User,
-    counterKey: 'nb_call' | 'nb_sale' | 'nb_recommandation' | 'nb_meeting' | 'nb_pending',
-    actionType: CommercialActionType,
-) {
-    const value = Number(rowUser.crm?.[counterKey]) || 0;
-
-    if (isCollaborator.value) {
-        return h('span', { class: 'text-gray-400' }, '-');
-    }
-
-    return h('button', {
-        type: 'button',
-        class: 'flex items-center gap-1 rounded px-1 hover:bg-gray-100 text-sm max-w-[150px]',
-        title: `${value} — cliquer pour ajouter`,
-        onClick: () => openCommercialDialog(rowUser, actionType),
-    }, [
-        h('span', { class: 'truncate' }, String(value)),
-        h(Plus, { class: 'w-3 h-3 shrink-0 text-primary' }),
-    ]);
-}
+const { kpiColumns } = useCrmWeeklyKpiColumns<User>({
+    setSort,
+    isCollaborator,
+    openCommercialDialog,
+    getRowId: row => row.id,
+});
 
 const columns: ColumnDef<User>[] = [
     {
@@ -989,91 +974,7 @@ const columns: ColumnDef<User>[] = [
             ]);
         },
     },
-    {
-        accessorKey: 'nb_call',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_call'),
-                title: 'Nombre d\'appels passés dans la semaine',
-            },
-            () => [
-                'Nombre d\'appels passés',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderKpiCell(row.original, 'nb_call', 'call')]),
-    },
-    {
-        accessorKey: 'nb_sale',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_sale'),
-                title: 'Nombre de ventes passées dans la semaine',
-            },
-            () => [
-                'Nombre de ventes passées',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderKpiCell(row.original, 'nb_sale', 'sale')]),
-    },
-    {
-        accessorKey: 'nb_recommandation',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_recommandation'),
-                title: 'Nombre de recommandations obtenues dans la semaine',
-            },
-            () => [
-                'Nombre de recommandations obtenues',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderKpiCell(row.original, 'nb_recommandation', 'recommandation')]),
-    },
-    {
-        accessorKey: 'nb_meeting',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_meeting'),
-                title: 'Nombre de rendez-vous planifiés dans la semaine',
-            },
-            () => [
-                'Nombre de rendez-vous planifiés',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderKpiCell(row.original, 'nb_meeting', 'meeting')]),
-    },
-    {
-        accessorKey: 'nb_pending',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_pending'),
-                title: 'Nombre de réponses en attente dans la semaine',
-            },
-            () => [
-                'Nombre de réponses en attente',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderKpiCell(row.original, 'nb_pending', 'pending')]),
-    },
+    ...kpiColumns,
     {
         accessorKey: 'created_at',
         header: () => {

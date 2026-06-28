@@ -592,7 +592,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Pencil, Plus, Trash2 } from 'lucide-vue-next';
+import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Comment, CrmInstitution, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
@@ -627,6 +627,7 @@ const commentDialogOpen = ref(false);
 const referrerDialogOpen = ref(false);
 const logContactAction = ref(false);
 const commercialDialogOpen = ref(false);
+const commercialResolvingId = ref<number | null>(null);
 const commercialUserId = ref(0);
 const commercialCrmUserId = ref<number | null>(null);
 const commercialEntityLabel = ref('');
@@ -668,6 +669,7 @@ const {
     sendInstitutionSubscriptionForSignature,
     deleteInstitutionSubscriptionDraft,
     updateCrmInstitutionContact,
+    ensureCrmInstitutionContact,
     updateCrmUser,
 } = useCrm();
 const representativeUserId = ref<number | null>(null);
@@ -924,13 +926,77 @@ function openInstitutionShow(institution: CrmInstitution, edit = false) {
     navigateTo(`/dashboard/admin/institutions/${institution.id}/show${query}`);
 }
 
-function openContactDialog(institution: CrmInstitution) {
-    representativeUserId.value = institution.representative_user_id;
-    editingUserId.value = institution.representative_user_id;
-    tempCrmId.value = Number(institution.crm?.id);
-    tempClientType.value = institution.crm?.client_type ?? 'institution';
-    tempContactDate.value = institution.crm?.last_contact_date ?? '';
-    tempContactMethod.value = institution.crm?.last_contact_method ?? 'mail';
+function patchInstitutionContactFromEnsure(
+    institutionId: number,
+    representativeUserId: number,
+    crm: Record<string, unknown>,
+): CrmInstitution {
+    const idx = localInstitutions.value.findIndex(i => i.id === institutionId);
+    const current = idx !== -1 ? localInstitutions.value[idx] : null;
+
+    const updated: CrmInstitution = {
+        ...(current ?? { id: institutionId, institution_id: institutionId } as CrmInstitution),
+        representative_user_id: representativeUserId,
+        crm: {
+            ...(current?.crm ?? {}),
+            ...crm,
+        } as CrmInstitution['crm'],
+    };
+
+    if (idx !== -1) {
+        localInstitutions.value[idx] = updated;
+        localInstitutions.value = [...localInstitutions.value];
+    }
+
+    return updated;
+}
+
+async function resolveInstitutionCrmContact(institution: CrmInstitution): Promise<CrmInstitution | null> {
+    if (institution.representative_user_id) {
+        return institution;
+    }
+
+    const email = institution.email?.trim();
+    if (!email) {
+        $toast({
+            description: 'Renseignez l\'e-mail de l\'institution pour créer le contact CRM.',
+            variant: 'destructive',
+        });
+        return null;
+    }
+
+    try {
+        const response = await ensureCrmInstitutionContact(institution.id);
+
+        return patchInstitutionContactFromEnsure(
+            institution.id,
+            response.representative_user_id,
+            response.crm ?? {},
+        );
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message
+            ?? 'Impossible de créer le contact CRM.';
+        $toast({
+            description: message,
+            variant: 'destructive',
+        });
+        return null;
+    }
+}
+
+async function openContactDialog(institution: CrmInstitution) {
+    const resolved = await resolveInstitutionCrmContact(institution);
+    if (!resolved?.representative_user_id || !resolved.crm?.id) {
+        return;
+    }
+
+    representativeUserId.value = resolved.representative_user_id;
+    editingUserId.value = resolved.representative_user_id;
+    tempCrmId.value = Number(resolved.crm.id);
+    tempClientType.value = resolved.crm.client_type ?? 'user';
+    tempContactDate.value = resolved.crm.last_contact_date ?? '';
+    tempContactMethod.value = resolved.crm.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
     logContactAction.value = false;
@@ -939,33 +1005,36 @@ function openContactDialog(institution: CrmInstitution) {
 
 type CommercialActionType = 'call' | 'sale' | 'recommandation' | 'meeting' | 'pending';
 
-function openCommercialDialog(institution: CrmInstitution, actionType: CommercialActionType = 'call') {
-    const userId = institution.representative_user_id;
+async function openCommercialDialog(institution: CrmInstitution, actionType: CommercialActionType = 'call') {
+    commercialResolvingId.value = institution.id;
+    try {
+        const resolved = await resolveInstitutionCrmContact(institution);
+        const userId = resolved?.representative_user_id;
 
-    if (!userId) {
-        $toast({
-            description: 'Aucun contact CRM : renseignez l\'e-mail ou activez un produit pour créer le contact.',
-            variant: 'destructive',
-        });
-        return;
+        if (!userId) {
+            return;
+        }
+
+        commercialInstitutionId.value = resolved.id;
+        commercialUserId.value = userId;
+        commercialCrmUserId.value = resolved.crm?.id ?? null;
+        commercialEntityLabel.value = resolved.full_name ?? '';
+        commercialClientType.value = resolved.crm?.client_type ?? 'user';
+        commercialDefaultAction.value = actionType;
+        commercialInitialCounters.value = resolved.crm
+            ? {
+                    nb_call: Number(resolved.crm.nb_call) || 0,
+                    nb_sale: Number(resolved.crm.nb_sale) || 0,
+                    nb_recommandation: Number(resolved.crm.nb_recommandation) || 0,
+                    nb_meeting: Number(resolved.crm.nb_meeting) || 0,
+                    nb_pending: Number(resolved.crm.nb_pending) || 0,
+                }
+            : null;
+        commercialDialogOpen.value = true;
     }
-
-    commercialInstitutionId.value = institution.id;
-    commercialUserId.value = userId;
-    commercialCrmUserId.value = institution.crm?.id ?? null;
-    commercialEntityLabel.value = institution.full_name ?? '';
-    commercialClientType.value = institution.crm?.client_type ?? 'user';
-    commercialDefaultAction.value = actionType;
-    commercialInitialCounters.value = institution.crm
-        ? {
-                nb_call: Number(institution.crm.nb_call) || 0,
-                nb_sale: Number(institution.crm.nb_sale) || 0,
-                nb_recommandation: Number(institution.crm.nb_recommandation) || 0,
-                nb_meeting: Number(institution.crm.nb_meeting) || 0,
-                nb_pending: Number(institution.crm.nb_pending) || 0,
-            }
-        : null;
-    commercialDialogOpen.value = true;
+    finally {
+        commercialResolvingId.value = null;
+    }
 }
 
 function patchLocalInstitutionCrm(institutionId: number, crm: Record<string, unknown>) {
@@ -1686,27 +1755,13 @@ const isFranceUser = computed(() => {
     return country === 'fr' || country === 'france';
 });
 
-function renderInstitutionKpiCell(
-    institution: CrmInstitution,
-    counterKey: 'nb_call' | 'nb_sale' | 'nb_recommandation' | 'nb_meeting' | 'nb_pending',
-    actionType: CommercialActionType,
-) {
-    const value = Number(institution.crm?.[counterKey]) || 0;
-
-    if (isCollaborator.value) {
-        return h('span', { class: 'text-gray-400' }, '-');
-    }
-
-    return h('button', {
-        type: 'button',
-        class: 'flex items-center gap-1 rounded px-1 hover:bg-gray-100 text-sm max-w-[150px]',
-        title: `${value} — cliquer pour ajouter`,
-        onClick: () => openCommercialDialog(institution, actionType),
-    }, [
-        h('span', { class: 'truncate' }, String(value)),
-        h(Plus, { class: 'w-3 h-3 shrink-0 text-primary' }),
-    ]);
-}
+const { kpiColumns } = useCrmWeeklyKpiColumns<CrmInstitution>({
+    setSort,
+    isCollaborator,
+    openCommercialDialog,
+    resolvingRowId: commercialResolvingId,
+    getRowId: row => row.id,
+});
 
 const columns: ColumnDef<CrmInstitution>[] = [
     {
@@ -1940,91 +1995,7 @@ const columns: ColumnDef<CrmInstitution>[] = [
             ]);
         },
     },
-    {
-        accessorKey: 'nb_call',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_call'),
-                title: 'Nombre d\'appels passés dans la semaine',
-            },
-            () => [
-                'Nombre d\'appels passés',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderInstitutionKpiCell(row.original, 'nb_call', 'call')]),
-    },
-    {
-        accessorKey: 'nb_sale',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_sale'),
-                title: 'Nombre de ventes passées dans la semaine',
-            },
-            () => [
-                'Nombre de ventes passées',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderInstitutionKpiCell(row.original, 'nb_sale', 'sale')]),
-    },
-    {
-        accessorKey: 'nb_recommandation',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_recommandation'),
-                title: 'Nombre de recommandations obtenues dans la semaine',
-            },
-            () => [
-                'Nombre de recommandations obtenues',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderInstitutionKpiCell(row.original, 'nb_recommandation', 'recommandation')]),
-    },
-    {
-        accessorKey: 'nb_meeting',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_meeting'),
-                title: 'Nombre de rendez-vous planifiés dans la semaine',
-            },
-            () => [
-                'Nombre de rendez-vous planifiés',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderInstitutionKpiCell(row.original, 'nb_meeting', 'meeting')]),
-    },
-    {
-        accessorKey: 'nb_pending',
-        header: () => h(Button,
-            {
-                variant: 'ghost',
-                onClick: () => setSort('nb_pending'),
-                title: 'Nombre de réponses en attente dans la semaine',
-            },
-            () => [
-                'Nombre de réponses en attente',
-                h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
-            ],
-        ),
-        cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center gap-1',
-        }, [renderInstitutionKpiCell(row.original, 'nb_pending', 'pending')]),
-    },
+    ...kpiColumns,
     {
         accessorKey: 'phone_number',
         header: () => h('div', { class: 'text-center' }, 'Téléphone'),

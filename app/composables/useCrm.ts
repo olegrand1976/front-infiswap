@@ -31,6 +31,28 @@ export type CrmActivityKpis = {
     without_contact_30_days: number;
 };
 
+export type CrmCommercialActivityRow = {
+    user_id: number;
+    full_name: string;
+    email: string;
+    roles_label: string;
+    nb_call: number;
+    nb_sale: number;
+    nb_recommandation: number;
+    nb_meeting: number;
+    nb_pending: number;
+    total_actions: number;
+};
+
+export type CrmCommercialActivityResponse = {
+    period: {
+        preset?: string;
+        start_date?: string;
+        end_date?: string;
+    };
+    rows: CrmCommercialActivityRow[];
+};
+
 export const useCrm = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
     const institutions = useState<Pagination<CrmInstitution> | null>('crmInstitutions', () => null);
@@ -203,6 +225,12 @@ export const useCrm = () => {
         });
     }
 
+    async function ensureCrmInstitutionContact(institutionId: number) {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/ensure-contact`, {
+            method: 'POST',
+        });
+    }
+
     function invalidateCrmCacheKey(
         page: number,
         perPage: number,
@@ -231,6 +259,13 @@ export const useCrm = () => {
         return response.histories ?? [];
     }
 
+    async function getCommercialActivity(params: Record<string, unknown> = {}) {
+        const response = await $apifetch<{ data: CrmCommercialActivityResponse }>('/api/crm/commercial-activity', {
+            query: params,
+        });
+        return response.data ?? { period: {}, rows: [] };
+    }
+
     return {
         trashCount,
         users,
@@ -245,11 +280,13 @@ export const useCrm = () => {
         sendInstitutionSubscriptionForSignature,
         deleteInstitutionSubscriptionDraft,
         updateCrmInstitutionContact,
+        ensureCrmInstitutionContact,
         invalidateCrmCacheKey,
         clearCrmCache,
         crmUser,
         updateCrmUser,
         getCrmHistories,
+        getCommercialActivity,
         buildCrmCacheKey,
     };
 };

@@ -6,7 +6,7 @@
         <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-2 max-h-[90vh] overflow-y-auto">
             <DialogHeader>
                 <DialogTitle class="text-lg font-semibold text-primary">
-                    Action commerciale
+                    Enregistrer une activité
                 </DialogTitle>
                 <p
                     v-if="entityLabel"
@@ -16,12 +16,22 @@
                 </p>
             </DialogHeader>
 
+            <div class="rounded-md border border-sky-100 bg-sky-50 px-3 py-2 text-sm text-sky-900">
+                <p class="font-medium">
+                    Les colonnes du tableau = total de la <strong>semaine en cours</strong> (lun.–dim.).
+                </p>
+                <p class="mt-1 text-sky-800/90">
+                    Pour faire évoluer le chiffre affiché, enregistrez une action datée <strong>cette semaine</strong>
+                    (le bouton « +1 aujourd'hui » utilise la date du jour).
+                </p>
+            </div>
+
             <div
                 v-if="weeklyCounters"
-                class="p-3 mb-4 border border-gray-200 rounded-lg bg-gray-50 text-sm"
+                class="p-3 border border-gray-200 rounded-lg bg-gray-50 text-sm"
             >
                 <p class="font-semibold text-primary mb-2">
-                    Compteurs semaine en cours
+                    Totaux semaine en cours
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                     <span>Appels : <strong>{{ weeklyCounters.nb_call ?? 0 }}</strong></span>
@@ -32,12 +42,124 @@
                 </div>
             </div>
 
+            <div class="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
+                <p class="text-sm font-medium text-primary">
+                    Ajout rapide
+                </p>
+                <p class="text-sm text-gray-600">
+                    {{ quickActionDescription }}
+                </p>
+                <Button
+                    type="button"
+                    class="w-full sm:w-auto"
+                    :in-progress="quickInProgress"
+                    @click="submitQuickOne"
+                >
+                    +1 {{ currentActionLabel }} aujourd'hui
+                </Button>
+            </div>
+
+            <details class="group rounded-lg border border-gray-200">
+                <summary class="cursor-pointer select-none px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Saisie avancée (période, quantité, produit…)
+                </summary>
+                <div class="border-t border-gray-100 px-4 pb-4 pt-3 space-y-4">
+                    <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-2">
+                        <button
+                            v-for="tab in actionTabs"
+                            :key="tab.key"
+                            type="button"
+                            class="pb-1 border-b-2 text-sm"
+                            :class="tradeTab === tab.key ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
+                            @click="tradeTab = tab.key"
+                        >
+                            {{ tab.label }}
+                        </button>
+                    </div>
+
+                    <form
+                        class="space-y-4"
+                        @submit.prevent="submit"
+                    >
+                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-xs font-medium text-gray-500">Du</label>
+                                <InputIcon
+                                    v-model="form.start_date"
+                                    type="date"
+                                    class="w-full h-10 px-3 bg-gray-100 border-none rounded-lg"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-xs font-medium text-gray-500">Au</label>
+                                <InputIcon
+                                    v-model="form.end_date"
+                                    type="date"
+                                    class="w-full h-10 px-3 bg-gray-100 border-none rounded-lg"
+                                />
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="tradeTab === 'sale'"
+                            class="flex flex-col w-full gap-1"
+                        >
+                            <label class="text-xs font-medium text-gray-500">Produit</label>
+                            <Select v-model="form.produit_id">
+                                <SelectTrigger class="w-full bg-white border border-gray-300 rounded-lg">
+                                    <SelectValue placeholder="Choisis un produit" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem
+                                        v-for="product in products"
+                                        :key="product.id"
+                                        :value="String(product.id)"
+                                    >
+                                        {{ product.name }}
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div class="flex flex-col w-full gap-1">
+                            <label class="text-sm font-medium text-gray-500">{{ countLabels[tradeTab] }}</label>
+                            <InputIcon
+                                v-model="form.number"
+                                type="number"
+                                min="1"
+                                placeholder="1"
+                                rounded="md"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full gap-1">
+                            <label class="text-sm font-medium text-gray-500">Commentaire (optionnel)</label>
+                            <InputIcon
+                                v-model="comment"
+                                type="text"
+                                placeholder="Note..."
+                                rounded="md"
+                            />
+                        </div>
+
+                        <Button
+                            type="submit"
+                            variant="secondary"
+                            class="w-full sm:w-auto"
+                            :in-progress="inProgress"
+                        >
+                            Enregistrer la saisie avancée
+                        </Button>
+                    </form>
+                </div>
+            </details>
+
             <div
                 v-if="crmHistories.length"
-                class="p-3 mb-4 border border-gray-200 rounded-lg max-h-32 overflow-y-auto"
+                class="p-3 border border-gray-200 rounded-lg max-h-28 overflow-y-auto"
             >
                 <p class="font-semibold text-primary mb-2 text-sm">
-                    Historique récent
+                    Dernières actions enregistrées
                 </p>
                 <ul class="space-y-2 text-xs">
                     <li
@@ -47,109 +169,21 @@
                     >
                         <span class="font-medium">{{ formatHistoryAction(entry.action_type ?? entry.field_name) }}</span>
                         <span v-if="entry.number_of_times"> — {{ entry.number_of_times }}×</span>
+                        <span v-if="entry.start_date" class="text-gray-500"> — {{ entry.start_date }}</span>
                         <span v-if="entry.comment" class="text-gray-600"> — {{ entry.comment }}</span>
-                        <br>
-                        <span class="text-gray-400">{{ formatDate(entry.created_at) }}</span>
                     </li>
                 </ul>
             </div>
 
-            <div class="flex flex-wrap gap-2 mb-4 border-b border-gray-300 pb-2">
-                <button
-                    v-for="tab in actionTabs"
-                    :key="tab.key"
+            <div class="flex justify-end pt-2">
+                <Button
                     type="button"
-                    class="pb-1 border-b-2 text-sm"
-                    :class="tradeTab === tab.key ? 'border-primary text-primary font-semibold' : 'border-transparent text-gray-500'"
-                    @click="tradeTab = tab.key"
+                    variant="ghost"
+                    @click="emit('update:open', false)"
                 >
-                    {{ tab.label }}
-                </button>
+                    Fermer
+                </Button>
             </div>
-
-            <form
-                class="space-y-4"
-                @submit.prevent="submit"
-            >
-                <p class="text-sm italic text-center text-gray-700">
-                    {{ actionDescriptions[tradeTab] }}
-                </p>
-
-                <div class="flex flex-col gap-4 md:flex-row md:items-end">
-                    <InputIcon
-                        v-model="form.start_date"
-                        type="date"
-                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
-                    />
-                    <InputIcon
-                        v-model="form.end_date"
-                        type="date"
-                        class="w-full h-10 px-3 bg-gray-200 border-none rounded-lg"
-                    />
-                </div>
-
-                <div
-                    v-if="tradeTab === 'sale'"
-                    class="flex flex-col w-full gap-1"
-                >
-                    <p class="text-gray-700 text-sm">
-                        Produit
-                    </p>
-                    <Select v-model="form.produit_id">
-                        <SelectTrigger
-                            class="w-full bg-white border-2 border-gray-300 rounded-lg"
-                        >
-                            <SelectValue placeholder="Choisis un produit" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem
-                                v-for="product in products"
-                                :key="product.id"
-                                :value="String(product.id)"
-                            >
-                                {{ product.name }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div class="flex flex-col w-full gap-1">
-                    <label class="text-sm font-medium text-gray-500">{{ countLabels[tradeTab] }}</label>
-                    <InputIcon
-                        v-model="form.number"
-                        type="number"
-                        min="1"
-                        placeholder="1"
-                        rounded="md"
-                    />
-                </div>
-
-                <div class="flex flex-col w-full gap-1">
-                    <label class="text-sm font-medium text-gray-500">Commentaire (optionnel)</label>
-                    <InputIcon
-                        v-model="comment"
-                        type="text"
-                        placeholder="Note..."
-                        rounded="md"
-                    />
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="emit('update:open', false)"
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        type="submit"
-                        :in-progress="inProgress"
-                    >
-                        Enregistrer
-                    </Button>
-                </div>
-            </form>
         </DialogContent>
     </Dialog>
 </template>
@@ -193,21 +227,22 @@ const products = ref<{ id: number; name: string }[]>([]);
 const crmHistories = ref<Array<Record<string, unknown>>>([]);
 const weeklyCounters = ref(props.initialCounters);
 const comment = ref('');
+const quickInProgress = ref(false);
 
 const actionTabs: Array<{ key: CommercialActionType; label: string }> = [
     { key: 'call', label: 'Appels' },
     { key: 'sale', label: 'Ventes' },
-    { key: 'recommandation', label: 'Recommandation' },
-    { key: 'meeting', label: 'Rendez-vous' },
-    { key: 'pending', label: 'Réponse en attente' },
+    { key: 'recommandation', label: 'Recommandations' },
+    { key: 'meeting', label: 'RDV' },
+    { key: 'pending', label: 'En attente' },
 ];
 
-const actionDescriptions: Record<CommercialActionType, string> = {
-    call: 'Nombre d’appels passés sur la période',
-    sale: 'Nombre de ventes sur la période',
-    recommandation: 'Nombre de recommandations sur la période',
-    meeting: 'Nombre de rendez-vous sur la période',
-    pending: 'Nombre de réponses en attente sur la période',
+const actionLabels: Record<CommercialActionType, string> = {
+    call: 'appel',
+    sale: 'vente',
+    recommandation: 'recommandation',
+    meeting: 'rendez-vous',
+    pending: 'réponse en attente',
 };
 
 const countLabels: Record<CommercialActionType, string> = {
@@ -217,6 +252,19 @@ const countLabels: Record<CommercialActionType, string> = {
     meeting: 'Nombre de rendez-vous',
     pending: 'Nombre de réponses en attente',
 };
+
+const currentActionLabel = computed(() => actionLabels[tradeTab.value]);
+
+const quickActionDescription = computed(() => {
+    const labels: Record<CommercialActionType, string> = {
+        call: 'Enregistre un appel téléphonique effectué aujourd\'hui.',
+        sale: 'Enregistre une vente conclue aujourd\'hui (produit optionnel en saisie avancée).',
+        recommandation: 'Enregistre une recommandation obtenue aujourd\'hui.',
+        meeting: 'Enregistre un rendez-vous planifié ou tenu aujourd\'hui.',
+        pending: 'Enregistre une relance en attente de réponse aujourd\'hui.',
+    };
+    return labels[tradeTab.value];
+});
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -271,16 +319,73 @@ function formatHistoryAction(action: string | null | undefined) {
     return labels[action ?? ''] ?? action ?? 'Action';
 }
 
-function formatDate(dateStr: string) {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
+function counterLabelForAction(action: CommercialActionType): string {
+    return actionLabels[action];
+}
+
+function counterKeyForAction(action: CommercialActionType): string {
+    const map: Record<CommercialActionType, string> = {
+        call: 'nb_call',
+        sale: 'nb_sale',
+        recommandation: 'nb_recommandation',
+        meeting: 'nb_meeting',
+        pending: 'nb_pending',
+    };
+    return map[action];
+}
+
+function applySuccess(response: { crm?: Record<string, unknown> } | Record<string, unknown>, action: CommercialActionType) {
+    const crm = (response as { crm?: Record<string, unknown> })?.crm ?? response as Record<string, unknown>;
+    weeklyCounters.value = {
+        nb_call: crm.nb_call as number,
+        nb_sale: crm.nb_sale as number,
+        nb_recommandation: crm.nb_recommandation as number,
+        nb_meeting: crm.nb_meeting as number,
+        nb_pending: crm.nb_pending as number,
+    };
+
+    const counterKey = counterKeyForAction(action);
+    const newTotal = crm[counterKey];
+    $toast({
+        description: `Enregistré : +1 ${counterLabelForAction(action)}. Total semaine : ${newTotal ?? '—'}.`,
+        variant: 'success',
     });
+    emit('crm-updated', crm);
+    loadHistories();
+    resetForm();
+    emit('update:open', false);
+}
+
+async function submitPayload(payload: Record<string, unknown>, action: CommercialActionType) {
+    const response = await crmUser(payload);
+    applySuccess(response, action);
+}
+
+async function submitQuickOne() {
+    quickInProgress.value = true;
+    const date = today();
+    try {
+        await submitPayload({
+            user_id: props.userId,
+            client_type: props.clientType,
+            last_contact_date: date,
+            history: [
+                {
+                    action_type: tradeTab.value,
+                    number_of_times: 1,
+                    start_date: date,
+                    end_date: date,
+                    comment: '',
+                },
+            ],
+        }, tradeTab.value);
+    }
+    catch {
+        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    }
+    finally {
+        quickInProgress.value = false;
+    }
 }
 
 watch(tradeTab, (val) => {
@@ -297,7 +402,7 @@ watch(() => props.open, async (isOpen) => {
 });
 
 const { submit, inProgress } = useSubmit(async () => {
-    const payload = {
+    return await crmUser({
         user_id: props.userId,
         client_type: props.clientType,
         last_contact_date: form.value.start_date,
@@ -312,23 +417,10 @@ const { submit, inProgress } = useSubmit(async () => {
                 comment: comment.value || '',
             },
         ],
-    };
-
-    return await crmUser(payload);
+    });
 }, {
     onSuccess: (response) => {
-        const crm = response?.crm ?? response;
-        weeklyCounters.value = {
-            nb_call: crm.nb_call,
-            nb_sale: crm.nb_sale,
-            nb_recommandation: crm.nb_recommandation,
-            nb_meeting: crm.nb_meeting,
-            nb_pending: crm.nb_pending,
-        };
-        $toast({ description: 'Action commerciale enregistrée' });
-        emit('crm-updated', crm);
-        loadHistories();
-        resetForm();
+        applySuccess(response, tradeTab.value);
     },
     onError: () => {
         $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
