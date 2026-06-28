@@ -168,6 +168,19 @@ type LastProductModifications = {
     product_name: string;
     activate: boolean | number;
     created_at: string;
+    updated_at?: string | null;
+};
+
+export type CrmProductKey = 'nurstech' | 'nursassur';
+
+export type ProductCrmHistoryEntry = {
+    id: number;
+    product_name: string;
+    activate: boolean;
+    effective_date: string | null;
+    referred_by_display: string | null;
+    admin_name: string | null;
+    created_at: string;
 };
 
 type ProductActivitySummary = {

@@ -276,6 +276,15 @@
             </DialogContent>
         </Dialog>
 
+        <CrmProductActivationModal
+            v-model:open="productActivationOpen"
+            :target-user-id="productActivationTargetUserId"
+            :product="productActivationProduct"
+            :entity-label="productActivationEntityLabel"
+            :referrer="productActivationReferrer"
+            @confirmed="onProductActivationConfirmed"
+        />
+
         <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
@@ -292,7 +301,7 @@
 import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-import type { Comment, Pagination, User, Referrer } from '~/lib/types';
+import type { Comment, Pagination, User, Referrer, CrmProductKey } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -327,12 +336,20 @@ const tempComment = ref('');
 const tempClientType = ref('user');
 const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
-const { edit, isCollaborator } = useAuth();
+const { isCollaborator } = useAuth();
+const { deactivateProduct } = useProductCrmHistory();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
 const referrerMode = ref<'account' | 'text'>('text');
 const tempReferrerText = ref('');
+
+const productActivationOpen = ref(false);
+const productActivationTargetUserId = ref(0);
+const productActivationProduct = ref<CrmProductKey>('nursassur');
+const productActivationEntityLabel = ref('');
+const productActivationReferrer = ref<Referrer | null>(null);
+const productActivationRowUserId = ref<number | null>(null);
 
 const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
 const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: User }[] } } } | null>(null);
@@ -410,6 +427,71 @@ async function openReferrerDialog(user: User) {
     }
 
     await getUserReferrer();
+}
+
+function openProductActivationModal(rowUser: User, product: CrmProductKey): void {
+    productActivationRowUserId.value = rowUser.id;
+    productActivationTargetUserId.value = rowUser.id;
+    productActivationProduct.value = product;
+    productActivationEntityLabel.value = rowUser.full_name ?? '';
+    productActivationReferrer.value = rowUser.referred_by ?? null;
+    productActivationOpen.value = true;
+}
+
+function applyProductFieldUpdate(userId: number, product: CrmProductKey, active: boolean): void {
+    const field = product === 'nursassur' ? 'insurance' : 'site';
+    const index = localUsers.value.findIndex(item => item.id === userId);
+    if (index === -1) {
+        return;
+    }
+
+    localUsers.value[index][field] = active ? 1 : 0;
+    const mods = localUsers.value[index].last_product_modifications ?? [];
+    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase().includes(product));
+    if (modIndex !== -1) {
+        mods[modIndex].activate = active ? 1 : 0;
+    }
+    localUsers.value[index].last_product_modifications = [...mods];
+}
+
+function emitUsersUpdate(): void {
+    emit('update-users', {
+        ...props.users,
+        data: localUsers.value,
+    });
+}
+
+function onProductActivationConfirmed(payload: { referred_by: Referrer; product: CrmProductKey }): void {
+    const userId = productActivationRowUserId.value;
+    if (!userId) {
+        return;
+    }
+
+    applyProductFieldUpdate(userId, payload.product, true);
+
+    const index = localUsers.value.findIndex(item => item.id === userId);
+    if (index !== -1) {
+        localUsers.value[index].referred_by = payload.referred_by;
+    }
+
+    emitUsersUpdate();
+}
+
+async function handleProductDeactivation(userId: number, product: CrmProductKey): Promise<void> {
+    applyProductFieldUpdate(userId, product, false);
+
+    try {
+        await deactivateProduct(userId, product);
+        emitUsersUpdate();
+    }
+    catch (error) {
+        applyProductFieldUpdate(userId, product, true);
+        console.error(error);
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
+        });
+    }
 }
 
 async function confirmReferrer() {
@@ -679,17 +761,11 @@ const columns: ColumnDef<User>[] = [
             })();
 
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    localUsers.value[index].insurance = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
-                    if (modIndex !== -1) {
-                        mods[modIndex].activate = value ? 1 : 0;
-                    }
-                    localUsers.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(user, 'nursassur');
+                    return;
                 }
-                await edit(Number(row.original.id), { nursassur: value });
+                await handleProductDeactivation(Number(row.original.id), 'nursassur');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -720,15 +796,11 @@ const columns: ColumnDef<User>[] = [
                 return 0;
             })();
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== undefined && index !== -1 && props.users) {
-                    localUsers.value[index].site = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
-                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-                    localUsers.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(user, 'nurstech');
+                    return;
                 }
-                await edit(Number(row.original.id), { nurstech: value });
+                await handleProductDeactivation(Number(row.original.id), 'nurstech');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {

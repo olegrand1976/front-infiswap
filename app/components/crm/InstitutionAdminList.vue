@@ -409,6 +409,15 @@
             </DialogContent>
         </Dialog>
 
+        <CrmProductActivationModal
+            v-model:open="productActivationOpen"
+            :target-user-id="productActivationTargetUserId"
+            :product="productActivationProduct"
+            :entity-label="productActivationEntityLabel"
+            :referrer="productActivationReferrer"
+            @confirmed="onProductActivationConfirmed"
+        />
+
         <Dialog v-model:open="subscriptionModalOpen">
             <DialogContent class="max-w-md gap-0 overflow-hidden p-0">
                 <div class="px-6 pt-6 pb-4">
@@ -594,7 +603,7 @@
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-import type { Comment, CrmInstitution, CrmInstitutionSubscription, Pagination, Referrer, User } from '~/lib/types';
+import type { Comment, CrmInstitution, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -635,7 +644,8 @@ const tempComment = ref('');
 const tempClientType = ref('user');
 const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
-const { edit, isCollaborator, isSuperAdmin, isAdmin } = useAuth();
+const { isCollaborator, isSuperAdmin, isAdmin } = useAuth();
+const { deactivateProduct } = useProductCrmHistory();
 const { forceDelete } = useInstitutions();
 const subscriptionModalOpen = ref(false);
 const subscriptionStatusModalOpen = ref(false);
@@ -664,6 +674,13 @@ const selectedReferrer = ref<Referrer | null>(null);
 const referrerMode = ref<'account' | 'text'>('text');
 const tempReferrerText = ref('');
 const editingInstitutionForReferrer = ref<CrmInstitution | null>(null);
+
+const productActivationOpen = ref(false);
+const productActivationTargetUserId = ref(0);
+const productActivationProduct = ref<CrmProductKey>('nursassur');
+const productActivationEntityLabel = ref('');
+const productActivationReferrer = ref<Referrer | null>(null);
+const productActivationInstitutionId = ref<number | null>(null);
 
 const localInstitutions = ref<CrmInstitution[]>(props.institutions?.data ? [...props.institutions.data] : []);
 const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: CrmInstitution }[] } } } | null>(null);
@@ -937,6 +954,90 @@ async function openReferrerDialog(institution: CrmInstitution) {
     }
 
     await getUserReferrer();
+}
+
+function openProductActivationModal(institution: CrmInstitution, product: CrmProductKey): void {
+    if (!institution.representative_user_id) {
+        $toast({
+            description: 'Aucun représentant associé à cette institution',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    productActivationInstitutionId.value = institution.id;
+    productActivationTargetUserId.value = institution.representative_user_id;
+    productActivationProduct.value = product;
+    productActivationEntityLabel.value = institution.full_name ?? '';
+    productActivationReferrer.value = institution.referred_by ?? null;
+    productActivationOpen.value = true;
+}
+
+function applyInstitutionProductFieldUpdate(institutionId: number, product: CrmProductKey, active: boolean): void {
+    const field = product === 'nursassur' ? 'insurance' : 'site';
+    const index = localInstitutions.value.findIndex(item => item.id === institutionId);
+    if (index === -1) {
+        return;
+    }
+
+    localInstitutions.value[index][field] = active ? 1 : 0;
+    const mods = localInstitutions.value[index].last_product_modifications ?? [];
+    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase().includes(product));
+    if (modIndex !== -1) {
+        mods[modIndex].activate = active ? 1 : 0;
+    }
+    localInstitutions.value[index].last_product_modifications = [...mods];
+}
+
+function emitInstitutionsUpdate(): void {
+    emit('update-institutions', {
+        ...props.institutions,
+        data: localInstitutions.value,
+    });
+}
+
+function onProductActivationConfirmed(payload: { referred_by: Referrer; product: CrmProductKey }): void {
+    const institutionId = productActivationInstitutionId.value;
+    if (!institutionId) {
+        return;
+    }
+
+    applyInstitutionProductFieldUpdate(institutionId, payload.product, true);
+
+    const index = localInstitutions.value.findIndex(item => item.id === institutionId);
+    if (index !== -1) {
+        localInstitutions.value[index].referred_by = payload.referred_by;
+    }
+
+    emitInstitutionsUpdate();
+}
+
+async function handleInstitutionProductDeactivation(
+    institution: CrmInstitution,
+    product: CrmProductKey,
+): Promise<void> {
+    if (!institution.representative_user_id) {
+        $toast({
+            description: 'Aucun représentant associé à cette institution',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    applyInstitutionProductFieldUpdate(institution.id, product, false);
+
+    try {
+        await deactivateProduct(institution.representative_user_id, product);
+        emitInstitutionsUpdate();
+    }
+    catch (error) {
+        applyInstitutionProductFieldUpdate(institution.id, product, true);
+        console.error(error);
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
+        });
+    }
 }
 
 function openSubscriptionModal(institution: CrmInstitution) {
@@ -1636,19 +1737,11 @@ const columns: ColumnDef<CrmInstitution>[] = [
             })();
 
             const toggle = async (value: boolean) => {
-                const index = localInstitutions.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    localInstitutions.value[index].insurance = value ? 1 : 0;
-                    const mods = localInstitutions.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
-                    if (modIndex !== -1) {
-                        mods[modIndex].activate = value ? 1 : 0;
-                    }
-                    localInstitutions.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(institution, 'nursassur');
+                    return;
                 }
-                if (institution.representative_user_id) {
-                    await edit(Number(institution.representative_user_id), { nursassur: value });
-                }
+                await handleInstitutionProductDeactivation(institution, 'nursassur');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -1679,17 +1772,11 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 return 0;
             })();
             const toggle = async (value: boolean) => {
-                const index = localInstitutions.value.findIndex(item => item.id === row.original.id);
-                if (index !== undefined && index !== -1 && props.institutions) {
-                    localInstitutions.value[index].site = value ? 1 : 0;
-                    const mods = localInstitutions.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
-                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-                    localInstitutions.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(institution, 'nurstech');
+                    return;
                 }
-                if (institution.representative_user_id) {
-                    await edit(Number(institution.representative_user_id), { nurstech: value });
-                }
+                await handleInstitutionProductDeactivation(institution, 'nurstech');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
