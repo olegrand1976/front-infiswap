@@ -166,6 +166,20 @@
                             </label>
                         </div>
                     </div>
+                    <div class="mb-4 flex items-center gap-2">
+                        <input
+                            id="institutionLogContactAction"
+                            v-model="logContactAction"
+                            type="checkbox"
+                            class="rounded border-gray-300"
+                        >
+                        <label
+                            for="institutionLogContactAction"
+                            class="text-sm text-gray-700"
+                        >
+                            Compter comme action commerciale
+                        </label>
+                    </div>
                     <div class="flex justify-end space-x-2">
                         <Button
                             variant="secondary"
@@ -246,6 +260,17 @@
                 </form>
             </DialogContent>
         </Dialog>
+
+        <CommercialQuickActionDialog
+            v-model:open="commercialDialogOpen"
+            :user-id="commercialUserId"
+            :crm-user-id="commercialCrmUserId"
+            :entity-label="commercialEntityLabel"
+            :default-action-type="commercialDefaultAction"
+            :client-type="commercialClientType"
+            :initial-counters="commercialInitialCounters"
+            @crm-updated="onCommercialCrmUpdated"
+        />
 
         <Dialog
             v-model:open="commentDialogOpen"
@@ -567,7 +592,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
+import { ArrowUpDown, Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Comment, CrmInstitution, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
@@ -600,6 +625,15 @@ const contactDialogOpen = ref(false);
 const contactInfoDialogOpen = ref(false);
 const commentDialogOpen = ref(false);
 const referrerDialogOpen = ref(false);
+const logContactAction = ref(false);
+const commercialDialogOpen = ref(false);
+const commercialUserId = ref(0);
+const commercialCrmUserId = ref<number | null>(null);
+const commercialEntityLabel = ref('');
+const commercialClientType = ref('user');
+const commercialDefaultAction = ref<'call' | 'sale' | 'recommandation' | 'meeting' | 'pending'>('call');
+const commercialInitialCounters = ref<Record<string, number> | null>(null);
+const commercialInstitutionId = ref<number | null>(null);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const tempInstitutionEmail = ref('');
@@ -899,7 +933,59 @@ function openContactDialog(institution: CrmInstitution) {
     tempContactMethod.value = institution.crm?.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
+    logContactAction.value = false;
     contactDialogOpen.value = true;
+}
+
+type CommercialActionType = 'call' | 'sale' | 'recommandation' | 'meeting' | 'pending';
+
+function openCommercialDialog(institution: CrmInstitution, actionType: CommercialActionType = 'call') {
+    const userId = institution.representative_user_id;
+
+    if (!userId) {
+        $toast({
+            description: 'Aucun contact CRM : renseignez l\'e-mail ou activez un produit pour créer le contact.',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    commercialInstitutionId.value = institution.id;
+    commercialUserId.value = userId;
+    commercialCrmUserId.value = institution.crm?.id ?? null;
+    commercialEntityLabel.value = institution.full_name ?? '';
+    commercialClientType.value = institution.crm?.client_type ?? 'user';
+    commercialDefaultAction.value = actionType;
+    commercialInitialCounters.value = institution.crm
+        ? {
+                nb_call: Number(institution.crm.nb_call) || 0,
+                nb_sale: Number(institution.crm.nb_sale) || 0,
+                nb_recommandation: Number(institution.crm.nb_recommandation) || 0,
+                nb_meeting: Number(institution.crm.nb_meeting) || 0,
+                nb_pending: Number(institution.crm.nb_pending) || 0,
+            }
+        : null;
+    commercialDialogOpen.value = true;
+}
+
+function patchLocalInstitutionCrm(institutionId: number, crm: Record<string, unknown>) {
+    const idx = localInstitutions.value.findIndex(i => i.id === institutionId);
+    if (idx === -1) return;
+
+    localInstitutions.value[idx] = {
+        ...localInstitutions.value[idx],
+        crm: {
+            ...localInstitutions.value[idx].crm,
+            ...crm,
+        },
+    };
+    localInstitutions.value = [...localInstitutions.value];
+}
+
+function onCommercialCrmUpdated(crm: Record<string, unknown>) {
+    if (commercialInstitutionId.value) {
+        patchLocalInstitutionCrm(commercialInstitutionId.value, crm);
+    }
 }
 
 function openContactInfoDialog(institution: CrmInstitution) {
@@ -1027,6 +1113,12 @@ function onProductActivationConfirmed(payload: {
         localInstitutions.value[index].referred_by = payload.referred_by;
         if (payload.contact_user_id) {
             localInstitutions.value[index].representative_user_id = payload.contact_user_id;
+        }
+        if (localInstitutions.value[index].crm) {
+            localInstitutions.value[index].crm = {
+                ...localInstitutions.value[index].crm,
+                nb_sale: Number(localInstitutions.value[index].crm?.nb_sale || 0) + 1,
+            };
         }
     }
 
@@ -1520,6 +1612,7 @@ const updateFormData = reactive({
     lastContactDate: tempContactDate,
     lastContactMethod: tempContactMethod,
     lastComment: tempComment,
+    logContactAction: logContactAction,
 });
 
 const updateCrmUserField = async (
@@ -1534,19 +1627,34 @@ const updateCrmUserField = async (
         const idx = localInstitutions.value.findIndex(u => u.id === editingUserId.value || u.representative_user_id === editingUserId.value);
         if (idx !== -1) {
             const current = localInstitutions.value[idx];
-            const updatedUser = {
+            const crmPatch = response.crm
+                ? {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                        nb_call: response.crm.nb_call,
+                        nb_sale: response.crm.nb_sale,
+                        nb_recommandation: response.crm.nb_recommandation,
+                        nb_meeting: response.crm.nb_meeting,
+                        nb_pending: response.crm.nb_pending,
+                    }
+                : {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                    };
+            localInstitutions.value[idx] = {
                 ...current,
-                crm: {
-                    ...current.crm,
-                    ...(type === 'contact'
-                        ? {
-                                last_contact_date: updateFormData.lastContactDate,
-                                last_contact_method: updateFormData.lastContactMethod,
-                            }
-                        : { last_comment: updateFormData.lastComment }),
-                },
+                crm: crmPatch,
             };
-            localInstitutions.value[idx] = updatedUser;
             localInstitutions.value = [...localInstitutions.value];
         }
     }
@@ -1577,6 +1685,28 @@ const isFranceUser = computed(() => {
 
     return country === 'fr' || country === 'france';
 });
+
+function renderInstitutionKpiCell(
+    institution: CrmInstitution,
+    counterKey: 'nb_call' | 'nb_sale' | 'nb_recommandation' | 'nb_meeting' | 'nb_pending',
+    actionType: CommercialActionType,
+) {
+    const value = Number(institution.crm?.[counterKey]) || 0;
+
+    if (isCollaborator.value) {
+        return h('span', { class: 'text-gray-400' }, '-');
+    }
+
+    return h('button', {
+        type: 'button',
+        class: 'flex items-center gap-1 rounded px-1 hover:bg-gray-100 text-sm max-w-[150px]',
+        title: `${value} — cliquer pour ajouter`,
+        onClick: () => openCommercialDialog(institution, actionType),
+    }, [
+        h('span', { class: 'truncate' }, String(value)),
+        h(Plus, { class: 'w-3 h-3 shrink-0 text-primary' }),
+    ]);
+}
 
 const columns: ColumnDef<CrmInstitution>[] = [
     {
@@ -1823,21 +1953,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_call = Number(row.original.crm?.nb_call) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_call.toString(),
-                            }, nb_call || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderInstitutionKpiCell(row.original, 'nb_call', 'call')]),
     },
     {
         accessorKey: 'nb_sale',
@@ -1852,21 +1970,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_sale = Number(row.original.crm?.nb_sale) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_sale.toString(),
-                            }, nb_sale || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderInstitutionKpiCell(row.original, 'nb_sale', 'sale')]),
     },
     {
         accessorKey: 'nb_recommandation',
@@ -1881,21 +1987,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_recommandation = Number(row.original.crm?.nb_recommandation) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_recommandation.toString(),
-                            }, nb_recommandation || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderInstitutionKpiCell(row.original, 'nb_recommandation', 'recommandation')]),
     },
     {
         accessorKey: 'nb_meeting',
@@ -1910,21 +2004,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_meeting = Number(row.original.crm?.nb_meeting) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_meeting.toString(),
-                            }, nb_meeting || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderInstitutionKpiCell(row.original, 'nb_meeting', 'meeting')]),
     },
     {
         accessorKey: 'nb_pending',
@@ -1939,21 +2021,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_pending = Number(row.original.crm?.nb_pending) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_pending.toString(),
-                            }, nb_pending || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderInstitutionKpiCell(row.original, 'nb_pending', 'pending')]),
     },
     {
         accessorKey: 'phone_number',

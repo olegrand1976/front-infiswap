@@ -29,9 +29,22 @@
             class="fixed inset-0 flex justify-center items-center bg-black/50"
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
-                <UsersCard :user="user" />
+                <UsersCard
+                    :user="user"
+                    @user-updated="onUserCardCrmUpdated"
+                />
             </DialogContent>
         </Dialog>
+
+        <CommercialQuickActionDialog
+            v-model:open="commercialDialogOpen"
+            :user-id="commercialUserId"
+            :crm-user-id="commercialCrmUserId"
+            :entity-label="commercialEntityLabel"
+            :default-action-type="commercialDefaultAction"
+            :initial-counters="commercialInitialCounters"
+            @crm-updated="onCommercialCrmUpdated"
+        />
 
         <Dialog
             v-model:open="contactDialogOpen"
@@ -89,6 +102,20 @@
                                 <span class="ml-2">Visioconférence</span>
                             </label>
                         </div>
+                    </div>
+                    <div class="mb-4 flex items-center gap-2">
+                        <input
+                            id="logContactAction"
+                            v-model="logContactAction"
+                            type="checkbox"
+                            class="rounded border-gray-300"
+                        >
+                        <label
+                            for="logContactAction"
+                            class="text-sm text-gray-700"
+                        >
+                            Compter comme action commerciale
+                        </label>
                     </div>
                     <div class="flex justify-end space-x-2">
                         <Button
@@ -237,7 +264,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
+import { ArrowUpDown, Eye, Pencil, Plus } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import type { Comment, Pagination, User, Referrer, CrmProductKey } from '~/lib/types';
@@ -267,6 +294,13 @@ const showModal = ref(false);
 const contactDialogOpen = ref(false);
 const commentDialogOpen = ref(false);
 const referrerDialogOpen = ref(false);
+const logContactAction = ref(false);
+const commercialDialogOpen = ref(false);
+const commercialUserId = ref(0);
+const commercialCrmUserId = ref<number | null>(null);
+const commercialEntityLabel = ref('');
+const commercialDefaultAction = ref<'call' | 'sale' | 'recommandation' | 'meeting' | 'pending'>('call');
+const commercialInitialCounters = ref<Record<string, number> | null>(null);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
@@ -335,7 +369,60 @@ function openContactDialog(user: User) {
     tempContactMethod.value = user.crm.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
+    logContactAction.value = false;
     contactDialogOpen.value = true;
+}
+
+type CommercialActionType = 'call' | 'sale' | 'recommandation' | 'meeting' | 'pending';
+
+function openCommercialDialog(targetUser: User, actionType: CommercialActionType = 'call') {
+    commercialUserId.value = targetUser.id;
+    commercialCrmUserId.value = targetUser.crm?.id ?? null;
+    commercialEntityLabel.value = targetUser.full_name ?? '';
+    commercialDefaultAction.value = actionType;
+    commercialInitialCounters.value = targetUser.crm
+        ? {
+                nb_call: Number(targetUser.crm.nb_call) || 0,
+                nb_sale: Number(targetUser.crm.nb_sale) || 0,
+                nb_recommandation: Number(targetUser.crm.nb_recommandation) || 0,
+                nb_meeting: Number(targetUser.crm.nb_meeting) || 0,
+                nb_pending: Number(targetUser.crm.nb_pending) || 0,
+            }
+        : null;
+    commercialDialogOpen.value = true;
+}
+
+function patchLocalUserCrm(userId: number, crm: Record<string, unknown>) {
+    const idx = localUsers.value.findIndex(u => u.id === userId);
+    if (idx === -1) return;
+
+    localUsers.value[idx] = {
+        ...localUsers.value[idx],
+        crm: {
+            ...localUsers.value[idx].crm,
+            ...crm,
+        },
+    };
+    localUsers.value = [...localUsers.value];
+}
+
+function onCommercialCrmUpdated(crm: Record<string, unknown>) {
+    patchLocalUserCrm(commercialUserId.value, crm);
+    if (user.value?.id === commercialUserId.value) {
+        user.value = {
+            ...user.value,
+            crm: { ...user.value.crm, ...crm },
+        };
+    }
+}
+
+function onUserCardCrmUpdated(crm: Record<string, unknown>) {
+    if (!user.value) return;
+    patchLocalUserCrm(user.value.id, crm);
+    user.value = {
+        ...user.value,
+        crm: { ...user.value.crm, ...crm },
+    };
 }
 
 async function openCommentDialog(user: User) {
@@ -411,6 +498,12 @@ function onProductActivationConfirmed(payload: { referred_by: Referrer; product:
     const index = localUsers.value.findIndex(item => item.id === userId);
     if (index !== -1) {
         localUsers.value[index].referred_by = payload.referred_by;
+        if (localUsers.value[index].crm) {
+            localUsers.value[index].crm = {
+                ...localUsers.value[index].crm,
+                nb_sale: Number(localUsers.value[index].crm?.nb_sale || 0) + 1,
+            };
+        }
     }
 
     emitUsersUpdate();
@@ -566,6 +659,7 @@ const updateFormData = reactive({
     lastContactDate: tempContactDate,
     lastContactMethod: tempContactMethod,
     lastComment: tempComment,
+    logContactAction: logContactAction,
 });
 
 const updateCrmUserField = async (
@@ -580,17 +674,33 @@ const updateCrmUserField = async (
         const idx = localUsers.value.findIndex(u => u.id === editingUserId.value);
         if (idx !== -1) {
             const current = localUsers.value[idx];
+            const crmPatch = response.crm
+                ? {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                        nb_call: response.crm.nb_call,
+                        nb_sale: response.crm.nb_sale,
+                        nb_recommandation: response.crm.nb_recommandation,
+                        nb_meeting: response.crm.nb_meeting,
+                        nb_pending: response.crm.nb_pending,
+                    }
+                : {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                    };
             const updatedUser = {
                 ...current,
-                crm: {
-                    ...current.crm,
-                    ...(type === 'contact'
-                        ? {
-                                last_contact_date: updateFormData.lastContactDate,
-                                last_contact_method: updateFormData.lastContactMethod,
-                            }
-                        : { last_comment: updateFormData.lastComment }),
-                },
+                crm: crmPatch,
             };
             localUsers.value[idx] = updatedUser;
             localUsers.value = [...localUsers.value];
@@ -623,6 +733,28 @@ const isFranceUser = computed(() => {
 
     return country === 'fr' || country === 'france';
 });
+
+function renderKpiCell(
+    rowUser: User,
+    counterKey: 'nb_call' | 'nb_sale' | 'nb_recommandation' | 'nb_meeting' | 'nb_pending',
+    actionType: CommercialActionType,
+) {
+    const value = Number(rowUser.crm?.[counterKey]) || 0;
+
+    if (isCollaborator.value) {
+        return h('span', { class: 'text-gray-400' }, '-');
+    }
+
+    return h('button', {
+        type: 'button',
+        class: 'flex items-center gap-1 rounded px-1 hover:bg-gray-100 text-sm max-w-[150px]',
+        title: `${value} — cliquer pour ajouter`,
+        onClick: () => openCommercialDialog(rowUser, actionType),
+    }, [
+        h('span', { class: 'truncate' }, String(value)),
+        h(Plus, { class: 'w-3 h-3 shrink-0 text-primary' }),
+    ]);
+}
 
 const columns: ColumnDef<User>[] = [
     {
@@ -870,21 +1002,9 @@ const columns: ColumnDef<User>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_call = Number(row.original.crm?.nb_call) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_call.toString(),
-                            }, nb_call || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderKpiCell(row.original, 'nb_call', 'call')]),
     },
     {
         accessorKey: 'nb_sale',
@@ -899,21 +1019,9 @@ const columns: ColumnDef<User>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_sale = Number(row.original.crm?.nb_sale) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_sale.toString(),
-                            }, nb_sale || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderKpiCell(row.original, 'nb_sale', 'sale')]),
     },
     {
         accessorKey: 'nb_recommandation',
@@ -928,21 +1036,9 @@ const columns: ColumnDef<User>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_recommandation = Number(row.original.crm?.nb_recommandation) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_recommandation.toString(),
-                            }, nb_recommandation || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderKpiCell(row.original, 'nb_recommandation', 'recommandation')]),
     },
     {
         accessorKey: 'nb_meeting',
@@ -957,21 +1053,9 @@ const columns: ColumnDef<User>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_meeting = Number(row.original.crm?.nb_meeting) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_meeting.toString(),
-                            }, nb_meeting || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderKpiCell(row.original, 'nb_meeting', 'meeting')]),
     },
     {
         accessorKey: 'nb_pending',
@@ -986,21 +1070,9 @@ const columns: ColumnDef<User>[] = [
                 h(ArrowUpDown, { class: 'inline w-4 h-4 ml-1' }),
             ],
         ),
-        cell: ({ row }) => {
-            const nb_pending = Number(row.original.crm?.nb_pending) || 0;
-            return h('div', {
-                class: 'flex justify-center items-center gap-1',
-            }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'max-w-[150px] truncate text-sm',
-                                title: nb_pending.toString(),
-                            }, nb_pending || ''),
-                        ]),
-            ]);
-        },
+        cell: ({ row }) => h('div', {
+            class: 'flex justify-center items-center gap-1',
+        }, [renderKpiCell(row.original, 'nb_pending', 'pending')]),
     },
     {
         accessorKey: 'created_at',
