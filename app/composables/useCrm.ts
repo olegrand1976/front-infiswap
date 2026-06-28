@@ -53,6 +53,23 @@ export type CrmCommercialActivityResponse = {
     rows: CrmCommercialActivityRow[];
 };
 
+export type CrmHistoryEntry = {
+    id: number;
+    field_name?: string | null;
+    action_type?: string | null;
+    method?: string | null;
+    status?: string | null;
+    comment?: string | null;
+    number_of_times?: number | null;
+    start_date?: string | null;
+    end_date?: string | null;
+    old_value?: string | null;
+    new_value?: string | null;
+    product?: { id: number; name: string } | null;
+    creator?: { id: number; full_name: string } | null;
+    created_at?: string | null;
+};
+
 export const useCrm = () => {
     const users = useState<Pagination<User> | null>('users', () => null);
     const institutions = useState<Pagination<CrmInstitution> | null>('crmInstitutions', () => null);
@@ -255,7 +272,7 @@ export const useCrm = () => {
     };
 
     async function getCrmHistories(crmUserId: number) {
-        const response = await $apifetch(`api/crm/${crmUserId}/histories`);
+        const response = await $apifetch<{ histories: CrmHistoryEntry[] }>(`api/crm/${crmUserId}/histories`);
         return response.histories ?? [];
     }
 

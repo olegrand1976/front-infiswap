@@ -28,17 +28,32 @@
 
             <div
                 v-if="weeklyCounters"
-                class="p-3 border border-gray-200 rounded-lg bg-gray-50 text-sm"
+                class="rounded-lg border border-gray-200 bg-white p-3 text-sm"
             >
                 <p class="font-semibold text-primary mb-2">
                     Totaux semaine en cours
                 </p>
-                <div class="grid grid-cols-2 gap-2">
-                    <span>Appels : <strong>{{ weeklyCounters.nb_call ?? 0 }}</strong></span>
-                    <span>Ventes : <strong>{{ weeklyCounters.nb_sale ?? 0 }}</strong></span>
-                    <span>Recommandations : <strong>{{ weeklyCounters.nb_recommandation ?? 0 }}</strong></span>
-                    <span>RDV : <strong>{{ weeklyCounters.nb_meeting ?? 0 }}</strong></span>
-                    <span>En attente : <strong>{{ weeklyCounters.nb_pending ?? 0 }}</strong></span>
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    <div class="rounded-md bg-gray-50 px-2 py-1.5">
+                        <span class="text-[10px] uppercase tracking-wide text-gray-500">Appels</span>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_call ?? 0 }}</p>
+                    </div>
+                    <div class="rounded-md bg-gray-50 px-2 py-1.5">
+                        <span class="text-[10px] uppercase tracking-wide text-gray-500">Ventes</span>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_sale ?? 0 }}</p>
+                    </div>
+                    <div class="rounded-md bg-gray-50 px-2 py-1.5">
+                        <span class="text-[10px] uppercase tracking-wide text-gray-500">Recommand.</span>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_recommandation ?? 0 }}</p>
+                    </div>
+                    <div class="rounded-md bg-gray-50 px-2 py-1.5">
+                        <span class="text-[10px] uppercase tracking-wide text-gray-500">RDV</span>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_meeting ?? 0 }}</p>
+                    </div>
+                    <div class="rounded-md bg-gray-50 px-2 py-1.5">
+                        <span class="text-[10px] uppercase tracking-wide text-gray-500">En attente</span>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_pending ?? 0 }}</p>
+                    </div>
                 </div>
             </div>
 
@@ -156,23 +171,22 @@
 
             <div
                 v-if="crmHistories.length"
-                class="p-3 border border-gray-200 rounded-lg max-h-28 overflow-y-auto"
+                class="rounded-lg border border-gray-200 bg-gray-50/50 overflow-hidden"
             >
-                <p class="font-semibold text-primary mb-2 text-sm">
-                    Dernières actions enregistrées
-                </p>
-                <ul class="space-y-2 text-xs">
-                    <li
-                        v-for="entry in crmHistories.slice(0, 5)"
-                        :key="entry.id"
-                        class="border-b border-gray-100 pb-2"
-                    >
-                        <span class="font-medium">{{ formatHistoryAction(entry.action_type ?? entry.field_name) }}</span>
-                        <span v-if="entry.number_of_times"> — {{ entry.number_of_times }}×</span>
-                        <span v-if="entry.start_date" class="text-gray-500"> — {{ entry.start_date }}</span>
-                        <span v-if="entry.comment" class="text-gray-600"> — {{ entry.comment }}</span>
-                    </li>
-                </ul>
+                <div class="border-b border-gray-200 bg-white px-3 py-2">
+                    <p class="font-semibold text-primary text-sm">
+                        Historique récent
+                    </p>
+                    <p class="text-[11px] text-gray-500">
+                        {{ crmHistories.length }} entrée(s) — affichage des 5 plus récentes
+                    </p>
+                </div>
+                <div class="max-h-40 overflow-y-auto px-3 py-2">
+                    <CrmHistoryEntryList
+                        :entries="crmHistories"
+                        :limit="5"
+                    />
+                </div>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -189,6 +203,9 @@
 </template>
 
 <script lang="ts" setup>
+import CrmHistoryEntryList from '@/components/crm/CrmHistoryEntryList.vue';
+import type { CrmHistoryEntry } from '@/composables/useCrm';
+
 type CommercialActionType = 'call' | 'sale' | 'recommandation' | 'meeting' | 'pending';
 
 const props = withDefaults(defineProps<{
@@ -224,7 +241,7 @@ const { $toast } = useNuxtApp();
 
 const tradeTab = ref<CommercialActionType>(props.defaultActionType);
 const products = ref<{ id: number; name: string }[]>([]);
-const crmHistories = ref<Array<Record<string, unknown>>>([]);
+const crmHistories = ref<CrmHistoryEntry[]>([]);
 const weeklyCounters = ref(props.initialCounters);
 const comment = ref('');
 const quickInProgress = ref(false);
@@ -306,17 +323,6 @@ async function loadHistories() {
     catch {
         crmHistories.value = [];
     }
-}
-
-function formatHistoryAction(action: string | null | undefined) {
-    const labels: Record<string, string> = {
-        call: 'Appel',
-        sale: 'Vente',
-        recommandation: 'Recommandation',
-        meeting: 'Rendez-vous',
-        pending: 'Réponse en attente',
-    };
-    return labels[action ?? ''] ?? action ?? 'Action';
 }
 
 function counterLabelForAction(action: CommercialActionType): string {

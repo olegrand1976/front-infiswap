@@ -277,6 +277,7 @@ import { useAuth } from '@/composables/useAuth';
 import { formatRelativeDate } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     users: Pagination<User>;
@@ -975,6 +976,30 @@ const columns: ColumnDef<User>[] = [
         },
     },
     ...kpiColumns,
+    {
+        id: 'follow_up_history',
+        header: () => h('div', { class: 'text-center leading-tight' }, [
+            h('span', { class: 'text-xs font-medium block' }, 'Historique'),
+            h('span', { class: 'text-[10px] font-normal text-gray-500 block' }, 'suivi'),
+        ]),
+        cell: ({ row }) => {
+            const targetUser = row.original;
+
+            return h('div', {
+                class: 'flex justify-center',
+                'data-no-row-select': 'true',
+            }, [
+                h(CrmFollowUpHistoryDropdown, {
+                    crmUserId: targetUser.crm?.id ?? null,
+                    entityLabel: targetUser.full_name ?? '',
+                    weeklyCount: crmWeeklyActionTotal(targetUser.crm),
+                    disabled: isCollaborator.value,
+                    onAddAction: () => openCommercialDialog(targetUser, 'call'),
+                }),
+            ]);
+        },
+        enableSorting: false,
+    },
     {
         accessorKey: 'created_at',
         header: () => {

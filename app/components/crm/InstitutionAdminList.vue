@@ -608,6 +608,7 @@ import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
 import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
@@ -1996,6 +1997,35 @@ const columns: ColumnDef<CrmInstitution>[] = [
         },
     },
     ...kpiColumns,
+    {
+        id: 'follow_up_history',
+        header: () => h('div', { class: 'text-center leading-tight' }, [
+            h('span', { class: 'text-xs font-medium block' }, 'Historique'),
+            h('span', { class: 'text-[10px] font-normal text-gray-500 block' }, 'suivi'),
+        ]),
+        cell: ({ row }) => {
+            const institution = row.original as CrmInstitution;
+
+            return h('div', {
+                class: 'flex justify-center',
+                'data-no-row-select': 'true',
+            }, [
+                h(CrmFollowUpHistoryDropdown, {
+                    crmUserId: institution.crm?.id ?? null,
+                    entityLabel: institution.full_name ?? '',
+                    weeklyCount: crmWeeklyActionTotal(institution.crm),
+                    disabled: isCollaborator.value,
+                    loading: commercialResolvingId.value === institution.id,
+                    resolveCrmUserId: async () => {
+                        const resolved = await resolveInstitutionCrmContact(institution);
+                        return resolved?.crm?.id ?? null;
+                    },
+                    onAddAction: () => void openCommercialDialog(institution, 'call'),
+                }),
+            ]);
+        },
+        enableSorting: false,
+    },
     {
         accessorKey: 'phone_number',
         header: () => h('div', { class: 'text-center' }, 'Téléphone'),

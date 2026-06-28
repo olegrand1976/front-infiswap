@@ -119,3 +119,14 @@ export function useCrmWeeklyKpiColumns<T extends EntityWithCrm>(options: {
 
     return { kpiColumns, CRM_WEEKLY_KPI_COLUMNS };
 }
+
+export function crmWeeklyActionTotal(crm?: EntityWithCrm['crm']): number {
+    if (!crm) {
+        return 0;
+    }
+
+    return CRM_WEEKLY_KPI_COLUMNS.reduce(
+        (sum, column) => sum + (Number(crm[column.accessorKey]) || 0),
+        0,
+    );
+}
