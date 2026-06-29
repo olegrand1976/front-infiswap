@@ -129,7 +129,7 @@
                     <AlertDialogTitle>Retirer l'accès CRM</AlertDialogTitle>
                     <AlertDialogDescription>
                         Retirer l'accès CRM de {{ revokeTarget?.full_name }} ?
-                        Les rôles CRM (administrateur, développeur, commercial) seront supprimés pour cette personne.
+                        Les rôles CRM (développeur, commercial) seront supprimés pour cette personne.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
