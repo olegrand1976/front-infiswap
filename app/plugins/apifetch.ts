@@ -2,6 +2,7 @@
 import { $fetch } from 'ofetch';
 import { parseCookies } from 'h3';
 import { AUTH_TOKEN, LANGUAGE } from '~/lib/constants';
+import { resolveApiBaseUrl } from '~/lib/resolveApiBaseUrl';
 import {
     useCookie,
     useRuntimeConfig,
@@ -31,16 +32,12 @@ function normalizeCsrfToken(token: string | null | undefined): string {
 }
 
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
-    const config = useRuntimeConfig();
-    const apiBaseUrl = import.meta.server && config.apiUrlInternal
-        ? config.apiUrlInternal
-        : config.public.API_URL;
     const language = useCookie(LANGUAGE)?.value ?? 'fr';
     const apifetch = $fetch.create({
         credentials: 'include',
-        baseURL: apiBaseUrl,
         timeout: import.meta.server ? 15_000 : 60_000,
         async onRequest({ options }) {
+            options.baseURL = resolveApiBaseUrl(useRuntimeConfig());
             const { $csrf } = useNuxtApp();
             const event = typeof useEvent === 'function' ? useRequestEvent() : null;
             const method = options?.method?.toLowerCase() ?? 'get';

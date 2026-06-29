@@ -1,4 +1,5 @@
 import { useCookie, useRuntimeConfig, defineNuxtPlugin } from '#app';
+import { resolveApiBaseUrl } from '~/lib/resolveApiBaseUrl';
 
 const CSRF_COOKIE = 'XSRF-TOKEN';
 
@@ -30,13 +31,10 @@ function readCsrfToken(): string | null {
 
 export default defineNuxtPlugin((nuxtApp) => {
     async function initCsrf() {
-        const config = useRuntimeConfig();
-        const apiBaseUrl = import.meta.server && config.apiUrlInternal
-            ? config.apiUrlInternal
-            : config.public.API_URL;
+        const apiBaseUrl = resolveApiBaseUrl(useRuntimeConfig());
 
         await $fetch('/sanctum/csrf-cookie', {
-            baseURL: apiBaseUrl as string,
+            baseURL: apiBaseUrl,
             credentials: 'include',
             timeout: import.meta.server ? 15_000 : 60_000,
         });

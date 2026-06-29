@@ -72,17 +72,31 @@ import { PERPAGE } from '~/lib/constants';
 
 const props = defineProps<{
     internalPerPage?: number;
+    perPage?: number;
     defaultPage?: number;
     total?: number;
 }>();
 
 const perPageOptions = [5, 10, 25, 50];
 const currentPage = ref(props.defaultPage ?? 1);
-const internalPerPage = ref(props.internalPerPage ?? PERPAGE);
+const resolvedPerPage = () => props.internalPerPage ?? props.perPage ?? PERPAGE;
+const internalPerPage = ref(resolvedPerPage());
 
 const emit = defineEmits<{
     (e: 'update:page' | 'update:perPage', value: number): void;
 }>();
+
+watch(() => props.defaultPage, (newPage) => {
+    if (newPage !== undefined) {
+        currentPage.value = newPage;
+    }
+});
+
+watch(() => props.internalPerPage ?? props.perPage, (newPerPage) => {
+    if (newPerPage !== undefined) {
+        internalPerPage.value = newPerPage;
+    }
+});
 
 watch(currentPage, (newPage) => {
     emit('update:page', Number(newPage));

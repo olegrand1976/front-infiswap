@@ -37,7 +37,7 @@ definePageMeta({
 useHead({
     title: 'Tarification Institutionnelle - InfiSwap',
     meta: [
-        { name: 'description', content: 'Découvrez les avantages exclusifs du compte Institutionnel sur InfiSwap : réduction des coûts RH, visibilité maximale et centre de pilotage intelligent.' },
+        { name: 'description', content: 'Compte Institution InfiSwap : accédez au réseau n°1 du remplacement infirmier en Belgique. Missions, binômes, favoris et pilotage centralisé pour MR/MRS, hôpitaux et centres d\'intérim.' },
     ],
 });
 </script>

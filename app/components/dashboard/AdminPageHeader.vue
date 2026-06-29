@@ -42,5 +42,5 @@ const props = defineProps<{
 
 const defaultFlex = 'flex items-center justify-between';
 const flexClass = computed(() => props.flexClass ?? defaultFlex);
-const as = computed(() => props.as ?? 'button');
+const as = computed(() => props.as ?? 'div');
 </script>

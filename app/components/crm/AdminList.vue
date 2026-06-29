@@ -1,8 +1,71 @@
 <template>
-    <div>
+    <div class="flex h-full min-h-0 w-full flex-col">
+        <div
+            v-if="selectedCount > 0"
+            class="mb-3 flex shrink-0 items-center gap-3 px-2"
+        >
+            <span class="text-sm text-gray-600">{{ selectedCount }} sélectionné(s)</span>
+            <Button
+                size="sm"
+                variant="outline"
+                class="rounded-md"
+                @click="exportSelectedCsv"
+            >
+                Exporter la sélection
+            </Button>
+        </div>
+        <div class="mb-4 min-h-0 flex-1 space-y-3 overflow-y-auto md:hidden">
+            <article
+                v-for="crmUser in localUsers"
+                :key="`mobile-user-${crmUser.id}`"
+                class="rounded-lg border bg-white p-4 shadow-sm"
+            >
+                <div class="min-w-0">
+                    <p class="font-semibold text-foreground">
+                        {{ crmUser.full_name }}
+                    </p>
+                    <p
+                        v-if="crmUser.email"
+                        class="mt-1 text-sm text-muted-foreground break-all"
+                    >
+                        {{ crmUser.email }}
+                    </p>
+                    <p
+                        v-if="crmUser.phone_number"
+                        class="mt-1 text-sm text-muted-foreground"
+                    >
+                        {{ formatPhoneNumber(crmUser.phone_number ?? null) ?? crmUser.phone_number }}
+                    </p>
+                    <p
+                        v-if="crmUser.zip_code || crmUser.city"
+                        class="mt-1 text-sm text-muted-foreground"
+                    >
+                        {{ [crmUser.zip_code, crmUser.city].filter(Boolean).join(' ') }}
+                    </p>
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        NursAssur : {{ userProductActive(crmUser, 'nursassur') ? 'Oui' : 'Non' }}
+                        · NursTech : {{ userProductActive(crmUser, 'nurstech') ? 'Oui' : 'Non' }}
+                    </p>
+                </div>
+                <div class="mt-3">
+                    <button
+                        type="button"
+                        class="text-sm text-primary underline touch-manipulation"
+                        @click="openModal(crmUser)"
+                    >
+                        Voir la fiche
+                    </button>
+                </div>
+            </article>
+        </div>
         <DataTable
+            ref="dataTableRef"
+            class="hidden min-h-0 flex-1 md:flex md:flex-col"
             :data="localUsers"
             :columns="columns"
+            manual-sorting
+            constrained-height
+            :sticky-leading-columns="2"
         />
 
         <Dialog
@@ -10,9 +73,22 @@
             class="fixed inset-0 flex justify-center items-center bg-black/50"
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
-                <UsersCard :user="user" />
+                <UsersCard
+                    :user="user"
+                    @user-updated="onUserCardCrmUpdated"
+                />
             </DialogContent>
         </Dialog>
+
+        <CommercialQuickActionDialog
+            v-model:open="commercialDialogOpen"
+            :user-id="commercialUserId"
+            :crm-user-id="commercialCrmUserId"
+            :entity-label="commercialEntityLabel"
+            :default-action-type="commercialDefaultAction"
+            :initial-counters="commercialInitialCounters"
+            @crm-updated="onCommercialCrmUpdated"
+        />
 
         <Dialog
             v-model:open="contactDialogOpen"
@@ -70,6 +146,20 @@
                                 <span class="ml-2">Visioconférence</span>
                             </label>
                         </div>
+                    </div>
+                    <div class="mb-4 flex items-center gap-2">
+                        <input
+                            id="logContactAction"
+                            v-model="logContactAction"
+                            type="checkbox"
+                            class="rounded border-gray-300"
+                        >
+                        <label
+                            for="logContactAction"
+                            class="text-sm text-gray-700"
+                        >
+                            Compter comme action commerciale
+                        </label>
                     </div>
                     <div class="flex justify-end space-x-2">
                         <Button
@@ -163,37 +253,18 @@
         >
             <DialogContent class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-2">
                 <p class="font-semibold mb-4">
-                    Sélectionner un référent
+                    Apporté par
                 </p>
 
-                <RollingLoader
-                    v-if="loading"
+                <CrmReferrerPicker
+                    v-model:mode="referrerMode"
+                    v-model:selected-referrer="selectedReferrer"
+                    v-model:referrer-text="tempReferrerText"
+                    :referrers="userReferrer"
                     :loading="loading"
+                    text-input-id="referrerFreeText"
+                    autocomplete-input-id="crmReferrerAutocomplete"
                 />
-
-                <template v-else>
-                    <p
-                        v-if="!userReferrer || userReferrer.length === 0"
-                        class="text-gray-500 italic text-center py-4"
-                    >
-                        Pas encore de porteur d'affaire enregistré
-                    </p>
-
-                    <ul
-                        v-else
-                        class="space-y-2 max-h-64 overflow-y-auto"
-                    >
-                        <li
-                            v-for="ref in userReferrer"
-                            :key="ref.id"
-                            class="cursor-pointer hover:bg-primary/90 hover:text-white p-2 rounded"
-                            :class="{ 'bg-primary text-white font-semibold': selectedReferrer?.id === ref.id }"
-                            @click="selectedReferrer = ref"
-                        >
-                            {{ ref.full_name }} ({{ ref.email }})
-                        </li>
-                    </ul>
-                </template>
 
                 <div class="flex justify-end space-x-2 mt-4">
                     <Button
@@ -215,10 +286,19 @@
             </DialogContent>
         </Dialog>
 
-        <div>
+        <CrmProductActivationModal
+            v-model:open="productActivationOpen"
+            :target-user-id="productActivationTargetUserId"
+            :product="productActivationProduct"
+            :entity-label="productActivationEntityLabel"
+            :referrer="productActivationReferrer"
+            @confirmed="onProductActivationConfirmed"
+        />
+
+        <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users?.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
@@ -231,7 +311,7 @@
 import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
-import type { Comment, Pagination, User, Referrer } from '~/lib/types';
+import type { Comment, Pagination, User, Referrer, CrmProductKey } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -239,8 +319,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/composables/useAuth';
 import { formatRelativeDate } from '@/composables/useDate';
+import { formatPhoneNumber } from '~/lib/utils';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     users: Pagination<User>;
@@ -252,12 +334,19 @@ const authUser = useState('user');
 
 const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
-const { updateReferrer, userReferrer, getUserReferrer } = useReferrer();
+const { updateReferrer, userReferrer, getUserReferrer, referrerDisplayLabel } = useReferrer();
 
 const showModal = ref(false);
 const contactDialogOpen = ref(false);
 const commentDialogOpen = ref(false);
 const referrerDialogOpen = ref(false);
+const logContactAction = ref(false);
+const commercialDialogOpen = ref(false);
+const commercialUserId = ref(0);
+const commercialCrmUserId = ref<number | null>(null);
+const commercialEntityLabel = ref('');
+const commercialDefaultAction = ref<'call' | 'sale' | 'recommandation' | 'meeting' | 'pending'>('call');
+const commercialInitialCounters = ref<Record<string, number> | null>(null);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
@@ -266,16 +355,70 @@ const tempComment = ref('');
 const tempClientType = ref('user');
 const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
-const { edit, isCollaborator } = useAuth();
+const { isCollaborator } = useAuth();
+const { deactivateProduct } = useProductCrmHistory();
 const { updateCrmUser } = useCrm();
 const user = ref<User | null>(null);
-const selectedReferrer = ref<{ id: number } | null>(null);
+const selectedReferrer = ref<Referrer | null>(null);
+const referrerMode = ref<'account' | 'text'>('account');
+const tempReferrerText = ref('');
+
+const productActivationOpen = ref(false);
+const productActivationTargetUserId = ref(0);
+const productActivationProduct = ref<CrmProductKey>('nursassur');
+const productActivationEntityLabel = ref('');
+const productActivationReferrer = ref<Referrer | null>(null);
+const productActivationRowUserId = ref<number | null>(null);
 
 const localUsers = ref<User[]>(props.users?.data ? [...props.users.data] : []);
+const dataTableRef = ref<{ table: { getFilteredSelectedRowModel: () => { rows: { original: User }[] } } } | null>(null);
+
+const selectedCount = computed(() => dataTableRef.value?.table.getFilteredSelectedRowModel().rows.length ?? 0);
+
+function exportSelectedCsv() {
+    const rows = dataTableRef.value?.table.getFilteredSelectedRowModel().rows.map(r => r.original) ?? [];
+    if (!rows.length) return;
+
+    const headers = ['Nom', 'Email', 'Téléphone', 'Code postal', 'Ville', 'NursAssur', 'NursTech'];
+    const escape = (value: unknown) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+    const lines = [
+        headers.join(';'),
+        ...rows.map(user => [
+            user.full_name,
+            user.email,
+            user.phone_number,
+            user.zip_code,
+            user.city,
+            user.insurance ? 'oui' : 'non',
+            user.site ? 'oui' : 'non',
+        ].map(escape).join(';')),
+    ];
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `crm-selection-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
 
 function openModal(selectedUser: User) {
     user.value = selectedUser;
     showModal.value = true;
+}
+
+function userProductActive(user: User, product: CrmProductKey): boolean {
+    const mods = user.last_product_modifications ?? [];
+    const needle = product === 'nursassur' ? 'nursassur' : 'nurstech';
+    const found = mods.find(p => (p.product_name || '').toLowerCase().includes(needle));
+    if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+        return Number(found.activate) === 1;
+    }
+    const field = product === 'nursassur' ? user.insurance : user.site;
+    if (field !== undefined && field !== null) {
+        return Number(field) === 1;
+    }
+    return false;
 }
 
 function openContactDialog(user: User) {
@@ -286,7 +429,60 @@ function openContactDialog(user: User) {
     tempContactMethod.value = user.crm.last_contact_method ?? 'mail';
     updateFormData.lastContactDate = tempContactDate.value;
     updateFormData.lastContactMethod = tempContactMethod.value;
+    logContactAction.value = false;
     contactDialogOpen.value = true;
+}
+
+type CommercialActionType = 'call' | 'sale' | 'recommandation' | 'meeting' | 'pending';
+
+function openCommercialDialog(targetUser: User, actionType: CommercialActionType = 'call') {
+    commercialUserId.value = targetUser.id;
+    commercialCrmUserId.value = targetUser.crm?.id ?? null;
+    commercialEntityLabel.value = targetUser.full_name ?? '';
+    commercialDefaultAction.value = actionType;
+    commercialInitialCounters.value = targetUser.crm
+        ? {
+                nb_call: Number(targetUser.crm.nb_call) || 0,
+                nb_sale: Number(targetUser.crm.nb_sale) || 0,
+                nb_recommandation: Number(targetUser.crm.nb_recommandation) || 0,
+                nb_meeting: Number(targetUser.crm.nb_meeting) || 0,
+                nb_pending: Number(targetUser.crm.nb_pending) || 0,
+            }
+        : null;
+    commercialDialogOpen.value = true;
+}
+
+function patchLocalUserCrm(userId: number, crm: Record<string, unknown>) {
+    const idx = localUsers.value.findIndex(u => u.id === userId);
+    if (idx === -1) return;
+
+    localUsers.value[idx] = {
+        ...localUsers.value[idx],
+        crm: {
+            ...localUsers.value[idx].crm,
+            ...crm,
+        },
+    };
+    localUsers.value = [...localUsers.value];
+}
+
+function onCommercialCrmUpdated(crm: Record<string, unknown>) {
+    patchLocalUserCrm(commercialUserId.value, crm);
+    if (user.value?.id === commercialUserId.value) {
+        user.value = {
+            ...user.value,
+            crm: { ...user.value.crm, ...crm },
+        };
+    }
+}
+
+function onUserCardCrmUpdated(crm: Record<string, unknown>) {
+    if (!user.value) return;
+    patchLocalUserCrm(user.value.id, crm);
+    user.value = {
+        ...user.value,
+        crm: { ...user.value.crm, ...crm },
+    };
 }
 
 async function openCommentDialog(user: User) {
@@ -298,16 +494,111 @@ async function openCommentDialog(user: User) {
 async function openReferrerDialog(user: User) {
     referrerDialogOpen.value = true;
     tempCrmId.value = user.id;
+    const referrer = user.referred_by;
+
+    if (referrer?.text) {
+        referrerMode.value = 'text';
+        tempReferrerText.value = referrer.text;
+        selectedReferrer.value = null;
+    }
+    else if (referrer?.id) {
+        referrerMode.value = 'account';
+        tempReferrerText.value = '';
+        selectedReferrer.value = referrer;
+    }
+    else {
+        referrerMode.value = 'account';
+        tempReferrerText.value = '';
+        selectedReferrer.value = null;
+    }
+
     await getUserReferrer();
 }
 
-async function confirmReferrer() {
-    if (!selectedReferrer.value) return;
+function openProductActivationModal(rowUser: User, product: CrmProductKey): void {
+    productActivationRowUserId.value = rowUser.id;
+    productActivationTargetUserId.value = rowUser.id;
+    productActivationProduct.value = product;
+    productActivationEntityLabel.value = rowUser.full_name ?? '';
+    productActivationReferrer.value = rowUser.referred_by ?? null;
+    productActivationOpen.value = true;
+}
+
+function applyProductFieldUpdate(userId: number, product: CrmProductKey, active: boolean): void {
+    const field = product === 'nursassur' ? 'insurance' : 'site';
+    const index = localUsers.value.findIndex(item => item.id === userId);
+    if (index === -1) {
+        return;
+    }
+
+    localUsers.value[index][field] = active ? 1 : 0;
+    const mods = localUsers.value[index].last_product_modifications ?? [];
+    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase().includes(product));
+    if (modIndex !== -1) {
+        mods[modIndex].activate = active ? 1 : 0;
+    }
+    localUsers.value[index].last_product_modifications = [...mods];
+}
+
+function emitUsersUpdate(): void {
+    emit('update-users', {
+        ...props.users,
+        data: localUsers.value,
+    });
+}
+
+function onProductActivationConfirmed(payload: { referred_by: Referrer; product: CrmProductKey }): void {
+    const userId = productActivationRowUserId.value;
+    if (!userId) {
+        return;
+    }
+
+    applyProductFieldUpdate(userId, payload.product, true);
+
+    const index = localUsers.value.findIndex(item => item.id === userId);
+    if (index !== -1) {
+        localUsers.value[index].referred_by = payload.referred_by;
+        if (localUsers.value[index].crm) {
+            localUsers.value[index].crm = {
+                ...localUsers.value[index].crm,
+                nb_sale: Number(localUsers.value[index].crm?.nb_sale || 0) + 1,
+            };
+        }
+    }
+
+    emitUsersUpdate();
+}
+
+async function handleProductDeactivation(userId: number, product: CrmProductKey): Promise<void> {
+    applyProductFieldUpdate(userId, product, false);
 
     try {
-        const response = await updateReferrer(tempCrmId.value, {
-            referred_by: selectedReferrer.value.id,
+        await deactivateProduct(userId, product);
+        emitUsersUpdate();
+    }
+    catch (error) {
+        applyProductFieldUpdate(userId, product, true);
+        console.error(error);
+        $toast({
+            description: 'Une erreur est survenue',
+            variant: 'destructive',
         });
+    }
+}
+
+async function confirmReferrer() {
+    const payload = referrerMode.value === 'text'
+        ? {
+                referred_by: null,
+                referred_by_text: tempReferrerText.value.trim() || null,
+            }
+        : {
+                referred_by: selectedReferrer.value?.id ?? null,
+                referred_by_text: null,
+            };
+
+    try {
+        const response = await updateReferrer(tempCrmId.value, payload);
 
         localUsers.value = localUsers.value.map(u =>
             u.id === tempCrmId.value
@@ -321,7 +612,7 @@ async function confirmReferrer() {
         });
 
         $toast({
-            description: 'Porteur d\'affaire mis à jour avec succès',
+            description: 'Apporté par mis à jour avec succès',
             variant: 'success',
         });
 
@@ -428,6 +719,7 @@ const updateFormData = reactive({
     lastContactDate: tempContactDate,
     lastContactMethod: tempContactMethod,
     lastComment: tempComment,
+    logContactAction: logContactAction,
 });
 
 const updateCrmUserField = async (
@@ -442,17 +734,33 @@ const updateCrmUserField = async (
         const idx = localUsers.value.findIndex(u => u.id === editingUserId.value);
         if (idx !== -1) {
             const current = localUsers.value[idx];
+            const crmPatch = response.crm
+                ? {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                        nb_call: response.crm.nb_call,
+                        nb_sale: response.crm.nb_sale,
+                        nb_recommandation: response.crm.nb_recommandation,
+                        nb_meeting: response.crm.nb_meeting,
+                        nb_pending: response.crm.nb_pending,
+                    }
+                : {
+                        ...current.crm,
+                        ...(type === 'contact'
+                            ? {
+                                    last_contact_date: updateFormData.lastContactDate,
+                                    last_contact_method: updateFormData.lastContactMethod,
+                                }
+                            : { last_comment: updateFormData.lastComment }),
+                    };
             const updatedUser = {
                 ...current,
-                crm: {
-                    ...current.crm,
-                    ...(type === 'contact'
-                        ? {
-                                last_contact_date: updateFormData.lastContactDate,
-                                last_contact_method: updateFormData.lastContactMethod,
-                            }
-                        : { last_comment: updateFormData.lastComment }),
-                },
+                crm: crmPatch,
             };
             localUsers.value[idx] = updatedUser;
             localUsers.value = [...localUsers.value];
@@ -486,6 +794,13 @@ const isFranceUser = computed(() => {
     return country === 'fr' || country === 'france';
 });
 
+const { kpiColumns } = useCrmWeeklyKpiColumns<User>({
+    setSort,
+    isCollaborator,
+    openCommercialDialog,
+    getRowId: row => row.id,
+});
+
 const columns: ColumnDef<User>[] = [
     {
         id: 'select',
@@ -517,6 +832,37 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
+    },
+    {
+        accessorKey: 'email',
+        header: () => h('div', { class: 'text-center' }, 'Email'),
+        cell: ({ row }) => {
+            const email = row.getValue('email') as string | null | undefined;
+
+            return h(
+                'span',
+                {
+                    class: 'block text-center text-sm lowercase whitespace-nowrap min-w-[220px]',
+                    title: email ?? '',
+                },
+                email || '—',
+            );
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'phone_number',
+        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
+        cell: ({ row }) => {
+            const phone = row.getValue('phone_number') as string | null | undefined;
+
+            return h(
+                'div',
+                { class: 'text-center text-sm whitespace-nowrap' },
+                formatPhoneNumber(phone ?? null) ?? '—',
+            );
+        },
+        enableSorting: false,
     },
     {
         accessorKey: 'zip_code',
@@ -562,17 +908,11 @@ const columns: ColumnDef<User>[] = [
             })();
 
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== -1) {
-                    localUsers.value[index].insurance = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nursassur');
-                    if (modIndex !== -1) {
-                        mods[modIndex].activate = value ? 1 : 0;
-                    }
-                    localUsers.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(user, 'nursassur');
+                    return;
                 }
-                await edit(Number(row.original.id), { nursassur: value });
+                await handleProductDeactivation(Number(row.original.id), 'nursassur');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -603,15 +943,11 @@ const columns: ColumnDef<User>[] = [
                 return 0;
             })();
             const toggle = async (value: boolean) => {
-                const index = localUsers.value.findIndex(item => item.id === row.original.id);
-                if (index !== undefined && index !== -1 && props.users) {
-                    localUsers.value[index].site = value ? 1 : 0;
-                    const mods = localUsers.value[index].last_product_modifications ?? [];
-                    const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'nurstech');
-                    if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-                    localUsers.value[index].last_product_modifications = [...mods];
+                if (value) {
+                    openProductActivationModal(user, 'nurstech');
+                    return;
                 }
-                await edit(Number(row.original.id), { nurstech: value });
+                await handleProductDeactivation(Number(row.original.id), 'nurstech');
             };
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
@@ -624,44 +960,6 @@ const columns: ColumnDef<User>[] = [
         },
         enableSorting: false,
     },
-    // {
-    //     accessorKey: 'ambassador',
-    //     header: 'Inficoncept',
-    //     cell: ({ row }) => {
-    //         const user = row.original as User;
-    //         const currentValue = (() => {
-    //             const mods = user.last_product_modifications ?? [];
-    //             const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
-    //             if (found !== undefined && found.activate !== undefined && found.activate !== null) {
-    //                 return Number(found.activate);
-    //             }
-    //             if (user.ambassador !== undefined && user.ambassador !== null) {
-    //                 return Number(user.ambassador);
-    //             }
-    //             return 0;
-    //         })();
-    //         const toggle = async (value: boolean) => {
-    //             const index = localUsers.value.findIndex(item => item.id === row.original.id);
-    //             if (index !== undefined && index !== -1 && props.users) {
-    //                 localUsers.value[index].ambassador = value ? 1 : 0;
-    //                 const mods = localUsers.value[index].last_product_modifications ?? [];
-    //                 const modIndex = mods.findIndex(p => (p.product_name || '').toLowerCase() === 'inficoncept');
-    //                 if (modIndex !== -1) mods[modIndex].activate = value ? 1 : 0;
-    //                 localUsers.value[index].last_product_modifications = [...mods];
-    //             }
-    //             await edit(Number(row.original.id), { inficoncept: value });
-    //         };
-    //         return h('div', { class: 'flex justify-center' }, [
-    //             h(Switch, {
-    //                 'class': 'mx-auto text-center',
-    //                 'checked': currentValue === 1,
-    //                 'onUpdate:checked': toggle,
-    //                 'disabled': isCollaborator.value,
-    //             }),
-    //         ]);
-    //     },
-    //     enableSorting: false,
-    // },
     {
         accessorKey: 'last_comment',
         header: 'Commentaire',
@@ -747,17 +1045,18 @@ const columns: ColumnDef<User>[] = [
         header: 'Apporté par',
         cell: ({ row }) => {
             const referrer = row.original?.referred_by as Referrer | undefined;
+            const label = referrerDisplayLabel(referrer);
 
             return h('div', {
                 class: 'flex justify-center items-center gap-1',
             }, [
                 isCollaborator.value
-                    ? h('span', { class: 'text-gray-400' }, '-')
+                    ? h('span', { class: 'text-gray-400' }, label || '-')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'max-w-[150px] truncate text-sm',
-                                title: referrer?.full_name ?? '',
-                            }, referrer?.full_name || ''),
+                                title: label,
+                            }, label),
                             h(Pencil, {
                                 class: 'w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800 shrink-0',
                                 onClick: () => openReferrerDialog(row.original),
@@ -765,6 +1064,31 @@ const columns: ColumnDef<User>[] = [
                         ]),
             ]);
         },
+    },
+    ...kpiColumns,
+    {
+        id: 'follow_up_history',
+        header: () => h('div', { class: 'text-center leading-tight' }, [
+            h('span', { class: 'text-xs font-medium block' }, 'Historique'),
+            h('span', { class: 'text-[10px] font-normal text-gray-500 block' }, 'suivi'),
+        ]),
+        cell: ({ row }) => {
+            const targetUser = row.original;
+
+            return h('div', {
+                class: 'flex justify-center',
+                'data-no-row-select': 'true',
+            }, [
+                h(CrmFollowUpHistoryDropdown, {
+                    crmUserId: targetUser.crm?.id ?? null,
+                    entityLabel: targetUser.full_name ?? '',
+                    weeklyCount: crmWeeklyActionTotal(targetUser.crm),
+                    disabled: isCollaborator.value,
+                    onAddAction: () => openCommercialDialog(targetUser, 'call'),
+                }),
+            ]);
+        },
+        enableSorting: false,
     },
     {
         accessorKey: 'created_at',
@@ -790,26 +1114,11 @@ const columns: ColumnDef<User>[] = [
     {
         id: 'last_post_date',
         accessorKey: 'historic_activity.last_post_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière post d\'un remplacement',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière post',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière post d\'un remplacement',
+        }, 'Dernière post'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_post_date;
 
@@ -831,35 +1140,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_post_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_post_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_accept_posted_date',
         accessorKey: 'historic_activity.last_accept_posted_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière acceptation d\'un remplacement',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière acceptation',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière acceptation d\'un remplacement',
+        }, 'Dernière acceptation'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_accept_posted_date;
             if (!rawDate) {
@@ -877,35 +1166,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_accept_posted_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_response_date',
         accessorKey: 'historic_activity.last_response_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière réponse à un remplacement posté',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Dernière réponse',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière réponse à un remplacement posté',
+        }, 'Dernière réponse'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_response_date;
             if (!rawDate) {
@@ -923,35 +1192,15 @@ const columns: ColumnDef<User>[] = [
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
         },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_response_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_response_date ?? 0).getTime();
-            return a - b;
-        },
     },
     {
         id: 'last_accept_response_date',
         accessorKey: 'historic_activity.last_accept_response_date',
-        header: ({ column }) => h(
-            'div',
-            {
-                class: 'relative group w-max mx-auto cursor-default',
-                title: 'Date de dernière acceptation sur un remplacement posté',
-            },
-            [
-                h(
-                    Button,
-                    {
-                        variant: 'ghost',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    },
-                    () => [
-                        'Acceptation réponse',
-                        h(ArrowUpDown, { class: 'ml-1 inline w-4 h-4' }),
-                    ],
-                ),
-            ],
-        ),
+        header: () => h('div', {
+            class: 'text-center text-sm',
+            title: 'Date de dernière acceptation sur un remplacement posté',
+        }, 'Acceptation réponse'),
+        enableSorting: false,
         cell: ({ row }) => {
             const rawDate = row.original.historic_activity?.last_accept_response_date;
             if (!rawDate) {
@@ -968,11 +1217,6 @@ const columns: ColumnDef<User>[] = [
             const minutes = String(dateObj.getMinutes()).padStart(2, '0');
             const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
             return h('div', { class: 'text-center' }, formattedDate);
-        },
-        sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.original.historic_activity?.last_accept_response_date ?? 0).getTime();
-            const b = new Date(rowB.original.historic_activity?.last_accept_response_date ?? 0).getTime();
-            return a - b;
         },
     },
     {
@@ -1015,12 +1259,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         id: 'action',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('action'),
-            }, () => ['Action', h(ArrowUpDown)]);
-        },
+        header: () => 'Action',
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, [
                 h(Eye, {

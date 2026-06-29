@@ -1,8 +1,11 @@
 <template>
-    <div class="w-full">
+    <div class="flex h-full min-h-0 w-full flex-col">
         <DataTable
+            class="min-h-0 flex-1"
             :data="localUsers"
             :columns="columnsExUsers"
+            manual-sorting
+            constrained-height
         />
 
         <Dialog
@@ -18,14 +21,13 @@
             </DialogContent>
         </Dialog>
 
-        <div>
+        <div class="mt-auto shrink-0">
             <CustomPagination
                 :default-page="page"
-                :per-page="perPage"
+                :internal-per-page="perPage"
                 :total="props.users.total"
                 @update:page="emit('refresh-users', $event)"
                 @update:per-page="emit('handle-per-page-change', $event)"
-                @user-updated="emit('user-updated', $event)"
             />
         </div>
     </div>
@@ -47,7 +49,7 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const { edit, restore, forceDelete, isDeveloper } = useAuth();
+const { edit, restore, forceDelete, isSuperAdmin } = useAuth();
 
 const showModal = ref(false);
 const loggedUser = useUser();
@@ -125,12 +127,7 @@ const columnsExUsers: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'contact',
-        header: () => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => setSort('contact'),
-            }, () => ['Contact', h(ArrowUpDown)]);
-        },
+        header: () => 'Contact',
         cell: ({ row }) => {
             return h('div', { class: 'ml-8' }, [
                 h(Eye, {
@@ -213,15 +210,19 @@ const columnsExUsers: ColumnDef<User>[] = [
                     label: 'Restaurer',
                     confirm: true,
                     onClick: () => handleRestore(user),
-                    hidden: isDeveloper.value,
+                    hidden: !isSuperAdmin.value,
                 },
                 {
                     label: 'Supprimer définitivement',
                     confirm: true,
                     onClick: () => handleForceDelete(user),
-                    hidden: isDeveloper.value,
+                    hidden: !isSuperAdmin.value,
                 },
             ].filter(action => !action.hidden);
+
+            if (!actions.length) {
+                return h('div', { class: 'ml-4 text-gray-400 text-sm' }, '—');
+            }
 
             return h('div', { class: 'flex ml-4' }, [
                 h(DropdownMenuAction, {
@@ -232,11 +233,9 @@ const columnsExUsers: ColumnDef<User>[] = [
     },
 ];
 
-watch(() => props.users.data, (newUsersData) => {
-    if (newUsersData) {
-        localUsers.value = [...newUsersData];
-    }
-}, { deep: true, immediate: true });
+watch(() => props.users, (newUsers) => {
+    localUsers.value = newUsers?.data ? [...newUsers.data] : [];
+}, { immediate: true });
 
 const handleRestore = async (user: User) => {
     const response = await restore(user.id);

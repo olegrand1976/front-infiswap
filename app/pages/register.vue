@@ -666,7 +666,7 @@
                 >
                     <div class="z-10">
                         <h3 class="text-white font-bold text-lg mb-1 leading-tight">Infiswap Institutional</h3>
-                        <p class="text-white/80 text-sm">Reprenez le contrôle sur vos coûts RH</p>
+                        <p class="text-white/80 text-sm">Le réseau n°1 du remplacement infirmier en Belgique</p>
                         <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
                             Découvrir les avantages
                             <ArrowRight class="size-4 animate-bounce-right" />
@@ -1317,7 +1317,7 @@ const accountOptions = [
     {
         value: 'institution',
         label: 'Institution',
-        description: '(maison de repos, hôpital, groupement infirmiers)',
+        description: 'MR/MRS, hôpital, bureau de tarification, groupe infirmier, centre d\'intérim',
     },
 ];
 

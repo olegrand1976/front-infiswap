@@ -112,10 +112,74 @@ export type User = {
     referral_source?: string;
 };
 
+export type CrmInstitutionSubscription = {
+    active: boolean;
+    status: string | null;
+    status_label: string | null;
+    formula: string | null;
+    contract_id: number | null;
+    reference: string | null;
+    created_at: string | null;
+    can_create: boolean;
+    can_send_for_signature: boolean;
+    can_sign: boolean;
+    can_cancel?: boolean;
+    can_delete_draft: boolean;
+    created_by?: number | null;
+    requester?: { id: number; full_name: string; email: string } | null;
+    signatory?: { id: number; full_name: string; email: string } | null;
+    signed_at?: string | null;
+    has_signed_pdf?: boolean;
+    signing_urls?: { client?: string | null; commercial?: string | null } | null;
+};
+
+export type CrmInstitution = {
+    id: number;
+    institution_id: number;
+    representative_user_id: number | null;
+    full_name: string;
+    email: string;
+    phone_number?: string | null;
+    zip_code?: string | null;
+    city?: string | null;
+    company_number?: string | null;
+    status?: 'pending' | 'active' | 'rejected' | 'changes_pending';
+    status_label?: string | null;
+    changes_pending?: boolean;
+    account_type: string;
+    insurance?: boolean | number;
+    site?: boolean | number;
+    ambassador?: boolean | number;
+    last_comment?: Comment | null;
+    referred_by?: Referrer;
+    crm?: CrmUser;
+    product_activity_summary?: ProductActivitySummary[];
+    last_product_modifications?: LastProductModifications[];
+    historic_activity?: UserActivity;
+    subscription?: CrmInstitutionSubscription;
+    registration_source?: 'site' | 'file';
+    registered_at?: string | null;
+    created_at?: string | null;
+    last_login_at?: string | null;
+};
+
 type LastProductModifications = {
     product_id: number;
     product_name: string;
     activate: boolean | number;
+    created_at: string;
+    updated_at?: string | null;
+};
+
+export type CrmProductKey = 'nurstech' | 'nursassur';
+
+export type ProductCrmHistoryEntry = {
+    id: number;
+    product_name: string;
+    activate: boolean;
+    effective_date: string | null;
+    referred_by_display: string | null;
+    admin_name: string | null;
     created_at: string;
 };
 
@@ -446,9 +510,10 @@ export type Comment = {
 };
 
 export type Referrer = {
-    id: number;
-    full_name: string;
-    email: string;
+    id: number | null;
+    full_name: string | null;
+    email: string | null;
+    text?: string | null;
 };
 
 export type Stat = {
@@ -613,4 +678,36 @@ export interface Institution {
     updated_at?: string;
     deleted_at?: string | null;
     status?: 'pending' | 'active' | 'rejected';
+    changes_pending?: boolean;
+    validation_date?: string | null;
+    registration_source?: 'site' | 'file';
+    registered_at?: string | null;
+    histories?: InstitutionHistory[];
+    email?: string | null;
+    phone_number?: string | null;
+    referred_by?: Referrer;
+    crm?: {
+        contact_user_id?: number | null;
+        crm_id?: number | null;
+        last_contact_date?: string | null;
+        last_contact_method?: string | null;
+        last_comment?: string | null;
+    };
+}
+
+export interface InstitutionHistory {
+    id: number;
+    event: string;
+    event_label: string;
+    field?: string | null;
+    field_label?: string | null;
+    old_value?: string | null;
+    new_value?: string | null;
+    description?: string | null;
+    actor?: {
+        id: number;
+        full_name: string;
+        email: string;
+    } | null;
+    created_at?: string | null;
 }

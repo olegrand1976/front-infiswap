@@ -290,22 +290,90 @@
                 v-else-if="activeTab === 'comment'"
                 class="space-y-3"
             >
-                <div class="relative">
-                    <Textarea
-                        v-model="comment"
-                        disabled
-                        class="w-full h-36 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary peer"
-                    />
-                    <p class="hidden mt-1 text-sm text-gray-500 peer-focus:block">
-                        Appuyez sur Entrée pour valider votre commentaire
-                    </p>
-                </div>
+                <RollingLoader
+                    v-if="commentLoading"
+                    :loading="commentLoading"
+                />
+                <template v-else>
+                    <div
+                        v-for="userComment in userComments"
+                        :key="userComment.id"
+                        class="bg-gray-50 p-3 rounded-md text-sm"
+                    >
+                        <p class="text-gray-700">
+                            {{ userComment.body }}
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            {{ formatRelativeDate(userComment.created_at) }}
+                        </p>
+                    </div>
+                    <div class="relative">
+                        <Textarea
+                            v-model="newComment"
+                            :disabled="isCollaborator"
+                            placeholder="Ajouter un commentaire..."
+                            class="w-full h-24 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            @keydown.enter.prevent="saveComment"
+                        />
+                        <div
+                            v-if="!isCollaborator"
+                            class="mt-2 flex justify-end"
+                        >
+                            <Button
+                                size="sm"
+                                class="rounded-md"
+                                :disabled="!newComment.trim() || savingComment"
+                                @click="saveComment"
+                            >
+                                Enregistrer
+                            </Button>
+                        </div>
+                    </div>
+                </template>
             </div>
 
             <div
                 v-else-if="activeTab === 'commercial'"
                 class="space-y-3"
             >
+                <div
+                    v-if="props.user.crm"
+                    class="p-3 border border-gray-200 rounded-lg bg-gray-50 text-sm"
+                >
+                    <p class="font-semibold text-primary mb-2">
+                        Compteurs semaine en cours
+                    </p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <span>Appels : <strong>{{ props.user.crm.nb_call ?? 0 }}</strong></span>
+                        <span>Ventes : <strong>{{ props.user.crm.nb_sale ?? 0 }}</strong></span>
+                        <span>Recommandations : <strong>{{ props.user.crm.nb_recommandation ?? 0 }}</strong></span>
+                        <span>RDV : <strong>{{ props.user.crm.nb_meeting ?? 0 }}</strong></span>
+                        <span>En attente : <strong>{{ props.user.crm.nb_pending ?? 0 }}</strong></span>
+                    </div>
+                </div>
+
+                <div
+                    v-if="crmHistories.length"
+                    class="p-3 border border-gray-200 rounded-lg max-h-40 overflow-y-auto"
+                >
+                    <p class="font-semibold text-primary mb-2 text-sm">
+                        Historique commercial
+                    </p>
+                    <ul class="space-y-2 text-xs">
+                        <li
+                            v-for="entry in crmHistories"
+                            :key="entry.id"
+                            class="border-b border-gray-100 pb-2"
+                        >
+                            <span class="font-medium">{{ formatHistoryAction(entry.action_type ?? entry.field_name) }}</span>
+                            <span v-if="entry.number_of_times"> — {{ entry.number_of_times }}×</span>
+                            <span v-if="entry.comment" class="text-gray-600"> — {{ entry.comment }}</span>
+                            <br>
+                            <span class="text-gray-400">{{ formatDate(entry.created_at) }}</span>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="relative p-4 border border-gray-200 rounded-lg">
                     <div class="flex gap-4 mb-4 border-b border-gray-300">
                         <button
@@ -704,8 +772,9 @@
 import { Building2, Calendar, CircleCheck, CircleUser, IdCard, Inbox, Mail, Phone, Users, XCircle } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
+import { formatRelativeDate } from '@/composables/useDate';
 
-const { isAdmin } = useAuth();
+const { isAdmin, isCollaborator } = useAuth();
 const activeTab = ref('information');
 const tradeTab = ref('call');
 
@@ -725,9 +794,13 @@ const iconSz = computed(() => (props.compact ? 'size-4' : 'size-5'));
 
 const { activityUser } = useReplacements();
 const { getAll } = useProduct();
-const { crmUser } = useCrm();
+const { crmUser, getCrmHistories } = useCrm();
+const { getUserComments, store: storeComment, loading: commentLoading, userComments } = useComment();
 const activityData = ref(null);
 const products = ref<{ id: number; name: string }[]>([]);
+const crmHistories = ref<Array<Record<string, unknown>>>([]);
+const newComment = ref('');
+const savingComment = ref(false);
 const emit = defineEmits(['close', 'refresh-users', 'user-updated']);
 const { $toast } = useNuxtApp();
 const defaultForm = {
@@ -741,6 +814,58 @@ const defaultForm = {
 };
 const form = ref({ ...defaultForm });
 const comment = ref(props.user.comment_crm ?? '');
+
+async function loadComments() {
+    await getUserComments(props.user);
+}
+
+async function loadCrmHistories() {
+    if (!props.user.crm?.id) {
+        crmHistories.value = [];
+        return;
+    }
+    crmHistories.value = await getCrmHistories(props.user.crm.id);
+}
+
+async function saveComment() {
+    const body = newComment.value.trim();
+    if (!body || isCollaborator.value) return;
+
+    savingComment.value = true;
+    try {
+        await storeComment(props.user.id, 'User', body);
+        newComment.value = '';
+        await loadComments();
+        $toast({ description: 'Commentaire enregistré', variant: 'success' });
+    }
+    catch {
+        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    }
+    finally {
+        savingComment.value = false;
+    }
+}
+
+function formatHistoryAction(action: string | null | undefined) {
+    const labels: Record<string, string> = {
+        call: 'Appel',
+        sale: 'Vente',
+        recommandation: 'Recommandation',
+        meeting: 'Rendez-vous',
+        pending: 'Réponse en attente',
+        referred_by: 'Porteur d\'affaire',
+    };
+    return labels[action ?? ''] ?? action ?? 'Action';
+}
+
+watch(activeTab, (tab) => {
+    if (tab === 'comment') {
+        loadComments();
+    }
+    if (tab === 'commercial') {
+        loadCrmHistories();
+    }
+});
 
 // const selectedProduct = ref<string>('');
 
@@ -816,7 +941,7 @@ const { submit, inProgress } = useSubmit(async () => {
         });
         form.value = { ...defaultForm };
         comment.value = '';
-        // emit('refresh-users');
+        loadCrmHistories();
         emit('user-updated', updatedUser);
         emit('close');
     },

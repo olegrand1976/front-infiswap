@@ -115,11 +115,11 @@
                 </div>
 
                 <a
-                    href="tel:0478023377"
+                    :href="`tel:${contact.phoneTel}`"
                     class="bg-slate-950 hover:bg-slate-800 text-white transition-all px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2"
                 >
                     <i class="fa-solid fa-phone text-[#46d88e]" />
-                    <span>0478.02.33.77</span>
+                    <span>{{ contact.phoneDisplay }}</span>
                 </a>
             </div>
         </header>
@@ -795,19 +795,26 @@
                                     Nos Coordonnées
                                 </h3>
                                 <ul class="space-y-3 text-xs text-slate-600">
+                                    <li
+                                        v-if="contact.contactName"
+                                        class="flex items-center gap-2"
+                                    >
+                                        <i class="fa-solid fa-user text-[#46d88e] w-6 text-center" />
+                                        <span>Contact : <span class="font-bold text-slate-900">{{ contact.contactName }}</span></span>
+                                    </li>
                                     <li class="flex items-center gap-2">
                                         <i class="fa-solid fa-phone text-[#46d88e] w-6 text-center" />
                                         <span>Téléphone : <a
-                                            href="tel:0478023377"
+                                            :href="`tel:${contact.phoneTel}`"
                                             class="font-bold text-slate-900 hover:underline"
-                                        >0478.02.33.77</a></span>
+                                        >{{ contact.phoneDisplay }}</a></span>
                                     </li>
                                     <li class="flex items-center gap-2">
                                         <i class="fa-solid fa-envelope text-[#46d88e] w-6 text-center" />
                                         <span>E-mail : <a
-                                            href="mailto:info@infiswap.be"
+                                            :href="`mailto:${contact.email}`"
                                             class="font-bold text-slate-900 hover:underline"
-                                        >info@infiswap.be</a></span>
+                                        >{{ contact.email }}</a></span>
                                     </li>
                                 </ul>
                                 <NuxtLink
@@ -835,13 +842,20 @@
                                     v-if="contactAlert"
                                     class="p-3 bg-emerald-50 text-emerald-800 border border-emerald-100 rounded-lg text-xs text-center"
                                 >
-                                    <i class="fa-solid fa-circle-check mr-1" /> Demande reçue ! L'équipe d'InfiSwap vous contactera dans les 24h ouvrables.
+                                    <i class="fa-solid fa-circle-check mr-1" /> {{ contactSuccessMessage }}
+                                </div>
+                                <div
+                                    v-if="contactError"
+                                    class="p-3 bg-red-50 text-red-800 border border-red-100 rounded-lg text-xs text-center"
+                                >
+                                    <i class="fa-solid fa-circle-exclamation mr-1" /> {{ contactError }}
                                 </div>
                                 <button
                                     type="submit"
-                                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs transition-all"
+                                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                    :disabled="contactSubmitting"
                                 >
-                                    Envoyer ma demande
+                                    {{ contactSubmitting ? 'Envoi en cours…' : 'Envoyer ma demande' }}
                                 </button>
                             </form>
                         </div>
@@ -1044,31 +1058,14 @@
 </template>
 
 <script setup lang="ts">
+import type { OffreInstitutionContact } from '~/lib/offreInstitutionContacts';
+import { submitInstitutionOfferStudy } from '~/composables/useContact';
+
 type TabId = 'accueil' | 'reseau' | 'diy-infiswap' | 'jaumana-premium' | 'simulateur-annonce' | 'comparatif' | 'contact';
 
-definePageMeta({
-    layout: false,
-});
-
-useHead({
-    title: 'Offre Institutions & Maisons de Repos',
-    link: [
-        {
-            rel: 'stylesheet',
-            href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-        },
-        {
-            rel: 'stylesheet',
-            href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap',
-        },
-    ],
-    meta: [
-        {
-            name: 'description',
-            content: 'Offre institutionnelle InfiSwap et Jaumana Soins : remplacements infirmiers, comparateur intérim, formules DIY et Premium.',
-        },
-    ],
-});
+const props = defineProps<{
+    contact: OffreInstitutionContact;
+}>();
 
 const activeTab = ref<TabId>('accueil');
 const presentationFolderRef = ref<HTMLElement | null>(null);
@@ -1084,6 +1081,14 @@ const adScale = ref('scale(1)');
 
 const contactInstitution = ref('');
 const contactAlert = ref(false);
+const contactSubmitting = ref(false);
+const contactError = ref('');
+
+const contactSuccessMessage = computed(() =>
+    props.contact.contactName
+        ? `Demande reçue ! ${props.contact.contactName} vous contactera dans les 24h ouvrables.`
+        : 'Demande reçue ! L\'équipe d\'InfiSwap vous contactera dans les 24h ouvrables.',
+);
 
 const calcHours = ref(80);
 const calcWeekPct = ref(75);
@@ -1197,7 +1202,32 @@ function simulateAdPublication() {
     }, 300);
 }
 
-function submitContactForm() {
+async function submitContactForm() {
+    contactError.value = '';
+
+    if (props.contact.repId) {
+        contactSubmitting.value = true;
+        try {
+            await submitInstitutionOfferStudy({
+                institutionName: contactInstitution.value,
+                repId: props.contact.repId,
+            });
+            contactAlert.value = true;
+            contactInstitution.value = '';
+            setTimeout(() => {
+                contactAlert.value = false;
+            }, 5000);
+        }
+        catch {
+            contactError.value = 'Impossible d\'envoyer votre demande. Veuillez réessayer ou nous contacter par téléphone.';
+        }
+        finally {
+            contactSubmitting.value = false;
+        }
+
+        return;
+    }
+
     contactAlert.value = true;
     contactInstitution.value = '';
     setTimeout(() => {
