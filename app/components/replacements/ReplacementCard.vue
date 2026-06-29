@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative">
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-md shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-3 border border-gray-100 hover:border-primary/20 group relative h-full flex flex-col">
         <div
             v-if="isNew"
             class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
@@ -40,158 +40,114 @@
             </span>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-            <!-- Périodes -->
-            <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
-                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm items-stretch">
+            <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
+                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">📅</span>
                     <span>Périodes</span>
                 </p>
-                <div class="text-gray-600">
-                    <p v-if="displayedPeriods.length > 0">
-                        {{ displayedPeriods[0] }}
-                    </p>
-                    <button
-                        v-if="periods.length > 1"
-                        class="text-primary hover:text-primary/80 font-medium text-xs mt-1 flex items-center gap-1"
-                        @click="showAllPeriods = !showAllPeriods"
-                    >
-                        {{ showAllPeriods ? 'Masquer' : `+${periods.length - 1} autres` }}
-                        <ChevronDown
-                            class="w-3 h-3 transition-transform"
-                            :class="{ 'rotate-180': showAllPeriods }"
-                        />
-                    </button>
-                    <div
-                        v-if="showAllPeriods && periods.length > 1"
-                        class="mt-2 space-y-1"
-                    >
-                        <p
-                            v-for="(period, index) in periods.slice(1)"
-                            :key="index"
-                            class="text-gray-600 text-xs"
-                        >
-                            {{ period }}
-                        </p>
-                    </div>
-                </div>
+                <p
+                    class="text-gray-600 text-xs flex-1"
+                    :class="{ 'line-clamp-2': !expanded.periods && isLongText(periodsText) }"
+                >
+                    {{ periodsText }}
+                </p>
+                <button
+                    v-if="isLongText(periodsText)"
+                    type="button"
+                    class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
+                    @click="expanded.periods = !expanded.periods"
+                >
+                    {{ expanded.periods ? 'Voir moins' : 'Voir plus' }}
+                </button>
             </div>
 
-            <!-- Codes postaux -->
-            <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
-                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
+            <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
+                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">📮</span>
                     <span>C . P</span>
                 </p>
-                <div class="text-gray-600">
-                    <p v-if="displayedZipCodes.length > 0">
-                        {{ displayedZipCodes[0] }}
-                    </p>
-                    <button
-                        v-if="zipCodes.length > 1"
-                        class="text-primary hover:text-primary/80 font-medium text-xs mt-1 flex items-center gap-1"
-                        @click="showAllZipCodes = !showAllZipCodes"
-                    >
-                        {{ showAllZipCodes ? 'Masquer' : `+${zipCodes.length - 1} autres` }}
-                        <ChevronDown
-                            class="w-3 h-3 transition-transform"
-                            :class="{ 'rotate-180': showAllZipCodes }"
-                        />
-                    </button>
-                    <div
-                        v-if="showAllZipCodes && zipCodes.length > 1"
-                        class="mt-2 space-y-1"
-                    >
-                        <p
-                            v-for="(zipCode, index) in zipCodes.slice(1)"
-                            :key="index"
-                            class="text-gray-600 text-xs"
-                        >
-                            {{ zipCode }}
-                        </p>
-                    </div>
-                </div>
+                <p
+                    class="text-gray-600 text-xs flex-1"
+                    :class="{ 'line-clamp-2': !expanded.zipCodes && isLongText(zipCodesText) }"
+                >
+                    {{ zipCodesText }}
+                </p>
+                <button
+                    v-if="isLongText(zipCodesText)"
+                    type="button"
+                    class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
+                    @click="expanded.zipCodes = !expanded.zipCodes"
+                >
+                    {{ expanded.zipCodes ? 'Voir moins' : 'Voir plus' }}
+                </button>
             </div>
 
-            <!-- Villes -->
-            <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
-                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
+            <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
+                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">🏙️</span>
                     <span>Villes</span>
                 </p>
-                <div class="text-gray-600">
-                    <p v-if="displayedCities.length > 0">
-                        {{ displayedCities[0] }}
-                    </p>
-                    <button
-                        v-if="cities.length > 1"
-                        class="text-primary hover:text-primary/80 font-medium text-xs mt-1 flex items-center gap-1"
-                        @click="showAllCities = !showAllCities"
-                    >
-                        {{ showAllCities ? 'Masquer' : `+${cities.length - 1} autres` }}
-                        <ChevronDown
-                            class="w-3 h-3 transition-transform"
-                            :class="{ 'rotate-180': showAllCities }"
-                        />
-                    </button>
-                    <div
-                        v-if="showAllCities && cities.length > 1"
-                        class="mt-2 space-y-1"
-                    >
-                        <p
-                            v-for="(city, index) in cities.slice(1)"
-                            :key="index"
-                            class="text-gray-600 text-xs"
-                        >
-                            {{ city }}
-                        </p>
-                    </div>
-                </div>
+                <p
+                    class="text-gray-600 text-xs flex-1"
+                    :class="{ 'line-clamp-2': !expanded.cities && isLongText(citiesText) }"
+                >
+                    {{ citiesText }}
+                </p>
+                <button
+                    v-if="isLongText(citiesText)"
+                    type="button"
+                    class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
+                    @click="expanded.cities = !expanded.cities"
+                >
+                    {{ expanded.cities ? 'Voir moins' : 'Voir plus' }}
+                </button>
             </div>
 
-            <!-- Types de soins -->
-            <div class="space-y-1 bg-gray-50/50 rounded-lg p-2">
-                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs">
+            <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
+                <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">🩺</span>
                     <span>Soins</span>
                 </p>
-                <div class="text-gray-600">
-                    <p v-if="displayedCareTypes.length > 0">
-                        {{ displayedCareTypes[0] }}
-                    </p>
-                    <button
-                        v-if="careTypes.length > 1"
-                        class="text-primary hover:text-primary/80 font-medium text-xs mt-1 flex items-center gap-1"
-                        @click="showAllCareTypes = !showAllCareTypes"
-                    >
-                        {{ showAllCareTypes ? 'Masquer' : `+${careTypes.length - 1} autres` }}
-                        <ChevronDown
-                            class="w-3 h-3 transition-transform"
-                            :class="{ 'rotate-180': showAllCareTypes }"
-                        />
-                    </button>
-                    <div
-                        v-if="showAllCareTypes && careTypes.length > 1"
-                        class="mt-2 space-y-1"
-                    >
-                        <p
-                            v-for="(careType, index) in careTypes.slice(1)"
-                            :key="index"
-                            class="text-gray-600 text-xs"
-                        >
-                            {{ careType }}
-                        </p>
-                    </div>
-                </div>
+                <p
+                    class="text-gray-600 text-xs flex-1"
+                    :class="{ 'line-clamp-2': !expanded.careTypes && isLongText(careTypesText) }"
+                >
+                    {{ careTypesText }}
+                </p>
+                <button
+                    v-if="isLongText(careTypesText)"
+                    type="button"
+                    class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
+                    @click="expanded.careTypes = !expanded.careTypes"
+                >
+                    {{ expanded.careTypes ? 'Voir moins' : 'Voir plus' }}
+                </button>
             </div>
         </div>
 
-        <p
+        <div
             v-if="replacement.comment"
-            class="text-xs text-gray-600 line-clamp-2"
+            class="min-h-[2.75rem] bg-gray-50/50 rounded-lg p-2"
         >
-            {{ replacement.comment }}
-        </p>
+            <p class="font-medium text-gray-700 mb-1 text-xs shrink-0">
+                Description
+            </p>
+            <p
+                class="text-xs text-gray-600"
+                :class="{ 'line-clamp-2': !expanded.comment && isLongText(replacement.comment) }"
+            >
+                {{ replacement.comment }}
+            </p>
+            <button
+                v-if="isLongText(replacement.comment)"
+                type="button"
+                class="text-primary text-xs font-medium mt-1 hover:underline"
+                @click="expanded.comment = !expanded.comment"
+            >
+                {{ expanded.comment ? 'Voir moins' : 'Voir plus' }}
+            </button>
+        </div>
 
         <div>
             <span
@@ -202,7 +158,7 @@
                 {{ replacementTypeLabel }}
             </span>
         </div>
-        <div class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100">
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100 mt-auto">
             <div class="flex items-center gap-2 text-xs text-gray-600 font-bold flex-1 min-w-0">
                 <div class="flex items-center gap-1">
                     <Clock class="w-3.5 h-3.5 text-primary shrink-0" />
@@ -341,7 +297,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronDown, ChevronRight, Clock, Ellipsis, Eye, Lock, SquarePen, Users } from 'lucide-vue-next';
+import { ChevronRight, Clock, Ellipsis, Eye, Lock, SquarePen, Users } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -440,10 +396,18 @@ const onBoostCancelled = () => {
 const user = useState<User>('user');
 const config = useRuntimeConfig();
 
-const showAllPeriods = ref(false);
-const showAllCities = ref(false);
-const showAllZipCodes = ref(false);
-const showAllCareTypes = ref(false);
+const expanded = reactive({
+    periods: false,
+    zipCodes: false,
+    cities: false,
+    careTypes: false,
+    comment: false,
+});
+
+const LONG_TEXT_MIN = 55;
+
+const isLongText = (text: string) => text.length > LONG_TEXT_MIN;
+
 const closeDialog = ref(false);
 const isClosing = ref(false);
 const localClosed = ref(false);
@@ -513,7 +477,7 @@ const periods = computed(() => {
     });
 });
 
-const displayedPeriods = computed(() => periods.value);
+const periodsText = computed(() => periods.value.join(' · '));
 
 const cities = computed(() => {
     if (!props.replacement.cities || props.replacement.cities.length === 0) {
@@ -522,7 +486,7 @@ const cities = computed(() => {
     return props.replacement.cities;
 });
 
-const displayedCities = computed(() => cities.value);
+const citiesText = computed(() => cities.value.join(' · '));
 
 const zipCodes = computed(() => {
     if (!props.replacement.zip_codes || props.replacement.zip_codes.length === 0) {
@@ -531,7 +495,7 @@ const zipCodes = computed(() => {
     return props.replacement.zip_codes;
 });
 
-const displayedZipCodes = computed(() => zipCodes.value);
+const zipCodesText = computed(() => zipCodes.value.join(' · '));
 
 const careTypes = computed(() => {
     if (!props.replacement.care_types || props.replacement.care_types.length === 0) {
@@ -540,7 +504,7 @@ const careTypes = computed(() => {
     return props.replacement.care_types.map(ct => ct.name);
 });
 
-const displayedCareTypes = computed(() => careTypes.value);
+const careTypesText = computed(() => careTypes.value.join(' · '));
 
 const timeSlotsText = computed(() => {
     const slots: string[] = [];
@@ -646,7 +610,6 @@ const institutionName = computed(() => {
 });
 
 const isNew = computed(() => {
-    console.log('props.rawReplacement', props.rawReplacement);
     const createdAt = props.rawReplacement?.created_at;
     if (!createdAt) return false;
     const oneWeekAgo = new Date();
