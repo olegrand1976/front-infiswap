@@ -14,7 +14,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     'update:open': [value: boolean];
-    refresh: [];
+    'refresh': [];
 }>();
 
 const { updateBilling, createPayment, markCommissionPaid } = useInstitutionSubscription();

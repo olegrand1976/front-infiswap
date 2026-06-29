@@ -121,27 +121,39 @@
                     >
                         <div>
                             <label class="text-sm font-medium text-gray-500">Email</label>
-                            <p class="text-base break-all">{{ institution.email || institution.main_user?.email || '—' }}</p>
+                            <p class="text-base break-all">
+                                {{ institution.email || institution.main_user?.email || '—' }}
+                            </p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500">Téléphone</label>
-                            <p class="text-base">{{ institution.phone_number || institution.main_user?.phone_number || '—' }}</p>
+                            <p class="text-base">
+                                {{ institution.phone_number || institution.main_user?.phone_number || '—' }}
+                            </p>
                         </div>
                         <div v-if="institution.crm?.contact_user_id">
                             <label class="text-sm font-medium text-gray-500">Date de contact</label>
-                            <p class="text-base">{{ formatContactDate(institution.crm?.last_contact_date) }}</p>
+                            <p class="text-base">
+                                {{ formatContactDate(institution.crm?.last_contact_date) }}
+                            </p>
                         </div>
                         <div v-if="institution.crm?.contact_user_id">
                             <label class="text-sm font-medium text-gray-500">Contacté par</label>
-                            <p class="text-base">{{ formatContactMethod(institution.crm?.last_contact_method) }}</p>
+                            <p class="text-base">
+                                {{ formatContactMethod(institution.crm?.last_contact_method) }}
+                            </p>
                         </div>
                         <div v-if="institution.crm?.contact_user_id">
                             <label class="text-sm font-medium text-gray-500">Dernier commentaire</label>
-                            <p class="text-base whitespace-pre-wrap">{{ institution.crm?.last_comment || '—' }}</p>
+                            <p class="text-base whitespace-pre-wrap">
+                                {{ institution.crm?.last_comment || '—' }}
+                            </p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-500">Apporté par</label>
-                            <p class="text-base">{{ referrerDisplayLabel(institution.referred_by) || '—' }}</p>
+                            <p class="text-base">
+                                {{ referrerDisplayLabel(institution.referred_by) || '—' }}
+                            </p>
                         </div>
                     </div>
 

@@ -101,13 +101,6 @@
                             >
                                 NEW
                             </div>
-                            <div
-                                v-if="type !== 'me' && isActivelyBoosted(r)"
-                                class="absolute z-10 top-1 right-2 rounded-lg border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-1 shadow-sm"
-                                title="Remplacement boosté"
-                            >
-                                <ReplacementBoostStars size="sm" />
-                            </div>
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
                                     <div
@@ -293,36 +286,36 @@
                                         @click="openBoostActive(r)"
                                     />
                                     <DropdownMenu>
-                                            <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
-                                                <Ellipsis class="h-5 w-5 text-gray-700" />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent class="w-48">
-                                                <DropdownMenuItem as-child>
-                                                    <NuxtLink
-                                                        :href="`/dashboard/replacements/detail/${r.id}`"
-                                                        class="flex items-center space-x-2 text-sm"
-                                                    >
-                                                        <Eye class="h-4 w-4" />
-                                                        <span>Voir</span>
-                                                    </NuxtLink>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
+                                        <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
+                                            <Ellipsis class="h-5 w-5 text-gray-700" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent class="w-48">
+                                            <DropdownMenuItem as-child>
+                                                <NuxtLink
+                                                    :href="`/dashboard/replacements/detail/${r.id}`"
                                                     class="flex items-center space-x-2 text-sm"
-                                                    @click="emit('open-edit', r)"
                                                 >
-                                                    <SquarePen class="h-4 w-4" />
-                                                    <span>Modifier</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
-                                                    class="flex items-center space-x-2 text-sm"
-                                                    @click="emit('select-replacement', r)"
-                                                >
-                                                    <X class="h-4 w-4" />
-                                                    <span>Fermer</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                    <Eye class="h-4 w-4" />
+                                                    <span>Voir</span>
+                                                </NuxtLink>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="emit('open-edit', r)"
+                                            >
+                                                <SquarePen class="h-4 w-4" />
+                                                <span>Modifier</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="emit('select-replacement', r)"
+                                            >
+                                                <X class="h-4 w-4" />
+                                                <span>Fermer</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </template>
                                 <template v-else>
                                     <ReplacementBoostTrustBadge
@@ -406,13 +399,6 @@
                                          isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
                                 FERMÉ
-                            </div>
-                            <div
-                                v-if="type !== 'me' && isActivelyBoosted(r)"
-                                class="absolute z-10 top-0 right-0 rounded-bl-lg border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-1 shadow-sm"
-                                title="Remplacement boosté"
-                            >
-                                <ReplacementBoostStars size="sm" />
                             </div>
 
                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">

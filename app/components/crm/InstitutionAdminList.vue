@@ -591,6 +591,7 @@
 <script setup lang="ts">
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
+import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 import { Button } from '@/components/ui/button';
 import type { Comment, CrmInstitution, CrmInstitutionSubscription, Pagination, Referrer, User } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
@@ -604,7 +605,6 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
-import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
@@ -1976,11 +1976,11 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 h(
                     'button',
                     {
-                        type: 'button',
+                        'type': 'button',
                         'data-no-row-select': 'true',
-                        class: `px-2 py-1 rounded text-xs font-medium touch-manipulation ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
-                        disabled: !isClickable,
-                        onClick: (event: MouseEvent) => {
+                        'class': `px-2 py-1 rounded text-xs font-medium touch-manipulation ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
+                        'disabled': !isClickable,
+                        'onClick': (event: MouseEvent) => {
                             event.stopPropagation();
                             if (isClickable) {
                                 handleSubscriptionClick(institution);
@@ -1991,19 +1991,19 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 ),
                 institutionCanCancel(institution) && !isCollaborator.value
                     ? h(
-                        'button',
-                        {
-                            type: 'button',
-                            'data-no-row-select': 'true',
-                            title: 'Annuler le bon de commande',
-                            class: 'p-1 rounded text-destructive hover:bg-destructive/10 touch-manipulation',
-                            onClick: (event: MouseEvent) => {
-                                event.stopPropagation();
-                                void deleteDraftSubscription(institution);
+                            'button',
+                            {
+                                'type': 'button',
+                                'data-no-row-select': 'true',
+                                'title': 'Annuler le bon de commande',
+                                'class': 'p-1 rounded text-destructive hover:bg-destructive/10 touch-manipulation',
+                                'onClick': (event: MouseEvent) => {
+                                    event.stopPropagation();
+                                    void deleteDraftSubscription(institution);
+                                },
                             },
-                        },
-                        [h(Trash2, { class: 'w-4 h-4' })],
-                    )
+                            [h(Trash2, { class: 'w-4 h-4' })],
+                        )
                     : null,
             ]);
         },
@@ -2023,21 +2023,21 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 }),
                 canDeleteInstitution(institution)
                     ? h(
-                        'button',
-                        {
-                            type: 'button',
-                            'data-no-row-select': 'true',
-                            title: isSiteRegistration(institution)
-                                ? 'Supprimer l\'institution inscrite sur le site'
-                                : 'Supprimer le prospect importé',
-                            class: 'p-1 rounded text-destructive hover:bg-destructive/10 touch-manipulation',
-                            onClick: (event: MouseEvent) => {
-                                event.stopPropagation();
-                                openDeleteInstitutionDialog(institution);
+                            'button',
+                            {
+                                'type': 'button',
+                                'data-no-row-select': 'true',
+                                'title': isSiteRegistration(institution)
+                                    ? 'Supprimer l\'institution inscrite sur le site'
+                                    : 'Supprimer le prospect importé',
+                                'class': 'p-1 rounded text-destructive hover:bg-destructive/10 touch-manipulation',
+                                'onClick': (event: MouseEvent) => {
+                                    event.stopPropagation();
+                                    openDeleteInstitutionDialog(institution);
+                                },
                             },
-                        },
-                        [h(Trash2, { class: 'w-4 h-4' })],
-                    )
+                            [h(Trash2, { class: 'w-4 h-4' })],
+                        )
                     : null,
             ]);
         },

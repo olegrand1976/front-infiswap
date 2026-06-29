@@ -220,7 +220,7 @@
             <template v-if="!isOwner">
                 <div class="flex items-center gap-2 shrink-0">
                     <ReplacementBoostTrustBadge
-                        v-if="isBoosted"
+                        v-if="showBoostBadge && isBoosted"
                         variant="visitor"
                         compact
                     />
@@ -257,43 +257,43 @@
                                 <Ellipsis class="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="end"
-                        class="w-48"
-                    >
-                        <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
-                            Actions
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem as-child>
-                            <NuxtLink
-                                :href="`/dashboard/replacements/detail/${replacement.id}`"
-                                class="flex items-center gap-2 text-sm cursor-pointer"
-                            >
-                                <Eye class="w-4 h-4 text-gray-500" />
-                                <span>Voir le détail</span>
-                            </NuxtLink>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            class="flex items-center gap-2 text-sm cursor-pointer"
-                            @click="emit('open-edit', props.rawReplacement ?? replacement)"
+                        <DropdownMenuContent
+                            align="end"
+                            class="w-48"
                         >
-                            <SquarePen class="w-4 h-4 text-gray-500" />
-                            <span>Modifier</span>
-                        </DropdownMenuItem>
-                        <template v-if="canClose">
+                            <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
+                                Actions
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem as-child>
+                                <NuxtLink
+                                    :href="`/dashboard/replacements/detail/${replacement.id}`"
+                                    class="flex items-center gap-2 text-sm cursor-pointer"
+                                >
+                                    <Eye class="w-4 h-4 text-gray-500" />
+                                    <span>Voir le détail</span>
+                                </NuxtLink>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
-                                @click="closeDialog = true"
+                                class="flex items-center gap-2 text-sm cursor-pointer"
+                                @click="emit('open-edit', props.rawReplacement ?? replacement)"
                             >
-                                <Lock class="w-4 h-4" />
-                                <span>Fermer</span>
+                                <SquarePen class="w-4 h-4 text-gray-500" />
+                                <span>Modifier</span>
                             </DropdownMenuItem>
-                        </template>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                            <template v-if="canClose">
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    class="flex items-center gap-2 text-sm text-primary hover:text-primary/90 focus:text-primary cursor-pointer"
+                                    @click="closeDialog = true"
+                                >
+                                    <Lock class="w-4 h-4" />
+                                    <span>Fermer</span>
+                                </DropdownMenuItem>
+                            </template>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </template>
         </div>
@@ -391,10 +391,13 @@ interface Replacement {
     is_favorited?: boolean;
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     replacement: Replacement;
     rawReplacement?: Record<string, any>;
-}>();
+    showBoostBadge?: boolean;
+}>(), {
+    showBoostBadge: false,
+});
 
 const emit = defineEmits<{
     (e: 'closed'): void;

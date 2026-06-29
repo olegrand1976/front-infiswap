@@ -367,7 +367,10 @@
                         >
                             <span class="font-medium">{{ formatHistoryAction(entry.action_type ?? entry.field_name) }}</span>
                             <span v-if="entry.number_of_times"> — {{ entry.number_of_times }}×</span>
-                            <span v-if="entry.comment" class="text-gray-600"> — {{ entry.comment }}</span>
+                            <span
+                                v-if="entry.comment"
+                                class="text-gray-600"
+                            > — {{ entry.comment }}</span>
                             <br>
                             <span class="text-gray-400">{{ formatDate(entry.created_at) }}</span>
                         </li>
