@@ -1277,10 +1277,6 @@ async function generateInstitutionSubscription() {
             description: response.message ?? 'Bon de commande généré.',
             variant: 'success',
         });
-
-        if (pendingSubscriptionContractId.value) {
-            await previewPendingSubscriptionPdf();
-        }
     }
     catch (error: unknown) {
         const apiMessage = (error as { data?: { message?: string } })?.data?.message;
