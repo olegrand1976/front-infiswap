@@ -282,6 +282,7 @@
                                     />
                                     <ReplacementBoostStars
                                         v-else-if="r.is_boosted"
+                                        plain
                                         clickable
                                         @click="openBoostActive(r)"
                                     />
@@ -318,11 +319,9 @@
                                     </DropdownMenu>
                                 </template>
                                 <template v-else>
-                                    <ReplacementBoostTrustBadge
+                                    <ReplacementBoostStars
                                         v-if="isActivelyBoosted(r)"
-                                        variant="visitor"
-                                        compact
-                                        stars-only
+                                        size="sm"
                                     />
                                     <Button
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
@@ -482,6 +481,7 @@
                                     />
                                     <ReplacementBoostStars
                                         v-else-if="r.is_boosted"
+                                        plain
                                         clickable
                                         @click="openBoostActive(r)"
                                     />
@@ -518,11 +518,9 @@
                                     </DropdownMenu>
                                 </template>
                                 <template v-else>
-                                    <ReplacementBoostTrustBadge
+                                    <ReplacementBoostStars
                                         v-if="isActivelyBoosted(r)"
-                                        variant="visitor"
-                                        compact
-                                        stars-only
+                                        size="sm"
                                     />
                                     <Button
                                         v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
@@ -591,7 +589,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import ReplacementTableSkeleton from '@/components/replacements/ReplacementTableSkeleton.vue';
 import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
-import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoostTrustBadge.vue';
 import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';

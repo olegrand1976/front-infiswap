@@ -188,7 +188,7 @@
                                 v-else
                                 :replacement="formatReplacementForCard(item)"
                                 :raw-replacement="item"
-                                :show-boost-badge="false"
+                                :show-boost-stars="true"
                                 @open-edit="openEditDialog"
                                 @closed="refreshItems(page)"
                             />

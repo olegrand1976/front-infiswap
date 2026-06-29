@@ -219,6 +219,10 @@
 
             <template v-if="!isOwner">
                 <div class="flex items-center gap-2 shrink-0">
+                    <ReplacementBoostStars
+                        v-if="showBoostStars && isBoosted"
+                        size="sm"
+                    />
                     <ReplacementBoostTrustBadge
                         v-if="showBoostBadge && isBoosted"
                         variant="visitor"
@@ -244,6 +248,7 @@
                     />
                     <ReplacementBoostStars
                         v-else-if="isBoosted"
+                        plain
                         clickable
                         @click="openBoostActive()"
                     />
@@ -395,8 +400,10 @@ const props = withDefaults(defineProps<{
     replacement: Replacement;
     rawReplacement?: Record<string, any>;
     showBoostBadge?: boolean;
+    showBoostStars?: boolean;
 }>(), {
     showBoostBadge: false,
+    showBoostStars: false,
 });
 
 const emit = defineEmits<{

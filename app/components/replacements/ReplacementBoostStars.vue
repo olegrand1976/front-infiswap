@@ -2,8 +2,13 @@
     <button
         v-if="clickable"
         type="button"
-        class="inline-flex items-center gap-0.5 rounded-lg px-2 py-1.5 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        :class="sizeClasses"
+        class="inline-flex items-center gap-0.5"
+        :class="[
+            sizeClasses,
+            plain
+                ? 'p-0 bg-transparent border-0 shadow-none hover:opacity-80 focus:outline-none'
+                : 'rounded-lg px-2 py-1.5 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400',
+        ]"
         :title="title"
         :aria-label="title"
         @click.stop="emit('click')"
@@ -39,11 +44,13 @@ const props = withDefaults(defineProps<{
     count?: number;
     size?: 'sm' | 'md' | 'lg';
     clickable?: boolean;
+    plain?: boolean;
     title?: string;
 }>(), {
     count: 5,
     size: 'sm',
     clickable: false,
+    plain: false,
     title: 'Remplacement boosté',
 });
 
