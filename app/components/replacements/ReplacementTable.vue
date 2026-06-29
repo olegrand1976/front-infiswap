@@ -276,12 +276,12 @@
                             <TableCell class="text-xs flex items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
                                 <template v-if="type === 'me'">
                                     <ReplacementBoostButton
-                                        v-if="canBoostReplacement(r, type) && !r.is_boosted"
+                                        v-if="canBoostReplacement(r, type) && !isActivelyBoosted(r)"
                                         variant="table"
                                         @boost="openBoostPreview(r)"
                                     />
                                     <ReplacementBoostStars
-                                        v-else-if="r.is_boosted"
+                                        v-else-if="isActivelyBoosted(r)"
                                         plain
                                         clickable
                                         @click="openBoostActive(r)"
@@ -475,12 +475,12 @@
                             <TableCell class="text-xs flex flex-row items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
                                 <template v-if="type === 'me'">
                                     <ReplacementBoostButton
-                                        v-if="canBoostReplacement(r, type) && !r.is_boosted"
+                                        v-if="canBoostReplacement(r, type) && !isActivelyBoosted(r)"
                                         variant="table"
                                         @boost="openBoostPreview(r)"
                                     />
                                     <ReplacementBoostStars
-                                        v-else-if="r.is_boosted"
+                                        v-else-if="isActivelyBoosted(r)"
                                         plain
                                         clickable
                                         @click="openBoostActive(r)"
