@@ -609,7 +609,6 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
-import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
