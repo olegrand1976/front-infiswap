@@ -159,7 +159,9 @@ export const useAuth = () => {
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
-                useCookie(AUTH_TOKEN).value = response.token;
+                if (response?.token) {
+                    useCookie(AUTH_TOKEN).value = response.token;
+                }
             })
             .then(() => {
                 toast.success('Inscription réussie');

@@ -192,7 +192,7 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            N° de téléphone
+                                            N° de téléphone <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.phoneNumber"
@@ -365,7 +365,7 @@
                                             Complément d'adresse
                                         </label>
                                         <InputIcon
-                                            v-model="formData.address.additionnalInformation"
+                                            v-model="formData.address.additionalInformation"
                                             :icon="EllipsisHorizontalCircleIcon"
                                             size="md"
                                             placeholder="Complément d'adresse"
@@ -500,6 +500,7 @@
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             {{ identifierLabel }}
+                                            <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.identifierNumber"
@@ -531,7 +532,8 @@
                             class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnel
+                                Catégorie professionnelle
+                                <span class="text-xs font-normal text-muted-foreground">(optionnel — complétable dans votre profil)</span>
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <Select v-model="formData.professionalCategory">
@@ -623,7 +625,7 @@
                                 class="w-[70%] text-base font-bold"
                                 type="submit"
                                 :in-progress="inProgress"
-                                :disabled="!charteAccepted"
+                                :disabled="!canSubmit"
                             >
                                 S'inscrire
                             </Button>
@@ -823,7 +825,7 @@
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        N° de téléphone
+                                        N° de téléphone <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.phoneNumber"
@@ -996,7 +998,7 @@
                                         Complément d'adresse
                                     </label>
                                     <InputIcon
-                                        v-model="formData.address.additionnalInformation"
+                                        v-model="formData.address.additionalInformation"
                                         :icon="EllipsisHorizontalCircleIcon"
                                         size="md"
                                         placeholder="Complément d'adresse"
@@ -1131,6 +1133,7 @@
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         {{ identifierLabel }}
+                                        <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.identifierNumber"
@@ -1161,7 +1164,8 @@
                             class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnel
+                                Catégorie professionnelle
+                                <span class="text-xs font-normal text-muted-foreground">(optionnel — complétable dans votre profil)</span>
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <Select v-model="formData.professionalCategory">
@@ -1252,7 +1256,7 @@
                             :class="cn('w-full', formData.accountType === 'institution' ? 'bg-white text-primary hover:bg-white/80' : 'bg-primary text-white hover:bg-primary/80')"
                             type="submit"
                             :in-progress="inProgress"
-                            :disabled="!charteAccepted"
+                            :disabled="!canSubmit"
                         >
                             S'inscrire
                         </Button>
@@ -1399,11 +1403,11 @@ const roleOptions = [
 
 const professionalCategory = [
     {
-        label: 'Indépendant(e)',
+        label: 'Salarié(e)',
         value: 'salaried',
     },
     {
-        label: 'Salarié(e)',
+        label: 'Indépendant(e)',
         value: 'independent',
     },
 ];
@@ -1425,7 +1429,7 @@ const formData = reactive({
     passwordConfirmation: '',
     gender: 'F',
     language: LANGUAGES[0].value,
-    phoneNumber: undefined,
+    phoneNumber: '',
     identifierNumber: '',
 
     address: {
@@ -1434,7 +1438,7 @@ const formData = reactive({
         zipCode: '',
         country: countries[0].value,
         workingAt: country.value ? [country.value as 'Belgique' | 'France'] : [] as ('Belgique' | 'France')[],
-        additionnalInformation: '',
+        additionalInformation: '',
     },
     referralSource: '',
     zipCodesArray: [],
@@ -1467,6 +1471,56 @@ const identifierLabel = computed(() => {
     return 'Numéro INAMI';
 });
 
+const canSubmit = computed(() => {
+    if (!charteAccepted.value) {
+        return false;
+    }
+
+    if (!formData.lastname?.trim() || !formData.firstname?.trim() || !formData.email?.trim()) {
+        return false;
+    }
+
+    if (!formData.password || formData.password.length < 8) {
+        return false;
+    }
+
+    if (formData.password !== formData.passwordConfirmation) {
+        return false;
+    }
+
+    if (!formData.address.street?.trim() || !formData.address.city?.trim() || !formData.address.zipCode?.trim()) {
+        return false;
+    }
+
+    if (!formData.address.workingAt?.length) {
+        return false;
+    }
+
+    if (formData.accountType === 'institution' && !formData.institutionName?.trim()) {
+        return false;
+    }
+
+    return true;
+});
+
+function trimOrNull(value: string | null | undefined): string | null {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed : null;
+}
+
+function buildRegistrationPayload() {
+    return {
+        ...formData,
+        phoneNumber: trimOrNull(formData.phoneNumber),
+        identifierNumber: trimOrNull(formData.identifierNumber),
+        professionalCategory: formData.professionalCategory || null,
+        companyNumber: trimOrNull(formData.companyNumber),
+        zipCodes: formData.zipCodesArray.join(', '),
+        cities: formData.citiesArray.join(', '),
+        charteAccepted: charteAccepted.value,
+    };
+}
+
 const route = useRoute();
 const { register } = useAuth();
 
@@ -1477,12 +1531,7 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        const formDataForBackend = {
-            ...formData,
-            zipCodes: formData.zipCodesArray.join(', '),
-            cities: formData.citiesArray.join(', '),
-            charteAccepted: charteAccepted.value ? true : false,
-        };
+        const formDataForBackend = buildRegistrationPayload();
 
         return register(formDataForBackend);
     },
