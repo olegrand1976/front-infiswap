@@ -35,7 +35,11 @@ export type CrmCommercialActivityRow = {
     user_id: number;
     full_name: string;
     email: string;
+    status: string | null;
+    status_label: string;
+    roles: string[];
     roles_label: string;
+    can_revoke: boolean;
     nb_call: number;
     nb_sale: number;
     nb_recommandation: number;
@@ -299,6 +303,12 @@ export const useCrm = () => {
         return response.data ?? { period: {}, rows: [] };
     }
 
+    async function revokeCommercialAccess(userId: number) {
+        return $apifetch<{ message: string }>(`/api/crm/commercial-access/${userId}`, {
+            method: 'DELETE',
+        });
+    }
+
     return {
         trashCount,
         users,
@@ -321,6 +331,7 @@ export const useCrm = () => {
         updateCrmUser,
         getCrmHistories,
         getCommercialActivity,
+        revokeCommercialAccess,
         buildCrmCacheKey,
     };
 };

@@ -122,11 +122,34 @@
                 Aucune activité pour les filtres sélectionnés.
             </p>
         </template>
+
+        <AlertDialog v-model:open="revokeDialogOpen">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Retirer l'accès CRM</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Retirer l'accès CRM de {{ revokeTarget?.full_name }} ?
+                        Les rôles CRM (administrateur, développeur, commercial) seront supprimés pour cette personne.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>
+                        Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        :disabled="revoking"
+                        @click="confirmRevoke"
+                    >
+                        {{ revoking ? 'Suppression…' : 'Retirer l\'accès' }}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { RefreshCw } from 'lucide-vue-next';
+import { RefreshCw, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { h } from 'vue';
 import { Button } from '@/components/ui/button';
@@ -138,8 +161,7 @@ import { formatToDMY } from '@/composables/useDate';
 import type { CrmCommercialActivityRow } from '@/composables/useCrm';
 
 const { $apifetch } = useNuxtApp();
-const { getCommercialActivity } = useCrm();
-const { getUserReferrer, userReferrer } = useReferrer();
+const { getCommercialActivity, revokeCommercialAccess } = useCrm();
 const user = useUser();
 
 type CommercialOption = {
@@ -158,6 +180,9 @@ const customStartDate = ref('');
 const customEndDate = ref('');
 const commercialSearch = ref('');
 const commercialOptions = ref<CommercialOption[]>([]);
+const revokeDialogOpen = ref(false);
+const revokeTarget = ref<CrmCommercialActivityRow | null>(null);
+const revoking = ref(false);
 
 const selectedCommercialLabel = computed(() => {
     if (selectedCommercial.value === 'all') {
@@ -223,18 +248,6 @@ function mergeFromRows(data: CrmCommercialActivityRow[]) {
     })));
 }
 
-async function loadReferrerOptions() {
-    await getUserReferrer();
-    mergeCommercialOptions(
-        userReferrer.value
-            .filter(r => r.id !== null)
-            .map(r => ({
-                id: r.id as number,
-                full_name: r.full_name ?? `Commercial #${r.id}`,
-            })),
-    );
-}
-
 async function searchCommercials() {
     if (commercialSearch.value.length < 2) {
         return;
@@ -244,7 +257,7 @@ async function searchCommercials() {
         const data = await $apifetch<Array<{ id: number; firstname?: string | null; lastname?: string | null; full_name?: string | null }>>('api/admin/users/search', {
             params: {
                 query: commercialSearch.value,
-                roles: 'administrator,developer,sale_representative,community_manager',
+                roles: 'administrator,developer,sale_representative',
             },
         });
         mergeCommercialOptions(data.map(user => ({
@@ -347,6 +360,41 @@ function resetFilters() {
     refresh();
 }
 
+function openRevokeDialog(row: CrmCommercialActivityRow) {
+    revokeTarget.value = row;
+    revokeDialogOpen.value = true;
+}
+
+async function confirmRevoke() {
+    if (!revokeTarget.value || revoking.value) {
+        return;
+    }
+
+    const targetId = revokeTarget.value.user_id;
+    revoking.value = true;
+    try {
+        await revokeCommercialAccess(targetId);
+        $toast({ description: 'Accès CRM retiré.' });
+        revokeDialogOpen.value = false;
+        revokeTarget.value = null;
+
+        if (selectedCommercial.value === String(targetId)) {
+            selectedCommercial.value = 'all';
+        }
+
+        await refresh();
+    }
+    catch {
+        $toast({
+            description: 'Impossible de retirer l\'accès CRM.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        revoking.value = false;
+    }
+}
+
 const columns: ColumnDef<CrmCommercialActivityRow>[] = [
     {
         accessorKey: 'full_name',
@@ -355,8 +403,13 @@ const columns: ColumnDef<CrmCommercialActivityRow>[] = [
     },
     {
         accessorKey: 'roles_label',
-        header: 'Profil',
+        header: 'Rôles',
         cell: ({ row }) => row.original.roles_label || '—',
+    },
+    {
+        accessorKey: 'status_label',
+        header: 'Statut',
+        cell: ({ row }) => row.original.status_label || '—',
     },
     {
         accessorKey: 'email',
@@ -393,6 +446,27 @@ const columns: ColumnDef<CrmCommercialActivityRow>[] = [
         header: 'Total',
         cell: ({ row }) => h('span', { class: 'font-semibold' }, row.original.total_actions),
     },
+    {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => {
+            if (!row.original.can_revoke) {
+                return null;
+            }
+
+            return h(
+                Button,
+                {
+                    variant: 'ghost',
+                    size: 'icon',
+                    class: 'text-destructive hover:text-destructive',
+                    title: 'Retirer l\'accès CRM',
+                    onClick: () => openRevokeDialog(row.original),
+                },
+                () => h(Trash2, { class: 'size-4' }),
+            );
+        },
+    },
 ];
 
 onMounted(async () => {
@@ -402,7 +476,6 @@ onMounted(async () => {
             full_name: user.value.full_name ?? `Commercial #${user.value.id}`,
         }]);
     }
-    await loadReferrerOptions();
     await refresh();
 });
 </script>
