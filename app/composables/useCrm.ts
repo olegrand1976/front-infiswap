@@ -1,9 +1,5 @@
 import { useState, useNuxtApp } from '#app';
 import type { CrmInstitution, Pagination, User } from '~/lib/types';
-
-function clonePagination<T>(pagination: Pagination<T>): Pagination<T> {
-    return structuredClone(pagination);
-}
 import {
     buildCrmCacheKey,
     clearCrmCache,
@@ -11,6 +7,10 @@ import {
     getCrmCacheEntry,
     setCrmCacheEntry,
 } from '@/composables/useCrmCache';
+
+function clonePagination<T>(pagination: Pagination<T>): Pagination<T> {
+    return structuredClone(pagination);
+}
 
 type GetCrmPlusOptions = Record<string, unknown> & {
     force?: boolean;

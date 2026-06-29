@@ -40,6 +40,8 @@ export type User = {
     identifier_number: string;
     email: string;
     type: 'standard' | 'institution';
+    is_boosted?: boolean;
+    boosted_until?: string | null;
     institution?: {
         id: number;
         name: string;
@@ -360,6 +362,8 @@ export type Replacement = {
     end_date: string;
     visibility: 'public' | 'group' | 'friends';
     status: 'open' | 'closed';
+    is_boosted?: boolean;
+    boosted_until?: string | null;
     type: 'immediate' | 'classic';
     patient_count?: number;
     zip_codes?: string[] | string;
