@@ -14,9 +14,53 @@
                 Exporter la sélection
             </Button>
         </div>
+        <div class="mb-4 min-h-0 flex-1 space-y-3 overflow-y-auto md:hidden">
+            <article
+                v-for="crmUser in localUsers"
+                :key="`mobile-user-${crmUser.id}`"
+                class="rounded-lg border bg-white p-4 shadow-sm"
+            >
+                <div class="min-w-0">
+                    <p class="font-semibold text-foreground">
+                        {{ crmUser.full_name }}
+                    </p>
+                    <p
+                        v-if="crmUser.email"
+                        class="mt-1 text-sm text-muted-foreground break-all"
+                    >
+                        {{ crmUser.email }}
+                    </p>
+                    <p
+                        v-if="crmUser.phone_number"
+                        class="mt-1 text-sm text-muted-foreground"
+                    >
+                        {{ formatPhoneNumber(crmUser.phone_number ?? null) ?? crmUser.phone_number }}
+                    </p>
+                    <p
+                        v-if="crmUser.zip_code || crmUser.city"
+                        class="mt-1 text-sm text-muted-foreground"
+                    >
+                        {{ [crmUser.zip_code, crmUser.city].filter(Boolean).join(' ') }}
+                    </p>
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        NursAssur : {{ userProductActive(crmUser, 'nursassur') ? 'Oui' : 'Non' }}
+                        · NursTech : {{ userProductActive(crmUser, 'nurstech') ? 'Oui' : 'Non' }}
+                    </p>
+                </div>
+                <div class="mt-3">
+                    <button
+                        type="button"
+                        class="text-sm text-primary underline touch-manipulation"
+                        @click="openModal(crmUser)"
+                    >
+                        Voir la fiche
+                    </button>
+                </div>
+            </article>
+        </div>
         <DataTable
             ref="dataTableRef"
-            class="min-h-0 flex-1"
+            class="hidden min-h-0 flex-1 md:flex md:flex-col"
             :data="localUsers"
             :columns="columns"
             manual-sorting
@@ -275,6 +319,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/composables/useAuth';
 import { formatRelativeDate } from '@/composables/useDate';
+import { formatPhoneNumber } from '~/lib/utils';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
 import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
@@ -360,6 +405,20 @@ function exportSelectedCsv() {
 function openModal(selectedUser: User) {
     user.value = selectedUser;
     showModal.value = true;
+}
+
+function userProductActive(user: User, product: CrmProductKey): boolean {
+    const mods = user.last_product_modifications ?? [];
+    const needle = product === 'nursassur' ? 'nursassur' : 'nurstech';
+    const found = mods.find(p => (p.product_name || '').toLowerCase().includes(needle));
+    if (found !== undefined && found.activate !== undefined && found.activate !== null) {
+        return Number(found.activate) === 1;
+    }
+    const field = product === 'nursassur' ? user.insurance : user.site;
+    if (field !== undefined && field !== null) {
+        return Number(field) === 1;
+    }
+    return false;
 }
 
 function openContactDialog(user: User) {
@@ -773,6 +832,37 @@ const columns: ColumnDef<User>[] = [
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
+    },
+    {
+        accessorKey: 'email',
+        header: () => h('div', { class: 'text-center' }, 'Email'),
+        cell: ({ row }) => {
+            const email = row.getValue('email') as string | null | undefined;
+
+            return h(
+                'span',
+                {
+                    class: 'block text-center text-sm lowercase whitespace-nowrap min-w-[220px]',
+                    title: email ?? '',
+                },
+                email || '—',
+            );
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'phone_number',
+        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
+        cell: ({ row }) => {
+            const phone = row.getValue('phone_number') as string | null | undefined;
+
+            return h(
+                'div',
+                { class: 'text-center text-sm whitespace-nowrap' },
+                formatPhoneNumber(phone ?? null) ?? '—',
+            );
+        },
+        enableSorting: false,
     },
     {
         accessorKey: 'zip_code',

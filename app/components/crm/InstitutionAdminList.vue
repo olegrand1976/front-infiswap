@@ -25,6 +25,18 @@
                         <p class="font-semibold text-foreground">
                             {{ institution.full_name }}
                         </p>
+                        <p
+                            v-if="institution.email"
+                            class="mt-1 text-sm text-muted-foreground break-all"
+                        >
+                            {{ institution.email }}
+                        </p>
+                        <p
+                            v-if="institution.phone_number"
+                            class="mt-1 text-sm text-muted-foreground"
+                        >
+                            {{ institution.phone_number }}
+                        </p>
                         <span
                             class="inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium"
                             :class="institutionStatusBadgeClass(institution.status)"
@@ -40,17 +52,6 @@
                         <p class="text-sm text-muted-foreground mt-1">
                             NursAssur : {{ institutionProductActive(institution, 'nursassur') ? 'Oui' : 'Non' }}
                             · NursTech : {{ institutionProductActive(institution, 'nurstech') ? 'Oui' : 'Non' }}
-                        </p>
-                        <p
-                            v-if="institution.phone_number || institution.email"
-                            class="text-sm text-muted-foreground mt-1"
-                        >
-                            <span v-if="institution.phone_number">{{ institution.phone_number }}</span>
-                            <span v-if="institution.phone_number && institution.email"> · </span>
-                            <span
-                                v-if="institution.email"
-                                class="break-all"
-                            >{{ institution.email }}</span>
                         </p>
                         <button
                             v-if="!isCollaborator"
@@ -1797,6 +1798,52 @@ const columns: ColumnDef<CrmInstitution>[] = [
         cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
     },
     {
+        accessorKey: 'email',
+        header: () => h('div', { class: 'text-center' }, 'Email'),
+        cell: ({ row }) => {
+            const email = row.getValue('email') as string | null | undefined;
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator.value
+                    ? h('span', {
+                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                        title: email ?? '',
+                    }, email || '—')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', {
+                                class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                                title: email ?? '',
+                            }, email || '—'),
+                            h(Pencil, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
+                                onClick: () => openContactInfoDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: 'phone_number',
+        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
+        cell: ({ row }) => {
+            const phone = row.getValue('phone_number') as string | null | undefined;
+
+            return h('div', { class: 'flex justify-center items-center gap-1' }, [
+                isCollaborator.value
+                    ? h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—')
+                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
+                            h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—'),
+                            h(Pencil, {
+                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
+                                onClick: () => openContactInfoDialog(row.original),
+                            }),
+                        ]),
+            ]);
+        },
+        enableSorting: false,
+    },
+    {
         accessorKey: 'zip_code',
         header: () => {
             return h(Button, {
@@ -2022,52 +2069,6 @@ const columns: ColumnDef<CrmInstitution>[] = [
                     },
                     onAddAction: () => void openCommercialDialog(institution, 'call'),
                 }),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'phone_number',
-        header: () => h('div', { class: 'text-center' }, 'Téléphone'),
-        cell: ({ row }) => {
-            const phone = row.getValue('phone_number') as string | null | undefined;
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', { class: 'text-sm whitespace-nowrap' }, phone || '—'),
-                            h(Pencil, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
-                                onClick: () => openContactInfoDialog(row.original),
-                            }),
-                        ]),
-            ]);
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: 'email',
-        header: () => h('div', { class: 'text-center' }, 'Email'),
-        cell: ({ row }) => {
-            const email = row.getValue('email') as string | null | undefined;
-
-            return h('div', { class: 'flex justify-center items-center gap-1' }, [
-                isCollaborator.value
-                    ? h('span', {
-                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                        title: email ?? '',
-                    }, email || '—')
-                    : h('div', { class: 'flex justify-center items-center gap-1' }, [
-                            h('span', {
-                                class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                                title: email ?? '',
-                            }, email || '—'),
-                            h(Pencil, {
-                                class: 'w-3 h-3 cursor-pointer hover:text-gray-700 shrink-0',
-                                onClick: () => openContactInfoDialog(row.original),
-                            }),
-                        ]),
             ]);
         },
         enableSorting: false,
