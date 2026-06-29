@@ -1,3 +1,5 @@
+import { canBoostReplacement as canBoostReplacementItem } from '~/lib/replacementBoost';
+
 export const useReplacementBoost = () => {
     const { $apifetch } = useNuxtApp();
     const { isInstitution } = useAuth();
@@ -27,16 +29,17 @@ export const useReplacementBoost = () => {
         return boostPlan.value;
     };
 
-    const canBoostReplacement = (r: {
-        institution_id?: number | null;
-        status?: string;
-        has_confirmed_substitute?: boolean;
-    }, listType = 'me') =>
-        listType === 'me'
-        && !isInstitution.value
-        && !r.institution_id
-        && r.status === 'open'
-        && r.has_confirmed_substitute !== true;
+    const canBoostReplacement = (
+        replacement: {
+            institution_id?: number | null;
+            status?: string;
+            has_confirmed_substitute?: boolean;
+        },
+        listType = 'me',
+    ) => canBoostReplacementItem(replacement, {
+        listType,
+        isInstitutionUser: isInstitution.value,
+    });
 
     return {
         boostPlan,

@@ -16,12 +16,7 @@
                 <div class="relative flex items-start gap-4">
                     <div class="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm shrink-0">
                         <Rocket
-                            v-if="!isActiveMode"
                             class="w-6 h-6"
-                        />
-                        <ReplacementBoostStars
-                            v-else
-                            size="md"
                         />
                     </div>
                     <div>
@@ -290,10 +285,11 @@ const zipLabel = computed(() => {
 
 const boostedUntilLabel = computed(() => {
     const until = props.replacement?.boosted_until;
-    if (!until) return 'Renouvellement automatique tant que le boost est actif.';
-    return `Actif jusqu'au ${formatDate(until)}`;
+    if (!until) return 'Renouvellement automatique chaque semaine tant que le boost est actif.';
+    return `Actif jusqu'au ${formatDate(until)} (non annulable avant cette date)`;
 });
 
+/** Annulation manuelle : abonnement Stripe uniquement (pas les boosts one-time avec date de fin). */
 const canCancel = computed(() => {
     const until = props.replacement?.boosted_until;
     return !until || new Date(until) <= new Date();

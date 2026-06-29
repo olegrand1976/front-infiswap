@@ -2,20 +2,21 @@
     <div class="pt-2">
         <div
             v-if="showBoostSuccess"
-            class="mx-3 mb-4 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-4 sm:p-5 shadow-sm"
+            class="mx-3 mb-3 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-3 sm:p-4 shadow-sm"
         >
-            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                <ReplacementBoostStars size="lg" />
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <ReplacementBoostStars size="md" />
                 <div class="flex-1">
-                    <p class="font-bold text-amber-900 text-lg">
+                    <p class="font-bold text-amber-900 text-sm sm:text-base">
                         Remplacement boosté avec succès !
                     </p>
-                    <p class="text-sm text-amber-800/80 mt-1">
+                    <p class="text-xs text-amber-800/80 mt-0.5">
                         Votre annonce est en tête de liste et bénéficie d'une visibilité maximale.
                     </p>
                 </div>
                 <Button
                     variant="outline"
+                    size="sm"
                     class="shrink-0 border-amber-300 text-amber-800 hover:bg-amber-100"
                     @click="showBoostSuccess = false"
                 >
@@ -24,18 +25,14 @@
             </div>
         </div>
 
-        <div
-            v-if="replacement.is_boosted"
-            class="mx-3 mb-2 sm:mb-4 flex justify-center sm:justify-start"
-        >
-            <ReplacementBoostTrustBadge
-                :variant="isReplacementOwner ? 'owner' : 'visitor'"
-                size="md"
-                :boosted-until="replacement.boosted_until"
-                :clickable="isReplacementOwner"
-                @click="openBoostActive"
-            />
-        </div>
+        <ReplacementDetailBoostBlock
+            v-if="replacement"
+            :replacement="replacement"
+            :is-owner="isReplacementOwner"
+            :can-boost="canBoostThisReplacement"
+            @boost="openBoostPreview"
+            @manage="openBoostActive"
+        />
 
         <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
@@ -407,7 +404,7 @@
 import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
-import ReplacementBoostTrustBadge from '~/components/replacements/ReplacementBoostTrustBadge.vue';
+import ReplacementDetailBoostBlock from '~/components/replacements/ReplacementDetailBoostBlock.vue';
 import ReplacementBoostModal from '~/components/replacements/ReplacementBoostModal.vue';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
@@ -421,10 +418,21 @@ const showBoostSuccess = ref(false);
 const boostModalOpen = ref(false);
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
+const { canBoostReplacement } = useReplacementBoost();
 
 const isReplacementOwner = computed(() =>
     user.value?.id != null && Number(replacement.value?.user_id) === Number(user.value.id),
 );
+
+const canBoostThisReplacement = computed(() =>
+    replacement.value ? canBoostReplacement(replacement.value, 'me') : false,
+);
+
+const openBoostPreview = () => {
+    if (isReplacementOwner.value) {
+        boostModalOpen.value = true;
+    }
+};
 
 const openBoostActive = () => {
     if (isReplacementOwner.value) {

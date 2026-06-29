@@ -16,8 +16,7 @@
         <Star
             v-for="i in count"
             :key="i"
-            class="fill-amber-400 text-amber-400"
-            :class="starSize"
+            :class="[starSize, starColorClass]"
         />
     </button>
     <span
@@ -31,8 +30,7 @@
         <Star
             v-for="i in count"
             :key="i"
-            class="fill-amber-400 text-amber-400"
-            :class="starSize"
+            :class="[starSize, starColorClass]"
         />
     </span>
 </template>
@@ -45,12 +43,14 @@ const props = withDefaults(defineProps<{
     size?: 'sm' | 'md' | 'lg';
     clickable?: boolean;
     plain?: boolean;
+    tone?: 'amber' | 'light';
     title?: string;
 }>(), {
     count: 5,
     size: 'sm',
     clickable: false,
     plain: false,
+    tone: 'amber',
     title: 'Remplacement boosté',
 });
 
@@ -67,4 +67,8 @@ const starSize = computed(() => ({
     md: 'w-4 h-4',
     lg: 'w-4 h-4',
 }[props.size]));
+
+const starColorClass = computed(() =>
+    props.tone === 'light' ? 'fill-white text-white' : 'fill-amber-400 text-amber-400',
+);
 </script>
