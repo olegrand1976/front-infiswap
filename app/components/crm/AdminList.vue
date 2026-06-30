@@ -51,7 +51,7 @@
                     <button
                         type="button"
                         class="text-sm text-primary underline touch-manipulation"
-                        @click="openModal(crmUser)"
+                        @click="openUserProfile(crmUser)"
                     >
                         Voir la fiche
                     </button>
@@ -335,6 +335,7 @@ const authUser = useState('user');
 const emit = defineEmits(['refresh-users', 'handle-per-page-change', 'set-sort', 'update-users']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateReferrer, userReferrer, getUserReferrer, referrerDisplayLabel } = useReferrer();
+const { openUserProfile, setActionHandler, closeProfile } = useCrmProfile();
 
 const showModal = ref(false);
 const contactDialogOpen = ref(false);
@@ -831,7 +832,14 @@ const columns: ColumnDef<User>[] = [
                 onClick: () => setSort('firstname'),
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
+        cell: ({ row }) => {
+            const targetUser = row.original as User;
+            return h(Button, {
+                variant: 'link',
+                class: 'h-auto p-0 capitalize font-medium justify-start text-left',
+                onClick: () => openUserProfile(targetUser),
+            }, () => targetUser.full_name);
+        },
     },
     {
         accessorKey: 'email',
@@ -1274,4 +1282,28 @@ const columns: ColumnDef<User>[] = [
 watch(() => props.users, (newUsers) => {
     localUsers.value = newUsers?.data ? [...newUsers.data] : [];
 }, { immediate: true });
+
+onMounted(() => {
+    setActionHandler((action) => {
+        if (!('user' in action) || !action.user) {
+            return;
+        }
+
+        closeProfile();
+
+        if (action.type === 'contact' && action.user.crm?.id) {
+            openContactDialog(action.user);
+        }
+        else if (action.type === 'comment') {
+            void openCommentDialog(action.user);
+        }
+        else if (action.type === 'referrer') {
+            void openReferrerDialog(action.user);
+        }
+    });
+});
+
+onUnmounted(() => {
+    setActionHandler(null);
+});
 </script>

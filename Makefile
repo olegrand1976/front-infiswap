@@ -32,6 +32,7 @@ export SSH_HOST SSH_USER SSH_PORT PMA_PORT DB_PORT DB_REMOTE
 	down down-all down-front down-back \
 	front-npm-dev front-npm-dev-prep \
 	migrate-back \
+	test-registration smoke-registration \
 	tunnel-prod tunnel-pma tunnel-db verify-ovh sync-prod-db \
 	gcp-bootstrap gcp-setup-github-deploy gcp-deploy gcp-domains gcp-disable-premedica gcp-smoke \
 	gcp-scale-up gcp-scale-down gcp-scale-scheduler \
@@ -67,6 +68,8 @@ help:
 	@echo "  Local — back (Sail, stack up requise : make up-back)"
 	@echo "    make migrate-back              # vendor/bin/sail artisan migrate"
 	@echo "    make migrate-back ARGS=\"--step\"  # options artisan supplémentaires"
+	@echo "    make test-registration         # tests Pest validation + inscription"
+	@echo "    make smoke-registration      # contrôle artisan bout-en-bout (staging)"
 	@echo ""
 	@echo "  Prod — tunnel SSH (admin DB sans exposition publique)"
 	@echo "    make tunnel-prod   # via SSH_TARGET=infiswap-back (~/.ssh/config)"
@@ -229,6 +232,12 @@ front-npm-dev: front-npm-dev-prep
 
 migrate-back:
 	cd "$(BACK_DIR)" && vendor/bin/sail artisan migrate $(ARGS)
+
+test-registration:
+	cd "$(BACK_DIR)" && vendor/bin/sail artisan test tests/Unit/Http/RegistrationRequestValidationTest.php tests/Feature/Auth/RegistrationTest.php
+
+smoke-registration:
+	cd "$(BACK_DIR)" && vendor/bin/sail artisan registration:smoke-test
 
 # --- Tunnel SSH vers les services d'admin du serveur de prod ---
 

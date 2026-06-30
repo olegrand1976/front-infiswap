@@ -77,7 +77,7 @@
                     <button
                         type="button"
                         class="text-sm text-primary underline touch-manipulation"
-                        @click="openInstitutionShow(institution)"
+                        @click="openInstitutionProfile(institution)"
                     >
                         Voir la fiche
                     </button>
@@ -609,7 +609,6 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
-import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
 import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
@@ -623,6 +622,7 @@ const authUser = useState('user');
 const emit = defineEmits(['refresh-institutions', 'handle-per-page-change', 'set-sort', 'update-institutions']);
 const { loading, userComments, getUserComments, destroy, store, update } = useComment();
 const { updateInstitutionReferrer, userReferrer, getUserReferrer, referrerDisplayLabel } = useReferrer();
+const { openInstitutionProfile, setActionHandler, closeProfile } = useCrmProfile();
 
 const contactDialogOpen = ref(false);
 const contactInfoDialogOpen = ref(false);
@@ -1792,7 +1792,14 @@ const columns: ColumnDef<CrmInstitution>[] = [
                 onClick: () => setSort('name'),
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('full_name')),
+        cell: ({ row }) => {
+            const institution = row.original as CrmInstitution;
+            return h(Button, {
+                variant: 'link',
+                class: 'h-auto p-0 capitalize font-medium justify-start text-left',
+                onClick: () => openInstitutionProfile(institution),
+            }, () => institution.full_name);
+        },
     },
     {
         accessorKey: 'email',
@@ -2373,4 +2380,28 @@ const columns: ColumnDef<CrmInstitution>[] = [
 watch(() => props.institutions, (newInstitutions) => {
     localInstitutions.value = newInstitutions?.data ? [...newInstitutions.data] : [];
 }, { immediate: true });
+
+onMounted(() => {
+    setActionHandler(async (action) => {
+        if (!('institution' in action) || !action.institution) {
+            return;
+        }
+
+        closeProfile();
+
+        if (action.type === 'contact') {
+            await openContactDialog(action.institution);
+        }
+        else if (action.type === 'comment') {
+            await openCommentDialog(action.institution);
+        }
+        else if (action.type === 'referrer') {
+            await openReferrerDialog(action.institution);
+        }
+    });
+});
+
+onUnmounted(() => {
+    setActionHandler(null);
+});
 </script>

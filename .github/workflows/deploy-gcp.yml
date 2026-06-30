@@ -16,6 +16,11 @@ on:
         options:
           - staging
           - prod
+      skip_baseline:
+        description: Ignorer baseline pre-deploy (recovery)
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: deploy-front-gcp-${{ github.ref_name }}
@@ -32,29 +37,40 @@ env:
   GCP_SERVICE_ACCOUNT: github-infiswap-deploy@premedica-prod-2025.iam.gserviceaccount.com
 
 jobs:
-  deploy:
-    name: Cloud Build → front GCP
+  resolve-env:
+    name: Resolve environment
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-
+    outputs:
+      target: ${{ steps.env.outputs.target }}
+      gate_ref: ${{ steps.env.outputs.gate_ref }}
+      front_branch: ${{ steps.env.outputs.front_branch }}
+      cloudbuild_config: ${{ steps.env.outputs.cloudbuild_config }}
+      web_service: ${{ steps.env.outputs.web_service }}
+      web_public_url: ${{ steps.env.outputs.web_public_url }}
+      skip_baseline: ${{ steps.env.outputs.skip_baseline }}
     steps:
       - name: Resolve target environment
         id: env
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             target="${{ github.event.inputs.target }}"
+            skip_baseline="${{ github.event.inputs.skip_baseline }}"
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
             target="prod"
+            skip_baseline="false"
           else
             target="staging"
+            skip_baseline="false"
           fi
           case "$target" in
             prod)
+              gate_ref="main"
               echo "cloudbuild_config=infra/gcp/cloudbuild-prod-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-prod" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.be" >> "$GITHUB_OUTPUT"
               ;;
             staging)
+              gate_ref="staging"
               echo "cloudbuild_config=infra/gcp/cloudbuild-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-staging" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.ll-it-sc.be" >> "$GITHUB_OUTPUT"
@@ -64,14 +80,49 @@ jobs:
               exit 1
               ;;
           esac
+          echo "target=${target}" >> "$GITHUB_OUTPUT"
+          echo "gate_ref=${gate_ref}" >> "$GITHUB_OUTPUT"
+          echo "front_branch=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          echo "skip_baseline=${skip_baseline}" >> "$GITHUB_OUTPUT"
 
+  quality-gate-staging:
+    name: Quality gate (staging)
+    needs: resolve-env
+    if: needs.resolve-env.outputs.target == 'staging'
+    uses: olegrand1976/back-infiswap/.github/workflows/quality-gate.yml@staging
+    with:
+      environment: staging
+      front_branch: ${{ needs.resolve-env.outputs.front_branch }}
+      skip_baseline: ${{ needs.resolve-env.outputs.skip_baseline == 'true' }}
+
+  quality-gate-prod:
+    name: Quality gate (prod)
+    needs: resolve-env
+    if: needs.resolve-env.outputs.target == 'prod'
+    uses: olegrand1976/back-infiswap/.github/workflows/quality-gate.yml@main
+    with:
+      environment: prod
+      front_branch: ${{ needs.resolve-env.outputs.front_branch }}
+      skip_baseline: ${{ needs.resolve-env.outputs.skip_baseline == 'true' }}
+
+  deploy:
+    name: Cloud Build → front GCP
+    needs: [resolve-env, quality-gate-staging, quality-gate-prod]
+    if: |
+      !cancelled() &&
+      (needs.quality-gate-staging.result == 'success' || needs.quality-gate-staging.result == 'skipped') &&
+      (needs.quality-gate-prod.result == 'success' || needs.quality-gate-prod.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
       - name: Checkout front
         uses: actions/checkout@v4
 
       - name: Validate Cloud Build context
         run: |
           test -f Dockerfile.cloudrun.web
-          test -f "${{ steps.env.outputs.cloudbuild_config }}"
+          test -f "${{ needs.resolve-env.outputs.cloudbuild_config }}"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -88,18 +139,18 @@ jobs:
         run: |
           gcloud builds submit \
             --project="${GCP_PROJECT_ID}" \
-            --config="${{ steps.env.outputs.cloudbuild_config }}"
+            --config="${{ needs.resolve-env.outputs.cloudbuild_config }}"
 
       - name: Summary
         run: |
-          WEB_URL="$(gcloud run services describe "${{ steps.env.outputs.web_service }}" \
+          WEB_URL="$(gcloud run services describe "${{ needs.resolve-env.outputs.web_service }}" \
             --region="${GCP_RUN_REGION}" --project="${GCP_PROJECT_ID}" \
             --format='value(status.url)' 2>/dev/null || true)"
           {
-            echo "### Front GCP (${{ steps.env.outputs.web_service }})"
+            echo "### Front GCP (${{ needs.resolve-env.outputs.web_service }})"
             echo ""
             echo "| | URL |"
             echo "|---|-----|"
-            echo "| Custom | ${{ steps.env.outputs.web_public_url }} |"
+            echo "| Custom | ${{ needs.resolve-env.outputs.web_public_url }} |"
             echo "| Cloud Run | ${WEB_URL} |"
           } >> "${GITHUB_STEP_SUMMARY}"

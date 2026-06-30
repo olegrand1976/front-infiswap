@@ -135,6 +135,27 @@ export type CrmInstitutionSubscription = {
     signing_urls?: { client?: string | null; commercial?: string | null } | null;
 };
 
+export type InstitutionAiInsightItem = {
+    title: string;
+    summary?: string | null;
+    url: string;
+    source_name?: string | null;
+    published_at?: string | null;
+    category?: string | null;
+};
+
+export type InstitutionAiInsight = {
+    id: number;
+    institution_id: number;
+    company_summary?: string | null;
+    news_items?: InstitutionAiInsightItem[];
+    job_items?: InstitutionAiInsightItem[];
+    grounding_sources?: string[];
+    status: 'pending' | 'completed' | 'failed';
+    error_message?: string | null;
+    generated_at?: string | null;
+};
+
 export type CrmInstitution = {
     id: number;
     institution_id: number;
