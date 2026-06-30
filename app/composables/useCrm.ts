@@ -1,5 +1,6 @@
 import { useState, useNuxtApp } from '#app';
 import type { CrmInstitution, Pagination, User } from '~/lib/types';
+import type { CrmWeeklyKpiActionType } from '@/composables/useCrmWeeklyKpi';
 import {
     buildCrmCacheKey,
     clearCrmCache,
@@ -56,6 +57,37 @@ export type CrmCommercialActivityResponse = {
     };
     rows: CrmCommercialActivityRow[];
 };
+
+export type CrmQuickActionResponse = {
+    message?: string;
+    crm: Record<string, unknown>;
+};
+
+function todayIsoDate(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
+export function buildQuickCommercialActionPayload(
+    userId: number,
+    clientType: string,
+    actionType: CrmWeeklyKpiActionType,
+    date = todayIsoDate(),
+) {
+    return {
+        user_id: userId,
+        client_type: clientType,
+        last_contact_date: date,
+        history: [
+            {
+                action_type: actionType,
+                number_of_times: 1,
+                start_date: date,
+                end_date: date,
+                comment: '',
+            },
+        ],
+    };
+}
 
 export type CrmHistoryEntry = {
     id: number;
@@ -284,6 +316,27 @@ export const useCrm = () => {
         });
     };
 
+    async function recordQuickCommercialAction(
+        userId: number,
+        clientType: string,
+        actionType: CrmWeeklyKpiActionType,
+    ): Promise<CrmQuickActionResponse> {
+        return await $apifetch<CrmQuickActionResponse>('/api/crm/plus', {
+            method: 'POST',
+            body: buildQuickCommercialActionPayload(userId, clientType, actionType),
+        });
+    }
+
+    async function revertQuickCommercialAction(
+        crmUserId: number,
+        actionType: CrmWeeklyKpiActionType,
+    ): Promise<CrmQuickActionResponse> {
+        return await $apifetch<CrmQuickActionResponse>(`/api/crm/${crmUserId}/revert-last`, {
+            method: 'POST',
+            body: { action_type: actionType },
+        });
+    }
+
     const updateCrmUser = async (id, formData) => {
         return await $apifetch(`/api/crm/${id}/update`, {
             method: 'PUT',
@@ -328,6 +381,8 @@ export const useCrm = () => {
         invalidateCrmCacheKey,
         clearCrmCache,
         crmUser,
+        recordQuickCommercialAction,
+        revertQuickCommercialAction,
         updateCrmUser,
         getCrmHistories,
         getCommercialActivity,

@@ -348,6 +348,7 @@ const commercialCrmUserId = ref<number | null>(null);
 const commercialEntityLabel = ref('');
 const commercialDefaultAction = ref<'call' | 'sale' | 'recommandation' | 'meeting' | 'pending'>('call');
 const commercialInitialCounters = ref<Record<string, number> | null>(null);
+const kpiResolvingId = ref<number | null>(null);
 const tempContactDate = ref('');
 const tempContactMethod = ref('mail');
 const editingUserId = ref<number | null>(null);
@@ -358,7 +359,7 @@ const updatingComment = ref<Comment | null>(null);
 const { $toast } = useNuxtApp();
 const { isCollaborator } = useAuth();
 const { deactivateProduct } = useProductCrmHistory();
-const { updateCrmUser } = useCrm();
+const { updateCrmUser, recordQuickCommercialAction, revertQuickCommercialAction } = useCrm();
 const user = ref<User | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
 const referrerMode = ref<'account' | 'text'>('account');
@@ -451,6 +452,59 @@ function openCommercialDialog(targetUser: User, actionType: CommercialActionType
             }
         : null;
     commercialDialogOpen.value = true;
+}
+
+function weeklyCounterTotal(crm: Record<string, unknown>, actionType: CommercialActionType): number {
+    const key = crmWeeklyCounterKeyForAction(actionType);
+    return Number(crm[key]) || 0;
+}
+
+async function incrementCommercialAction(targetUser: User, actionType: CommercialActionType) {
+    kpiResolvingId.value = targetUser.id;
+    try {
+        const response = await recordQuickCommercialAction(
+            targetUser.id,
+            (targetUser.crm?.client_type as string) ?? 'user',
+            actionType,
+        );
+        patchLocalUserCrm(targetUser.id, response.crm);
+        $toast({
+            description: `+1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch {
+        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    }
+    finally {
+        kpiResolvingId.value = null;
+    }
+}
+
+async function decrementCommercialAction(targetUser: User, actionType: CommercialActionType) {
+    const crmId = targetUser.crm?.id;
+    if (!crmId) {
+        $toast({ description: 'Aucun contact CRM pour retirer une action.', variant: 'destructive' });
+        return;
+    }
+
+    kpiResolvingId.value = targetUser.id;
+    try {
+        const response = await revertQuickCommercialAction(crmId, actionType);
+        patchLocalUserCrm(targetUser.id, response.crm);
+        $toast({
+            description: `−1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message
+            ?? 'Erreur lors du retrait';
+        $toast({ description: message, variant: 'destructive' });
+    }
+    finally {
+        kpiResolvingId.value = null;
+    }
 }
 
 function patchLocalUserCrm(userId: number, crm: Record<string, unknown>) {
@@ -798,7 +852,10 @@ const isFranceUser = computed(() => {
 const { kpiColumns } = useCrmWeeklyKpiColumns<User>({
     setSort,
     isCollaborator,
-    openCommercialDialog,
+    onIncrement: incrementCommercialAction,
+    onDecrement: decrementCommercialAction,
+    getCrmUserId: row => row.crm?.id ?? null,
+    resolvingRowId: kpiResolvingId,
     getRowId: row => row.id,
 });
 

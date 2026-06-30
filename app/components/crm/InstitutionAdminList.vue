@@ -674,6 +674,8 @@ const {
     updateCrmInstitutionContact,
     ensureCrmInstitutionContact,
     updateCrmUser,
+    recordQuickCommercialAction,
+    revertQuickCommercialAction,
 } = useCrm();
 const representativeUserId = ref<number | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
@@ -1034,6 +1036,68 @@ async function openCommercialDialog(institution: CrmInstitution, actionType: Com
                 }
             : null;
         commercialDialogOpen.value = true;
+    }
+    finally {
+        commercialResolvingId.value = null;
+    }
+}
+
+function weeklyCounterTotal(crm: Record<string, unknown>, actionType: CommercialActionType): number {
+    const key = crmWeeklyCounterKeyForAction(actionType);
+    return Number(crm[key]) || 0;
+}
+
+async function incrementCommercialAction(institution: CrmInstitution, actionType: CommercialActionType) {
+    commercialResolvingId.value = institution.id;
+    try {
+        const resolved = await resolveInstitutionCrmContact(institution);
+        const userId = resolved?.representative_user_id;
+
+        if (!userId) {
+            return;
+        }
+
+        const response = await recordQuickCommercialAction(
+            userId,
+            resolved.crm?.client_type ?? 'user',
+            actionType,
+        );
+        patchLocalInstitutionCrm(resolved.id, response.crm);
+        $toast({
+            description: `+1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch {
+        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    }
+    finally {
+        commercialResolvingId.value = null;
+    }
+}
+
+async function decrementCommercialAction(institution: CrmInstitution, actionType: CommercialActionType) {
+    commercialResolvingId.value = institution.id;
+    try {
+        const resolved = await resolveInstitutionCrmContact(institution);
+        const crmId = resolved?.crm?.id;
+
+        if (!crmId) {
+            $toast({ description: 'Aucun contact CRM pour retirer une action.', variant: 'destructive' });
+            return;
+        }
+
+        const response = await revertQuickCommercialAction(crmId, actionType);
+        patchLocalInstitutionCrm(resolved.id, response.crm);
+        $toast({
+            description: `−1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message
+            ?? 'Erreur lors du retrait';
+        $toast({ description: message, variant: 'destructive' });
     }
     finally {
         commercialResolvingId.value = null;
@@ -1757,7 +1821,9 @@ const isFranceUser = computed(() => {
 const { kpiColumns } = useCrmWeeklyKpiColumns<CrmInstitution>({
     setSort,
     isCollaborator,
-    openCommercialDialog,
+    onIncrement: incrementCommercialAction,
+    onDecrement: decrementCommercialAction,
+    getCrmUserId: row => row.crm?.id ?? null,
     resolvingRowId: commercialResolvingId,
     getRowId: row => row.id,
 });
