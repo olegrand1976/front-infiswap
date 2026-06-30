@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { $fetch } from 'ofetch';
 import { AUTH_TOKEN, LANGUAGE } from '~/lib/constants';
 import { resolveApiBaseUrl } from '~/lib/resolveApiBaseUrl';

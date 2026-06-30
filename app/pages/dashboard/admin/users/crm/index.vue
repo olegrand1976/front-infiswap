@@ -378,6 +378,7 @@
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+        <CrmCommercialProfileDialog />
     </div>
 </template>
 

@@ -273,11 +273,22 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="text-xs flex -mt-12 2xl:mt-0 items-center justify-center bg-[#F1F2F7] overflow-x-hidden pt-4">
+                            <TableCell class="text-xs flex items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
                                 <template v-if="type === 'me'">
+                                    <ReplacementBoostButton
+                                        v-if="canBoostReplacement(r, type) && !isActivelyBoosted(r)"
+                                        variant="table"
+                                        @boost="openBoostPreview(r)"
+                                    />
+                                    <ReplacementBoostStars
+                                        v-else-if="isActivelyBoosted(r)"
+                                        plain
+                                        clickable
+                                        @click="openBoostActive(r)"
+                                    />
                                     <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <Ellipsis class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
+                                        <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
+                                            <Ellipsis class="h-5 w-5 text-gray-700" />
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent class="w-48">
                                             <DropdownMenuItem as-child>
@@ -308,6 +319,10 @@
                                     </DropdownMenu>
                                 </template>
                                 <template v-else>
+                                    <ReplacementBoostStars
+                                        v-if="isActivelyBoosted(r)"
+                                        size="sm"
+                                    />
                                     <Button
                                         class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white mx-auto justify-center items-center"
                                         :href="`/dashboard/replacements/detail/${r.id}`"
@@ -457,57 +472,70 @@
                                 </div>
                             </TableCell>
 
-                            <TableCell class="text-xs flex flex-col justify-center w-full items-center bg-[#F1F2F7] overflow-x-hidden pt-4">
-                                <div class="flex flex-col items-center justify-center space-y-2">
-                                    <template v-if="type === 'me'">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger>
-                                                <Ellipsis class="h-6 w-6 text-black hover:text-gray-600 cursor-pointer" />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent class="w-48">
-                                                <DropdownMenuItem as-child>
-                                                    <NuxtLink
-                                                        :href="`/dashboard/replacements/detail/${r.id}`"
-                                                        class="flex items-center space-x-2 text-sm"
-                                                    >
-                                                        <Eye class="h-4 w-4" />
-                                                        <span>Voir</span>
-                                                    </NuxtLink>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
+                            <TableCell class="text-xs flex flex-row items-center justify-end gap-2 bg-[#F1F2F7] overflow-x-hidden py-3 px-2">
+                                <template v-if="type === 'me'">
+                                    <ReplacementBoostButton
+                                        v-if="canBoostReplacement(r, type) && !isActivelyBoosted(r)"
+                                        variant="table"
+                                        @boost="openBoostPreview(r)"
+                                    />
+                                    <ReplacementBoostStars
+                                        v-else-if="isActivelyBoosted(r)"
+                                        plain
+                                        clickable
+                                        @click="openBoostActive(r)"
+                                    />
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-200/80 transition-colors">
+                                            <Ellipsis class="h-5 w-5 text-gray-700" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent class="w-48">
+                                            <DropdownMenuItem as-child>
+                                                <NuxtLink
+                                                    :href="`/dashboard/replacements/detail/${r.id}`"
                                                     class="flex items-center space-x-2 text-sm"
-                                                    @click="emit('open-edit', r)"
                                                 >
-                                                    <SquarePen class="h-4 w-4" />
-                                                    <span>Modifier</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
-                                                    class="flex items-center space-x-2 text-sm"
-                                                    @click="emit('select-replacement', r)"
-                                                >
-                                                    <X class="h-4 w-4" />
-                                                    <span>Fermer</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </template>
-                                    <template v-else>
-                                        <Button
-                                            v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            @click="openCloseDialog(r)"
-                                        >
-                                            <X class="h-6 mt-1" />
-                                        </Button>
-                                        <Button
-                                            class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
-                                            :href="`/dashboard/replacements/detail/${r.id}`"
-                                        >
-                                            <Eye class="h-6 mt-1" />
-                                        </Button>
-                                    </template>
-                                </div>
+                                                    <Eye class="h-4 w-4" />
+                                                    <span>Voir</span>
+                                                </NuxtLink>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="emit('open-edit', r)"
+                                            >
+                                                <SquarePen class="h-4 w-4" />
+                                                <span>Modifier</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
+                                                class="flex items-center space-x-2 text-sm"
+                                                @click="emit('select-replacement', r)"
+                                            >
+                                                <X class="h-4 w-4" />
+                                                <span>Fermer</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </template>
+                                <template v-else>
+                                    <ReplacementBoostStars
+                                        v-if="isActivelyBoosted(r)"
+                                        size="sm"
+                                    />
+                                    <Button
+                                        v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
+                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                        @click="openCloseDialog(r)"
+                                    >
+                                        <X class="h-6 mt-1" />
+                                    </Button>
+                                    <Button
+                                        class="inline-block rounded bg-[#E4E7F4] text-black hover:text-white justify-center items-center"
+                                        :href="`/dashboard/replacements/detail/${r.id}`"
+                                    >
+                                        <Eye class="h-6 mt-1" />
+                                    </Button>
+                                </template>
                             </TableCell>
 
                             <span class="bg-white h-[0.01em]" />
@@ -516,6 +544,12 @@
                 </TableBody>
             </Table>
         </div>
+
+        <ReplacementBoostModal
+            v-model:open="boostModalOpen"
+            :replacement="boostModalReplacement"
+            @cancelled="onBoostCancelled"
+        />
 
         <Dialog v-model:open="closeReplacementDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
@@ -553,10 +587,38 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ReplacementTableSkeleton from '@/components/replacements/ReplacementTableSkeleton.vue';
+import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
+import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
+import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
+import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import { useInstitutions } from '~/composables/useInstitution';
 import type { Replacement } from '~/lib/types';
+
+const { canBoostReplacement } = useReplacementBoost();
+
+const boostModalOpen = ref(false);
+const boostModalReplacement = ref<Replacement | null>(null);
+
+const openBoostPreview = (r: Replacement) => {
+    boostModalReplacement.value = r;
+    boostModalOpen.value = true;
+};
+
+const openBoostActive = (r: Replacement) => {
+    boostModalReplacement.value = r;
+    boostModalOpen.value = true;
+};
+
+const onBoostCancelled = () => {
+    if (boostModalReplacement.value) {
+        boostModalReplacement.value.is_boosted = false;
+        boostModalReplacement.value.boosted_until = null;
+    }
+};
+
+const isActivelyBoosted = (replacement: Replacement) => isReplacementActivelyBoosted(replacement);
 
 interface Props {
     replacements: Replacement[];

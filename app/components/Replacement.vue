@@ -166,95 +166,33 @@
                     Réinitialiser les filtres
                 </Button>
             </div>
-            <template v-if="allMissions.length > 0">
+            <template v-if="showTopSection && topItems.length > 0">
                 <div class="mb-12">
                     <h2 class="font-bold text-gray-800 mb-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 group">
                         <div class="flex items-center">
                             <div class="flex gap-1 text-sm items-center px-3 py-1 rounded-r-md font-bold bg-primary/10 text-primary border border-primary/20 border-l-5 border-l-primary shadow-sm transition-all group-hover:bg-primary/20">
-                                <span>{{ allMissions.length }}</span>
-                                <span>mission{{ allMissions.length > 1 ? 's' : '' }}</span>
+                                Top missions &amp; remplacements
                             </div>
                         </div>
                     </h2>
-                    <div
-                        v-if="isCardMode"
-                        class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
-                    >
-                        <MissionCard
-                            v-for="mission in allMissions"
-                            :key="`mission-top-${mission.id}`"
-                            :mission="mission"
-                        />
-                    </div>
-                    <div v-else>
-                        <Table>
-                            <TableHeader class="w-full">
-                                <TableRow :class="['overflow-x-hidden gap-2 grid rounded-t-lg border-none', gridClass]">
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                        Jour
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
-                                        <div class="text-center">
-                                            Matin
-                                        </div>
-                                        <div class="text-center">
-                                            Midi
-                                        </div>
-                                        <div class="text-center">
-                                            Soir
-                                        </div>
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                        Codes postaux
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                        Ville(s)
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                        Diplômes
-                                    </TableHead>
-
-                                    <TableHead
-                                        v-if="props.type === 'groups'"
-                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                                    >
-                                        —
-                                    </TableHead>
-                                    <TableHead
-                                        v-if="props.type === 'groups'"
-                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                                    >
-                                        —
-                                    </TableHead>
-
-                                    <TableHead
-                                        v-if="props.type === ''"
-                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                                    >
-                                        Type
-                                    </TableHead>
-                                    <TableHead
-                                        v-if="props.type === ''"
-                                        class="bg-primary w-full flex justify-center items-center text-white text-xs"
-                                    >
-                                        Institution
-                                    </TableHead>
-
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                                        Action
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                <MissionTable
-                                    v-for="mission in allMissions"
-                                    :key="`mission-row-top-${mission.id}`"
-                                    :mission="mission"
-                                    :type="props.type"
-                                    :grid-class="gridClass"
-                                />
-                            </TableBody>
-                        </Table>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <template
+                            v-for="item in topItems"
+                            :key="`top-${item.record_type}-${item.id}`"
+                        >
+                            <MissionCard
+                                v-if="item.record_type === 'mission'"
+                                :mission="item"
+                            />
+                            <ReplacementCard
+                                v-else
+                                :replacement="formatReplacementForCard(item)"
+                                :raw-replacement="item"
+                                :show-boost-stars="true"
+                                @open-edit="openEditDialog"
+                                @closed="refreshItems(page)"
+                            />
+                        </template>
                     </div>
                 </div>
             </template>
@@ -294,7 +232,7 @@
                     </template>
                     <template v-else>
                         <template
-                            v-for="item in currentItems.filter(i => i.record_type === 'replacement')"
+                            v-for="item in replacementItems"
                             :key="`card-flat-${item.record_type}-${item.id}`"
                         >
                             <ReplacementCard
@@ -326,7 +264,7 @@
                     />
                     <template v-else>
                         <ReplacementTable
-                            :replacements="items.filter(i => i.record_type === 'replacement')"
+                            :replacements="items"
                             :type="props.type"
                             :user-id="user.id"
                             :group-members="groupMembers"
@@ -349,8 +287,8 @@
                 />
                 <template v-else>
                     <ReplacementTable
-                        v-if="currentItems.some(i => i.record_type === 'replacement')"
-                        :replacements="currentItems.filter(i => i.record_type === 'replacement')"
+                        v-if="replacementItems.length > 0"
+                        :replacements="replacementItems"
                         :type="props.type"
                         :user-id="user.id"
                         :group-members="groupMembers"
@@ -564,6 +502,12 @@ import { useCareTypes } from '@/composables/useCareTypes';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
+import {
+    isReplacementActivelyBoosted,
+    sortByCreatedAtDesc,
+    sortRegularReplacements,
+    sortReplacementsByBoost,
+} from '~/lib/replacementBoost';
 
 const { $toast } = useNuxtApp();
 
@@ -642,20 +586,36 @@ const initialItems = ref<MergedItem[]>([]);
 
 const isMission = (item: MergedItem) => item.record_type === 'mission';
 
-const allMissions = computed<MergedItem[]>(() =>
-    currentItems.value.filter(
-        item => item.record_type === 'mission',
-    ),
-);
+const showTopSection = computed(() => props.type === '' || props.type === 'nurse');
+
+const topItems = computed<MergedItem[]>(() => {
+    if (!showTopSection.value) return [];
+
+    return sortByCreatedAtDesc(
+        currentItems.value.filter(
+            item => item.record_type === 'mission' || isReplacementActivelyBoosted(item),
+        ),
+    );
+});
+
+const replacementItems = computed<MergedItem[]>(() => {
+    const replacements = currentItems.value.filter(item => item.record_type === 'replacement');
+
+    if (showTopSection.value) {
+        return sortRegularReplacements(
+            replacements.filter(item => !isReplacementActivelyBoosted(item)),
+        );
+    }
+
+    return sortReplacementsByBoost(replacements);
+});
 
 const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
     if (!props.groupByProvince) return {};
 
     const groups: Record<string, MergedItem[]> = {};
 
-    currentItems.value.forEach((item) => {
-        if (item.record_type === 'mission') return;
-
+    replacementItems.value.forEach((item) => {
         const province = item.province || 'Autres';
         if (!groups[province]) groups[province] = [];
         groups[province].push(item);
@@ -668,7 +628,7 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
             if (b === 'Autres') return -1;
             return a.localeCompare(b, 'fr');
         })
-        .forEach((key) => { sorted[key] = groups[key]; });
+        .forEach((key) => { sorted[key] = sortRegularReplacements(groups[key]); });
 
     return sorted;
 });
@@ -685,6 +645,9 @@ const isAnyFilterActive = computed(() =>
 
 const isEmpty = computed(() => {
     if (loading.value || loadingSearch.value) return false;
+    if (showTopSection.value) {
+        return topItems.value.length === 0 && replacementItems.value.length === 0;
+    }
     return currentItems.value.length === 0;
 });
 
@@ -866,6 +829,8 @@ const formatReplacementForCard = (r: any) => ({
     type: r.type,
     details: r.details || [],
     has_confirmed_substitute: r.has_confirmed_substitute,
+    is_boosted: r.is_boosted,
+    boosted_until: r.boosted_until,
 });
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];

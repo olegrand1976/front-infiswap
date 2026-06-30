@@ -72,6 +72,7 @@ export default defineNuxtConfig({
     routeRules: {
         '/': { prerender: false },
         '/dashboard/**': { ssr: false },
+        '/dashboard/subscriptions/create': { redirect: '/acces-plan' },
     },
 
     devServer: {

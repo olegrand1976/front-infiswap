@@ -21,6 +21,8 @@ export interface MergedItem {
     details?: Record<string, unknown>[];
     has_confirmed_substitute?: boolean;
     confirmed_substitute?: Record<string, unknown> | null;
+    is_boosted?: boolean;
+    boosted_until?: string | null;
     user?: { id: number; full_name?: string; name?: string; phone_number?: string; institution?: Institution };
     institution?: { id: number; name: string; logo?: string | null } | null;
     // Mission

@@ -16,6 +16,12 @@ export const useReplacements = () => {
     const user = useState('user');
 
     const submitReplacement = async (formData) => {
+        const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
+
+        if (!(await requirePlatformAccess())) {
+            return null;
+        }
+
         loading.value = true;
         error.value = null;
         success.value = false;
@@ -29,6 +35,12 @@ export const useReplacements = () => {
             return response;
         }
         catch (err) {
+            if (isPlatformAccessError(err)) {
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
+                return null;
+            }
+
             error.value = err;
             throw err;
         }
@@ -136,6 +148,12 @@ export const useReplacements = () => {
     };
 
     const sendUrgentReplacement = async (formData) => {
+        const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
+
+        if (!(await requirePlatformAccess())) {
+            return false;
+        }
+
         loading.value = true;
         error.value = null;
         success.value = false;
@@ -150,6 +168,12 @@ export const useReplacements = () => {
             return true;
         }
         catch (err) {
+            if (isPlatformAccessError(err)) {
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
+                return false;
+            }
+
             if (err.data && err.data.errors) {
                 const backendErrors = err.data.errors;
                 const firstField = Object.keys(backendErrors)[0];
@@ -376,10 +400,15 @@ export const useDetailReplacement = (replacementId) => {
 
 export const sendResponse = () => {
     const { $apifetch, $toast } = useNuxtApp();
+    const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
 
     const isDisabled = useState('replacementResponseIsDisabled', () => false);
 
     const submitResponse = async (formData) => {
+        if (!(await requirePlatformAccess())) {
+            return false;
+        }
+
         isDisabled.value = true;
         try {
             await $apifetch('/api/replacement-responses/send', {
@@ -390,6 +419,12 @@ export const sendResponse = () => {
             return true;
         }
         catch (e) {
+            if (isPlatformAccessError(e)) {
+                const { redirectToAccesPlan } = useSubscription();
+                await redirectToAccesPlan();
+                return false;
+            }
+
             const errorMessage = e?.data?.message || e?.message || 'Une erreur est survenue lors de l\'envoi de la réponse';
             toast.error(errorMessage);
             throw e;

@@ -36,8 +36,8 @@ export const HOME_STATS_FALLBACK: PlatformStats = {
 };
 
 /** Accroche hero (NewBanner) — Belgique & France. */
-export const HOME_HERO_TAGLINE =
-    'InfiSwap est la plateforme 100 % automatisée dédiée à la mise en relation des infirmiers en Belgique et en France.';
+export const HOME_HERO_TAGLINE
+    = 'InfiSwap est la plateforme 100 % automatisée dédiée à la mise en relation des infirmiers en Belgique et en France.';
 
 /** Copy marketing éditable — point unique pour ajuster le storytelling. */
 export const HOME_STATS_COPY = {

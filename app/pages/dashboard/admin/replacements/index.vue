@@ -311,7 +311,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronsUpDown, Eye, RefreshCw } from 'lucide-vue-next';
+import { ChevronsUpDown, Eye, RefreshCw, Rocket } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -506,6 +506,24 @@ function handleViewDetails(id: number) {
 }
 
 const columns: ColumnDef<Replacement>[] = [
+    {
+        id: 'boost',
+        accessorKey: 'is_boosted',
+        header: () => null,
+        enableSorting: false,
+        cell: ({ row }) => {
+            if (!row.original.is_boosted) {
+                return null;
+            }
+
+            return h('div', {
+                class: 'flex justify-center w-8',
+                title: 'Publication boostée',
+            }, [
+                h(Rocket, { class: 'w-4 h-4 text-amber-500' }),
+            ]);
+        },
+    },
     {
         id: 'view_details',
         accessorKey: 'start_date',

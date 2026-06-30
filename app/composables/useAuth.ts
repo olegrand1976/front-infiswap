@@ -43,6 +43,18 @@ export const useAuth = () => {
 
     const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
     const STAFF_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];
+    const INFISWAP_STAFF_ROLES = [
+        ...STAFF_ROLES,
+        'collaborator',
+        'tester',
+        'test_manager',
+    ] as const;
+
+    const isInfiswapStaff = computed(() =>
+        user.value?.roles?.some(role =>
+            (INFISWAP_STAFF_ROLES as readonly string[]).includes(role),
+        ) ?? false,
+    );
 
     const canAccessInstitution = computed(() => {
         if (!user.value?.institution_id) return false;
@@ -147,7 +159,9 @@ export const useAuth = () => {
     async function register(credentials) {
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
-                useCookie(AUTH_TOKEN).value = response.token;
+                if (response?.token) {
+                    useCookie(AUTH_TOKEN).value = response.token;
+                }
             })
             .then(() => {
                 toast.success('Inscription réussie');
@@ -598,6 +612,7 @@ export const useAuth = () => {
         canAccessNurse,
         canAccessAdmin,
         canImportInstitutions,
+        isInfiswapStaff,
         activeContext,
         switchContext,
         isCommunityManager,
