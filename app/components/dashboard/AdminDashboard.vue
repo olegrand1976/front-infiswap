@@ -23,7 +23,7 @@
                     </svg>
                 </button>
                 <div
-                    v-if="showStats"
+                    v-show="showStats"
                     class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8"
                 >
                     <div class="col-span-full mb-2 sm:mb-0">
@@ -106,7 +106,7 @@
                                             :categories="['Inscrits']"
                                             :x-formatter="xInstitutionWeekFormatter"
                                             :y-formatter="yFormatter"
-                                            :show-all-x-ticks="true"
+                                            :show-all-x-ticks="showAllXTicks(institutionWeeklyChartData.data)"
                                             :colors="['var(--chart-3, #8b5cf6)']"
                                             :legend-labels="institutionWeeklyChartData.legendLabels"
                                             class="w-full"
@@ -150,200 +150,181 @@
                     </svg>
                 </button>
                 <div
-                    v-if="showRegistrations"
-                    class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8"
+                    class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8 transition-none"
+                    :class="showRegistrations
+                        ? ''
+                        : 'pointer-events-none fixed -left-[10000px] top-0 z-[-1] w-full max-w-6xl opacity-0'"
+                    :aria-hidden="!showRegistrations"
                 >
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des inscriptions de cette semaine-ci
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                        </div>
+                    <template v-if="loading">
                         <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
+                            v-for="i in 4"
+                            :key="i"
+                            class="col-span-1"
                         >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="registrationDailyChartData.data"
-                                    index="name"
-                                    :categories="['count']"
-                                    :x-formatter="xRegistrationDayFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--chart-2)']"
-                                    :legend-labels="registrationDailyChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
+                            <Skeleton class="mt-3 h-96 rounded-sm bg-gray-200" />
                         </div>
-                    </div>
+                    </template>
+                    <template v-else-if="!preloadCharts">
+                        <div
+                            v-for="i in 4"
+                            :key="`preload-${i}`"
+                            class="col-span-1"
+                        >
+                            <Skeleton class="mt-3 h-96 rounded-sm bg-gray-200" />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des inscriptions de cette semaine-ci
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="registrationDailyChartData.data"
+                                        index="name"
+                                        :categories="['count']"
+                                        :x-formatter="xRegistrationDayFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--chart-2)']"
+                                        :legend-labels="registrationDailyChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
+                        </div>
 
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des remplacements de cette semaine-ci
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des remplacements de cette semaine-ci
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="replacementDailyChartData.data"
+                                        index="name"
+                                        :categories="['count', 'accepted']"
+                                        :x-formatter="xReplacementDayFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--primary)', 'var(--success)']"
+                                        :legend-labels="replacementDailyChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                        <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
-                        >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="replacementDailyChartData.data"
-                                    index="name"
-                                    :categories="['count', 'accepted']"
-                                    :x-formatter="xReplacementDayFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--primary)', 'var(--success)']"
-                                    :legend-labels="replacementDailyChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
 
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des inscriptions de ce mois-ci
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des inscriptions de ce mois-ci
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="registrationMonthlyChartData.data"
+                                        index="name"
+                                        :categories="['count']"
+                                        :x-formatter="xRegistrationMonthFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--chart-2)']"
+                                        :legend-labels="registrationMonthlyChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                        <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
-                        >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="registrationMonthlyChartData.data"
-                                    index="name"
-                                    :categories="['count']"
-                                    :x-formatter="xRegistrationMonthFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--chart-2)']"
-                                    :legend-labels="registrationMonthlyChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
 
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des remplacements de ce mois-ci
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des remplacements de ce mois-ci
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="replacementMonthlyChartData.data"
+                                        index="name"
+                                        :categories="['count', 'accepted']"
+                                        :x-formatter="xReplacementMonthFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--primary)', 'var(--success)']"
+                                        :legend-labels="replacementMonthlyChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                        <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
-                        >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="replacementMonthlyChartData.data"
-                                    index="name"
-                                    :categories="['count', 'accepted']"
-                                    :x-formatter="xReplacementMonthFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--primary)', 'var(--success)']"
-                                    :legend-labels="replacementMonthlyChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
 
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des inscriptions de l'année
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des inscriptions de l'année
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="registrationChartData.data"
+                                        index="name"
+                                        :categories="['count']"
+                                        :x-formatter="xRegistrationWeekYearFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--chart-2)']"
+                                        :legend-labels="registrationChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                        <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
-                        >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="registrationChartData.data"
-                                    index="name"
-                                    :categories="['count']"
-                                    :x-formatter="xRegistrationWeekYearFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--chart-2)']"
-                                    :legend-labels="registrationChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
 
-                    <div>
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des remplacements de l'année
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
+                        <div>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des remplacements de l'année
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="replacementChartData.data"
+                                        index="name"
+                                        :categories="['count', 'accepted']"
+                                        :x-formatter="xReplacementWeekYearFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--primary)', 'var(--success)']"
+                                        :legend-labels="replacementChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                        <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
-                        >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="replacementChartData.data"
-                                    index="name"
-                                    :categories="['count', 'accepted']"
-                                    :x-formatter="xReplacementWeekYearFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--primary)', 'var(--success)']"
-                                    :legend-labels="replacementChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
 
-                    <div
-                        v-if="deletedUserChartData.data.length > 0"
-                        class="col-span-1 lg:col-span-2"
-                    >
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des utilisateurs perdus
-                        </p>
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                        </div>
                         <div
-                            v-else
-                            class="mt-3 bg-white rounded-sm shadow-md"
+                            v-if="deletedUserChartData.data.length > 0"
+                            class="col-span-1 lg:col-span-2"
                         >
-                            <ClientOnly>
-                                <BarChart
-                                    :data="deletedUserChartData.data"
-                                    index="name"
-                                    :categories="['count']"
-                                    :x-formatter="xDeletedUsersFormatter"
-                                    :y-formatter="yFormatter"
-                                    :show-all-x-ticks="true"
-                                    :colors="['var(--chart-2)']"
-                                    :legend-labels="deletedUserChartData.legendLabels"
-                                    class="w-full"
-                                />
-                            </ClientOnly>
+                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
+                                Évolution des utilisateurs perdus
+                            </p>
+                            <div class="mt-3 bg-white rounded-sm shadow-md">
+                                <ClientOnly>
+                                    <BarChart
+                                        :data="deletedUserChartData.data"
+                                        index="name"
+                                        :categories="['count']"
+                                        :x-formatter="xDeletedUsersFormatter"
+                                        :y-formatter="yFormatter"
+                                        :show-all-x-ticks="false"
+                                        :colors="['var(--chart-2)']"
+                                        :legend-labels="deletedUserChartData.legendLabels"
+                                        class="w-full"
+                                    />
+                                </ClientOnly>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
 
@@ -499,7 +480,7 @@
                                 <AreaChart
                                     index="name"
                                     :data="userByZipCode"
-                                    :show-all-x-ticks="true"
+                                    :show-all-x-ticks="false"
                                     :categories="['inscrits']"
                                     :x-formatter="xZipCodeFormatter"
                                     :y-formatter="yFormatter"
@@ -522,28 +503,46 @@ import { RefreshCw, Send, Users } from 'lucide-vue-next';
 import { DashboardStatCardAdminGroup } from '#components';
 import { BarChart } from '@/components/ui/chart-bar';
 import { AreaChart } from '@/components/ui/chart-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useReports } from '~/composables/useReports';
 
-const { reports } = useReports();
+const { reports, loading: reportsLoading } = useReports();
 
 const { isAdmin, isCommunityManager } = useAuth();
-const loading = ref(true);
+const loading = computed(() => reportsLoading.value || !reports.value);
 const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
-useHead({ title: 'Tableau de bord' });
-
-definePageMeta({
-    layout: 'dashboard',
-    middleware: ['auth', 'verified'],
-});
 const showStats = ref(true);
-const showRegistrations = ref(true);
+const showRegistrations = ref(false);
 const showReplacements = ref(false);
 const showGeography = ref(false);
+const preloadCharts = ref(false);
 
-onMounted(() => {
-    loading.value = false;
-});
+watch(() => reports.value, (data) => {
+    if (!data || preloadCharts.value) {
+        return;
+    }
+
+    nextTick(() => {
+        const schedule = typeof requestIdleCallback !== 'undefined'
+            ? (callback: () => void) => requestIdleCallback(callback, { timeout: 800 })
+            : (callback: () => void) => setTimeout(callback, 50);
+
+        schedule(() => {
+            preloadCharts.value = true;
+        });
+    });
+}, { immediate: true });
+
+const currentYear = new Date().getFullYear();
+
+function weeksForCurrentYear<T extends { year: number }>(weeks: T[] = []): T[] {
+    return weeks.filter(item => item.year === currentYear);
+}
+
+function showAllXTicks(data: unknown[] = []) {
+    return data.length > 0 && data.length <= 12;
+}
 
 const selectedCountryForProvince = ref('be');
 const selectedCountryForZipCode = ref('be');
@@ -590,11 +589,13 @@ const registrationMonthlyChartData = computed(() => {
 });
 
 const registrationChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.registration_statistics?.weeks_year, 'Semaine', ['Total']);
+    const weeks = weeksForCurrentYear(reports.value?.registration_statistics?.weeks_year);
+    return mapWeeklyStatistics(weeks, 'Semaine', ['Total']);
 });
 
 const deletedUserChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.registration_statistics?.total_deleted, 'Semaine', ['Total']);
+    const weeks = weeksForCurrentYear(reports.value?.registration_statistics?.total_deleted);
+    return mapWeeklyStatistics(weeks, 'Semaine', ['Total']);
 });
 
 const replacementDailyChartData = computed(() => {
@@ -606,7 +607,8 @@ const replacementMonthlyChartData = computed(() => {
 });
 
 const replacementChartData = computed(() => {
-    return mapWeeklyStatistics(reports.value?.replacement_statistics?.weeks_year, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
+    const weeks = weeksForCurrentYear(reports.value?.replacement_statistics?.weeks_year);
+    return mapWeeklyStatistics(weeks, 'Semaine', ['Total', 'Acceptés'], ['accepted']);
 });
 
 const xRegistrationDayFormatter = computed(() => createXFormatter(computed(() => registrationDailyChartData.value.data)));

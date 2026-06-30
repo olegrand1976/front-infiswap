@@ -70,7 +70,9 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { prerender: false },
+        '/': { prerender: true },
+        '/about': { prerender: true },
+        '/contact': { prerender: true },
         '/dashboard/**': { ssr: false },
         '/dashboard/subscriptions/create': { redirect: '/acces-plan' },
     },
@@ -78,6 +80,10 @@ export default defineNuxtConfig({
     devServer: {
         host: '0.0.0.0',
         port: 3000,
+    },
+
+    experimental: {
+        spaLoadingTemplateLocation: 'body',
     },
 
     compatibilityDate: '2025-01-10',

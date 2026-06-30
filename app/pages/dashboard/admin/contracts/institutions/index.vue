@@ -107,7 +107,6 @@
             :histories="selectedHistories"
             @refresh="reloadDetail"
         />
-
     </div>
 </template>
 

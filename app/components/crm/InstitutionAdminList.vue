@@ -596,6 +596,7 @@
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 import { Button } from '@/components/ui/button';
 import type { Comment, CrmInstitution, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
@@ -609,7 +610,6 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
-import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
@@ -1810,9 +1810,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
                 isCollaborator.value
                     ? h('span', {
-                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                        title: email ?? '',
-                    }, email || '—')
+                            class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                            title: email ?? '',
+                        }, email || '—')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
@@ -2058,7 +2058,7 @@ const columns: ColumnDef<CrmInstitution>[] = [
             const institution = row.original as CrmInstitution;
 
             return h('div', {
-                class: 'flex justify-center',
+                'class': 'flex justify-center',
                 'data-no-row-select': 'true',
             }, [
                 h(CrmFollowUpHistoryDropdown, {

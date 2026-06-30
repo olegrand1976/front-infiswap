@@ -145,9 +145,9 @@ function getStickyColumnClass(
     const bgClass = options.isHeader
         ? 'bg-gray-100'
         : cn(
-            'bg-white group-hover:bg-gray-100',
-            options.isSelected && 'bg-gray-100',
-        );
+                'bg-white group-hover:bg-gray-100',
+                options.isSelected && 'bg-gray-100',
+            );
 
     return cn(
         'sticky',

@@ -1,9 +1,10 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app';
 import { useUser } from '~/composables/useAuth';
+import { AUTH_TOKEN } from '~/lib/constants';
 
 export default defineNuxtRouteMiddleware(async () => {
     const user = useUser();
-    const token = useCookie('AUTH_TOKEN');
+    const token = useCookie(AUTH_TOKEN);
     const { $apifetch } = useNuxtApp();
 
     if (user.value) {

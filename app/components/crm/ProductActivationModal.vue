@@ -140,7 +140,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     'update:open': [value: boolean];
-    confirmed: [payload: {
+    'confirmed': [payload: {
         referred_by: Referrer;
         product: CrmProductKey;
         contact_user_id?: number;

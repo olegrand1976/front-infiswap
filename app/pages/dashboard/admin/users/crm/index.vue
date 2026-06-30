@@ -331,18 +331,18 @@
                             @update-users="handleUsersListUpdate"
                         />
                     </template>
-                <template v-else-if="selectedCrm === 'exUsers'">
-                    <CrmUserDeletedList
-                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
-                        :users="users"
-                        :page="page"
-                        :per-page="perPage"
-                        @refresh-users="refreshUsers"
-                        @handle-per-page-change="handlePerPageChange"
-                        @set-sort="setSort"
-                        @user-updated="handleUserUpdate"
-                    />
-                </template>
+                    <template v-else-if="selectedCrm === 'exUsers'">
+                        <CrmUserDeletedList
+                            class="flex min-h-0 flex-1 flex-col overflow-hidden"
+                            :users="users"
+                            :page="page"
+                            :per-page="perPage"
+                            @refresh-users="refreshUsers"
+                            @handle-per-page-change="handlePerPageChange"
+                            @set-sort="setSort"
+                            @user-updated="handleUserUpdate"
+                        />
+                    </template>
                 </template>
             </div>
         </DashboardAdminPageContent>

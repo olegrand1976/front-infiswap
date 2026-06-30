@@ -1,27 +1,34 @@
 <template>
     <div class="mb-4">
-        <div
-            v-if="isAdmin || isCommunityManager"
-            class="space-y-8 mb-4"
-        >
-            <DashboardAdminDashboard />
-        </div>
-        <div v-else>
-            <DashboardNurseInformation
-                :reports="reports.replacement"
-                :tours="reports.tours"
-            />
-        </div>
+        <DashboardAdminSkeleton
+            v-if="(pending || loading) && (isAdmin || isCommunityManager)"
+        />
+        <DashboardNurseSkeleton
+            v-else-if="pending || loading"
+        />
+
+        <template v-else>
+            <div
+                v-if="isAdmin || isCommunityManager"
+                class="mb-4 space-y-8"
+            >
+                <DashboardAdminDashboard />
+            </div>
+            <div v-else-if="reports">
+                <DashboardNurseInformation
+                    :reports="reports.replacement"
+                    :tours="reports.tours"
+                />
+            </div>
+        </template>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { useReports } from '~/composables/useReports';
 
-const { reports, getReports } = useReports();
-
-const { isAdmin, isCommunityManager, isInstitution } = useAuth();
-const user = useUser();
+const { reports, getReports, loading } = useReports();
+const { isAdmin, isCommunityManager } = useAuth();
 
 useHead({ title: 'Tableau de bord' });
 
@@ -30,16 +37,10 @@ definePageMeta({
     middleware: ['auth', 'verified', 'institution'],
 });
 
-if (isInstitution.value) {
-    if (user.value?.validate_at) {
-        await navigateTo('/dashboard/institution', { replace: true });
-    }
-    else {
-        await navigateTo('/dashboard/institution/pending-validation', { replace: true });
-    }
-}
-
-await getReports();
+const { pending } = useAsyncData('dashboard-reports', () => getReports(), {
+    server: false,
+    lazy: true,
+});
 </script>
 
 <style scoped>

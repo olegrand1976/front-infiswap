@@ -78,7 +78,9 @@ const priceLabel = computed(() => {
     return `${accessPlan.value.amount} ${currencySymbol(accessPlan.value.currency)}`;
 });
 
-await getAccessPlan();
+onMounted(() => {
+    getAccessPlan();
+});
 
 const handlePurchase = async () => {
     if (!accessPlan.value?.stripe_price_id) {

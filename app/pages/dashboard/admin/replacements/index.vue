@@ -184,9 +184,20 @@
             </Dialog>
 
             <DataTable
+                v-if="!isLoading && replacements?.data"
                 :data="replacements.data"
                 :columns="columns"
             />
+            <div
+                v-else
+                class="space-y-3 p-4"
+            >
+                <Skeleton
+                    v-for="i in 8"
+                    :key="i"
+                    class="h-12 w-full rounded-md"
+                />
+            </div>
             <div>
                 <CustomPagination
                     :default-page="page"
@@ -326,6 +337,7 @@ import { regions, departments, formatPhoneNumber, getErrorMessage } from '~/lib/
 import ReplacementPeriod from '~/components/replacements/ReplacementPeriod.vue';
 import ReplacementDetailsModal from '~/components/replacements/ReplacementDetailsModal.vue';
 import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import UsersName from '@/components/users/Name.vue';
 
@@ -336,7 +348,7 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { replacements, getReplacementsForAdmin, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
+const { replacements, getReplacementsForAdmin, loading: replacementsLoading, updateReplacement, forceDelete, extractPostalDataFromReplacement } = useReplacements();
 const { relaunchMailToCreator, relaunchMailToRegion, fetchRelaunchHistory } = useRelaunch();
 const { isSuperAdmin, isCommunityManager, isDeveloper } = useAuth();
 
@@ -454,14 +466,15 @@ const resetFilter = async () => {
     await getReplacementsForAdmin(page.value, perPage.value, option.value);
 };
 
-const debouncedFilterReplacements = debounce(filterReplacements, 100);
+const debouncedFilterReplacements = debounce(filterReplacements, 300);
 
-// await getReplacementsForAdmin(page.value, perPage.value);
-await getReplacementsForAdmin(
-    page.value,
-    perPage.value,
-    option.value,
+const { pending } = useAsyncData(
+    'admin-replacements',
+    () => getReplacementsForAdmin(page.value, perPage.value, option.value),
+    { server: false, lazy: true },
 );
+
+const isLoading = computed(() => pending.value || replacementsLoading.value);
 
 const { $toast } = useNuxtApp();
 

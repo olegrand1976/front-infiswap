@@ -17,7 +17,7 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
         async onRequest({ options }) {
             options.baseURL = resolveApiBaseUrl(useRuntimeConfig());
 
-            let headers: Record<string, string> = {
+            const headers: Record<string, string> = {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${useCookie(AUTH_TOKEN).value ?? ''}`,
                 'Accept-Language': language,

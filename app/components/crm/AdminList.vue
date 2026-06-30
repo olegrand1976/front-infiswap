@@ -310,6 +310,7 @@
 <script setup lang="ts">
 import { ArrowUpDown, Eye, Pencil } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 import { Button } from '@/components/ui/button';
 import type { Comment, Pagination, User, Referrer, CrmProductKey } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
@@ -322,7 +323,6 @@ import { formatRelativeDate } from '@/composables/useDate';
 import { formatPhoneNumber } from '~/lib/utils';
 import { useCrm } from '@/composables/useCrm';
 import { useComment } from '~/composables/useComment';
-import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     users: Pagination<User>;
@@ -1084,7 +1084,7 @@ const columns: ColumnDef<User>[] = [
             const targetUser = row.original;
 
             return h('div', {
-                class: 'flex justify-center',
+                'class': 'flex justify-center',
                 'data-no-row-select': 'true',
             }, [
                 h(CrmFollowUpHistoryDropdown, {
