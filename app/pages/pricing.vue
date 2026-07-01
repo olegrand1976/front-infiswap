@@ -1,40 +1,30 @@
 <template>
-    <!-- <NuxtLayout name="guest-with-title">
-        <template #title>
-            <div class="flex flex-col items-center justify-center xl:mx-8 mb-8">
-                <h1 class="text-2xl font-medium capitalize lg:text-3xl dark:text-white">
-                    Abonnement
-                </h1>
-                <div class="mt-2">
-                    <span class="inline-block w-28 h-1 bg-primary rounded-full" />
-                    <span class="inline-block w-6 h-1 mx-1 bg-primary rounded-full" />
-                    <span class="inline-block w-1 h-1 bg-primary rounded-full" />
-                </div>
-            </div>
-        </template>
-        <div
-            class="relative min-h-96 container"
-        >
-            <Pricing />
-        </div>
-    </NuxtLayout> -->
-    <section class="bg-white grid place-content-center mb-4">
-        <TemporaryFree />
-    </section>
+    <Pricing />
 </template>
 
 <script setup lang="ts">
+import Pricing from '@/components/Pricing.vue';
+
+const seoDescription = 'Tarifs InfiSwap : compte gratuit (recherche de remplacements, alertes, consultations), accès plateforme 9,90 € paiement unique (publier, postuler, gérer vos annonces), boost visibilité 5 €/semaine en tête de liste.';
+
+useSeoMeta({
+    title: 'Tarifs InfiSwap — Gratuit, Accès 9,90 € & Boost remplacement',
+    description: seoDescription,
+    ogTitle: 'Tarifs InfiSwap — Gratuit, Accès 9,90 € & Boost remplacement',
+    ogDescription: seoDescription,
+    ogType: 'website',
+    twitterCard: 'summary_large_image',
+    twitterTitle: 'Tarifs InfiSwap',
+    twitterDescription: seoDescription,
+});
+
 useHead({
-    title: 'Tarifs',
+    link: [
+        { rel: 'canonical', href: '/pricing' },
+    ],
 });
 
 definePageMeta({
-    // layout: false,
+    layout: 'guest',
 });
 </script>
-
-<style scoped>
-.bg-url {
-  background-image: url('/images/home/equipe_infirmier.png');
-}
-</style>

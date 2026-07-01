@@ -73,6 +73,7 @@ export default defineNuxtConfig({
         '/': { prerender: true },
         '/about': { prerender: true },
         '/contact': { prerender: true },
+        '/pricing': { prerender: true },
         '/dashboard/**': { ssr: false },
         '/dashboard/subscriptions/create': { redirect: '/acces-plan' },
     },
