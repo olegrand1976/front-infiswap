@@ -557,7 +557,7 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
 
     if (isInstitutionsTab.value) {
         params.enrich = 1;
-        delete params.deleted;
+        params.deleted = undefined;
     }
     else {
         params.deleted = selectedCrm.value === 'exUsers';
@@ -569,13 +569,17 @@ function buildCrmQueryParams(overrides: Record<string, unknown> = {}) {
         params.sortOrder = sort.order;
     }
 
-    ['insurance', 'site', 'days_without_contact', 'registration_source', 'name', 'zip', 'city', 'country'].forEach((key) => {
-        if (params[key] === null || params[key] === '' || params[key] === CRM_FILTER_ALL) {
-            delete params[key];
-        }
-    });
+    const filterKeys = ['insurance', 'site', 'days_without_contact', 'registration_source', 'name', 'zip', 'city', 'country'];
 
-    return params;
+    return Object.fromEntries(
+        Object.entries(params).filter(([key, value]) => {
+            if (filterKeys.includes(key)) {
+                return value !== null && value !== '' && value !== CRM_FILTER_ALL;
+            }
+
+            return value !== undefined;
+        }),
+    );
 }
 
 async function fetchCrmKpis(params: Record<string, unknown>) {

@@ -372,11 +372,6 @@ function applySuccess(response: { crm?: Record<string, unknown> } | Record<strin
     emit('update:open', false);
 }
 
-async function submitPayload(payload: Record<string, unknown>, action: CommercialActionType) {
-    const response = await crmUser(payload);
-    applySuccess(response, action);
-}
-
 async function submitQuickOne() {
     quickInProgress.value = true;
     try {

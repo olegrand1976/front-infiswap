@@ -191,6 +191,7 @@
                                 :show-boost-stars="true"
                                 @open-edit="openEditDialog"
                                 @closed="refreshItems(page)"
+                                @boost-cancelled="clearReplacementBoost(item)"
                             />
                         </template>
                     </div>
@@ -217,6 +218,7 @@
                                 :raw-replacement="item"
                                 @open-edit="openEditDialog"
                                 @closed="refreshItems(page)"
+                                @boost-cancelled="clearReplacementBoost(item)"
                             />
                         </template>
                     </div>
@@ -240,6 +242,7 @@
                                 :raw-replacement="item"
                                 @open-edit="openEditDialog"
                                 @closed="refreshItems(page)"
+                                @boost-cancelled="clearReplacementBoost(item)"
                             />
                         </template>
                     </template>
@@ -832,6 +835,11 @@ const formatReplacementForCard = (r: any) => ({
     is_boosted: r.is_boosted,
     boosted_until: r.boosted_until,
 });
+
+const clearReplacementBoost = (replacement: { is_boosted?: boolean; boosted_until?: string | null }) => {
+    replacement.is_boosted = false;
+    replacement.boosted_until = null;
+};
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
 const frenchDays: Record<string, string> = {

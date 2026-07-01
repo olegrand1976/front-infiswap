@@ -100,6 +100,7 @@ import {
     type ColumnDef,
     type ColumnFiltersState,
     type ExpandedState,
+    type Row,
     type SortingState,
     type VisibilityState,
     FlexRender,
@@ -110,7 +111,6 @@ import {
     useVueTable,
 } from '@tanstack/vue-table';
 import { ref, toRefs, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
-import type { Row } from '@tanstack/vue-table';
 import { cn, valueUpdater } from '~/lib/utils';
 
 const props = withDefaults(defineProps<{

@@ -57,7 +57,6 @@
 import { Rocket } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import ReplacementBoostButton from '@/components/replacements/ReplacementBoostButton.vue';
-import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
 import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import type { Replacement } from '~/lib/types';
 

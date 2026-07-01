@@ -1,5 +1,7 @@
 <template>
-    <Pricing />
+    <div class="mt-4 lg:mt-10">
+        <Pricing />
+    </div>
 </template>
 
 <script setup lang="ts">

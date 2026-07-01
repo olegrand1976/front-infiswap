@@ -2,9 +2,9 @@
     <div class="p-4 flex justify-end bg-white">
         <div class="flex items-center gap-2 mr-8">
             <span class="hidden sm:block">Par page : </span>
-            <Select v-model="internalPerPage">
+            <Select v-model="selectedPerPage">
                 <SelectTrigger class="w-20 rounded">
-                    <SelectValue :placeholder="internalPerPage.toString()" />
+                    <SelectValue :placeholder="selectedPerPage.toString()" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
@@ -23,7 +23,7 @@
         <Pagination
             v-slot="{ page }"
             v-model:page="currentPage"
-            :items-per-page="Number(internalPerPage)"
+            :items-per-page="Number(selectedPerPage)"
             :total="props.total ?? 1"
             :sibling-count="1"
             show-edges
@@ -80,7 +80,7 @@ const props = defineProps<{
 const perPageOptions = [5, 10, 25, 50];
 const currentPage = ref(props.defaultPage ?? 1);
 const resolvedPerPage = () => props.internalPerPage ?? props.perPage ?? PERPAGE;
-const internalPerPage = ref(resolvedPerPage());
+const selectedPerPage = ref(resolvedPerPage());
 
 const emit = defineEmits<{
     (e: 'update:page' | 'update:perPage', value: number): void;
@@ -94,7 +94,7 @@ watch(() => props.defaultPage, (newPage) => {
 
 watch(() => props.internalPerPage ?? props.perPage, (newPerPage) => {
     if (newPerPage !== undefined) {
-        internalPerPage.value = newPerPage;
+        selectedPerPage.value = newPerPage;
     }
 });
 
@@ -102,7 +102,7 @@ watch(currentPage, (newPage) => {
     emit('update:page', Number(newPage));
 });
 
-watch(internalPerPage, (newPerPage) => {
+watch(selectedPerPage, (newPerPage) => {
     emit('update:perPage', Number(newPerPage));
 });
 </script>

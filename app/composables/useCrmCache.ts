@@ -136,7 +136,7 @@ export function setCrmCacheEntry(key: string, entry: CrmCacheEntry): void {
     while (store.order.length > MAX_CACHE_ENTRIES) {
         const oldest = store.order.shift();
         if (oldest) {
-            delete store.entries[oldest];
+            Reflect.deleteProperty(store.entries, oldest);
         }
     }
 
@@ -146,7 +146,7 @@ export function setCrmCacheEntry(key: string, entry: CrmCacheEntry): void {
 export function clearCrmCacheKey(key: string): void {
     const store = readCacheStore();
 
-    delete store.entries[key];
+    Reflect.deleteProperty(store.entries, key);
     store.order = store.order.filter(k => k !== key);
     writeCacheStore(store);
 }

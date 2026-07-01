@@ -40,7 +40,7 @@
                                 <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">0</span>
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">
+                            <p class="mt-2 text-sm text-gray-500">
                                 Compte gratuit · sans carte bancaire
                             </p>
                         </div>
@@ -112,7 +112,7 @@
                                 </span>
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">
+                            <p class="mt-2 text-sm text-gray-500">
                                 Paiement unique · accès permanent
                             </p>
                         </div>
@@ -169,8 +169,8 @@
                                 </span>
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">
-                                Par semaine · sans engagement long terme
+                            <p class="mt-2 text-sm text-gray-500">
+                                Par semaine · sans engagement
                             </p>
                         </div>
 

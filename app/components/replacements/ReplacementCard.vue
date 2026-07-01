@@ -363,7 +363,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-    (e: 'closed'): void;
+    (e: 'closed' | 'boost-cancelled'): void;
     (e: 'open-edit', replacement: Replacement): void;
 }>();
 const { updateReplacement } = useReplacements();
@@ -388,10 +388,7 @@ const openBoostActive = () => {
 
 const onBoostCancelled = () => {
     localBoosted.value = false;
-    if (props.rawReplacement) {
-        props.rawReplacement.is_boosted = false;
-        props.rawReplacement.boosted_until = null;
-    }
+    emit('boost-cancelled');
 };
 const user = useState<User>('user');
 const config = useRuntimeConfig();

@@ -84,10 +84,10 @@ export const useSubscription = () => {
                 },
             });
         }
-        catch (error: any) {
+        catch (error: unknown) {
             $toast({
                 variant: 'destructive',
-                description: error?.data?.message || 'Erreur lors de l\'achat de l\'accès',
+                description: getApiErrorMessage(error, 'Erreur lors de l\'achat de l\'accès'),
                 duration: 3000,
             });
             return null;
@@ -117,10 +117,10 @@ export const useSubscription = () => {
                 method: 'POST',
             });
         }
-        catch (error: any) {
+        catch (error: unknown) {
             $toast({
                 variant: 'destructive',
-                description: error?.data?.message || 'Impossible d\'activer la mise en avant.',
+                description: getApiErrorMessage(error, 'Impossible d\'activer la mise en avant.'),
             });
             return null;
         }
@@ -205,6 +205,17 @@ export interface AccessPlan {
 
 interface CheckoutResponse {
     url: string;
+}
+
+function getApiErrorMessage(error: unknown, fallback: string): string {
+    if (error && typeof error === 'object' && 'data' in error) {
+        const message = (error as { data?: { message?: string } }).data?.message;
+        if (message) {
+            return message;
+        }
+    }
+
+    return fallback;
 }
 
 interface CheckResponse {
