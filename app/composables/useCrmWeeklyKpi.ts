@@ -148,7 +148,7 @@ export function useCrmWeeklyKpiColumns<T extends EntityWithCrm>(options: {
         accessorKey: meta.accessorKey,
         header: () => renderKpiHeader(meta),
         cell: ({ row }) => h('div', {
-            class: 'flex justify-center items-center',
+            'class': 'flex justify-center items-center',
             'data-no-row-select': 'true',
         }, [renderKpiCell(row.original, meta)]),
     }));
