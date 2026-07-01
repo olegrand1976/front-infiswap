@@ -7,6 +7,14 @@ export type CrmWeeklyKpiActionType = 'call' | 'sale' | 'recommandation' | 'meeti
 
 export type CrmWeeklyKpiCounterKey = 'nb_call' | 'nb_sale' | 'nb_recommandation' | 'nb_meeting' | 'nb_pending';
 
+export const CRM_WEEKLY_KPI_ACTION_SHORT_LABELS: Record<CrmWeeklyKpiActionType, string> = {
+    call: 'appel',
+    sale: 'vente',
+    recommandation: 'recommandation',
+    meeting: 'rendez-vous',
+    pending: 'réponse en attente',
+};
+
 export const CRM_WEEKLY_KPI_COLUMNS: Array<{
     accessorKey: CrmWeeklyKpiCounterKey;
     sortKey: string;
@@ -59,6 +67,7 @@ export const CRM_WEEKLY_KPI_COLUMNS: Array<{
 
 type EntityWithCrm = {
     crm?: {
+        id?: number;
         nb_call?: number;
         nb_sale?: number;
         nb_recommandation?: number;
@@ -67,14 +76,36 @@ type EntityWithCrm = {
     } | null;
 };
 
+export function crmWeeklyCounterKeyForAction(actionType: CrmWeeklyKpiActionType): CrmWeeklyKpiCounterKey {
+    const map: Record<CrmWeeklyKpiActionType, CrmWeeklyKpiCounterKey> = {
+        call: 'nb_call',
+        sale: 'nb_sale',
+        recommandation: 'nb_recommandation',
+        meeting: 'nb_meeting',
+        pending: 'nb_pending',
+    };
+
+    return map[actionType];
+}
+
 export function useCrmWeeklyKpiColumns<T extends EntityWithCrm>(options: {
     setSort: (key: string) => void;
     isCollaborator: Ref<boolean>;
-    openCommercialDialog: (row: T, actionType: CrmWeeklyKpiActionType) => void | Promise<void>;
+    onIncrement: (row: T, actionType: CrmWeeklyKpiActionType) => void | Promise<void>;
+    onDecrement: (row: T, actionType: CrmWeeklyKpiActionType) => void | Promise<void>;
+    getCrmUserId: (row: T) => number | null;
     resolvingRowId?: Ref<number | null>;
     getRowId: (row: T) => number;
 }) {
-    const { setSort, isCollaborator, openCommercialDialog, resolvingRowId, getRowId } = options;
+    const {
+        setSort,
+        isCollaborator,
+        onIncrement,
+        onDecrement,
+        getCrmUserId,
+        resolvingRowId,
+        getRowId,
+    } = options;
 
     function renderKpiHeader(meta: typeof CRM_WEEKLY_KPI_COLUMNS[number]) {
         return h(Button, {
@@ -103,9 +134,13 @@ export function useCrmWeeklyKpiColumns<T extends EntityWithCrm>(options: {
         return h(CrmWeeklyKpiCell, {
             value,
             actionLabel: meta.actionLabel,
+            columnLabel: meta.label,
+            actionType: meta.actionType,
+            crmUserId: getCrmUserId(row),
             loading,
-            hint: `${value} ${meta.label.toLowerCase()} cette semaine. Cliquez sur Ajouter pour enregistrer ${meta.actionLabel}.`,
-            onAdd: () => openCommercialDialog(row, meta.actionType),
+            hint: `${value} ${meta.label.toLowerCase()} cette semaine. + pour ajouter, − pour retirer (avec confirmation).`,
+            onIncrement: () => void onIncrement(row, meta.actionType),
+            onDecrement: () => void onDecrement(row, meta.actionType),
         });
     }
 
@@ -114,6 +149,7 @@ export function useCrmWeeklyKpiColumns<T extends EntityWithCrm>(options: {
         header: () => renderKpiHeader(meta),
         cell: ({ row }) => h('div', {
             class: 'flex justify-center items-center',
+            'data-no-row-select': 'true',
         }, [renderKpiCell(row.original, meta)]),
     }));
 

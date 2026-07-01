@@ -245,7 +245,7 @@ const emit = defineEmits<{
     'crm-updated': [crm: Record<string, unknown>];
 }>();
 
-const { crmUser, getCrmHistories } = useCrm();
+const { crmUser, getCrmHistories, recordQuickCommercialAction } = useCrm();
 const { getAll } = useProduct();
 const { $toast } = useNuxtApp();
 
@@ -379,22 +379,13 @@ async function submitPayload(payload: Record<string, unknown>, action: Commercia
 
 async function submitQuickOne() {
     quickInProgress.value = true;
-    const date = today();
     try {
-        await submitPayload({
-            user_id: props.userId,
-            client_type: props.clientType,
-            last_contact_date: date,
-            history: [
-                {
-                    action_type: tradeTab.value,
-                    number_of_times: 1,
-                    start_date: date,
-                    end_date: date,
-                    comment: '',
-                },
-            ],
-        }, tradeTab.value);
+        const response = await recordQuickCommercialAction(
+            props.userId,
+            props.clientType,
+            tradeTab.value,
+        );
+        applySuccess(response, tradeTab.value);
     }
     catch {
         $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });

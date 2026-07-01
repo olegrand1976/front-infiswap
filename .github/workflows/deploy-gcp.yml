@@ -85,18 +85,33 @@ jobs:
           echo "front_branch=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           echo "skip_baseline=${skip_baseline}" >> "$GITHUB_OUTPUT"
 
-  quality-gate:
-    name: Quality gate
+  quality-gate-staging:
+    name: Quality gate (staging)
     needs: resolve-env
-    uses: olegrand1976/back-infiswap/.github/workflows/quality-gate.yml@${{ needs.resolve-env.outputs.gate_ref }}
+    if: needs.resolve-env.outputs.target == 'staging'
+    uses: olegrand1976/back-infiswap/.github/workflows/quality-gate.yml@staging
     with:
-      environment: ${{ needs.resolve-env.outputs.target }}
+      environment: staging
+      front_branch: ${{ needs.resolve-env.outputs.front_branch }}
+      skip_baseline: ${{ needs.resolve-env.outputs.skip_baseline == 'true' }}
+
+  quality-gate-prod:
+    name: Quality gate (prod)
+    needs: resolve-env
+    if: needs.resolve-env.outputs.target == 'prod'
+    uses: olegrand1976/back-infiswap/.github/workflows/quality-gate.yml@main
+    with:
+      environment: prod
       front_branch: ${{ needs.resolve-env.outputs.front_branch }}
       skip_baseline: ${{ needs.resolve-env.outputs.skip_baseline == 'true' }}
 
   deploy:
     name: Cloud Build → front GCP
-    needs: [resolve-env, quality-gate]
+    needs: [resolve-env, quality-gate-staging, quality-gate-prod]
+    if: |
+      !cancelled() &&
+      (needs.quality-gate-staging.result == 'success' || needs.quality-gate-staging.result == 'skipped') &&
+      (needs.quality-gate-prod.result == 'success' || needs.quality-gate-prod.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
