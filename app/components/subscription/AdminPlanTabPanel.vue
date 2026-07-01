@@ -1,39 +1,38 @@
 <template>
-    <div class="space-y-6">
+    <div class="space-y-5">
         <div
             v-if="plan"
-            class="max-w-lg mx-auto bg-white border border-gray-100 rounded-lg p-6 space-y-4"
+            class="mx-auto max-w-lg overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
         >
-            <div class="text-center">
-                <h2 class="text-xl font-semibold text-success">
+            <div class="bg-gradient-to-br from-primary/5 via-white to-emerald-50/40 px-6 py-8 text-center">
+                <span class="inline-flex items-center rounded-full bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-success">
+                    Plan actif
+                </span>
+                <h2 class="mt-4 text-xl font-semibold text-gray-900">
                     {{ plan.name }}
                 </h2>
                 <p
                     v-if="plan.description"
-                    class="mt-2 text-gray-500 text-sm"
+                    class="mt-2 text-sm text-gray-500"
                 >
                     {{ plan.description }}
                 </p>
-                <p class="mt-4 text-3xl font-bold text-gray-800">
-                    {{ plan.amount }} {{ currencySymbol(plan.currency) }}
+                <p class="mt-5 text-4xl font-bold tracking-tight text-gray-900">
+                    {{ plan.amount }}<span class="text-2xl font-semibold text-gray-500">{{ currencySymbol(plan.currency) }}</span>
                 </p>
-                <p class="text-sm text-gray-400 mt-1">
+                <p class="mt-1 text-sm text-gray-400">
                     {{ intervalDescription(plan) }}
                 </p>
             </div>
 
-            <div class="border-t border-gray-100 pt-4 space-y-2 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Statut</span>
-                    <span class="font-medium text-success">Actif</span>
-                </div>
-                <div class="flex justify-between">
+            <div class="space-y-3 border-t border-gray-100 px-6 py-5 text-sm">
+                <div class="flex justify-between gap-4">
                     <span class="text-gray-500">Priorité</span>
-                    <span>{{ plan.priority }}</span>
+                    <span class="font-medium text-gray-800">{{ plan.priority }}</span>
                 </div>
                 <div>
                     <span class="text-gray-500">Stripe Price ID</span>
-                    <p class="font-mono text-xs mt-1 break-all text-gray-700">
+                    <p class="mt-1 break-all font-mono text-xs text-gray-700">
                         {{ plan.stripe_price_id }}
                     </p>
                 </div>
@@ -41,7 +40,7 @@
 
             <div
                 v-if="isSuperAdmin"
-                class="flex flex-wrap gap-3 justify-center pt-2"
+                class="flex flex-wrap justify-center gap-2 border-t border-gray-100 bg-gray-50/50 px-6 py-4"
             >
                 <Button
                     class="rounded"
@@ -69,14 +68,14 @@
 
         <div
             v-else
-            class="text-center py-8 space-y-4"
+            class="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center"
         >
             <p class="text-gray-500">
                 Aucun plan actif pour le moment.
             </p>
             <Button
                 v-if="isSuperAdmin"
-                class="rounded"
+                class="mt-4 rounded-lg"
                 :href="createHref"
             >
                 Créer un plan
@@ -85,15 +84,15 @@
 
         <div
             v-if="inactivePlans.length"
-            class="max-w-lg mx-auto space-y-3"
+            class="mx-auto max-w-lg space-y-3"
         >
-            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Plans inactifs
             </h3>
             <div
                 v-for="inactive in inactivePlans"
                 :key="inactive.id"
-                class="bg-white border border-gray-100 rounded-lg p-4 flex items-center justify-between gap-4"
+                class="flex items-center justify-between gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
             >
                 <div>
                     <p class="font-medium">

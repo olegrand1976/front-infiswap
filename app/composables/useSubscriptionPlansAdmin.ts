@@ -6,6 +6,11 @@ export const SUBSCRIPTION_TABS: SubscriptionTab[] = [
 export const resolveSubscriptionTab = (tabKey: string): SubscriptionTab =>
     SUBSCRIPTION_TABS.find(t => t.key === tabKey) ?? SUBSCRIPTION_TABS[0];
 
+type TabPlansCache = Record<string, {
+    active: StripePlanAdmin | null;
+    inactive: StripePlanAdmin[];
+}>;
+
 export const useSubscriptionPlansAdmin = () => {
     const { $apifetch, $toast } = useNuxtApp();
     const tabs = useState<SubscriptionTab[]>('adminSubscriptionTabs', () => SUBSCRIPTION_TABS);
@@ -13,8 +18,32 @@ export const useSubscriptionPlansAdmin = () => {
     const inactivePlans = useState<StripePlanAdmin[]>('adminInactivePlans', () => []);
     const loadedTabKey = useState<string>('adminLoadedTabKey', () => '');
     const loading = useState<boolean>('adminPlansLoading', () => false);
+    const tabCache = useState<TabPlansCache>('adminSubscriptionPlansCache', () => ({}));
+
+    const applyTabData = (tabKey: string, active: StripePlanAdmin | null, inactive: StripePlanAdmin[]) => {
+        activePlan.value = active;
+        inactivePlans.value = inactive;
+        loadedTabKey.value = tabKey;
+    };
+
+    const invalidateTabCache = (tabKey?: string) => {
+        if (!tabKey) {
+            tabCache.value = {};
+            return;
+        }
+
+        const { [tabKey]: _removed, ...rest } = tabCache.value;
+        tabCache.value = rest;
+    };
 
     const getPlansByGroup = async (group: 'access' | 'boost', feature?: string, tabKey?: string) => {
+        const resolvedTabKey = tabKey ?? (group === 'access' ? 'access' : `boost_${feature ?? 'replacement'}`);
+
+        if (tabCache.value[resolvedTabKey]) {
+            applyTabData(resolvedTabKey, tabCache.value[resolvedTabKey].active, tabCache.value[resolvedTabKey].inactive);
+            return;
+        }
+
         loading.value = true;
         try {
             const params = new URLSearchParams({ group });
@@ -24,17 +53,30 @@ export const useSubscriptionPlansAdmin = () => {
 
             const response = await $apifetch<PlansGroupResponse>(`api/admin/stripe-plans?${params.toString()}`);
             tabs.value = response.tabs ?? SUBSCRIPTION_TABS;
-            activePlan.value = response.active;
-            inactivePlans.value = response.inactive ?? [];
-            loadedTabKey.value = tabKey ?? (group === 'access' ? 'access' : `boost_${feature ?? 'replacement'}`);
+
+            const inactive = response.inactive ?? [];
+            tabCache.value = {
+                ...tabCache.value,
+                [resolvedTabKey]: {
+                    active: response.active,
+                    inactive,
+                },
+            };
+
+            applyTabData(resolvedTabKey, response.active, inactive);
         }
         finally {
             loading.value = false;
         }
     };
 
-    const loadTab = async (tabKey: string) => {
+    const loadTab = async (tabKey: string, force = false) => {
         const tab = resolveSubscriptionTab(tabKey);
+
+        if (force) {
+            invalidateTabCache(tab.key);
+        }
+
         await getPlansByGroup(tab.group, tab.feature, tab.key);
     };
 
@@ -54,6 +96,10 @@ export const useSubscriptionPlansAdmin = () => {
             body: payload,
         });
         $toast({ description: response.message || 'Plan créé.' });
+        const cacheKey = payload.type === 'boost'
+            ? `boost_${payload.feature ?? 'replacement'}`
+            : 'access';
+        invalidateTabCache(cacheKey);
         activePlan.value = response.plan;
         return response.plan;
     };
@@ -64,6 +110,7 @@ export const useSubscriptionPlansAdmin = () => {
             body: payload,
         });
         $toast({ description: response.message || 'Plan mis à jour.' });
+        invalidateTabCache(loadedTabKey.value);
         return response.plan;
     };
 
