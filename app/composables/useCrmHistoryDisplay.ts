@@ -170,3 +170,41 @@ export function groupCrmHistoriesByMonth(entries: CrmHistoryEntry[]): Array<{
 export function crmHistoryFilterLabel(filter: CrmHistoryFilterValue): string {
     return CRM_HISTORY_FILTER_OPTIONS.find(option => option.value === filter)?.label ?? 'Toutes les actions';
 }
+
+function isDateInCurrentWeek(dateStr: string): boolean {
+    const weekStart = startOfWeekDate();
+    const weekEnd = endOfWeekDate();
+    const date = new Date(dateStr);
+
+    if (Number.isNaN(date.getTime())) {
+        return false;
+    }
+
+    return date >= weekStart && date <= weekEnd;
+}
+
+function isHistoryEntryInCurrentWeek(entry: CrmHistoryEntry): boolean {
+    const start = entry.start_date;
+    const end = entry.end_date;
+
+    if (start && isDateInCurrentWeek(start)) {
+        return true;
+    }
+
+    if (end && isDateInCurrentWeek(end)) {
+        return true;
+    }
+
+    if (!start && !end && entry.created_at) {
+        return isDateInCurrentWeek(entry.created_at);
+    }
+
+    return false;
+}
+
+export function filterCrmHistoriesInCurrentWeek(
+    entries: CrmHistoryEntry[],
+    actionType: CrmWeeklyKpiActionType,
+): CrmHistoryEntry[] {
+    return filterCrmHistories(entries, actionType).filter(isHistoryEntryInCurrentWeek);
+}

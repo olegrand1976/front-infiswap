@@ -387,12 +387,21 @@
             @confirmed="onProductActivationConfirmed"
         />
 
+        <InstitutionCommercialOfferModal
+            v-model:open="commercialOfferModalOpen"
+            :institution-id="commercialOfferInstitutionId"
+            :institution-name="commercialOfferInstitutionName"
+            :offer="commercialOfferData"
+            @updated="onCommercialOfferUpdated"
+            @converted="onCommercialOfferConverted"
+        />
+
         <Dialog v-model:open="subscriptionModalOpen">
             <DialogContent class="max-w-md gap-0 overflow-hidden p-0">
                 <div class="px-6 pt-6 pb-4">
                     <DialogHeader class="space-y-1 text-left">
                         <DialogTitle class="text-xl font-semibold text-primary">
-                            {{ subscriptionModalStep === 'formula' ? 'Abonnement institution' : 'Bon de commande' }}
+                            Bon de commande
                         </DialogTitle>
                         <DialogDescription class="text-sm text-muted-foreground">
                             {{ subscriptionInstitutionName }}
@@ -401,60 +410,7 @@
                 </div>
 
                 <div class="px-6 pb-6">
-                    <template v-if="subscriptionModalStep === 'formula'">
-                        <div class="grid gap-3 sm:grid-cols-2">
-                            <button
-                                type="button"
-                                class="rounded-lg border p-4 text-left transition-colors hover:border-primary hover:bg-primary/5 touch-manipulation"
-                                :class="selectedSubscriptionFormula === 'institution_monthly_150' ? 'border-primary bg-primary/5 ring-2 ring-primary' : ''"
-                                :disabled="subscriptionBusy"
-                                @click="selectedSubscriptionFormula = 'institution_monthly_150'"
-                            >
-                                <p class="font-semibold text-lg">
-                                    150 €
-                                </p>
-                                <p class="text-sm text-muted-foreground">
-                                    par mois
-                                </p>
-                            </button>
-
-                            <button
-                                type="button"
-                                class="rounded-lg border p-4 text-left transition-colors hover:border-primary hover:bg-primary/5 touch-manipulation"
-                                :class="selectedSubscriptionFormula === 'institution_yearly_1500' ? 'border-primary bg-primary/5 ring-2 ring-primary' : ''"
-                                :disabled="subscriptionBusy"
-                                @click="selectedSubscriptionFormula = 'institution_yearly_1500'"
-                            >
-                                <p class="font-semibold text-lg">
-                                    1 500 €
-                                </p>
-                                <p class="text-sm text-muted-foreground">
-                                    par an
-                                </p>
-                            </button>
-                        </div>
-
-                        <DialogFooter class="mt-6 gap-2 sm:justify-end">
-                            <Button
-                                variant="secondary"
-                                type="button"
-                                :disabled="subscriptionBusy"
-                                @click="subscriptionModalOpen = false"
-                            >
-                                Annuler
-                            </Button>
-                            <Button
-                                type="button"
-                                :disabled="!selectedSubscriptionFormula || subscriptionBusy"
-                                :in-progress="subscriptionGenerating"
-                                @click="generateInstitutionSubscription"
-                            >
-                                Générer le bon de commande
-                            </Button>
-                        </DialogFooter>
-                    </template>
-
-                    <template v-else>
+                    <template v-if="subscriptionModalStep === 'review'">
                         <div class="space-y-4">
                             <div class="overflow-hidden rounded-lg border bg-card shadow-sm">
                                 <div class="flex items-center justify-between gap-3 border-b bg-muted/50 px-4 py-3">
@@ -483,7 +439,7 @@
                             <p class="text-sm leading-relaxed text-muted-foreground">
                                 Vérifiez le PDF avant l'envoi Documenso.
                                 <span class="mt-1 block text-xs">
-                                    Pour changer de formule, supprimez ce brouillon puis générez-en un nouveau.
+                                    Pour modifier le tarif, supprimez ce brouillon et créez une nouvelle offre commerciale.
                                 </span>
                             </p>
                         </div>
@@ -596,8 +552,10 @@
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
+import InstitutionCommercialOfferModal from './InstitutionCommercialOfferModal.vue';
+import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 import { Button } from '@/components/ui/button';
-import type { Comment, CrmInstitution, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
+import type { Comment, CrmInstitution, CrmInstitutionCommercialOffer, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { Switch } from '~/components/ui/switch';
@@ -609,7 +567,6 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
-import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
@@ -654,26 +611,29 @@ const { deactivateInstitutionProduct } = useProductCrmHistory();
 const { forceDelete } = useInstitutions();
 const subscriptionModalOpen = ref(false);
 const subscriptionStatusModalOpen = ref(false);
+const commercialOfferModalOpen = ref(false);
+const commercialOfferInstitutionId = ref<number | null>(null);
+const commercialOfferInstitutionName = ref('');
+const commercialOfferData = ref<CrmInstitutionCommercialOffer | null>(null);
 const subscriptionInstitutionId = ref<number | null>(null);
 const subscriptionInstitutionName = ref('');
 const subscriptionStatusData = ref<CrmInstitution['subscription'] | null>(null);
-const selectedSubscriptionFormula = ref<'institution_monthly_150' | 'institution_yearly_1500' | null>(null);
-const subscriptionModalStep = ref<'formula' | 'review'>('formula');
+const subscriptionModalStep = ref<'review'>('review');
 const pendingSubscriptionContractId = ref<number | null>(null);
-const subscriptionGenerating = ref(false);
 const subscriptionSending = ref(false);
 const subscriptionDeleting = ref(false);
 const subscriptionBusy = computed(() =>
-    subscriptionGenerating.value || subscriptionSending.value || subscriptionDeleting.value,
+    subscriptionSending.value || subscriptionDeleting.value,
 );
 const {
-    createInstitutionSubscription,
     viewInstitutionSubscriptionPdf,
     sendInstitutionSubscriptionForSignature,
     deleteInstitutionSubscriptionDraft,
     updateCrmInstitutionContact,
     ensureCrmInstitutionContact,
     updateCrmUser,
+    recordQuickCommercialAction,
+    revertQuickCommercialAction,
 } = useCrm();
 const representativeUserId = ref<number | null>(null);
 const selectedReferrer = ref<Referrer | null>(null);
@@ -829,17 +789,9 @@ const pendingSubscriptionReference = computed(() =>
     pendingSubscriptionInstitution.value?.subscription?.reference ?? null,
 );
 
-const pendingSubscriptionFormulaLabel = computed(() => {
-    const formula = pendingSubscriptionInstitution.value?.subscription?.formula;
-    if (formula === 'institution_yearly_1500') {
-        return '1 500 € / an';
-    }
-    if (formula === 'institution_monthly_150') {
-        return '150 € / mois';
-    }
-
-    return null;
-});
+const pendingSubscriptionFormulaLabel = computed(() =>
+    pendingSubscriptionInstitution.value?.subscription?.formula_label ?? null,
+);
 
 function emptyInstitutionSubscription(): CrmInstitutionSubscription {
     return {
@@ -1040,6 +992,68 @@ async function openCommercialDialog(institution: CrmInstitution, actionType: Com
     }
 }
 
+function weeklyCounterTotal(crm: Record<string, unknown>, actionType: CommercialActionType): number {
+    const key = crmWeeklyCounterKeyForAction(actionType);
+    return Number(crm[key]) || 0;
+}
+
+async function incrementCommercialAction(institution: CrmInstitution, actionType: CommercialActionType) {
+    commercialResolvingId.value = institution.id;
+    try {
+        const resolved = await resolveInstitutionCrmContact(institution);
+        const userId = resolved?.representative_user_id;
+
+        if (!userId) {
+            return;
+        }
+
+        const response = await recordQuickCommercialAction(
+            userId,
+            resolved.crm?.client_type ?? 'user',
+            actionType,
+        );
+        patchLocalInstitutionCrm(resolved.id, response.crm);
+        $toast({
+            description: `+1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch {
+        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    }
+    finally {
+        commercialResolvingId.value = null;
+    }
+}
+
+async function decrementCommercialAction(institution: CrmInstitution, actionType: CommercialActionType) {
+    commercialResolvingId.value = institution.id;
+    try {
+        const resolved = await resolveInstitutionCrmContact(institution);
+        const crmId = resolved?.crm?.id;
+
+        if (!crmId) {
+            $toast({ description: 'Aucun contact CRM pour retirer une action.', variant: 'destructive' });
+            return;
+        }
+
+        const response = await revertQuickCommercialAction(crmId, actionType);
+        patchLocalInstitutionCrm(resolved.id, response.crm);
+        $toast({
+            description: `−1 ${CRM_WEEKLY_KPI_ACTION_SHORT_LABELS[actionType]}. Total semaine : ${weeklyCounterTotal(response.crm, actionType)}.`,
+            variant: 'success',
+        });
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message
+            ?? 'Erreur lors du retrait';
+        $toast({ description: message, variant: 'destructive' });
+    }
+    finally {
+        commercialResolvingId.value = null;
+    }
+}
+
 function patchLocalInstitutionCrm(institutionId: number, crm: Record<string, unknown>) {
     const idx = localInstitutions.value.findIndex(i => i.id === institutionId);
     if (idx === -1) return;
@@ -1217,90 +1231,140 @@ async function handleInstitutionProductDeactivation(
     }
 }
 
+function patchInstitutionCommercialOffer(
+    institutionId: number,
+    commercialOffer: CrmInstitutionCommercialOffer,
+) {
+    localInstitutions.value = localInstitutions.value.map((institution) => {
+        if (institution.id !== institutionId) {
+            return institution;
+        }
+
+        return { ...institution, commercial_offer: commercialOffer };
+    });
+
+    emit('update-institutions', {
+        ...props.institutions,
+        data: localInstitutions.value,
+    });
+}
+
+function emptyCommercialOffer(): CrmInstitutionCommercialOffer {
+    return {
+        id: null,
+        reference: null,
+        status: null,
+        status_label: null,
+        payment_mode: null,
+        amount_htva: null,
+        amount_label: null,
+        can_edit: true,
+        can_validate: false,
+        can_convert: false,
+        can_cancel: false,
+    };
+}
+
+function isActiveCommercialOffer(offer?: CrmInstitutionCommercialOffer | null): boolean {
+    return offer?.status === 'draft' || offer?.status === 'validated';
+}
+
+function openCommercialOfferModal(institution: CrmInstitution) {
+    commercialOfferInstitutionId.value = institution.id;
+    commercialOfferInstitutionName.value = institution.full_name;
+    commercialOfferData.value = isActiveCommercialOffer(institution.commercial_offer)
+        ? institution.commercial_offer!
+        : emptyCommercialOffer();
+    commercialOfferModalOpen.value = true;
+}
+
+function onCommercialOfferUpdated(offer: CrmInstitutionCommercialOffer) {
+    if (!commercialOfferInstitutionId.value) {
+        return;
+    }
+
+    commercialOfferData.value = offer;
+    patchInstitutionCommercialOffer(commercialOfferInstitutionId.value, offer);
+}
+
+function onCommercialOfferConverted(payload: {
+    offer: CrmInstitutionCommercialOffer;
+    contractId: number;
+    contract?: {
+        id: number;
+        formula?: string | null;
+        reference?: string | null;
+        status?: string | null;
+        created_at?: string | null;
+    };
+}) {
+    if (!commercialOfferInstitutionId.value) {
+        return;
+    }
+
+    patchInstitutionCommercialOffer(commercialOfferInstitutionId.value, payload.offer);
+
+    if (payload.contract) {
+        patchInstitutionSubscription(
+            commercialOfferInstitutionId.value,
+            {
+                ...buildDraftSubscription(payload.contract),
+                formula_label: payload.offer.amount_label,
+            },
+        );
+    }
+
+    const institution = localInstitutions.value.find(item => item.id === commercialOfferInstitutionId.value);
+    if (institution) {
+        openSubscriptionReviewModal(institution, payload.contractId);
+    }
+
+    emit('refresh-institutions', props.page);
+}
+
+function institutionCommercialOfferLabel(institution: CrmInstitution): string {
+    const offer = institution.commercial_offer;
+    if (!isActiveCommercialOffer(offer)) {
+        return 'Créer offre';
+    }
+    if (offer?.status_label) {
+        return offer.reference ? `${offer.status_label} (${offer.reference})` : offer.status_label;
+    }
+
+    return 'Offre';
+}
+
+function institutionCommercialOfferBadgeClass(institution: CrmInstitution): string {
+    const status = institution.commercial_offer?.status;
+
+    if (!isActiveCommercialOffer(institution.commercial_offer)) {
+        return 'bg-primary/10 text-primary border border-primary/30';
+    }
+    if (status === 'validated') {
+        return 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+    }
+
+    return 'bg-slate-100 text-slate-800 border border-slate-300';
+}
+
+function handleCommercialOfferClick(institution: CrmInstitution) {
+    if (isCollaborator.value) {
+        return;
+    }
+
+    openCommercialOfferModal(institution);
+}
+
 function openSubscriptionModal(institution: CrmInstitution) {
-    subscriptionInstitutionId.value = institution.id;
-    subscriptionInstitutionName.value = institution.full_name;
-    selectedSubscriptionFormula.value = null;
-    subscriptionModalStep.value = 'formula';
-    pendingSubscriptionContractId.value = null;
-    subscriptionModalOpen.value = true;
+    openCommercialOfferModal(institution);
 }
 
 function openSubscriptionReviewModal(institution: CrmInstitution, contractId: number) {
     subscriptionInstitutionId.value = institution.id;
     subscriptionInstitutionName.value = institution.full_name;
     pendingSubscriptionContractId.value = contractId;
-    selectedSubscriptionFormula.value = institution.subscription?.formula === 'institution_yearly_1500'
-        ? 'institution_yearly_1500'
-        : institution.subscription?.formula === 'institution_monthly_150'
-            ? 'institution_monthly_150'
-            : null;
     subscriptionModalStep.value = 'review';
     subscriptionModalOpen.value = true;
-}
-
-async function generateInstitutionSubscription() {
-    if (!subscriptionInstitutionId.value || !selectedSubscriptionFormula.value) {
-        $toast({
-            description: 'Sélectionnez une formule d\'abonnement.',
-            variant: 'destructive',
-        });
-        return;
-    }
-
-    subscriptionGenerating.value = true;
-
-    try {
-        const response = await createInstitutionSubscription(
-            subscriptionInstitutionId.value,
-            selectedSubscriptionFormula.value,
-        );
-
-        const contract = response.contract as {
-            id: number;
-            formula?: string | null;
-            reference?: string | null;
-            status?: string | null;
-            created_at?: string | null;
-        } | undefined;
-
-        pendingSubscriptionContractId.value = contract?.id ?? null;
-        subscriptionModalStep.value = 'review';
-
-        if (subscriptionInstitutionId.value && contract) {
-            patchInstitutionSubscription(
-                subscriptionInstitutionId.value,
-                buildDraftSubscription(contract),
-            );
-        }
-
-        $toast({
-            description: response.message ?? 'Bon de commande généré.',
-            variant: 'success',
-        });
-    }
-    catch (error: unknown) {
-        const apiMessage = (error as { data?: { message?: string } })?.data?.message;
-        const institution = localInstitutions.value.find(item => item.id === subscriptionInstitutionId.value);
-        const existingContractId = institution?.subscription?.contract_id;
-
-        if (existingContractId && apiMessage?.includes('déjà actif')) {
-            openSubscriptionReviewModal(institution!, existingContractId);
-            $toast({
-                description: 'Un brouillon existe déjà. Supprimez-le ou continuez l\'envoi pour signature.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        $toast({
-            description: apiMessage ?? 'Impossible de générer le bon de commande. Supprimez le brouillon existant ou ouvrez-le pour continuer.',
-            variant: 'destructive',
-        });
-    }
-    finally {
-        subscriptionGenerating.value = false;
-    }
 }
 
 async function previewPendingSubscriptionPdf() {
@@ -1414,7 +1478,7 @@ function institutionSubscriptionLabel(institution: CrmInstitution): string {
         return subscription.status_label;
     }
     if (status === 'paid' || status === 'accomplished') {
-        return formula === 'institution_yearly_1500' ? 'Actif (annuel)' : 'Actif (mensuel)';
+        return subscription?.formula_label ?? (subscription?.formula?.includes('yearly') ? 'Actif (annuel)' : 'Actif (mensuel)');
     }
 
     return 'Suivi signature';
@@ -1482,8 +1546,6 @@ async function deleteDraftSubscription(institution: CrmInstitution) {
             subscriptionStatusModalOpen.value = false;
             subscriptionModalOpen.value = false;
             pendingSubscriptionContractId.value = null;
-            selectedSubscriptionFormula.value = null;
-            subscriptionModalStep.value = 'formula';
         },
     });
 }
@@ -1503,8 +1565,7 @@ async function deletePendingSubscriptionDraft() {
         reference: pendingSubscriptionInstitution.value?.subscription?.reference,
         onSuccess: () => {
             pendingSubscriptionContractId.value = null;
-            selectedSubscriptionFormula.value = null;
-            subscriptionModalStep.value = 'formula';
+            subscriptionModalOpen.value = false;
         },
     });
 }
@@ -1757,7 +1818,9 @@ const isFranceUser = computed(() => {
 const { kpiColumns } = useCrmWeeklyKpiColumns<CrmInstitution>({
     setSort,
     isCollaborator,
-    openCommercialDialog,
+    onIncrement: incrementCommercialAction,
+    onDecrement: decrementCommercialAction,
+    getCrmUserId: row => row.crm?.id ?? null,
     resolvingRowId: commercialResolvingId,
     getRowId: row => row.id,
 });
@@ -1810,9 +1873,9 @@ const columns: ColumnDef<CrmInstitution>[] = [
             return h('div', { class: 'flex justify-center items-center gap-1' }, [
                 isCollaborator.value
                     ? h('span', {
-                        class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
-                        title: email ?? '',
-                    }, email || '—')
+                            class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
+                            title: email ?? '',
+                        }, email || '—')
                     : h('div', { class: 'flex justify-center items-center gap-1' }, [
                             h('span', {
                                 class: 'text-sm lowercase whitespace-nowrap min-w-[220px]',
@@ -2058,7 +2121,7 @@ const columns: ColumnDef<CrmInstitution>[] = [
             const institution = row.original as CrmInstitution;
 
             return h('div', {
-                class: 'flex justify-center',
+                'class': 'flex justify-center',
                 'data-no-row-select': 'true',
             }, [
                 h(CrmFollowUpHistoryDropdown, {
@@ -2295,6 +2358,34 @@ const columns: ColumnDef<CrmInstitution>[] = [
         cell: ({ row }) => {
             return h('div', { class: 'text-center' }, formatRelativeDate(row.getValue('created_at')));
         },
+    },
+    {
+        id: 'commercial_offer',
+        header: 'Offre commerciale',
+        cell: ({ row }) => {
+            const institution = row.original as CrmInstitution;
+            const label = institutionCommercialOfferLabel(institution);
+            const badgeClass = institutionCommercialOfferBadgeClass(institution);
+            const isClickable = !isCollaborator.value;
+
+            return h(
+                'button',
+                {
+                    'type': 'button',
+                    'data-no-row-select': 'true',
+                    'class': `px-2 py-1 rounded text-xs font-medium touch-manipulation ${badgeClass} ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`,
+                    'disabled': !isClickable,
+                    'onClick': (event: MouseEvent) => {
+                        event.stopPropagation();
+                        if (isClickable) {
+                            handleCommercialOfferClick(institution);
+                        }
+                    },
+                },
+                label,
+            );
+        },
+        enableSorting: false,
     },
     {
         id: 'subscription',

@@ -36,23 +36,33 @@
                 <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     <div class="rounded-md bg-gray-50 px-2 py-1.5">
                         <span class="text-[10px] uppercase tracking-wide text-gray-500">Appels</span>
-                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_call ?? 0 }}</p>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">
+                            {{ weeklyCounters.nb_call ?? 0 }}
+                        </p>
                     </div>
                     <div class="rounded-md bg-gray-50 px-2 py-1.5">
                         <span class="text-[10px] uppercase tracking-wide text-gray-500">Ventes</span>
-                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_sale ?? 0 }}</p>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">
+                            {{ weeklyCounters.nb_sale ?? 0 }}
+                        </p>
                     </div>
                     <div class="rounded-md bg-gray-50 px-2 py-1.5">
                         <span class="text-[10px] uppercase tracking-wide text-gray-500">Recommand.</span>
-                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_recommandation ?? 0 }}</p>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">
+                            {{ weeklyCounters.nb_recommandation ?? 0 }}
+                        </p>
                     </div>
                     <div class="rounded-md bg-gray-50 px-2 py-1.5">
                         <span class="text-[10px] uppercase tracking-wide text-gray-500">RDV</span>
-                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_meeting ?? 0 }}</p>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">
+                            {{ weeklyCounters.nb_meeting ?? 0 }}
+                        </p>
                     </div>
                     <div class="rounded-md bg-gray-50 px-2 py-1.5">
                         <span class="text-[10px] uppercase tracking-wide text-gray-500">En attente</span>
-                        <p class="text-lg font-bold tabular-nums text-gray-900">{{ weeklyCounters.nb_pending ?? 0 }}</p>
+                        <p class="text-lg font-bold tabular-nums text-gray-900">
+                            {{ weeklyCounters.nb_pending ?? 0 }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -235,7 +245,7 @@ const emit = defineEmits<{
     'crm-updated': [crm: Record<string, unknown>];
 }>();
 
-const { crmUser, getCrmHistories } = useCrm();
+const { crmUser, getCrmHistories, recordQuickCommercialAction } = useCrm();
 const { getAll } = useProduct();
 const { $toast } = useNuxtApp();
 
@@ -362,29 +372,15 @@ function applySuccess(response: { crm?: Record<string, unknown> } | Record<strin
     emit('update:open', false);
 }
 
-async function submitPayload(payload: Record<string, unknown>, action: CommercialActionType) {
-    const response = await crmUser(payload);
-    applySuccess(response, action);
-}
-
 async function submitQuickOne() {
     quickInProgress.value = true;
-    const date = today();
     try {
-        await submitPayload({
-            user_id: props.userId,
-            client_type: props.clientType,
-            last_contact_date: date,
-            history: [
-                {
-                    action_type: tradeTab.value,
-                    number_of_times: 1,
-                    start_date: date,
-                    end_date: date,
-                    comment: '',
-                },
-            ],
-        }, tradeTab.value);
+        const response = await recordQuickCommercialAction(
+            props.userId,
+            props.clientType,
+            tradeTab.value,
+        );
+        applySuccess(response, tradeTab.value);
     }
     catch {
         $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });

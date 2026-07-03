@@ -70,7 +70,6 @@ export type InstitutionSubscriptionItem = {
     };
 };
 
-
 export type InstitutionSubscriptionKpis = {
     total: number;
     created_this_month: number;

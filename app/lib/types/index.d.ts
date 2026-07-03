@@ -119,6 +119,8 @@ export type CrmInstitutionSubscription = {
     status: string | null;
     status_label: string | null;
     formula: string | null;
+    formula_label?: string | null;
+    amount_htva?: number | null;
     contract_id: number | null;
     reference: string | null;
     created_at: string | null;
@@ -133,6 +135,22 @@ export type CrmInstitutionSubscription = {
     signed_at?: string | null;
     has_signed_pdf?: boolean;
     signing_urls?: { client?: string | null; commercial?: string | null } | null;
+};
+
+export type CrmInstitutionCommercialOffer = {
+    id: number | null;
+    reference: string | null;
+    status: 'draft' | 'validated' | 'converted' | 'cancelled' | null;
+    status_label: string | null;
+    payment_mode: 'monthly' | 'yearly' | null;
+    amount_htva: number | null;
+    amount_label: string | null;
+    can_edit: boolean;
+    can_validate: boolean;
+    can_convert: boolean;
+    can_cancel: boolean;
+    validated_at?: string | null;
+    created_at?: string | null;
 };
 
 export type InstitutionAiInsightItem = {
@@ -180,6 +198,7 @@ export type CrmInstitution = {
     last_product_modifications?: LastProductModifications[];
     historic_activity?: UserActivity;
     subscription?: CrmInstitutionSubscription;
+    commercial_offer?: CrmInstitutionCommercialOffer;
     registration_source?: 'site' | 'file';
     registered_at?: string | null;
     created_at?: string | null;
