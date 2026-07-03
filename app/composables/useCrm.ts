@@ -212,12 +212,55 @@ export const useCrm = () => {
 
     async function createInstitutionSubscription(
         institutionId: number,
-        formula: 'institution_monthly_150' | 'institution_yearly_1500',
+        commercialOfferId: number,
     ) {
         return await $apifetch(`/api/crm/institutions/${institutionId}/subscription`, {
             method: 'POST',
-            body: { formula },
+            body: { commercial_offer_id: commercialOfferId },
         });
+    }
+
+    async function saveInstitutionCommercialOffer(
+        institutionId: number,
+        payload: { payment_mode: 'monthly' | 'yearly'; amount_htva: number },
+        offerId?: number | null,
+    ) {
+        if (offerId) {
+            return await $apifetch(`/api/crm/institutions/${institutionId}/commercial-offer/${offerId}`, {
+                method: 'PUT',
+                body: payload,
+            });
+        }
+
+        return await $apifetch(`/api/crm/institutions/${institutionId}/commercial-offer`, {
+            method: 'POST',
+            body: payload,
+        });
+    }
+
+    async function validateInstitutionCommercialOffer(institutionId: number, offerId: number) {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/commercial-offer/${offerId}/validate`, {
+            method: 'POST',
+        });
+    }
+
+    async function convertInstitutionCommercialOffer(institutionId: number, offerId: number) {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/commercial-offer/${offerId}/convert`, {
+            method: 'POST',
+        });
+    }
+
+    async function cancelInstitutionCommercialOffer(institutionId: number, offerId: number) {
+        return await $apifetch(`/api/crm/institutions/${institutionId}/commercial-offer/${offerId}`, {
+            method: 'DELETE',
+        });
+    }
+
+    async function viewInstitutionCommercialOfferPdf(institutionId: number, offerId: number) {
+        await openPdfInNewWindow(
+            `/api/crm/institutions/${institutionId}/commercial-offer/${offerId}/pdf`,
+            'Chargement de l\'offre commerciale...',
+        );
     }
 
     async function openPdfInNewWindow(apiPath: string, loadingTitle: string) {
@@ -372,6 +415,11 @@ export const useCrm = () => {
         getCrmInstitutions,
         getCrmKpis,
         createInstitutionSubscription,
+        saveInstitutionCommercialOffer,
+        validateInstitutionCommercialOffer,
+        convertInstitutionCommercialOffer,
+        cancelInstitutionCommercialOffer,
+        viewInstitutionCommercialOfferPdf,
         viewInstitutionSubscriptionPdf,
         openCrmDocumentationPdf,
         sendInstitutionSubscriptionForSignature,

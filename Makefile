@@ -42,7 +42,7 @@ help:
 	@echo "Infiswap — commandes disponibles"
 	@echo ""
 	@echo "  Git — les deux dépôts"
-	@echo "    make pull-all / push-all"
+	@echo "    make pull / pull-all / push-all"
 	@echo "    make pull-all-autostash (rebase + autostash)"
 	@echo "  Git — un dépôt"
 	@echo "    make pull-front | pull-back"
@@ -95,6 +95,8 @@ help:
 	@echo "Chemins : FRONT=$(FRONT_DIR)  BACK=$(BACK_DIR)"
 
 # --- Git (branche courante) ---
+
+pull: pull-all
 
 pull-all: pull-front pull-back
 
