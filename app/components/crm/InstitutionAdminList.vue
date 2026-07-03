@@ -552,6 +552,7 @@
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import InstitutionSubscriptionStatusModal from './InstitutionSubscriptionStatusModal.vue';
+import InstitutionCommercialOfferModal from './InstitutionCommercialOfferModal.vue';
 import CrmFollowUpHistoryDropdown from './CrmFollowUpHistoryDropdown.vue';
 import { Button } from '@/components/ui/button';
 import type { Comment, CrmInstitution, CrmInstitutionCommercialOffer, CrmInstitutionSubscription, CrmProductKey, Pagination, Referrer, User } from '~/lib/types';
