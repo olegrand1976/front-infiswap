@@ -142,7 +142,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    save: [];
+    'save': [];
     'update:modelValue': [value: InstitutionCommissionSettingsPayload];
 }>();
 

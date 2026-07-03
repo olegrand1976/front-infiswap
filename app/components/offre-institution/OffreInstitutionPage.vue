@@ -834,7 +834,14 @@
                                 <input
                                     v-model="contactInstitution"
                                     type="text"
-                                    placeholder="Nom de l'Institution"
+                                    placeholder="Nom de l'institution"
+                                    required
+                                    class="w-full p-2 border border-slate-200 rounded-md text-xs focus:ring-1 focus:ring-[#d3405c] outline-none"
+                                >
+                                <input
+                                    v-model="contactEmail"
+                                    type="email"
+                                    placeholder="Adresse e-mail"
                                     required
                                     class="w-full p-2 border border-slate-200 rounded-md text-xs focus:ring-1 focus:ring-[#d3405c] outline-none"
                                 >
@@ -1080,6 +1087,7 @@ const adPulse = ref(true);
 const adScale = ref('scale(1)');
 
 const contactInstitution = ref('');
+const contactEmail = ref('');
 const contactAlert = ref(false);
 const contactSubmitting = ref(false);
 const contactError = ref('');
@@ -1204,35 +1212,27 @@ function simulateAdPublication() {
 
 async function submitContactForm() {
     contactError.value = '';
+    contactSubmitting.value = true;
 
-    if (props.contact.repId) {
-        contactSubmitting.value = true;
-        try {
-            await submitInstitutionOfferStudy({
-                institutionName: contactInstitution.value,
-                repId: props.contact.repId,
-            });
-            contactAlert.value = true;
-            contactInstitution.value = '';
-            setTimeout(() => {
-                contactAlert.value = false;
-            }, 5000);
-        }
-        catch {
-            contactError.value = 'Impossible d\'envoyer votre demande. Veuillez réessayer ou nous contacter par téléphone.';
-        }
-        finally {
-            contactSubmitting.value = false;
-        }
-
-        return;
+    try {
+        await submitInstitutionOfferStudy({
+            institutionName: contactInstitution.value,
+            email: contactEmail.value,
+            repId: props.contact.repId,
+        });
+        contactAlert.value = true;
+        contactInstitution.value = '';
+        contactEmail.value = '';
+        setTimeout(() => {
+            contactAlert.value = false;
+        }, 5000);
     }
-
-    contactAlert.value = true;
-    contactInstitution.value = '';
-    setTimeout(() => {
-        contactAlert.value = false;
-    }, 5000);
+    catch {
+        contactError.value = 'Impossible d\'envoyer votre demande. Veuillez réessayer ou nous contacter par téléphone.';
+    }
+    finally {
+        contactSubmitting.value = false;
+    }
 }
 
 onMounted(() => {

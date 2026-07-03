@@ -5,15 +5,17 @@ import type { User } from '~/lib/types';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
     const user = useUser();
+    const authReady = useState('authReady', () => false);
+    const token = useCookie(AUTH_TOKEN);
     const { $apifetch } = useNuxtApp();
 
-    const fetchCurrentUser = async (): Promise<User> => {
+    const fetchCurrentUser = async (): Promise<User | null> => {
         try {
             return await $apifetch('/api/user');
         }
         catch (error: { data?: { code?: string }; status?: number }) {
             if (error?.data?.code === 'institution_deleted') {
-                useCookie(AUTH_TOKEN).value = null;
+                token.value = null;
             }
 
             return null;
@@ -21,8 +23,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     };
 
     if (!user.value) {
-        user.value = await fetchCurrentUser();
+        if (token.value) {
+            user.value = await fetchCurrentUser();
+        }
+        else {
+            user.value = null;
+        }
     }
+
+    authReady.value = true;
 
     nuxtApp.provide('fetchCurrentUser', fetchCurrentUser);
     nuxtApp.provide('user', user.value);

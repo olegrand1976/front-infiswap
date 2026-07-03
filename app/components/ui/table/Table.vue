@@ -16,7 +16,7 @@ const expandsHorizontally = computed(() => {
     }
 
     if (Array.isArray(props.class)) {
-        return props.class.some((value) => typeof value === 'string' && value.includes('w-max'));
+        return props.class.some(value => typeof value === 'string' && value.includes('w-max'));
     }
 
     return false;

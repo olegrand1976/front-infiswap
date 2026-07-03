@@ -226,7 +226,6 @@
 import {
     Bell,
     BellRing,
-    Check,
     CircleCheck,
     HeartHandshake,
     MapPin,

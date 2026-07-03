@@ -1,5 +1,7 @@
 <template>
+    <LayoutsDashboardSkeleton v-if="!user" />
     <SidebarProvider
+        v-else
         storage-key="infiswap-sidebar"
         class="min-h-svh"
     >
@@ -374,8 +376,11 @@ const handleDisable = async () => {
 };
 
 onMounted(async () => {
-    roles.value = await getRoles();
-    await getUnreadCount();
+    const [fetchedRoles] = await Promise.all([
+        getRoles(),
+        getUnreadCount(),
+    ]);
+    roles.value = fetchedRoles;
     startPolling(10000);
 
     const notif = parsedSettings.value?.notification || {};

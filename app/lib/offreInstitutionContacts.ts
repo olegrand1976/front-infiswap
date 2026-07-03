@@ -13,7 +13,7 @@ export const DEFAULT_OFFRE_INSTITUTION_CONTACT: OffreInstitutionContact = {
 };
 
 export const OFFRE_INSTITUTION_CONTACTS: Record<string, OffreInstitutionContact> = {
-    '1': {
+    1: {
         phoneTel: '0493855038',
         phoneDisplay: '0493.85.50.38',
         email: 'vincent@infiswap.be',

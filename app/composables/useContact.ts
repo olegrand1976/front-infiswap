@@ -10,7 +10,8 @@ export const submitContact = async (formData) => {
 
 export const submitInstitutionOfferStudy = async (body: {
     institutionName: string;
-    repId: string;
+    email: string;
+    repId?: string;
 }) => {
     const { $apifetch } = useNuxtApp();
 
@@ -18,7 +19,8 @@ export const submitInstitutionOfferStudy = async (body: {
         method: 'post',
         body: {
             institution_name: body.institutionName,
-            rep_id: body.repId,
+            email: body.email,
+            ...(body.repId ? { rep_id: body.repId } : {}),
         },
     });
 };

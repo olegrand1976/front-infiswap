@@ -192,13 +192,13 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            N° de téléphone <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
+                                            N° de téléphone <span class="text-red-500">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.phoneNumber"
                                             :icon="Phone"
                                             size="md"
-                                            placeholder="N° de téléphone"
+                                            placeholder="N° de téléphone *"
                                         />
                                     </div>
 
@@ -532,8 +532,7 @@
                             class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnelle
-                                <span class="text-xs font-normal text-muted-foreground">(optionnel — complétable dans votre profil)</span>
+                                Catégorie professionnelle <span class="text-red-500">*</span>
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <Select v-model="formData.professionalCategory">
@@ -543,7 +542,7 @@
                                     >
                                         <Users class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Catégorie"
+                                            placeholder="Catégorie professionnelle *"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -825,13 +824,13 @@
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        N° de téléphone <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
+                                        N° de téléphone <span class="text-red-500">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.phoneNumber"
                                         :icon="Phone"
                                         size="md"
-                                        placeholder="N° de téléphone"
+                                        placeholder="N° de téléphone *"
                                     />
                                 </div>
 
@@ -1164,8 +1163,7 @@
                             class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
                         >
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnelle
-                                <span class="text-xs font-normal text-muted-foreground">(optionnel — complétable dans votre profil)</span>
+                                Catégorie professionnelle <span class="text-red-500">*</span>
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <Select v-model="formData.professionalCategory">
@@ -1175,7 +1173,7 @@
                                     >
                                         <Users class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Catégorie"
+                                            placeholder="Catégorie professionnelle *"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -1476,7 +1474,7 @@ const canSubmit = computed(() => {
         return false;
     }
 
-    if (!formData.lastname?.trim() || !formData.firstname?.trim() || !formData.email?.trim()) {
+    if (!formData.lastname?.trim() || !formData.firstname?.trim() || !formData.email?.trim() || !formData.phoneNumber?.trim()) {
         return false;
     }
 
@@ -1497,6 +1495,10 @@ const canSubmit = computed(() => {
     }
 
     if (formData.accountType === 'institution' && !formData.institutionName?.trim()) {
+        return false;
+    }
+
+    if (formData.accountType !== 'institution' && !formData.professionalCategory) {
         return false;
     }
 

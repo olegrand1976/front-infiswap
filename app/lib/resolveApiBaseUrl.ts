@@ -6,7 +6,7 @@ type RuntimeConfigLike = {
 };
 
 /**
- * URL de base pour $apifetch / CSRF.
+ * URL de base pour $apifetch.
  * - SSR : API directe (réseau Docker / host interne).
  * - Client dev : aligne le hostname API sur celui de la page (localhost ≠ 127.0.0.1).
  * - Client prod : URL publique API.

@@ -238,7 +238,9 @@ const selectedCountry = ref(
 const { getAll: getMissions, missions } = useMissions();
 const availableMissions = computed(() => missions.value.data ?? []);
 
-await getMissions(1, PERPAGE, { type: 'nurse' });
+onMounted(() => {
+    getMissions(1, PERPAGE, { type: 'nurse' });
+});
 
 const countries = availableCountries;
 
