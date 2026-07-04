@@ -202,7 +202,7 @@
                 <CustomPagination
                     :default-page="page"
                     :per-page="perPage"
-                    :total="replacements.total"
+                    :total="replacements?.total"
                     @update:page="refreshReplacement"
                     @update:per-page="handlePerPageChange"
                 />
