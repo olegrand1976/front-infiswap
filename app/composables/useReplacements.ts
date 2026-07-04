@@ -134,6 +134,8 @@ export const useReplacements = () => {
 
         replacement.details.forEach((detail) => {
             const patient = detail.patient;
+            if (!patient) return;
+
             const key = `${patient.id}-${patient.zip_code}-${patient.city}`;
 
             if (!seen.has(key)) {
