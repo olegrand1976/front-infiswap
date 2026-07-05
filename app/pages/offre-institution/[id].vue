@@ -40,7 +40,7 @@ useHead({
     meta: [
         {
             name: 'description',
-            content: 'Offre institutionnelle InfiSwap et Jaumana Soins : remplacements infirmiers, comparateur intérim, formules DIY et Premium.',
+            content: 'Offre institutionnelle InfiSwap et Jaumana Soins : partenariat, remplacements infirmiers, comparateur intérim et formule DIY.',
         },
     ],
 });

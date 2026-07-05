@@ -116,8 +116,20 @@
                                 Coût élevé et variable selon les profils
                             </td>
                             <td class="p-3 sm:p-4 font-extrabold text-white text-base sm:text-lg">
-                                150 € / mois
-                                <span class="block text-xs font-normal text-white/60 mt-0.5">ou 1 500 € / an</span>
+                                {{ diyMonthlyLabel }}
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="block text-sm font-normal text-white/40 line-through mt-0.5"
+                                >{{ diyFullMonthlyLabel }}</span>
+                                <span class="block text-xs font-normal text-white/60 mt-0.5">ou {{ diyYearlyShortLabel }}</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="block text-xs font-normal text-white/40 line-through"
+                                >{{ diyFullYearlyShortLabel }}</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="block text-[10px] font-semibold text-green-300 mt-1"
+                                >{{ diyPromoValidityLabel }}</span>
                             </td>
                         </tr>
                         <tr class="hover:bg-white/5 transition-colors">
@@ -151,6 +163,15 @@
 
 <script setup lang="ts">
 import { Building2 } from 'lucide-vue-next';
+
+const {
+    diyPromoActive,
+    diyPromoValidityLabel,
+    diyMonthlyLabel,
+    diyFullMonthlyLabel,
+    diyYearlyShortLabel,
+    diyFullYearlyShortLabel,
+} = useInstitutionDiyPricing();
 </script>
 
 <style scoped>

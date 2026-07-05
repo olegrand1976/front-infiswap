@@ -109,7 +109,7 @@
                         Espace Institutionnel Belge
                     </span>
                     <div class="flex items-center space-x-2 border-l pl-6 border-slate-200">
-                        <span class="text-xs text-slate-400">Partenaire agréé :</span>
+                        <span class="text-xs text-slate-400">Partenariat officiel :</span>
                         <span class="font-bold text-slate-700 tracking-wider text-sm bg-slate-50 px-2 py-1 rounded">JAUMANA <span class="text-[#46d88e]">Soins</span></span>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                         Garantissez la continuité de vos soins, <span class="text-[#46d88e]">à un coût largement inférieur à l'intérim.</span>
                     </h1>
                     <p class="text-slate-300 text-base sm:text-lg mb-6 leading-relaxed">
-                        Marre de payer l'intérim à <strong>100 € / heure</strong> ? Découvrez la puissance de frappe d'InfiSwap, fort de <strong>plus de 1 500 infirmières indépendantes belges inscrites</strong>. Trouvez rapidement vos remplaçants via notre plateforme ou déléguez tout à Jaumana Soins.
+                        Marre de payer l'intérim à <strong>100 € / heure</strong> ? Découvrez la puissance de frappe d'InfiSwap, fort de <strong>plus de 1 500 infirmières indépendantes belges inscrites</strong>. Publiez vos besoins sur la plateforme ou sécurisez vos remplacements grâce au <strong>partenariat InfiSwap × Jaumana Soins</strong>.
                     </p>
                     <div class="flex flex-wrap gap-3">
                         <button
@@ -184,8 +184,20 @@
                         <div class="flex items-center justify-between mb-4">
                             <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Option 1 : Do-It-Yourself (Abonnement)</span>
                             <div class="text-right">
-                                <span class="text-slate-950 font-extrabold text-sm block">250 € / mois</span>
-                                <span class="text-slate-400 text-[10px] block">ou 2 500 € / an (2 mois offerts)</span>
+                                <span class="text-slate-950 font-extrabold text-sm block">{{ diyMonthlyLabel }}</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="text-slate-400 text-[10px] line-through block"
+                                >{{ diyFullMonthlyLabel }}</span>
+                                <span class="text-slate-400 text-[10px] block">ou {{ diyYearlyShortLabel }} (2 mois offerts)</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="text-slate-400 text-[10px] line-through block"
+                                >{{ diyFullYearlyShortLabel }}</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="text-[#d3405c] text-[10px] font-bold block mt-1"
+                                >{{ diyPromoValidityLabel }}</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-3 mb-3">
@@ -222,33 +234,33 @@
 
                 <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative overflow-hidden">
                     <div class="absolute top-0 right-0 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
-                        Réseau Jaumana Soins Exclusif
+                        Partenariat InfiSwap × Jaumana
                     </div>
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="bg-[#d3405c]/10 text-[#d3405c] text-xs font-bold px-3 py-1 rounded-full">Option 2 : All-Inclusive (Gestion Déléguée)</span>
-                            <span class="text-slate-700 font-extrabold text-sm">6 % de la facturation</span>
+                            <span class="bg-[#d3405c]/10 text-[#d3405c] text-xs font-bold px-3 py-1 rounded-full">Option 2 : Encadrement professionnel (Partenariat Jaumana)</span>
+                            <span class="text-slate-700 font-extrabold text-sm">Sécurisation &amp; suivi</span>
                         </div>
                         <div class="flex items-center gap-3 mb-3">
                             <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-[#d3405c]">
                                 <i class="fa-solid fa-handshake-angle text-lg" />
                             </div>
                             <h3 class="text-xl font-bold text-slate-800">
-                                L'Offre clé-en-main Jaumana
+                                Jaumana Soins : simplifier et sécuriser
                             </h3>
                         </div>
                         <p class="text-slate-600 text-sm mb-4 leading-relaxed">
-                            Recherche d'intervenant stable, gestion administrative et facturation 100% prises en charge par Jaumana. Vous profitez d'un pool d'infirmières d'expérience à des tarifs très compétitifs, bien loin des coûts de l'intérim.
+                            Le partenariat <strong>InfiSwap × Jaumana Soins</strong> vous accompagne pour publier vos demandes sur la plateforme et encadrer professionnellement vos remplacements, en maison de repos comme à domicile.
                         </p>
                         <ul class="space-y-2 mb-6">
                             <li class="text-xs text-slate-600 flex items-center gap-2">
-                                <i class="fa-solid fa-check text-[#d3405c]" /> Tarifs transparents : <strong>57,50 € / h</strong> (Semaine) | <strong>85 € / h</strong> (Week-end)
+                                <i class="fa-solid fa-check text-[#d3405c]" /> <strong>Étape 1 :</strong> convention Jaumana → publication de vos demandes sur InfiSwap
                             </li>
                             <li class="text-xs text-slate-600 flex items-center gap-2">
-                                <i class="fa-solid fa-check text-[#d3405c]" /> Gestion administrative complète pour <strong>6% de commission</strong> seulement
+                                <i class="fa-solid fa-check text-[#d3405c]" /> <strong>Étape 2 :</strong> encadrement pro. garantissant paiements, engagements des titulaires et protection anti-détournement
                             </li>
                             <li class="text-xs text-slate-600 flex items-center gap-2">
-                                <i class="fa-solid fa-check text-[#d3405c]" /> Accès exclusif au réseau spécialisé de remplacement Jaumana Soins
+                                <i class="fa-solid fa-check text-[#d3405c]" /> Expérience, discrétion et fiabilité au service de la continuité des soins
                             </li>
                         </ul>
                     </div>
@@ -341,10 +353,10 @@
                         </div>
                         <div class="p-5 bg-[#46d88e]/10 border border-[#46d88e]/20 rounded-xl">
                             <h4 class="font-bold text-slate-900 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-lightbulb text-[#46d88e]" /> Pourquoi InfiSwap et Jaumana changent la donne ?
+                                <i class="fa-solid fa-lightbulb text-[#46d88e]" /> Le partenariat InfiSwap × Jaumana Soins
                             </h4>
                             <p class="text-slate-700 text-sm leading-relaxed">
-                                En nous appuyant sur un <strong>réseau d'infirmières indépendantes belges</strong>, nous éliminons les intermédiaires gourmands. Nous vous proposons soit une plateforme de publication prioritaire en direct (DIY à 250 € / mois), soit une délégation totale à Jaumana Soins (6% de commission avec des taux fixes compétitifs).
+                                En nous appuyant sur un <strong>réseau d'infirmières indépendantes belges</strong>, nous éliminons les intermédiaires gourmands. Vous publiez en autonomie sur InfiSwap (DIY à {{ diyMonthlyLabel }}) ou vous sécurisez vos remplacements via la <strong>convention Jaumana</strong> : publication sur InfiSwap, paiements garantis, engagements des titulaires et protection contre le détournement de patientèle.
                             </p>
                         </div>
                         <div class="pt-4 flex justify-end">
@@ -431,9 +443,23 @@
                         <p class="text-slate-600 leading-relaxed">
                             InfiSwap est la <strong>1ère plateforme belge 100% automatisée</strong> de mise en relation directe pour remplacements d'infirmier(e)s. Pour les établissements de soins, notre modèle d'abonnement sans commission s'adapte à votre planification :
                         </p>
+                        <div
+                            v-if="diyPromoActive"
+                            class="flex items-center gap-2 p-3 rounded-xl bg-[#d3405c]/10 border border-[#d3405c]/20 text-xs text-[#d3405c] font-semibold"
+                        >
+                            <i class="fa-solid fa-tags" />
+                            <span>Offre promotionnelle — {{ diyPromoValidityLabel }}</span>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
                             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm relative">
-                                <span class="absolute top-3 right-3 bg-emerald-50 text-emerald-800 text-[9px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider">Sans engagement</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="absolute top-3 right-3 bg-[#d3405c] text-white text-[9px] font-extrabold px-2 py-0.5 rounded uppercase"
+                                >Promo</span>
+                                <span
+                                    v-else
+                                    class="absolute top-3 right-3 bg-emerald-50 text-emerald-800 text-[9px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider"
+                                >Sans engagement</span>
                                 <h3 class="font-extrabold text-slate-900 text-sm">
                                     Abonnement Mensuel
                                 </h3>
@@ -441,8 +467,12 @@
                                     Flexibilité totale, arrêt de l'abonnement à tout moment.
                                 </p>
                                 <div class="mt-4 pb-4 border-b border-slate-100">
-                                    <span class="text-3xl font-black text-slate-900">250 €</span>
+                                    <span class="text-3xl font-black text-slate-900">{{ diyMonthlyAmountLabel }}</span>
                                     <span class="text-xs text-slate-500">/ mois (HTVA)</span>
+                                    <span
+                                        v-if="diyPromoActive"
+                                        class="block text-sm text-slate-400 line-through mt-1"
+                                    >{{ diyFullMonthlyAmountLabel }} / mois</span>
                                 </div>
                                 <ul class="mt-4 space-y-2 text-xs text-slate-600">
                                     <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Facturation claire, résiliable mensuellement</li>
@@ -452,6 +482,10 @@
                             </div>
                             <div class="bg-gradient-to-br from-emerald-50 to-white p-5 rounded-xl border-2 border-[#46d88e]/40 shadow-sm relative">
                                 <span class="absolute top-3 right-3 bg-[#d3405c] text-white text-[9px] font-extrabold px-2 py-0.5 rounded uppercase">Populaire (2 mois gratuits)</span>
+                                <span
+                                    v-if="diyPromoActive"
+                                    class="absolute top-9 right-3 bg-emerald-700 text-white text-[8px] font-bold px-2 py-0.5 rounded uppercase"
+                                >Promo</span>
                                 <h3 class="font-extrabold text-slate-800 text-sm">
                                     Engagement Annuel
                                 </h3>
@@ -459,11 +493,15 @@
                                     Sécurité de remplacement à l'année au meilleur tarif.
                                 </p>
                                 <div class="mt-4 pb-4 border-b border-slate-100">
-                                    <span class="text-3xl font-black text-slate-900">2 500 €</span>
+                                    <span class="text-3xl font-black text-slate-900">{{ diyYearlyAmountLabel }}</span>
                                     <span class="text-xs text-slate-500">/ an (HTVA)</span>
+                                    <span
+                                        v-if="diyPromoActive"
+                                        class="block text-sm text-slate-400 line-through mt-1"
+                                    >{{ diyFullYearlyAmountLabel }} / an</span>
                                 </div>
                                 <ul class="mt-4 space-y-2 text-xs text-slate-600">
-                                    <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Équivaut à seulement <strong>208 € / mois</strong></li>
+                                    <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Équivaut à seulement <strong>{{ diyYearlyMonthlyEquivalentLabel }}</strong></li>
                                     <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> 0% de commission sur les heures prestées</li>
                                     <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Économies massives par rapport aux agences</li>
                                 </ul>
@@ -482,7 +520,7 @@
                                 class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all"
                                 @click="switchTab('jaumana-premium')"
                             >
-                                Voir la formule Premium Jaumana <i class="fa-solid fa-arrow-right" />
+                                Découvrir le partenariat Jaumana <i class="fa-solid fa-arrow-right" />
                             </button>
                         </div>
                     </div>
@@ -495,13 +533,82 @@
                         <div class="border-b border-slate-100 pb-4">
                             <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">Partie 4</span>
                             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
-                                JAUMANA Soins : Remplacement d'élite clé-en-main
+                                Partenariat InfiSwap × Jaumana Soins
                             </h2>
+                            <p class="text-sm text-slate-500 mt-2">
+                                Pour mieux vous accompagner, pour mieux vous soutenir — des soins de qualité, sans interruption.
+                            </p>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            <strong>Jaumana Soins</strong> renforce sa collaboration avec <strong>InfiSwap</strong> pour simplifier la vie des institutions et sécuriser leurs remplacements, en <strong>maison de repos</strong> comme à <strong>domicile</strong>.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                            <div class="p-5 border border-slate-200 bg-white rounded-xl shadow-sm">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="w-8 h-8 rounded-full bg-[#d3405c]/10 text-[#d3405c] flex items-center justify-center text-sm font-black">1</span>
+                                    <i class="fa-solid fa-bullhorn text-[#d3405c]" />
+                                    <h3 class="font-bold text-slate-900 text-sm">
+                                        Publication sur InfiSwap
+                                    </h3>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Si votre établissement signe la <strong>convention avec Jaumana Soins</strong>, vos demandes de remplacement sont publiées pour vous sur <strong>InfiSwap</strong>.
+                                </p>
+                            </div>
+                            <div class="p-5 border border-[#46d88e]/30 bg-emerald-50/40 rounded-xl shadow-sm">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="w-8 h-8 rounded-full bg-[#46d88e]/20 text-emerald-800 flex items-center justify-center text-sm font-black">2</span>
+                                    <i class="fa-solid fa-shield-halved text-[#46d88e]" />
+                                    <h3 class="font-bold text-slate-900 text-sm">
+                                        Encadrement professionnel
+                                    </h3>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                                    Si vous trouvez un remplaçant sur <strong>InfiSwap</strong> et souhaitez un encadrement professionnel qui :
+                                </p>
+                                <ul class="space-y-1.5 text-xs text-slate-700">
+                                    <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> <strong>garantit les paiements</strong></li>
+                                    <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> <strong>garantit les engagements des titulaires</strong></li>
+                                    <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> <strong>protège du détournement de patientèle</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                            <div
+                                v-for="value in jaumanaPartnershipValues"
+                                :key="value.title"
+                                class="p-3 bg-slate-50 border border-slate-100 rounded-xl text-center"
+                            >
+                                <i
+                                    :class="value.icon"
+                                    class="text-[#d3405c] text-lg mb-2 block"
+                                />
+                                <p class="text-[10px] font-bold text-slate-800 uppercase tracking-wide leading-snug">
+                                    {{ value.title }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <p class="text-sm font-semibold">
+                                <i class="fa-solid fa-phone text-[#46d88e] mr-2" />
+                                Contactez Jaumana Soins — nous sommes là pour vous <strong>simplifier</strong> la vie et <strong>sécuriser</strong> votre activité.
+                            </p>
+                            <a
+                                href="https://www.jaumana.be"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="shrink-0 bg-[#46d88e] hover:bg-[#2ebd73] text-slate-950 text-xs font-bold px-4 py-2 rounded-lg transition-all text-center"
+                            >
+                                www.jaumana.be
+                            </a>
+                        </div>
+                        <div class="border-b border-slate-100 pb-2 mt-8 mb-4">
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Conditions tarifaires institutionnelles</span>
                         </div>
                         <div class="flex flex-col md:flex-row gap-6 items-start">
                             <div class="flex-1 space-y-4">
-                                <p class="text-slate-600 leading-relaxed">
-                                    Pour les directions d'institutions souhaitant déléguer à 100% la recherche, la facturation et le suivi opérationnel, notre partenaire de confiance <strong>JAUMANA Soins</strong> propose une formule d'accompagnement intégrale au taux unique de <strong>6% de la facturation globale</strong>, s'appuyant sur des taux fixes exceptionnels par rapport à l'intérim.
+                                <p class="text-slate-600 text-sm leading-relaxed">
+                                    Pour les établissements souhaitant déléguer la gestion administrative et la facturation, Jaumana Soins propose un encadrement intégral au taux de <strong>6&nbsp;% de la facturation globale</strong>, avec des taux horaires fixes compétitifs par rapport à l'intérim.
                                 </p>
                                 <div class="grid grid-cols-2 gap-3 bg-red-50 p-4 rounded-xl border border-red-100">
                                     <div class="text-center">
@@ -528,50 +635,16 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-                            <div class="p-5 border border-slate-100 bg-slate-50 rounded-xl space-y-3">
-                                <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider text-[#d3405c]">
-                                    Le réseau spécialisé de remplacement
-                                </h3>
-                                <ul class="space-y-3 text-xs text-slate-600">
-                                    <li class="flex gap-2">
-                                        <i class="fa-solid fa-user-shield text-[#d3405c] mt-0.5" />
-                                        <span><strong>Protection Anti-détournement :</strong> Conventions strictes et encadrement légal pour préserver la cohésion de vos équipes de soins et votre patientèle.</span>
-                                    </li>
-                                    <li class="flex gap-2">
-                                        <i class="fa-solid fa-id-card-clip text-[#d3405c] mt-0.5" />
-                                        <span><strong>Intervenant Fidèle Alterné :</strong> Attribution préférentielle des mêmes soignants sur vos tournées pour préserver les repères de vos résidents.</span>
-                                    </li>
-                                    <li class="flex gap-2">
-                                        <i class="fa-solid fa-hand-holding-dollar text-[#d3405c] mt-0.5" />
-                                        <span><strong>Valorisation et Équité :</strong> Jaumana reverse <strong>94%</strong> de la valeur facturée à l'infirmier(e) de terrain.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="p-5 border border-slate-100 bg-slate-50 rounded-xl flex flex-col justify-between">
-                                <div>
-                                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider text-[#46d88e] mb-2">
-                                        Un réseau de confiance établi
-                                    </h3>
-                                    <p class="text-xs text-slate-600 leading-relaxed">
-                                        En confiant vos shifts à Jaumana Soins, vous profitez immédiatement d'un bassin de <strong>150+ praticiens titulaires d'expérience</strong> prêts à intervenir sous statut autonome.
-                                    </p>
-                                </div>
-                                <div class="border-t border-slate-200 pt-4 mt-4 grid grid-cols-2 gap-2 text-center">
-                                    <div>
-                                        <span class="text-2xl font-extrabold text-slate-800">150+</span>
-                                        <p class="text-[9px] text-slate-400 uppercase">
-                                            Soignants Qualifiés
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <span class="text-2xl font-extrabold text-[#d3405c]">6 %</span>
-                                        <p class="text-[9px] text-slate-400 uppercase">
-                                            Commission Service
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="p-5 border border-slate-100 bg-slate-50 rounded-xl">
+                            <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider text-[#46d88e] mb-2">
+                                Où intervenir ?
+                            </h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Le partenariat couvre les <strong>remplacements à domicile</strong> et en <strong>maison de repos</strong>, pour une continuité de soins sans interruption.
+                            </p>
+                            <p class="border-t border-slate-200 pt-4 mt-4 text-xs text-slate-500 italic text-center">
+                                Ensemble, continuons à offrir des soins de qualité, sans interruption.
+                            </p>
                         </div>
                         <div class="pt-4 flex justify-between">
                             <button
@@ -735,7 +808,7 @@
                                             InfiSwap DIY (Abonnement)
                                         </th>
                                         <th class="p-4 text-sm text-[#d3405c] w-3/8">
-                                            JAUMANA Soins (All-Inclusive)
+                                            Jaumana Soins (Encadrement pro.)
                                         </th>
                                     </tr>
                                 </thead>
@@ -949,7 +1022,7 @@
                                 <span class="font-extrabold text-slate-200 font-mono">{{ formatEur(totalInterimCost) }}</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-slate-400"><i class="fa-solid fa-handshake-angle text-[#d3405c] mr-1.5" /> Jaumana Premium (6% inc.) :</span>
+                                <span class="text-slate-400"><i class="fa-solid fa-handshake-angle text-[#d3405c] mr-1.5" /> Jaumana — Encadrement pro. (6% inc.) :</span>
                                 <span class="font-extrabold text-slate-200 font-mono">{{ formatEur(totalJaumanaCost) }}</span>
                             </div>
                             <div class="flex justify-between items-center">
@@ -987,7 +1060,7 @@
                                 class="hover:text-white transition-all"
                                 @click="switchTab('diy-infiswap')"
                             >
-                                Formule DIY Platform (250€)
+                                Formule DIY Platform ({{ diyMonthlyPrice }}€)
                             </button>
                         </li>
                         <li>
@@ -996,7 +1069,7 @@
                                 class="hover:text-white transition-all"
                                 @click="switchTab('jaumana-premium')"
                             >
-                                Formule Jaumana Premium (6%)
+                                Partenariat Jaumana Soins
                             </button>
                         </li>
                         <li>
@@ -1058,7 +1131,7 @@
                 </div>
             </div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-slate-800 text-center text-[11px] text-slate-600">
-                <p>© {{ currentYear }} InfiSwap. Tous droits réservés. En partenariat technique et opérationnel avec JAUMANA Soins.</p>
+                <p>© {{ currentYear }} InfiSwap. Tous droits réservés. Partenariat officiel InfiSwap × Jaumana Soins — vos soins sans interruption.</p>
             </div>
         </footer>
     </div>
@@ -1066,6 +1139,12 @@
 
 <script setup lang="ts">
 import type { OffreInstitutionContact } from '~/lib/offreInstitutionContacts';
+import {
+    formatInstitutionDiyMonthlyLabel,
+    formatInstitutionDiyYearlyLabel,
+    INSTITUTION_DIY_FULL_MONTHLY,
+    INSTITUTION_DIY_FULL_YEARLY,
+} from '~/lib/offreInstitutionPricing';
 import { submitInstitutionOfferStudy } from '~/composables/useContact';
 
 type TabId = 'accueil' | 'reseau' | 'diy-infiswap' | 'jaumana-premium' | 'simulateur-annonce' | 'comparatif' | 'contact';
@@ -1073,6 +1152,23 @@ type TabId = 'accueil' | 'reseau' | 'diy-infiswap' | 'jaumana-premium' | 'simula
 const props = defineProps<{
     contact: OffreInstitutionContact;
 }>();
+
+const {
+    diyPromoActive,
+    diyPromoValidityLabel,
+    diyMonthlyPrice,
+    diyYearlyPrice,
+    calcDiyPlan,
+    diyMonthlyLabel,
+    diyFullMonthlyLabel,
+    diyYearlyShortLabel,
+    diyFullYearlyShortLabel,
+    diyMonthlyAmountLabel,
+    diyFullMonthlyAmountLabel,
+    diyYearlyAmountLabel,
+    diyFullYearlyAmountLabel,
+    diyYearlyMonthlyEquivalentLabel,
+} = useInstitutionDiyPricing();
 
 const activeTab = ref<TabId>('accueil');
 const presentationFolderRef = ref<HTMLElement | null>(null);
@@ -1101,7 +1197,6 @@ const contactSuccessMessage = computed(() =>
 const calcHours = ref(80);
 const calcWeekPct = ref(75);
 const calcIndieRate = ref(45);
-const calcDiyPlan = 250;
 
 const currentYear = new Date().getFullYear();
 
@@ -1109,7 +1204,7 @@ const folderTabs = [
     { id: 'accueil' as TabId, label: '1. Contexte & Enjeux', icon: 'fa-solid fa-circle-info' },
     { id: 'reseau' as TabId, label: '2. Force des Indépendantes', icon: 'fa-solid fa-users' },
     { id: 'diy-infiswap' as TabId, label: '3. Formule InfiSwap (DIY)', icon: 'fa-solid fa-laptop-code' },
-    { id: 'jaumana-premium' as TabId, label: '4. Formule Jaumana (Premium)', icon: 'fa-solid fa-handshake-angle' },
+    { id: 'jaumana-premium' as TabId, label: '4. Partenariat Jaumana Soins', icon: 'fa-solid fa-handshake-angle' },
     { id: 'simulateur-annonce' as TabId, label: '5. Démo : Publier un besoin', icon: 'fa-solid fa-mobile-screen-button' },
     { id: 'comparatif' as TabId, label: '6. Tableau Comparatif', icon: 'fa-solid fa-scale-balanced' },
     { id: 'contact' as TabId, label: '7. Prendre Contact', icon: 'fa-solid fa-paper-plane' },
@@ -1122,6 +1217,13 @@ const enjeuxCards = [
     { icon: 'fa-solid fa-heart-crack text-lg', title: 'Motivation variable', text: 'Les statuts précaires des intérimaires nuisent parfois à leur engagement de long terme au sein de votre établissement.' },
 ];
 
+const jaumanaPartnershipValues = [
+    { icon: 'fa-solid fa-user-nurse', title: 'Expérience et autonomie' },
+    { icon: 'fa-solid fa-heart-pulse', title: 'Respect et écoute des patients' },
+    { icon: 'fa-solid fa-user-shield', title: 'Discrétion et fiabilité' },
+    { icon: 'fa-solid fa-house-medical', title: 'Domicile et maison de repos' },
+];
+
 const reseauAdvantages = [
     { icon: 'fa-solid fa-medal text-emerald-600', title: 'Responsabilisation & Engagement', text: 'Les infirmières indépendantes gèrent leur propre patientèle et leur réputation professionnelle. Contrairement à l\'intérim, elles ont à cœur de fournir un travail rigoureux, professionnel, ponctuel et de s\'intégrer harmonieusement à vos équipes existantes.' },
     { icon: 'fa-solid fa-hand-holding-dollar text-emerald-600', title: 'Zéro charge sociale / patronale (ONSS)', text: 'Finies les déclarations Dimona complexes, les calculs d\'ancienneté ou les provisions pour congés payés. Vous réglez une facture de prestation claire et nette.' },
@@ -1129,38 +1231,53 @@ const reseauAdvantages = [
     { icon: 'fa-solid fa-shield-halved text-emerald-600', title: 'Cadre juridique de non-détournement', text: 'Toutes les collaborations sont protégées par un cadre réglementaire strict interdisant tout détournement de patientèle.' },
 ];
 
-const comparatifRows = [
-    {
-        label: 'Tarif / Commissions',
-        diy: '<span class="text-slate-900 font-bold block">Tarif Standard : 250 € / mois</span><span class="text-emerald-600 block text-[10px] font-semibold">0% Commission Horaire</span>',
-        jaumana: '<span class="block text-slate-900">57,50 € / h (Semaine)</span><span class="block text-[#d3405c]">85,00 € / h (Week-end)</span><span class="text-slate-400 block text-[10px] font-normal">+ 6 % de commission sur la facturation globale</span>',
-    },
-    {
-        label: 'Tarif Annuel (Engagement)',
-        diy: '<span class="text-[#46d88e] font-extrabold block">2 500 € / an <span class="text-slate-400 font-normal text-[10px]">(2 mois gratuits offerts)</span></span>',
-        jaumana: 'Non applicable',
-    },
-    {
-        label: 'Méthode de recherche',
-        diy: 'Vous postez vos besoins de façon autonome.',
-        jaumana: 'Recherche, gestion et planification intégrales par nos équipes.',
-    },
-    {
-        label: 'Accès Réseau',
-        diy: 'Réseau d\'entraide InfiSwap de Belgique (+1500 infirmières).',
-        jaumana: 'Accès prioritaire au réseau spécifique Jaumana Soins spécialisé en remplacement.',
-    },
-    {
-        label: 'Priorité des annonces',
-        diy: '<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-star"></i> Top de Liste</span>',
-        jaumana: '<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-star"></i> Top de Liste + Pool de titulaires</span>',
-    },
-    {
-        label: 'Sécurité administrative & juridique',
-        diy: 'Gérée par vous via la plateforme de mise en relation directe.',
-        jaumana: 'Conventions blindées anti-détournement + paiement garanti aux remplaçants.',
-    },
-];
+const comparatifRows = computed(() => {
+    const monthly = formatInstitutionDiyMonthlyLabel(diyMonthlyPrice.value);
+    const yearly = formatInstitutionDiyYearlyLabel(diyYearlyPrice.value);
+    const fullMonthly = formatInstitutionDiyMonthlyLabel(INSTITUTION_DIY_FULL_MONTHLY);
+    const fullYearly = formatInstitutionDiyYearlyLabel(INSTITUTION_DIY_FULL_YEARLY);
+
+    const diyMonthlyTarif = diyPromoActive.value
+        ? `<span class="text-slate-900 font-bold block">Tarif promo : ${monthly}</span><span class="text-slate-400 line-through block text-[10px]">${fullMonthly}</span><span class="text-emerald-600 block text-[10px] font-semibold">0% Commission Horaire</span>`
+        : `<span class="text-slate-900 font-bold block">Tarif Standard : ${monthly}</span><span class="text-emerald-600 block text-[10px] font-semibold">0% Commission Horaire</span>`;
+
+    const diyYearlyTarif = diyPromoActive.value
+        ? `<span class="text-[#46d88e] font-extrabold block">${yearly} <span class="text-slate-400 font-normal text-[10px]">(2 mois gratuits offerts)</span></span><span class="text-slate-400 line-through block text-[10px]">${fullYearly}</span>`
+        : `<span class="text-[#46d88e] font-extrabold block">${yearly} <span class="text-slate-400 font-normal text-[10px]">(2 mois gratuits offerts)</span></span>`;
+
+    return [
+        {
+            label: 'Tarif / Commissions',
+            diy: diyMonthlyTarif,
+            jaumana: '<span class="block text-slate-900">57,50 € / h (Semaine)</span><span class="block text-[#d3405c]">85,00 € / h (Week-end)</span><span class="text-slate-400 block text-[10px] font-normal">+ 6 % de commission — encadrement professionnel</span>',
+        },
+        {
+            label: 'Tarif Annuel (Engagement)',
+            diy: diyYearlyTarif,
+            jaumana: 'Non applicable (convention Jaumana)',
+        },
+        {
+            label: 'Méthode de recherche',
+            diy: 'Vous postez vos besoins de façon autonome sur InfiSwap.',
+            jaumana: 'Convention Jaumana : vos demandes sont publiées pour vous sur InfiSwap.',
+        },
+        {
+            label: 'Accès Réseau',
+            diy: 'Réseau d\'entraide InfiSwap de Belgique (+1500 infirmières).',
+            jaumana: 'Remplaçants trouvés sur InfiSwap, encadrés par Jaumana Soins.',
+        },
+        {
+            label: 'Priorité des annonces',
+            diy: '<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-star"></i> Top de Liste</span>',
+            jaumana: '<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-star"></i> Publication InfiSwap + encadrement pro.</span>',
+        },
+        {
+            label: 'Sécurité administrative & juridique',
+            diy: 'Gérée par vous via la plateforme de mise en relation directe.',
+            jaumana: 'Paiements garantis, engagements des titulaires garantis, protection anti-détournement.',
+        },
+    ];
+});
 
 const calcWeekendPct = computed(() => 100 - calcWeekPct.value);
 
