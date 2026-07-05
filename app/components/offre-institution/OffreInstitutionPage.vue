@@ -1421,7 +1421,7 @@ const totalJaumanaCost = computed(() => {
     return base * 1.06;
 });
 
-const totalDiyCost = computed(() => calcHours.value * calcIndieRate.value + calcDiyPlan);
+const totalDiyCost = computed(() => calcHours.value * calcIndieRate.value + calcDiyPlan.value);
 
 const savingsDiy = computed(() => Math.max(0, totalInterimCost.value - totalDiyCost.value));
 
