@@ -21,11 +21,10 @@
                     class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-[#46d88e] hover:bg-emerald-50/40 transition-all"
                     @click="emit('select', 'be')"
                 >
-                    <img
-                        src="/icons/belgium.png"
-                        alt=""
-                        class="size-12"
-                    >
+                    <span
+                        class="text-4xl leading-none"
+                        aria-hidden="true"
+                    >🇧🇪</span>
                     <span class="font-bold text-slate-900">Belgique</span>
                     <span class="text-[11px] text-slate-500 text-center leading-snug">
                         DIY InfiSwap + partenariat Jaumana Soins
@@ -36,11 +35,10 @@
                     class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-[#46d88e] hover:bg-emerald-50/40 transition-all"
                     @click="emit('select', 'fr')"
                 >
-                    <img
-                        src="/icons/fr.png"
-                        alt=""
-                        class="size-12"
-                    >
+                    <span
+                        class="text-4xl leading-none"
+                        aria-hidden="true"
+                    >🇫🇷</span>
                     <span class="font-bold text-slate-900">France</span>
                     <span class="text-[11px] text-slate-500 text-center leading-snug">
                         Formule DIY InfiSwap uniquement
