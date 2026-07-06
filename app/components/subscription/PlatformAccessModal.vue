@@ -66,17 +66,26 @@ function handleObtainAccess() {
                     Rejoignez le réseau n°1 des remplacements infirmiers
                 </AlertDialogTitle>
                 <AlertDialogDescription as="div" class="space-y-4 text-left text-sm text-muted-foreground">
-                    <div class="rounded-xl border-2 border-success/30 bg-success/5 px-4 py-3">
-                        <p class="text-sm font-semibold text-foreground">
-                            Un seul paiement. Un accès à vie.
+                    <div class="rounded-xl border border-primary/20 bg-primary/5 px-4 py-4 text-center">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-primary">
+                            Paiement unique
                         </p>
-                        <p class="mt-1.5 text-sm leading-relaxed">
+                        <p class="mt-1 text-3xl font-extrabold text-primary">
+                            {{ formattedPrice }} {{ currencySymbol }}
+                        </p>
+                        <p class="mt-1 text-xs text-muted-foreground">
+                            Accès à vie au réseau — sans abonnement
+                        </p>
+                    </div>
+
+                    <div class="rounded-xl border-2 border-success/30 bg-success/5 px-4 py-3">
+                        <p class="text-sm leading-relaxed">
                             Pour publier votre remplacement et le rendre visible auprès des infirmiers et aides-soignant(e)s
                             de votre région, activez votre accès avec un
                             <strong class="text-foreground">paiement unique de {{ formattedPrice }} {{ currencySymbol }}</strong>.
                             Aucun abonnement, aucun renouvellement : vous accédez
                             <strong class="text-foreground">à vie</strong>
-                            au réseau n°1 des remplacements infirmiers en Belgique et en France.
+                            au réseau n°1 des remplacements infirmiers.
                         </p>
                     </div>
 
