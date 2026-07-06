@@ -440,6 +440,6 @@ useHead({
 
 definePageMeta({
     layout: 'dashboard',
-    middleware: ['auth', 'require-platform-access'],
+    middleware: ['auth'],
 });
 </script>
