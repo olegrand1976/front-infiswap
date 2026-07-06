@@ -198,75 +198,39 @@
                 </div>
             </template>
 
-            <template v-if="isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
+            <template v-if="hasProvinceGroups">
                 <div
                     v-for="(items, province) in groupsByProvince"
-                    :key="`province-${province}`"
+                    :key="`${isCardMode ? 'card' : 'table'}-province-${province}`"
                     class="mb-8"
                 >
                     <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
                         {{ province }}
                         <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
                     </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <template
+
+                    <div
+                        v-if="isCardMode"
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
+                    >
+                        <ReplacementCard
                             v-for="item in items"
                             :key="`card-${item.record_type}-${item.id}`"
-                        >
-                            <ReplacementCard
-                                :replacement="formatReplacementForCard(item)"
-                                :raw-replacement="item"
-                                @open-edit="openEditDialog"
-                                @closed="refreshItems(page)"
-                                @boost-cancelled="clearReplacementBoost(item)"
-                            />
-                        </template>
-                    </div>
-                </div>
-            </template>
-            <template v-else-if="isCardMode && !props.groupByProvince">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <template v-if="loading || loadingSearch">
-                        <ReplacementCardSkeleton
-                            v-for="i in 6"
-                            :key="`sk-${i}`"
+                            :replacement="formatReplacementForCard(item)"
+                            :raw-replacement="item"
+                            @open-edit="openEditDialog"
+                            @closed="refreshItems(page)"
+                            @boost-cancelled="clearReplacementBoost(item)"
                         />
-                    </template>
+                    </div>
                     <template v-else>
-                        <template
-                            v-for="item in replacementItems"
-                            :key="`card-flat-${item.record_type}-${item.id}`"
-                        >
-                            <ReplacementCard
-                                :replacement="formatReplacementForCard(item)"
-                                :raw-replacement="item"
-                                @open-edit="openEditDialog"
-                                @closed="refreshItems(page)"
-                                @boost-cancelled="clearReplacementBoost(item)"
-                            />
-                        </template>
-                    </template>
-                </div>
-            </template>
-
-            <template v-else-if="!isCardMode && props.groupByProvince && Object.keys(groupsByProvince).length > 0">
-                <div
-                    v-for="(items, province) in groupsByProvince"
-                    :key="`table-province-${province}`"
-                    class="mb-8"
-                >
-                    <h2 class="font-semibold text-black/70 mb-4 flex items-center gap-2">
-                        {{ province }}
-                        <span class="text-gray-400 font-normal text-sm">({{ items.length }})</span>
-                    </h2>
-
-                    <ReplacementTableSkeleton
-                        v-if="loading || loadingSearch"
-                        :type="props.type"
-                        :count="6"
-                    />
-                    <template v-else>
+                        <ReplacementTableSkeleton
+                            v-if="loading || loadingSearch"
+                            :type="props.type"
+                            :count="6"
+                        />
                         <ReplacementTable
+                            v-else
                             :replacements="items"
                             :type="props.type"
                             :user-id="user.id"
@@ -282,15 +246,37 @@
                 </div>
             </template>
 
-            <template v-else-if="!isCardMode && !props.groupByProvince">
-                <ReplacementTableSkeleton
-                    v-if="loading || loadingSearch"
-                    :type="props.type"
-                    :count="8"
-                />
+            <template v-else>
+                <div
+                    v-if="isCardMode"
+                    class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
+                >
+                    <template v-if="loading || loadingSearch">
+                        <ReplacementCardSkeleton
+                            v-for="i in 6"
+                            :key="`sk-${i}`"
+                        />
+                    </template>
+                    <template v-else>
+                        <ReplacementCard
+                            v-for="item in replacementItems"
+                            :key="`card-flat-${item.record_type}-${item.id}`"
+                            :replacement="formatReplacementForCard(item)"
+                            :raw-replacement="item"
+                            @open-edit="openEditDialog"
+                            @closed="refreshItems(page)"
+                            @boost-cancelled="clearReplacementBoost(item)"
+                        />
+                    </template>
+                </div>
                 <template v-else>
+                    <ReplacementTableSkeleton
+                        v-if="loading || loadingSearch"
+                        :type="props.type"
+                        :count="8"
+                    />
                     <ReplacementTable
-                        v-if="replacementItems.length > 0"
+                        v-else-if="replacementItems.length > 0"
                         :replacements="replacementItems"
                         :type="props.type"
                         :user-id="user.id"
@@ -634,6 +620,10 @@ const groupsByProvince = computed<Record<string, MergedItem[]>>(() => {
 
     return sorted;
 });
+
+const hasProvinceGroups = computed<boolean>(() =>
+    props.groupByProvince && Object.keys(groupsByProvince.value).length > 0,
+);
 
 const isAnyFilterActive = computed(() =>
     formData.postalCodeTags.length > 0
