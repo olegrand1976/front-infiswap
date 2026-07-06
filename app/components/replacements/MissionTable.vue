@@ -95,24 +95,41 @@
 
             <TableCell
                 v-if="type === ''"
-                class="bg-gray-100 text-xs pt-5"
+                class="bg-gray-100 text-xs pt-5 min-w-0"
             >
-                <div class="pt-3 h-10 rounded bg-[#E4E7F4] flex items-center justify-center px-3">
-                    <template v-if="institutionLogoUrl">
-                        <div class="w-8 h-8 rounded bg-white flex items-center justify-center">
-                            <img
-                                :src="institutionLogoUrl"
+                <div class="pt-3 min-h-10 rounded bg-[#E4E7F4] flex items-center gap-2 px-2 min-w-0">
+                    <template v-if="institutionName">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded bg-white">
+                            <LayoutsApiImage
+                                v-if="institutionLogo"
+                                :path="institutionLogo"
                                 :alt="institutionName"
-                                class="max-w-full max-h-full object-contain"
+                                class="h-full w-full object-contain"
                             >
+                                <template #fallback>
+                                    <span class="text-[10px] font-semibold text-primary">
+                                        {{ institutionInitial }}
+                                    </span>
+                                </template>
+                            </LayoutsApiImage>
+                            <span
+                                v-else
+                                class="flex h-full w-full items-center justify-center bg-primary/20 text-[10px] font-semibold text-primary"
+                            >
+                                {{ institutionInitial }}
+                            </span>
                         </div>
+                        <span
+                            class="min-w-0 flex-1 text-xs truncate"
+                            :title="institutionName"
+                        >
+                            {{ institutionName }}
+                        </span>
                     </template>
                     <span
                         v-else
-                        class="text-xs truncate"
-                    >
-                        {{ institutionName }}
-                    </span>
+                        class="text-gray-400"
+                    >—</span>
                 </div>
             </TableCell>
 
@@ -184,7 +201,6 @@
 import { CircleCheck, Eye, RefreshCw } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
-import { useInstitutions } from '~/composables/useInstitution';
 import type { MergedItem } from '~/composables/useMergedSearch';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 
@@ -193,8 +209,6 @@ const props = defineProps<{
     type?: string;
     gridClass?: string;
 }>();
-
-const { getLogoUrl } = useInstitutions();
 
 const formatDate = (d?: string | null) => {
     if (!d) return '—';
@@ -225,16 +239,19 @@ const duplicateMission = () => {
     navigateTo(`/dashboard/institution/missions/create?duplicate_id=${props.mission.id}`);
 };
 
-const institutionLogoUrl = computed(() => {
-    const logo = (props.mission as any).institution?.logo || (props.mission as any).institution?.profil_url;
-    if (!logo) return null;
-    if (logo.startsWith('http://') || logo.startsWith('https://')) return logo;
-    return getLogoUrl(logo);
+const institutionLogo = computed(() => {
+    const institution = (props.mission as any).institution;
+    return institution?.logo || institution?.profil_url || null;
 });
 
 const institutionName = computed(() =>
     (props.mission as any).institution?.institution_name
     || (props.mission as any).institution?.name
-    || '—',
+    || '',
 );
+
+const institutionInitial = computed(() => {
+    const name = institutionName.value;
+    return name ? name.charAt(0).toUpperCase() : 'I';
+});
 </script>

@@ -244,23 +244,32 @@
 
                             <TableCell
                                 v-if="type === ''"
-                                class="bg-gray-100 text-xs pt-5"
+                                class="bg-gray-100 text-xs pt-5 min-w-0"
                             >
-                                <div class="pt-3 h-10 rounded bg-[#E4E7F4] flex items-center justify-center px-3">
-                                    <template v-if="r.institution || r.user?.institution">
-                                        <div
-                                            v-if="getInstitutionLogoUrl(r)"
-                                            class="w-8 h-8 rounded bg-white flex items-center justify-center"
-                                        >
-                                            <img
-                                                :src="getInstitutionLogoUrl(r)"
+                                <div class="pt-3 min-h-10 rounded bg-[#E4E7F4] flex items-center gap-2 px-2 min-w-0">
+                                    <template v-if="getInstitutionName(r)">
+                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded bg-white">
+                                            <LayoutsApiImage
+                                                v-if="getInstitutionLogo(r)"
+                                                :path="getInstitutionLogo(r)"
                                                 :alt="getInstitutionName(r)"
-                                                class="max-w-full max-h-full object-contain"
+                                                class="h-full w-full object-contain"
                                             >
+                                                <template #fallback>
+                                                    <span class="text-[10px] font-semibold text-primary">
+                                                        {{ getInstitutionInitial(r) }}
+                                                    </span>
+                                                </template>
+                                            </LayoutsApiImage>
+                                            <span
+                                                v-else
+                                                class="flex h-full w-full items-center justify-center bg-primary/20 text-[10px] font-semibold text-primary"
+                                            >
+                                                {{ getInstitutionInitial(r) }}
+                                            </span>
                                         </div>
                                         <span
-                                            v-else
-                                            class="text-xs truncate"
+                                            class="min-w-0 flex-1 text-xs truncate"
                                             :title="getInstitutionName(r)"
                                         >
                                             {{ getInstitutionName(r) }}
@@ -593,7 +602,6 @@ import ReplacementBoostModal from '@/components/replacements/ReplacementBoostMod
 import { cn } from '@/lib/utils';
 import { getPeriodsFromTimeSlot } from '~/lib/utils';
 import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
-import { useInstitutions } from '~/composables/useInstitution';
 import type { Replacement } from '~/lib/types';
 
 const { canBoostReplacement } = useReplacementBoost();
@@ -737,18 +745,21 @@ const getCreatorInfo = (r: Replacement, field: 'name' | 'group') => {
         : m.group_name ?? '';
 };
 
-const { getLogoUrl } = useInstitutions();
+const resolveInstitution = (r: Replacement) => r.institution || r.user?.institution;
 
 const getInstitutionName = (r: Replacement): string => {
-    if (r.institution) return r.institution.name;
-    if (r.user?.institution) return r.user.institution.name;
-    return '';
+    const institution = resolveInstitution(r) as { institution_name?: string; name?: string } | null | undefined;
+    return institution?.institution_name || institution?.name || '';
 };
 
-const getInstitutionLogoUrl = (r: Replacement): string | null => {
-    const logo = r.institution?.logo || r.user?.institution?.logo;
-    if (!logo) return null;
-    return getLogoUrl(logo);
+const getInstitutionLogo = (r: Replacement): string | null => {
+    const institution = resolveInstitution(r) as { logo?: string | null } | null | undefined;
+    return institution?.logo || null;
+};
+
+const getInstitutionInitial = (r: Replacement): string => {
+    const name = getInstitutionName(r);
+    return name ? name.charAt(0).toUpperCase() : 'I';
 };
 
 const isNew = (r: Replacement) => {

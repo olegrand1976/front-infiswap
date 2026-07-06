@@ -7,33 +7,43 @@
             New
         </div>
 
-        <div class="flex justify-between items-start">
-            <div class="flex-1 flex items-center gap-2">
-                <div
-                    v-if="replacement.institution || rawReplacement?.institution || rawReplacement?.user?.institution"
-                    class="flex items-center gap-2"
-                >
-                    <div
-                        v-if="institutionLogoUrl"
-                        class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center flex-shrink-0"
+        <div class="flex justify-between items-start gap-2">
+            <div
+                v-if="hasInstitution"
+                class="flex min-w-0 flex-1 items-center gap-2"
+            >
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-100">
+                    <LayoutsApiImage
+                        v-if="institutionLogo"
+                        :path="institutionLogo"
+                        :alt="institutionName"
+                        class="h-full w-full object-contain"
                     >
-                        <img
-                            :src="institutionLogoUrl"
-                            :alt="institutionName"
-                            class="max-w-full max-h-full object-contain"
-                        >
-                    </div>
+                        <template #fallback>
+                            <span class="text-xs font-semibold text-primary">{{ institutionInitial }}</span>
+                        </template>
+                    </LayoutsApiImage>
                     <span
-                        v-else-if="institutionName"
-                        class="text-xs font-medium text-gray-600"
+                        v-else
+                        class="flex h-full w-full items-center justify-center bg-primary/20 text-xs font-semibold text-primary"
                     >
-                        {{ institutionName }}
+                        {{ institutionInitial }}
                     </span>
                 </div>
+                <p
+                    class="min-w-0 flex-1 text-xs font-medium text-gray-700 truncate"
+                    :title="institutionName"
+                >
+                    {{ institutionName }}
+                </p>
             </div>
+            <div
+                v-else
+                class="flex-1"
+            />
 
             <span
-                class="px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap ml-3"
+                class="px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap shrink-0"
                 :class="statusBadgeClass"
             >
                 {{ statusText }}
@@ -309,7 +319,6 @@ import ReplacementBoostTrustBadge from '@/components/replacements/ReplacementBoo
 import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import ReplacementBoostModal from '@/components/replacements/ReplacementBoostModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
-import { useInstitutions } from '~/composables/useInstitution';
 import type { User } from '~/lib/types';
 
 interface CareTypeItem {
@@ -367,7 +376,6 @@ const emit = defineEmits<{
     (e: 'open-edit', replacement: Replacement): void;
 }>();
 const { updateReplacement } = useReplacements();
-const { getLogoUrl } = useInstitutions();
 const { canBoostReplacement } = useReplacementBoost();
 
 const boostModalOpen = ref(false);
@@ -588,22 +596,25 @@ const replacementTypeBadgeClass = computed(() => {
     return 'bg-blue-100 text-blue-700';
 });
 
-const institutionLogoUrl = computed(() => {
-    const institution = props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution;
-    if (!institution || !institution.logo) return null;
+const institutionSource = computed(() =>
+    props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution,
+);
 
-    const logo = institution.logo;
-    if (logo.startsWith('http://') || logo.startsWith('https://')) {
-        return logo;
-    }
-
-    const logoUrl = getLogoUrl(logo);
-    return logoUrl;
-});
+const hasInstitution = computed(() => !!institutionSource.value);
 
 const institutionName = computed(() => {
-    const institution = props.replacement.institution || props.rawReplacement?.institution || props.rawReplacement?.user?.institution;
-    return institution?.name || '';
+    const institution = institutionSource.value as { institution_name?: string; name?: string } | null | undefined;
+    return institution?.institution_name || institution?.name || '';
+});
+
+const institutionLogo = computed(() => {
+    const institution = institutionSource.value as { logo?: string | null } | null | undefined;
+    return institution?.logo || null;
+});
+
+const institutionInitial = computed(() => {
+    const name = institutionName.value;
+    return name ? name.charAt(0).toUpperCase() : 'I';
 });
 
 const isNew = computed(() => {
