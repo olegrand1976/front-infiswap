@@ -612,7 +612,7 @@ const {
 
         const success = await sendResponse().submitResponse(payload);
         if (!success) {
-            throw new Error('Échec de l\'envoi de la réponse');
+            return;
         }
     },
     {

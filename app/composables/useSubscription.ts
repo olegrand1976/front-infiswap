@@ -2,7 +2,6 @@ import {
     hasPaidPlatformAccess,
     isLocallyExemptFromPlatformPayment,
     isOneTimeAccessPlan,
-    isSubjectToPlatformAccessPayment,
     resolvePlatformAccessPromptAction,
 } from '~/utils/platformAccess';
 import { safeReturnPath } from '~/utils/accessReturn';
@@ -80,11 +79,11 @@ export const useSubscription = () => {
             return true;
         }
 
-        if (!isSubjectToPlatformAccessPayment(user.value)) {
-            return true;
+        if (!user.value?.id) {
+            return false;
         }
 
-        const response = await check(user.value!.id);
+        const response = await check(user.value.id);
         const action = resolvePlatformAccessPromptAction(response, false);
 
         if (action === 'allow') {

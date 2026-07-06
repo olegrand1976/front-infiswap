@@ -12,6 +12,22 @@ export function isPlatformAccessRole(roles: string[] | undefined | null): boolea
     return roles.some(role => PLATFORM_ACCESS_ROLES.includes(role as PlatformAccessRole));
 }
 
+/** Rôles effectifs pour la cotisation (fallback account_type si roles absent du cache). */
+export function resolvePlatformAccessRoles(user: {
+    roles?: string[];
+    account_type?: string | null;
+} | null | undefined): string[] {
+    if (user?.roles?.length) {
+        return user.roles;
+    }
+
+    if (user?.account_type) {
+        return [user.account_type];
+    }
+
+    return [];
+}
+
 export function isRegisteredAfterPlatformAccessCutoff(createdAt: string | null | undefined): boolean {
     if (!createdAt) {
         return false;
@@ -28,13 +44,14 @@ export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string |
 
 export function isSubjectToPlatformAccessPayment(user: {
     roles?: string[];
+    account_type?: string | null;
     created_at?: string | null;
 } | null | undefined): boolean {
     if (!user) {
         return false;
     }
 
-    return isPlatformAccessRole(user.roles)
+    return isPlatformAccessRole(resolvePlatformAccessRoles(user))
         && isRegisteredAfterPlatformAccessCutoff(user.created_at);
 }
 

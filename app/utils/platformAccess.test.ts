@@ -51,6 +51,11 @@ describe('platformAccess', () => {
             created_at: '2026-07-02T10:00:00',
         })).toBe(true);
         expect(isSubjectToPlatformAccessPayment({
+            account_type: 'nurse',
+            roles: [],
+            created_at: '2026-07-02T10:00:00',
+        })).toBe(true);
+        expect(isSubjectToPlatformAccessPayment({
             roles: ['collaborator'],
             created_at: '2026-07-02T10:00:00',
         })).toBe(false);
