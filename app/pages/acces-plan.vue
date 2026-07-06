@@ -156,14 +156,21 @@
 
                                     <Button
                                         class="w-full font-bold bg-success hover:bg-success/90"
-                                        :in-progress="purchasing"
+                                        :in-progress="purchasing || confirmingPayment"
+                                        :disabled="purchaseBlocked"
                                         @click="handleCta"
                                     >
-                                        {{ hasAccess ? 'Accéder à mon espace' : 'Obtenir mon accès maintenant' }}
+                                        {{ ctaLabel }}
                                     </Button>
 
                                     <p
-                                        v-if="!hasAccess"
+                                        v-if="confirmFailed"
+                                        class="text-center text-xs text-amber-700 leading-relaxed"
+                                    >
+                                        Votre paiement a été reçu. Cliquez sur « Réessayer la validation » ou rechargez la page.
+                                    </p>
+                                    <p
+                                        v-else-if="!hasAccess && !purchaseBlocked"
                                         class="text-center text-xs text-gray-400 leading-relaxed"
                                     >
                                         En cliquant, vous serez redirigé vers un paiement sécurisé.
@@ -260,6 +267,8 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import { extractStripeSessionId, safeReturnPath, waitForAuthReady } from '~/utils/accessReturn';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 useHead({
     title: 'Plan d\'accès — InfiSwap',
@@ -295,6 +304,7 @@ const formattedMembersCount = computed(() => membersCount.value.toLocaleString('
 const hasAccess = ref(false);
 const purchasing = ref(false);
 const confirmingPayment = ref(false);
+const confirmFailed = ref(false);
 const planLoaded = ref(false);
 
 const pageView = computed(() => {
@@ -347,56 +357,129 @@ const includedItems = [
 ];
 
 const redirectTo = computed(() => safeReturnPath(route.query.redirectTo));
+const processedSessionIds = ref(new Set<string>());
 
-await Promise.all([getAccessPlan(), fetchStats()]);
-planLoaded.value = true;
+const stripeSessionId = computed(() => extractStripeSessionId(route.query));
+const purchaseBlocked = computed(() => Boolean(
+    stripeSessionId.value && !hasAccess.value && (confirmingPayment.value || confirmFailed.value),
+));
+const ctaLabel = computed(() => {
+    if (hasAccess.value) {
+        return 'Accéder à mon espace';
+    }
 
-onMounted(async () => {
-    const sessionId = route.query.session_id;
+    if (confirmFailed.value) {
+        return 'Réessayer la validation du paiement';
+    }
 
-    if (sessionId) {
-        await waitForAuthReady();
+    return 'Obtenir mon accès maintenant';
+});
 
-        const { $fetchCurrentUser } = useNuxtApp();
-        const token = useAuthTokenCookie();
+void Promise.all([getAccessPlan(), fetchStats()]).finally(() => {
+    planLoaded.value = true;
+});
 
-        if (!user.value && token.value) {
-            user.value = await $fetchCurrentUser();
-        }
+const processStripeReturn = async () => {
+    const sessionId = extractStripeSessionId(route.query);
 
-        if (!user.value) {
+    if (!sessionId) {
+        return;
+    }
+
+    if (processedSessionIds.value.has(sessionId) && !confirmFailed.value) {
+        return;
+    }
+
+    const authReady = await waitForAuthReady();
+    const { $fetchCurrentUser } = useNuxtApp();
+    const token = useAuthTokenCookie();
+
+    if (!user.value && token.value) {
+        user.value = await $fetchCurrentUser();
+    }
+
+    if (!user.value) {
+        if (!authReady && !token.value) {
             return navigateTo({
                 path: '/login',
                 query: { redirect: route.fullPath },
             });
         }
 
-        confirmingPayment.value = true;
-
-        try {
-            const confirmed = await confirmAccess(String(sessionId));
-
-            if (confirmed) {
-                hasAccess.value = true;
-                await refresh();
-                $toast({ description: 'Accès activé avec succès !' });
-                await navigateTo(redirectTo.value, { replace: true });
-            }
-            else {
-                $toast({
-                    variant: 'destructive',
-                    description: 'Paiement en cours de validation. Réessayez dans quelques instants.',
-                });
-            }
+        if (!token.value) {
+            return navigateTo({
+                path: '/login',
+                query: { redirect: route.fullPath },
+            });
         }
-        finally {
-            confirmingPayment.value = false;
-        }
-
-        return;
     }
 
-    if (user.value) {
+    confirmingPayment.value = true;
+    confirmFailed.value = false;
+
+    try {
+        let activated = false;
+        let authError = false;
+
+        for (let attempt = 0; attempt < 4; attempt++) {
+            const { outcome } = await confirmAccess(sessionId);
+
+            if (outcome === 'active' || await hasPlatformAccess()) {
+                activated = true;
+                break;
+            }
+
+            if (outcome === 'auth_error') {
+                authError = true;
+                break;
+            }
+
+            if (attempt < 3) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+            }
+        }
+
+        if (authError) {
+            $toast({
+                variant: 'destructive',
+                description: 'Session expirée. Reconnectez-vous pour activer votre accès.',
+            });
+
+            return navigateTo({
+                path: '/login',
+                query: { redirect: route.fullPath },
+            });
+        }
+
+        if (activated) {
+            processedSessionIds.value.add(sessionId);
+            hasAccess.value = true;
+            confirmFailed.value = false;
+            await refresh();
+            $toast({ description: 'Accès activé avec succès !' });
+            await navigateTo(redirectTo.value, { replace: true });
+        }
+        else {
+            confirmFailed.value = true;
+            $toast({
+                variant: 'destructive',
+                description: 'Paiement en cours de validation. Réessayez dans quelques instants.',
+            });
+        }
+    }
+    finally {
+        confirmingPayment.value = false;
+    }
+};
+
+watch(() => route.query.session_id, () => {
+    if (import.meta.client) {
+        void processStripeReturn();
+    }
+}, { immediate: true });
+
+onMounted(async () => {
+    if (!extractStripeSessionId(route.query) && user.value) {
         hasAccess.value = await hasPlatformAccess();
     }
 });
@@ -406,10 +489,23 @@ const handleCta = async () => {
         return navigateTo(redirectTo.value);
     }
 
+    if (confirmFailed.value && stripeSessionId.value) {
+        confirmFailed.value = false;
+        return processStripeReturn();
+    }
+
+    if (purchaseBlocked.value) {
+        return;
+    }
+
     await handlePurchase();
 };
 
 const handlePurchase = async () => {
+    if (purchaseBlocked.value || stripeSessionId.value) {
+        return;
+    }
+
     if (!user.value) {
         return navigateTo({
             path: '/login',

@@ -9,7 +9,13 @@ import {
     validateCreateReplacementForm,
     validateImmediateReplacementForm,
 } from './platformAccess';
-import { safeLoginRedirectPath, safeReturnPath } from './accessReturn';
+import {
+    safeLoginRedirectPath,
+    safeReturnPath,
+    extractStripeSessionId,
+    isStripeCheckoutSessionId,
+    parseConfirmAccessOutcome,
+} from './accessReturn';
 
 describe('platformAccess', () => {
     it('detects paid platform access', () => {
@@ -66,6 +72,27 @@ describe('platformAccess', () => {
             .toBe('/acces-plan?session_id=cs_test&redirectTo=/dashboard');
         expect(safeReturnPath('/acces-plan?session_id=cs_test')).toBe('/dashboard');
         expect(safeLoginRedirectPath('//evil')).toBe('/dashboard');
+    });
+
+
+    it('validates stripe checkout session id format', () => {
+        expect(isStripeCheckoutSessionId('cs_live_test')).toBe(true);
+        expect(isStripeCheckoutSessionId('invalid')).toBe(false);
+    });
+
+    it('parses confirm access outcomes', () => {
+        expect(parseConfirmAccessOutcome({ status: 'active' })).toBe('active');
+        expect(parseConfirmAccessOutcome({ status: 'pending' })).toBe('pending');
+        expect(parseConfirmAccessOutcome(null, { status: 202, data: { status: 'pending' } })).toBe('pending');
+        expect(parseConfirmAccessOutcome(null, { status: 401 })).toBe('auth_error');
+        expect(parseConfirmAccessOutcome(null, { status: 403 })).toBe('auth_error');
+        expect(parseConfirmAccessOutcome(null, { status: 500 })).toBe('error');
+    });
+
+    it('extracts stripe session id from route query', () => {
+        expect(extractStripeSessionId({ session_id: 'cs_live_test' })).toBe('cs_live_test');
+        expect(extractStripeSessionId({ session_id: ['cs_live_test'] })).toBe('cs_live_test');
+        expect(extractStripeSessionId({})).toBeNull();
     });
 
     it('resolves platform access prompt action from check result', () => {

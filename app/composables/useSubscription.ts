@@ -4,7 +4,11 @@ import {
     isOneTimeAccessPlan,
     resolvePlatformAccessPromptAction,
 } from '~/utils/platformAccess';
-import { safeReturnPath } from '~/utils/accessReturn';
+import { parseConfirmAccessOutcome, safeReturnPath, type ConfirmAccessOutcome } from '~/utils/accessReturn';
+
+export type ConfirmAccessResult = {
+    outcome: ConfirmAccessOutcome;
+};
 
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
@@ -165,16 +169,17 @@ export const useSubscription = () => {
         }
     };
 
-    const confirmAccess = async (sessionId: string): Promise<boolean> => {
+    const confirmAccess = async (sessionId: string): Promise<ConfirmAccessResult> => {
         try {
             const response = await $apifetch<{ status: string }>('api/subscription/confirm', {
                 method: 'POST',
                 body: { session_id: sessionId },
             });
-            return response.status === 'active';
+
+            return { outcome: parseConfirmAccessOutcome(response) };
         }
-        catch {
-            return false;
+        catch (error: unknown) {
+            return { outcome: parseConfirmAccessOutcome(null, error) };
         }
     };
 

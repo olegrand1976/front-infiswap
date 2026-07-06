@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useNuxtApp } from '#app';
 import { useUser } from '~/composables/useAuth';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearLegacyHostOnlyAuthCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import type { User } from '~/lib/types';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -8,6 +8,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const authReady = useState('authReady', () => false);
     const token = useAuthTokenCookie();
     const { $apifetch } = useNuxtApp();
+
+    if (import.meta.client) {
+        clearLegacyHostOnlyAuthCookie();
+    }
 
     const fetchCurrentUser = async (): Promise<User | null> => {
         try {
