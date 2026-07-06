@@ -23,6 +23,26 @@ export const useSubscription = () => {
         return isInfiswapStaff.value;
     };
 
+    const isLocallyExemptFromPlatformPayment = (): boolean => {
+        if (bypassesPlatformAccess()) {
+            return true;
+        }
+
+        if (!isPlatformAccessRole(user.value?.roles)) {
+            return true;
+        }
+
+        if (!isRegisteredAfterPlatformAccessCutoff(user.value?.created_at)) {
+            return true;
+        }
+
+        if (hasPaidPlatformAccess(user.value)) {
+            return true;
+        }
+
+        return false;
+    };
+
     const hasPlatformAccess = async (): Promise<boolean> => {
         if (bypassesPlatformAccess()) {
             return true;
@@ -30,7 +50,11 @@ export const useSubscription = () => {
 
         const response = await check(user.value!.id);
 
-        return response?.status === 'active';
+        if (!response) {
+            return false;
+        }
+
+        return response.status === 'active';
     };
 
     const redirectToAccesPlan = async (redirectTo?: string) => {
@@ -50,14 +74,29 @@ export const useSubscription = () => {
         platformAccessRedirectTo.value = null;
     };
 
-    const requirePlatformAccess = async (): Promise<boolean> => {
-        if (await hasPlatformAccess()) {
+    /** Opens the payment modal when cotisation is required; call after form validation. */
+    const promptPlatformAccessIfRequired = async (redirectTo?: string): Promise<boolean> => {
+        if (isLocallyExemptFromPlatformPayment()) {
             return true;
         }
 
-        openPlatformAccessModal(safeReturnPath(route.fullPath));
+        const response = await check(user.value!.id);
+
+        if (!response) {
+            return false;
+        }
+
+        if (!response.payment_required) {
+            return true;
+        }
+
+        openPlatformAccessModal(redirectTo ?? safeReturnPath(route.fullPath));
 
         return false;
+    };
+
+    const requirePlatformAccess = async (): Promise<boolean> => {
+        return promptPlatformAccessIfRequired();
     };
 
     const isPlatformAccessError = (error: unknown): boolean => {
@@ -70,7 +109,7 @@ export const useSubscription = () => {
         loading.value = true;
         try {
             const response = await $apifetch<{ access: AccessPlan | null }>('api/subscription/plans');
-            accessPlan.value = response.access;
+            accessPlan.value = response.access?.interval === 'one_time' ? response.access : null;
         }
         catch (error) {
             console.error('Error fetching access plan:', error);
@@ -83,6 +122,14 @@ export const useSubscription = () => {
     const purchaseAccess = async (priceId: string): Promise<CheckoutResponse | null> => {
         if (!user.value) {
             navigateTo('/login');
+            return null;
+        }
+
+        if (!accessPlan.value || !isOneTimeAccessPlan(accessPlan.value)) {
+            $toast({
+                variant: 'destructive',
+                description: 'Le plan d\'accès unique n\'est pas disponible pour le moment.',
+            });
             return null;
         }
 
@@ -200,6 +247,7 @@ export const useSubscription = () => {
         startTrial,
         hasPlatformAccess,
         requirePlatformAccess,
+        promptPlatformAccessIfRequired,
         openPlatformAccessModal,
         closePlatformAccessModal,
         redirectToAccesPlan,
@@ -238,6 +286,7 @@ function getApiErrorMessage(error: unknown, fallback: string): string {
 
 interface CheckResponse {
     status: 'active' | 'expired';
+    payment_required?: boolean;
 }
 
 export interface ActiveAccess {

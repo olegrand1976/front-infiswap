@@ -321,11 +321,13 @@ import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
+import { validateCreateReplacementForm } from '~/utils/platformAccess';
 
 const user = useState<User>('user');
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
+const { promptPlatformAccessIfRequired } = useSubscription();
 const router = useRouter();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
@@ -554,6 +556,17 @@ const resetForm = () => {
 
 const { submit, inProgress } = useSubmit(
     async () => {
+        const validationError = validateCreateReplacementForm(formData);
+
+        if (validationError) {
+            toast.error(validationError);
+            return;
+        }
+
+        if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/create'))) {
+            return;
+        }
+
         await submitReplacement(formData);
     },
     {

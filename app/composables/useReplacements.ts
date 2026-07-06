@@ -16,11 +16,7 @@ export const useReplacements = () => {
     const user = useState('user');
 
     const submitReplacement = async (formData) => {
-        const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
-
-        if (!(await requirePlatformAccess())) {
-            return null;
-        }
+        const { isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
         loading.value = true;
         error.value = null;
@@ -149,11 +145,7 @@ export const useReplacements = () => {
     };
 
     const sendUrgentReplacement = async (formData) => {
-        const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
-
-        if (!(await requirePlatformAccess())) {
-            return false;
-        }
+        const { isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
         loading.value = true;
         error.value = null;
