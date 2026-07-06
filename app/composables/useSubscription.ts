@@ -4,6 +4,8 @@ export const useSubscription = () => {
     const accessPlan = useState<AccessPlan | null>('accessPlan', () => null);
     const loading = useState<boolean>('subscriptionLoading', () => false);
     const current = useState<ActiveAccess | null>('currentAccess', () => null);
+    const platformAccessModalOpen = useState<boolean>('platformAccessModalOpen', () => false);
+    const platformAccessRedirectTo = useState<string | null>('platformAccessRedirectTo', () => null);
     const user = useUser();
     const route = useRoute();
 
@@ -38,12 +40,22 @@ export const useSubscription = () => {
         });
     };
 
+    const openPlatformAccessModal = (redirectTo?: string | null) => {
+        platformAccessRedirectTo.value = redirectTo ?? safeReturnPath(route.fullPath);
+        platformAccessModalOpen.value = true;
+    };
+
+    const closePlatformAccessModal = () => {
+        platformAccessModalOpen.value = false;
+        platformAccessRedirectTo.value = null;
+    };
+
     const requirePlatformAccess = async (): Promise<boolean> => {
         if (await hasPlatformAccess()) {
             return true;
         }
 
-        await redirectToAccesPlan();
+        openPlatformAccessModal(safeReturnPath(route.fullPath));
 
         return false;
     };
@@ -175,6 +187,8 @@ export const useSubscription = () => {
     return {
         loading,
         accessPlan,
+        platformAccessModalOpen,
+        platformAccessRedirectTo,
         getAccessPlan,
         purchaseAccess,
         confirmAccess,
@@ -186,6 +200,8 @@ export const useSubscription = () => {
         startTrial,
         hasPlatformAccess,
         requirePlatformAccess,
+        openPlatformAccessModal,
+        closePlatformAccessModal,
         redirectToAccesPlan,
         isPlatformAccessError,
     };
@@ -201,6 +217,8 @@ export interface AccessPlan {
     valid_until: string | null;
     stripe_price_id: string;
     is_active?: boolean;
+    interval?: string;
+    live_interval?: string | null;
 }
 
 interface CheckoutResponse {

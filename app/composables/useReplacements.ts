@@ -16,7 +16,7 @@ export const useReplacements = () => {
     const user = useState('user');
 
     const submitReplacement = async (formData) => {
-        const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
+        const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
         if (!(await requirePlatformAccess())) {
             return null;
@@ -36,8 +36,7 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                const { redirectToAccesPlan } = useSubscription();
-                await redirectToAccesPlan();
+                openPlatformAccessModal();
                 return null;
             }
 
@@ -150,7 +149,7 @@ export const useReplacements = () => {
     };
 
     const sendUrgentReplacement = async (formData) => {
-        const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
+        const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
         if (!(await requirePlatformAccess())) {
             return false;
@@ -171,8 +170,7 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                const { redirectToAccesPlan } = useSubscription();
-                await redirectToAccesPlan();
+                openPlatformAccessModal();
                 return false;
             }
 
@@ -402,7 +400,7 @@ export const useDetailReplacement = (replacementId) => {
 
 export const sendResponse = () => {
     const { $apifetch, $toast } = useNuxtApp();
-    const { requirePlatformAccess, isPlatformAccessError } = useSubscription();
+    const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
     const isDisabled = useState('replacementResponseIsDisabled', () => false);
 
@@ -422,8 +420,7 @@ export const sendResponse = () => {
         }
         catch (e) {
             if (isPlatformAccessError(e)) {
-                const { redirectToAccesPlan } = useSubscription();
-                await redirectToAccesPlan();
+                openPlatformAccessModal();
                 return false;
             }
 

@@ -52,9 +52,35 @@
                                 <span class="text-foreground/80">Pour toujours.</span>
                             </h1>
                             <p class="text-gray-600 text-base lg:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
-                                Rejoignez des centaines d'infirmier(ère)s qui simplifient leurs remplacements.
-                                Un seul paiement, un accès permanent à tous les outils essentiels.
+                                Rejoignez le réseau InfiSwap pour publier vos remplacements et répondre aux annonces.
+                                Un seul paiement unique vous donne un accès permanent à toute la communauté.
                             </p>
+                        </div>
+
+                        <div class="flex items-center gap-4 rounded-2xl border border-primary/15 bg-white/90 p-5 shadow-sm max-w-lg mx-auto lg:mx-0">
+                            <div class="rounded-2xl bg-primary/10 p-3 text-primary shrink-0">
+                                <Users class="w-6 h-6" />
+                            </div>
+                            <div class="text-left">
+                                <p
+                                    v-if="statsLoading"
+                                    class="text-3xl font-extrabold text-primary"
+                                >
+                                    …
+                                </p>
+                                <p
+                                    v-else
+                                    class="text-3xl font-extrabold text-primary"
+                                >
+                                    {{ formattedMembersCount }}+
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    Membres inscrits
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Professionnels actifs en Belgique et en France
+                                </p>
+                            </div>
                         </div>
 
                         <ul class="grid sm:grid-cols-2 gap-4 text-left">
@@ -260,6 +286,11 @@ const {
     hasPlatformAccess,
 } = useSubscription();
 
+const { getKpiValue, fetchStats, loading: statsLoading } = usePlatformStats();
+
+const membersCount = computed(() => getKpiValue('members_total'));
+const formattedMembersCount = computed(() => membersCount.value.toLocaleString('fr-BE'));
+
 const hasAccess = ref(false);
 const purchasing = ref(false);
 const confirmingPayment = ref(false);
@@ -316,7 +347,7 @@ const includedItems = [
 
 const redirectTo = computed(() => safeReturnPath(route.query.redirectTo));
 
-await getAccessPlan();
+await Promise.all([getAccessPlan(), fetchStats()]);
 planLoaded.value = true;
 
 onMounted(async () => {
