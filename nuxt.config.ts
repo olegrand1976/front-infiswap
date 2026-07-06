@@ -55,6 +55,10 @@ export default defineNuxtConfig({
         public: {
             API_URL: process.env.NUXT_PUBLIC_API_URL || process.env.API_URL,
             FRONT_END_URL: process.env.NUXT_PUBLIC_FRONT_END_URL || process.env.FRONT_END_URL,
+            REVERB_APP_KEY: process.env.NUXT_PUBLIC_REVERB_APP_KEY || '',
+            REVERB_HOST: process.env.NUXT_PUBLIC_REVERB_HOST || 'localhost',
+            REVERB_PORT: process.env.NUXT_PUBLIC_REVERB_PORT || '8080',
+            REVERB_SCHEME: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
             MAINTENANCE_MODE: process.env.MAINTENANCE_MODE === 'true' || false,
             metapixel: {
                 default: {
@@ -122,7 +126,6 @@ export default defineNuxtConfig({
         debug: process.env.NODE_ENV !== 'production',
         loadScript: true,
         enableRouterSync: true,
-        ignoredViews: ['dashboard'],
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
     },

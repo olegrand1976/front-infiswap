@@ -1511,6 +1511,8 @@ function trimOrNull(value: string | null | undefined): string | null {
 }
 
 function buildRegistrationPayload() {
+    const referralCode = typeof route.query.referral === 'string' ? route.query.referral : '';
+
     return {
         ...formData,
         phoneNumber: trimOrNull(formData.phoneNumber),
@@ -1520,6 +1522,7 @@ function buildRegistrationPayload() {
         zipCodes: formData.zipCodesArray.join(', '),
         cities: formData.citiesArray.join(', '),
         charteAccepted: charteAccepted.value,
+        referralCode: referralCode || null,
     };
 }
 

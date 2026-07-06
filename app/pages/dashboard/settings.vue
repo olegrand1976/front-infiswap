@@ -1220,6 +1220,30 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
+                            <div class="flex justify-between items-center">
+                                <Label for="digestWeekly">Digest hebdomadaire zone</Label>
+                                <Switch
+                                    id="digestWeekly"
+                                    v-model:checked="notifDigestWeekly"
+                                    @update:checked="handleChangeNotif"
+                                />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <Label for="urgentOnly">Urgences uniquement (push)</Label>
+                                <Switch
+                                    id="urgentOnly"
+                                    v-model:checked="notifUrgentOnly"
+                                    @update:checked="handleChangeNotif"
+                                />
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <Label for="smsUrgent">SMS urgences</Label>
+                                <Switch
+                                    id="smsUrgent"
+                                    v-model:checked="notifSmsUrgent"
+                                    @update:checked="handleChangeNotif"
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -1590,6 +1614,9 @@ const handleChangePassword = async () => {
 
 const notifNewReplacement = ref(setting.notification?.new_replacement);
 const notifAcceptReplacement = ref(setting.notification?.replacement_accepted);
+const notifDigestWeekly = ref(setting.notification?.digest_weekly ?? true);
+const notifUrgentOnly = ref(setting.notification?.urgent_only ?? false);
+const notifSmsUrgent = ref(setting.notification?.sms_urgent ?? false);
 
 const handleChangeNotif = async () => {
     try {
@@ -1598,6 +1625,9 @@ const handleChangeNotif = async () => {
             value: {
                 new_replacement: notifNewReplacement.value,
                 replacement_accepted: notifAcceptReplacement.value,
+                digest_weekly: notifDigestWeekly.value,
+                urgent_only: notifUrgentOnly.value,
+                sms_urgent: notifSmsUrgent.value,
             },
         });
 

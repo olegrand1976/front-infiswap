@@ -28,6 +28,9 @@ export const useReplacements = () => {
                 body: JSON.stringify(formData),
             });
             success.value = true;
+            useProductAnalytics().trackEvent('replacement_created', {
+                type: formData.type ?? 'classic',
+            });
             return response;
         }
         catch (err) {
@@ -407,6 +410,9 @@ export const sendResponse = () => {
             await $apifetch('/api/replacement-responses/send', {
                 method: 'POST',
                 body: formData,
+            });
+            useProductAnalytics().trackEvent('response_sent', {
+                replacement_id: String(formData.replacementId ?? route.params.id ?? ''),
             });
             toast.success('Réponse envoyée avec succès');
             return true;

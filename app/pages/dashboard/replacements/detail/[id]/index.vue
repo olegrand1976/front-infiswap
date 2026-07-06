@@ -34,6 +34,16 @@
             @manage="openBoostActive"
         />
 
+        <div
+            v-if="replacement"
+            class="mx-3 mt-4"
+        >
+            <ReplacementShareButtons
+                :replacement-id="replacement.id"
+                :title="`Remplacement InfiSwap — ${replacement.start_date}`"
+            />
+        </div>
+
         <div class="mt-6 flex flex-col space-y-8 sm:space-y-6 lg:space-y-0 lg:flex-row lg:space-x-3 justify-between">
             <div
                 :class="{ 'w-full': !(user && replacement.user_id === user.id), 'w-full lg:w-[55%]': (user && replacement.user_id === user.id) }"
@@ -405,6 +415,7 @@ import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
 import ReplacementDetailBoostBlock from '~/components/replacements/ReplacementDetailBoostBlock.vue';
+import ReplacementShareButtons from '~/components/replacements/ReplacementShareButtons.vue';
 import ReplacementBoostModal from '~/components/replacements/ReplacementBoostModal.vue';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
@@ -649,6 +660,9 @@ const endDate = computed(() => {
 });
 
 await fetchReplacement();
+useProductAnalytics().trackEvent('replacement_viewed', {
+    replacement_id: String(replacementId),
+});
 
 onMounted(async () => {
     if (route.query.boost === 'success') {
