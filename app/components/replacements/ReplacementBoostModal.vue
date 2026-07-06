@@ -25,7 +25,7 @@
                         </DialogTitle>
                         <DialogDescription class="text-amber-50/90 mt-1 text-sm">
                             {{ isActiveMode
-                                ? 'Votre annonce bénéficie d\'une visibilité maximale'
+                                ? 'Prolongez la visibilité ou consultez la fin de votre mise en avant'
                                 : 'Mettez votre remplacement en tête de liste' }}
                         </DialogDescription>
                     </div>
@@ -109,25 +109,7 @@
                 </section>
 
                 <section
-                    v-if="!isActiveMode && boostPlan"
-                    class="rounded-xl border-2 border-dashed border-amber-200 bg-amber-50/50 p-4 text-center"
-                >
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">
-                        Tarif
-                    </p>
-                    <p class="text-2xl font-bold text-amber-700 mt-1">
-                        {{ boostPlan.label }}
-                    </p>
-                    <p
-                        v-if="boostPlan.description"
-                        class="text-xs text-gray-500 mt-2"
-                    >
-                        {{ boostPlan.description }}
-                    </p>
-                </section>
-
-                <section
-                    v-else-if="isActiveMode"
+                    v-if="isActiveMode"
                     class="rounded-xl border border-green-200 bg-green-50 p-4 flex items-center gap-3"
                 >
                     <ReplacementBoostStars size="lg" />
@@ -141,8 +123,42 @@
                     </div>
                 </section>
 
+                <section
+                    v-if="boostPlans.length > 0"
+                    class="space-y-3"
+                >
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        {{ isActiveMode ? 'Prolonger la mise en avant' : 'Choisir une durée' }}
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button
+                            v-for="plan in boostPlans"
+                            :key="plan.id"
+                            type="button"
+                            class="rounded-xl border-2 p-4 text-left transition-all"
+                            :class="selectedPlanId === plan.id
+                                ? 'border-amber-400 bg-amber-50 shadow-sm'
+                                : 'border-gray-200 bg-white hover:border-amber-200'"
+                            @click="selectedPlanId = plan.id"
+                        >
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                {{ plan.duration_days }} jours
+                            </p>
+                            <p class="text-xl font-bold text-amber-700 mt-1">
+                                {{ plan.label }}
+                            </p>
+                            <p
+                                v-if="plan.description"
+                                class="text-xs text-gray-500 mt-2 line-clamp-2"
+                            >
+                                {{ plan.description }}
+                            </p>
+                        </button>
+                    </div>
+                </section>
+
                 <p
-                    v-if="!boostPlan && !isActiveMode && !planLoading"
+                    v-if="boostPlans.length === 0 && !planLoading"
                     class="text-sm text-center text-gray-500 py-2"
                 >
                     L'option boost n'est pas disponible pour le moment.
@@ -159,13 +175,13 @@
                 </Button>
 
                 <Button
-                    v-if="!isActiveMode && boostPlan"
+                    v-if="selectedPlan"
                     class="sm:flex-1 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-md"
                     :in-progress="paying"
                     @click="confirmBoost"
                 >
                     <Rocket class="w-4 h-4 mr-2" />
-                    Booster — {{ boostPlan.label }}
+                    {{ isActiveMode ? 'Prolonger' : 'Booster' }} — {{ selectedPlan.label }}
                 </Button>
 
                 <Button
@@ -187,6 +203,7 @@ import { Calendar, Eye, Hash, MapPin, MessageCircle, Rocket, TrendingUp } from '
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
+import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import type { Replacement } from '~/lib/types';
 
 const open = defineModel<boolean>('open', { default: false });
@@ -201,19 +218,27 @@ const emit = defineEmits<{
 
 const { $toast } = useNuxtApp();
 const { boostReplacement, cancelBoost } = useSubscription();
-const { boostPlan, fetchBoostPlan } = useReplacementBoost();
+const { boostPlans, fetchBoostPlans } = useReplacementBoost();
 
 const paying = ref(false);
 const canceling = ref(false);
 const planLoading = ref(false);
+const selectedPlanId = ref<number | null>(null);
 
-const isActiveMode = computed(() => props.replacement?.is_boosted === true);
+const isActiveMode = computed(() =>
+    props.replacement ? isReplacementActivelyBoosted(props.replacement) : false,
+);
+
+const selectedPlan = computed(() =>
+    boostPlans.value.find(plan => plan.id === selectedPlanId.value) ?? null,
+);
 
 watch(open, async (isOpen) => {
     if (!isOpen) return;
     planLoading.value = true;
     try {
-        await fetchBoostPlan(true);
+        const plans = await fetchBoostPlans(true);
+        selectedPlanId.value = plans[0]?.id ?? null;
     }
     finally {
         planLoading.value = false;
@@ -285,11 +310,13 @@ const zipLabel = computed(() => {
 
 const boostedUntilLabel = computed(() => {
     const until = props.replacement?.boosted_until;
-    if (!until) return 'Renouvellement automatique chaque semaine tant que le boost est actif.';
-    return `Actif jusqu'au ${formatDate(until)} (non annulable avant cette date)`;
+    if (!until) {
+        return 'Votre annonce bénéficie d\'une visibilité maximale.';
+    }
+    return `Actif jusqu'au ${formatDate(until)}. Un nouvel achat prolonge la durée.`;
 });
 
-/** Annulation manuelle : abonnement Stripe uniquement (pas les boosts one-time avec date de fin). */
+/** Annulation manuelle : abonnement Stripe legacy uniquement. */
 const canCancel = computed(() => {
     const until = props.replacement?.boosted_until;
     return !until || new Date(until) <= new Date();
@@ -297,11 +324,12 @@ const canCancel = computed(() => {
 
 const confirmBoost = async () => {
     const id = props.replacement?.id;
-    if (!id) return;
+    const planId = selectedPlanId.value;
+    if (!id || !planId) return;
 
     paying.value = true;
     try {
-        const response = await boostReplacement(id);
+        const response = await boostReplacement(id, planId);
         const checkoutUrl = response?.url;
         if (checkoutUrl) {
             window.location.assign(checkoutUrl);

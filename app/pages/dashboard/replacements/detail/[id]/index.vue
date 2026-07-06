@@ -657,6 +657,12 @@ onMounted(async () => {
         await fetchReplacement();
         router.replace({ path: route.path, query: {} });
     }
+    else if (route.query.boost === 'offer') {
+        if (canBoostThisReplacement.value) {
+            boostModalOpen.value = true;
+        }
+        router.replace({ path: route.path, query: {} });
+    }
     else if (route.query.boost === 'cancel') {
         $toast({ variant: 'destructive', description: 'Paiement annulé.' });
         router.replace({ path: route.path, query: {} });

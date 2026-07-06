@@ -163,14 +163,29 @@
                         </div>
 
                         <div class="lg:min-h-[5.25rem] mb-4">
-                            <div class="flex items-end gap-1">
-                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ formatAmount(boostPlan?.amount, '5,00') }}
-                                </span>
-                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
+                            <div
+                                v-if="boostPlans.length > 1"
+                                class="space-y-2"
+                            >
+                                <div
+                                    v-for="plan in boostPlans"
+                                    :key="plan.id"
+                                    class="flex items-baseline justify-between gap-3"
+                                >
+                                    <span class="text-sm text-gray-600">{{ plan.duration_days }} jours</span>
+                                    <span class="text-2xl font-bold text-gray-900">{{ formatAmount(plan.amount) }} €</span>
+                                </div>
                             </div>
+                            <template v-else>
+                                <div class="flex items-end gap-1">
+                                    <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
+                                        {{ formatAmount(boostPlans[0]?.amount ?? boostPlan?.amount, '2,00') }}
+                                    </span>
+                                    <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
+                                </div>
+                            </template>
                             <p class="mt-2 text-sm text-gray-500">
-                                Par semaine · sans engagement
+                                Paiement unique · 3 ou 7 jours de visibilité
                             </p>
                         </div>
 
@@ -214,7 +229,7 @@
                     </p>
                     <p class="text-xs text-gray-500 mt-2 leading-relaxed">
                         Créez un compte gratuit pour explorer les remplacements, activez l'accès à 9,90 €
-                        pour publier ou postuler, puis boostez une annonce à 5 €/semaine si besoin.
+                        pour publier ou postuler, puis boostez une annonce dès 2 € (3 jours) si besoin.
                     </p>
                 </div>
             </div>
@@ -254,7 +269,7 @@
                 </span>
                 <span class="flex items-center gap-2">
                     <Zap class="w-4 h-4 text-amber-500" />
-                    Boost annulable à tout moment
+                    Durée fixe, sans abonnement
                 </span>
             </div>
         </div>
@@ -297,6 +312,13 @@ type PricingPlansResponse = {
             amount?: string | number;
             description?: string | null;
         } | null;
+        replacement_plans?: Array<{
+            id: number;
+            label?: string;
+            amount?: string | number;
+            duration_days?: number;
+            description?: string | null;
+        }>;
     };
 };
 
@@ -305,12 +327,13 @@ const { data: plansData } = await useAsyncData('pricing-plans', async () => {
         return await $apifetch<PricingPlansResponse>('api/subscription/plans');
     }
     catch {
-        return { access: null, boosts: { replacement: null } } satisfies PricingPlansResponse;
+        return { access: null, boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
     }
 });
 
 const accessPlan = computed(() => plansData.value?.access ?? null);
 const boostPlan = computed(() => plansData.value?.boosts?.replacement ?? null);
+const boostPlans = computed(() => plansData.value?.boosts?.replacement_plans ?? []);
 
 const DEFAULT_ACCESS_DESCRIPTION = 'Passez à l\'action : publiez vos besoins et candidatez aux remplacements qui vous correspondent.';
 const DEFAULT_BOOST_DESCRIPTION = 'Mettez votre annonce en tête des recherches et augmentez votre visibilité auprès des remplaçants disponibles.';
@@ -362,10 +385,10 @@ const accessFeatures = [
 
 const boostFeatures = [
     'Annonce en tête des résultats de recherche',
-    'Visibilité maximale pendant 7 jours',
+    '3 jours à 2,00 € ou 7 jours à 4,40 €',
     'Idéal pour combler une période rapidement',
     'Activation en un clic sur vos annonces',
-    'Annulable à tout moment',
+    'Prolongation possible avant expiration',
 ];
 
 const tips = [
@@ -381,8 +404,8 @@ const tips = [
     },
     {
         icon: Rocket,
-        title: 'Boost 5 €/sem.',
-        text: 'Option ponctuelle pour accélérer le remplissage d\'une annonce déjà publiée.',
+        title: 'Boost dès 2 €',
+        text: 'Option ponctuelle (3 ou 7 jours) pour accélérer le remplissage d\'une annonce déjà publiée.',
     },
     {
         icon: Search,

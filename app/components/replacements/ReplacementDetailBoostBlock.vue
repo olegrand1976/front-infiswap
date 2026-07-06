@@ -99,7 +99,7 @@ const subtitle = computed(() => {
             ? 'Votre annonce apparaît en tête des recherches.'
             : 'Cette annonce bénéficie d\'une visibilité maximale.';
     }
-    return 'Passez en tête de liste et obtenez des réponses plus rapidement.';
+    return 'Passez en tête de liste : 3 jours à 2 € ou 7 jours à 4,40 €.';
 });
 
 function formatDate(iso: string) {

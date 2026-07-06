@@ -77,7 +77,7 @@
                     v-model="form.amount"
                     rounded="md"
                     label="Montant (€)"
-                    :placeholder="isBoostMode ? '5' : '15'"
+                    :placeholder="isBoostMode ? '2' : '15'"
                 />
 
                 <InputIcon
@@ -85,7 +85,7 @@
                     v-model="form.duration_days"
                     rounded="md"
                     label="Durée (jours)"
-                    placeholder="7"
+                    placeholder="3"
                 />
             </template>
 
@@ -172,9 +172,6 @@ const isEditMode = computed(() => !!props.plan?.id);
 const isBoostMode = computed(() => props.mode === 'boost');
 
 const boostIntervalOptions = [
-    { value: 'week', label: 'Semaine' },
-    { value: 'month', label: 'Mois' },
-    { value: 'quarter', label: 'Trimestre' },
     { value: 'one_time', label: 'Paiement unique' },
 ] as const;
 
@@ -193,21 +190,22 @@ const form = reactive({
     name: '',
     type: 'platform_access' as StripePlanAdmin['type'],
     feature: 'replacement' as string | undefined,
-    interval: 'week' as string,
-    duration_days: 7,
-    amount: 15,
+    interval: 'one_time' as string,
+    duration_days: 3,
+    amount: 2,
     currency: 'eur',
     description: '',
     priority: 10,
     is_active: true,
-    deactivate_previous: true,
+    deactivate_previous: false,
 });
 
 watch(isBoostMode, (boost) => {
     form.type = boost ? 'boost' : 'platform_access';
     form.feature = boost ? props.feature : undefined;
-    form.interval = boost ? 'week' : 'one_time';
-    form.amount = boost ? 5 : 15;
+    form.interval = boost ? 'one_time' : 'one_time';
+    form.amount = boost ? 2 : 15;
+    form.duration_days = boost ? 3 : 7;
 }, { immediate: true });
 
 const applyPlan = (plan: StripePlanAdmin) => {

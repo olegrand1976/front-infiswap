@@ -1,31 +1,40 @@
-import { canBoostReplacement as canBoostReplacementItem } from '~/lib/replacementBoost';
+import { canBoostReplacement as canBoostReplacementItem, type ReplacementBoostPlan } from '~/lib/replacementBoost';
 
 export const useReplacementBoost = () => {
     const { $apifetch } = useNuxtApp();
     const { isInstitution } = useAuth();
 
-    const boostPlan = useState<{
-        label?: string;
-        amount?: string | number;
-        interval?: string;
-        description?: string | null;
-    } | null>('replacementBoostPlan', () => null);
+    const boostPlans = useState<ReplacementBoostPlan[]>('replacementBoostPlans', () => []);
+    const boostPlan = useState<ReplacementBoostPlan | null>('replacementBoostPlan', () => null);
     const planLoaded = useState('replacementBoostPlanLoaded', () => false);
 
-    const fetchBoostPlan = async (force = false) => {
-        if (planLoaded.value && !force) return boostPlan.value;
+    const fetchBoostPlans = async (force = false) => {
+        if (planLoaded.value && !force) {
+            return boostPlans.value;
+        }
 
         try {
-            const response = await $apifetch<{ plan: typeof boostPlan.value }>('api/subscription/boosts/replacement');
-            boostPlan.value = response.plan;
+            const response = await $apifetch<{
+                plans?: ReplacementBoostPlan[];
+                plan?: ReplacementBoostPlan | null;
+            }>('api/subscription/boosts/replacement');
+
+            boostPlans.value = response.plans ?? (response.plan ? [response.plan] : []);
+            boostPlan.value = boostPlans.value[0] ?? null;
         }
         catch {
+            boostPlans.value = [];
             boostPlan.value = null;
         }
         finally {
             planLoaded.value = true;
         }
 
+        return boostPlans.value;
+    };
+
+    const fetchBoostPlan = async (force = false) => {
+        await fetchBoostPlans(force);
         return boostPlan.value;
     };
 
@@ -43,7 +52,9 @@ export const useReplacementBoost = () => {
 
     return {
         boostPlan,
+        boostPlans,
         fetchBoostPlan,
+        fetchBoostPlans,
         canBoostReplacement,
     };
 };

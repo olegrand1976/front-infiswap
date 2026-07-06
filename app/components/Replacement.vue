@@ -171,7 +171,7 @@
                     <h2 class="font-bold text-gray-800 mb-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 group">
                         <div class="flex items-center">
                             <div class="flex gap-1 text-sm items-center px-3 py-1 rounded-r-md font-bold bg-primary/10 text-primary border border-primary/20 border-l-5 border-l-primary shadow-sm transition-all group-hover:bg-primary/20">
-                                Top missions &amp; remplacements
+                                Top missions, institutions &amp; remplacements
                             </div>
                         </div>
                     </h2>
@@ -507,9 +507,10 @@ import ProposalLocationModal from '@/components/ProposalLocationModal.vue';
 import { useReplacements } from '~/composables/useReplacements';
 import {
     isReplacementActivelyBoosted,
-    sortByCreatedAtDesc,
+    isTopSectionItem,
     sortRegularReplacements,
     sortReplacementsByBoost,
+    sortTopSectionItems,
 } from '~/lib/replacementBoost';
 
 const { $toast } = useNuxtApp();
@@ -594,10 +595,8 @@ const showTopSection = computed(() => props.type === '' || props.type === 'nurse
 const topItems = computed<MergedItem[]>(() => {
     if (!showTopSection.value) return [];
 
-    return sortByCreatedAtDesc(
-        currentItems.value.filter(
-            item => item.record_type === 'mission' || isReplacementActivelyBoosted(item),
-        ),
+    return sortTopSectionItems(
+        currentItems.value.filter(item => isTopSectionItem(item)),
     );
 });
 
@@ -606,7 +605,7 @@ const replacementItems = computed<MergedItem[]>(() => {
 
     if (showTopSection.value) {
         return sortRegularReplacements(
-            replacements.filter(item => !isReplacementActivelyBoosted(item)),
+            replacements.filter(item => !isTopSectionItem(item)),
         );
     }
 

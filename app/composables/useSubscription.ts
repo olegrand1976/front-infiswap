@@ -169,11 +169,12 @@ export const useSubscription = () => {
         }
     };
 
-    const boostReplacement = async (replacementId: number): Promise<CheckoutResponse | null> => {
+    const boostReplacement = async (replacementId: number, planId: number): Promise<CheckoutResponse | null> => {
         loading.value = true;
         try {
             return await $apifetch<CheckoutResponse>(`api/subscription/replacements/${replacementId}/boost`, {
                 method: 'POST',
+                body: { plan_id: planId },
             });
         }
         catch (error: unknown) {

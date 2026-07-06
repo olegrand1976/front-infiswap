@@ -570,9 +570,14 @@ const { submit, inProgress } = useSubmit(
         await submitReplacement(formData);
     },
     {
-        onSuccess: () => {
+        onSuccess: (response: { replacement?: { id?: number } } | null) => {
             toast.success('Création effectuée');
             resetForm();
+            const id = response?.replacement?.id;
+            if (id) {
+                router.push(`/dashboard/replacements/detail/${id}?boost=offer`);
+                return;
+            }
             setTimeout(() => {
                 router.push('/dashboard/replacements/me');
             }, 2000);

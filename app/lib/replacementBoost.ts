@@ -74,6 +74,7 @@ export function sortRegularReplacements<T extends {
 
 export function isTopSectionItem(item: {
     record_type?: string;
+    institution_id?: number | null;
     is_boosted?: boolean;
     boosted_until?: string | null;
 }): boolean {
@@ -81,7 +82,53 @@ export function isTopSectionItem(item: {
         return true;
     }
 
-    return item.record_type === 'replacement' && isReplacementActivelyBoosted(item);
+    if (item.record_type !== 'replacement') {
+        return false;
+    }
+
+    if (item.institution_id) {
+        return true;
+    }
+
+    return isReplacementActivelyBoosted(item);
+}
+
+export function topSectionSortKey(item: {
+    record_type?: string;
+    institution_id?: number | null;
+    is_boosted?: boolean;
+    boosted_until?: string | null;
+}): number {
+    if (item.record_type === 'mission') {
+        return 0;
+    }
+
+    if (item.institution_id) {
+        return 1;
+    }
+
+    if (isReplacementActivelyBoosted(item)) {
+        return 2;
+    }
+
+    return 3;
+}
+
+export function sortTopSectionItems<T extends {
+    record_type?: string;
+    institution_id?: number | null;
+    is_boosted?: boolean;
+    boosted_until?: string | null;
+    created_at?: string;
+}>(items: T[]): T[] {
+    return [...items].sort((a, b) => {
+        const keyDiff = topSectionSortKey(a) - topSectionSortKey(b);
+        if (keyDiff !== 0) {
+            return keyDiff;
+        }
+
+        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+    });
 }
 
 export function sortReplacementsByBoost<T extends {
@@ -102,3 +149,12 @@ export function sortReplacementsByBoost<T extends {
         return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
     });
 }
+
+export type ReplacementBoostPlan = {
+    id: number;
+    label?: string;
+    amount?: string | number;
+    interval?: string;
+    duration_days?: number;
+    description?: string | null;
+};
