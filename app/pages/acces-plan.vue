@@ -400,7 +400,11 @@ const handlePurchase = async () => {
         return navigateTo('/login');
     }
 
-    if (!accessPlan.value?.stripe_price_id) {
+    if (!accessPlan.value?.stripe_price_id || accessPlan.value.interval !== 'one_time') {
+        $toast({
+            variant: 'destructive',
+            description: 'Le plan d\'accès unique n\'est pas disponible pour le moment.',
+        });
         return;
     }
 

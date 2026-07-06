@@ -68,7 +68,7 @@ export type User = {
     pm_type?: string | null;
     pm_last_four?: string | null;
     trial_ends_at?: string | null;
-    profil_url?: string | null;
+    platform_access_paid_at?: string | null;
     street_address?: string | null;
     city?: string | null;
     zip_code?: string | null;

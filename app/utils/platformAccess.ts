@@ -1,0 +1,128 @@
+export const PLATFORM_ACCESS_CUTOFF_DATE = '2026-07-01';
+
+export const PLATFORM_ACCESS_ROLES = ['nurse', 'caregiver', 'midwife'] as const;
+
+export type PlatformAccessRole = typeof PLATFORM_ACCESS_ROLES[number];
+
+export function isPlatformAccessRole(roles: string[] | undefined | null): boolean {
+    if (!roles?.length) {
+        return false;
+    }
+
+    return roles.some(role => PLATFORM_ACCESS_ROLES.includes(role as PlatformAccessRole));
+}
+
+export function isRegisteredAfterPlatformAccessCutoff(createdAt: string | null | undefined): boolean {
+    if (!createdAt) {
+        return false;
+    }
+
+    const cutoff = new Date(`${PLATFORM_ACCESS_CUTOFF_DATE}T00:00:00`);
+
+    return new Date(createdAt) >= cutoff;
+}
+
+export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string | null } | null | undefined): boolean {
+    return Boolean(user?.platform_access_paid_at);
+}
+
+interface CreateReplacementForm {
+    periods: Array<{ startDate: string | null; endDate: string | null }>;
+    roleType: string | null;
+    patientCount: number | string | null;
+    zipCodes: string[];
+    careTypes: number[];
+    timeSlot: {
+        morning: { startAt: string; endAt: string };
+        evening: { startAt: string; endAt: string };
+    };
+}
+
+export function validateCreateReplacementForm(formData: CreateReplacementForm): string | null {
+    if (!formData.roleType) {
+        return 'Veuillez sélectionner votre type de professionnel.';
+    }
+
+    const validPeriods = formData.periods.filter(
+        period => period.startDate && period.endDate,
+    );
+
+    if (validPeriods.length === 0) {
+        return 'Veuillez sélectionner au moins une période de remplacement.';
+    }
+
+    for (const period of validPeriods) {
+        if (period.endDate! < period.startDate!) {
+            return 'La date de fin doit être postérieure ou égale à la date de début.';
+        }
+    }
+
+    if (!formData.patientCount || !/^\d+$/.test(String(formData.patientCount))) {
+        return 'Veuillez indiquer un nombre de patients valide.';
+    }
+
+    if (!formData.zipCodes.length) {
+        return 'Veuillez ajouter au moins un code postal.';
+    }
+
+    if (!formData.careTypes.length) {
+        return 'Veuillez sélectionner au moins un type de soin.';
+    }
+
+    const hasTimeSlot = [
+        formData.timeSlot.morning.startAt && formData.timeSlot.morning.endAt,
+        formData.timeSlot.evening.startAt && formData.timeSlot.evening.endAt,
+    ].some(Boolean);
+
+    if (!hasTimeSlot) {
+        return 'Veuillez renseigner au moins un créneau horaire (matin ou soir).';
+    }
+
+    return null;
+}
+
+interface ImmediateReplacementForm {
+    startTime: string;
+    endTime: string;
+    patientCount: string | number;
+    roleType: string | null;
+    zipCodes: string[];
+    cities: string[];
+    careTypes: number[];
+}
+
+export function validateImmediateReplacementForm(formData: ImmediateReplacementForm): string | null {
+    if (!formData.startTime || !formData.endTime) {
+        return 'Veuillez renseigner les heures de début et de fin.';
+    }
+
+    if (formData.endTime <= formData.startTime) {
+        return 'L\'heure de fin doit être postérieure à l\'heure de début.';
+    }
+
+    if (!formData.patientCount || Number(formData.patientCount) < 1) {
+        return 'Veuillez indiquer un nombre de patients valide.';
+    }
+
+    if (!formData.roleType) {
+        return 'Veuillez sélectionner votre type de professionnel.';
+    }
+
+    if (!formData.zipCodes.length) {
+        return 'Veuillez ajouter au moins un code postal.';
+    }
+
+    if (!formData.cities.length) {
+        return 'Veuillez ajouter au moins une ville.';
+    }
+
+    if (!formData.careTypes.length) {
+        return 'Veuillez sélectionner au moins un type de soin.';
+    }
+
+    return null;
+}
+
+export function isOneTimeAccessPlan(plan: { interval?: string | null } | null | undefined): boolean {
+    return plan?.interval === 'one_time';
+}

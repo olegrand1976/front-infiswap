@@ -276,6 +276,7 @@ import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import type { CountryCode, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
+import { validateImmediateReplacementForm } from '~/utils/platformAccess';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -305,6 +306,7 @@ const hasMultipleValidRoles = computed(() => {
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
+const { promptPlatformAccessIfRequired } = useSubscription();
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const countryCode = computed<CountryCode>(() => {
     const country = (
@@ -412,6 +414,20 @@ const getSelectedCareTypesText = (selectedIds) => {
 
 const pendingReplacement = useState('pendingReplacement', () => null);
 const { submit, inProgress } = useSubmit(async () => {
+    const validationError = validateImmediateReplacementForm(formData);
+
+    if (validationError) {
+        $toast({
+            variant: 'destructive',
+            description: validationError,
+        });
+        return;
+    }
+
+    if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/immediate'))) {
+        return;
+    }
+
     try {
         const result = await sendUrgentReplacement(formData);
         if (result === true) {
