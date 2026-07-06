@@ -187,11 +187,11 @@ export const useNetworkJourney = () => {
 
         if (questId === 'prefs_zone') {
             nursePrefsDialogRequest.value += 1;
-            await navigateTo('/dashboard');
+            await navigateTo('/dashboard', { force: true });
             return;
         }
 
-        await navigateTo(quest.route);
+        await navigateTo(quest.route, { force: true });
     };
 
     const celebrateXpGain = () => {

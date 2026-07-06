@@ -70,14 +70,6 @@ const currentTip = computed(() => allTips.value[currentTipIndex.value] ?? null);
 const hasPreviousTip = computed(() => currentTipIndex.value > 0);
 const hasNextTip = computed(() => currentTipIndex.value < allTips.value.length - 1);
 
-const nextQuestHref = computed(() => {
-    if (!nextQuest.value || nextQuest.value.id === 'prefs_zone') {
-        return null;
-    }
-
-    return nextQuest.value.route;
-});
-
 watch(showNudge, (active) => {
     if (active) {
         minimized.value = false;
@@ -180,12 +172,13 @@ function triggerCelebrationIfNeeded() {
     }, 2000);
 }
 
-async function handlePrefsQuestClick() {
-    if (!nextQuest.value || nextQuest.value.id !== 'prefs_zone') {
+async function handleQuestClick() {
+    if (!nextQuest.value) {
         return;
     }
 
-    await navigateToQuest('prefs_zone');
+    showTipsModal.value = false;
+    await navigateToQuest(nextQuest.value.id);
 }
 
 async function confirmDisable() {
@@ -309,21 +302,11 @@ async function confirmDisable() {
                         >
                             {{ journeyState.welcomeMessage }}
                         </p>
-                        <NuxtLink
-                            v-if="nextQuest && nextQuestHref"
-                            :to="nextQuestHref"
-                            class="mt-1 inline-flex max-w-full items-center gap-1 text-left text-sm font-medium text-primary hover:underline"
-                        >
-                            <Sparkles class="size-3.5 shrink-0" />
-                            <span class="truncate">
-                                {{ showNudge ? 'Reprendre :' : 'Prochaine étape :' }} {{ nextQuest.cta }} →
-                            </span>
-                        </NuxtLink>
                         <button
-                            v-else-if="nextQuest"
+                            v-if="nextQuest"
                             type="button"
                             class="mt-1 inline-flex max-w-full items-center gap-1 text-left text-sm font-medium text-primary hover:underline"
-                            @click="handlePrefsQuestClick"
+                            @click="handleQuestClick"
                         >
                             <Sparkles class="size-3.5 shrink-0" />
                             <span class="truncate">
