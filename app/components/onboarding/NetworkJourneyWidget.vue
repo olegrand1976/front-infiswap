@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronDown, Lightbulb, Sparkles, X } from 'lucide-vue-next';
+import { ChevronDown, ChevronLeft, ChevronRight, Lightbulb, Sparkles, X } from 'lucide-vue-next';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,12 +18,15 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-} from '@/components/ui/sheet';
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { filterJourneyTips } from '~/lib/networkJourney';
+
+const TIPS_DISMISSED_KEY = 'journey_tips_dismissed';
 
 const {
     journeyState,
@@ -40,7 +43,8 @@ const { getReports } = useReports();
 
 const minimized = ref(false);
 const showDisableDialog = ref(false);
-const showTipsSheet = ref(false);
+const showTipsModal = ref(false);
+const currentTipIndex = ref(0);
 const celebrating = ref(false);
 const celebrationText = ref('');
 
@@ -59,10 +63,33 @@ const allTips = computed(() => filterJourneyTips(
     journeyState.value.nextQuest,
     journeyState.value.onboarding.completed_quests,
 ));
+const currentTip = computed(() => allTips.value[currentTipIndex.value] ?? null);
+const hasPreviousTip = computed(() => currentTipIndex.value > 0);
+const hasNextTip = computed(() => currentTipIndex.value < allTips.value.length - 1);
+
+const nextQuestHref = computed(() => {
+    if (!nextQuest.value || nextQuest.value.id === 'prefs_zone') {
+        return null;
+    }
+
+    return nextQuest.value.route;
+});
 
 watch(showNudge, (active) => {
     if (active) {
         minimized.value = false;
+    }
+});
+
+watch(allTips, (tips) => {
+    if (currentTipIndex.value >= tips.length) {
+        currentTipIndex.value = Math.max(0, tips.length - 1);
+    }
+});
+
+watch(showTipsModal, (open) => {
+    if (!open && import.meta.client) {
+        sessionStorage.setItem(TIPS_DISMISSED_KEY, '1');
     }
 });
 
@@ -73,6 +100,7 @@ onMounted(async () => {
     ]);
     await syncQuests();
     triggerCelebrationIfNeeded();
+    maybeOpenTipsOnLogin();
 });
 
 watch(
@@ -81,6 +109,43 @@ watch(
         triggerCelebrationIfNeeded();
     },
 );
+
+function maybeOpenTipsOnLogin() {
+    if (!import.meta.client || !allTips.value.length) {
+        return;
+    }
+
+    if (sessionStorage.getItem(TIPS_DISMISSED_KEY)) {
+        return;
+    }
+
+    openTipsModal();
+}
+
+function openTipsModal() {
+    currentTipIndex.value = 0;
+    showTipsModal.value = true;
+}
+
+function toggleTipsModal() {
+    showTipsModal.value = !showTipsModal.value;
+
+    if (showTipsModal.value) {
+        currentTipIndex.value = 0;
+    }
+}
+
+function previousTip() {
+    if (hasPreviousTip.value) {
+        currentTipIndex.value -= 1;
+    }
+}
+
+function nextTip() {
+    if (hasNextTip.value) {
+        currentTipIndex.value += 1;
+    }
+}
 
 function triggerCelebrationIfNeeded() {
     const celebration = celebrateXpGain();
@@ -97,12 +162,12 @@ function triggerCelebrationIfNeeded() {
     }, 2000);
 }
 
-async function handleQuestClick() {
-    if (!nextQuest.value) {
+async function handlePrefsQuestClick() {
+    if (!nextQuest.value || nextQuest.value.id !== 'prefs_zone') {
         return;
     }
 
-    await navigateToQuest(nextQuest.value.id);
+    await navigateToQuest('prefs_zone');
 }
 
 async function confirmDisable() {
@@ -226,11 +291,21 @@ async function confirmDisable() {
                         >
                             {{ journeyState.welcomeMessage }}
                         </p>
+                        <NuxtLink
+                            v-if="nextQuest && nextQuestHref"
+                            :to="nextQuestHref"
+                            class="mt-1 inline-flex max-w-full items-center gap-1 text-left text-sm font-medium text-primary hover:underline"
+                        >
+                            <Sparkles class="size-3.5 shrink-0" />
+                            <span class="truncate">
+                                {{ showNudge ? 'Reprendre :' : 'Prochaine étape :' }} {{ nextQuest.cta }} →
+                            </span>
+                        </NuxtLink>
                         <button
-                            v-if="nextQuest"
+                            v-else-if="nextQuest"
                             type="button"
                             class="mt-1 inline-flex max-w-full items-center gap-1 text-left text-sm font-medium text-primary hover:underline"
-                            @click="handleQuestClick"
+                            @click="handlePrefsQuestClick"
                         >
                             <Sparkles class="size-3.5 shrink-0" />
                             <span class="truncate">
@@ -248,7 +323,7 @@ async function confirmDisable() {
                             <button
                                 type="button"
                                 class="text-xs font-medium text-primary hover:underline"
-                                @click="showTipsSheet = true"
+                                @click="openTipsModal"
                             >
                                 Voir tous les conseils
                             </button>
@@ -263,6 +338,16 @@ async function confirmDisable() {
                     >
                         {{ celebrationText }}
                     </span>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        class="h-8 gap-1 px-2 text-xs"
+                        :class="showTipsModal ? 'text-primary' : 'text-muted-foreground'"
+                        @click="toggleTipsModal"
+                    >
+                        <Lightbulb class="size-3.5" />
+                        Conseils
+                    </Button>
                     <Button
                         variant="ghost"
                         size="sm"
@@ -311,27 +396,60 @@ async function confirmDisable() {
             </div>
         </div>
 
-        <Sheet v-model:open="showTipsSheet">
-            <SheetContent class="w-full overflow-y-auto sm:max-w-md">
-                <SheetHeader>
-                    <SheetTitle>Conseils d'utilisation</SheetTitle>
-                </SheetHeader>
-                <ul class="mt-4 space-y-3">
-                    <li
-                        v-for="tip in allTips"
-                        :key="tip.id"
-                        class="rounded-lg border border-primary/10 bg-primary/5 px-3 py-2"
-                    >
-                        <p class="text-xs font-semibold uppercase tracking-wide text-primary/70">
-                            {{ tip.category }}
-                        </p>
-                        <p class="mt-1 text-sm text-gray-800">
-                            {{ tip.text }}
-                        </p>
-                    </li>
-                </ul>
-            </SheetContent>
-        </Sheet>
+        <Dialog v-model:open="showTipsModal">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Conseils d'utilisation</DialogTitle>
+                </DialogHeader>
+
+                <div
+                    v-if="currentTip"
+                    class="rounded-lg border border-primary/10 bg-primary/5 px-4 py-3"
+                >
+                    <p class="text-xs font-semibold uppercase tracking-wide text-primary/70">
+                        {{ currentTip.category }}
+                    </p>
+                    <p class="mt-2 text-sm text-gray-800">
+                        {{ currentTip.text }}
+                    </p>
+                </div>
+
+                <p
+                    v-else
+                    class="text-sm text-muted-foreground"
+                >
+                    Aucun conseil disponible pour le moment.
+                </p>
+
+                <DialogFooter class="flex-col gap-3 sm:flex-row sm:justify-between">
+                    <p class="text-xs text-muted-foreground">
+                        {{ allTips.length ? currentTipIndex + 1 : 0 }} / {{ allTips.length }}
+                    </p>
+                    <div class="flex w-full gap-2 sm:w-auto">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            class="flex-1 sm:flex-none"
+                            :disabled="!hasPreviousTip"
+                            @click="previousTip"
+                        >
+                            <ChevronLeft class="size-4" />
+                            Précédent
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            class="flex-1 sm:flex-none"
+                            :disabled="!hasNextTip"
+                            @click="nextTip"
+                        >
+                            Suivant
+                            <ChevronRight class="size-4" />
+                        </Button>
+                    </div>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
 
         <AlertDialog v-model:open="showDisableDialog">
             <AlertDialogContent>

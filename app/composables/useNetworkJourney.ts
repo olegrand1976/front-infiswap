@@ -3,7 +3,6 @@ import type { OnboardingState, QuestId } from '~/lib/networkJourney';
 import {
     addSnoozeUntil,
     bootstrapOnboardingState,
-    completeQuestManually,
     disableJourney,
     enableJourney,
     parseOnboardingState,
@@ -20,7 +19,6 @@ export const useNetworkJourney = () => {
     const { $apifetch, $toast } = useNuxtApp();
     const { refresh, isAdmin, isInstitution } = useAuth();
     const { reports } = useReports();
-    const { openPlatformAccessModal } = useSubscription();
 
     const onboarding = useState<OnboardingState>('networkJourneyOnboarding', () => parseOnboardingState(user.value));
     const isBootstrapping = useState('networkJourneyBootstrapping', () => false);
@@ -148,12 +146,6 @@ export const useNetworkJourney = () => {
         await maybeRecordNudge();
     };
 
-    const completeQuest = async (questId: QuestId) => {
-        const next = completeQuestManually(onboarding.value, questId, user.value);
-        nudgeRecordedThisSession.value = false;
-        await persistOnboarding(next);
-    };
-
     const snooze = async (days = 7) => {
         const next = addSnoozeUntil(onboarding.value, days);
         await persistOnboarding(next);
@@ -184,12 +176,6 @@ export const useNetworkJourney = () => {
         const quest = journeyState.value.nextQuest;
 
         if (!quest || quest.id !== questId) {
-            return;
-        }
-
-        if (questId === 'discover_access') {
-            openPlatformAccessModal(route.fullPath);
-            await completeQuest('discover_access');
             return;
         }
 
