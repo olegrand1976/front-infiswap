@@ -17,11 +17,13 @@ export function safeLoginRedirectPath(path: unknown): string {
 }
 
 /** Attend la fin du bootstrap auth (plugin auth.ts). */
-export async function waitForAuthReady(timeoutMs = 5000): Promise<void> {
+export async function waitForAuthReady(timeoutMs = 5000): Promise<boolean> {
     const authReady = useState<boolean>('authReady', () => false);
     const start = Date.now();
 
     while (!authReady.value && Date.now() - start < timeoutMs) {
         await new Promise(resolve => setTimeout(resolve, 50));
     }
+
+    return authReady.value;
 }

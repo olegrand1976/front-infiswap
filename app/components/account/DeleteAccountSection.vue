@@ -60,7 +60,7 @@
 <script lang="ts" setup>
 import { Trash2 } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AUTH_TOKEN } from '~/lib/constants';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { getErrorMessage } from '~/lib/utils';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
@@ -85,7 +85,7 @@ const handleDeleteAccount = async () => {
         await deleteAccount({ password: password.value });
 
         user.value = null;
-        useCookie(AUTH_TOKEN).value = '';
+        useAuthTokenCookie().value = '';
         password.value = '';
         deleteAccountDialog.value = false;
 

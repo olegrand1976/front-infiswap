@@ -1,6 +1,9 @@
 import {
+    hasPaidPlatformAccess,
     isLocallyExemptFromPlatformPayment,
     isOneTimeAccessPlan,
+    isSubjectToPlatformAccessPayment,
+    resolvePlatformAccessPromptAction,
 } from '~/utils/platformAccess';
 import { safeReturnPath } from '~/utils/accessReturn';
 
@@ -69,20 +72,29 @@ export const useSubscription = () => {
 
     /** Opens the payment modal when cotisation is required; call after form validation. */
     const promptPlatformAccessIfRequired = async (redirectTo?: string): Promise<boolean> => {
-        if (isLocallyExemptFromPlatformPaymentFn()) {
+        if (bypassesPlatformAccess()) {
+            return true;
+        }
+
+        if (hasPaidPlatformAccess(user.value)) {
+            return true;
+        }
+
+        if (!isSubjectToPlatformAccessPayment(user.value)) {
             return true;
         }
 
         const response = await check(user.value!.id);
+        const action = resolvePlatformAccessPromptAction(response, false);
 
-        if (!response) {
-            return false;
-        }
-
-        if (!response.payment_required) {
+        if (action === 'allow') {
             await refresh();
 
             return true;
+        }
+
+        if (action === 'deny') {
+            return false;
         }
 
         openPlatformAccessModal(redirectTo ?? safeReturnPath(route.fullPath));
@@ -90,8 +102,8 @@ export const useSubscription = () => {
         return false;
     };
 
-    const requirePlatformAccess = async (): Promise<boolean> => {
-        return promptPlatformAccessIfRequired();
+    const requirePlatformAccess = async (redirectTo?: string): Promise<boolean> => {
+        return promptPlatformAccessIfRequired(redirectTo);
     };
 
     const isPlatformAccessError = (error: unknown): boolean => {
@@ -116,7 +128,10 @@ export const useSubscription = () => {
 
     const purchaseAccess = async (priceId: string): Promise<CheckoutResponse | null> => {
         if (!user.value) {
-            navigateTo('/login');
+            await navigateTo({
+                path: '/login',
+                query: { redirect: route.fullPath },
+            });
             return null;
         }
 

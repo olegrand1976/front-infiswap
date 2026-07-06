@@ -392,12 +392,13 @@ export const useDetailReplacement = (replacementId) => {
 
 export const sendResponse = () => {
     const { $apifetch, $toast } = useNuxtApp();
+    const route = useRoute();
     const { requirePlatformAccess, isPlatformAccessError, openPlatformAccessModal } = useSubscription();
 
     const isDisabled = useState('replacementResponseIsDisabled', () => false);
 
     const submitResponse = async (formData) => {
-        if (!(await requirePlatformAccess())) {
+        if (!(await requirePlatformAccess(route.fullPath))) {
             return false;
         }
 
@@ -412,7 +413,7 @@ export const sendResponse = () => {
         }
         catch (e) {
             if (isPlatformAccessError(e)) {
-                openPlatformAccessModal();
+                openPlatformAccessModal(route.fullPath);
                 return false;
             }
 

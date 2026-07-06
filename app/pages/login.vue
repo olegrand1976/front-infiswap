@@ -235,7 +235,10 @@ const { submit, inProgress } = useSubmit(
         await nextTick();
 
         if (useCookie('2fa_hash').value) {
-            return router.push('/2fa-challenge');
+            return router.push({
+                path: '/2fa-challenge',
+                query: route.query.redirect ? { redirect: route.query.redirect } : undefined,
+            });
         }
         else {
             return router.push(safeLoginRedirectPath(route.query.redirect));

@@ -411,7 +411,10 @@ const handleCta = async () => {
 
 const handlePurchase = async () => {
     if (!user.value) {
-        return navigateTo('/login');
+        return navigateTo({
+            path: '/login',
+            query: { redirect: route.fullPath },
+        });
     }
 
     if (!accessPlan.value?.stripe_price_id || accessPlan.value.interval !== 'one_time') {

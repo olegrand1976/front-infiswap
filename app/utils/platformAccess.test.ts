@@ -4,6 +4,8 @@ import {
     isLocallyExemptFromPlatformPayment,
     isPlatformAccessRole,
     isRegisteredAfterPlatformAccessCutoff,
+    isSubjectToPlatformAccessPayment,
+    resolvePlatformAccessPromptAction,
     validateCreateReplacementForm,
     validateImmediateReplacementForm,
 } from './platformAccess';
@@ -34,11 +36,40 @@ describe('platformAccess', () => {
         }, { bypassesPlatformAccess: false })).toBe(false);
     });
 
+    it('does not exempt when roles are missing from cached profile', () => {
+        expect(isLocallyExemptFromPlatformPayment({
+            id: 1,
+            roles: [],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: null,
+        }, { bypassesPlatformAccess: false })).toBe(false);
+    });
+
+    it('detects users subject to platform access payment', () => {
+        expect(isSubjectToPlatformAccessPayment({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+        })).toBe(true);
+        expect(isSubjectToPlatformAccessPayment({
+            roles: ['collaborator'],
+            created_at: '2026-07-02T10:00:00',
+        })).toBe(false);
+    });
+
     it('preserves login redirect with session_id on acces-plan', () => {
         expect(safeLoginRedirectPath('/acces-plan?session_id=cs_test&redirectTo=/dashboard'))
             .toBe('/acces-plan?session_id=cs_test&redirectTo=/dashboard');
         expect(safeReturnPath('/acces-plan?session_id=cs_test')).toBe('/dashboard');
         expect(safeLoginRedirectPath('//evil')).toBe('/dashboard');
+    });
+
+    it('resolves platform access prompt action from check result', () => {
+        expect(resolvePlatformAccessPromptAction({ payment_required: false, status: 'active' }, false))
+            .toBe('allow');
+        expect(resolvePlatformAccessPromptAction({ payment_required: true, status: 'expired' }, false))
+            .toBe('prompt_payment');
+        expect(resolvePlatformAccessPromptAction(null, false)).toBe('deny');
+        expect(resolvePlatformAccessPromptAction({ payment_required: true }, true)).toBe('allow');
     });
     it('detects platform access roles', () => {
         expect(isPlatformAccessRole(['nurse'])).toBe(true);

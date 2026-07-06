@@ -26,6 +26,18 @@ export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string |
     return Boolean(user?.platform_access_paid_at);
 }
 
+export function isSubjectToPlatformAccessPayment(user: {
+    roles?: string[];
+    created_at?: string | null;
+} | null | undefined): boolean {
+    if (!user) {
+        return false;
+    }
+
+    return isPlatformAccessRole(user.roles)
+        && isRegisteredAfterPlatformAccessCutoff(user.created_at);
+}
+
 export function isLocallyExemptFromPlatformPayment(user: {
     id?: number;
     roles?: string[];
@@ -42,6 +54,10 @@ export function isLocallyExemptFromPlatformPayment(user: {
         return true;
     }
 
+    if (!user.roles?.length) {
+        return false;
+    }
+
     if (!isPlatformAccessRole(user.roles)) {
         return true;
     }
@@ -55,6 +71,31 @@ export function isLocallyExemptFromPlatformPayment(user: {
     }
 
     return false;
+}
+
+export type PlatformAccessCheckResult = {
+    payment_required: boolean;
+    status?: string;
+} | null;
+
+/** Décision après check API ou exemption locale (testable sans composable). */
+export function resolvePlatformAccessPromptAction(
+    checkResult: PlatformAccessCheckResult,
+    locallyExempt: boolean,
+): 'allow' | 'deny' | 'prompt_payment' {
+    if (locallyExempt) {
+        return 'allow';
+    }
+
+    if (!checkResult) {
+        return 'deny';
+    }
+
+    if (!checkResult.payment_required) {
+        return 'allow';
+    }
+
+    return 'prompt_payment';
 }
 
 interface CreateReplacementForm {

@@ -2,6 +2,7 @@
 import { toast } from 'vue-sonner';
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { safeLoginRedirectPath } from '~/utils/accessReturn';
 import type { AccountType, Address, Pagination, User } from '~/lib/types';
 
 export const useUser = () => {
@@ -272,7 +273,7 @@ export const useAuth = () => {
         });
     };
 
-    async function verify2fa(formData) {
+    async function verify2fa(formData, redirectPath?: string) {
         const response = await $apifetch(`/api/verify-2fa`, {
             method: 'post',
             body: formData,
@@ -281,7 +282,7 @@ export const useAuth = () => {
         authToken.value = response.token;
         await nextTick();
         await refresh();
-        return navigateTo('/dashboard');
+        return navigateTo(safeLoginRedirectPath(redirectPath));
     };
 
     async function updateStatusAccount(formData) {

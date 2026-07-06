@@ -159,8 +159,10 @@ import {
 } from '@/components/ui/pin-input';
 import { useCookie } from '#app';
 import { getErrorMessage } from '~/lib/utils';
+import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
 const { $toast } = useNuxtApp();
+const route = useRoute();
 
 const { verify2fa, login } = useAuth();
 
@@ -190,7 +192,7 @@ const { submit, inProgress } = useSubmit(
             two_factor_code: pinValue.value.join(''),
         };
 
-        await verify2fa(credentials);
+        await verify2fa(credentials, safeLoginRedirectPath(route.query.redirect));
 
         useCookie('2fa_hash').value = '';
         localStorage.removeItem('credentials');
