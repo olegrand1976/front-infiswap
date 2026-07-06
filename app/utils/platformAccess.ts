@@ -42,6 +42,16 @@ export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string |
     return Boolean(user?.platform_access_paid_at);
 }
 
+/** Badge header : infirmière ayant souscrit l'accès réseau (post-cutoff + payé). */
+export function showsPaidNetworkAccessBadge(user: {
+    roles?: string[];
+    account_type?: string | null;
+    created_at?: string | null;
+    platform_access_paid_at?: string | null;
+} | null | undefined): boolean {
+    return isSubjectToPlatformAccessPayment(user) && hasPaidPlatformAccess(user);
+}
+
 export function isSubjectToPlatformAccessPayment(user: {
     roles?: string[];
     account_type?: string | null;

@@ -8,12 +8,13 @@ export { default as CardHeader } from './CardHeader.vue';
 export { default as CardTitle } from './CardTitle.vue';
 
 export const cardVariants = cva(
-    'bg-white rounded-2xl shadow-lg hover:cursor-pointer transform transition duration-300 ease-in-out group',
+    'bg-white rounded-2xl shadow-lg transform transition duration-300 ease-in-out group',
     {
         variants: {
             hover: {
                 default:
-          'text-primary hover:scale-105 focus:scale-105 hover:bg-primary',
+          'cursor-pointer hover:cursor-pointer text-primary hover:scale-105 focus:scale-105 hover:bg-primary',
+                none: 'cursor-default',
             },
         },
         defaultVariants: {

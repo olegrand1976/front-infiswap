@@ -60,6 +60,7 @@ const formattedAsOf = computed(() => {
                 <Card
                     v-for="kpi in kpiDefinitions"
                     :key="kpi.key"
+                    variant="none"
                     class="border-none bg-white/90 shadow-md backdrop-blur-sm"
                 >
                     <div class="flex flex-col gap-4 p-6">

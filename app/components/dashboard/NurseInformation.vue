@@ -676,6 +676,12 @@ const formData = reactive({
     radiusKm: '',
 });
 
+const prefsDialogRequest = useState('nursePrefsDialogRequest', () => 0);
+
+watch(prefsDialogRequest, () => {
+    configDialog.value = true;
+});
+
 watch(configDialog, (isOpen) => {
     if (isOpen) {
         const settings = user.value?.settings ? JSON.parse(user.value.settings) : {};
@@ -716,12 +722,6 @@ const handleSetPreference = async () => {
 
 onMounted(() => {
     loading.value = false;
-
-    nextTick(() => {
-        if (arePreferencesEmpty()) {
-            configDialog.value = true;
-        }
-    });
 });
 </script>
 

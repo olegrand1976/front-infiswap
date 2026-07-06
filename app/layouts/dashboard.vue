@@ -22,6 +22,19 @@
                 </div>
 
                 <div class="ml-auto flex min-w-0 items-center gap-1 sm:gap-2">
+                    <div
+                        v-if="showNetworkMemberBadge"
+                        class="flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
+                        title="Accès réseau actif — membre InfiSwap"
+                    >
+                        <Medal
+                            class="size-4 shrink-0 text-amber-600 sm:size-4"
+                            aria-hidden="true"
+                        />
+                        <span class="hidden text-xs font-semibold text-amber-900 sm:inline">
+                            Membre réseau
+                        </span>
+                    </div>
                     <div class="relative shrink-0 sm:pr-2">
                         <div class="flex flex-nowrap gap-2 sm:gap-4">
                             <NotificationsNotificationDropdown />
@@ -227,6 +240,12 @@
                             </template>
 
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                v-if="showReenableNetworkJourney"
+                                @click="reenableNetworkJourney"
+                            >
+                                Réactiver Mon réseau InfiSwap
+                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <NuxtLink to="/acces-plan">Accès plateforme</NuxtLink>
                             </DropdownMenuItem>
@@ -246,6 +265,7 @@
                     </DropdownMenu>
                 </div>
             </header>
+            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />
             <div class="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
                 <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
             </div>
@@ -255,12 +275,13 @@
 </template>
 
 <script lang="ts" setup>
-import { BellOff, CircleUser, Frown } from 'lucide-vue-next';
+import { BellOff, CircleUser, Frown, Medal } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
 import { getRole, getShortDisplayName } from '~/lib/utils';
+import { showsPaidNetworkAccessBadge } from '~/utils/platformAccess';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
 
@@ -300,6 +321,15 @@ const reportDescription = ref('');
 
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
 const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
+const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
+
+const {
+    showWidget: showNetworkJourneyWidget,
+    isJourneyDisabled,
+    enable: reenableNetworkJourney,
+} = useNetworkJourney();
+
+const showReenableNetworkJourney = computed(() => isJourneyDisabled.value);
 
 const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     hasPaidPlatformAccess,
+    showsPaidNetworkAccessBadge,
     isLocallyExemptFromPlatformPayment,
     isPlatformAccessRole,
     isRegisteredAfterPlatformAccessCutoff,
@@ -22,6 +23,24 @@ describe('platformAccess', () => {
         expect(hasPaidPlatformAccess({ platform_access_paid_at: '2026-07-06T10:00:00Z' })).toBe(true);
         expect(hasPaidPlatformAccess({ platform_access_paid_at: null })).toBe(false);
         expect(hasPaidPlatformAccess(null)).toBe(false);
+    });
+
+    it('shows golden network badge only for paid post-cutoff nurse', () => {
+        expect(showsPaidNetworkAccessBadge({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: '2026-07-06T10:00:00Z',
+        })).toBe(true);
+        expect(showsPaidNetworkAccessBadge({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: null,
+        })).toBe(false);
+        expect(showsPaidNetworkAccessBadge({
+            roles: ['nurse'],
+            created_at: '2026-06-15T10:00:00',
+            platform_access_paid_at: '2026-07-06T10:00:00Z',
+        })).toBe(false);
     });
 
     it('detects local exemption when already paid', () => {
