@@ -24,6 +24,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import { filterJourneyTips } from '~/lib/networkJourney';
 
 const TIPS_DISMISSED_KEY = 'journey_tips_dismissed';
@@ -36,6 +37,7 @@ const {
     navigateToQuest,
     celebrateXpGain,
     syncQuests,
+    persistTipsAutoOpenDisabled,
 } = useNetworkJourney();
 
 const user = useUser();
@@ -45,6 +47,7 @@ const minimized = ref(false);
 const showDisableDialog = ref(false);
 const showTipsModal = ref(false);
 const currentTipIndex = ref(0);
+const dontShowTipsAgain = ref(false);
 const celebrating = ref(false);
 const celebrationText = ref('');
 
@@ -87,9 +90,20 @@ watch(allTips, (tips) => {
     }
 });
 
-watch(showTipsModal, (open) => {
-    if (!open && import.meta.client) {
-        sessionStorage.setItem(TIPS_DISMISSED_KEY, '1');
+watch(showTipsModal, async (open, wasOpen) => {
+    if (open) {
+        dontShowTipsAgain.value = false;
+        return;
+    }
+
+    if (!wasOpen || !import.meta.client) {
+        return;
+    }
+
+    sessionStorage.setItem(TIPS_DISMISSED_KEY, '1');
+
+    if (dontShowTipsAgain.value) {
+        await persistTipsAutoOpenDisabled();
     }
 });
 
@@ -112,6 +126,10 @@ watch(
 
 function maybeOpenTipsOnLogin() {
     if (!import.meta.client || !allTips.value.length) {
+        return;
+    }
+
+    if (journeyState.value.onboarding.tips_auto_open_disabled) {
         return;
     }
 
@@ -420,6 +438,17 @@ async function confirmDisable() {
                 >
                     Aucun conseil disponible pour le moment.
                 </p>
+
+                <label class="flex cursor-pointer items-start gap-2 rounded-md border border-primary/10 bg-muted/30 px-3 py-2">
+                    <Checkbox
+                        :checked="dontShowTipsAgain"
+                        class="mt-0.5"
+                        @update:checked="(checked) => { dontShowTipsAgain = checked === true; }"
+                    />
+                    <span class="text-sm text-muted-foreground">
+                        Ne plus afficher automatiquement à la connexion
+                    </span>
+                </label>
 
                 <DialogFooter class="flex-col gap-3 sm:flex-row sm:justify-between">
                     <p class="text-xs text-muted-foreground">

@@ -35,6 +35,7 @@ export interface OnboardingState {
     last_progress_at: string | null;
     nudge_count: number;
     last_nudge_at: string | null;
+    tips_auto_open_disabled: boolean;
 }
 
 export interface JourneyLevel {
@@ -242,6 +243,7 @@ export function createEmptyOnboarding(): OnboardingState {
         last_progress_at: null,
         nudge_count: 0,
         last_nudge_at: null,
+        tips_auto_open_disabled: false,
     };
 }
 
@@ -288,6 +290,7 @@ export function parseOnboardingState(user: JourneyUser | null | undefined): Onbo
         last_progress_at: typeof onboarding.last_progress_at === 'string' ? onboarding.last_progress_at : null,
         nudge_count: typeof onboarding.nudge_count === 'number' ? onboarding.nudge_count : 0,
         last_nudge_at: typeof onboarding.last_nudge_at === 'string' ? onboarding.last_nudge_at : null,
+        tips_auto_open_disabled: onboarding.tips_auto_open_disabled === true,
     };
 }
 
@@ -748,6 +751,13 @@ export function enableJourney(onboarding: OnboardingState): OnboardingState {
         disabled: false,
         disabled_at: null,
         snoozed_until: null,
+    };
+}
+
+export function suppressTipsAutoOpen(onboarding: OnboardingState): OnboardingState {
+    return {
+        ...onboarding,
+        tips_auto_open_disabled: true,
     };
 }
 

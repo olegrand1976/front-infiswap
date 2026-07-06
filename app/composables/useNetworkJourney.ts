@@ -9,6 +9,7 @@ import {
     recordNudgeDisplay,
     resolveJourneyState,
     shouldRecordNudge,
+    suppressTipsAutoOpen,
     syncOnboardingProgress,
     trackRouteVisit,
 } from '~/lib/networkJourney';
@@ -172,6 +173,11 @@ export const useNetworkJourney = () => {
         });
     };
 
+    const persistTipsAutoOpenDisabled = async () => {
+        const next = suppressTipsAutoOpen(onboarding.value);
+        await persistOnboarding(next);
+    };
+
     const navigateToQuest = async (questId: QuestId) => {
         const quest = journeyState.value.nextQuest;
 
@@ -243,6 +249,7 @@ export const useNetworkJourney = () => {
         snooze,
         disable,
         enable,
+        persistTipsAutoOpenDisabled,
         navigateToQuest,
         celebrateXpGain,
     };
