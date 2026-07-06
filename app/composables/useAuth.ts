@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
-import { AUTH_TOKEN } from '~/lib/constants';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import type { AccountType, Address, Pagination, User } from '~/lib/types';
 
 export const useUser = () => {
@@ -12,6 +12,7 @@ export const useAuth = () => {
     const router = useRouter();
     const { $apifetch, $fetchCurrentUser } = useNuxtApp();
     const user = useUser();
+    const authToken = useAuthTokenCookie();
     const users = useState<Pagination<User> | null>('users', () => null);
     const count = useState<number>('userCount', () => 0);
     const isLoggedIn = computed(() => !!user.value && !!user.value.email_verified_at);
@@ -118,8 +119,8 @@ export const useAuth = () => {
             user.value = null;
         }
 
-        if (!user.value && useCookie(AUTH_TOKEN).value) {
-            useCookie(AUTH_TOKEN).value = null;
+        if (!user.value && authToken.value) {
+            authToken.value = null;
         }
     }
 
@@ -133,7 +134,7 @@ export const useAuth = () => {
             });
 
             if (response.token) {
-                useCookie(AUTH_TOKEN, { maxAge: 7776000 }).value = response.token;
+                authToken.value = response.token;
                 await nextTick();
                 await refresh();
                 return;
@@ -160,7 +161,7 @@ export const useAuth = () => {
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
                 if (response?.token) {
-                    useCookie(AUTH_TOKEN).value = response.token;
+                    authToken.value = response.token;
                 }
             })
             .then(() => {
@@ -210,7 +211,7 @@ export const useAuth = () => {
     async function registerImmediate(credentials) {
         return $apifetch('/api/register-immediate', { method: 'post', body: credentials })
             .then((response) => {
-                useCookie(AUTH_TOKEN).value = response.token;
+                authToken.value = response.token;
             })
             .then(() => {
                 toast.success('Inscription rapide réussie');
@@ -277,7 +278,7 @@ export const useAuth = () => {
             body: formData,
         });
 
-        useCookie(AUTH_TOKEN).value = response.token;
+        authToken.value = response.token;
         await nextTick();
         await refresh();
         return navigateTo('/dashboard');
@@ -316,7 +317,7 @@ export const useAuth = () => {
             if (!isLoggedIn.value) return;
             $apifetch('api/logout', { method: 'post' });
             user.value = null;
-            useCookie(AUTH_TOKEN).value = '';
+            authToken.value = '';
 
             router.push('/');
         }

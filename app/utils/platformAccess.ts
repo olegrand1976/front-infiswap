@@ -26,6 +26,37 @@ export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string |
     return Boolean(user?.platform_access_paid_at);
 }
 
+export function isLocallyExemptFromPlatformPayment(user: {
+    id?: number;
+    roles?: string[];
+    created_at?: string | null;
+    platform_access_paid_at?: string | null;
+} | null | undefined, options: {
+    bypassesPlatformAccess: boolean;
+}): boolean {
+    if (options.bypassesPlatformAccess) {
+        return true;
+    }
+
+    if (!user?.id) {
+        return true;
+    }
+
+    if (!isPlatformAccessRole(user.roles)) {
+        return true;
+    }
+
+    if (!isRegisteredAfterPlatformAccessCutoff(user.created_at)) {
+        return true;
+    }
+
+    if (hasPaidPlatformAccess(user)) {
+        return true;
+    }
+
+    return false;
+}
+
 interface CreateReplacementForm {
     periods: Array<{ startDate: string | null; endDate: string | null }>;
     roleType: string | null;

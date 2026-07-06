@@ -1,12 +1,12 @@
-import { defineNuxtPlugin, useCookie, useNuxtApp } from '#app';
+import { defineNuxtPlugin, useNuxtApp } from '#app';
 import { useUser } from '~/composables/useAuth';
-import { AUTH_TOKEN } from '~/lib/constants';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import type { User } from '~/lib/types';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
     const user = useUser();
     const authReady = useState('authReady', () => false);
-    const token = useCookie(AUTH_TOKEN);
+    const token = useAuthTokenCookie();
     const { $apifetch } = useNuxtApp();
 
     const fetchCurrentUser = async (): Promise<User | null> => {
@@ -34,5 +34,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     authReady.value = true;
 
     nuxtApp.provide('fetchCurrentUser', fetchCurrentUser);
+    nuxtApp.provide('authReady', authReady);
     nuxtApp.provide('user', user.value);
 });

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { $fetch } from 'ofetch';
-import { AUTH_TOKEN, LANGUAGE } from '~/lib/constants';
+import { LANGUAGE } from '~/lib/constants';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { resolveApiBaseUrl } from '~/lib/resolveApiBaseUrl';
 import {
     useCookie,
@@ -19,7 +20,7 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
 
             const headers: Record<string, string> = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${useCookie(AUTH_TOKEN).value ?? ''}`,
+                'Authorization': `Bearer ${useAuthTokenCookie().value ?? ''}`,
                 'Accept-Language': language,
                 ...(options?.headers as Record<string, string> | undefined),
             };

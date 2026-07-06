@@ -277,6 +277,7 @@ definePageMeta({
 
 const route = useRoute();
 const user = useUser();
+const { refresh } = useAuth();
 const { $toast } = useNuxtApp();
 const {
     accessPlan,
@@ -354,8 +355,20 @@ onMounted(async () => {
     const sessionId = route.query.session_id;
 
     if (sessionId) {
+        await waitForAuthReady();
+
+        const { $fetchCurrentUser } = useNuxtApp();
+        const token = useAuthTokenCookie();
+
+        if (!user.value && token.value) {
+            user.value = await $fetchCurrentUser();
+        }
+
         if (!user.value) {
-            return navigateTo('/login');
+            return navigateTo({
+                path: '/login',
+                query: { redirect: route.fullPath },
+            });
         }
 
         confirmingPayment.value = true;
@@ -365,6 +378,7 @@ onMounted(async () => {
 
             if (confirmed) {
                 hasAccess.value = true;
+                await refresh();
                 $toast({ description: 'Accès activé avec succès !' });
                 await navigateTo(redirectTo.value, { replace: true });
             }

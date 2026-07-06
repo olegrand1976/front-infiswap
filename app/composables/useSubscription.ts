@@ -1,5 +1,12 @@
+import {
+    isLocallyExemptFromPlatformPayment,
+    isOneTimeAccessPlan,
+} from '~/utils/platformAccess';
+import { safeReturnPath } from '~/utils/accessReturn';
+
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
+    const { refresh } = useAuth();
 
     const accessPlan = useState<AccessPlan | null>('accessPlan', () => null);
     const loading = useState<boolean>('subscriptionLoading', () => false);
@@ -23,24 +30,10 @@ export const useSubscription = () => {
         return isInfiswapStaff.value;
     };
 
-    const isLocallyExemptFromPlatformPayment = (): boolean => {
-        if (bypassesPlatformAccess()) {
-            return true;
-        }
-
-        if (!isPlatformAccessRole(user.value?.roles)) {
-            return true;
-        }
-
-        if (!isRegisteredAfterPlatformAccessCutoff(user.value?.created_at)) {
-            return true;
-        }
-
-        if (hasPaidPlatformAccess(user.value)) {
-            return true;
-        }
-
-        return false;
+    const isLocallyExemptFromPlatformPaymentFn = (): boolean => {
+        return isLocallyExemptFromPlatformPayment(user.value, {
+            bypassesPlatformAccess: bypassesPlatformAccess(),
+        });
     };
 
     const hasPlatformAccess = async (): Promise<boolean> => {
@@ -76,7 +69,7 @@ export const useSubscription = () => {
 
     /** Opens the payment modal when cotisation is required; call after form validation. */
     const promptPlatformAccessIfRequired = async (redirectTo?: string): Promise<boolean> => {
-        if (isLocallyExemptFromPlatformPayment()) {
+        if (isLocallyExemptFromPlatformPaymentFn()) {
             return true;
         }
 
@@ -87,6 +80,8 @@ export const useSubscription = () => {
         }
 
         if (!response.payment_required) {
+            await refresh();
+
             return true;
         }
 

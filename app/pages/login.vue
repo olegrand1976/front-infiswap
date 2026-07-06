@@ -217,8 +217,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import Button from '~/components/ui/button/Button.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
+import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
 const router = useRouter();
+const route = useRoute();
 const { login } = useAuth();
 
 const credentials = reactive({
@@ -236,7 +238,7 @@ const { submit, inProgress } = useSubmit(
             return router.push('/2fa-challenge');
         }
         else {
-            return router.push('/dashboard');
+            return router.push(safeLoginRedirectPath(route.query.redirect));
         }
     },
 );
