@@ -211,19 +211,66 @@
                         <div
                             v-for="payment in contract.payments"
                             :key="payment.id"
-                            class="flex flex-wrap justify-between gap-2 text-sm border-t pt-2"
+                            class="flex flex-col gap-1 text-sm border-t pt-2"
+                        >
+                            <div class="flex flex-wrap justify-between gap-2">
+                                <div>
+                                    <p>{{ formatDate(payment.received_at) }}</p>
+                                    <p class="text-muted-foreground">
+                                        Année {{ payment.subscription_year }} — {{ payment.commission_rate }} %
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p>{{ formatEuro(payment.amount_received) }} encaissé</p>
+                                    <p :class="payment.commission_paid_at ? 'text-emerald-600' : 'text-amber-600'">
+                                        {{ formatEuro(payment.commission_amount) }}
+                                        {{ payment.commission_paid_at ? 'versée' : 'due' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                v-if="payment.splits?.length"
+                                class="ml-2 space-y-1 text-xs text-muted-foreground"
+                            >
+                                <p
+                                    v-for="split in payment.splits"
+                                    :key="split.id"
+                                    :class="split.commission_paid_at ? 'text-emerald-600' : 'text-amber-600'"
+                                >
+                                    {{ splitTypeLabel(split.split_type) }} :
+                                    {{ formatEuro(split.commission_amount) }}
+                                    {{ split.commission_paid_at ? '(versée)' : '(due)' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="detail.override_payments?.length"
+                        class="space-y-3"
+                    >
+                        <h4 class="text-sm font-semibold">
+                            Commissions override (downline)
+                        </h4>
+                        <div
+                            v-for="entry in detail.override_payments"
+                            :key="entry.split_id"
+                            class="border rounded-lg p-3 text-sm flex flex-wrap justify-between gap-2"
                         >
                             <div>
-                                <p>{{ formatDate(payment.received_at) }}</p>
+                                <p class="font-medium">
+                                    {{ entry.contract?.reference ?? `BC #${entry.contract?.id}` }}
+                                </p>
                                 <p class="text-muted-foreground">
-                                    Année {{ payment.subscription_year }} — {{ payment.commission_rate }} %
+                                    {{ entry.contract?.institution?.name ?? '—' }}
+                                    — {{ splitTypeLabel(entry.split_type) }}
                                 </p>
                             </div>
                             <div class="text-right">
-                                <p>{{ formatEuro(payment.amount_received) }} encaissé</p>
-                                <p :class="payment.commission_paid_at ? 'text-emerald-600' : 'text-amber-600'">
-                                    {{ formatEuro(payment.commission_amount) }}
-                                    {{ payment.commission_paid_at ? 'versée' : 'due' }}
+                                <p>{{ formatDate(entry.payment?.received_at) }}</p>
+                                <p :class="entry.commission_paid_at ? 'text-emerald-600' : 'text-amber-600'">
+                                    {{ formatEuro(entry.commission_amount) }}
+                                    {{ entry.commission_paid_at ? 'versée' : 'due' }}
                                 </p>
                             </div>
                         </div>
@@ -389,6 +436,15 @@ function formatDate(value?: string | null) {
     return value ? formatToDMY(value) : '—';
 }
 
+function splitTypeLabel(type: string) {
+    switch (type) {
+        case 'direct': return 'Direct';
+        case 'upline_l1': return 'Override L1';
+        case 'upline_l2': return 'Override L2';
+        default: return type;
+    }
+}
+
 async function loadKpis() {
     kpiLoading.value = true;
     try {
@@ -486,6 +542,16 @@ const vendorColumns: ColumnDef<VendorCommissionSummary>[] = [
         accessorKey: 'commission_due',
         header: 'Commissions dues',
         cell: ({ row }) => formatEuro(row.original.commission_due),
+    },
+    {
+        accessorKey: 'commission_direct_due',
+        header: 'Direct dues',
+        cell: ({ row }) => formatEuro(row.original.commission_direct_due ?? 0),
+    },
+    {
+        accessorKey: 'commission_override_due',
+        header: 'Override dues',
+        cell: ({ row }) => formatEuro(row.original.commission_override_due ?? 0),
     },
     {
         accessorKey: 'commission_paid',

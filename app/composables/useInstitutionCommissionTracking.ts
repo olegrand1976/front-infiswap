@@ -5,6 +5,7 @@ export type CommissionRatePeriod = {
     effective_from: string;
     first_year_rate: number;
     renewal_rates: Array<{ from_year: number; rate: number }>;
+    annual_indexation_rate?: number | null;
     updated_at?: string | null;
     updated_by?: { id: number; full_name: string; email: string } | null;
 };
@@ -17,6 +18,10 @@ export type CommissionKpis = {
     total_received: number;
     commission_due: number;
     commission_paid: number;
+    commission_direct_due?: number;
+    commission_direct_paid?: number;
+    commission_override_due?: number;
+    commission_override_paid?: number;
     signed_contracts: number;
     active_vendors: number;
     payout_rate: number;
@@ -29,7 +34,19 @@ export type VendorCommissionSummary = {
     amount_received: number;
     commission_due: number;
     commission_paid: number;
+    commission_direct_due?: number;
+    commission_direct_paid?: number;
+    commission_override_due?: number;
+    commission_override_paid?: number;
     last_payment_at?: string | null;
+};
+
+export type CommissionSplitRow = {
+    id: number;
+    split_type: string;
+    commission_amount: number;
+    commission_paid_at?: string | null;
+    override_rate?: number | null;
 };
 
 export type VendorCommissionDetail = {
@@ -56,7 +73,17 @@ export type VendorCommissionDetail = {
             commission_amount: number;
             commission_paid_at?: string | null;
             subscription_year?: number | null;
+            splits?: CommissionSplitRow[];
         }>;
+    }>;
+    override_payments?: Array<{
+        split_id: number;
+        split_type: string;
+        commission_amount: number;
+        commission_paid_at?: string | null;
+        override_rate?: number | null;
+        payment?: { id: number; received_at?: string | null; amount_received: number } | null;
+        contract?: { id: number; reference?: string | null; institution?: { id: number; name: string } | null } | null;
     }>;
 };
 

@@ -519,7 +519,7 @@
                                         >{{ diyFullMonthlyAmountLabel }} / mois</span>
                                     </div>
                                     <ul class="mt-4 space-y-2 text-xs text-slate-600">
-                                        <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Engagement 12 mois, reconduction tacite</li>
+                                        <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Engagement {{ commitmentLabel }}, reconduction tacite</li>
                                         <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Publication prioritaire <strong>En Haut de Liste</strong></li>
                                         <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Mise en relation directe et rapide avec {{ networkProfilesLabel }}</li>
                                     </ul>
@@ -1223,6 +1223,7 @@ import {
     INSTITUTION_DIY_FULL_MONTHLY,
     INSTITUTION_DIY_FULL_YEARLY,
 } from '~/lib/offreInstitutionPricing';
+import { getInstitutionCommitmentLabel, loadInstitutionSubscriptionPolicy } from '~/lib/institutionSubscriptionPolicy';
 import { submitInstitutionOfferStudy } from '~/composables/useContact';
 import OffreInstitutionCountryModal from '~/components/offre-institution/OffreInstitutionCountryModal.vue';
 
@@ -1231,6 +1232,8 @@ type TabId = 'accueil' | 'reseau' | 'diy-infiswap' | 'jaumana-premium' | 'simula
 const props = defineProps<{
     contact: OffreInstitutionContact;
 }>();
+
+const commitmentLabel = computed(() => getInstitutionCommitmentLabel('monthly'));
 
 const {
     diyPromoActive,
@@ -1493,6 +1496,7 @@ async function submitContactForm() {
 }
 
 onMounted(() => {
+    void loadInstitutionSubscriptionPolicy();
     const today = new Date();
     demoStart.value = today.toISOString().slice(0, 10);
 });

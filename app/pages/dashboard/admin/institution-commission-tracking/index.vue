@@ -3,6 +3,12 @@
         <DashboardAdminPageHeader title="Suivi commercial" />
 
         <DashboardAdminPageContent>
+            <CommercialCareerStatusCard
+                v-if="!canManageSettings"
+                class="mb-6 mx-4"
+                :status="careerStatus"
+                :loading="careerLoading"
+            />
             <CommissionVendorTracking
                 v-if="canAccessTracking"
                 :is-admin-view="canManageSettings"
@@ -13,6 +19,11 @@
 
 <script setup lang="ts">
 import CommissionVendorTracking from '@/components/commissions/CommissionVendorTracking.vue';
+import CommercialCareerStatusCard from '@/components/crm/CommercialCareerStatusCard.vue';
+
+const { getMyCareerStatus } = useInstitutionCrmSettings();
+const careerStatus = ref<Awaited<ReturnType<typeof getMyCareerStatus>> | null>(null);
+const careerLoading = ref(false);
 
 useHead({ title: 'Suivi commercial' });
 
@@ -26,9 +37,20 @@ const { isAdmin, isSuperAdmin, isSaleRepresentative } = useAuth();
 const canManageSettings = computed(() => isSuperAdmin.value || isAdmin.value);
 const canAccessTracking = computed(() => canManageSettings.value || isSaleRepresentative.value);
 
-onMounted(() => {
+onMounted(async () => {
     if (!canAccessTracking.value) {
         navigateTo('/dashboard/admin/users/crm', { replace: true });
+        return;
+    }
+
+    if (!canManageSettings.value) {
+        careerLoading.value = true;
+        try {
+            careerStatus.value = await getMyCareerStatus();
+        }
+        finally {
+            careerLoading.value = false;
+        }
     }
 });
 </script>

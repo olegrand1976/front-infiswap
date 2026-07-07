@@ -50,6 +50,22 @@
                         class="w-36 mt-1"
                     />
                 </div>
+                <div>
+                    <Label :for="`annual_indexation_rate_${periodIndex}`">
+                        Indexation annuelle (%)
+                    </Label>
+                    <Input
+                        :id="`annual_indexation_rate_${periodIndex}`"
+                        :model-value="period.annual_indexation_rate ?? ''"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        placeholder="Désactivée"
+                        class="w-36 mt-1"
+                        @update:model-value="(v) => period.annual_indexation_rate = v === '' || v === null || v === undefined ? null : Number(v)"
+                    />
+                </div>
                 <Button
                     v-if="form.periods.length > 1"
                     type="button"
@@ -167,6 +183,7 @@ function addPeriod() {
         effective_from: today,
         first_year_rate: last?.first_year_rate ?? 60,
         renewal_rates: last?.renewal_rates?.map(row => ({ ...row })) ?? [{ from_year: 2, rate: 7.5 }],
+        annual_indexation_rate: last?.annual_indexation_rate ?? null,
     });
 }
 
