@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <DashboardAdminPageHeader title="Récap activité commerciale" />
+        <DashboardAdminPageHeader title="Récap activité & carrière commerciale" />
 
         <DashboardAdminPageContent>
             <CommercialActivityRecap v-if="canAccess" />
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import CommercialActivityRecap from '@/components/crm/CommercialActivityRecap.vue';
 
-useHead({ title: 'Récap activité commerciale' });
+useHead({ title: 'Récap activité & carrière commerciale' });
 
 definePageMeta({
     layout: 'dashboard',

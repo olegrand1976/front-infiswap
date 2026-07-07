@@ -103,6 +103,22 @@
             {{ periodLabelText }}
         </p>
 
+        <CommercialCareerGradesGrid
+            :grades="careerGrades"
+            :loading="gradesLoading"
+            :current-grade-id="selectedCareerStatus?.grade?.id ?? null"
+            :progression="selectedCareerStatus?.progression ?? null"
+        />
+
+        <CommercialCareerProgressPanel
+            v-if="selectedUserId"
+            :key="selectedUserId"
+            :user-id="selectedUserId"
+            :commercial-name="selectedCommercialLabel"
+            :grades="careerGrades"
+            @updated="onCareerUpdated"
+        />
+
         <div
             v-if="loading"
             class="flex justify-center py-12"
@@ -157,11 +173,15 @@ import { Input } from '@/components/ui/input';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import RollingLoader from '~/components/RollingLoader.vue';
+import CommercialCareerGradesGrid from '@/components/crm/CommercialCareerGradesGrid.vue';
+import CommercialCareerProgressPanel from '@/components/crm/CommercialCareerProgressPanel.vue';
 import { formatToDMY } from '@/composables/useDate';
 import type { CrmCommercialActivityRow } from '@/composables/useCrm';
+import type { CommercialCareerGrade, MyCareerStatus } from '@/composables/useInstitutionCrmSettings';
 
 const { $apifetch } = useNuxtApp();
 const { getCommercialActivity, revokeCommercialAccess } = useCrm();
+const { getSettings, getCommercialCareerStatus } = useInstitutionCrmSettings();
 const user = useUser();
 
 type CommercialOption = {
@@ -183,6 +203,22 @@ const commercialOptions = ref<CommercialOption[]>([]);
 const revokeDialogOpen = ref(false);
 const revokeTarget = ref<CrmCommercialActivityRow | null>(null);
 const revoking = ref(false);
+const careerGrades = ref<CommercialCareerGrade[]>([]);
+const gradesLoading = ref(true);
+const selectedCareerStatus = ref<MyCareerStatus | null>(null);
+
+const selectedUserId = computed(() => {
+    if (selectedCommercial.value === 'all') {
+        return null;
+    }
+    if (selectedCommercial.value === 'me') {
+        return user.value?.id ?? null;
+    }
+    const parsed = Number(selectedCommercial.value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+});
+
+const showCareerColumns = computed(() => selectedUserId.value !== null);
 
 const selectedCommercialLabel = computed(() => {
     if (selectedCommercial.value === 'all') {
@@ -308,6 +344,43 @@ function buildQueryParams(): Record<string, unknown> {
     return params;
 }
 
+async function loadCareerGrades() {
+    gradesLoading.value = true;
+    try {
+        const settings = await getSettings();
+        careerGrades.value = settings?.grades ?? [];
+    }
+    catch {
+        careerGrades.value = [];
+    }
+    finally {
+        gradesLoading.value = false;
+    }
+}
+
+async function loadSelectedCareerStatus() {
+    if (!selectedUserId.value) {
+        selectedCareerStatus.value = null;
+        return;
+    }
+
+    try {
+        selectedCareerStatus.value = await getCommercialCareerStatus(selectedUserId.value);
+    }
+    catch {
+        selectedCareerStatus.value = null;
+    }
+}
+
+async function onCareerUpdated() {
+    await loadSelectedCareerStatus();
+}
+
+function careerProgressPercent(current?: number | null, min?: number | null) {
+    if (!min || min <= 0) return 0;
+    return Math.min(100, Math.round(((current ?? 0) / min) * 100));
+}
+
 async function refresh() {
     if (selectedPeriod.value === 'custom' && (!customStartDate.value || !customEndDate.value)) {
         return;
@@ -319,6 +392,7 @@ async function refresh() {
         rows.value = data.rows ?? [];
         periodInfo.value = data.period ?? {};
         mergeFromRows(rows.value);
+        await loadSelectedCareerStatus();
     }
     catch {
         rows.value = [];
@@ -357,6 +431,7 @@ function resetFilters() {
     customStartDate.value = '';
     customEndDate.value = '';
     commercialSearch.value = '';
+    selectedCareerStatus.value = null;
     refresh();
 }
 
@@ -395,79 +470,145 @@ async function confirmRevoke() {
     }
 }
 
-const columns: ColumnDef<CrmCommercialActivityRow>[] = [
-    {
-        accessorKey: 'full_name',
-        header: 'Personne',
-        cell: ({ row }) => h('div', { class: 'font-medium' }, row.original.full_name),
-    },
-    {
-        accessorKey: 'roles_label',
-        header: 'Rôles',
-        cell: ({ row }) => row.original.roles_label || '—',
-    },
-    {
-        accessorKey: 'status_label',
-        header: 'Statut',
-        cell: ({ row }) => row.original.status_label || '—',
-    },
-    {
-        accessorKey: 'email',
-        header: 'E-mail',
-        cell: ({ row }) => row.original.email || '—',
-    },
-    {
-        accessorKey: 'nb_call',
-        header: 'Appels',
-        cell: ({ row }) => row.original.nb_call,
-    },
-    {
-        accessorKey: 'nb_sale',
-        header: 'Ventes',
-        cell: ({ row }) => row.original.nb_sale,
-    },
-    {
-        accessorKey: 'nb_recommandation',
-        header: 'Recommandations',
-        cell: ({ row }) => row.original.nb_recommandation,
-    },
-    {
-        accessorKey: 'nb_meeting',
-        header: 'RDV',
-        cell: ({ row }) => row.original.nb_meeting,
-    },
-    {
-        accessorKey: 'nb_pending',
-        header: 'Réponses en attente',
-        cell: ({ row }) => row.original.nb_pending,
-    },
-    {
-        accessorKey: 'total_actions',
-        header: 'Total',
-        cell: ({ row }) => h('span', { class: 'font-semibold' }, row.original.total_actions),
-    },
-    {
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => {
-            if (!row.original.can_revoke) {
-                return null;
-            }
-
-            return h(
-                Button,
-                {
-                    variant: 'ghost',
-                    size: 'icon',
-                    class: 'text-destructive hover:text-destructive',
-                    title: 'Retirer l\'accès CRM',
-                    onClick: () => openRevokeDialog(row.original),
-                },
-                () => h(Trash2, { class: 'size-4' }),
-            );
+const columns = computed<ColumnDef<CrmCommercialActivityRow>[]>(() => {
+    const base: ColumnDef<CrmCommercialActivityRow>[] = [
+        {
+            accessorKey: 'full_name',
+            header: 'Personne',
+            cell: ({ row }) => h('div', { class: 'font-medium' }, row.original.full_name),
         },
-    },
-];
+        {
+            accessorKey: 'roles_label',
+            header: 'Rôles',
+            cell: ({ row }) => row.original.roles_label || '—',
+        },
+    ];
+
+    if (showCareerColumns.value) {
+        base.push(
+            {
+                id: 'career_grade',
+                header: 'Grade',
+                cell: () => h(
+                    'span',
+                    {
+                        class: selectedCareerStatus.value?.grade
+                            ? 'text-xs rounded px-2 py-0.5 bg-primary/10 text-primary font-medium'
+                            : 'text-xs text-muted-foreground',
+                    },
+                    selectedCareerStatus.value?.grade?.name ?? 'Non défini',
+                ),
+            },
+            {
+                id: 'career_progression',
+                header: 'Progression',
+                cell: () => {
+                    const progression = selectedCareerStatus.value?.progression;
+                    const nextGrade = selectedCareerStatus.value?.next_grade;
+                    if (!progression || !nextGrade) {
+                        return h('span', { class: 'text-xs text-muted-foreground' }, '—');
+                    }
+
+                    const bcPct = careerProgressPercent(progression.direct_bc, progression.min_direct_bc);
+                    const caPct = progression.min_team_revenue
+                        ? careerProgressPercent(progression.team_revenue, progression.min_team_revenue)
+                        : null;
+
+                    return h('div', { class: 'space-y-1 min-w-28' }, [
+                        h('div', { class: 'flex items-center gap-2 text-xs' }, [
+                            h('span', { class: 'text-muted-foreground w-6' }, 'BC'),
+                            h('div', { class: 'flex-1 h-1.5 bg-muted rounded-full overflow-hidden' }, [
+                                h('div', {
+                                    class: 'h-full bg-primary rounded-full',
+                                    style: { width: `${bcPct}%` },
+                                }),
+                            ]),
+                            h('span', { class: 'w-8 text-right' }, `${bcPct}%`),
+                        ]),
+                        caPct !== null
+                            ? h('div', { class: 'flex items-center gap-2 text-xs' }, [
+                                h('span', { class: 'text-muted-foreground w-6' }, 'CA'),
+                                h('div', { class: 'flex-1 h-1.5 bg-muted rounded-full overflow-hidden' }, [
+                                    h('div', {
+                                        class: 'h-full bg-indigo-600 rounded-full',
+                                        style: { width: `${caPct}%` },
+                                    }),
+                                ]),
+                                h('span', { class: 'w-8 text-right' }, `${caPct}%`),
+                            ])
+                            : null,
+                    ]);
+                },
+            },
+        );
+    }
+
+    base.push(
+        {
+            accessorKey: 'status_label',
+            header: 'Statut',
+            cell: ({ row }) => row.original.status_label || '—',
+        },
+        {
+            accessorKey: 'email',
+            header: 'E-mail',
+            cell: ({ row }) => row.original.email || '—',
+        },
+        {
+            accessorKey: 'nb_call',
+            header: 'Appels',
+            cell: ({ row }) => row.original.nb_call,
+        },
+        {
+            accessorKey: 'nb_sale',
+            header: 'Ventes',
+            cell: ({ row }) => row.original.nb_sale,
+        },
+        {
+            accessorKey: 'nb_recommandation',
+            header: 'Recommandations',
+            cell: ({ row }) => row.original.nb_recommandation,
+        },
+        {
+            accessorKey: 'nb_meeting',
+            header: 'RDV',
+            cell: ({ row }) => row.original.nb_meeting,
+        },
+        {
+            accessorKey: 'nb_pending',
+            header: 'Réponses en attente',
+            cell: ({ row }) => row.original.nb_pending,
+        },
+        {
+            accessorKey: 'total_actions',
+            header: 'Total',
+            cell: ({ row }) => h('span', { class: 'font-semibold' }, row.original.total_actions),
+        },
+        {
+            id: 'actions',
+            header: '',
+            cell: ({ row }) => {
+                if (!row.original.can_revoke) {
+                    return null;
+                }
+
+                return h(
+                    Button,
+                    {
+                        variant: 'ghost',
+                        size: 'icon',
+                        class: 'text-destructive hover:text-destructive',
+                        title: 'Retirer l\'accès CRM',
+                        onClick: () => openRevokeDialog(row.original),
+                    },
+                    () => h(Trash2, { class: 'size-4' }),
+                );
+            },
+        },
+    );
+
+    return base;
+});
 
 onMounted(async () => {
     if (user.value?.id) {
@@ -476,6 +617,6 @@ onMounted(async () => {
             full_name: user.value.full_name ?? `Commercial #${user.value.id}`,
         }]);
     }
-    await refresh();
+    await Promise.all([loadCareerGrades(), refresh()]);
 });
 </script>

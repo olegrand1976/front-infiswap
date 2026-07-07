@@ -14,6 +14,8 @@ export type NormalizedCareerStatus = {
     upline?: { id: number; full_name: string } | null;
     assigned_at?: string | null;
     next_grade?: CareerGradeSummary | null;
+    has_initial_assignment?: boolean;
+    eligible_for_promotion?: boolean;
     progression?: {
         direct_bc: number;
         min_direct_bc?: number | null;
@@ -33,6 +35,8 @@ export function normalizeMyCareerStatus(raw: Record<string, unknown>): Normalize
         upline: raw.upline as NormalizedCareerStatus['upline'],
         assigned_at: raw.assigned_at as string | undefined,
         next_grade: raw.next_grade as CareerGradeSummary | null | undefined,
+        has_initial_assignment: raw.has_initial_assignment as boolean | undefined,
+        eligible_for_promotion: raw.eligible_for_promotion as boolean | undefined,
         progression: progression ?? {
             direct_bc: progress?.direct_bc_count ?? 0,
         },

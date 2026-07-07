@@ -65,12 +65,56 @@ export type MyCareerStatus = {
     upline?: { id: number; full_name: string } | null;
     assigned_at?: string | null;
     next_grade?: CommercialCareerGrade | null;
+    has_initial_assignment?: boolean;
+    eligible_for_promotion?: boolean;
     progression?: {
         direct_bc: number;
         min_direct_bc?: number | null;
         team_revenue?: number | null;
         min_team_revenue?: number | null;
     };
+};
+
+export type CareerHistoryEntry = {
+    id: number;
+    assignment_type: 'initial' | 'promotion' | 'manual' | 'demotion';
+    status?: string | null;
+    effective_at?: string | null;
+    notes?: string | null;
+    notify_sent_at?: string | null;
+    created_at?: string | null;
+    grade?: {
+        id: number;
+        slug: string;
+        name: string;
+        level: number;
+    } | null;
+    assigned_by?: {
+        id: number;
+        full_name: string;
+    } | null;
+};
+
+export type CareerProgressionMonth = {
+    month: string;
+    direct_bc: number;
+    direct_bc_cumulative: number;
+    team_revenue: number;
+};
+
+export type CareerProgressionSeries = {
+    months: CareerProgressionMonth[];
+    totals: {
+        direct_bc: number;
+        team_revenue: number;
+    };
+    next_grade?: {
+        id?: number;
+        name: string;
+        min_direct_bc?: number | null;
+        min_team_revenue?: number | null;
+    } | null;
+    eligible_for_promotion: boolean;
 };
 
 export type TeamSimulatorScenario = {
@@ -200,6 +244,26 @@ export const useInstitutionCrmSettings = () => {
         return (response.data ?? response) as TeamSimulatorExample;
     }
 
+    async function getCommercialCareerStatus(userId: number) {
+        const response = await $apifetch(`api/admin/commercials/${userId}/career-status`);
+        return normalizeMyCareerStatus(response.data as Record<string, unknown>) as MyCareerStatus;
+    }
+
+    async function getCommercialCareerHistory(userId: number) {
+        const response = await $apifetch(`api/admin/commercials/${userId}/career-history`);
+        return {
+            eligible_for_promotion: Boolean(response.eligible_for_promotion),
+            entries: (response.data ?? []) as CareerHistoryEntry[],
+        };
+    }
+
+    async function getCommercialCareerProgressionSeries(userId: number, months = 12) {
+        const response = await $apifetch(`api/admin/commercials/${userId}/career-progression-series`, {
+            query: { months },
+        });
+        return response.data as CareerProgressionSeries;
+    }
+
     return {
         settings,
         commercials,
@@ -213,5 +277,8 @@ export const useInstitutionCrmSettings = () => {
         getMyCareerStatus,
         calculateTeamSimulator,
         getTeamSimulatorExample,
+        getCommercialCareerStatus,
+        getCommercialCareerHistory,
+        getCommercialCareerProgressionSeries,
     };
 };
