@@ -38,8 +38,9 @@ const {
     celebrateXpGain,
     syncQuests,
     persistTipsAutoOpenDisabled,
+    resetCelebrationBaseline,
 } = useNetworkJourney();
-const { requestPrompt } = useGoogleReviewPrompt();
+const { requestEngagement } = usePostSuccessEngagement();
 
 const user = useUser();
 const { getReports } = useReports();
@@ -52,6 +53,7 @@ const dontShowTipsAgain = ref(false);
 const celebrating = ref(false);
 const celebrationText = ref('');
 const wasJourneyComplete = ref(journeyState.value.isComplete);
+let celebrationTimer: ReturnType<typeof setTimeout> | null = null;
 
 const ringRadius = 18;
 const ringCircumference = 2 * Math.PI * ringRadius;
@@ -107,7 +109,7 @@ onMounted(async () => {
         bootstrapJourney(),
     ]);
     await syncQuests();
-    triggerCelebrationIfNeeded();
+    resetCelebrationBaseline();
     maybeOpenTipsOnLogin();
 });
 
@@ -172,11 +174,22 @@ function triggerCelebrationIfNeeded() {
     const journeyJustCompleted = !wasJourneyComplete.value && journeyState.value.isComplete;
     wasJourneyComplete.value = journeyState.value.isComplete;
 
-    setTimeout(() => {
+    if (celebrationTimer) {
+        clearTimeout(celebrationTimer);
+    }
+
+    celebrationTimer = setTimeout(() => {
         celebrating.value = false;
-        requestPrompt(journeyJustCompleted ? 'onboarding_complete' : 'onboarding_quest');
+        requestEngagement(journeyJustCompleted ? 'onboarding_complete' : 'onboarding_quest');
+        celebrationTimer = null;
     }, 2000);
 }
+
+onBeforeUnmount(() => {
+    if (celebrationTimer) {
+        clearTimeout(celebrationTimer);
+    }
+});
 
 async function handleQuestClick() {
     if (!nextQuest.value) {

@@ -271,10 +271,10 @@
 
         <Teleport to="body">
             <div
-                v-if="activeGoogleReviewPrompt"
+                v-if="activeEngagement"
                 class="fixed inset-0 z-[110] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
             >
-                <MarketingGoogleReviewPrompt />
+                <MarketingSuccessEngagementModal />
             </div>
         </Teleport>
     </div>
@@ -332,7 +332,8 @@ const formattedMembersCount = computed(() => membersCount.value.toLocaleString('
 
 const hasAccess = ref(false);
 const showSuccessCelebration = ref(false);
-const { activePrompt: activeGoogleReviewPrompt, requestPrompt } = useGoogleReviewPrompt();
+const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
+const { processStripeReturn: processSponsorshipReturn } = useSponsorship();
 const purchasing = ref(false);
 const confirmingPayment = ref(false);
 const confirmFailed = ref(false);
@@ -433,11 +434,29 @@ async function finishAccessCelebration(targetRoute: string) {
     showSuccessCelebration.value = false;
 
     const destination = targetRoute || redirectTo.value;
-    const shown = requestPrompt('platform_access', { pendingRoute: destination });
+    const shown = requestEngagement('platform_access', { pendingRoute: destination });
 
     if (!shown) {
         await navigateTo(destination, { replace: true });
     }
+}
+
+async function processSponsorshipStripeReturn(): Promise<void> {
+    const granted = await processSponsorshipReturn(route.query as Record<string, unknown>);
+
+    if (!granted) {
+        return;
+    }
+
+    $toast({
+        title: 'Merci',
+        description: 'Votre sponsoring soutient la visibilité du réseau InfiSwap. Facture envoyée par e-mail.',
+    });
+
+    const query = { ...route.query };
+    delete query.sponsorship;
+    delete query.session_id;
+    await navigateTo({ path: route.path, query }, { replace: true });
 }
 
 const stripeSessionId = computed(() => extractStripeSessionId(route.query));
@@ -583,6 +602,10 @@ watch(() => route.query.session_id, () => {
 onMounted(async () => {
     if (!extractStripeSessionId(route.query) && user.value) {
         hasAccess.value = await hasPlatformAccess();
+    }
+
+    if (import.meta.client) {
+        await processSponsorshipStripeReturn();
     }
 });
 

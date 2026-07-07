@@ -15,7 +15,10 @@ type ProductEventName =
     | 'purchase_celebration_cta_click'
     | 'google_review_impression'
     | 'google_review_cta_click'
-    | 'google_review_dismiss';
+    | 'google_review_dismiss'
+    | 'sponsorship_impression'
+    | 'sponsorship_tier_click'
+    | 'sponsorship_paid';
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();

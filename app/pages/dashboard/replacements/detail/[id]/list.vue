@@ -159,7 +159,7 @@ const replacementId = route.params.id;
 const { $toast } = useNuxtApp();
 const { trackEvent } = useProductAnalytics();
 const { triggerCelebration } = usePurchaseCelebration();
-const { requestPrompt } = useGoogleReviewPrompt();
+const { requestEngagement } = usePostSuccessEngagement();
 const { confirmContract } = useReplacementContract();
 
 function trackContractPaidOnce(sessionId: string) {
@@ -262,7 +262,7 @@ function openAcceptModal(response: ReplacementResponse) {
 async function onAccepted() {
     await fetchListResponse();
     $toast({ description: 'Statut modifié avec succès' });
-    requestPrompt('replacement_accepted');
+    requestEngagement('replacement_accepted');
 }
 
 function goToReplacementDetail() {

@@ -284,10 +284,10 @@
                 />
             </div>
             <div
-                v-if="activeGoogleReviewPrompt"
+                v-if="activeEngagement"
                 class="fixed inset-0 z-[110] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
             >
-                <MarketingGoogleReviewPrompt />
+                <MarketingSuccessEngagementModal />
             </div>
         </Teleport>
     </SidebarProvider>
@@ -344,7 +344,8 @@ const displayShortName = computed(() => getShortDisplayName(user.value) || displ
 const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
 
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
-const { activePrompt: activeGoogleReviewPrompt, requestPrompt } = useGoogleReviewPrompt();
+const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
+const { processStripeReturn: processSponsorshipReturn } = useSponsorship();
 const router = useRouter();
 
 async function handleCelebrationContinue(targetRoute: string) {
@@ -352,7 +353,7 @@ async function handleCelebrationContinue(targetRoute: string) {
     dismissCelebration();
 
     if (variant) {
-        const shown = requestPrompt(mapCelebrationVariantToReviewSource(variant), {
+        const shown = requestEngagement(mapCelebrationVariantToReviewSource(variant), {
             pendingRoute: targetRoute,
         });
 
@@ -364,6 +365,24 @@ async function handleCelebrationContinue(targetRoute: string) {
     }
 
     await router.replace(targetRoute);
+}
+
+async function processSponsorshipStripeReturn(): Promise<void> {
+    const granted = await processSponsorshipReturn(route.query as Record<string, unknown>);
+
+    if (!granted) {
+        return;
+    }
+
+    $toast({
+        title: 'Merci',
+        description: 'Votre sponsoring soutient la visibilité du réseau InfiSwap. Facture envoyée par e-mail.',
+    });
+
+    const query = { ...route.query };
+    delete query.sponsorship;
+    delete query.session_id;
+    await router.replace({ path: route.path, query });
 }
 
 const {
@@ -464,6 +483,7 @@ onMounted(async () => {
     const [fetchedRoles] = await Promise.all([
         getRoles(),
         getUnreadCount(),
+        processSponsorshipStripeReturn(),
     ]);
     roles.value = fetchedRoles;
     startPolling(10000);
