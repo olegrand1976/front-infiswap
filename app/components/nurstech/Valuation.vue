@@ -1,5 +1,8 @@
 <template>
     <section class="container mx-auto px-4 py-10">
+        <div class="mb-6 rounded-lg bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-blue-900 text-center">
+            Formules dès <strong>450 €</strong> — page web pro clé en main pour infirmiers libéraux.
+        </div>
         <div class="flex flex-col lg:flex-row">
             <div class="lg:w-1/2 w-full">
                 <LayoutsAppImage

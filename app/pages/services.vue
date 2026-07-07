@@ -188,7 +188,7 @@
                 <div class="relative">
                     <LayoutsAppImage
                         src="home/monitor_with_laptop.png"
-                        alt="un infirmier with vielle homme"
+                        alt="Infirmier avec patient"
                         class="w-full z-10"
                     />
                     <div
@@ -198,31 +198,28 @@
                     </div>
                 </div>
 
-                <div class="hidden lg:block">
-                    <div
-                        class="hidden lg:grid place-content-center mb-3"
-                    >
+                <div class="space-y-4 px-2 lg:px-0">
+                    <div class="hidden lg:grid place-content-center mb-3">
                         <LayoutsNursTech />
                     </div>
-                    <p class="hidden text-base">
-                        Avec NURSTECH, bénéficiez d’une page web claire, professionnelle et optimisée pour que vos futurs patients vous trouvent facilement et vous contactent rapidement.
+                    <p class="text-sm lg:text-base text-center lg:text-left">
+                        Créez votre page web professionnelle avec
+                        <span class="font-bold text-primary">NURS</span><span class="font-bold text-primarytech">TECH</span>
+                        — visible sur InfiSwap et optimisée pour vos futurs patients.
                     </p>
-
-                    <p class="mb-4">
-                        Créez votre page web professionnelle avec <span class="font-bold text-primary">NURS</span><span class="font-bold text-primarytech">TECH</span><br>
-                        Valorisez votre activité et attirez plus de patients à domicile grâce
-                        à une page personnalisée, visible sur Infiswap.
-                    </p>
-
-                    <p class="mb-4">
-                        Avec NURSTECH, bénéficiez d’une page web claire, professionnelle
+                    <p class="hidden lg:block text-base">
+                        Avec NURSTECH, bénéficiez d'une page web claire, professionnelle
                         et optimisée pour que vos futurs patients vous trouvent facilement
                         et vous contactent rapidement.
                     </p>
-
-                    <Button href="/nurstech-by-infiswap">
-                        En savoir plus
-                    </Button>
+                    <div class="flex justify-center lg:justify-start">
+                        <Button
+                            href="/nurstech-by-infiswap"
+                            @click="onServicesLearnMore('nurstech')"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,18 +228,24 @@
             <div
                 class="relative my-8 lg:my-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-2 lg:py-6 -mt-10"
             >
-                <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
-                    <div
-                        class="hidden lg:grid place-content-center"
-                    >
+                <div class="lg:space-y-6 space-y-4 order-2 lg:order-1 relative z-30 px-2 lg:px-0">
+                    <div class="hidden lg:grid place-content-center">
                         <LayoutsNursAssur />
                     </div>
+                    <p class="text-sm lg:text-base text-center lg:text-left">
+                        Votre assurance professionnelle 100% adaptée aux infirmiers libéraux — devis personnalisé sous 48h.
+                    </p>
                     <p class="hidden lg:block text-base">
                         Votre assurance professionnelle 100% adaptée à votre métier d'infirmier-ère. Avec NURSASSUR, bénéficiez d'une couverture complète, conçue pour les besoins spécifiques des infirmiers et infirmières libéraux. Gagnez en sérénité et concentrez-vous sur vos patients !
                     </p>
-                    <Button href="/nursassur-by-infiswap">
-                        En savoir plus
-                    </Button>
+                    <div class="flex justify-center lg:justify-start">
+                        <Button
+                            href="/nursassur-by-infiswap"
+                            @click="onServicesLearnMore('nursassur')"
+                        >
+                            En savoir plus
+                        </Button>
+                    </div>
                 </div>
                 <div
                     class="relative order-1 lg:order-2 flex justify-center lg:justify-end"
@@ -540,6 +543,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { PartnerProduct } from '~/utils/partnerServices';
+
+const { trackPartnerImpression, trackPartnerCtaClick } = usePartnerServices();
+
 useHead({
     title: 'Services',
     meta: [
@@ -554,4 +561,13 @@ useHead({
 definePageMeta({
     layout: 'auth',
 });
+
+onMounted(() => {
+    trackPartnerImpression('nurstech', 'services_section', 'services');
+    trackPartnerImpression('nursassur', 'services_section', 'services');
+});
+
+function onServicesLearnMore(product: PartnerProduct) {
+    trackPartnerCtaClick(product, 'services_section', 'learn_more', 'services');
+}
 </script>

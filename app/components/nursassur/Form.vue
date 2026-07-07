@@ -158,6 +158,7 @@ import { useNuxtApp } from '#app';
 const { getAssurTypes, createHistory } = useService();
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
+const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
 
 const emit = defineEmits(['close']);
 
@@ -169,6 +170,7 @@ const form = ref({
 });
 
 onMounted(async () => {
+    trackPartnerFormStart('nursassur', 'dashboard_modal');
     if (!isLoggedIn.value) {
         return;
     }
@@ -186,6 +188,7 @@ onMounted(async () => {
 });
 
 const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async () => {
+    trackPartnerFormSubmit('nursassur', 'dashboard_modal');
     await createHistory({
         product: 'NursAssur',
         description: form.value.description,
@@ -214,6 +217,7 @@ const { submitContact } = useService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
+        trackPartnerFormSubmit('nursassur', 'dashboard_modal_guest');
         await submitContact(contact);
 
         $toast({

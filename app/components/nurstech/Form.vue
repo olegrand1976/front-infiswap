@@ -118,13 +118,19 @@ import { ref } from 'vue';
 
 const { createHistory, submitContact } = useService();
 const { $toast } = useNuxtApp();
+const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
 const emit = defineEmits(['close']);
 const { isLoggedIn } = useAuth();
 
 const description = ref('');
 
+onMounted(() => {
+    trackPartnerFormStart('nurstech', 'dashboard_modal');
+});
+
 const submitHistory = async () => {
     try {
+        trackPartnerFormSubmit('nurstech', 'dashboard_modal');
         await createHistory({ product: 'Nurstech', description: description.value });
         $toast({
             description: 'Votre demande a été transmise à NursTech avec succès.',
@@ -153,6 +159,7 @@ const contact = reactive({
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
+        trackPartnerFormSubmit('nurstech', 'dashboard_modal_guest');
         await submitContact(contact);
 
         $toast({

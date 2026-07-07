@@ -7,6 +7,7 @@
             <div class="container mt-12">
                 <HomePlatform />
             </div>
+            <HomePartnerServices v-if="!isLoggedIn" />
             <HomeInstitutionBanner />
         </div>
         <div>

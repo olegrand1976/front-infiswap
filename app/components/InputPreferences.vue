@@ -2,7 +2,13 @@
     <div>
         <form class="w-full grid 2xl:grid-cols-2 gap-6">
             <div>
-                <label class="font-semibold text-primary">Codes postaux</label>
+                <label class="font-semibold text-primary flex items-center gap-1.5">
+                    Codes postaux
+                    <SettingsFieldHint
+                        :text="SETTINGS_TOOLTIPS.zipCodesPreference"
+                        label="Codes postaux"
+                    />
+                </label>
                 <div class="grid gap-3 mt-3">
                     <div
                         v-for="i in 4"
@@ -35,7 +41,13 @@
             </div>
 
             <div>
-                <label class="font-semibold text-primary">Villes</label>
+                <label class="font-semibold text-primary flex items-center gap-1.5">
+                    Villes
+                    <SettingsFieldHint
+                        :text="SETTINGS_TOOLTIPS.citiesPreference"
+                        label="Villes"
+                    />
+                </label>
                 <div class="grid gap-3 mt-3">
                     <div
                         v-for="i in 4"
@@ -75,6 +87,7 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
+import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
 
 const props = defineProps<{
     initialZipCodes: string[];

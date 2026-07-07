@@ -26,6 +26,11 @@ export type CrmActivityKpis = {
     registered_this_month: number;
     registered_previous_month: number;
     with_insurance?: number;
+    with_site?: number;
+    partner_nurstech_clicks_30d?: number;
+    partner_nursassur_clicks_30d?: number;
+    partner_nurstech_contacts_30d?: number;
+    partner_nursassur_contacts_30d?: number;
     total_sales?: number;
     with_active_subscription?: number;
     with_signed_bc?: number;

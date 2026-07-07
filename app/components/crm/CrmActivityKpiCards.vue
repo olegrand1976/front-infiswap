@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { CalendarDays, CalendarRange, PhoneOff, ShieldCheck, ShoppingBag, TrendingUp, Users } from 'lucide-vue-next';
+import { CalendarDays, CalendarRange, MousePointerClick, PhoneOff, ShieldCheck, ShoppingBag, TrendingUp, Users } from 'lucide-vue-next';
 import type { CrmActivityKpis } from '@/composables/useCrm';
 
 const props = defineProps<{
@@ -84,6 +84,36 @@ const items = computed(() => {
             label: 'Avec Nursassur',
             colorClass: 'bg-indigo-600',
             icon: ShieldCheck,
+        },
+        {
+            value: data?.with_site ?? 0,
+            label: 'Avec NursTech',
+            colorClass: 'bg-sky-600',
+            icon: TrendingUp,
+        },
+        {
+            value: data?.partner_nurstech_clicks_30d ?? 0,
+            label: 'Clics NursTech (30j)',
+            colorClass: 'bg-blue-500',
+            icon: MousePointerClick,
+        },
+        {
+            value: data?.partner_nursassur_clicks_30d ?? 0,
+            label: 'Clics NursAssur (30j)',
+            colorClass: 'bg-indigo-500',
+            icon: MousePointerClick,
+        },
+        {
+            value: data?.partner_nurstech_contacts_30d ?? 0,
+            label: 'Leads NursTech (30j)',
+            colorClass: 'bg-cyan-600',
+            icon: ShoppingBag,
+        },
+        {
+            value: data?.partner_nursassur_contacts_30d ?? 0,
+            label: 'Leads NursAssur (30j)',
+            colorClass: 'bg-violet-500',
+            icon: ShoppingBag,
         },
         {
             value: data?.total_sales ?? 0,

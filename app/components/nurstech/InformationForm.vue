@@ -99,8 +99,12 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
+import type { User } from '~/lib/types';
 
 const { $toast } = useNuxtApp();
+const { isLoggedIn } = useAuth();
+const user = useState<User | null>('user');
+const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
 const contact = reactive({
     product: 'NursTech',
     name: '',
@@ -112,9 +116,19 @@ const contact = reactive({
 
 const { submitContact } = useService();
 
+onMounted(() => {
+    trackPartnerFormStart('nurstech', 'landing_information_form');
+    if (isLoggedIn.value && user.value) {
+        contact.name = user.value.full_name ?? `${user.value.firstname} ${user.value.lastname}`.trim();
+        contact.email = user.value.email ?? '';
+        contact.phone = user.value.phone_number ?? '';
+    }
+});
+
 const { submit, inProgress } = useSubmit(async () => {
     try {
         await submitContact(contact);
+        trackPartnerFormSubmit('nurstech', 'landing_information_form');
 
         $toast({
             description: 'Votre demande de contact a été transmise à NursTech avec succès.',

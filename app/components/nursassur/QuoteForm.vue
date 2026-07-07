@@ -79,9 +79,13 @@
 
 <script lang="ts" setup>
 import { useService } from '~/composables/useService';
+import type { User } from '~/lib/types';
 
 const { submitContact } = useService();
 const { $toast } = useNuxtApp();
+const { isLoggedIn } = useAuth();
+const user = useState<User | null>('user');
+const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
 
 const props = defineProps<{
     selectedItems?: string[];
@@ -98,6 +102,15 @@ const formData = reactive({
     phone: '',
     description: '',
     interested_products: [],
+});
+
+onMounted(() => {
+    trackPartnerFormStart('nursassur', 'landing_quote_form');
+    if (isLoggedIn.value && user.value) {
+        formData.name = user.value.full_name ?? `${user.value.firstname} ${user.value.lastname}`.trim();
+        formData.email = user.value.email ?? '';
+        formData.phone = user.value.phone_number ?? '';
+    }
 });
 
 const resetFormData = () => {
@@ -124,6 +137,7 @@ const {
         );
 
         return submitContact(formData).then(() => {
+            trackPartnerFormSubmit('nursassur', 'landing_quote_form');
             $toast({
                 description: 'Demande de devis envoyé avec succès',
             });

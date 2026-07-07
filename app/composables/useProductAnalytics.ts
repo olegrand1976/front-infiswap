@@ -18,7 +18,17 @@ type ProductEventName =
     | 'google_review_dismiss'
     | 'sponsorship_impression'
     | 'sponsorship_tier_click'
-    | 'sponsorship_paid';
+    | 'sponsorship_paid'
+    | 'nurstech_impression'
+    | 'nurstech_cta_click'
+    | 'nurstech_form_start'
+    | 'nurstech_form_submit'
+    | 'nursassur_impression'
+    | 'nursassur_cta_click'
+    | 'nursassur_form_start'
+    | 'nursassur_form_submit'
+    | 'partner_banner_impression'
+    | 'partner_banner_click';
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();

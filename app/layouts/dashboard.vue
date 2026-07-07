@@ -175,7 +175,39 @@
                                 >
                                     {{ displayFullName }}
                                 </p>
+                                <div
+                                    v-if="showProfileTypeSelect"
+                                    class="flex justify-end"
+                                    @click.stop
+                                    @pointerdown.stop
+                                >
+                                    <Select
+                                        :model-value="user?.account_type"
+                                        :disabled="isSwitchingRole"
+                                        @update:model-value="handleProfileTypeChange"
+                                    >
+                                        <SelectTrigger
+                                            :class="cn(
+                                                'h-7 min-w-0 max-w-[9rem] border-none bg-transparent p-0 text-xs font-bold shadow-none focus:ring-0 sm:max-w-[12rem]',
+                                                isAdmin ? 'text-success' : 'text-primary',
+                                            )"
+                                            @click.stop
+                                        >
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent align="end">
+                                            <SelectItem
+                                                v-for="role in switchableRoles"
+                                                :key="role"
+                                                :value="role"
+                                            >
+                                                {{ getRole(role) }}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                                 <p
+                                    v-else
                                     :class="cn('text-xs -mt-1 text-end font-bold truncate', {
                                         'text-success': isAdmin,
                                         'text-primary': !isAdmin,
@@ -307,6 +339,7 @@ const { isAdmin, hasChangedAvatar } = useAuth();
 
 const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
+const isSwitchingRole = ref(false);
 
 const { $toast } = useNuxtApp();
 const {
@@ -404,23 +437,48 @@ const hasMultipleContexts = computed(() => {
     return count > 1;
 });
 
-const secondaryRoles = computed(() => {
-    if (!roles.value?.length) return [];
-
-    if (activeContext.value === 'admin') {
-        const staffRoles = roles.value.filter((r: string) => STAFF_SWITCH_ROLES.includes(r));
-        if (staffRoles.length <= 1) return [];
-
-        return staffRoles.filter((role: string) => role !== user.value?.account_type);
+const switchableRoles = computed(() => {
+    if (!roles.value?.length || user.value?.type !== 'standard') {
+        return [];
     }
 
-    if (activeContext.value !== 'nurse') return [];
+    if (activeContext.value === 'admin') {
+        const staffRoles = roles.value.filter((role: string) => STAFF_SWITCH_ROLES.includes(role));
 
-    const medicalRoles = roles.value.filter((r: string) => MEDICAL_ROLES.includes(r));
-    if (medicalRoles.length <= 1) return [];
+        return staffRoles.length > 1 ? staffRoles : [];
+    }
 
-    return medicalRoles.filter((role: string) => role !== user.value?.account_type);
+    if (activeContext.value !== 'nurse') {
+        return [];
+    }
+
+    const medicalRoles = roles.value.filter((role: string) => MEDICAL_ROLES.includes(role));
+
+    return medicalRoles.length > 1 ? medicalRoles : [];
 });
+
+const showProfileTypeSelect = computed(() => switchableRoles.value.length > 1);
+
+const secondaryRoles = computed(() => {
+    return switchableRoles.value.filter((role: string) => role !== user.value?.account_type);
+});
+
+async function handleProfileTypeChange(value: unknown) {
+    const role = typeof value === 'string' ? value : '';
+
+    if (!role || role === user.value?.account_type || isSwitchingRole.value) {
+        return;
+    }
+
+    isSwitchingRole.value = true;
+
+    try {
+        await switchRole(role);
+    }
+    finally {
+        isSwitchingRole.value = false;
+    }
+}
 
 const submitReport = async () => {
     try {

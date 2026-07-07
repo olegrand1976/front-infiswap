@@ -8,8 +8,7 @@
                 Carrière commerciale
             </h1>
             <p class="text-muted-foreground text-lg">
-                Développez le réseau InfiSwap auprès des institutions de soins et progressez
-                dans une structure de carrière claire, basée sur vos résultats commerciaux.
+                {{ careerPageHeroIntro }}
             </p>
         </section>
 
@@ -28,14 +27,60 @@
             </article>
         </section>
 
+        <section class="space-y-6">
+            <div class="max-w-3xl space-y-2">
+                <h2 class="text-xl font-semibold text-primary">
+                    Les offres que vous développez
+                </h2>
+                <p class="text-sm text-muted-foreground">
+                    {{ commercialOfferingsIntro }}
+                </p>
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-2">
+                <article
+                    v-for="offering in commercialOfferings"
+                    :key="offering.id"
+                    class="rounded-lg border p-5 space-y-3 flex flex-col"
+                >
+                    <div class="space-y-1">
+                        <span
+                            class="inline-block text-xs font-semibold uppercase tracking-wide rounded-full px-2.5 py-0.5"
+                            :class="offering.id === 'institutions'
+                                ? 'bg-primary/10 text-primary'
+                                : 'bg-muted text-muted-foreground'"
+                        >
+                            {{ offering.badge }}
+                        </span>
+                        <h3 class="font-semibold text-primary pt-1">
+                            {{ offering.title }}
+                        </h3>
+                        <p class="text-sm text-muted-foreground">
+                            {{ offering.subtitle }}
+                        </p>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1.5 text-sm text-muted-foreground flex-1">
+                        <li
+                            v-for="(bullet, index) in offering.bullets"
+                            :key="index"
+                        >
+                            {{ bullet }}
+                        </li>
+                    </ul>
+                </article>
+            </div>
+
+            <p class="text-sm text-muted-foreground max-w-3xl rounded-lg border border-dashed px-4 py-3 bg-muted/20">
+                {{ careerBcProgressionNote }}
+            </p>
+        </section>
+
         <section class="space-y-4">
             <h2 class="text-xl font-semibold text-primary">
                 Les niveaux de carrière
             </h2>
             <p class="text-sm text-muted-foreground max-w-3xl">
-                Quatre grades structurés. Chaque niveau requiert un volume de
-                <strong>Bons de Commande (BC)</strong> institution signés et un développement
-                de votre équipe commerciale directe.
+                {{ careerLevelsIntro }}
             </p>
             <div
                 v-if="loadingLevels"
@@ -130,7 +175,13 @@ import {
 } from '@/components/ui/table';
 import {
     bcDefinition,
+    careerBcProgressionNote,
     careerDescriptionBySlug,
+    careerLevelsIntro,
+    careerPageHeroIntro,
+    careerPageSeoDescription,
+    commercialOfferings,
+    commercialOfferingsIntro,
     publicCareerLevels,
     recruitmentHighlights,
 } from '@/lib/careerContent';
@@ -149,9 +200,9 @@ definePageMeta({ layout: 'guest' });
 
 useSeoMeta({
     title: 'Carrière commerciale — InfiSwap',
-    description: 'Rejoignez le réseau commercial InfiSwap : progression structurée, autonomie et impact auprès des institutions de soins.',
+    description: careerPageSeoDescription,
     ogTitle: 'Carrière commerciale — InfiSwap',
-    ogDescription: 'Découvrez les niveaux de carrière et le recrutement commercial InfiSwap.',
+    ogDescription: careerPageSeoDescription,
 });
 
 const { $apifetch } = useNuxtApp();

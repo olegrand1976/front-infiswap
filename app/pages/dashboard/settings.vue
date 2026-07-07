@@ -121,8 +121,13 @@
                                             v-if="user.type == 'institution'"
                                             class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full"
                                         >
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Nom de l'institution
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.institutionName"
+                                                    label="Nom de l'institution"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.institution.name"
@@ -132,8 +137,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Nom
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.lastname"
+                                                    label="Nom"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.lastname"
@@ -143,8 +153,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Prénom
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.firstname"
+                                                    label="Prénom"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.firstname"
@@ -154,8 +169,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Date de naissance
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.dateOfBirth"
+                                                    label="Date de naissance"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.dateOfBirth"
@@ -165,8 +185,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary w-full truncate sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary w-full truncate sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Email
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.email"
+                                                    label="Email"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.email"
@@ -176,8 +201,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Numéro {{ identifierLabel }}
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.identifierNumber"
+                                                    :label="`Numéro ${identifierLabel}`"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.identifierNumber"
@@ -188,8 +218,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Téléphone
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.phoneNumber"
+                                                    label="Téléphone"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formPersonalInfo.phoneNumber"
@@ -200,8 +235,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Sexe
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.gender"
+                                                    label="Sexe"
+                                                />
                                             </p>
                                             <Select v-model="formPersonalInfo.gender">
                                                 <SelectTrigger
@@ -224,8 +264,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Catégorie professionnel
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.professionalCategory"
+                                                    label="Catégorie professionnel"
+                                                />
                                             </p>
                                             <Select v-model="formPersonalInfo.professionalCategory">
                                                 <SelectTrigger
@@ -279,6 +324,11 @@
                                     >
                                         <Building2 class="w-5" />
                                         <span>Nom de l'institution</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.institutionName"
+                                            label="Nom de l'institution"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -296,6 +346,11 @@
                                     >
                                         <CircleUser class="w-5" />
                                         <span>Nom</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.lastname"
+                                            label="Nom"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -313,6 +368,11 @@
                                     >
                                         <UserPlus class="w-5" />
                                         <span>Prénom</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.firstname"
+                                            label="Prénom"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -330,6 +390,11 @@
                                     >
                                         <Calendar class="w-5" />
                                         <span>Date de naissance</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.dateOfBirth"
+                                            label="Date de naissance"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -347,6 +412,11 @@
                                     >
                                         <Mail class="w-5" />
                                         <span class="truncate w-full">Email</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.email"
+                                            label="Email"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border w-full truncate border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -364,6 +434,11 @@
                                     >
                                         <span class="font-bold">N°</span>
                                         <span>{{ identifierLabel }}</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.identifierNumber"
+                                            :label="`Numéro ${identifierLabel}`"
+                                        />
                                     </label>
                                 </div>
                                 <p
@@ -384,6 +459,11 @@
                                     >
                                         <Phone class="w-5" />
                                         <span>Téléphone</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.phoneNumber"
+                                            label="Téléphone"
+                                        />
                                     </label>
                                 </div>
                                 <p
@@ -407,6 +487,11 @@
                                             class="w-5"
                                         >
                                         <span>Sexe</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.gender"
+                                            label="Sexe"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -424,6 +509,11 @@
                                     >
                                         <Users class="text-white w-5" />
                                         <span>Catégorie professionnel</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.professionalCategory"
+                                            label="Catégorie professionnel"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -461,8 +551,13 @@
 
                                     <form class="mt-4 space-y-3">
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Rue
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.street"
+                                                    label="Rue"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.streetAddress"
@@ -472,8 +567,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Ville
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.city"
+                                                    label="Ville"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.city"
@@ -483,8 +583,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Pays
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.country"
+                                                    label="Pays"
+                                                />
                                             </p>
                                             <Select v-model="formAddress.country">
                                                 <SelectTrigger
@@ -507,8 +612,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Pays de travail
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.workingAt"
+                                                    label="Pays de travail"
+                                                />
                                             </p>
                                             <Select v-model="formAddress.workingAt">
                                                 <SelectTrigger
@@ -531,8 +641,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Code postal
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.zipCode"
+                                                    label="Code postal"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.zipCode"
@@ -542,8 +657,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Complément
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.additionalInfo"
+                                                    label="Complément"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.additionalInfo"
@@ -583,6 +703,11 @@
                                     >
                                         <Map class="w-5" />
                                         <span>Rue</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.street"
+                                            label="Rue"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -600,6 +725,11 @@
                                     >
                                         <Building2 class="w-5" />
                                         <span>Ville</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.city"
+                                            label="Ville"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -617,6 +747,11 @@
                                     >
                                         <FlagIcon class="w-5" />
                                         <span>Pays</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.country"
+                                            label="Pays"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -634,6 +769,11 @@
                                     >
                                         <Building2 class="w-5" />
                                         <span>Pays de travail</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.workingAt"
+                                            label="Pays de travail"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -651,6 +791,11 @@
                                     >
                                         <EnvelopeOpenIcon class="w-5" />
                                         <span>Code postal</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.zipCode"
+                                            label="Code postal"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -668,6 +813,11 @@
                                     >
                                         <EllipsisHorizontalCircleIcon class="w-5" />
                                         <span>Complément</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.additionalInfo"
+                                            label="Complément"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -707,8 +857,13 @@
 
                                     <form class="mt-4 space-y-3">
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Rue
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.street"
+                                                    label="Rue"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.streetAddress"
@@ -718,8 +873,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Ville
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.city"
+                                                    label="Ville"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.city"
@@ -729,8 +889,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Pays
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.country"
+                                                    label="Pays"
+                                                />
                                             </p>
                                             <Select v-model="formAddress.country">
                                                 <SelectTrigger
@@ -753,8 +918,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Pays de travail
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.workingAt"
+                                                    label="Pays de travail"
+                                                />
                                             </p>
                                             <Select v-model="formAddress.workingAt">
                                                 <SelectTrigger
@@ -777,8 +947,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Code postal
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.zipCode"
+                                                    label="Code postal"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.zipCode"
@@ -788,8 +963,13 @@
                                         </div>
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
                                                 Complément
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.additionalInfo"
+                                                    label="Complément"
+                                                />
                                             </p>
                                             <Input
                                                 v-model="formAddress.additionalInfo"
@@ -829,6 +1009,11 @@
                                     >
                                         <Map class="w-5" />
                                         <span>Rue</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.street"
+                                            label="Rue"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -846,6 +1031,11 @@
                                     >
                                         <Building2 class="w-5" />
                                         <span>Ville</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.city"
+                                            label="Ville"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -863,6 +1053,11 @@
                                     >
                                         <FlagIcon class="w-5" />
                                         <span>Pays</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.country"
+                                            label="Pays"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -880,6 +1075,11 @@
                                     >
                                         <Building2 class="w-5" />
                                         <span>Pays de travail</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.workingAt"
+                                            label="Pays de travail"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -897,6 +1097,11 @@
                                     >
                                         <EnvelopeOpenIcon class="w-5" />
                                         <span>Code postal</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.zipCode"
+                                            label="Code postal"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -914,6 +1119,11 @@
                                     >
                                         <EllipsisHorizontalCircleIcon class="w-5" />
                                         <span>Complément</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.additionalInfo"
+                                            label="Complément"
+                                        />
                                     </label>
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
@@ -933,13 +1143,19 @@
 
                         <div class="mt-4 space-y-3">
                             <div class="flex justify-between items-center">
-                                <label
-                                    for="currentPassword"
-                                    class="font-normal flex items-center space-x-3"
-                                >
-                                    <KeyIcon class="w-5 " />
-                                    <span>Mot de passe</span>
-                                </label>
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <label
+                                        for="currentPassword"
+                                        class="font-normal flex items-center space-x-3"
+                                    >
+                                        <KeyIcon class="w-5 " />
+                                        <span>Mot de passe</span>
+                                    </label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.password"
+                                        label="Mot de passe"
+                                    />
+                                </div>
 
                                 <SquarePen
                                     class="w-5 text-black/50 hover:text-primary font-semibold text-sm cursor-pointer"
@@ -1012,13 +1228,19 @@
                             </div>
 
                             <div class="flex justify-between items-center space-x-3">
-                                <label
-                                    for="authTwoFactor"
-                                    class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
-                                >
-                                    <Smartphone class="w-5 hidden sm:block" />
-                                    <span class="w-full truncate">Authentification à deux facteurs</span>
-                                </label>
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <label
+                                        for="authTwoFactor"
+                                        class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
+                                    >
+                                        <Smartphone class="w-5 hidden sm:block" />
+                                        <span class="w-full truncate">Authentification à deux facteurs</span>
+                                    </label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.twoFactor"
+                                        label="Authentification à deux facteurs"
+                                    />
+                                </div>
                                 <Switch
                                     id="authTwoFactor"
                                     v-model:checked="enableTwoFactor"
@@ -1172,6 +1394,11 @@
                                     >
                                         <LanguageIcon class="w-5 hidden sm:block" />
                                         <span>Langue</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.language"
+                                            label="Langue"
+                                        />
                                     </label>
                                 </div>
                                 <Select
@@ -1211,40 +1438,70 @@
                         </h3>
 
                         <div class="mt-4 space-y-4">
-                            <div class="flex justify-between items-center">
-                                <Label for="newReplacement">Nouveau remplacement</Label>
+                            <div class="flex justify-between items-center gap-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="newReplacement">Nouveau remplacement</Label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.newReplacement"
+                                        label="Nouveau remplacement"
+                                    />
+                                </div>
                                 <Switch
                                     id="newReplacement"
                                     v-model:checked="notifNewReplacement"
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center">
-                                <Label for="acceptReplacement">Remplacement accepté</Label>
+                            <div class="flex justify-between items-center gap-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="acceptReplacement">Remplacement accepté</Label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.replacementAccepted"
+                                        label="Remplacement accepté"
+                                    />
+                                </div>
                                 <Switch
                                     id="acceptReplacement"
                                     v-model:checked="notifAcceptReplacement"
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center">
-                                <Label for="digestWeekly">Digest hebdomadaire zone</Label>
+                            <div class="flex justify-between items-center gap-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="digestWeekly">Résumé hebdomadaire (ma zone)</Label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.digestWeekly"
+                                        label="Résumé hebdomadaire (ma zone)"
+                                    />
+                                </div>
                                 <Switch
                                     id="digestWeekly"
                                     v-model:checked="notifDigestWeekly"
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center">
-                                <Label for="urgentOnly">Urgences uniquement (push)</Label>
+                            <div class="flex justify-between items-center gap-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="urgentOnly">Urgences uniquement</Label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.urgentOnly"
+                                        label="Urgences uniquement"
+                                    />
+                                </div>
                                 <Switch
                                     id="urgentOnly"
                                     v-model:checked="notifUrgentOnly"
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center">
-                                <Label for="smsUrgent">SMS urgences</Label>
+                            <div class="flex justify-between items-center gap-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="smsUrgent">SMS urgences</Label>
+                                    <SettingsFieldHint
+                                        :text="SETTINGS_TOOLTIPS.smsUrgent"
+                                        label="SMS urgences"
+                                    />
+                                </div>
                                 <Switch
                                     id="smsUrgent"
                                     v-model:checked="notifSmsUrgent"
@@ -1387,6 +1644,7 @@ import { useAuth } from '~/composables/useAuth';
 import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
+import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
 
 const { $toast } = useNuxtApp();
 

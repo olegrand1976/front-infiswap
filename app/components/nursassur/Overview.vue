@@ -1,5 +1,8 @@
 <template>
     <div class="container my-16 lg:my-32 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div class="lg:col-span-2 mb-2 rounded-lg bg-indigo-50 border border-indigo-100 px-4 py-3 text-sm text-indigo-900 text-center">
+            Devis personnalisé <strong>en moins de 48h</strong> — RC pro et prévoyance adaptées aux infirmiers libéraux.
+        </div>
         <LayoutsAppImage
             src="home/two_women_discussing.png"
             alt="Two women discussing"

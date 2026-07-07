@@ -150,7 +150,6 @@ const { isLoggedIn } = useAuth();
 
 const navigationNurseItems = [
     { label: 'Qui sommes-nous?', targetId: menuData.value.whoAreWe },
-    ...(props.theme !== 'assur' ? [{ label: 'Nos Partenaires', targetId: 'partners' }] : []),
     { label: 'Services', targetId: menuData.value.services },
     { label: 'Contact', targetId: menuData.value.contact },
 ];
