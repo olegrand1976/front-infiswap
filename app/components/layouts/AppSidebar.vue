@@ -153,6 +153,7 @@
             </Dialog>
 
             <NuxtLink
+                v-if="showGoogleReviewLink"
                 to="https://g.page/r/Cf8HfnS8YUz2EAE/review"
                 target="_blank"
                 class="flex flex-col gap-1 text-center"
@@ -190,6 +191,7 @@ import { useSidebar } from '../ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { PERPAGE } from '~/lib/constants';
+import { hasLeftGoogleReview } from '~/utils/googleReview';
 
 const {
     isSuperAdmin,
@@ -205,6 +207,7 @@ const {
 } = useAuth();
 const config = useRuntimeConfig();
 const user = useUser();
+const showGoogleReviewLink = computed(() => !hasLeftGoogleReview(user.value));
 const { setOpenMobile, isMobile } = useSidebar();
 const referralDialog = ref(false);
 

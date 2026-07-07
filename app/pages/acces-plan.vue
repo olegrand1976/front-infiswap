@@ -268,6 +268,15 @@
         </main>
 
         <LayoutsFooter />
+
+        <Teleport to="body">
+            <div
+                v-if="activeGoogleReviewPrompt"
+                class="fixed inset-0 z-[110] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
+            >
+                <MarketingGoogleReviewPrompt />
+            </div>
+        </Teleport>
     </div>
 </template>
 
@@ -323,6 +332,7 @@ const formattedMembersCount = computed(() => membersCount.value.toLocaleString('
 
 const hasAccess = ref(false);
 const showSuccessCelebration = ref(false);
+const { activePrompt: activeGoogleReviewPrompt, requestPrompt } = useGoogleReviewPrompt();
 const purchasing = ref(false);
 const confirmingPayment = ref(false);
 const confirmFailed = ref(false);
@@ -421,7 +431,13 @@ const celebrationAvatarUrl = computed(() => {
 
 async function finishAccessCelebration(targetRoute: string) {
     showSuccessCelebration.value = false;
-    await navigateTo(targetRoute || redirectTo.value, { replace: true });
+
+    const destination = targetRoute || redirectTo.value;
+    const shown = requestPrompt('platform_access', { pendingRoute: destination });
+
+    if (!shown) {
+        await navigateTo(destination, { replace: true });
+    }
 }
 
 const stripeSessionId = computed(() => extractStripeSessionId(route.query));

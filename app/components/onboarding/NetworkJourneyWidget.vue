@@ -39,6 +39,7 @@ const {
     syncQuests,
     persistTipsAutoOpenDisabled,
 } = useNetworkJourney();
+const { requestPrompt } = useGoogleReviewPrompt();
 
 const user = useUser();
 const { getReports } = useReports();
@@ -50,6 +51,7 @@ const currentTipIndex = ref(0);
 const dontShowTipsAgain = ref(false);
 const celebrating = ref(false);
 const celebrationText = ref('');
+const wasJourneyComplete = ref(journeyState.value.isComplete);
 
 const ringRadius = 18;
 const ringCircumference = 2 * Math.PI * ringRadius;
@@ -167,8 +169,12 @@ function triggerCelebrationIfNeeded() {
     celebrationText.value = `+${celebration.gained} XP — ${celebration.levelTitle}`;
     celebrating.value = true;
 
+    const journeyJustCompleted = !wasJourneyComplete.value && journeyState.value.isComplete;
+    wasJourneyComplete.value = journeyState.value.isComplete;
+
     setTimeout(() => {
         celebrating.value = false;
+        requestPrompt(journeyJustCompleted ? 'onboarding_complete' : 'onboarding_quest');
     }, 2000);
 }
 
