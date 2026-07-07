@@ -184,19 +184,16 @@
                                     {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
                                 </p>
                             </div>
-                            <div class="shrink-0">
-                                <template v-if="user?.profil_url != null">
-                                    <Avatar>
-                                        <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                        <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                    </Avatar>
-                                </template>
-                                <template v-else>
-                                    <CircleUser
-                                        class="size-11 text-black/40"
-                                    />
-                                </template>
-                            </div>
+                            <ProfileLifetimeAccessBadge>
+                                <Avatar v-if="user?.profil_url != null">
+                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                </Avatar>
+                                <CircleUser
+                                    v-else
+                                    class="size-11 text-black/40"
+                                />
+                            </ProfileLifetimeAccessBadge>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>

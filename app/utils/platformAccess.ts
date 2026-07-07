@@ -52,6 +52,28 @@ export function showsPaidNetworkAccessBadge(user: {
     return isSubjectToPlatformAccessPayment(user) && hasPaidPlatformAccess(user);
 }
 
+/** Accès réseau à vie : cotisation payée ou compte legacy antérieur au cutoff. */
+export function hasLifetimeNetworkAccess(user: {
+    roles?: string[];
+    account_type?: string | null;
+    created_at?: string | null;
+    platform_access_paid_at?: string | null;
+} | null | undefined): boolean {
+    if (!user) {
+        return false;
+    }
+
+    if (!isPlatformAccessRole(resolvePlatformAccessRoles(user))) {
+        return false;
+    }
+
+    if (hasPaidPlatformAccess(user)) {
+        return true;
+    }
+
+    return !isRegisteredAfterPlatformAccessCutoff(user.created_at);
+}
+
 export function isSubjectToPlatformAccessPayment(user: {
     roles?: string[];
     account_type?: string | null;

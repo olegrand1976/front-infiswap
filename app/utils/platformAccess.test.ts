@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+    hasLifetimeNetworkAccess,
     hasPaidPlatformAccess,
     showsPaidNetworkAccessBadge,
     isLocallyExemptFromPlatformPayment,
@@ -40,6 +41,29 @@ describe('platformAccess', () => {
             roles: ['nurse'],
             created_at: '2026-06-15T10:00:00',
             platform_access_paid_at: '2026-07-06T10:00:00Z',
+        })).toBe(false);
+    });
+
+    it('detects lifetime network access for paid and legacy nurses', () => {
+        expect(hasLifetimeNetworkAccess({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: '2026-07-06T10:00:00Z',
+        })).toBe(true);
+        expect(hasLifetimeNetworkAccess({
+            roles: ['nurse'],
+            created_at: '2026-06-15T10:00:00',
+            platform_access_paid_at: null,
+        })).toBe(true);
+        expect(hasLifetimeNetworkAccess({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: null,
+        })).toBe(false);
+        expect(hasLifetimeNetworkAccess({
+            roles: ['collaborator'],
+            created_at: '2026-06-15T10:00:00',
+            platform_access_paid_at: null,
         })).toBe(false);
     });
 
