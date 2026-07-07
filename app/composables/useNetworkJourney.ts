@@ -210,6 +210,10 @@ export const useNetworkJourney = () => {
         };
     };
 
+    const resetCelebrationBaseline = () => {
+        lastCelebratedXp.value = journeyState.value.totalXp;
+    };
+
     watch(
         () => user.value?.settings,
         async () => {
@@ -252,5 +256,6 @@ export const useNetworkJourney = () => {
         persistTipsAutoOpenDisabled,
         navigateToQuest,
         celebrateXpGain,
+        resetCelebrationBaseline,
     };
 };

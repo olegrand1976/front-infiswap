@@ -480,6 +480,10 @@ void Promise.all([getAccessPlan(), fetchStats()]).finally(() => {
 });
 
 const processStripeReturn = async () => {
+    if (route.query.sponsorship === 'success') {
+        return;
+    }
+
     const sessionId = extractStripeSessionId(route.query);
 
     if (!sessionId) {
